@@ -11,7 +11,7 @@
         </div>
       </template>
     </el-page-header>
-      
+    <!-- 编辑 以及 订大货进入 -->
     <div :class="{ 'none1': isNone1 }">
       <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
         <el-step title="产品基础信息录入" />
@@ -30,32 +30,33 @@
         v-if="active === 1"
         :step1-data="step2ReceivedData" 
         @change-step="handleSetStep"
-        @update:image-preview-visibale="updateUploadPriviewVisible"
-        @update:priview-list-value="setPreviewList"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
       <order-step3 
         v-if="active === 2" 
         :step1-data="step2ReceivedData" 
         @change-step="handleSetStep"
-        @update:image-preview-visibale="updateUploadPriviewVisible"
-        @update:priview-list-value="setPreviewList"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
       <order-step4 v-if="active === 3" :step1-data="step2ReceivedData" @change-step="handleSetStep" />
       <order-step5 
         v-if="active === 4" 
         :step1-data="step2ReceivedData" 
         @change-step="handleSetStep"
-        @update:image-preview-visibale="updateUploadPriviewVisible"
-        @update:priview-list-value="setPreviewList"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
       <order-step6 
         v-if="active === 5" 
         :step1-data="step2ReceivedData"             
         @change-step="handleSetStep"
-        @update:image-preview-visibale="updateUploadPriviewVisible"
-        @update:priview-list-value="setPreviewList"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
       />
     </div>
+    <!-- 只能查看 -->
     <div :class="{ 'none2': isNone2 }">
       <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px;">
         <el-step title="产品基础信息录入" />
@@ -65,16 +66,10 @@
         <el-step title="检查并提交" />
       </el-steps>
       <order-check-step1 v-if="activeCheck === 0" @change-check-step="handleCheckSetStep" />
-      <order-check-step2
-v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-      @update:priview-list-value="setPreviewList"/>
+      <order-check-step2 v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
       <order-check-step3 v-if="activeCheck === 2" @change-check-step="handleCheckSetStep" />
-      <order-check-step4
-v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-      @update:priview-list-value="setPreviewList"/>
-      <order-check-step5
-v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visibale="updateUploadPriviewVisible"
-      @update:priview-list-value="setPreviewList"/>
+      <order-check-step4 v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
+      <order-check-step5 v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
@@ -104,9 +99,9 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
-const active = ref<any>(0)
+const active = ref<number>(0)
 // 查看跳转,从0开始
-const activeCheck = ref<any>(0)
+const activeCheck = ref<number>(0)
 const isNone1 = ref<boolean>(false)
 const isNone2 = ref<boolean>(false)
 
@@ -122,7 +117,7 @@ const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
 // 控制图片是否预览
-const updateUploadPriviewVisible = (newV:boolean) =>{
+const updateUploadPreviewVisible = (newV:boolean) =>{
     imagePreviewVisible.value = newV
 }
 // 修改图片预览列表
@@ -131,10 +126,10 @@ const setPreviewList = (imageUrl:string) =>{
     imagePreviewList.value.push(imageUrl)
 }
 
-const handleSetStep = (_active: any) => {
+const handleSetStep = (_active: number) => {
   active.value = _active
 }
-const handleCheckSetStep = (_active: any) => {
+const handleCheckSetStep = (_active: number) => {
   activeCheck.value = _active
 }
 // 接收并存储从 step1 传递过来的数据
@@ -148,31 +143,29 @@ const goBack = async () => {
   history.back()
 }
 onBeforeMount(() => {
-  // 如果 `reviewStatus` 存在且值为 '0' 或 '2'
-  if (!route.query.reviewStatus || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
+  // 如果 `reviewStatus` 存在且值为 '0' 或 '2'，编辑和订大货显示
+  if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
     isNone1.value = false;
-  } else {
+    if (route.query.stepNo) {
+      // console.log(active.value); 
+      active.value = parseInt(route.query.stepNo)
+      // console.log(active.value);
+    } else {
+      active.value = 0 // 订大货的是0
+    }
+  } else { // 查看显示
     isNone2.value = false;
     isNone1.value = true;
-  }
-  const stepNo = parseInt(route.query.stepNo)
-  if (route.query.stepNo) {
-    if (isNone2.value) {
-      active.value = stepNo //编辑进去的
+    if (route.query.stepNo) {
+      const stepNo = parseInt(route.query.stepNo)
+      activeCheck.value = stepNo
+      if (stepNo === 5) {
+        activeCheck.value = 0
+      }
     }
-    if (isNone1.value) {
-      activeCheck.value = stepNo //查看进去的
-    }
-    
-    if (stepNo === 5) { //查看
-      activeCheck.value = 0
-    }
-  } else { //订大货进去的
-    active.value = 0
   }
 })
-
 
 </script>
 

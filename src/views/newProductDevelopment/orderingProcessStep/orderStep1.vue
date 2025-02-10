@@ -79,7 +79,7 @@ import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, revie
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 defineOptions({
-    name: 'OrderStep1',
+  name: 'OrderStep1',
 })
 
 const route: any = useRoute()
@@ -265,12 +265,13 @@ const fetchData = async () => {
   Object.assign(form, data);
 }
 
-onMounted(async () => {  //编辑进来的需要获取数据 并且状态不是查看
+onMounted(() => {  //编辑进来的需要获取数据, 订大货的需要是空
   const getItem = localStorage.getItem('orderStep1Form')
-  if(getItem) {
+  if (getItem) {
     Object.assign(form, JSON.parse(getItem));
     localStorage.removeItem('orderStep1Form')
   }
+  // 编辑进来的
   if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     fetchData()
   }

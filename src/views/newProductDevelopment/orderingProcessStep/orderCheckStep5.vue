@@ -119,22 +119,22 @@ defineOptions({
 })
 
 const emit = defineEmits<{ 
-    (e: 'changeCheck-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+  (e: 'changeCheck-step', value: number): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
 
 const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const photoSampleOptions = [
-    { label: '已有拍照样品,大货无需留样', value: 0 },
-    { label: '大货需要留样拍照', value: 1 }
-];
+  { label: '已有拍照样品,大货无需留样', value: 0 },
+  { label: '大货需要留样拍照', value: 1 }
+]
 
 const setPreviewImage = (url: string) => {
-  emit("update:priviewListValue", url)
-  emit("update:imagePreviewVisibale", true)
+  emit("update:previewListValue", url)
+  emit("update:imagePreviewVisible", true)
 }
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)

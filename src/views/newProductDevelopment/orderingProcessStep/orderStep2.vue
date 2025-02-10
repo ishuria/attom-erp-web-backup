@@ -77,8 +77,8 @@ const props = defineProps<{ step1Data: number | undefined }>()
 
 const emit = defineEmits<{ 
     (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+    (e: 'update:imagePreviewVisible', value: boolean): void
+    (e: 'update:previewListValue', value: string): void
  }>()
 
 const selectRows = ref<any>([])
@@ -91,8 +91,8 @@ const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement
   // 处理图片放大预览
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-    emit("update:priviewListValue", row.componentImg)
-    emit("update:imagePreviewVisibale", true)
+    emit("update:previewListValue", row.componentImg)
+    emit("update:imagePreviewVisible", true)
   }
 }
 

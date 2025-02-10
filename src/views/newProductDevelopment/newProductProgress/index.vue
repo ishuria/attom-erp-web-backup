@@ -57,7 +57,7 @@ handleSubmit<template>
                   list-type="picture-card"
                 >
                   <div 
-                    style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                    style="display: flex; align-items: center; justify-content: center; width: 75px; height: 75px; "
                     @click="handleIconClick(row)"
                   >
                     <el-icon ><plus /></el-icon>
@@ -91,9 +91,7 @@ handleSubmit<template>
           <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input
-v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)"
-                    @keyup.enter="clickCancel($event, row)" />
+                  <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span v-html="formattedProgressLog(row.product)"></span>
             </template>
@@ -223,9 +221,7 @@ v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="tex
                   <el-input v-model.trim="queryForm.productKeyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button
-:icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                    @click="queryData"/>
+                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
                 </el-form-item>
               </el-form>
             </div>
@@ -241,7 +237,7 @@ v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="tex
         >
           <el-table-column align="center" label="优先级" min-width="75" prop="priority">
             <template #default = "{ row }">
-              <el-select v-model="row.priority" disabled size="default" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
+              <el-select v-model="row.priority" disabled size="default" style="min-width: 100%;" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
                 <el-option 
                   v-for="item in priorityOptions" 
                   :key="item.value" 
@@ -270,7 +266,7 @@ v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="tex
                   list-type="picture-card"
                 >
                   <div 
-                    style="width: 75px; height: 75px; display: flex; align-items: center; justify-content: center;"
+                    style="display: flex; align-items: center; justify-content: center; width: 75px; height: 75px;"
                     @click="handleIconClick(row)"
                   >
                     <el-icon ><plus /></el-icon>
@@ -844,7 +840,7 @@ async function uploadImage (params: any) {
     let sort = progressList.value[tableClickRowIndex.value].imageList!.length - 1
     imageForm.value = new FormData(); // 每次上传前重置 FormData
     imageForm.value.append('file', params.file);
-    imageForm.value.append('progressId', tableClickProgressId);
+    imageForm.value.append('progressId', tableClickProgressId.value);
     imageForm.value.append('sort', sort);
 
     const { data } = await uploadFile(imageForm.value)
@@ -1388,8 +1384,8 @@ onBeforeMount(() => {
   transform-origin: center; // 确保放大从中心开始
 }
 .ghost {
-  opacity: 0.5;
   background: #c8ebfb;
+  opacity: 0.5;
 }
 // 开模申请
 :deep(.moldDialog .el-dialog__body) { 
@@ -1420,8 +1416,8 @@ onBeforeMount(() => {
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

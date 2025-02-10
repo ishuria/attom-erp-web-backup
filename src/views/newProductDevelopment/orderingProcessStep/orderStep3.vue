@@ -516,8 +516,8 @@ const props = defineProps<{ step1Data: number }>()
 
 const emit = defineEmits<{ 
   (e: 'change-step', value: number): void
-  (e: 'update:imagePreviewVisibale', value: boolean): void
-  (e: 'update:priviewListValue', value: string): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
  }>()
 
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
@@ -791,8 +791,8 @@ async function uploadImage(params: any, row: any) {
  */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
     // console.log(row);
-    emit("update:priviewListValue", row.componentImgUrl[0].url)
-    emit("update:imagePreviewVisibale", true)
+    emit("update:previewListValue", row.componentImgUrl[0].url)
+    emit("update:imagePreviewVisible", true)
 }
 /**
  * 图片删除功能

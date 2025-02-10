@@ -212,8 +212,8 @@ const props = defineProps<{ step1Data: number }>()
 // })
 const emit = defineEmits<{ 
   (e: 'change-step', value: number): void
-  (e: 'update:imagePreviewVisibale', value: boolean): void
-  (e: 'update:priviewListValue', value: string): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
  }>()
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
@@ -278,8 +278,8 @@ const photoSampleOptions = [
  * 图片预览事件
  */
  const handlePictureCardPreview = (file: UploadFile) => {
-  emit("update:priviewListValue", file.url!)
-  emit("update:imagePreviewVisibale", true)
+  emit("update:previewListValue", file.url!)
+  emit("update:imagePreviewVisible", true)
 }
 // 点击图标的行的下标
 const clickIconProp = ref<string>('')

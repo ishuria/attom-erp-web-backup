@@ -144,8 +144,8 @@ const photoSampleOptions = [
 ];
 const emit = defineEmits<{ 
     (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+    (e: 'update:imagePreviewVisible', value: boolean): void
+    (e: 'update:previewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
 const checkPersonListVisible = ref<boolean>(false)
@@ -159,8 +159,8 @@ const props = defineProps<{ step1Data: number }>()
 const route: any = useRoute()
 
 const setPreviewImage = (url: string) => {
-  emit("update:priviewListValue", url)
-  emit("update:imagePreviewVisibale", true)
+  emit("update:previewListValue", url)
+  emit("update:imagePreviewVisible", true)
 }
 const handleCheckPersonClose = () => {
   checkPersonListVisible.value = false

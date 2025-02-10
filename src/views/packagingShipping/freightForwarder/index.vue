@@ -25,7 +25,8 @@
       stripe
     >
       <el-table-column align="left" label="渠道全名" prop="fullName" :width="flexColumnWidth(list, '渠道全名', 'fullName')" />
-      <el-table-column align="center" label="当前价格" prop="price"/>
+      <el-table-column align="center" label="当前价格(kg)" prop="kgPrice"/>
+      <el-table-column align="center" label="当前价格(m3)" prop="m3Price"/>
       <el-table-column align="center" label="近10次时效" prop="tenCountTime"/>
       <el-table-column align="center" label="名义时效" prop="nominalLimitation"/>
       <el-table-column align="center" label="累计发货次数" prop="cumulativeCount"/>
@@ -64,7 +65,7 @@
     >
       <vab-query-form>
         <vab-query-form-left-panel>
-          <span style="font-size: var(--el-font-size-base); margin-right: 8px;">货代简称</span>
+          <span style="margin-right: 8px; font-size: var(--el-font-size-base);">货代简称</span>
           <el-select v-model="selectId" @change="fetchFeeNameSetting">
             <el-option 
               v-for="item in selectList"
@@ -148,7 +149,7 @@
         label-width="auto"
         :model="addForwarderForm" 
         :rules="addForwarderRule" 
-        style="margin-left: 20px; margin-right: 20px;"
+        style="margin-right: 20px; margin-left: 20px;"
       >
         <el-form-item label="货代公司全名" prop="fullName">
           <el-input v-model="addForwarderForm.fullName" clearable/>
@@ -198,7 +199,7 @@
       @close="closeAddNewChannel"
     >
       <div style="max-height: 60vh; overflow: auto;">
-        <el-form ref="addNewChannelFormRef" label-position="right" label-width="auto" :model="addNewChannelForm" style="margin-left: 10px; margin-right: 10px;">
+        <el-form ref="addNewChannelFormRef" label-position="right" label-width="auto" :model="addNewChannelForm" style="margin-right: 10px; margin-left: 10px;">
           <el-form-item label="渠道名">
             <div style="display: flex; gap: 1%; align-items: center;">
               <el-select v-model="addNewChannelForm.freightForwarderId" placeholder="货代简称" style="flex: 1">
@@ -321,7 +322,7 @@
       width="38%"
     >
       <div style="max-height: 60vh; overflow: auto;">
-        <el-form label-position="right" label-width="auto" :model="updateForm" style="margin-left: 10px; margin-right: 10px;">
+        <el-form label-position="right" label-width="auto" :model="updateForm" style="margin-right: 10px; margin-left: 10px;">
           <el-form-item label="渠道名">
             <div style="display: flex; gap: 1%; align-items: center;">
               <el-select v-model="updateForm.freightForwarderId" placeholder="货代简称" style="flex: 1">

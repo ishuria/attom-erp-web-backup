@@ -1674,10 +1674,6 @@ const handleShowCurrentTask = async () => {
 }
 // 下班人员显示
 const handleShowGetOffWork = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning')
-    return
-  }
   const { data } = await getGoOffWorkList()
   goOffWorkList.value = data
   getOffWorkVisible.value = true

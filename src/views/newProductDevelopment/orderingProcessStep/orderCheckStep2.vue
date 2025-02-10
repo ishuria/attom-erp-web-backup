@@ -260,9 +260,9 @@ const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
 const emit = defineEmits<{ 
-    (e: 'changeCheck-step', value: number): void
-    (e: 'update:imagePreviewVisibale', value: boolean): void
-    (e: 'update:priviewListValue', value: string): void
+  (e: 'changeCheck-step', value: number): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
 // 零件列表
@@ -328,8 +328,8 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   }
   let el = getSpecificChildren(cell, "img")[0];
   if (getDataAttribute(el,'img') && el){
-    emit("update:priviewListValue", row.componentImgUrl)
-    emit("update:imagePreviewVisibale", true)
+    emit("update:previewListValue", row.componentImgUrl)
+    emit("update:imagePreviewVisible", true)
   }
 
 }

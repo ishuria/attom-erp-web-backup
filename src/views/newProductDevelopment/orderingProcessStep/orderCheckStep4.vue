@@ -107,8 +107,8 @@ const { delVisitedRoute } = tabsStore
 
 const emit = defineEmits<{ 
   (e: 'changeCheck-step', value: number): void
-  (e: 'update:imagePreviewVisibale', value: boolean): void
-  (e: 'update:priviewListValue', value: string): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
 }>()
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
@@ -139,8 +139,8 @@ const labelMap: Record<string, string> = {
 }
 
 const setPreviewImage = (url: string) => {
-  emit("update:priviewListValue", url)
-    emit("update:imagePreviewVisibale", true)
+  emit("update:previewListValue", url)
+  emit("update:imagePreviewVisible", true)
 }
 
 // 当点击保存的时候
