@@ -4,10 +4,28 @@
       <vab-query-form-left-panel>
         <el-form inline>
           <el-form-item label="站点">
-            <el-select/>
+            <el-select
+              v-model="site"
+              class="multiple-select"
+              clearable
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="1"
+              multiple
+              placeholder="请选择站点"
+              style="width: 220px"
+              @change="queryData"
+            >
+              <template #header>
+                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
+              </template>
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select/>
+            <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" @change="queryData">
+              <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
@@ -59,7 +77,7 @@
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image fit="fill" :src="row.componentImage" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.componentImage)" >
+            <el-image fit="fill" :src="row.componentImage" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.componentImage)" >
               <template #error>
                 <el-icon/>
               </template>
@@ -125,7 +143,7 @@
               placeholder="最小值"
               style="flex: 1"
             />
-            <span style="white-space: nowrap; color: #303133">至</span>
+            <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
               v-model="filterForm.number2"
               :min="0"
@@ -142,7 +160,7 @@
               placeholder="最小值"
               style="flex: 1"
             />
-            <span style="white-space: nowrap; color: #303133">至</span>
+            <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
               v-model="filterForm.number4"
               :min="0"
@@ -151,7 +169,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="ES总新">
+        <el-form-item label="库存可售">
           <div class="flex">
             <el-input-number
               v-model="filterForm.number5"
@@ -159,7 +177,7 @@
               placeholder="最小值"
               style="flex: 1"
             />
-            <span style="white-space: nowrap; color: #303133">至</span>
+            <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
               v-model="filterForm.number6"
               :min="0"
@@ -168,7 +186,7 @@
             />
           </div>
         </el-form-item>
-        <el-form-item label="上海签售">
+        <el-form-item label="上海签收">
           <div class="flex">
             <el-input-number
               v-model="filterForm.number7"
@@ -176,7 +194,7 @@
               placeholder="最小值"
               style="flex: 1"
             />
-            <span style="white-space: nowrap; color: #303133">至</span>
+            <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
               v-model="filterForm.number8"
               :min="0"
@@ -193,7 +211,7 @@
               placeholder="最小值"
               style="flex: 1"
             />
-            <span style="white-space: nowrap; color: #303133">至</span>
+            <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
               v-model="filterForm.number10"
               :min="0"
@@ -273,8 +291,10 @@
 <script setup lang="ts">
 import { Search, Star } from '@element-plus/icons-vue'
 import { removeHtmlTags } from '/@/utils/tableColum'
-import type { FormInstance } from 'element-plus'
+import type { CheckboxValueType, FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import type { IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
+import { getDistributionOptionUserList, getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
 
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)
@@ -285,6 +305,34 @@ const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
+const checkAll = ref<boolean>(true)
+const indeterminate = ref<boolean>(false)
+const site = ref<number[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const operateUserList = ref<{ id: number, label: string }[]>([])
+watch(site, (val) => {
+  if (val.length === 0) {
+    checkAll.value = false
+    indeterminate.value = false
+  } else if (val.length === siteList.value.length) {
+    checkAll.value = true
+    indeterminate.value = false
+  } else {
+    indeterminate.value = true
+  }
+})
+const handleCheckAll = (val: CheckboxValueType) => {
+  indeterminate.value = false
+  if (val) {
+    site.value = siteList.value.map((_) => _.id)
+    // 全选的时候获取数据
+    queryData()
+  } else {
+    site.value = []
+    // 取消全选获取数据
+    queryData()
+  }
+}
 const showQuantityCheck = () => {
   quantityCheckVisible.value = true
 }
@@ -343,7 +391,7 @@ const fakeData = [
 const columns = ref<any>([
   {
     label: '图片',
-    prop: 'componentImage',
+    prop: 'asinImgUrl',
     width: 75,
     isFixed: 'left'
   },
@@ -361,7 +409,7 @@ const columns = ref<any>([
   },
   {
     label: '今销#',
-    prop: 'todaySell',
+    prop: 'currentSalesNumber',
     minWidth: 90,
   },
   {
@@ -371,12 +419,12 @@ const columns = ref<any>([
   },
   {
     label: '库存可售',
-    prop: 'stockSale',
+    prop: '',
     minWidth: 100,
   },
   {
     label: '可售含在途',
-    prop: 'saleTransit',
+    prop: 'esAvailableSaleDayTotal',
     minWidth: 110,
   },
   {
@@ -386,62 +434,62 @@ const columns = ref<any>([
   },
   {
     label: '广告',
-    prop: 'remark',
+    prop: 'advertisementStatus',
     minWidth: 90,
   },
   {
     label: '运营',
-    prop: 'remark',
+    prop: 'operationUserName',
     minWidth: 150,
   },
   {
     label: '运营分类',
-    prop: 'remark',
+    prop: 'operationTypeId',
     minWidth: 150,
   },
   {
     label: '月销量',
-    prop: 'monthlySell',
+    prop: 'monthSalesVolume',
     minWidth: 90,
   },
   {
     label: '月销售额',
-    prop: 'monthlySales',
+    prop: 'monthSalesPrice',
     minWidth: 100,
   },
   {
     label: '月净利润',
-    prop: 'monthlyNetProfit',
+    prop: '',
     minWidth: 100,
   },
   {
     label: '库龄',
-    prop: 'storageAge',
+    prop: 'inventoryAge',
     minWidth: 90,
   },
   {
     label: '剩余库存',
-    prop: 'remainingStock',
+    prop: '',
     minWidth: 100,
   },
   {
     label: '接收中',
-    prop: 'receiving',
+    prop: 'acceptingCount',
     minWidth: 90,
   },
   {
     label: '最近入库',
-    prop: 'recentlyStorage',
+    prop: 'recentlyInboundStorage',
     minWidth: 100,
   },
   {
     label: '总入库',
-    prop: 'totalStorage',
+    prop: 'inboundStorageTotal',
     minWidth: 90,
   },
   {
     label: '订货#',
-    prop: 'order',
+    prop: 'orderCount',
     minWidth: 90,
   },
   {
@@ -456,37 +504,37 @@ const columns = ref<any>([
   },
   {
     label: '推荐#',
-    prop: 'sign',
+    prop: 'recommendCount',
     minWidth: 90,
   },
   {
     label: '装箱#',
-    prop: 'sign',
+    prop: '',
     minWidth: 90,
   },
   {
     label: '最晚补货',
-    prop: 'sign',
+    prop: 'latestRestock',
     minWidth: 90,
   },
   {
     label: '今补',
-    prop: 'sign',
+    prop: 'nowSupplement',
     minWidth: 90,
   },
   {
     label: '今补广',
-    prop: 'sign',
+    prop: 'nowSupplementAdv',
     minWidth: 90,
   },
   {
     label: '操作',
-    prop: 'suggestions',
+    prop: '',
     minWidth: 100,
   },
   {
     label: '当前售价',
-    prop: 'currentPrice',
+    prop: 'sellingPrice',
     minWidth: 100,
   },
   {
@@ -506,13 +554,13 @@ const columns = ref<any>([
   },
   {
     label: '月ACOS',
-    prop: 'monthlyACOS',
+    prop: 'monthAcos',
 
     minWidth: 100,
   },
   {
     label: '月TACOS',
-    prop: 'monthlyTACOS',
+    prop: 'monthTacos',
     minWidth: 100,
   },
   {
@@ -522,12 +570,15 @@ const columns = ref<any>([
   },
 ])
 const listLoading = ref<boolean>(false)
-const queryForm = reactive<any>({
+const queryForm = reactive<IGetOperationOrderListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  operationUserId: -1,
+  sites: ''
 })
 const total = ref<number>(0)
+
 const queryData = () => {
   queryForm.pageNo = 1
   // fetchData
@@ -557,14 +608,28 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'left'
   }
 }
+const fetchSiteList = async () => {
+  const { data } = await getDistributionSiteList()
+  siteList.value = data
+  site.value = siteList.value.map((_) => _.id)
+}
+const fetchOperateUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operateUserList.value = data
+  operateUserList.value.unshift({ id: -1, label: '全部' })
+}
+onBeforeMount(() => {
+  fetchSiteList()
+  fetchOperateUserList()
+})
 </script>
 
 <style lang="scss" scoped>
 .rate-wrapper {
   display: flex; 
-  align-items: center; 
   gap: 8px;
-
+  align-items: center; 
+  
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -590,14 +655,14 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 
   }
   .rate-count {
-    color: #36788C;
     margin-left: -11px;
+    color: #36788C;
   }
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 .noneHoverTable :deep(.clear-padding) {
   padding-top: 0px;
@@ -613,8 +678,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 .flex {
   display: flex;
-  align-items: center;
   gap: 20px;
+  align-items: center;
   width: 100%;
 }
 </style>

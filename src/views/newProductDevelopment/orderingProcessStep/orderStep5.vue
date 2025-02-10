@@ -75,43 +75,43 @@
           </template>
           <template v-if="row['column0'] === 'productLength'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'productWidth'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'productHeight'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'material'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'battery'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
           <template v-if="row['column0'] === 'benchmarkAsin'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
           <template v-if="row['column0'] === 'patent'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancle($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancle($event, prop)" />
+              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
@@ -474,7 +474,7 @@ const handleInputChange = async (row: any, prop: string) => {
 /**
  * 输入失焦事件
  */
-const clickCancle = async (event: any, prop: any) =>{
+const clickCancel = async (event: any, prop: any) =>{
 
     const rootElement = getRootElement(event.srcElement, ".cell");
 
@@ -487,7 +487,16 @@ const clickCancle = async (event: any, prop: any) =>{
         }
       if (t2) t2.classList.remove("none");
     }
-
+    const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][prop])
+    let productManagerId = 1
+    if (managerIndex !== -1) {
+      productManagerId = peopleList.value[managerIndex].value
+    }
+    const designIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[9][prop])
+    let productDesignId = -1
+    if (designIndex !== -1) {
+      productDesignId = peopleList.value[designIndex].value
+    }
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
         await reviewStepNo5SkuInfoPerfect({
@@ -498,8 +507,8 @@ const clickCancle = async (event: any, prop: any) =>{
           battery: exchangeList.value[5][prop],
           benchmarkAsin: exchangeList.value[6][prop],
           patent: exchangeList.value[7][prop],
-          productManagerId: exchangeList.value[8][prop],
-          productDesignId: exchangeList.value[9][prop],
+          productManagerId,
+          productDesignId,
           sampleRetentionStatus: exchangeList.value[10][prop],
           checkStatus: exchangeList.value[11][prop],
           orderEntryId: exchangeList.value[15][prop],
@@ -838,7 +847,7 @@ const fetchVariantList = async () => {
     console.error('Error fetching variant list:', error);
   }
 };
-onMounted(async () => {
+onMounted(() => {
   fetchVariantList()  
 })
 </script>

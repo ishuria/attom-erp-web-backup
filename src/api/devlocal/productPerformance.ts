@@ -99,6 +99,16 @@ export function updateOperationSKUOperateTypeList(data: { id: number, typeId: nu
   })
 }
 /**
+ * @description 产品表现ASIN-运营分类修改
+ */
+export function updateOperationASINOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/asin/operateType/update`,
+    method: 'post',
+    data
+  })
+}
+/**
  * @description 产品表现-SKU停产状态修改
  */
 export function updateOperationSKUDisContinuedStatus(data: { id: number, status: number }): Promise<{ data: boolean }> {

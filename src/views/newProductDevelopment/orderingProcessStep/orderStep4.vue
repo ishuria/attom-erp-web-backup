@@ -296,12 +296,6 @@ const handleAddQualityInspection = async () => {
         variant: '所有',
         variantId: 0,
     }
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
-    }
     const { data } = await reviewStepNo4AddQualityInspection({ reviewId: classReviewId! })
     newQualityInspection.qualityInspectionId = data
     qualityInspectionList.value.push(newQualityInspection)

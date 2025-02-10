@@ -142,28 +142,35 @@ const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
   history.back()
 }
-onBeforeMount(() => {
+onMounted(() => {
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'，编辑和订大货显示
   if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
     isNone1.value = false;
-    if (route.query.stepNo) {
-      // console.log(active.value); 
-      active.value = parseInt(route.query.stepNo)
-      // console.log(active.value);
-    } else {
-      active.value = 0 // 订大货的是0
-    }
+    nextTick(() => {
+      if (route.query.stepNo) {
+        // console.log(active.value); 
+        active.value = parseInt(route.query.stepNo)
+        // console.log(active.value);
+        console.log('加载');
+        
+      } else {
+        active.value = 0 // 订大货的是0
+      }
+    })
+    
   } else { // 查看显示
     isNone2.value = false;
     isNone1.value = true;
-    if (route.query.stepNo) {
-      const stepNo = parseInt(route.query.stepNo)
-      activeCheck.value = stepNo
-      if (stepNo === 5) {
-        activeCheck.value = 0
+    nextTick(() => {
+      if (route.query.stepNo) {
+        const stepNo = parseInt(route.query.stepNo)
+        activeCheck.value = stepNo
+        if (stepNo === 5) {
+          activeCheck.value = 0
+        }
       }
-    }
+    })
   }
 })
 

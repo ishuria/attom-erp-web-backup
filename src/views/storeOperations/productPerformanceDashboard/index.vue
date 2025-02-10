@@ -534,7 +534,7 @@
                 </div>
               </span>
               <span v-if="item.label === '运营分类'">
-                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
+                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateAsinOpeType(row)">
                   <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
                 </el-select>
               </span>
@@ -908,7 +908,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { _addData } from '~/src/utils/skuOptions'
+import { _addData } from '/@/utils/skuOptions'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -928,6 +928,7 @@ import {
   updateCurrencyASINAmazonOperation,
   updateCurrencyParentASINAmazonOperation,
   updateCurrencySKUAmazonOperation,
+  updateOperationASINOperateTypeList,
   updateOperationSKUDisContinuedStatus,
   updateOperationSKUOperateTypeList,
   updateRemarkAmazonOperation,
@@ -1046,6 +1047,13 @@ const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
   await updateOperationSKUOperateTypeList({
     id: row.id!,
     typeId: row.operationTypeId!,
+  })
+}
+// 修改 ASIN 的运营分类
+const handleUpdateAsinOpeType = async (row: IGetOperationAsinList) => {
+  await updateOperationASINOperateTypeList({
+    id: row.id!,
+    typeId: row.operationTypeId!
   })
 }
 const handleUpdateSKUStopStatus = async (row: IGetOperationAmazonSKUList) => {
