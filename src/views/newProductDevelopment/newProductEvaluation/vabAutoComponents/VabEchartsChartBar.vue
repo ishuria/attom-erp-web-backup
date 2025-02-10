@@ -74,7 +74,12 @@ const option = reactive<any>({
     }
   ]
 })
-  
+
+watchEffect(() => {
+  // 当 props.yAxisData 变化时，更新 option.series[0].data
+  option.series[0].data = props.yAxisData;
+})
+
 watch(
   theme.value,
   () => {
