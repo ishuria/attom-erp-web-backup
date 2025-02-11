@@ -65,7 +65,7 @@
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
       <el-table-column label="箱规号" min-width="110" prop="encasementNo"/>
-      <el-table-column label="站点" min-width="100" prop="site"/>
+      <el-table-column label="发往站点" min-width="130" prop="planSiteName"/>
       <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
       <el-table-column label="箱数" min-width="150" prop="numberOfBoxes">
@@ -102,9 +102,9 @@
     />
     <!-- 修改 -->
     <vab-modify-dialog 
-      :_siteList="siteList"
       :encasement-id="encasementId"
       :modify-visible="modifyVisible"
+      :site-list="siteList"
       @update:modify-visible="closeModify"
     />
 
@@ -120,7 +120,7 @@
         <el-form-item label="箱号" prop="boxNumber">
           <el-input v-model="boxNumberForm.boxNumber" disabled />
         </el-form-item>
-        <el-form-item label="站点" prop="site">
+        <el-form-item label="发往站点" prop="site">
           <el-select v-model="boxNumberForm.site" placeholder="请选择站点" >
             <el-option 
               v-for="item in siteList"
@@ -168,6 +168,9 @@
     <vab-dialog
       v-model="shippingAmazonVisible"
       class="dialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :draggable="false"
       title="发货（亚马逊）"
       top="6vh"
       width="25%"
@@ -225,15 +228,16 @@
         <el-form-item label="SHIPMENT ID" prop="shipmentId">
           <el-input v-model="shipmentAmazonForm.shipmentId" clearable />
         </el-form-item>
-        <el-form-item label="站点" prop="site">
-          <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
+        <el-form-item label="发往站点" prop="site">
+          <!-- <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
             <el-option 
               v-for="item in siteList"
               :key="item.id"
               :label="item.label"
               :value="item.id"
             />
-          </el-select>
+          </el-select> -->
+          <el-input v-model="shipmentAmazonForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
           <el-select v-model="shipmentAmazonForm.channel" clearable placeholder="请选择货代渠道">
@@ -407,7 +411,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
-import { confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -698,7 +702,7 @@ const submitShipmentAmazon = async () => {
       templateFile3Name: fileName3.value,
       contractNumber: shipmentAmazonForm.contractNumber,
       shipmentId: shipmentAmazonForm.shipmentId,
-      site: shipmentAmazonForm.site,
+      site: shipmentAmazonForm.siteId,
       channel: shipmentAmazonForm.channel
     })
     if (res) {
@@ -854,11 +858,17 @@ const showShippingAmazon = async () => {
     $baseMessage('总箱数不能大于500，请重新勾选', 'error')
     return
   }
-  const { data } = await getChannelList()
-  channelList.value = data
-  file2Disabled.value = true
-  file3Disabled.value = true
-  shippingAmazonVisible.value = true
+  const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
+  const { data } = await checkEncasementShipment({ encasementIds })
+  if (data) {
+    const { data: res } = await getChannelList()
+    channelList.value = res
+    file2Disabled.value = true
+    file3Disabled.value = true
+    shippingAmazonVisible.value = true
+    shipmentAmazonForm.site = data.siteName
+    shipmentAmazonForm.siteId = data.siteId
+  }
 }
 // 展示发货沃尔玛
 const showShippingWalmart = () => {

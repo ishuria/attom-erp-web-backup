@@ -23,6 +23,7 @@ import type {
   IGetCustomsClearanceSkuListReq,
   IGetCustomsClearanceSkuListRes,
   IGetProductAllReadyCOmponentListQuery,
+  IGetSkuInfoRes,
   ISkuId,
   ISubmitProductComponentQuery,
   ISubmitProductConsumableQuery,
@@ -746,5 +747,16 @@ export function updateMerchandiseTypeBatch(data: IUpdateMerchandiseTypeBatchReq)
     url: `${BASE_API}/merchandise/type/batch/update`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * @description 查询sku信息
+ */
+export function getSkuInfo(params: { sku: string }): Promise<IGetSkuInfoRes> {
+  return request({
+    url: `${BASE_API}/get/skuInfo`,
+    method: 'get',
+    params
   })
 }

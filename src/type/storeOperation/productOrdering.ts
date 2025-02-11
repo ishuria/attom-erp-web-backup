@@ -1,9 +1,19 @@
 export interface IGetOperationOrderListReq {
-  keyWord: string
-  operationUserId: number // 运营人员用户id
-  sites: string // 站点列表多个，分割
-  pageNo: number
-  pageSize: number
+  keyWord?: string
+  operationUserId?: number // 运营人员用户id
+  sites?: string // 站点列表多个，分割
+  pageNo?: number
+  pageSize?: number
+  minDeliveryDate?: number
+  maxDeliveryDate?: number
+  minNewArrivalDay?: number
+  maxNewArrivalDay?: number
+  minEs?: number
+  maxEs?: number
+  minSign?: number
+  maxSign?: number
+  startLatestDate?: string
+  endLatestDate?: string
 }
 export interface IGetOperationOrderListRes {
   data: {
@@ -29,6 +39,10 @@ export interface IGetOperationOrderList {
    */
   asinImgUrl?: string
   /**
+   * 剩余库存/前
+   */
+  availableInventory?: number
+  /**
    * 半年有货率
    */
   availableRate?: number
@@ -45,9 +59,21 @@ export interface IGetOperationOrderList {
    */
   currentSalesNumber?: number
   /**
+   * 交期
+   */
+  deliveryDate?: number
+  /**
+   * 装箱产品数
+   */
+  encasementCount?: number
+  /**
    * 可售含在途天数
    */
   esAvailableSaleDayTotal?: number
+  /**
+   * 剩余库存/后
+   */
+  fbaCount?: number
   /**
    * 试算毛利
    */
@@ -73,6 +99,14 @@ export interface IGetOperationOrderList {
    */
   monthAcos?: number
   /**
+   * 月广告百分比
+   */
+  monthAdv?: number
+  /**
+   * 月净利润
+   */
+  monthNetProfit?: number
+  /**
    * 月净利润率
    */
   monthNetProfitMargin?: number
@@ -80,6 +114,10 @@ export interface IGetOperationOrderList {
    * 月退款百分比
    */
   monthRefund?: number
+  /**
+   * 月退货百分比
+   */
+  monthReturnGoods?: number
   /**
    * 月销售额
    */
@@ -93,13 +131,21 @@ export interface IGetOperationOrderList {
    */
   monthTacos?: number
   /**
-   * 今广
+   * 今补(实际)
    */
-  nowSupplement?: number
+  nowSupplementActual?: number
   /**
-   * 今广补
+   * 今补广(实际)
    */
-  nowSupplementAdv?: number
+  nowSupplementAdvActual?: number
+  /**
+   * 今补广(计算)
+   */
+  nowSupplementAdvCalcu?: number
+  /**
+   * 今补(计算)
+   */
+  nowSupplementCalcu?: number
   /**
    * 运营分类id
    */
@@ -167,15 +213,22 @@ export interface IGetOperationOrderList {
   sku?: string
   [property: string]: any
 }
-
 export interface OperationTypeList {
-  /**
-   * label映射的id
-   */
-  id?: number
-  /**
-   * label
-   */
-  label?: string
-  [property: string]: any
+  id: number
+  label: string
 }
+
+export interface IGetOperationOrdersSmoothness {
+  smoothness: number
+  newSmoothness: number
+  newProductDays: number
+}
+export interface IGetOperationOrderSpringFestival {
+  springFestivalStock: number
+  startDate: string
+}
+export interface IReleaseOperationPlanPoReq {
+  asinId: number
+  sku: string
+  number: number
+} 

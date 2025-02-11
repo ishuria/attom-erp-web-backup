@@ -22,3 +22,32 @@ export function getAmazonStars(score: number) {
   if (score >= 1.3) return 1.5;
   return 1;
 }
+
+/**
+ * @description 处理亚马逊图片变清晰
+ * @param url 
+ */
+export const handleImgUrl = (url: string): string => {
+  if (url.startsWith("https")) {
+    //去掉第一个_后面的到最后一个.前面的
+    const start = url.indexOf('_')
+    const end = url.lastIndexOf('.')
+    if (start !== -1 && end > start) {
+      const before = url.substring(0, start) // 左闭右开
+      const after = url.substring(end + 1)
+      return before + after
+    }
+  }
+  return url
+}
+/**
+ * @description 将小数转化为百分比，保留对应的位数
+ * @param value 
+ * @param num 
+ * @returns 
+ */
+ export function formatPercentage(value: number | null, num: number): string | null {
+  if (value == null) return value
+  const percentage = (value * 100).toFixed(num) // 将小数转换为百分比，并保留两位小数
+  return `${percentage}%`
+}

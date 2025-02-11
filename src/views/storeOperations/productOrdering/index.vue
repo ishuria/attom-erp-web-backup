@@ -31,13 +31,13 @@
             <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="smoothSettingVisible = true">平滑指数设定</el-button>
+            <el-button type="primary" @click="handleOpenSmooth">平滑指数设定</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="stockUpVisible = true">春节备货</el-button>
+            <el-button type="primary" @click="handleOpenSpringFestival">春节备货</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -56,14 +56,14 @@
       border 
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
-      class="noneHoverTable" :data="fakeData" :header-cell-style="{ textAlign: 'center' }"
+      class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column
-        v-for="(item, index) in columns"
+        v-for="(item, index) in orderColumns"
         :key="index"
         :fixed="item.isFixed"
         :label="item.label"
-        :min-width="item.minWidth"
+        :min-width="handleWidth(item)"
         :prop="item.prop"
         :width="item.width"
       >
@@ -74,10 +74,18 @@
           <span v-if="item.label==='可售含在途'">
             库存<br />含在途
           </span>
+          <span v-if="item.label === '月广告%'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip" >月广告销售占比</div>
+              </template>
+            </el-tooltip>
+          </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image fit="fill" :src="row.componentImage" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.componentImage)" >
+            <el-image fit="fill" :src="row.asinImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.asinImgUrl)" >
               <template #error>
                 <el-icon/>
               </template>
@@ -86,27 +94,57 @@
           <span v-if="item.label === 'ASIN'">
             <el-link type="primary">{{ row.asin }}</el-link>
             <div class="rate-wrapper">
-              <span class="rate-value">{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" class="custom-rate" disabled :void-icon="Star" /></span>
-              <span class="rate-count">{{ 484 }}</span>
+              <span class="rate-value">{{ row.rating }}</span>
+              <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+              <span class="rate-count">{{ row.commentsNumbers }}</span>
             </div>
           </span>
           <span v-if="item.label === 'SKU'">
-            <el-tooltip content=" " effect="dark" placement="top">
+            <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
               <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.sku) }}</div>
+                <div class="custom-tooltip">{{ row._skuFull }}</div>
               </template>
-              <span>{{ removeHtmlTags(row.sku) }}</span>
+              <span v-html="row._sku"></span>
             </el-tooltip>
           </span>
           <span v-if="item.label === '销量趋势'">
             <div style="width: 100%; height: 59px">
-              <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+              <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
             </div>
           </span>
           <span v-if="item.label === '广告'">
-            <el-tag v-if="row.ad === 0" type="danger">关</el-tag>
-            <el-tag v-if="row.ad === 1" type="success">开</el-tag>
+            <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
+            <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
+          </span>
+          <span v-if="item.label === '运营分类'">
+            <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateAsinOpeType(row)">
+              <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
+            </el-select>
+          </span>
+          <span v-if="item.label === '今补'">
+            {{ row.nowSupplementActual }} / {{ row.nowSupplementCalcu }}
+          </span>
+          <span v-if="item.label === '今补广'">
+            {{ row.nowSupplementAdvActual }} / {{ row.nowSupplementAdvCalcu }}
+          </span>
+          <span v-if="label3.includes(item.label)">
+            <!-- 处理 天 -->
+            {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
+          </span>
+          <span v-if="item.label === '月净利润'">
+            {{ row.monthNetProfit ? row.currencyIcon + row.monthNetProfit : '' }}
+          </span>
+          <span v-if="item.label === '半年有货率'">
+            {{ row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : '' }}
+          </span>
+          <span v-if="label.includes(item.label)">
+            {{ row[labelMap.get(item.label)!] !== null ? row[labelMap.get(item.label)!].toFixed(2) + '%' : '' }}
+          </span>
+          <span v-if="item.label === '剩余库存'">
+            {{ row.availableInventory }} / {{ row.fbaCount }}
+          </span>
+          <span v-if="item.label === '操作'">
+            <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
           </span>
         </template>
       </el-table-column>
@@ -138,14 +176,14 @@
         <el-form-item label="交期">
           <div class="flex">
             <el-input-number
-              v-model="filterForm.number1"
+              v-model="queryForm.minDeliveryDate"
               :min="0"
               placeholder="最小值"
               style="flex: 1"
             />
             <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
-              v-model="filterForm.number2"
+              v-model="queryForm.maxDeliveryDate"
               :min="0"
               placeholder="最大值"
               style="flex: 1"
@@ -155,14 +193,14 @@
         <el-form-item label="上新天数">
           <div class="flex">
             <el-input-number
-              v-model="filterForm.number3"
+              v-model="queryForm.minNewArrivalDay"
               :min="0"
               placeholder="最小值"
               style="flex: 1"
             />
             <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
-              v-model="filterForm.number4"
+              v-model="queryForm.maxNewArrivalDay"
               :min="0"
               placeholder="最大值"
               style="flex: 1"
@@ -172,14 +210,14 @@
         <el-form-item label="库存可售">
           <div class="flex">
             <el-input-number
-              v-model="filterForm.number5"
+              v-model="queryForm.minEs"
               :min="0"
               placeholder="最小值"
               style="flex: 1"
             />
             <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
-              v-model="filterForm.number6"
+              v-model="queryForm.maxEs"
               :min="0"
               placeholder="最大值"
               style="flex: 1"
@@ -189,14 +227,14 @@
         <el-form-item label="上海签收">
           <div class="flex">
             <el-input-number
-              v-model="filterForm.number7"
+              v-model="queryForm.minSign"
               :min="0"
               placeholder="最小值"
               style="flex: 1"
             />
             <span style="color: #303133; white-space: nowrap;">至</span>
             <el-input-number
-              v-model="filterForm.number8"
+              v-model="queryForm.maxSign"
               :min="0"
               placeholder="最大值"
               style="flex: 1"
@@ -205,25 +243,20 @@
         </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
-            <el-input-number
-              v-model="filterForm.number9"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="color: #303133; white-space: nowrap;">至</span>
-            <el-input-number
-              v-model="filterForm.number10"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
+            <el-date-picker 
+              v-model="latestDate"
+              end-placeholder="结束日期"
+              range-separator="至"
+              start-placeholder="开始日期"
+              type="daterange"
+              value-format="YYYY-MM-DD"
             />
           </div>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button>取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button @click="filterVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmFilter">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 平滑指数设定 -->
@@ -232,20 +265,20 @@
       title="平滑指数设定"
       width="20%"
     >
-      <el-form label-position="top">
-        <el-form-item label="平滑指数">
-          <el-input type="number" />
+      <el-form label-position="top" :model="smoothForm">
+        <el-form-item label="平滑指数" prop="smoothness">
+          <el-input v-model="smoothForm.smoothness" type="number" />
         </el-form-item>
-        <el-form-item label="新款平滑指数设定">
-          <el-input type="number" />
+        <el-form-item label="新款平滑指数设定" prop="newSmoothness">
+          <el-input v-model="smoothForm.newSmoothness" type="number" />
         </el-form-item>
-        <el-form-item label="上新天数设定">
-          <el-input type="number" />
+        <el-form-item label="上新天数设定" prop="newProductDays">
+          <el-input v-model="smoothForm.newProductDays" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="smoothSettingVisible = false">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="handleConfirmUpdateSmooth">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 发货数检查 -->
@@ -253,13 +286,14 @@
       v-model="quantityCheckVisible"
       title="发货数检查"
     >
-      <el-table border :cell-style="{ textAlign: 'center' }" class="noneHoverTable" :data="fakeCheckData" :header-cell-style="{ textAlign: 'center' }" stripe>\
+      <el-table border :cell-style="{ textAlign: 'center' }" class="noneHoverTable" :data="shipList" :header-cell-style="{ textAlign: 'center' }" stripe>\
         <el-table-column type="selection"/>
-        <el-table-column label="发货计划" prop="date"/>
-        <el-table-column label="产品数量" prop=""/>
-        <el-table-column label="重量" prop=""/>
-        <el-table-column label="体积" prop=""/>
-        <el-table-column label="箱数" prop=""/>
+        <el-table-column label="站点" prop="siteName" />
+        <el-table-column label="发货计划" prop="shippingPlanDate"/>
+        <el-table-column label="产品数量" prop="productCount"/>
+        <el-table-column label="重量" prop="weight"/>
+        <el-table-column label="体积" prop="volume"/>
+        <el-table-column label="箱数" prop="encasementCount"/>
       </el-table>
       <template #footer>
         <el-button @click="quantityCheckVisible = false">取消</el-button>
@@ -274,27 +308,78 @@
     >
       <el-form class="noneHoverTable" style="margin: auto 0">
         <el-form-item label="春节备货">
-          <el-checkbox />
+          <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
         </el-form-item>
         <el-form-item label="节后开工日期" label-position="top">
-          <el-date-picker v-model="stockUpForm.date" type="date" value-format="YYYY-MM-DD"/>
+          <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD"/>
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="stockUpVisible = false">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="handleConfirmSpringFestival">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 发布订货 -->
+    <vab-dialog
+      v-model="releaseOrderVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :draggable="false"
+      title="发布订货"
+      width="59%"
+    >
+      <el-form class="custom-form" inline label-position="top" :model="releaseOrderForm" style="justify-content: space-around; width: 100%">
+        <el-form-item>
+          <el-image :src="releaseOrderForm.skuImageUrl" style="display: block; width: 85px; height: 85px; cursor: pointer; border: 1px solid #e4e7ed; border-radius: 10%;" @click="imagePreviewShow(releaseOrderForm.skuImageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
+        </el-form-item>
+        <el-form-item label="SKU">
+          <el-select v-model="releaseOrderForm.sku" placeholder="请选择SKU" style="width: 20em;" @change="handleSwitchSku">
+            <el-option 
+              v-for="item in skuList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="releaseOrderForm.description" disabled style="width: 18em" />
+        </el-form-item>
+        <el-form-item label="订货数量">
+          <el-input v-model="releaseOrderForm.number" style="width: 8em;" type="number" />
+        </el-form-item>
+        <el-form-item label="起订量">
+          <el-input v-model="releaseOrderForm.moq" disabled style="width: 8em;" />
+        </el-form-item>
+        <el-form-item label="整箱数">
+          <el-input v-model="releaseOrderForm.numberOfCartons" disabled style="width: 8em;" />
+        </el-form-item>
+        <el-form-item label="产品经理" style="margin-right: 0;">
+          <el-input v-model="releaseOrderForm.productManagerName" disabled />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="releaseOrderVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleReleaseOrder">发布</el-button>
       </template>
     </vab-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Search, Star } from '@element-plus/icons-vue'
-import { removeHtmlTags } from '/@/utils/tableColum'
+import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import type { IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
-import { getDistributionOptionUserList, getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
+import { orderColumns } from '../constantOption'
+import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { getSkuInfo } from '/@/api/devlocal/productInformation'
+import { getOperationOrderList, getOperationOrderShippingInspection, getOperationOrderSmoothness, getOperationOrderSpringFestival, releaseOperationPlanPo, updateOperationOrderSmoothness, updateOperationOrderSpringFestival } from '/@/api/devlocal/productOrdering'
+import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
+import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
+import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { calculateBrColumnWidth, processField } from '/@/utils/tableColum'
 
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)
@@ -307,9 +392,137 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const checkAll = ref<boolean>(true)
 const indeterminate = ref<boolean>(false)
+const listLoading = ref<boolean>(false)
+const queryForm = reactive<IGetOperationOrderListReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  operationUserId: -1,
+  sites: ''
+})
+const total = ref<number>(0)
 const site = ref<number[]>([])
 const siteList = ref<{ id: number, label: string }[]>([])
 const operateUserList = ref<{ id: number, label: string }[]>([])
+const list = ref<IGetOperationOrderList[]>([])
+const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+const latestDate = ref<string[]>([])
+const label = [
+  '毛利率',
+  '月广告%',
+  '月ACOS',
+  '月TACOS',
+  '月退货%',
+]
+const label3 = ['库存可售', '可售含在途', '断货']
+const labelMap = new Map([
+  ['毛利率', 'grossProfit'],
+  ['月广告%', 'monthAdv'],
+  ['月ACOS', 'monthAcos'],
+  ['月TACOS', 'monthTacos'],
+  ['月退货%', 'monthReturnGoods'],
+])
+const label3Map = new Map([
+  ['库存可售', 'esAvailableSaleDay'],
+  ['可售含在途', 'esAvailableSaleDayTotal'],
+  ['断货', 'outOfStock'],
+])
+const releaseOrderVisible = ref<boolean>(false)
+// 发布订货表单
+const releaseOrderForm = reactive<any>({})
+// 发布订货里面的sku列表
+const skuList = ref<{ value: string, label: string }[]>([])
+const asinId = ref<number>(-1)
+const smoothForm = reactive<any>({})
+const shipList = ref<any[]>([])
+// 确定修改春节备货
+const handleConfirmSpringFestival = async () => {
+  const { data } = await updateOperationOrderSpringFestival(stockUpForm)
+  if (data) {
+    $baseMessage('修改春节备货成功！', 'success')
+    stockUpVisible.value = false
+  }
+}
+// 打开春节备货
+const handleOpenSpringFestival = async () => {
+  stockUpVisible.value = true
+  const { data } = await getOperationOrderSpringFestival()
+  Object.assign(stockUpForm, data)
+}
+// 确认修改平滑指数
+const handleConfirmUpdateSmooth = async () => {
+  const { data } = await updateOperationOrderSmoothness(smoothForm)
+  if (data) {
+    $baseMessage('修改平滑指数成功！', 'success')
+    smoothSettingVisible.value = false
+  }
+}
+// 打开平滑指数
+const handleOpenSmooth = async () => {
+  smoothSettingVisible.value = true
+  const { data } = await getOperationOrderSmoothness()
+  Object.assign(smoothForm, data)
+}
+// 确认发布订货
+const handleReleaseOrder = async () => {
+  const { data } = await releaseOperationPlanPo({
+    asinId: asinId.value,
+    sku: releaseOrderForm.sku,
+    number: releaseOrderForm.number
+  })
+  if (data) {
+    $baseMessage('发布订货成功！', 'success')
+    releaseOrderVisible.value = false
+  }
+}
+const handleSwitchSku = async () => {
+  const { data } = await getSkuInfo({ sku: releaseOrderForm.sku })
+  Object.assign(releaseOrderForm, data)
+}
+// 打开发布订货
+const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
+  releaseOrderVisible.value = true
+  if (row.sku) {
+    const skuArray = row.sku?.split(',')
+    if (skuArray.length > 0) {
+      skuList.value = skuArray.map((item) => {
+        return {
+          label: item,
+          value: item
+        }
+      })
+      const { data } = await getSkuInfo({ sku: skuArray[0] })
+      Object.assign(releaseOrderForm, data)
+      asinId.value = row.id!
+    }
+  }
+}
+// 修改运营分类
+const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
+  await updateOperationASINOperateTypeList({
+    id: row.id!,
+    typeId: row.operationTypeId!
+  })
+}
+// 确认筛选
+const handleConfirmFilter = async () => {
+  queryForm.startLatestDate = latestDate.value[0] || ''
+  queryForm.endLatestDate = latestDate.value[1] || ''
+  queryForm.pageNo = 1
+  queryForm.pageSize = 20
+  fetchData()
+  filterVisible.value = false
+}
+const handleWidth = (item: any) => {
+  switch (item.label) {
+    case 'SKU': {
+      return calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
+    }
+    default: {
+      return item.minWidth
+    }
+  }
+}
 watch(site, (val) => {
   if (val.length === 0) {
     checkAll.value = false
@@ -333,8 +546,11 @@ const handleCheckAll = (val: CheckboxValueType) => {
     queryData()
   }
 }
-const showQuantityCheck = () => {
+// 打开发货数检查
+const showQuantityCheck = async () => {
   quantityCheckVisible.value = true
+  const { data } = await getOperationOrderShippingInspection()
+  shipList.value = data
 }
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -344,253 +560,18 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const fakeCheckData = [
-  {
-    date: '2025-01-02'
-  }
-]
-const fakeData = [
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU12345',
-    asin: 'ASIN12345',
-    rate: 3.5,
-    ad: 0,
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-  }
-]
-const columns = ref<any>([
-  {
-    label: '图片',
-    prop: 'asinImgUrl',
-    width: 75,
-    isFixed: 'left'
-  },
-  {
-    label: 'ASIN',
-    prop: 'asin',
-    minWidth: 170,
-    isFixed: 'left'
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    minWidth: 140,
-    isFixed: 'left'
-  },
-  {
-    label: '今销#',
-    prop: 'currentSalesNumber',
-    minWidth: 90,
-  },
-  {
-    label: '销量趋势',
-    prop: 'trend',
-    minWidth: 180,
-  },
-  {
-    label: '库存可售',
-    prop: '',
-    minWidth: 100,
-  },
-  {
-    label: '可售含在途',
-    prop: 'esAvailableSaleDayTotal',
-    minWidth: 110,
-  },
-  {
-    label: '断货',
-    prop: 'outOfStock',
-    minWidth: 90,
-  },
-  {
-    label: '广告',
-    prop: 'advertisementStatus',
-    minWidth: 90,
-  },
-  {
-    label: '运营',
-    prop: 'operationUserName',
-    minWidth: 150,
-  },
-  {
-    label: '运营分类',
-    prop: 'operationTypeId',
-    minWidth: 150,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    minWidth: 90,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    minWidth: 100,
-  },
-  {
-    label: '月净利润',
-    prop: '',
-    minWidth: 100,
-  },
-  {
-    label: '库龄',
-    prop: 'inventoryAge',
-    minWidth: 90,
-  },
-  {
-    label: '剩余库存',
-    prop: '',
-    minWidth: 100,
-  },
-  {
-    label: '接收中',
-    prop: 'acceptingCount',
-    minWidth: 90,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyInboundStorage',
-    minWidth: 100,
-  },
-  {
-    label: '总入库',
-    prop: 'inboundStorageTotal',
-    minWidth: 90,
-  },
-  {
-    label: '订货#',
-    prop: 'orderCount',
-    minWidth: 90,
-  },
-  {
-    label: '计划#',
-    prop: 'order',
-    minWidth: 90,
-  },
-  {
-    label: '签收',
-    prop: 'sign',
-    minWidth: 90,
-  },
-  {
-    label: '推荐#',
-    prop: 'recommendCount',
-    minWidth: 90,
-  },
-  {
-    label: '装箱#',
-    prop: '',
-    minWidth: 90,
-  },
-  {
-    label: '最晚补货',
-    prop: 'latestRestock',
-    minWidth: 90,
-  },
-  {
-    label: '今补',
-    prop: 'nowSupplement',
-    minWidth: 90,
-  },
-  {
-    label: '今补广',
-    prop: 'nowSupplementAdv',
-    minWidth: 90,
-  },
-  {
-    label: '操作',
-    prop: '',
-    minWidth: 100,
-  },
-  {
-    label: '当前售价',
-    prop: 'sellingPrice',
-    minWidth: 100,
-  },
-  {
-    label: '毛利率',
-    prop: 'trialGrossProfit',
-    minWidth: 100,
-  },
-  {
-    label: '月有货率',
-    prop: 'monthlyNetInterestRate',
-    minWidth: 100,
-  },
-  {
-    label: '月广告售%',
-    prop: 'monthlyAdSales',
-    minWidth: 110,
-  },
-  {
-    label: '月ACOS',
-    prop: 'monthAcos',
-
-    minWidth: 100,
-  },
-  {
-    label: '月TACOS',
-    prop: 'monthTacos',
-    minWidth: 100,
-  },
-  {
-    label: '月退货%',
-    prop: 'monthlyReturns',
-    minWidth: 100,
-  },
-])
-const listLoading = ref<boolean>(false)
-const queryForm = reactive<IGetOperationOrderListReq>({
-  keyWord: '',
-  pageNo: 1,
-  pageSize: 20,
-  operationUserId: -1,
-  sites: ''
-})
-const total = ref<number>(0)
-
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.columnIndex === 0) {
@@ -598,29 +579,48 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 8) {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['SKU', 'ASIN', '库龄', '运营'].includes(label)) {
     return {
-      textAlign: 'center'
+      textAlign: 'left',
+    }
+  } else {
+    return {
+      textAlign: 'center',
     }
   }
-  return {
-    textAlign: 'left'
-  }
 }
+// 获取站点列表
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
   site.value = siteList.value.map((_) => _.id)
 }
+// 获取运营列表
 const fetchOperateUserList = async () => {
   const { data } = await getDistributionOptionUserList()
   operateUserList.value = data
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
+// 获取 table 数据
+const fetchData = async () => {
+  listLoading.value = true
+  queryForm.sites = site.value.join(',')
+  const { data } = await getOperationOrderList(queryForm)
+  total.value = data.total
+  list.value = data.list
+  list.value.forEach((item) => {
+    processField(item, 'sku', 2)
+    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
+    item.displayRating = computed(() => getAmazonStars(item.rating!))
+  })
+  listLoading.value = false
+}
 onBeforeMount(() => {
   fetchSiteList()
   fetchOperateUserList()
+  fetchData()
 })
 </script>
 
@@ -681,5 +681,14 @@ onBeforeMount(() => {
   gap: 20px;
   align-items: center;
   width: 100%;
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
 }
 </style>

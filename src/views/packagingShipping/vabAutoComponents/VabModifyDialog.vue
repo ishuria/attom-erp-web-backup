@@ -7,7 +7,7 @@
     top="7vh"
     width="35%"
   >
-    <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" style="margin-left: 3px; margin-right: 3px">
+    <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" style="margin-right: 3px; margin-left: 3px;">
       <el-form-item label="数量(箱)" prop="boxNumber" >
         <el-input v-model="modifyForm.boxNumber" clearable />
       </el-form-item>
@@ -23,10 +23,10 @@
       <el-form-item label="高(cm)" prop="height" >
         <el-input v-model="modifyForm.height" clearable />
       </el-form-item>
-      <el-form-item label="站点" prop="siteId" >
+      <el-form-item label="发往站点" prop="siteId" >
         <el-select v-model="modifyForm.siteId" placeholder="请选择站点">
           <el-option 
-            v-for="item in props._siteList"
+            v-for="item in props.siteList"
             :key="item.id"
             :label="item.label"
             :value="item.id"
@@ -106,7 +106,7 @@
       <el-table-column align="center" label="PO" min-width="100" prop="po"/>
       <el-table-column align="center" label="产品图片" prop="skuImageUrl" width="70">
         <template #default="{ row }">
-          <el-image :src="row.skuImageUrl" style="width: 70px; height: 70px; display: block" @click="imagePreviewShow(row.skuImageUrl)">
+          <el-image :src="row.skuImageUrl" style="display: block; width: 70px; height: 70px;" @click="imagePreviewShow(row.skuImageUrl)">
             <template #error>
               <el-icon/>
             </template>
@@ -133,7 +133,7 @@
     title="打包总数"
     width="22%"
   >
-    <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-left: 20px; margin-right: 0px">
+    <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-right: 0px; margin-left: 20px;">
       <el-form-item label="任务数量" prop="packageTaskCount">
         <div style="width: 85%;">
           <el-input v-model="packingCountForm.packageTaskCount" disabled  />
@@ -143,7 +143,7 @@
         <div style="width: 85%; margin-right: 10px;">
           <el-input v-model.trim="packingCountForm.goodCount" clearable/>
         </div>
-        <div style="width: 10%; display: flex; align-items: center">
+        <div style="display: flex; align-items: center; width: 10%; ">
           <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><circle-plus /></el-icon>
         </div>
       </el-form-item>
@@ -193,7 +193,7 @@
     width="17%"
     @close="handleCloseAdd"
   >
-    <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-left: 20px; margin-right: 20px">
+    <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px;">
       <el-form-item label="好" prop="good">
         <el-input v-model.trim="addForm.good" clearable />
       </el-form-item>
@@ -241,7 +241,7 @@ const imagePreviewShow = (url: string) => {
 let props = defineProps<{
   modifyVisible: boolean
   encasementId: number
-  _siteList: ISiteOption[]
+  siteList: ISiteOption[]
 }>()
 const fetchData = async () => {
   const { data } = await getEncasementUpdate({
@@ -481,11 +481,11 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
   color: var(--el-color-primary); 
 }
 .noneHoveTable :deep(.clear-padding) {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .noneHoveTable :deep(.clear-padding .cell) {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>

@@ -1237,3 +1237,17 @@ export interface IUpdateProductCustomsClearanceStatus {
   status: number
 }
 
+/**
+ * @description 查询sku信息
+ */
+export interface IGetSkuInfoRes {
+  data: {
+    sku: string
+    skuImageUrl: string
+    description: string
+    moq: number
+    numberOfCartons: number
+    productManagerName: string
+  }
+}
+

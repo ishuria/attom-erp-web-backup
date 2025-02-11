@@ -245,3 +245,189 @@ export const months = [
   { label: '11月', prop: 'Nov' },
   { label: '12月', prop: 'Dec' },
 ]
+
+export const orderColumns = [
+  {
+    label: '图片',
+    prop: 'asinImgUrl',
+    width: 75,
+    isFixed: 'left'
+  },
+  {
+    label: 'ASIN',
+    prop: 'asin',
+    minWidth: 170,
+    isFixed: 'left'
+  },
+  {
+    label: 'SKU',
+    prop: 'sku',
+    minWidth: 140,
+    isFixed: 'left'
+  },
+  {
+    label: '今销量',
+    prop: 'currentSalesNumber',
+    minWidth: 90,
+  },
+  {
+    label: '站点',
+    prop: 'siteName',
+    minWidth: 130,
+  },
+  {
+    label: '销量趋势',
+    prop: 'trend',
+    minWidth: 180,
+  },
+  {
+    label: '库存可售',
+    prop: 'esAvailableSaleDay',
+    minWidth: 100,
+  },
+  {
+    label: '可售含在途',
+    prop: 'esAvailableSaleDayTotal',
+    minWidth: 110,
+  },
+  {
+    label: '断货',
+    prop: 'outOfStock',
+    minWidth: 90,
+  },
+  {
+    label: '广告',
+    prop: 'advertisementStatus',
+    minWidth: 90,
+  },
+  {
+    label: '运营',
+    prop: 'operationUserName',
+    minWidth: 150,
+  },
+  {
+    label: '运营分类',
+    prop: 'operationTypeId',
+    minWidth: 150,
+  },
+  {
+    label: '月销量',
+    prop: 'monthSalesVolume',
+    minWidth: 90,
+  },
+  {
+    label: '月销售额',
+    prop: 'monthSalesPrice',
+    minWidth: 100,
+  },
+  {
+    label: '月净利润',
+    prop: 'monthNetProfit',
+    minWidth: 100,
+  },
+  {
+    label: '库龄',
+    prop: 'inventoryAge',
+    minWidth: 90,
+  },
+  {
+    label: '剩余库存',
+    prop: '',
+    minWidth: 100,
+  },
+  {
+    label: '接收中',
+    prop: 'acceptingCount',
+    minWidth: 90,
+  },
+  {
+    label: '最近入库',
+    prop: 'recentlyInboundStorage',
+    minWidth: 100,
+  },
+  {
+    label: '总入库',
+    prop: 'inboundStorageTotal',
+    minWidth: 90,
+  },
+  {
+    label: '订货#',
+    prop: 'orderCount',
+    minWidth: 90,
+  },
+  {
+    label: '计划#',
+    prop: 'planPoPurchaseSkuNumber',
+    minWidth: 90,
+  },
+  {
+    label: '签收',
+    prop: 'quantityReceived',
+    minWidth: 90,
+  },
+  {
+    label: '推荐#',
+    prop: 'recommendCount',
+    minWidth: 90,
+  },
+  {
+    label: '装箱#',
+    prop: 'encasementCount',
+    minWidth: 90,
+  },
+  {
+    label: '最晚补货',
+    prop: 'latestRestock',
+    minWidth: 90,
+  },
+  {
+    label: '今补',
+    prop: 'nowSupplement',
+    minWidth: 90,
+  },
+  {
+    label: '今补广',
+    prop: 'nowSupplementAdv',
+    minWidth: 90,
+  },
+  {
+    label: '操作',
+    prop: '',
+    minWidth: 130,
+  },
+  {
+    label: '当前售价',
+    prop: 'sellingPrice',
+    minWidth: 100,
+  },
+  {
+    label: '毛利率',
+    prop: 'grossProfit',
+    minWidth: 100,
+  },
+  {
+    label: '半年有货率',
+    prop: 'availableRate',
+    minWidth: 110,
+  },
+  {
+    label: '月广告%',
+    prop: 'monthAdv',
+    minWidth: 110,
+  },
+  {
+    label: '月ACOS',
+    prop: 'monthAcos',
+    minWidth: 100,
+  },
+  {
+    label: '月TACOS',
+    prop: 'monthTacos',
+    minWidth: 100,
+  },
+  {
+    label: '月退货%',
+    prop: 'monthReturnGoods',
+    minWidth: 100,
+  },
+]

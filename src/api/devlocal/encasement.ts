@@ -40,7 +40,6 @@ import type {
   ISplitEncasementReq,
   IStringRes,
   ISubmitEncasementSkuReq,
-  ISubmitSKUEncasementReq,
   ITypeId,
   IUpdateCostFreightForwarderReq,
   IUpdateEncasementReq,
@@ -563,6 +562,18 @@ export const printBarcodeEncasement = (data: { code: string }): Promise<IPrintBa
 export const printBarcodeEncasementSuccess = (data: any) => {
   return request({
     url: "https://192.168.6.19:6789/api/v2/print",
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 发货（亚马逊）-前置检查check
+ * @param data 
+ * @returns 
+ */
+export const checkEncasementShipment = (data: { encasementIds: string }): Promise<{ data: { siteId: number, siteName: string }}> => {
+  return request({
+    url: `${BASE_API}/encasement/shipment/check`,
     method: 'post',
     data
   })
