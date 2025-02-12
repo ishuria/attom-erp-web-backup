@@ -487,16 +487,7 @@ const clickCancel = async (event: any, prop: any) =>{
         }
       if (t2) t2.classList.remove("none");
     }
-    const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][prop])
-    let productManagerId = 1
-    if (managerIndex !== -1) {
-      productManagerId = peopleList.value[managerIndex].value
-    }
-    const designIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[9][prop])
-    let productDesignId = -1
-    if (designIndex !== -1) {
-      productDesignId = peopleList.value[designIndex].value
-    }
+
     if (event.type === 'blur') {
         // 执行失去焦点处理逻辑
         await reviewStepNo5SkuInfoPerfect({
@@ -507,8 +498,8 @@ const clickCancel = async (event: any, prop: any) =>{
           battery: exchangeList.value[5][prop],
           benchmarkAsin: exchangeList.value[6][prop],
           patent: exchangeList.value[7][prop],
-          productManagerId,
-          productDesignId,
+          productManagerId: exchangeList.value[8][prop],
+          productDesignId: exchangeList.value[9][prop],
           sampleRetentionStatus: exchangeList.value[10][prop],
           checkStatus: exchangeList.value[11][prop],
           orderEntryId: exchangeList.value[15][prop],
@@ -560,26 +551,26 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
     const newValue = row[prop];  
       // console.log(exchangeList.value);
       // console.log(peopleList.value);
-      
       Object.keys(row).forEach(async key => {
         if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue // 将其他单元格的值更新为当前输入框的值
-          // console.log('row[key]', row[key]);
-          // console.log('exchangeList.value[8][key]', exchangeList.value[8][key]);
-          const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][key])
-          // console.log('managerIndex', managerIndex);
           
-          let productManagerId = 1
-          if (managerIndex !== -1) {
-            productManagerId = peopleList.value[managerIndex].value
+          // 需要先判断是id还是name,如果是id,就直接拿id修改
+          let productManagerId = null
+          if (exchangeList.value[8][key] instanceof Number) {
+            productManagerId = exchangeList.value[8][key]
+          } else {
+            // 如果是name,需要找到下标再修改
+
+              // const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][prop])
+              // let productManagerId = null
+              // if (managerIndex !== -1) {
+              //   productManagerId = peopleList.value[managerIndex].value
+              // }
           }
-          const designIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[9][key])
-          // console.log('designIndex', designIndex);
-          let productDesignId = -1
-          if (designIndex !== -1) {
-            productDesignId = peopleList.value[designIndex].value
-          }
-          
+          console.log('exchangeList.value[8][key]', exchangeList.value[8][key]);
+          console.log('exchangeList.value[9][key]', exchangeList.value[9][key]);
+   
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
               productLength: exchangeList.value[1][key],
@@ -589,8 +580,8 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
               battery: exchangeList.value[5][key],
               benchmarkAsin: exchangeList.value[6][key],
               patent: exchangeList.value[7][key],
-              productManagerId,
-              productDesignId,
+              productManagerId: exchangeList.value[8][key],
+              productDesignId: exchangeList.value[9][key],
               sampleRetentionStatus: exchangeList.value[10][key],
               checkStatus: exchangeList.value[11][key],
               orderEntryId: exchangeList.value[15][key],
@@ -600,16 +591,16 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
         } 
       })
   } else {
-    const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][prop])
-    let productManagerId = 1
-    if (managerIndex !== -1) {
-      productManagerId = peopleList.value[managerIndex].value
-    }
-    const designIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[9][prop])
-    let productDesignId = -1
-    if (designIndex !== -1) {
-      productDesignId = peopleList.value[designIndex].value
-    }
+    // const managerIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[8][prop])
+    // let productManagerId = null
+    // if (managerIndex !== -1) {
+    //   productManagerId = peopleList.value[managerIndex].value
+    // }
+    // const designIndex = peopleList.value.findIndex((item) => item.label === exchangeList.value[9][prop])
+    // let productDesignId = null
+    // if (designIndex !== -1) {
+    //   productDesignId = peopleList.value[designIndex].value
+    // }
     await reviewStepNo5SkuInfoPerfect({
       productLength: exchangeList.value[1][prop],
       productWidth: exchangeList.value[2][prop],
@@ -618,8 +609,8 @@ const handleSampleRetentionStatus = async (row: any, prop: any) => {
       battery: exchangeList.value[5][prop],
       benchmarkAsin: exchangeList.value[6][prop],
       patent: exchangeList.value[7][prop],
-      productManagerId,
-      productDesignId,
+      productManagerId: exchangeList.value[8][prop],
+      productDesignId: exchangeList.value[9][prop],
       sampleRetentionStatus: exchangeList.value[10][prop],
       checkStatus: exchangeList.value[11][prop],
       orderEntryId: exchangeList.value[15][prop],
@@ -765,19 +756,22 @@ let columnsChange: any
 const fetchVariantList = async () => {
   let classReviewId: number | undefined
   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
+    classReviewId = props.step1Data
   } else {
-      classReviewId = route.query.reviewId
+    classReviewId = route.query.reviewId
   }
   try {
     const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
     variantsSelectList.value = variantSelectList;
     const { data } = await reviewGetSkuList({ reviewId: classReviewId! })
     // console.log(data);
-    const { data: productManager } = await reviewProductManager({reviewId: classReviewId! })
-    peopleList.value = data.map((item: any) => {
-        return { value: item.userId, label: item.userName }
-    })
+    const { data: productManager } = await reviewProductManager({ reviewId: classReviewId! })
+    // peopleList.value = data.map((item: any) => {
+    //     return { value: item.userId, label: item.userName }
+    // })
+    // const { data: list } = await getAllName({ name: productManager })
+    // const item = list.find((item: any) => item.userName === productManager)
+    // const productManagerId = item.userId
     skuVariantsData.value = data.map((item: any) => {
       if (item.variantImg === "") {
         return {
@@ -841,7 +835,7 @@ const fetchVariantList = async () => {
         syncVariantValues(item)
       }
     })
-    // console.log(exchangeList.value);
+    console.log(exchangeList.value);
 
   } catch (error) {
     console.error('Error fetching variant list:', error);

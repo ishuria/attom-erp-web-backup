@@ -1,382 +1,370 @@
 <template>
-    <!-- 零件清单 -->
-    <div style="width: 100%; flex-grow: 2">
-        <vab-query-form style="margin-top: 0;">
-            <vab-query-form-left-panel>
-                <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
-                <el-button type="primary" @click="addSampleHandler">拿样</el-button>
-                <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
-                <el-button type="primary" @click="handleGetLog">开发日志</el-button>
-                <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
-                <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
-            </vab-query-form-left-panel>
-        </vab-query-form>
+  <!-- 零件清单 -->
+  <div style="flex-grow: 2; width: 100%;">
+    <vab-query-form style="margin-top: 0;">
+      <vab-query-form-left-panel>
+        <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
+        <el-button type="primary" @click="addSampleHandler">拿样</el-button>
+        <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
+        <el-button type="primary" @click="handleGetLog">开发日志</el-button>
+        <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
+        <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
+      </vab-query-form-left-panel>
+    </vab-query-form>
 
-        <el-table
-ref="progressComponentTable" border :cell-style="cellStyle" class="noneHoveTable"
-            :data="progressProductList" :header-cell-style="{ 'text-align': 'center' }" :row-class-name="stripedRowClass"
-            :span-method="objectSpanMethod" @cell-click="componentTableInputChange" >
+    <el-table 
+      ref="progressComponentTable" border 
+      :cell-style="cellStyle" class="noneHoveTable"
+      :data="progressProductList" :header-cell-style="{ 'text-align': 'center' }" :row-class-name="stripedRowClass"
+      :span-method="objectSpanMethod" @cell-click="componentTableInputChange" 
+    >
 
-            <el-table-column align="center" fixed="left" label="零件操作" width="120px">
-                <template #default="scope">
-                    <el-dropdown>
-                        <el-button text type="primary" @click="uploadProdcutProgressImage(scope.row, scope.$index)">
-                            上传图片
-                            <el-icon class="el-icon--right">
-                                <arrow-down />
-                            </el-icon>
-                        </el-button>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item @click="uploadProdcutProgressImage(scope.row, scope.$index)">
-                                    <el-link type="primary" :underline="false">上传图片</el-link>
-                                </el-dropdown-item>
-                                <el-dropdown-item @click="addSuppliserInfo(scope.row)">
-                                    <el-link type="primary" :underline="false">新增供应商</el-link>
-                                </el-dropdown-item>
-                                <el-dropdown-item @click="copyComponentInfo(scope.row)">
-                                    <el-link type="primary" :underline="false">复制</el-link>
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                </template>
-            </el-table-column>
-
-
-            <el-table-column align="center" label="图片" min-width="80" prop="componentImg">
-                <template #default="scope">
-                    <div>
-                        <el-image
-v-if="scope.row.componentImg" data-img="img"
-                            fit="contain" :src="scope.row.componentImg" style="width: 55px;" />
-                    </div>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="零件名" min-width="200" prop="componentName">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input
-v-model="row.componentName" 
-                            autofocus
-                            :autosize="{ minRows: 2, maxRows: 7 }"
-                            type="textarea" 
-                            @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.componentName }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="已有零件id" min-width="80"  prop="existingPartId">
-                <template #header>
-                    已有零<br>件id
-                </template>
-                <template #default="{ row }"  >
-                    <div>{{ row.existingPartId }}</div>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="零件数量" min-width="60" prop="componentQuantity">
-                <template #header>
-                    零件<br>数量
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.componentQuantity" 
-                            type="text"
-                            @blur="componentClickCancle($event, row)"
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.componentQuantity }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="零件单位" min-width="60" prop="componentUnit">
-                <template #header>
-                    零件<br>单位
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.componentUnit" 
-                            type="text"
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.componentUnit }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="出厂单价" min-width="70" prop="unitPrice">
-                <template #header>
-                    出厂<br>单价
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.unitPrice" 
-                            type="text" 
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.unitPrice }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="出厂总价" min-width="70" prop="totalPrice">
-                <template #header>
-                    出厂<br>总价
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.totalPrice" 
-                            type="text" 
-                            @blur="componentClickCancle($event, row,)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.totalPrice }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="运费含税" min-width="60" prop="freight">
-                <template #header>
-                    运费<br>含税
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.freight" 
-                            type="text" 
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.freight }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="总未税价" min-width="70" prop="preTaxPrice">
-                <template #header>
-                    总未<br>税价
-                </template>
-                <template #default="{ row }">
-                    <span>{{ row.preTaxPrice }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="总含税价" min-width="70" prop="taxIncludedPrice">
-                <template #header>
-                    总含<br>税价
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.taxIncludedPrice" 
-                            type="text"
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.taxIncludedPrice }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="货币" prop="currency" width="110px">
-                <template #default="{ row }">
-                    <el-select
-v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;"
-                        @change="handlerCurrencyChange(row)">
-                        <el-option 
-                            v-for="dict in currencyList" 
-                            :key="dict.value" 
-                            :label="dict.label"
-                            :value="dict.value" />
-                    </el-select>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="计入产品成本" prop="includedInCost">
-                <template #header>
-                    计入产<br>品成本
-                </template>
-                <template #default="{ row }">
-                    <el-checkbox 
-                        v-model="row.includedInCost" 
-                        class="custom-checkbox" 
-                        :false-value="1" 
-                        size="large"
-                        :true-value="0" 
-                        @change="includedInCostChange(row)"
-                    />
-                </template>
-            </el-table-column>
-
-            <el-table-column label="供应商" min-width="140" prop="supplier">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.supplier" 
-                            autofocus 
-                            type="text"
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>
-                        <el-text truncated>
-                            {{ row.supplier }}
-                        </el-text>
-                    </span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="开票" prop="invoicing" width="140">
-                <template #default="{ row }">
-                    <el-select
-v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;"
-                        @change="handlerInvoicingChange(row)">
-                        <el-option
-v-for="dict in invoicingList" :key="dict.value" :label="dict.label"
-                            :value="dict.value"/>
-                    </el-select>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="实际税点" min-width="60" prop="actualTaxRate">
-                <template #header>
-                    实际<br>税点
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.actualTaxRate" 
-                            type="text" 
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.actualTaxRate }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="开票税点" min-width="60" prop="invoicingTaxRate">
-                <template #header>
-                    开票<br>税点
-                </template>
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input 
-                            v-model="row.invoicingTaxRate" 
-                            type="text"
-                            @blur="componentClickCancle($event, row)" 
-                            @keydown.enter="effectiveCountInputeHandle($event)"
-                        />
-                    </div>
-                    <span>{{ row.invoicingTaxRate }}</span>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="采购链接" min-width="140" prop="purchaseLink">
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input 
-                    v-model="row.purchaseLink"
-                    @blur="componentClickCancle($event, row)"
-                    @keydown.enter="effectiveCountInputeHandle($event)"
-                  />
-                </div>  
-                <el-tooltip content="" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
+      <el-table-column align="center" fixed="left" label="零件操作" width="120px">
+          <template #default="scope">
+              <el-dropdown>
+                  <el-button text type="primary" @click="uploadProdcutProgressImage(scope.row, scope.$index)">
+                      上传图片
+                      <el-icon class="el-icon--right">
+                          <arrow-down />
+                      </el-icon>
+                  </el-button>
+                  <template #dropdown>
+                      <el-dropdown-menu>
+                          <el-dropdown-item @click="uploadProdcutProgressImage(scope.row, scope.$index)">
+                              <el-link type="primary" :underline="false">上传图片</el-link>
+                          </el-dropdown-item>
+                          <el-dropdown-item @click="addSuppliserInfo(scope.row)">
+                              <el-link type="primary" :underline="false">新增供应商</el-link>
+                          </el-dropdown-item>
+                          <el-dropdown-item @click="copyComponentInfo(scope.row)">
+                              <el-link type="primary" :underline="false">复制</el-link>
+                          </el-dropdown-item>
+                      </el-dropdown-menu>
                   </template>
-                  <el-text truncated>{{ row.purchaseLink }}</el-text>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="备注" prop="remarks" >
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input 
-                    v-model="row.remarks" 
-                    @blur="componentClickCancle($event, row)"
-                    @keydown.enter="effectiveCountInputeHandle($event)"
-                  />
-                </div>
-                <el-tooltip content="" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip" >{{ row.remarks }}</div>
-                  </template>
-                  <el-text truncated>{{ row.remarks }}</el-text>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-
-            <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
-                <template #default="scope">
-                    <el-button text type="primary" @click="deleteSupplserOrComponent(scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+              </el-dropdown>
+          </template>
+      </el-table-column>
 
 
-        <vab-upload 
-            :data-id="dataId"
-            :file-list-flag="false" 
-            :is-multiple="false" 
-            title="上传图片"
-            :upload-file="uploadImageFile" 
-            :upload-visible="uploadPicVisible" 
-            @update:upload-visible="updateUploadPicVisible" 
-        />
+      <el-table-column align="center" label="图片" min-width="80" prop="componentImg">
+        <template #default="scope">
+          <div>
+            <el-image v-if="scope.row.componentImg" data-img="img" fit="contain" :src="scope.row.componentImg" style="width: 55px;" />
+          </div>
+        </template>
+      </el-table-column>
 
-        <!-- 样品追踪dialog -->
-        <vab-sample-tranck 
-            :close-dialog-handler="() => sampleVisible = false" 
-            :progress-id="props.progressId"
-            :visible="sampleVisible" 
-            @update:priview-list-value="settingPriviewList" />
+      <el-table-column label="零件名" min-width="200" prop="componentName">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input
+              v-model="row.componentName" 
+              autofocus
+              :autosize="{ minRows: 2, maxRows: 7 }"
+              type="textarea" 
+              @blur="componentClickCancle($event, row)"
+              @keydown.enter="effectiveCountInputeHandle($event)"
+            />
+          </div>
+          <span>{{ row.componentName }}</span>
+        </template>
+      </el-table-column>
 
-        <!-- 拿样 -->
-        <vab-sample 
-            :close-dialog="() => sampleFormVisible = false" 
-            :progress-id="props.progressId"
-            :refresh-component="fetchDataComponent" 
-            :visible="sampleFormVisible"
-        />
+        <el-table-column label="已有零件id" min-width="80"  prop="existingPartId">
+          <template #header>
+            已有零<br>件id
+          </template>
+          <template #default="{ row }"  >
+            <div>{{ row.existingPartId }}</div>
+          </template>
+        </el-table-column>
 
-        <!-- 开发日志显示 -->
-        <wang-editor 
-            :classify='classify' 
-            :content="progressLog" 
-            :title="wangEditorTitle"
-            :wang-editor-visible="wangEditorVisible" 
-            @click-boolean="clickLogBool" 
-            @click-child="clickLog" 
-        />
-        <!-- 添加零件 -->
-        <vab-create-component 
-          :create-component-visible="createComponentVisible"
-          @update:create-component-visible="handleCloseCreateComponent"
-          @update:table-value="handleSubmitComponent"
-        />
-        <!-- 添加耗材 -->
-        <vab-create-consumable 
-          :create-consumable-visible="createConsumableVisible"
-          @update:create-consumable-visible="handleCloseCreateConsumable"
-          @update:table-value="handleSubmitConsumable"
-        />
-    </div>
+        <el-table-column label="零件数量" min-width="60" prop="componentQuantity">
+          <template #header>
+            零件<br>数量
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.componentQuantity" 
+                type="text"
+                @blur="componentClickCancle($event, row)"
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.componentQuantity }}</span>
+          </template>
+        </el-table-column>
 
+        <el-table-column label="零件单位" min-width="60" prop="componentUnit">
+          <template #header>
+            零件<br>单位
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.componentUnit" 
+                type="text"
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.componentUnit }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="出厂单价" min-width="70" prop="unitPrice">
+          <template #header>
+            出厂<br>单价
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.unitPrice" 
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.unitPrice }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="出厂总价" min-width="70" prop="totalPrice">
+          <template #header>
+            出厂<br>总价
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.totalPrice" 
+                @blur="componentClickCancle($event, row,)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.totalPrice }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="运费含税" min-width="60" prop="freight">
+          <template #header>
+            运费<br>含税
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.freight" 
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.freight }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="总未税价" min-width="70" prop="preTaxPrice">
+          <template #header>
+            总未<br>税价
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.preTaxPrice }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="总含税价" min-width="70" prop="taxIncludedPrice">
+          <template #header>
+            总含<br>税价
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.taxIncludedPrice" 
+                type="text"
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.taxIncludedPrice }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="货币" prop="currency" width="110px">
+          <template #default="{ row }">
+            <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handlerCurrencyChange(row)">
+              <el-option 
+                v-for="dict in currencyList" 
+                :key="dict.value" 
+                :label="dict.label"
+                :value="dict.value" 
+              />
+            </el-select>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="计入产品成本" prop="includedInCost">
+          <template #header>
+            计入产<br>品成本
+          </template>
+          <template #default="{ row }">
+            <el-checkbox 
+              v-model="row.includedInCost" 
+              class="custom-checkbox" 
+              :false-value="1" 
+              size="large"
+              :true-value="0" 
+              @change="includedInCostChange(row)"
+            />
+          </template>
+        </el-table-column>
+
+        <el-table-column label="供应商" min-width="140" prop="supplier">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.supplier" 
+                autofocus 
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>
+              <el-text truncated>
+                {{ row.supplier }}
+              </el-text>
+            </span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="开票" prop="invoicing" width="140">
+          <template #default="{ row }">
+            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handlerInvoicingChange(row)">
+              <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value"/>
+            </el-select>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="实际税点" min-width="60" prop="actualTaxRate">
+          <template #header>
+            实际<br>税点
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input 
+                v-model="row.actualTaxRate" 
+                @blur="componentClickCancle($event, row)" 
+                @keydown.enter="effectiveCountInputeHandle($event)"
+              />
+            </div>
+            <span>{{ row.actualTaxRate }}</span>
+          </template>
+        </el-table-column>
+
+      <el-table-column label="开票税点" min-width="60" prop="invoicingTaxRate">
+        <template #header>
+          开票<br>税点
+        </template>
+        <template #default="{ row }">
+          <div class="none">
+            <el-input 
+              v-model="row.invoicingTaxRate" 
+              @blur="componentClickCancle($event, row)" 
+              @keydown.enter="effectiveCountInputeHandle($event)"
+            />
+          </div>
+          <span>{{ row.invoicingTaxRate }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="采购链接" min-width="140" prop="purchaseLink">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input 
+              v-model="row.purchaseLink"
+              @blur="componentClickCancle($event, row)"
+              @keydown.enter="effectiveCountInputeHandle($event)"
+            />
+          </div>  
+          <el-tooltip content="" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
+            </template>
+            <el-text truncated>{{ row.purchaseLink }}</el-text>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="备注" prop="remarks" >
+        <template #default="{ row }">
+          <div class="none">
+            <el-input 
+              v-model="row.remarks" 
+              @blur="componentClickCancle($event, row)"
+              @keydown.enter="effectiveCountInputeHandle($event)"
+            />
+          </div>
+          <el-tooltip content="" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.remarks }}</div>
+            </template>
+            <el-text truncated>{{ row.remarks }}</el-text>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
+        <template #default="scope">
+          <el-button text type="primary" @click="deleteSupplserOrComponent(scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+
+    <vab-upload 
+      :data-id="dataId"
+      :file-list-flag="false" 
+      :is-multiple="false" 
+      title="上传图片"
+      :upload-file="uploadImageFile" 
+      :upload-visible="uploadPicVisible" 
+      @update:upload-visible="updateUploadPicVisible" 
+    />
+
+    <!-- 样品追踪dialog -->
+    <vab-sample-tranck 
+      :close-dialog-handler="() => sampleVisible = false" 
+      :progress-id="props.progressId"
+      :visible="sampleVisible" 
+      @update:preview-list-value="settingPreviewList" 
+    />
+    <!-- 拿样 -->
+    <vab-sample 
+      :close-dialog="() => sampleFormVisible = false" 
+      :progress-id="props.progressId"
+      :refresh-component="fetchDataComponent" 
+      :visible="sampleFormVisible"
+    />
+
+    <!-- 开发日志显示 -->
+    <wang-editor 
+      :classify='classify' 
+      :content="progressLog" 
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorVisible" 
+      @click-boolean="clickLogBool" 
+      @click-child="clickLog" 
+    />
+    <!-- 添加零件 -->
+    <vab-create-component 
+      :create-component-visible="createComponentVisible"
+      @update:create-component-visible="handleCloseCreateComponent"
+      @update:table-value="handleSubmitComponent"
+    />
+    <!-- 添加耗材 -->
+    <vab-create-consumable 
+      :create-consumable-visible="createConsumableVisible"
+      @update:create-consumable-visible="handleCloseCreateConsumable"
+      @update:table-value="handleSubmitConsumable"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -431,8 +419,8 @@ watchEffect(() => {
 })
 
 const emit = defineEmits<{
-    (e: 'update:imagePreviewVisible', value: boolean): void
-    (e: 'update:previewListValue', value: string): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
 }>()
 
 interface SpanMethodProps {
@@ -851,7 +839,7 @@ const addSampleHandler = async () => {
 }
 
 // 样品table
-const settingPriviewList = (imageUr: string) => {
+const settingPreviewList = (imageUr: string) => {
   emit("update:previewListValue", imageUr)
   emit("update:imagePreviewVisible", true)
 }
@@ -943,8 +931,8 @@ onMounted(async () => {
 
 /** 删除configrm框样式 */
 .deleteConfirmFont {
-    color: red;
-    font-weight: bolder;
+  font-weight: bolder;
+  color: red;
 }
 
 // 设置行高
@@ -971,8 +959,8 @@ onMounted(async () => {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

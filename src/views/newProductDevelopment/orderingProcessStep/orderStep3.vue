@@ -602,6 +602,7 @@ const handleSubmitComponent = async (value: any) => {
    if (data === true) {
      $baseMessage('添加零件提交成功', 'success', 'hey')
      fetchDataComponent()
+     fetchVariantsData()
    }
  } catch (error) {
    console.error(error)
@@ -628,6 +629,7 @@ const handleSubmitConsumable = async (value: any) => {
    if (data === true) {
      $baseMessage('添加耗材提交成功', 'success', 'hey')
      fetchDataComponent()
+     fetchVariantsData()
    }
  } catch (error) {
    console.error(error)

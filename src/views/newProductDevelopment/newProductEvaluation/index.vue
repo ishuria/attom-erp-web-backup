@@ -13,14 +13,14 @@
         <el-button v-permissions="{ permission: ['newProduct:evaluation:default:params'] }" type="primary" @click="getScoreParams">
           评分参数
         </el-button>
-        <el-button
+        <!-- <el-button
           v-permissions="{ permission: ['newProduct:evaluation:score:params'] }"
           class="hidden-xs-only"
           type="primary"
           @click="costAccountingeParam"
         >
           成本核算默认参数
-        </el-button>
+        </el-button> -->
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="custom-table-right-tools">
