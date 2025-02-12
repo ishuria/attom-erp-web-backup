@@ -292,31 +292,30 @@ const fetchData = async () => {
   const { data } = await reviewStepNo6CheckGet({ reviewId: route.query.reviewId })
   const { data: productManager } = await reviewProductManager({reviewId: route.query.reviewId! })
   checkTableData.value = data.map((item: any, index: number) => ({
-        column0: convertString(index),
-        variantImg: item.variantImg,
-        productName: item.productName,
-        amazonUsOrderQuantity: item.amazonUsOrderQuantity,
-        purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
-        finalSellingPrice: item.finalSellingPrice,
-        actualTotalCost: item.actualTotalCost,
-        grossMarginRate: item.grossMarginRate,
-        packagingSize: item.packagingSize,
-        productSize: item.productSize,
-        material: item.material,
-        battery: item.battery,
-        benchmarkAsin: item.benchmarkAsin,
-        patent: item.patent,
-        sampleRetentionStatus: item.sampleRetentionStatus,
-        productManager,
-        productDesign: item.productDesign,
-        certification: '',
-        variantSku: item.variantSku,
-        orderEntryId: item.orderEntryId,
+    column0: convertString(index),
+    variantImg: item.variantImg,
+    productName: item.productName,
+    amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+    purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
+    finalSellingPrice: item.finalSellingPrice,
+    actualTotalCost: item.actualTotalCost,
+    grossMarginRate: item.grossMarginRate,
+    packagingSize: item.packagingSize,
+    productSize: item.productSize,
+    material: item.material,
+    battery: item.battery,
+    benchmarkAsin: item.benchmarkAsin,
+    patent: item.patent,
+    sampleRetentionStatus: item.sampleRetentionStatus,
+    productManager: item.productManager === '' ? productManager : item.productManager,
+    productDesign: item.productDesign,
+    certification: '',
+    variantSku: item.variantSku,
+    orderEntryId: item.orderEntryId,
   }))
   const { initData, columns } = useTableDataLineToColumn();
   columnsChange = columns 
   exchangeList.value = initData(checkTableData.value);
-  
 }
 
 const fetchMoldData = async () => {

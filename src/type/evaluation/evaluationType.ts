@@ -67,60 +67,61 @@ export interface IKeyWordTrend{
  * 产品成本核算与推进
  */
 export interface IEstimatedCostAccounting{
-    // id
-    id:string
-    // 评估id
-    evaluationId: string
-    // 日期
-    createTime:string
-    // 站点
-    site:string
-    // 外币币种
-    currencyType:string
-    // 汇率
-    foreignExchange:string
-    // 图片地址
-    imgUrl:string
-    // 产品描述
-    desc:string
-    // 价格信息
-    priceInfo:string
-    // 1688连接
-    url1688:string
-    // 价格信息
-    price: string
-    // 长
-    length:string
-    // 宽
-    width:string
-    // 高
-    height:string
-    // 重量
-    weight:string
-    // 尾程
-    lastMile:string
-    // 头程
-    firstMile:string
-    // 打包
-    packaging:string
-    // 头程渠道
-    firstMileChannel: number
-    // 售价
-    sellingPrice:string
-    // 毛利率
-    grossMarginRate:string
-    // ROI
-    roi:string
-    // weightCoefficient
-    weightCoefficient:string
-    // volumeCoefficient
-    volumeCoefficient:string
-    // 关税
-    tariff:string
-    // 平台佣金
-    platformCommission:string
-    // 仓储费
-    storageFee:string
+  // id
+  id:string
+  // 评估id
+  evaluationId: string
+  // 日期
+  createTime:string
+  // 站点
+  site:string
+  // 外币币种
+  currencyType:string
+  // 汇率
+  foreignExchange:string
+  // 图片地址
+  imgUrl:string
+  // 产品描述
+  desc:string
+  // 价格信息
+  priceInfo:string
+  // 1688连接
+  url1688:string
+  // 价格信息
+  price: string
+  // 长
+  length:string
+  // 宽
+  width:string
+  // 高
+  height:string
+  // 重量
+  weight:string
+  // 尾程
+  lastMile:string
+  // 头程
+  firstMile:string
+  // 打包
+  packaging:string
+  // 头程渠道
+  firstMileChannel: number
+  // 售价
+  sellingPrice:string
+  // 毛利率
+  grossMarginRate:string
+  // ROI
+  roi:string
+  // weightCoefficient
+  weightCoefficient:string
+  // volumeCoefficient
+  volumeCoefficient:string
+  // 关税
+  tariff:string
+  // 平台佣金
+  platformCommission:string
+  // 仓储费
+  storageFee: string
+  [property: string]: any
 }
 
 /**

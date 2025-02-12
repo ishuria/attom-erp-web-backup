@@ -35,7 +35,7 @@
           </template>
         </el-table-column>
         <el-table-column label="汇率" prop="foreignExchange" />
-        <el-table-column label="图片" prop="imgUrl" width="75px">
+        <el-table-column label="图片" prop="imgUrl" width="76px">
           <template #default="{ row, $index }">
             <div @click="getCellRowData($index)">
               <el-image data-img="img" fit="fill" :src="row.imgUrl" style="display: block; width: 75px; height: 75px">
@@ -44,6 +44,26 @@
                 </template>
               </el-image>
             </div>
+            <!-- <el-upload 
+              class="component-upload" 
+              :class="{ hide: row.hide }" 
+              :file-list="row.imageList"
+              :http-request="(file) => uploadImage(file, row)"
+              list-type="picture-card" 
+            >
+              <el-icon><plus /></el-icon> 
+              <template #file="{ file }">
+                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
+                <span class="el-upload-list__item-actions">
+                  <span class="el-upload-list__item-preview" @click="handlePreview(file)">
+                    <el-icon><zoom-in /></el-icon>
+                  </span>
+                  <span class="el-upload-list__item-delete" @click="handleComponentRemove(file, row)">
+                    <el-icon><delete /></el-icon>
+                  </span>
+                </span>
+              </template>
+            </el-upload> -->
           </template>
         </el-table-column>
         <el-table-column label="产品描述" min-width="200" prop="desc">
@@ -337,11 +357,11 @@ import { ElLink, ElMessageBox } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
-import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
-  name: 'VabEstimatedCostAccounting',
+  name: 'VabEstimatedCostAccounting'
 })
 
 let props = defineProps<{
@@ -382,6 +402,30 @@ const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
 let { list, evaluationId } = toRefs(props)
 
+// const uploadImage = (file: any, row: any) => {
+//   //
+//   row.hide = true
+//   try {
+//       let uploadImgForm = new FormData() // 每次上传前重置 FormData
+//       uploadImgForm.append('file', file);
+//       uploadImgForm.append('id', row.id);
+
+//       // const { data } = await uploadComponentImage(uploadImgForm.value)
+      
+//       // Object.assign(row.imageList, [{ url: data }])
+//   } catch (error) {
+//       console.error(error)
+//   }
+// }
+// const handleComponentRemove = (file: any, row: any) => {
+//   //
+// }
+// 图片预览
+// const handlePreview = (file: any) => {
+//   imagePreviewVisible.value = true
+//   imagePreviewList.value = []
+//   imagePreviewList.value.push(file.url)
+// }
 const isValueAllInput = (row: IEstimatedCostAccounting) => {
   if (row.site == null) {
     $baseMessage('站点不能为空，请选择后再进行逆算！', 'warning')
@@ -502,11 +546,6 @@ const changeInput = (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property === 'url1688') {
     link1688.value = row.url1688
     link1688Visible.value = true
-  }
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, 'img')[0]
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, 'img')[0]) {
-    imagePreviewVisible.value = true
   }
 
   const firstChild = cell?.children[0]?.children[0]
@@ -791,5 +830,28 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   max-width: 400px;
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
+}
+// 图片上传的样式
+.component-upload {
+  width: 75px;
+  height: 75px;
+  :deep() {
+    .el-upload-list--picture-card {
+      width: 100%;
+      height: 100%;
+      .el-upload-list__item {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        transition: none;
+      }
+    }
+    .el-upload--picture-card {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>

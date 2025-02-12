@@ -230,8 +230,8 @@ let columnsChange: any
 const fetchVariantList = async () => {
   try {
     const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: route.query.reviewId });
-    const { data: productManager } = await reviewProductManager({reviewId: route.query.reviewId! })
     variantsSelectList.value = variantSelectList;
+    const { data: productManager } = await reviewProductManager({reviewId: route.query.reviewId! })
     const { data } = await reviewGetSkuList({ reviewId: route.query.reviewId })
     skuVariantsData.value = data.map((item: any) => (
       {
@@ -244,7 +244,7 @@ const fetchVariantList = async () => {
         battery: item.battery,
         benchmarkAsin: item.benchmarkAsin,
         patent: item.patent,
-        productManager,
+        productManager: item.productManager === '' ? productManager : item.productManager,
         productDesign: item.productDesign,
         sampleRetentionStatus: item.sampleRetentionStatus,
         packingGroup: item.checkStatus,
