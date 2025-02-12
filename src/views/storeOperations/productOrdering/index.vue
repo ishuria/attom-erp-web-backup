@@ -53,7 +53,8 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
-      border 
+      v-loading="listLoading" 
+      border
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
       class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
@@ -328,7 +329,7 @@
       title="发布订货"
       width="59%"
     >
-      <el-form class="custom-form" inline label-position="top" :model="releaseOrderForm" style="justify-content: space-around; width: 100%">
+      <el-form v-loading="orderListLoading" class="custom-form" inline label-position="top" :model="releaseOrderForm" style="justify-content: space-around; width: 100%">
         <el-form-item>
           <el-image :src="releaseOrderForm.skuImageUrl" style="display: block; width: 85px; height: 85px; cursor: pointer; border: 1px solid #e4e7ed; border-radius: 10%;" @click="imagePreviewShow(releaseOrderForm.skuImageUrl)">
             <template #error><el-icon /></template>
@@ -348,7 +349,19 @@
           <el-input v-model="releaseOrderForm.description" disabled style="width: 18em" />
         </el-form-item>
         <el-form-item label="订货数量">
-          <el-input v-model="releaseOrderForm.number" style="width: 8em;" type="number" />
+          <!-- <el-input v-model="releaseOrderForm.number" min="0" oninput="if(value<0)value=0" style="width: 8em;" type="number" /> -->
+          <el-input-number v-model="releaseOrderForm.number" class="custom-inputNumber" controls-position="right" :min="0">
+            <template #decrease-icon>
+              <el-icon>
+                <minus />
+              </el-icon>
+            </template>
+            <template #increase-icon>
+              <el-icon>
+                <plus />
+              </el-icon>
+            </template>
+          </el-input-number>
         </el-form-item>
         <el-form-item label="起订量">
           <el-input v-model="releaseOrderForm.moq" disabled style="width: 8em;" />
@@ -369,7 +382,7 @@
 </template>
 
 <script setup lang="ts">
-import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import { Minus, Plus, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { orderColumns } from '../constantOption'
@@ -435,6 +448,7 @@ const skuList = ref<{ value: string, label: string }[]>([])
 const asinId = ref<number>(-1)
 const smoothForm = reactive<any>({})
 const shipList = ref<any[]>([])
+const orderListLoading = ref<boolean>(false)
 // 确定修改春节备货
 const handleConfirmSpringFestival = async () => {
   const { data } = await updateOperationOrderSpringFestival(stockUpForm)
@@ -473,6 +487,7 @@ const handleReleaseOrder = async () => {
   if (data) {
     $baseMessage('发布订货成功！', 'success')
     releaseOrderVisible.value = false
+    queryData()
   }
 }
 const handleSwitchSku = async () => {
@@ -483,18 +498,24 @@ const handleSwitchSku = async () => {
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
   releaseOrderVisible.value = true
   if (row.sku) {
-    const skuArray = row.sku?.split(',')
-    if (skuArray.length > 0) {
-      skuList.value = skuArray.map((item) => {
-        return {
-          label: item,
-          value: item
-        }
-      })
-      const { data } = await getSkuInfo({ sku: skuArray[0] })
-      Object.assign(releaseOrderForm, data)
-      asinId.value = row.id!
-    }
+    orderListLoading.value = true
+    const skuArray = row.sku.split(',')
+    skuList.value = skuArray.map((item) => {
+      return {
+        label: item,
+        value: item
+      }
+    })
+    const { data } = await getSkuInfo({ sku: skuArray[0] })
+    Object.assign(releaseOrderForm, data)
+    releaseOrderForm.number = 0
+    asinId.value = row.id!
+    orderListLoading.value = false
+  } else {
+    skuList.value = []
+    Object.keys(releaseOrderForm).forEach(key => {
+      delete releaseOrderForm[key]
+    })
   }
 }
 // 修改运营分类
@@ -689,6 +710,12 @@ onBeforeMount(() => {
 
   .el-icon {
     margin-left: 3px;
+  }
+}
+.custom-inputNumber {
+  width: 9em;
+  :deep(.el-input__inner) {
+    text-align: left;
   }
 }
 </style>
