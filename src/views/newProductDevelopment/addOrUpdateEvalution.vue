@@ -314,11 +314,11 @@ const handlerSave = async() =>{
   if (route.query.idNo){
     formData.append("id",route.query.idNo)
 
-    $baseConfirm('您确定要修改新款评估吗', null, async () => {
+    $baseConfirm('您确定要修改保存新款评估吗', null, async () => {
       aginAnalyzeFlg.value = false
-      const {data} = await updateEvaluation(formData)
-      if (data == true) {
-        $baseMessage("新款评估修改成功!","success","hey")
+      const { data } = await updateEvaluation(formData)
+      if (data) {
+        $baseMessage("新款评估修改保存成功!","success","hey")
       }
       setResponseValue(data)
     })

@@ -384,49 +384,40 @@ let { list, evaluationId } = toRefs(props)
 
 const isValueAllInput = (row: IEstimatedCostAccounting) => {
   if (row.site == null) {
-    $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
-    return false
-  } else if (!row.desc?.trim()) {
-    $baseMessage('产品描述不能为空，请填写后再进行逆算', 'warning')
-    return false
-  } else if (!row.priceInfo.trim()) {
-    $baseMessage('价格信息不能为空，请填写后再进行逆算', 'warning')
-    return false
-  } else if (!row.url1688.trim()) {
-    $baseMessage('1688链接不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('站点不能为空，请选择后再进行逆算！', 'warning')
     return false
   } else if (row.price == null) {
-    $baseMessage('产品价格不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品价格不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.length == null) {
-    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的长度(cm)不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.width == null) {
-    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的宽度(cm)不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.height == null) {
-    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的高度(cm)不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.weight == null) {
-    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的重量(g)不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.packaging == null) {
-    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的打包价格不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.firstMileChannel == null) {
-    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
+    $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算！', 'warning')
     return false
   } else if (row.sellingPrice == null) {
-    $baseMessage('产品的售价不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的售价不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.weightCoefficient == null) {
-    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的重量系数不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.volumeCoefficient == null) {
-    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的体积系数不能为空，请填写后再进行逆算！', 'warning')
     return false
   } else if (row.tariff == null) {
-    $baseMessage('产品的关税不能为空，请填写后再进行逆算', 'warning')
+    $baseMessage('产品的关税不能为空，请填写后再进行逆算！', 'warning')
     return false
   }
   return true
