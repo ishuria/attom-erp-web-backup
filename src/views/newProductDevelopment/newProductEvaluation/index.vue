@@ -58,7 +58,6 @@
         :label="item.label"
         :min-width="handleWidth(item)"
         :prop="item.prop"
-        width="auto"
       >
         <template #header>
           <span v-if="item.label === '30毛利盈亏自然单占比'">
@@ -321,23 +320,26 @@ const fixed = ref<string>('right')
 const handleWidth = (item: any) => {
   switch (item.label) {
     case '评估人': {
-      return flexColumnWidth(evaluationList.value, '评估人', 'evaluatorName', 10)
+      return flexColumnWidth(evaluationList.value, '评估人', 'evaluatorName')
     }
     case '来源': {
-      return flexColumnWidth(evaluationList.value, '来源', 'productSource', 10)
+      return flexColumnWidth(evaluationList.value, '来源', 'productSource')
+    }
+    case '中文品名': {
+      return flexColumnWidth(evaluationList.value, '中文品名', 'productNameZh')
     }
     case '亚马逊前台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords', 0)
+      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
     }
     case '亚马逊后台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords', 0)
+      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
     }
     case '年市场容量': {
-      return flexColumnWidth(evaluationList.value, '年市场容量', 'marketVolume', 10)
+      return flexColumnWidth(evaluationList.value, '年市场容量', 'marketVolume')
     }
     // No default
   }
-  return item.minWIdth || 100
+  return item.minWidth || 100
 }
 /**
  * 获取初始新款评估数据
@@ -558,7 +560,7 @@ const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (['亚马逊前台关键词', '亚马逊后台关键词', '年市场容量'].includes(data.column.label)) {
+  if (['中文品名', '亚马逊前台关键词', '亚马逊后台关键词', '年市场容量'].includes(data.column.label)) {
     return {
       textAlign: 'left'
     }

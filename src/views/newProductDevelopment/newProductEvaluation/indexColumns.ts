@@ -7,17 +7,17 @@ export const indexColumns = [
   {
     label: '评估人',
     prop: 'evaluatorName',
-    minWidth: 110,
+    minWidth: 90,
   },
   {
     label: '评估日期',
     prop: 'evaluateDate',
-    minWidth: 110,
+    minWidth: 115,
   },
   {
     label: '中文品名',
     prop: 'productNameZh',
-    minWidth: 150,
+    minWidth: 100,
   },
   {
     label: '亚马逊前台关键词',
@@ -51,7 +51,7 @@ export const indexColumns = [
   {
     label: '30毛利盈亏自然单占比',
     prop: 'grossProfitAndLoss',
-    minWidth: 150,
+    minWidth: 110,
   },
   {
     label: '平均转化',
@@ -71,7 +71,7 @@ export const indexColumns = [
   {
     label: '关键词首页评分',
     prop: 'keyWordScore',
-    minWidth: 130
+    minWidth: 100
   },
   {
     label: '总分',
@@ -81,7 +81,7 @@ export const indexColumns = [
   {
     label: '来源',
     prop: 'productSource',
-    minWidth: 130
+    minWidth: 100
   },
 ]
 
