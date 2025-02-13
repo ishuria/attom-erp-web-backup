@@ -1,6 +1,6 @@
 <template>
   <!-- 成本核算 -->
-  <div style="width: 100%; padding-top:15px; flex-grow: 2" >
+  <div style="flex-grow: 2; width: 100%; padding-top:15px;" >
   
     <el-divider style="margin: 10px 0"/>
       
@@ -41,11 +41,28 @@
 
         <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
         <el-table-column label="汇率" prop="foreignExchange"/>
-        <el-table-column label="图片" width="60">
+        <el-table-column label="图片" width="76">
           <template #default="{ row }">
-            <el-image :src="row.imgUrl" style="width: 60px; height: 60px; display: block;" @click="showImagePreview(row.imgUrl)" >
-              <template #error><el-icon/></template>
-            </el-image>
+            <el-upload 
+              class="component-upload" 
+              :class="{ hide: row.hide }" 
+              :file-list="row.imageList"
+              :http-request="(file) => uploadImage(file, row)"
+              list-type="picture-card" 
+            >
+              <el-icon><plus /></el-icon> 
+              <template #file="{ file }">
+                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
+                <span class="el-upload-list__item-actions">
+                  <span class="el-upload-list__item-preview" @click="showImagePreview(file)">
+                    <el-icon><zoom-in /></el-icon>
+                  </span>
+                  <span class="el-upload-list__item-delete" @click="removeImage(file, row)">
+                    <el-icon><delete /></el-icon>
+                  </span>
+                </span>
+              </template>
+            </el-upload>
           </template>
         </el-table-column>
 
@@ -212,7 +229,7 @@
         </el-table-column>
 
         <el-table-column align="center" fixed="right" label="操作" width="120px">
-          <template #default="{ row, $index }">
+          <template #default="{ row }">
             <el-dropdown>
               <el-button text type="primary" @click="handleReverseCalculate(row)">
                 逆算
@@ -225,14 +242,11 @@
                   <el-dropdown-item @click="handleReverseCalculate(row)"> 
                     <el-link type="primary" :underline="false">逆算</el-link>
                   </el-dropdown-item>
-                  <el-dropdown-item @click="costAccountImageUpload(row, $index)">
-                    <el-link type="primary" :underline="false" >上传图片</el-link>
-                  </el-dropdown-item>
                   <el-dropdown-item @click="costAccountCopy(row)">
                     <el-link type="primary" :underline="false" >复制</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="costAccountDelete(row)">
-                    <el-link type="primary" :underline="false" >删除</el-link>
+                    <el-link type="danger" :underline="false" >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -242,15 +256,6 @@
       </el-table>
     </vue-draggable>
 
-    <vab-upload 
-      :data-id = "dataId" 
-      :file-list-flag = "false" 
-      :is-multiple="false"
-      title="上传图片"
-      :upload-file="costAccountingUploadImageFile"
-      :upload-visible="costAccoutingVisible"
-      @update:upload-visible = "costAccountingUpdateUploadPicVisible"
-    />
     <!-- 产品描述显示 -->
     <wang-editor 
       :classify='classify' 
@@ -273,14 +278,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown } from '@element-plus/icons-vue'
-import type { TableRefs, UploadRequestOptions } from 'element-plus'
+import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import type { TableRefs } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import { VueDraggable } from 'vue-draggable-plus'
-
 import wangEditor from '../newProductProgress/wangEditor.vue'
-
 import type { CSSProperties } from 'vue'
 import {
   addCostAccounting,
@@ -360,12 +363,7 @@ const clickRemarkBool = ( val: any) => {
 }
 // 成本核算列表
 const estimatedCostList = ref<IProgressEstimatedCostAccounting[]>([])
-// 图片上传显示控制vesiblae
-const costAccoutingVisible = ref<boolean>(false)
-// 图片唯一id
-const dataId = ref<string>("")
 const costAccountingTable = ref<TableRefs>()
-let imageUploadCellIdx = 0
 const _site = ref<number>(0)
 const handleFocus = (row: any) => {
   _site.value = row.site
@@ -477,8 +475,8 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-const showImagePreview = (url: string) => {
-  emit("update:previewListValue", url)
+const showImagePreview = (file: any) => {
+  emit("update:previewListValue", file.url)
   emit("update:imagePreviewVisible", true)
 }
 let copyRow: any
@@ -549,35 +547,52 @@ const fetchDataCostAccounting = async ()=>{
     // 成本核算列表
     const {data} = await getCostAccountingList({ progressId: props.progressId })
     estimatedCostList.value = data
+    estimatedCostList.value.forEach((item) => {
+      if (!item.imgUrl) {
+        item.hide = false
+        item.imageList = []
+      } else if (item.imgUrl){
+        item.hide = true
+        item.imageList = [{ url: item.imgUrl }]
+      }
+    })
   } catch(error) {
     console.error(error)
   }
 }
+const uploadImage = async (file: any, row: any) => {
+  //
+  row.hide = true
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file.file)
+    uploadImgForm.append('accountingId', row.id)
 
-// 图片上传按钮
-const costAccountImageUpload =  async (row:IProgressEstimatedCostAccounting,idx:number) =>{
-  costAccoutingVisible.value = true
-  dataId.value = `${row.id  }`
-  imageUploadCellIdx = idx
-}
-
-// 上传文件
-const costAccountingUploadImageFile = async (options: UploadRequestOptions) => {
-  const formdata = new FormData()
-  formdata.append('file', options.file)
-  formdata.append('accountingId', dataId.value)
-
-  try{
-    const {data} = await costAccountingUploadImage(formdata);
+    const { data } = await costAccountingUploadImage(uploadImgForm)
     if (data) {
-      $baseMessage("零件图片上传成功！","success","hey")
-      estimatedCostList.value[imageUploadCellIdx].imgUrl! = data
-      costAccoutingVisible.value = false
+      Object.assign(row.imageList, [{ url: data }])
+      $baseMessage('零件图片上传成功！', 'success')
+    } else {
+      $baseMessage('零件图片上传失败！', 'error')
     }
-  } catch(error_){
-    const error = error_ as Error;
+  } catch (error) {
     console.error(error)
-    $baseMessage("零件图片上传失败！","error","hey")
+  }
+}
+const removeImage = (file: any, row: any) => {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      // const { data } = await delComponentImage({
+      //   id: row.id
+      // })
+      // if (data == true) {
+      row.imageList = []
+      row.hide = false
+      $baseMessage("图片删除成功!","success","hey")
+      // }
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -585,11 +600,6 @@ const costAccountingUploadImageFile = async (options: UploadRequestOptions) => {
 const handlerEstimatendChange = async (row: IProgressEstimatedCostAccounting) =>{
   await costAccountingUpdate({ ...row, tariff: `${parseFloat(row.tariff!) / 100}`, grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`, roi: `${parseFloat(row.roi!)/ 100}` })
   fetchDataCostAccounting()
-}
-
-
-const costAccountingUpdateUploadPicVisible = (newV:boolean) =>{
-  costAccoutingVisible.value = newV
 }
 
 // 新增
@@ -695,7 +705,7 @@ defineExpose({
   fetchDataCostAccounting
 })
 
-onMounted(async ()=>{
+onMounted(()=>{
   fetchDataCostAccounting()
 })
 
@@ -729,8 +739,8 @@ onMounted(async ()=>{
       padding-top: 0;
       padding-bottom: 0;
       .cell {
-        padding-left: 0;
         padding-right: 0;
+        padding-left: 0;
       }
     }
   }
@@ -745,8 +755,31 @@ onMounted(async ()=>{
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
+}
+// 图片上传的样式
+.component-upload {
+  width: 75px;
+  height: 75px;
+  :deep() {
+    .el-upload-list--picture-card {
+      width: 100%;
+      height: 100%;
+      .el-upload-list__item {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        transition: none;
+      }
+    }
+    .el-upload--picture-card {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 </style>

@@ -36,15 +36,8 @@
         </el-table-column>
         <el-table-column label="汇率" prop="foreignExchange" />
         <el-table-column label="图片" prop="imgUrl" width="76px">
-          <template #default="{ row, $index }">
-            <div @click="getCellRowData($index)">
-              <el-image data-img="img" fit="fill" :src="row.imgUrl" style="display: block; width: 75px; height: 75px">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </div>
-            <!-- <el-upload 
+          <template #default="{ row }">
+            <el-upload 
               class="component-upload" 
               :class="{ hide: row.hide }" 
               :file-list="row.imageList"
@@ -58,12 +51,12 @@
                   <span class="el-upload-list__item-preview" @click="handlePreview(file)">
                     <el-icon><zoom-in /></el-icon>
                   </span>
-                  <span class="el-upload-list__item-delete" @click="handleComponentRemove(file, row)">
+                  <span class="el-upload-list__item-delete" @click="removeImage(file, row)">
                     <el-icon><delete /></el-icon>
                   </span>
                 </span>
               </template>
-            </el-upload> -->
+            </el-upload>
           </template>
         </el-table-column>
         <el-table-column label="产品描述" min-width="200" prop="desc">
@@ -261,7 +254,7 @@
         </el-table-column>
 
         <el-table-column align="center" :fixed="fixed" label="操作" width="120px">
-          <template #default="{ row, $index }">
+          <template #default="{ row }">
             <el-dropdown>
               <el-button text type="primary" @click="handleCalculate(row)">
                 逆算
@@ -273,9 +266,6 @@
                 <el-dropdown-menu>
                   <el-dropdown-item @click="handleCalculate(row)">
                     <el-link type="primary" :underline="false">逆算</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="handlerPicUpload(row, $index)">
-                    <el-link type="primary" :underline="false">上传图片</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handlerCopyData(row)">
                     <el-link type="primary" :underline="false">复制</el-link>
@@ -295,15 +285,6 @@
 
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 
-  <vab-upload
-    :data-id="dataId"
-    :file-list-flag="false"
-    :is-multiple="false"
-    title="上传图片"
-    :upload-file="uploadFile"
-    :upload-visible="uploadPicVisible"
-    @update:upload-visible="updateUploadPicVisible"
-  />
   <!-- 产品描述 -->
   <vab-dialog v-model="productDescriptionVisible" title="产品描述" width="25%">
     <el-input v-model="productDescription" :rows="20" type="textarea" />
@@ -331,7 +312,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown } from '@element-plus/icons-vue'
+import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { ElLink, ElMessageBox } from 'element-plus'
+import { isEqual } from 'lodash'
+import debounce from 'lodash/debounce'
+import type { CSSProperties } from 'vue'
+import { VueDraggable } from 'vue-draggable-plus'
+import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
   addEstimatedCostAccounting,
   addEstimatedCostAccountingProductRelease,
@@ -344,19 +331,8 @@ import {
   updateEstimatedCostAccountingSort,
   uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
-import { formatDate } from '/@/utils/dateUtils'
-
-import { VueDraggable } from 'vue-draggable-plus'
-
-import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
-
 import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
-
-import type { UploadRequestOptions } from 'element-plus'
-import { ElLink, ElMessageBox } from 'element-plus'
-import { isEqual } from 'lodash'
-import debounce from 'lodash/debounce'
-import type { CSSProperties } from 'vue'
+import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
@@ -390,42 +366,57 @@ watchEffect(() => {
   dflag.value = props.flag
 })
 
-// Table cell 下标
-let imageUploadCellIdx = 0
 const imagePreviewVisible = ref<boolean>(false)
-const uploadPicVisible = ref<boolean>(false)
-const dataId = ref<string>('')
 const fixed = ref<string>('right')
 const estimatedCostAccountingList = ref<IEstimatedCostAccounting[]>([])
 const imagePreviewList = ref<string[]>([])
 const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
-let { list, evaluationId } = toRefs(props)
+let { evaluationId } = toRefs(props)
 
-// const uploadImage = (file: any, row: any) => {
-//   //
-//   row.hide = true
-//   try {
-//       let uploadImgForm = new FormData() // 每次上传前重置 FormData
-//       uploadImgForm.append('file', file);
-//       uploadImgForm.append('id', row.id);
+// 上传图片
+const uploadImage = async (file: any, row: any) => {
+  row.hide = true
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file.file);
+    uploadImgForm.append('id', `${row.id}`);
 
-//       // const { data } = await uploadComponentImage(uploadImgForm.value)
-      
-//       // Object.assign(row.imageList, [{ url: data }])
-//   } catch (error) {
-//       console.error(error)
-//   }
-// }
-// const handleComponentRemove = (file: any, row: any) => {
-//   //
-// }
+    const { data } = await uploadFileBoBakend(uploadImgForm)
+    if (data) {
+      Object.assign(row.imageList, [{ url: data }])
+      $baseMessage('图片上传成功！', 'success')
+    } else {
+      $baseMessage('图片上传失败！', 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 删除图片
+const removeImage = (file: any, row: any) => {
+  //
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      // const { data } = await delComponentImage({
+      //   id: row.id
+      // })
+      // if (data == true) {
+      row.imageList = []
+      row.hide = false
+      $baseMessage("图片删除成功!","success","hey")
+      // }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 // 图片预览
-// const handlePreview = (file: any) => {
-//   imagePreviewVisible.value = true
-//   imagePreviewList.value = []
-//   imagePreviewList.value.push(file.url)
-// }
+const handlePreview = (file: any) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(file.url)
+}
 const isValueAllInput = (row: IEstimatedCostAccounting) => {
   if (row.site == null) {
     $baseMessage('站点不能为空，请选择后再进行逆算！', 'warning')
@@ -638,12 +629,6 @@ const getCellStyle = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
-// 获取点击行的table cell下标
-const getCellRowData = (idx: number) => {
-  imagePreviewList.value = []
-  imageUploadCellIdx = idx
-  imagePreviewList.value.push(list.value[imageUploadCellIdx].imgUrl)
-}
 
 // 图片预览关闭事件
 const imagePreviewClose = () => {
@@ -685,10 +670,6 @@ const handlerEstimatedChange = async (row: IEstimatedCostAccounting) => {
 
 // 修改站点
 const handlerSiteChange = async (row: IEstimatedCostAccounting) => {
-  // row.currencyType = siteReflectCurrencyAndExchangeRate.get(row.site)!
-  // const {data} = await getExchangeRate({currency:row.currencyType})
-  // row.foreignExchange = data
-  // row.site = row.site
   await updateEstimatedCostAccounting({
     ...row,
     tariff: Number(row.tariff) / 100,
@@ -696,13 +677,6 @@ const handlerSiteChange = async (row: IEstimatedCostAccounting) => {
     roi: Number(row.roi) / 100,
   })
   props.callParentMethod(parseInt(evaluationId.value))
-}
-
-// 上传图片
-const handlerPicUpload = async (row: any, idx: number) => {
-  uploadPicVisible.value = true
-  dataId.value = `${row.id}`
-  imageUploadCellIdx = idx
 }
 
 // 添加到新品进度管理
@@ -751,37 +725,9 @@ const onEnd = debounce(async () => {
   }
 }, 500)
 
-// 上传文件
-const uploadFile = async (options: UploadRequestOptions) => {
-  const formdata = new FormData()
-  formdata.append('file', options.file)
-  formdata.append('id', dataId.value)
-
-  try {
-    const { data } = await uploadFileBoBakend(formdata)
-    if (data) {
-      $baseMessage('产品成本核算图片上传成功！', 'success', 'hey')
-      imagePreviewList.value = []
-      list.value[imageUploadCellIdx].imgUrl = data
-      imagePreviewList.value.push(data)
-      uploadPicVisible.value = false
-    }
-  } catch (error_) {
-    const error = error_ as Error
-    console.error(error)
-    $baseMessage('产品成本核算图片上传失败！', 'error', 'hey')
-    uploadPicVisible.value = false
-  }
-}
-
 // table checkbox事件
 const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
   selectRows.value = val
-}
-
-// 通过事件获取子组件数据
-const updateUploadPicVisible = (newV: boolean) => {
-  uploadPicVisible.value = newV
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {

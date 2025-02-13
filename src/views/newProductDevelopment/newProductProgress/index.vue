@@ -23,12 +23,13 @@ handleSubmit<template>
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          border :data="progressList"
+          border :cell-style="cellStyle"
+          :data="progressList"
           :header-cell-style="{ 'text-align': 'center' }" 
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column align="center" label="优先级" min-width="75" prop="priority">
+          <el-table-column label="优先级" min-width="90" prop="priority">
             <template #default = "{ row }">
               <el-select v-model="row.priority" size="default" style="min-width: 100%" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
                 <el-option 
@@ -91,22 +92,22 @@ handleSubmit<template>
           <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
               <div class="none">
-                  <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span v-html="formattedProgressLog(row.product)"></span>
+                <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span v-html="formattedProgressLog(row.product)"></span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="OEM" min-width="65" prop="oem">
+          <el-table-column label="OEM" min-width="65" prop="oem">
             <template #default = "{ row }">
                <el-checkbox v-model="row.oem" class="custom-checkbox" :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="立项日期" prop="createTime" width="120">
+          <el-table-column label="立项日期" prop="createTime" width="120">
             <template #default = "{ row }">
-              <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
+              {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="当前阶段" min-width="90" prop="currentPhaseStatus">
+          <el-table-column label="当前阶段" min-width="90" prop="currentPhaseStatus">
             <template #default = "{ row }">
               <div class="none">
                 <el-input v-model="row.currentPhaseStatus" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)"  @keyup.enter="clickCancel($event, row)"/>
@@ -124,7 +125,7 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
+          <el-table-column label="参与人员" min-width="100" prop="sharerName">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -144,7 +145,7 @@ handleSubmit<template>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="目标月销" min-width="90" prop="targetMonthlySales">
+          <el-table-column label="目标月销" min-width="90" prop="targetMonthlySales">
             <template #default = "{ row }">
               <div class="none">
                   <el-input v-model="row.targetMonthlySales" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -152,13 +153,9 @@ handleSubmit<template>
                 <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="新款评估编号" prop="evaluationId" width="130">
-            <template #default = "{ row }">
-              <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column label="新款评估编号" prop="evaluationId" width="130" />
 
-          <el-table-column align="center" :fixed="fixed" label="操作" min-width="180px">
+          <el-table-column :fixed="fixed" label="操作" min-width="180px">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleSampleCosting(row)">
@@ -235,7 +232,7 @@ handleSubmit<template>
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column align="center" label="优先级" min-width="75" prop="priority">
+          <el-table-column align="center" label="优先级" min-width="90" prop="priority">
             <template #default = "{ row }">
               <el-select v-model="row.priority" disabled size="default" style="min-width: 100%;" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
                 <el-option 
@@ -312,7 +309,7 @@ handleSubmit<template>
               <span style="color: rgb(192, 192, 192, 1)">{{ row.createTime.split(' ')[0] }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="当前阶段" prop="currentPhaseStatus" width="85">
+          <el-table-column align="center" label="当前阶段" min-width="100" prop="currentPhaseStatus">
             <template #default = "{ row }">
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
@@ -572,6 +569,7 @@ import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
+import type { CSSProperties} from 'vue';
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { indexColumns } from './indexColumns'
@@ -1298,7 +1296,24 @@ const cleanKeyWordTrendData = (newValue:string) => {
 const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
   trendEcahts.value = newValue
 }
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const index = data.columnIndex
+  if (index === 4 || index === 7 || index === 10) {
+    return {
+      textAlign: 'center',
+      color: '#999',
+      cursor: 'not-allowed'
+    }
+  } else if (index === 1 || index === 2 || index === 6 || index === 8) {
+    return {
+      textAlign: 'left'
+    }
+  } else {
+    return {
+      textAlign: 'center'
+    }
+  }
+}
 onActivated(() => { 
   tableRef.value?.doLayout()
 })

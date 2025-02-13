@@ -1,4 +1,4 @@
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
 
 /**
  * 新品进度成零件
@@ -159,6 +159,7 @@ export interface IProgressEstimatedCostAccounting {
   platformCommission?: string
   // 仓储费
   storageFee?: string
+  [property: string]: any
 }
 
 // 样品追踪
