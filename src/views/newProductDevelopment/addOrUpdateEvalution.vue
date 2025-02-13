@@ -443,6 +443,12 @@ onMounted(async () => {
       title: `${route.query.title}`,
     },
   })
+  // await changeTabsMeta({
+  //   title: '新款评估',
+  //   meta: {
+  //     title: `${route.query.idNo} - 新款评估`,
+  //   },
+  // })
 })
 </script>
 

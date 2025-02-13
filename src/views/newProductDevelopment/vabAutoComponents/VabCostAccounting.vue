@@ -57,7 +57,7 @@
                   <span class="el-upload-list__item-preview" @click="showImagePreview(file)">
                     <el-icon><zoom-in /></el-icon>
                   </span>
-                  <span class="el-upload-list__item-delete" @click="removeImage(file, row)">
+                  <span class="el-upload-list__item-delete" @click="removeImage(row)">
                     <el-icon><delete /></el-icon>
                   </span>
                 </span>
@@ -289,6 +289,7 @@ import {
   addCostAccounting,
   costAccountingCopy,
   costAccountingDelete,
+  costAccountingDeleteImage,
   costAccountingUpdate,
   costAccountingUpdateRowSort,
   costAccountingUploadImage,
@@ -579,17 +580,17 @@ const uploadImage = async (file: any, row: any) => {
     console.error(error)
   }
 }
-const removeImage = (file: any, row: any) => {
+const removeImage = (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-      // const { data } = await delComponentImage({
-      //   id: row.id
-      // })
-      // if (data == true) {
-      row.imageList = []
-      row.hide = false
-      $baseMessage("图片删除成功!","success","hey")
-      // }
+      const { data } = await costAccountingDeleteImage({
+        id: row.id
+      })
+      if (data) {
+        row.imageList = []
+        row.hide = false
+        $baseMessage("图片删除成功!","success","hey")
+      }
     })
   } catch (error) {
     console.error(error)

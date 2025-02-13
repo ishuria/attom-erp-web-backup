@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import type { IProgressId } from '/@/type/progress/progressType'
 import type {
   IComponentAddReq,
   IComponentAddResp,
@@ -53,7 +54,6 @@ import type {
   IupdateProgressProductdesc,
   IupdateTrialcalculationProductdesc
 } from '/@/type/progress/sampleAndComponentType'
-import type { IProgressId } from '/@/type/progress/progressType'
 import type { IBooleanResp } from '/@/type/purchase/po'
 
 /**
@@ -134,7 +134,16 @@ export function componentUploadImage(data?: any): Promise<IComponentImageResp> {
     data,
   })
 }
-
+/**
+ * @description 零件清单-删除图片
+ */
+export function componentDeleteImage(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/progress/delete/trial/img`,
+    method: 'post',
+    params
+  })
+}
 /**
  * 零件清单-修改
  * @param data
@@ -210,7 +219,16 @@ export function costAccountingUploadImage(data?: any): Promise<ICostAccountingIm
     data,
   })
 }
-
+/**
+ * @description 成本核算-删除图片信息
+ */
+export function costAccountingDeleteImage(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/progress/costAccounting/delete/img`,
+    method: 'post',
+    params
+  })
+}
 /**
  * 成本核算-表格table拖拽排序
  * @param data

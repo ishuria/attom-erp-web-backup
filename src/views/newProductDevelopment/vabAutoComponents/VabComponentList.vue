@@ -63,7 +63,7 @@
                 <span class="el-upload-list__item-preview" @click="handlePreview(file)">
                   <el-icon><zoom-in /></el-icon>
                 </span>
-                <span class="el-upload-list__item-delete" @click="removeImage(file, row)">
+                <span class="el-upload-list__item-delete" @click="removeImage(row)">
                   <el-icon><delete /></el-icon>
                 </span>
               </span>
@@ -374,11 +374,13 @@
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
 import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog, } from '/@/api/devlocal/progress'
 import {
   addComponent, addSuppliers,
+  componentDeleteImage,
   componentUploadImage, copyComponent,
   deleteSuppliers, getComponentList,
   submitProgressComponent,
@@ -391,7 +393,6 @@ import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/typ
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import type { CSSProperties } from 'vue'
 
 defineComponent({
   name: 'VabComponentList',
@@ -460,7 +461,6 @@ const handleUpdateRemark = async (value: string) => {
   $baseMessage('修改备注成功！', 'success')
 }
 const uploadImage = async (file: any, row: any) => {
-  //
   row.hide = true
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
@@ -482,18 +482,17 @@ const handlePreview = (file: any) => {
   emit("update:previewListValue", file.url)
   emit("update:imagePreviewVisible", true)
 }
-const removeImage = (file: any, row: any) => {
-  // 
+const removeImage = (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-      // const { data } = await delComponentImage({
-      //   id: row.id
-      // })
-      // if (data == true) {
-      row.imageList = []
-      row.hide = false
-      $baseMessage("图片删除成功!","success","hey")
-      // }
+      const { data } = await componentDeleteImage({
+        id: row.componentId
+      })
+      if (data) {
+        row.imageList = []
+        row.hide = false
+        $baseMessage("图片删除成功!","success","hey")
+      }
     })
   } catch (error) {
     console.error(error)

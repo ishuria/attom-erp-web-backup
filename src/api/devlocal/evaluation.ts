@@ -178,7 +178,16 @@ export function uploadFileBoBakend(data?: any) {
     data,
   })
 }
-
+/**
+ * @description 新款评估-成本核算删除图片
+ */
+export function evaluationCostDeleteImg(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/evaluation/cost/delete/img`,
+    method: 'post',
+    params
+  })
+}
 
 /**
  * 删除
