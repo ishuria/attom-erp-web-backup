@@ -7,15 +7,15 @@
       :header-cell-style="{ 'text-align': 'center' }" 
       stripe
     >
-      <el-table-column align="left" label="供应商全名" min-width="120" prop="suppliser" />   
+      <el-table-column align="left" label="供应商全名" prop="suppliser" :width="flexColumnWidth(list, '供应商全名', 'suppliser')" />   
       <el-table-column label="税号" min-width="120" prop="taxNumber" />  
       <el-table-column label="地址" prop="address" :width="flexColumnWidth(list, '地址', 'address')" />
-      <el-table-column label="开票电话"  min-width="100" prop="telephone" />
+      <el-table-column align="center" label="开票电话"  min-width="100" prop="telephone" />
       <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')"/>    
       <el-table-column label="开户账号"  min-width="120" prop="accountNumber" />
-      <el-table-column align="center" label="联行号" min-width="100" prop="bankRoutingNumber"/>    
+      <el-table-column label="联行号" min-width="100" prop="bankRoutingNumber"/>    
       <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson"/>
-      <el-table-column label="联系人电话" min-width="100" prop="contactNumber"/>    
+      <el-table-column align="center" label="联系人电话" min-width="100" prop="contactNumber"/>    
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
