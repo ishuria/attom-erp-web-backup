@@ -1,6 +1,6 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header :content="route.query.title" @back="goBack" />
+    <el-page-header :content="`修改 ${route.query.title}`" @back="goBack" />
     <el-row>
       <el-col :span="12">
         <el-form
@@ -438,13 +438,8 @@ onMounted(async () => {
     saveBtnText.value = "修改保存"
   }
   
-  changeTabsMeta({
-    meta: {
-      title: `${route.query.title}`,
-    },
-  })
   // await changeTabsMeta({
-  //   title: '新款评估',
+  //   name: 'AddOrUpdateEvalution',
   //   meta: {
   //     title: `${route.query.idNo} - 新款评估`,
   //   },

@@ -111,13 +111,13 @@
 
 import { ArrowDown } from '@element-plus/icons-vue'
 import type { FormInstance, } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { sampleTrackTableColumns } from '../productProgressComponent'
-import { getSampleList, updateSampleOrder, updateSampleReceipt } from '/@/api/devlocal/progressSample'
+import { getSampleList, updateSampleOrder, updateSampleReceipt, updateSampleTrackRemark } from '/@/api/devlocal/progressSample'
 import type { ISampleOrderReq, ISampleTrack } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import type { CSSProperties } from 'vue'
 
 defineComponent({
   name:"VabSampleTranck"
@@ -150,16 +150,25 @@ const orderForm = reactive({
   orderNo:'',
   logisticsNo:'',
 })
-
-const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+let copyRow: any
+const cellClick = (row: any, column: any) => {
   if (column.property === 'remark') {
     remark.value = row.remark
     remarkVisible.value = true
+    copyRow = row
   }
 }
 // 确认修改备注
-const confirmUpdateRemark = () => {
-  //
+const confirmUpdateRemark = async () => {
+  const { data } = await updateSampleTrackRemark({
+    id: copyRow.sampleId,
+    remark: remark.value
+  })
+  if (data) {
+    copyRow.remark = remark.value
+    $baseMessage('修改备注成功！', 'success')
+    remarkVisible.value = false
+  }
 }
 const handleWidth = (item: any) => {
   switch (item.label) {

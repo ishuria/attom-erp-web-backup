@@ -170,19 +170,18 @@ v-for="dict in currencyList" :key="dict.value"
 v-model="row.supplier" autofocus type="text" 
                     @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
-                <span>
-                    <el-text truncated>
-                        {{ row.supplier }}
-                    </el-text>
-                </span>
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.supplier) }}</div>
+                  </template>
+                  <el-text truncated>{{ removeHtmlTags(row.supplier) }}</el-text>
+                </el-tooltip>
             </template>
         </el-table-column>
         <el-table-column align="center" label="开票" prop="oem" width="140">
             <template #default = "{ row }">
                 <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingChange(row)">
-                    <el-option
-v-for="dict in invoicingList" :key="dict.value"
-                        :label="dict.label" :value="dict.value"/>
+                    <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value"/>
                 </el-select>
             </template>
         </el-table-column>
@@ -212,16 +211,17 @@ v-for="dict in invoicingList" :key="dict.value"
 
         
         <el-table-column  label="采购链接" min-width="140" prop="purchaseLink">
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input v-model="row.purchaseLink" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>
-                    <el-text truncated>
-                        {{ row.purchaseLink }}
-                    </el-text>
-                </span>
-            </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.purchaseLink" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseLink) }}</div>
+              </template>
+              <el-text truncated>{{ removeHtmlTags(row.purchaseLink) }}</el-text>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column  label="收货仓库" min-width="140" prop="defaultRepositoryId">
             <template #default="{ row }">
@@ -474,6 +474,7 @@ import type { UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
   reverseCalculateReview,
@@ -503,7 +504,6 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { getChannelList } from '/@/api/devlocal/encasement'
 defineOptions({
   name: 'OrderStep3',
 })
@@ -1008,72 +1008,75 @@ const handleSave = async () => {
 // 当点击保存并继续的时候
 // 校验每个组件项的函数
 const validateComponent = (item: any) => {
-    if (item.componentImgUrl.length === 0) {
-        $baseMessage('请先上传零件图片', 'error', 'hey');
-        return false;
-    } else if (!item.componentName) {
-        $baseMessage('请先填写零件名', 'error', 'hey');
-        return false;
-    } else if (!item.quantity) {
-        $baseMessage('请先填写每个SKU需要的数量', 'error', 'hey');
-        return false;
-    } else if (!item.componentUnit) {
-        $baseMessage('请先填写单位', 'error', 'hey');
-        return false;
-    } else if (!item.unitPrice) {
-        $baseMessage('请先填写出厂单价', 'error', 'hey');
-        return false;
-    } else if (!item.totalPrice) {
-        $baseMessage('请先填写出场总价', 'error', 'hey');
-        return false;
-    } else if (!item.freight) {
-        $baseMessage('请先填写运费含税', 'error', 'hey');
-        return false;
-    } else if (!item.taxIncludedPrice) {
-        $baseMessage('请先填写总含税价', 'error', 'hey');
-        return false;
-    } else if (!item.supplier) {
-        $baseMessage('请先填写供应商', 'error', 'hey');
-        return false;
-    } else if (!item.actualTaxRate) {
-        $baseMessage('请先填写实际税点', 'error', 'hey');
-        return false;
-    } else if (!item.invoicingTaxRate) {
-        $baseMessage('请先填写开票税点', 'error', 'hey');
-        return false;
-    } else if (item.invoicing !== '0' && !item.purchaseLink) { //采购链接 必填的校验仅针对选择了普票和无法开票的
-        $baseMessage('请填写所有无法开票和普票零件的采购链接', 'error', 'hey');
-        return false;
-    }
-    return true; // 所有校验通过
+  if (item.componentImgUrl.length === 0) {
+    $baseMessage('请先上传零件图片！', 'warning', 'hey');
+    return false;
+  } else if (!item.componentName) {
+    $baseMessage('请先填写零件名！', 'warning', 'hey');
+    return false;
+  } else if (!item.quantity) {
+    $baseMessage('请先填写每个SKU需要的数量！', 'warning', 'hey');
+    return false;
+  } else if (!item.componentUnit) {
+    $baseMessage('请先填写单位！', 'warning', 'hey');
+    return false;
+  } else if (!item.unitPrice) {
+    $baseMessage('请先填写出厂单价！', 'warning', 'hey');
+    return false;
+  } else if (!item.totalPrice) {
+    $baseMessage('请先填写出场总价！', 'warning', 'hey');
+    return false;
+  } else if (!item.freight) {
+    $baseMessage('请先填写运费含税！', 'warning', 'hey');
+    return false;
+  } else if (!item.taxIncludedPrice) {
+    $baseMessage('请先填写总含税价！', 'warning', 'hey');
+    return false;
+  } else if (!item.supplier) {
+    $baseMessage('请先填写供应商！', 'warning', 'hey');
+    return false;
+  } else if (!item.actualTaxRate) {
+    $baseMessage('请先填写实际税点！', 'warning', 'hey');
+    return false;
+  } else if (!item.invoicingTaxRate) {
+    $baseMessage('请先填写开票税点！', 'warning', 'hey');
+    return false;
+  } else if (item.invoicing !== '0' && !item.purchaseLink) { //采购链接 必填的校验仅针对选择了普票和无法开票的
+    $baseMessage('请填写所有无法开票和普票零件的采购链接！', 'warning', 'hey');
+    return false;
+  } else if (item.defaultRepositoryId === null) {
+    $baseMessage('请选择收货仓库', 'warning')
+    return false
+  }
+  return true; // 所有校验通过
 };
 const validateVariants = (item: any) => {
   if (!item.packagingLength) {
-      $baseMessage('请先填写变体的长（cm）', 'error', 'hey');
+      $baseMessage('请先填写变体的长（cm）', 'warning', 'hey');
       return false;
   } else if (!item.packagingWidth) {
-      $baseMessage('请先填写变体的宽（cm）', 'error', 'hey');
+      $baseMessage('请先填写变体的宽（cm）', 'warning', 'hey');
       return false;
   } else if (!item.packagingHeight) {
-      $baseMessage('请先填写变体的高（cm）', 'error', 'hey');
+      $baseMessage('请先填写变体的高（cm）', 'warning', 'hey');
       return false;
   } else if (!item.weight) {
-      $baseMessage('请先填写重量', 'error', 'hey');
+      $baseMessage('请先填写重量', 'warning', 'hey');
       return false;
   } else if (!item.packagingPrice) {
-      $baseMessage('请先填写打包价格', 'error', 'hey');
+      $baseMessage('请先填写打包价格', 'warning', 'hey');
       return false;
   } else if (!item.finalSellingPrice) {
-      $baseMessage('请先填写最终售价', 'error', 'hey');
+      $baseMessage('请先填写最终售价', 'warning', 'hey');
       return false;
   } else if (!item.weightCoefficient) {
-      $baseMessage('请先填写重量系数', 'error', 'hey');
+      $baseMessage('请先填写重量系数', 'warning', 'hey');
       return false;
   } else if (!item.volumeCoefficient) {
-      $baseMessage('请先填写体积系数', 'error', 'hey');
+      $baseMessage('请先填写体积系数', 'warning', 'hey');
       return false;
   } else if (!item.tariff) {
-      $baseMessage('请先填写关税', 'error', 'hey');
+      $baseMessage('请先填写关税', 'warning', 'hey');
       return false;
   }
   return true; // 所有校验通过

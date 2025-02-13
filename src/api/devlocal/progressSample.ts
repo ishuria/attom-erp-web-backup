@@ -169,7 +169,16 @@ export function getSampleList(params?: ISampleQueryReq): Promise<ISampleQueryRes
     params,
   })
 }
-
+/**
+ * @description 样品追踪 修改备注
+ */
+export function updateSampleTrackRemark(data: { id: number, remark: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/progress/sample/remark/save`,
+    method: 'post',
+    data
+  })
+}
 /**
  * 获取新品进度成本核算数据列表
  * @param params

@@ -238,12 +238,19 @@ import { getChannelList } from '/@/api/devlocal/encasement'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { convertString } from '/@/utils/stringUtils'
 import type { CSSProperties } from 'vue'
+import { handleMatched, handleTabs } from '~/src/utils/routes'
+import { useRoutesStore } from '~/src/store/modules/routes'
+import { useTabsStore } from '~/src/store/modules/tabs'
 
 defineOptions({
   name: 'Evaluation',
 })
 
 const router = useRouter()
+const routesStore = useRoutesStore()
+const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
+const tabsStore = useTabsStore()
+const { changeTabsMeta } = tabsStore
 const tableRef = ref<TableInstance>()
 const isFullscreen = ref<boolean>(false)
 
@@ -385,17 +392,34 @@ const startEvalution = () => {
 /**
  * 修改新款评估
  */
-const toUpdateEvaluation = (row: any) => {
+const toUpdateEvaluation = async (row: any) => {
   row.avgConversionRate = row.avgConversionRate.split('%')[0]
   setLocalStorage('evlautionRouteParams', { ...row })
-  router.push({
-    path: '/newProductDevelopment/addOrUpdateEvalution',
+  const matched = handleMatched(allRoutes.value, '/newProductDevelopment/addOrUpdateEvalution')
+  
+  const tab = handleTabs({
+    ...matched.at(-1),
     query: {
+      title: `${row.idNo}-新款评估`,
       idNo: row.idNo,
-      title: '评估修改',
-      timestamp: Date.now(),
     },
   })
+  
+  if (tab) {
+    await router.push({
+      path: '/newProductDevelopment/addOrUpdateEvalution',
+      query: {
+        title: `${tab.query.title}`,
+        idNo: row.idNo,
+      },
+    })
+    await changeTabsMeta({
+      title: '查看和修改新款评估',
+      meta: {
+        title: `${tab.query.title}`,
+      },
+    })
+  }
 }
 
 // 关键词趋势检索
