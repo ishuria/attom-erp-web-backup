@@ -133,19 +133,22 @@
   
 <script lang="ts" setup>
 import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
-    name: 'OrderStep6',
+  name: 'OrderStep6',
 })
+
 const photoSampleOptions = [
-    { label: '已有拍照样品,大货无需留样', value: 0 },
-    { label: '大货需要留样拍照', value: 1 }
+  { label: '已有拍照样品,大货无需留样', value: 0 },
+  { label: '大货需要留样拍照', value: 1 }
 ];
 const emit = defineEmits<{ 
-    (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisible', value: boolean): void
-    (e: 'update:previewListValue', value: string): void
+  (e: 'change-step', value: number): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
  }>()
 // const listLoading = ref<boolean>(true)
 const checkPersonListVisible = ref<boolean>(false)
@@ -156,7 +159,10 @@ const reviewPersonId = ref<string>('')
 const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const props = defineProps<{ step1Data: number }>()
+const router = useRouter()
 const route: any = useRoute()
+const tabsStore = useTabsStore()
+const { delVisitedRoute } = tabsStore
 
 const setPreviewImage = (url: string) => {
   emit("update:previewListValue", url)
@@ -169,15 +175,19 @@ const handlePersonSelectConfirm = async () => {
   checkPersonListVisible.value = false
   try {
     const { data } = await reviewStepNo6SaveSix({ reviewId: classReviewId!, reviewPersonId: reviewPersonId.value })
-      if (data === true) {
-        $baseMessage("提交审核成功。","success","hey")
-      }
+    if (data) {
+      $baseMessage("提交审核成功! ", "success", "hey")
+      await delVisitedRoute(handleActivePath(route, true))
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords'
+      })
+    }
   } catch (error) {
     console.error(error)
   }
 }
 const formattedPrice = (price: string) => {
-    return parseFloat(price).toFixed(2)
+  return parseFloat(price).toFixed(2)
 }
 
 const generateStatus = (value: number) => {
@@ -197,7 +207,7 @@ const generateStatus = (value: number) => {
   }
 }
 const generateInvoiceType = (value: number) => {
-    switch (value) {
+  switch (value) {
     case 0: {
         return "专票"
     }
@@ -207,11 +217,11 @@ const generateInvoiceType = (value: number) => {
     case 2: {
         return "不开票"
     }
-    // No default
-    }
+  // No default
+  }
 }
 const generateDealMethod = (value: number) => {
-    switch (value) {
+  switch (value) {
     case 0: {
         return "不含在PO"
     }
@@ -221,8 +231,8 @@ const generateDealMethod = (value: number) => {
     case 2: {
         return "含在其他PO"
     }
-    // No default
-    }
+  // No default
+  }
 }
 const labelMap: Record<string, string> = {
   column0: '',
@@ -314,48 +324,47 @@ const useTableDataLineToColumn = () => {
 
 // 当点击提交审核的时候
 const handleSaveAndContinue = async () => {
-    checkPersonListVisible.value = true
-    try {
-      const { data: person }  = await reviewStepNo6PersonList()
-      personList.value = person
-    } catch (error) {
-      console.error(error)
-    }
+  checkPersonListVisible.value = true
+  try {
+    const { data: person }  = await reviewStepNo6PersonList()
+    personList.value = person
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 4)
+  emit('change-step', 4)
 }
 const checkTableData = ref([])
 let columnsChange: any
 const fetchData = async () => {
   const { data } = await reviewStepNo6CheckGet({ reviewId: classReviewId! })
   checkTableData.value = data.map((item: any, index: number) => ({
-        column0: convertString(index),
-        variantImg: item.variantImg,
-        productName: item.productName,
-        amazonUsOrderQuantity: item.amazonUsOrderQuantity,
-        purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
-        finalSellingPrice: item.finalSellingPrice,
-        actualTotalCost: item.actualTotalCost,
-        grossMarginRate: item.grossMarginRate,
-        packagingSize: item.packagingSize,
-        productSize: item.productSize,
-        material: item.material,
-        battery: item.battery,
-        benchmarkAsin: item.benchmarkAsin,
-        patent: item.patent,
-        sampleRetentionStatus: item.sampleRetentionStatus,
-        productManager: item.productManager,
-        productDesign: item.productDesign,
-        certification: '',
-        variantSku: item.variantSku,
-        orderEntryId: item.orderEntryId,
+    column0: convertString(index),
+    variantImg: item.variantImg,
+    productName: item.productName,
+    amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+    purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
+    finalSellingPrice: item.finalSellingPrice,
+    actualTotalCost: item.actualTotalCost,
+    grossMarginRate: item.grossMarginRate,
+    packagingSize: item.packagingSize,
+    productSize: item.productSize,
+    material: item.material,
+    battery: item.battery,
+    benchmarkAsin: item.benchmarkAsin,
+    patent: item.patent,
+    sampleRetentionStatus: item.sampleRetentionStatus,
+    productManager: item.productManager,
+    productDesign: item.productDesign,
+    certification: '',
+    variantSku: item.variantSku,
+    orderEntryId: item.orderEntryId,
   }))
   const { initData, columns } = useTableDataLineToColumn();
   columnsChange = columns 
   exchangeList.value = initData(checkTableData.value);
-  
 }
 let classReviewId: number | undefined
 
@@ -364,25 +373,23 @@ const fetchMoldData = async () => {
   if (data) {
     moldCheckList.value = data
   }
-
 }
 onMounted(() => {
   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
+    classReviewId = props.step1Data
   } else {
-      classReviewId = route.query.reviewId
+    classReviewId = route.query.reviewId
   }
   fetchData()
   fetchMoldData()
-  
 })
 </script>
   
 <style lang="scss" scoped>
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
 /* 只隐藏 class 为 table1 的 el-table 的最后一行 */
 :deep(.table1 .el-table__body-wrapper tr:last-child ){

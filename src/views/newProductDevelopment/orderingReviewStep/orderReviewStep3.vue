@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
       <el-table
-ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" height="895"
-        :show-header="false" stripe style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
+        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" height="895"
+        :show-header="false" stripe style="width: auto; table-layout: fixed;"
+      >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
           <template #default="{ row }">
@@ -13,7 +14,7 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
-              <el-image data-img="img" fit="fill" :src="scope.row[prop]" style="width: 105px;height: 105px;">
+              <el-image fit="fill" :src="scope.row[prop]" style="width: 105px; height: 105px;" @click="showPreviewImage(scope.row[prop])">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -59,7 +60,7 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
               />
             </template>
             <template
-v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
+              v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
               && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
               && scope.row['column0'] !== 'variantImg' && scope.row['column0'] !== 'packagingSize'">
               {{ scope.row[prop] }}
@@ -88,9 +89,8 @@ import { getDistributionList, reviewStepNo3Save,updateStepNoQuantity } from '/@/
 import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
-const router = useRouter()
 
+const router = useRouter()
 
 defineOptions({
   name: 'OrderReviewStep3',
@@ -137,15 +137,10 @@ const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-      imagePreviewVisible.value = true
-      imagePreviewList.value = []
-      imagePreviewList.value.push(el.src)
-    }
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const buildParams = (idx: number): IReviewStepUpdateReq => {
   let n: any = {}

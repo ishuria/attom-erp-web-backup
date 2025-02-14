@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <el-table
-ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" height="750"
-        :show-header="false" stripe style="width: auto; table-layout: fixed;" @cell-click="tableInputChange">
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <el-table 
+        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false" stripe style="width: auto; table-layout: fixed;"
+      >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
           <template #default="{ row }">
@@ -12,7 +13,6 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
         </el-table-column>
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
-
             <template v-if="row['column0'] === 'sku'">
               <el-input 
                 v-model.trim="row[prop]" 
@@ -22,7 +22,7 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image data-img="img" fit="fill" :src="row[prop]" style="width: 105px;height: 105px;">
+              <el-image fit="fill" :src="row[prop]" style="width: 105px;height: 105px;" @click="showPreviewImage(row[prop])">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -38,7 +38,16 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
             <template v-if="row['column0'] === 'productSize'">
                 {{ row[prop] }} inch
             </template>
-            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'">
+            <template v-if="row['column0'] === 'sampleRetentionStatus'">
+              <span v-show="row[prop] === 0">已有拍照样品,大货无需留样</span>
+              <span v-show="row[prop] === 1">大货需要留样拍照</span>
+            </template>
+            <template v-if="row['column0'] === 'purchaseTotalPrice'">
+              {{ Number(row[prop]).toFixed(2) }}
+            </template>
+            <template 
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize'
+                && row['column0'] !== 'productSize' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
               {{ row[prop] }}
             </template>
             
@@ -49,7 +58,6 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
         </template>
       </el-table>
     </div>
-
 
     <div style="padding-top: 20px;">
       <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
@@ -84,7 +92,6 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
             <span v-if="row.dealMethod == 2">含在其他PO</span>
           </template>
         </el-table-column>
-
       </el-table>
     </div>
 
@@ -92,12 +99,10 @@ ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'r
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
-
   </div>
 </template>
 
 <script lang="ts" setup>
-import { getDataAttribute, getSpecificChildren } from '~/src/utils/nodeUtils'
 import { getMoldInfoByReviewId, getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewMoldItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
@@ -168,15 +173,11 @@ const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-      imagePreviewVisible.value = true
-      imagePreviewList.value = []
-      imagePreviewList.value.push(el.src)
-    }
+
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const buildParams = (): IReviewStep2Req => {
   let paramVArr: IReviewStep2Item[] = []

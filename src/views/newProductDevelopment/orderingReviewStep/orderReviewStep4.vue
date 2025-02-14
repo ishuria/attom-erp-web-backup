@@ -1,99 +1,97 @@
 <template>
-    <div>
-      <div class="comprehensive-table-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-            <el-table 
-                ref="tableRef" 
-                border :data="variantList" 
-                :header-cell-style="{ 'text-align': 'right' }" 
-                height="630"
-                :show-header="false"
-                stripe
-                style="width: auto; table-layout: fixed;"
-                @cell-click="tableInputChange"
-            >
-                <!-- 第一列固定标签列 -->
-                <el-table-column 
-                    align="right" 
-                    fixed 
-                    :label="labelMap['column0']"
-                    :prop="'column0'"
-                    width="260"
-                >
-                    <template #default="{ row }">
-                        <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
-                    </template>
-                </el-table-column>
-                <el-table-column 
-                    v-for="(prop, i) in columns" 
-                    :key="i" 
-                    align="center" 
-                    :label="prop" 
-                    min-width="240" 
-                    :prop="prop"
-                >
-                    <template #default="scope">
-                        <template v-if="scope.row['column0'] === 'variantImg'">
-                            <el-image data-img="img" fit="fill" :src="scope.row[prop]" style="width: 105px;height: 105px;">
-                              <template #error>
-                                <el-icon/>
-                              </template>
-                            </el-image>
-                        </template>
-                        <template v-if="scope.row['column0'] === 'oem'">
-                            <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
-                        </template>
-                        <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
-                          <el-input
-                            v-model="scope.row[prop]" 
-                            @blur="updateHnadlerNumber($event, scope)"
-                            @click="inputHandleMouseOver($event)" 
-                            @keydown.enter="updateHnadlerNumber($event, scope)" 
-                          />
-                        </template>
-                        <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
-                          <el-input 
-                            v-model="scope.row[prop]" 
-                            @blur="updateHnadlerNumber($event, scope)"
-                            @click="inputHandleMouseOver($event)"
-                            @keydown.enter="updateHnadlerNumber($event, scope)"
-                          />
-                        </template>
-                        <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
-                          <el-input
-                            v-model="scope.row[prop]"
-                            @blur="updateHnadlerNumber($event, scope)"
-                            @click="inputHandleMouseOver($event)"
-                            @keydown.enter="updateHnadlerNumber($event, scope)"
-                          />
-                        </template>
-                        <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
-                          <el-input
-                            v-model="scope.row[prop]"
-                            @blur="updateHnadlerNumber($event, scope)"
-                            @click="inputHandleMouseOver($event)"
-                            @keydown.enter="updateHnadlerNumber($event, scope)"
-                          />
-                        </template>
-                        <template 
-                          v-if="scope.row['column0'] !== 'oem' && scope.row['column0'] !== 'amazonUsOrderQuantity' && 
-                          scope.row['column0'] !== 'amazonUkOrderQuantity' && scope.row['column0'] !== 'amazonDeOrderQuantity' && 
-                          scope.row['column0'] !== 'walmartUsOrderQuantity' && scope.row['column0'] !== 'variantImg'"
-                        >
-                            {{ scope.row[prop] }}
-                        </template>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+  <div>
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <el-table 
+        ref="tableRef" 
+        border :data="variantList" 
+        :header-cell-style="{ 'text-align': 'right' }" 
+        height="630"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed;"
+      >
+        <!-- 第一列固定标签列 -->
+        <el-table-column 
+          align="right" 
+          fixed 
+          :label="labelMap['column0']"
+          :prop="'column0'"
+          width="260"
+        >
+          <template #default="{ row }">
+            <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
+          </template>
+        </el-table-column>
+        <el-table-column 
+          v-for="(prop, i) in columns" 
+          :key="i" 
+          align="center" 
+          :label="prop" 
+          min-width="240" 
+          :prop="prop"
+        >
+          <template #default="scope">
+            <template v-if="scope.row['column0'] === 'variantImg'">
+              <el-image fit="fill" :src="scope.row[prop]" style="width: 105px; height: 105px;" @click="showPreviewImage(scope.row[prop])">
+                <template #error>
+                  <el-icon/>
                 </template>
-            </el-table>
-        </div>
-        <div class="pay-button-group">
-            <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
-        </div>
-        
+              </el-image>
+            </template>
+            <template v-if="scope.row['column0'] === 'oem'">
+                <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]" 
+                @blur="updateHnadlerNumber($event, scope)"
+                @click="inputHandleMouseOver($event)" 
+                @keydown.enter="updateHnadlerNumber($event, scope)" 
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
+              <el-input 
+                v-model="scope.row[prop]" 
+                @blur="updateHnadlerNumber($event, scope)"
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]"
+                @blur="updateHnadlerNumber($event, scope)"
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
+              <el-input
+                v-model="scope.row[prop]"
+                @blur="updateHnadlerNumber($event, scope)"
+                @click="inputHandleMouseOver($event)"
+                @keydown.enter="updateHnadlerNumber($event, scope)"
+              />
+            </template>
+            <template 
+              v-if="scope.row['column0'] !== 'oem' && scope.row['column0'] !== 'amazonUsOrderQuantity' && 
+              scope.row['column0'] !== 'amazonUkOrderQuantity' && scope.row['column0'] !== 'amazonDeOrderQuantity' && 
+              scope.row['column0'] !== 'walmartUsOrderQuantity' && scope.row['column0'] !== 'variantImg'"
+            >
+                {{ scope.row[prop] }}
+            </template>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        </template>
+      </el-table>
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <div class="pay-button-group">
+      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
+    </div>
+  </div>
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
 </template>
   
 <script lang="ts" setup>
@@ -102,10 +100,9 @@ import {releasePo,reviewProductList,updateStepNoQuantity} from '/@/api/devlocal/
 import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
-    name: 'OrderReviewStep4',
+  name: 'OrderReviewStep4',
 })
 
 const props = defineProps<{
@@ -121,16 +118,10 @@ const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-    // 处理图片放大预览
-    
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-      imagePreviewVisible.value = true
-      imagePreviewList.value = []
-      imagePreviewList.value.push(el.src)
-    }
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const route: any = useRoute()
 const tabsStore = useTabsStore()
@@ -211,7 +202,6 @@ const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await reviewProductList({ reviewId: props.reviewId })
 
-
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
@@ -236,8 +226,6 @@ const fetchData = async () => {
 onMounted(() => {
   fetchData()
 })
-
-
 </script>
   
 <style lang="scss" scoped>
@@ -260,9 +248,9 @@ onMounted(() => {
 }
 
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
 .custom-checkbox {
   transform: scale(1.3); // 放大 20%
