@@ -48,7 +48,7 @@
       <el-table-column label="产品经理" min-width="90" prop="productManager"/>
       <el-table-column label="停产" prop="productionHaltStatus">
         <template #default="{ row }">
-          <el-switch v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #ff4949; --el-switch-off-color: #13ce66" @change="handleUpdateStatus(row)"/>
+          <el-switch v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #ff4949;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
       <el-table-column label="优先打包" min-width="90" prop="priorityPacking">

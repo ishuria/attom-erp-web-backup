@@ -220,8 +220,6 @@ import {
   updateSharePerson,
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
-import { setLocalStorage } from '/@/utils/localStorage'
-
 import type {
   IBenchmarkScore,
   ICostAccounting,
@@ -233,13 +231,13 @@ import type {
   IShared,
 } from '/@/type/evaluation/evaluationType'
 
-import { getChannelList } from '/@/api/devlocal/encasement'
-import { flexColumnWidth } from '/@/utils/tableColum'
-import { convertString } from '/@/utils/stringUtils'
 import type { CSSProperties } from 'vue'
-import { handleMatched, handleTabs } from '~/src/utils/routes'
 import { useRoutesStore } from '~/src/store/modules/routes'
 import { useTabsStore } from '~/src/store/modules/tabs'
+import { handleMatched, handleTabs } from '~/src/utils/routes'
+import { getChannelList } from '/@/api/devlocal/encasement'
+import { convertString } from '/@/utils/stringUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Evaluation',
@@ -392,8 +390,8 @@ const startEvalution = () => {
  * 修改新款评估
  */
 const toUpdateEvaluation = async (row: any) => {
-  row.avgConversionRate = row.avgConversionRate.split('%')[0]
-  setLocalStorage('evlautionRouteParams', { ...row })
+  // row.avgConversionRate = row.avgConversionRate.split('%')[0]
+  // setLocalStorage('evlautionRouteParams', { ...row })
   const matched = handleMatched(allRoutes.value, '/newProductDevelopment/addOrUpdateEvalution')
   
   const tab = handleTabs({

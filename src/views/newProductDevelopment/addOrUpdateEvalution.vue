@@ -200,7 +200,6 @@ import {
   updateEvaluation
 } from '/@/api/devlocal/evaluation'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { removeLocalStorage } from '/@/utils/localStorage'
 import { handleActivePath } from '/@/utils/routes'
 
 import {
@@ -225,7 +224,7 @@ const route: any = useRoute()
 const echartsFlag = ref(false)
 
 const tabsStore = useTabsStore()
-const { changeTabsMeta, delVisitedRoute } = tabsStore
+const { delVisitedRoute } = tabsStore
 const uploadRef = ref<UploadInstance>()
 const fileList = ref<any>([])
 const isSaveLoading = ref<boolean>(false)
@@ -304,7 +303,7 @@ const handlerSave = async() =>{
   formData.append('averageSales360Days', inputForm.averageSales360Days)
   formData.append('top80PercentClickedProductsCount', inputForm.top80PercentClickedProductsCount)
   formData.append('amazonAdCpc', inputForm.amazonAdCpc)
-  formData.append('categoryAvgConversionRate', (Number(inputForm.categoryAvgConversionRate) / 100).toString())
+  formData.append('categoryAvgConversionRate', inputForm.categoryAvgConversionRate)
   
   // formData可以添加同名数据，
   fileList.value.forEach((v:any) => {
@@ -391,7 +390,7 @@ const aginAnalyze = async () =>{
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
-  removeLocalStorage("evlautionRouteParams")
+  // removeLocalStorage("evlautionRouteParams")
   history.back()
 }
 
@@ -418,7 +417,7 @@ onMounted(async () => {
     inputForm.averageSales360Days = data.averageSales360Days    
     inputForm.top80PercentClickedProductsCount = data.productsCount    
     inputForm.amazonAdCpc = data.cpc    
-    inputForm.categoryAvgConversionRate = (data.avgConversionRate * 100).toFixed(2)
+    inputForm.categoryAvgConversionRate = data.avgConversionRate
 
     outputForm.evaluationId = data.idNo
     outputForm.marketCapacity = data.marketVolume
