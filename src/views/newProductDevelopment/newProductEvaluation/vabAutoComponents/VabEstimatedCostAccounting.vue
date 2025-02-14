@@ -667,6 +667,7 @@ const handlerEstimatedChange = async (row: IEstimatedCostAccounting) => {
     id: Number(row.id),
     channelId: row.firstMileChannel,
   })
+  props.callParentMethod(parseInt(evaluationId.value))
 }
 
 // 修改站点
