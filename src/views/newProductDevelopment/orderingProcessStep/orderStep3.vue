@@ -10,13 +10,15 @@
       </vab-query-form>
         
       <el-table 
-        ref="tableRef" 
-        border :data="componentList" 
+        ref="tableRef"
+        border 
+        :cell-class-name="clearPadding" class="noneHoverTable" 
+        :data="componentList"
         :header-cell-style="{ 'text-align': 'center' }" 
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column align="center" label="属于变体" min-width="140">
+        <el-table-column fixed="left" label="属于变体" min-width="140">
           <template #default="{ row }">
             <el-select v-model="row.orderEntryId" placeholder="请选择变体" style="min-width: 100%;" @change="handleVariantChange(row)">
               <el-option v-for="item in variantsSelectList" :key="item.id" :label="item.label" :value="item.id"/>
@@ -24,9 +26,13 @@
           </template>
         </el-table-column>
         
-        <el-table-column align="center" class="image-wall" label="零件图片" min-width="100">
+        <el-table-column fixed="left" label="零件图片" width="76">
+          <template #header>
+            零件<br />图片
+          </template>
           <template #default="{ row }">
             <el-upload 
+              class="component-upload" 
               :class="{ hide: row.hide }" 
               :file-list="row.componentImgUrl" 
               :http-request="(File) => uploadImage(File, row)"
@@ -55,14 +61,15 @@
             </el-upload>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="零件ID" min-width="70"  width="100"/>   
+        <el-table-column align="center" label="零件ID" width="90"/>   
           
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
           <template #default="{ row }">
             <div class="none">
                 <el-input
-v-model="row.componentName" autofocus :autosize="{ minRows: 2, maxRows: 7 }" type="textarea"
-                @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                  v-model="row.componentName" autofocus :autosize="{ minRows: 2, maxRows: 7 }" type="textarea"
+                  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" 
+                />
             </div>
             <span>{{ row.componentName }}</span>
           </template>
@@ -98,26 +105,26 @@ v-model="row.componentName" autofocus :autosize="{ minRows: 2, maxRows: 7 }" typ
           </template>
         </el-table-column>
         <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')">
-            <template #header>
-                出厂<br>总价
-            </template>
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input v-model="row.totalPrice" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.totalPrice }}</span>
-            </template>
+          <template #header>
+            出厂<br>总价
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.totalPrice" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.totalPrice }}</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" label="每个SKU运费(含税)" min-width="100" prop="freight">
-            <template #header>
-                每个SKU<br>运费(含税)
-            </template>
-            <template #default="{ row }">
-                <div class="none">
-                    <el-input v-model="row.freight" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.freight }}</span>
-            </template>
+          <template #header>
+              每个SKU<br>运费(含税)
+          </template>
+          <template #default="{ row }">
+              <div class="none">
+                  <el-input v-model="row.freight" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.freight }}</span>
+          </template>
         </el-table-column>    
         <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
             <template #header>
@@ -268,26 +275,25 @@ v-model="row.supplier" autofocus type="text"
         </template>
       </el-table>
   
-        
       <vab-alert type="error">
-          <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
-          <h3>--为了精准核算利润，运费需要准确填写。</h3>
+        <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
+        <h3>--为了精准核算利润，运费需要准确填写。</h3>
       </vab-alert>
       <wang-editor
-          :classify="classify"
-          :content="attentionCopy"
-          :title="wangEditorTitle"
-          :wang-editor-visible="wangEditorAttentionVisible"
-          @click-boolean="clickAttentionCancel"
-          @click-child="clickAttentionConfirm"
+        :classify="classify"
+        :content="attentionCopy"
+        :title="wangEditorTitle"
+        :wang-editor-visible="wangEditorAttentionVisible"
+        @click-boolean="clickAttentionCancel"
+        @click-child="clickAttentionConfirm"
       />
       <wang-editor
-          :classify="classify"
-          :content="contractCopy"
-          :title="wangEditorTitle"
-          :wang-editor-visible="wangEditorContractVisible"
-          @click-boolean="clickContractCancel"
-          @click-child="clickContractConfirm"
+        :classify="classify"
+        :content="contractCopy"
+        :title="wangEditorTitle"
+        :wang-editor-visible="wangEditorContractVisible"
+        @click-boolean="clickContractCancel"
+        @click-child="clickContractConfirm"
       />
       <!-- 添加零件 -->
       <vab-create-component 
@@ -771,132 +777,128 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
  * 上传图片
  */
 async function uploadImage(params: any, row: any) {
-    row.hide = true
-    try {
-        const imageForm = new FormData();
-        imageForm.append('file', params.file);
-        imageForm.append('reviewComponentId', row.reviewComponentId as any);
+  row.hide = true
+  try {
+      const imageForm = new FormData();
+      imageForm.append('file', params.file);
+      imageForm.append('reviewComponentId', row.reviewComponentId as any);
 
-        const { data } = await reviewStepNo3ComponentUpload(imageForm)
-        
-        row.componentImgUrl = [{ url: data }]
-        // 提示成功信息
-        $baseMessage('图片上传成功!', 'success', 'hey');
-    } catch (error) {
-        console.error(error)
-    }
+      const { data } = await reviewStepNo3ComponentUpload(imageForm)
+      
+      row.componentImgUrl = [{ url: data }]
+      // 提示成功信息
+      $baseMessage('图片上传成功!', 'success', 'hey');
+  } catch (error) {
+      console.error(error)
+  }
 } 
-
 
 /**
  * 图片预览事件
  */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
-    // console.log(row);
-    emit("update:previewListValue", row.componentImgUrl[0].url)
-    emit("update:imagePreviewVisible", true)
+  // console.log(row);
+  emit("update:previewListValue", row.componentImgUrl[0].url)
+  emit("update:imagePreviewVisible", true)
 }
 /**
  * 图片删除功能
  */
 const handleRemove = async (file: UploadFile, row: any) => {
-    try {
-        $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-            const { data } = await reviewStepNo3ComponentImtDel({ reviewComponentId: row.reviewComponentId})
-            if (data === true) {
-                $baseMessage("此零件图片信息删除成功!", "success", "hey");
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+      const { data } = await reviewStepNo3ComponentImtDel({ reviewComponentId: row.reviewComponentId})
+      if (data === true) {
+        $baseMessage("此零件图片信息删除成功!", "success", "hey");
 
-                // 从 row.componentImgUrl 中删除对应的文件
-                const fileIndex = row.componentImgUrl.findIndex((img: any) => img.url === file.url);
-                if (fileIndex !== -1) {
-                    row.componentImgUrl.splice(fileIndex, 1);
-                }
+        // 从 row.componentImgUrl 中删除对应的文件
+        const fileIndex = row.componentImgUrl.findIndex((img: any) => img.url === file.url);
+        if (fileIndex !== -1) {
+          row.componentImgUrl.splice(fileIndex, 1);
+        }
 
-                // 如果 componentImgUrl 为空，则设置 hide 为 false
-                if (row.componentImgUrl.length === 0) {
-                    row.hide = false;
-                }
-            }
-        })
-        
-    } catch (error) {
-        console.error(error)
-    }
+        // 如果 componentImgUrl 为空，则设置 hide 为 false
+        if (row.componentImgUrl.length === 0) {
+          row.hide = false;
+        }
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 新增逻辑
 const handleCreateComponent = async () => {
-    const newComponent: IreviewStepNo3ComponentList = {
-        actualTaxRate: '',
-        componentImgUrl: '',
-        componentName: '',
-        componentUnit: '',
-        contractTerms: '',
-        currency: null,
-        freight: '',
-        invoicing: null,
-        invoicingTaxRate: '',
-        minimumOrderQuantity: null,
-        numberFullCartons: null,
-        orderEntryId: 0,
-        preTaxPrice: '',
-        purchaseLink: '',
-        purchaseMatters: '',
-        quantity: null,
-        reviewComponentId: null,
-        reviewId: null,
-        supplier: '',
-        taxIncludedPrice: '',
-        totalPrice: '',
-        unitPrice: '',
-        variant: '',
-    }
-    let classReviewId: number | undefined
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-        classReviewId = props.step1Data
-    } else {
-        classReviewId = route.query.reviewId
-    }
-    const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
-    newComponent.reviewComponentId = data
-    componentList.value.push(newComponent)
-    fetchDataComponent()
-    fetchVariantsData()
+  const newComponent: IreviewStepNo3ComponentList = {
+    actualTaxRate: '',
+    componentImgUrl: '',
+    componentName: '',
+    componentUnit: '',
+    contractTerms: '',
+    currency: null,
+    freight: '',
+    invoicing: null,
+    invoicingTaxRate: '',
+    minimumOrderQuantity: null,
+    numberFullCartons: null,
+    orderEntryId: 0,
+    preTaxPrice: '',
+    purchaseLink: '',
+    purchaseMatters: '',
+    quantity: null,
+    reviewComponentId: null,
+    reviewId: null,
+    supplier: '',
+    taxIncludedPrice: '',
+    totalPrice: '',
+    unitPrice: '',
+    variant: '',
+  }
+  let classReviewId: number | undefined
+  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await reviewStepNo3ComponentAdd({ reviewId: classReviewId!})
+  newComponent.reviewComponentId = data
+  componentList.value.push(newComponent)
+  fetchDataComponent()
+  fetchVariantsData()
 }
 // 删除逻辑
 const handleComponentDel = (row: IreviewStepNo3ComponentList) => {
-    try {
-        $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
-
-            const {data} = await reviewStepNo3ComponentDel({ reviewComponentId: row.reviewComponentId! })
-                if (data === true){
-                    const index = componentList.value.findIndex((item: IreviewStepNo3ComponentList) => item.reviewComponentId === row.reviewComponentId);
-                    if (index !== -1) {
-                        componentList.value.splice(index, 1);
-                    }
-                    $baseMessage("零件信息删除成功！","success","hey")
-                    fetchDataComponent()
-                    fetchVariantsData()
-                }
-        })
-       
-    } catch(error){
-        console.log(error as Error)
-   }
+  try {
+    $baseConfirm('确定要删除零件信息吗',"系统提示", async ()=>{
+      const {data} = await reviewStepNo3ComponentDel({ reviewComponentId: row.reviewComponentId! })
+      if (data === true){
+        const index = componentList.value.findIndex((item: IreviewStepNo3ComponentList) => item.reviewComponentId === row.reviewComponentId);
+        if (index !== -1) {
+          componentList.value.splice(index, 1);
+        }
+        $baseMessage("零件信息删除成功！","success","hey")
+        fetchDataComponent()
+        fetchVariantsData()
+      }
+    })
+  } catch(error){
+    console.log(error as Error)
+  }
 }
 // 复制逻辑
 const copyRow = ref<any>(null)
 const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
-    $baseConfirm('是否要复制本条零件信息？', '复制', async () => {
-        const { data } = await reviewStepNo3ComponentCopy({ reviewComponentId: row.reviewComponentId! })
-        if (data === true) {
-            copyRow.value = JSON.parse(JSON.stringify(row))
-            const index = componentList.value.indexOf(row)
-            componentList.value.splice(index + 1, 0, copyRow.value)
-            $baseMessage(`复制成功！`, "success", "hey")
-            fetchDataComponent()
-            fetchVariantsData()
-        }
-    })
+  $baseConfirm('是否要复制本条零件信息？', '复制', async () => {
+    const { data } = await reviewStepNo3ComponentCopy({ reviewComponentId: row.reviewComponentId! })
+    if (data === true) {
+      copyRow.value = JSON.parse(JSON.stringify(row))
+      const index = componentList.value.indexOf(row)
+      componentList.value.splice(index + 1, 0, copyRow.value)
+      $baseMessage(`复制成功！`, "success", "hey")
+      fetchDataComponent()
+      fetchVariantsData()
+    }
+  })
 }
 /**
  * 当点击时切换输入框，修改输入
@@ -1130,7 +1132,7 @@ const handleSaveAndContinue = async () => {
 
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 1)
+  emit('change-step', 1)
 }
 
 // 获取拿样零件添加数据
@@ -1212,7 +1214,12 @@ const fetchRepository = async () => { //获取收货仓库
     const { data: repository } = await getProductComponentStore()
     repositoryOption.value = repository
 }
-
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
+}
 onMounted(()=>{
   fetchDataComponent()
   fetchVariantsData()
@@ -1238,7 +1245,6 @@ onMounted(()=>{
 
 .table-container {
   flex: 1;
-  
 }
 .none {
   display: none;
@@ -1247,19 +1253,36 @@ onMounted(()=>{
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
+// 图片上传的样式
+.component-upload {
   width: 75px;
   height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
+  :deep() {
+    .el-upload-list--picture-card {
+      width: 100%;
+      height: 100%;
+      .el-upload-list__item {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        transition: none;
+      }
+    }
+    .el-upload--picture-card {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding  .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 .custom-tooltip {
   max-width: 400px; 

@@ -10,7 +10,7 @@
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column align="center" label="属于变体" min-width="140" prop="variant">
+        <el-table-column align="center" fixed="left" label="属于变体" min-width="140" prop="variant">
           <template #default="{ row }">
             <el-select v-model="row.variant" disabled  placeholder="请选择变体" style="min-width: 100%;">
               <el-option
@@ -22,7 +22,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="零件图片" width="75">
+        <el-table-column align="center" fixed="left" label="零件图片" width="75">
           <template #header>
             零件<br />图片
           </template>

@@ -225,7 +225,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"/>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0"  :true-value="1"/>
@@ -349,7 +349,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"/> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"/>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0"  :true-value="1"/>
@@ -473,7 +473,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"/> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"/>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1"/>
@@ -588,7 +588,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"/> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"/>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0"  :true-value="1"/>
@@ -691,7 +691,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" min-width="250" prop="suppliser"/> 
-          <el-table-column  label="采购方" min-width="100" prop="purchaseId"/>
+          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
               <template #default = "{ row }">
                   <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0"  :true-value="1"/>

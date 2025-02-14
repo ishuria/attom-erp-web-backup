@@ -210,7 +210,6 @@ import { type TableInstance } from 'element-plus'
 import { indexColumns, scoreDetialColumns } from './indexColumns'
 import {
   getEstimatedCostAccountingList,
-  getEvaluationCostParameter,
   getEvaluationScoreDetail,
   getEvaluationScoreParameter,
   getEvaluationShareInfo,
@@ -508,27 +507,27 @@ const getScoreParams = async () => {
   scoreParametersVisible.value = true
 }
 
-// 获取成本核算默认参数
-const costAccountingeParam = async () => {
-  const { data } = await getEvaluationCostParameter()
-  costAccountingFrom.rateMargin = data.rateMargin
-  costAccountingFrom.rateRoi = data.rateRoi
-  costAccountingFrom.tariffRatio = data.tariffRatio
-  costAccountingFrom.extraFulfillment = data.extraFulfillment
-  costAccountingFrom.exchangeRate = data.exchangeRate
-  costAccountingFrom.volumeFactor = data.volumeFactor
-  costAccountingFrom.weightFactor = data.weightFactor
-  costAccountingFrom.shippingType = data.shippingType
-  costAccountingFrom.savePrice = data.savePrice
-  costAccountingFrom.laborCost = data.laborCost
-  costAccountingFrom.oceanShipping = data.oceanShipping
-  costAccountingFrom.airTransport = data.airTransport
-  costAccountingFrom.volumeRate = data.volumeRate
-  costAccountingFrom.weightRate = data.weightRate
-  costAccountingFrom.fuelCost = data.fuelCost
+// // 获取成本核算默认参数
+// const costAccountingeParam = async () => {
+//   const { data } = await getEvaluationCostParameter()
+//   costAccountingFrom.rateMargin = data.rateMargin
+//   costAccountingFrom.rateRoi = data.rateRoi
+//   costAccountingFrom.tariffRatio = data.tariffRatio
+//   costAccountingFrom.extraFulfillment = data.extraFulfillment
+//   costAccountingFrom.exchangeRate = data.exchangeRate
+//   costAccountingFrom.volumeFactor = data.volumeFactor
+//   costAccountingFrom.weightFactor = data.weightFactor
+//   costAccountingFrom.shippingType = data.shippingType
+//   costAccountingFrom.savePrice = data.savePrice
+//   costAccountingFrom.laborCost = data.laborCost
+//   costAccountingFrom.oceanShipping = data.oceanShipping
+//   costAccountingFrom.airTransport = data.airTransport
+//   costAccountingFrom.volumeRate = data.volumeRate
+//   costAccountingFrom.weightRate = data.weightRate
+//   costAccountingFrom.fuelCost = data.fuelCost
 
-  costAccountingeParamVisible.value = true
-}
+//   costAccountingeParamVisible.value = true
+// }
 
 // 修改评分参数
 const updateScoreParam = (row: any) => {
