@@ -1041,13 +1041,11 @@ const handleSampleCosting = (row: IProgress) =>{
   })
 }
 // 订大货
-const handleOrderProcess = (row:IProgress) =>{
-  
+const handleOrderProcess = (row: IProgress) =>{
   router.push({
     path: '/newProductDevelopment/orderingProcess',
     query: {
       progressId: row.progressId,
-      timestamp: Date.now(),
     },
   })
 }

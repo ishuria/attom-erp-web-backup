@@ -77,12 +77,12 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
             :true-value="1" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品经理" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
+      <el-table-column align="center" label="产品经理" min-width="100" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
         <template #default="{ row }">
           <div v-html="row.productManager"></div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品设计" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
+      <el-table-column align="center" label="产品设计" min-width="100" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
         <template #default="{ row }">
           {{ row.productDesign }}
         </template>

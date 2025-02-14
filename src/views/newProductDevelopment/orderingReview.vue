@@ -79,10 +79,6 @@ watch(active, (newActive) => {
   }
 });
 
-
-
-
-
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))

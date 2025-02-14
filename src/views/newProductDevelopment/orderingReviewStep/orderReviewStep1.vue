@@ -24,8 +24,9 @@
               <el-checkbox 
                 v-model="row[prop]" 
                 class="custom-checkbox" 
-                :false-value="0" size="large"
-                :true-value="1" 
+                :false-value="0"
+                size="large" 
+                :true-value="1"
               />
             </template>
             <template v-if="row['column0'] === 'effectiveCount'">

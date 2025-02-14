@@ -7,7 +7,6 @@
             <el-form inline>
               <el-form-item>    
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
                 <el-button class="button-margin" type="warning" @click="handleOpenTest">测试模拟打卡</el-button>
@@ -127,6 +126,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
+                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowCurrentTask">当前任务加人</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
@@ -248,7 +248,6 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
@@ -368,7 +367,6 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
@@ -488,7 +486,6 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
@@ -607,7 +604,6 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
@@ -959,6 +955,7 @@
         class="person-select"
         :data="endTaskList"
         :header-cell-style="{ textAlign: 'center' }"
+        max-height="700"
         stripe
         @cell-click="changePartsListInput"
         @selection-change="setSelectFinishTaskRows"
@@ -1726,10 +1723,10 @@ const handleConfirmCurrentTask = async () => {
     userIds
   })
   if (data) {
-    $baseMessage('当前任务加人成功', 'success')
+    $baseMessage('当前任务加人成功!', 'success')
+    fetchData()
   }
   handleCloseCurrentTask()
-  selectRows.value = []
 }
 // 下班人员的取消
 const handleCloseGetOffWork = async () => {
@@ -1764,7 +1761,7 @@ const handleConfirmGetOffWork = async () => {
     }
   }
   handleCloseGetOffWork()
-  selectRows.value = []
+  // selectRows.value = []
 }
 // 结束任务的取消
 const handleCloseFinishTask = () => {
@@ -1783,9 +1780,10 @@ const handleConfirmFinishTask = async () => {
   })
   if (data) {
     $baseMessage('结束任务成功', 'success')
+    fetchData()
   }
   handleCloseFinishTask()
-  selectRows.value = []
+  // selectRows.value = []
 }
 // 开始任务的取消
 const handleCloseStartTask = () => {
@@ -1823,7 +1821,7 @@ const handleShowQualityProject = async () => {
   if (data) {
     skuQualityList.value = data
     qualityProjectVisible.value = true
-    selectRows.value = []
+    // selectRows.value = []
   }
 }
 // 修改优先打包
@@ -2095,7 +2093,7 @@ const fetchTaskingData = async () => {
 }  
 const handleTabClick = (tab: TabsPaneContext) => {
   list.value = []
-  selectRows.value = []
+  // selectRows.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
