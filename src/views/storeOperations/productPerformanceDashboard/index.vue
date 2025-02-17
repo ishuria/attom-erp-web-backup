@@ -109,6 +109,7 @@
           :cell-style="cellStyle"
           class="noneHoverTable"
           :data="list"
+          :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
           @cell-click="cellClick"
@@ -120,6 +121,7 @@
             :label="item.label"
             :min-width="handleWidth(item)"
             :prop="item.prop"
+            :sortable="item.sortable"
             :width="item.width"
           >
             <template #header>
@@ -207,7 +209,10 @@
               </span>
               <!-- SKU 展示-->
               <span v-if="item.label === 'SKU'">
-                {{ row.sku }}
+                <span class="copySku" data-sku="row.sku" @click="copySku($event, row.sku)" >
+                  {{ row.sku }}
+                  <vab-icon icon="file-copy-2-fill" />
+                </span>
                 <div class="rate-wrapper">
                   <span class="rate-value">{{ row.rating }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
@@ -429,6 +434,7 @@
             :label="item.label"
             :min-width="handleWidth(item)"
             :prop="item.prop"
+            :sortable="item.sortable"
             :width="item.width"
           >
             <template #header>
@@ -726,6 +732,7 @@
             :label="item.label"
             :min-width="handleWidth(item)"
             :prop="item.prop"
+            :sortable="item.sortable"
             :width="item.width"
           >
             <template #header>
@@ -908,7 +915,6 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { _addData } from '/@/utils/skuOptions'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -941,6 +947,7 @@ import type {
   IGetOperationParentAsinList,
 } from '/@/type/storeOperation/productPerformanceType'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'ProductPerformance',
@@ -1012,6 +1019,28 @@ const list = ref<IGetOperationAmazonSKUList[]>([])
 const asinList = ref<IGetOperationAsinList[]>([])
 const pAsinList = ref<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
+   
+const copySku = async (event: Event, sku: string) => {
+  const target = event.target as HTMLElement;
+  const skuElement = target.closest('.copySku') as HTMLElement;
+
+  if (!skuElement) return;
+
+  try {
+    await navigator.clipboard.writeText(sku);
+    $baseMessage('SKU 已复制到剪贴板!', 'success')
+
+    // 选择 SKU 元素的内容
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(skuElement);
+    selection?.removeAllRanges(); // 使用可选链避免可能的空指针
+    selection?.addRange(range); // 使用可选链避免可能的空指针
+
+  } catch (error) {
+    $baseMessage(`复制失败: ${error}`, 'error')
+  }
+}
 const handleConfirmFilter = async (filterForm: any) => {
   if (activeName.value === 0) {
     const { site, ...filterQueryForm } = queryForm
@@ -1454,7 +1483,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
+        return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku', 60)
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -1719,6 +1748,12 @@ const changeCurrencyPASIN = async () => {
     queryPAsinData()
   }
 }
+const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.column.label === '今销') {
+    return 'header-cell'
+  }
+  return ''
+}
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '开发人员'].includes(label)) {
@@ -1799,17 +1834,21 @@ const fetchData = async () => {
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
-        ${storageList
-          .map(
-            (item) => `
-          <div class="storage-item">
-            <span class="value1">${item.name}</span>
-            <span class="value2">${item.fba}</span>
-            <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
-          </div>
-        `
-          )
-          .join('')}
+        <div class="storage-item">
+          <span class="value1">181-270</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">271-360</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">361+</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+        </div>
       </div>
     `
   })
@@ -1831,17 +1870,21 @@ const fetchAsinData = async () => {
     item.displayRating = computed(() => getAmazonStars(item.rating!))
     item.storageAge = `
       <div class="storage-list">
-        ${storageList
-          .map(
-            (item) => `
-          <div class="storage-item">
-            <span class="value1">${item.name}</span>
-            <span class="value2">${item.fba}</span>
-            <span class="value3">${item.fba ? `($${item.price})` : ''}</span>
-          </div>
-        `
-          )
-          .join('')}
+        <div class="storage-item">
+          <span class="value1">181-270</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">271-360</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">361+</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+        </div>
       </div>
     `
   })
@@ -1864,11 +1907,7 @@ const fetchPAsinData = async () => {
   })
   listLoading.value = false
 }
-const storageList = [
-  { name: '181-270', fba: 10, price: 2.34 },
-  { name: '271-360', fba: 216, price: 35.33 },
-  { name: '361+', fba: 0 },
-]
+
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 0 })
   columns.value = data
@@ -1898,9 +1937,18 @@ const fetchColumn = async () => {
     if (item.prop === 'monthAdv') {
       item.minWidth = '110'
     }
-    // if (item.prop === 'trend') {
-    //   item.minWidth = '200'
-    // }
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+      item.sortable = true
+      item.minWidth = '100'
+    }
+    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
+      item.sortable = true
+      item.minWidth = '120'
+    }
+    if (item.prop === 'currentSalesPrice') {
+       item.sortable = true
+      item.minWidth = '130'
+    }
     if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
@@ -1935,6 +1983,14 @@ const fetchAsinColumn = async () => {
     if (item.label === '大类排名') {
       item.minWidth = '120'
     }
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+      item.sortable = true
+      item.minWidth = '100'
+    }
+    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
+      item.sortable = true
+      item.minWidth = '110'
+    }
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
@@ -1955,6 +2011,14 @@ const fetchPAsinColumn = async () => {
       item.minWidth = '100'
     }
     if (item.prop === 'monthAdv') {
+      item.minWidth = '110'
+    }
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+      item.sortable = true
+      item.minWidth = '100'
+    }
+    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
+      item.sortable = true
       item.minWidth = '110'
     }
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
@@ -2011,6 +2075,18 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
+          
+          .copySku {
+            display: inline-block; /* 使宽度适应内容，方便点击 */
+            padding: 5px; 
+            cursor: pointer;
+            -webkit-user-select: text;
+            user-select: text;
+            transition: all 0.3s;
+            &:hover {
+              color: #000;
+            }
+          }
         }
       }
     }
@@ -2065,6 +2141,14 @@ onBeforeMount(() => {
 .noneHoverTable :deep(.el-checkbox) {
   transform: scale(1.3);
   transform-origin: center;
+}
+/* 取消没有条纹的行的悬停背景色 */
+:deep(.noneHoverTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+}
+/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+:deep(.noneHoverTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .disabled-handle {
   cursor: not-allowed;
@@ -2160,5 +2244,10 @@ onBeforeMount(() => {
   .el-icon {
     margin-left: 3px;
   }
+}
+.noneHoverTable :deep(.header-cell .cell) {
+  display: flex;          /* 应用 Flexbox 布局 */
+  align-items: center;   /* 垂直居中 */
+  justify-content: center;
 }
 </style>

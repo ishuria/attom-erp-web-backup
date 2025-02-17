@@ -298,6 +298,35 @@ export interface IGetOperationAmazonSKUList {
    * 1年TACOS
    */
   yearTacos?: number
+  /**
+   * 库龄181-270数量
+   */
+  inventoryAgeLevel1Days?: number
+
+  /**
+   * 库龄181-270对应的价格
+   */
+  inventoryAgeLevel1Value?: number
+
+  /**
+   * 库龄271-360数量
+   */
+  inventoryAgeLevel2Days?: number
+
+  /**
+   * 库龄271-360对应的价格
+   */
+  inventoryAgeLevel2Value?: number
+
+  /**
+   * 库龄361+
+   */
+  inventoryAgeLevel3Days?: number
+
+  /**
+   * 库龄361对应的价格
+   */
+  inventoryAgeLevel3Value?: number
   [property: string]: any
 }
 
@@ -655,6 +684,35 @@ export interface IGetOperationAsinList {
    * 1年TACOS
    */
   yearTacos?: number
+  /**
+ * 库龄181-270数量
+ */
+  inventoryAgeLevel1Days?: number
+
+  /**
+   * 库龄181-270对应的价格
+   */
+  inventoryAgeLevel1Value?: number
+
+  /**
+   * 库龄271-360数量
+   */
+  inventoryAgeLevel2Days?: number
+
+  /**
+   * 库龄271-360对应的价格
+   */
+  inventoryAgeLevel2Value?: number
+
+  /**
+   * 库龄361+
+   */
+  inventoryAgeLevel3Days?: number
+
+  /**
+   * 库龄361对应的价格
+   */
+  inventoryAgeLevel3Value?: number
   [property: string]: any
 }
 
@@ -1161,6 +1219,7 @@ export interface IGetOperationColumnList {
   width?: string
   minWidth?: string
   isFixed?: boolean
+  sortable?: boolean
 }
 /**
  * 产品看板表现列隐藏
