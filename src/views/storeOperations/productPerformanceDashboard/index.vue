@@ -1027,6 +1027,28 @@ const copySku = async (event: Event, sku: string) => {
   if (!skuElement) return;
 
   try {
+    if (window.isSecureContext && navigator.clipboard) {
+      console.warn('Clipboard API is not supported, falling back to execCommand.');
+       // 创建临时 textarea 元素
+        const textarea = document.createElement('textarea');
+        textarea.value = sku;
+        document.body.appendChild(textarea);
+
+        // 选择文本内容
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length); //  For mobile devices
+        try {
+          document.execCommand('copy');
+          $baseMessage('SKU 已复制到剪贴板!', 'success')
+
+        } catch (error) {
+          $baseMessage(`复制失败: ${error}`, 'error')
+        } finally {
+          // 移除临时元素
+          document.body.removeChild(textarea);
+        }
+      return;
+    }
     await navigator.clipboard.writeText(sku);
     $baseMessage('SKU 已复制到剪贴板!', 'success')
 

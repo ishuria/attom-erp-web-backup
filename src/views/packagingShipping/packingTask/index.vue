@@ -71,7 +71,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -192,7 +192,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -311,7 +311,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -430,7 +430,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -549,7 +549,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -667,7 +667,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
             <template #default="{ row }">
               <span v-html="row.sku"></span>
             </template>
@@ -1261,6 +1261,7 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
+import { calculateBrColumnWidth } from '~/src/utils/tableColum'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
