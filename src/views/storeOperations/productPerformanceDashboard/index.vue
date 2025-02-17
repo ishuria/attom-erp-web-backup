@@ -1027,28 +1027,40 @@ const copySku = async (event: Event, sku: string) => {
   if (!skuElement) return;
 
   try {
-    if (window.isSecureContext && navigator.clipboard) {
+    if (!navigator.clipboard) {
       console.warn('Clipboard API is not supported, falling back to execCommand.');
-       // 创建临时 textarea 元素
-        const textarea = document.createElement('textarea');
-        textarea.value = sku;
-        document.body.appendChild(textarea);
+      // 创建临时 textarea 元素
+      const textarea = document.createElement('textarea');
+      textarea.value = sku;
+      document.body.appendChild(textarea);
 
-        // 选择文本内容
-        textarea.select();
-        textarea.setSelectionRange(0, textarea.value.length); //  For mobile devices
-        try {
-          document.execCommand('copy');
+      // 选择文本内容
+      textarea.select();
+      textarea.setSelectionRange(0, textarea.value.length); //  For mobile devices
+      try {
+        const successful = document.execCommand('copy');
+        if(successful){
           $baseMessage('SKU 已复制到剪贴板!', 'success')
-
-        } catch (error) {
-          $baseMessage(`复制失败: ${error}`, 'error')
-        } finally {
-          // 移除临时元素
-          document.body.removeChild(textarea);
+          // 选中 SKU 元素的内容
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(skuElement);
+          selection?.removeAllRanges(); // 使用可选链避免可能的空指针
+          selection?.addRange(range); // 使用可选链避免可能的空指针
+        } else {
+          $baseMessage(`复制失败: execCommand failed`, 'error');
         }
+
+
+      } catch (error) {
+        $baseMessage(`复制失败: ${error}`, 'error')
+      } finally {
+        // 移除临时元素
+        document.body.removeChild(textarea);
+      }
       return;
     }
+
     await navigator.clipboard.writeText(sku);
     $baseMessage('SKU 已复制到剪贴板!', 'success')
 
@@ -1062,7 +1074,7 @@ const copySku = async (event: Event, sku: string) => {
   } catch (error) {
     $baseMessage(`复制失败: ${error}`, 'error')
   }
-}
+};
 const handleConfirmFilter = async (filterForm: any) => {
   if (activeName.value === 0) {
     const { site, ...filterQueryForm } = queryForm
