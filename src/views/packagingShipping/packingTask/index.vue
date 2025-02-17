@@ -1192,10 +1192,10 @@
       @close="closeSplitTask"
     >
       <el-form ref="splitTaskFormRef" label-position="right" label-width="auto" :model="splitTaskForm" :rules="splitRules" style="margin-right: 20px; margin-left: 20px;">
-        <el-form-item label="拆分的数量" prop="splitCount">
+        <el-form-item label="转入的数量" prop="splitCount">
           <el-input v-model="splitTaskForm.splitCount" clearable/>
         </el-form-item>
-        <el-form-item label="站点" prop="site" style="width: 97.5%">
+        <el-form-item label="转入的站点" prop="site" style="width: 97.5%">
           <el-select v-model="splitTaskForm.site" clearable placeholder="请选择站点">
             <el-option 
               v-for="item in siteList"
@@ -1661,10 +1661,6 @@ const currentTaskList = ref<any>([])
 const goOffWorkList = ref<any>([])
 // 当前任务加人显示
 const handleShowCurrentTask = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning')
-    return
-  }
   const { data } = await getFreeList()
   currentTaskList.value = data
   currentTaskVisible.value = true
@@ -1689,10 +1685,6 @@ const handleShowStartTask = async () => {
 }
 // 结束任务显示
 const handleShowFinishTask = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning')
-    return
-  }
   const { data } = await getEndTaskList()
   endTaskList.value = data
   finishTaskVisible.value = true

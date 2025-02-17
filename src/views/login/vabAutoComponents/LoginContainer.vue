@@ -166,6 +166,11 @@ const handleShow = () => {
         .el-form-item {
           margin: 20px 0;
 
+          &:first-child {
+            margin-top: -10px;
+          }
+          
+
           &__error {
             position: absolute;
             font-size: var(--el-font-size-extra-small);

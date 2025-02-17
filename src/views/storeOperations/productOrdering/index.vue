@@ -12,7 +12,7 @@
               collapse-tags-tooltip
               :max-collapse-tags="1"
               multiple
-              placeholder="请选择站点"
+              placeholder="全部站点"
               style="width: 220px"
               @change="queryData"
             >
@@ -403,7 +403,7 @@ const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
-const checkAll = ref<boolean>(true)
+const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<IGetOperationOrderListReq>({
@@ -616,7 +616,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
-  site.value = siteList.value.map((_) => _.id)
 }
 // 获取运营列表
 const fetchOperateUserList = async () => {

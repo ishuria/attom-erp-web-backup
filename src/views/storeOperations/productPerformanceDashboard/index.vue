@@ -14,7 +14,7 @@
                   collapse-tags-tooltip
                   :max-collapse-tags="1"
                   multiple
-                  placeholder="请选择站点"
+                  placeholder="全部站点"
                   style="width: 220px"
                   @change="queryData"
                 >
@@ -247,11 +247,11 @@
                 {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
               </span>
               <span v-if="item.label === 'VOC满意度'">
-                <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">Very poor</el-tag>
-                <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">Fair</el-tag>
-                <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">Poor</el-tag>
-                <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">Good</el-tag>
-                <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">Excellent</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
               </span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
@@ -331,7 +331,7 @@
                   collapse-tags-tooltip
                   :max-collapse-tags="1"
                   multiple
-                  placeholder="请选择站点"
+                  placeholder="全部站点"
                   style="width: 220px"
                   @change="queryAsinData"
                 >
@@ -626,7 +626,7 @@
                   collapse-tags-tooltip
                   :max-collapse-tags="1"
                   multiple
-                  placeholder="请选择站点"
+                  placeholder="全部站点"
                   style="width: 220px"
                   @change="queryPAsinData"
                 >
@@ -980,7 +980,7 @@ const currencyPAsin = ref<number | undefined>(0)
 const developUserList = ref<optionType[]>([])
 const siteList = ref<optionType[]>([])
 const operateUserList = ref<optionType[]>([])
-const checkAll = ref<boolean>(true)
+const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',
@@ -1777,9 +1777,6 @@ const fetchUser = async () => {
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
-  queryForm.site = siteList.value.map((_) => _.id)
-  asinQueryForm.site = siteList.value.map((_) => _.id)
-  pAsinQueryForm.site = siteList.value.map((_) => _.id)
 }
 const fetchOperateUserList = async () => {
   const { data } = await getDistributionOptionUserList()

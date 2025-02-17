@@ -11,7 +11,7 @@
               collapse-tags-tooltip
               :max-collapse-tags="1"
               multiple
-              placeholder="请选择站点"
+              placeholder="全部站点"
               style="width: 220px"
               @change="queryData"
             >
@@ -45,14 +45,14 @@
               v-for="item in columns"
               :key="item.label"
               :class="{'non-draggable': item.disableCheck}"
-              style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
+              style="display: flex; align-items: center; font-size: var(--el-font-size-base); " 
             >
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
               <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
                 <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
-              <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer; " @click="handleChecked(item)">
                 <vab-icon v-show="!item.checked" icon="eye-off-line" />
                 <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
@@ -202,7 +202,7 @@ const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
-  site: [0],
+  site: [],
   pageNo: 1,
   pageSize: 20
 })
@@ -478,7 +478,6 @@ const fetchCurrencyList = async () => {
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
-  queryForm.site = siteList.value.map((_) => _.id)
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -546,8 +545,8 @@ onBeforeMount(() => {
   transition: background-color 0.3s; /* 动画过渡效果 */
 
   &:hover {
-    background-color: #f2f2f2; /* 浅灰色背景 */
     color: var(--el-color-primary);
+    background-color: #f2f2f2; /* 浅灰色背景 */
   }
 }
 .disabled-handle {
@@ -561,17 +560,17 @@ onBeforeMount(() => {
       padding-bottom: 0;
 
       .cell {
-        padding-left: 0;
         padding-right: 0;
+        padding-left: 0;
       }
     }
   }
 }
 .rate-wrapper {
   display: flex; 
-  align-items: center; 
   gap: 8px;
-
+  align-items: center; 
+  
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -597,17 +596,17 @@ onBeforeMount(() => {
 
   }
   .rate-count {
-    color: #36788C;
     margin-left: -11px;
+    color: #36788C;
   }
 }
 .customTag {
-  color: #fff; 
-  border-radius: 17px; 
+  width: 7em; 
   padding: 0 30px;
+  color: #fff;
   border: 0;
-  width: 7em;
-
+  border-radius: 17px; 
+  
   &-veryPoor {
     background-color: #e32e00; 
   }
@@ -626,15 +625,16 @@ onBeforeMount(() => {
 }
 
 .arrow-up {
-  color: #ff3f48; 
-  font-weight: 600;
-  transform: scale(0.9, 1.4);  
   margin-left: 3px;
+  font-weight: 600;
+  color: #ff3f48; 
+  transform: scale(0.9, 1.4);  
+  
 }
 .arrow-down {
-  color: #67C23A;
-  font-weight: 600;
-  transform: scale(0.9, 1.4);  
   margin-left: 3px;
+  font-weight: 600;
+  color: #67C23A;
+  transform: scale(0.9, 1.4);  
 }
 </style>

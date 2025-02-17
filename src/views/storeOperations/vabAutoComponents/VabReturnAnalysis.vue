@@ -2,10 +2,10 @@
   <div class="return-container">
     <el-row :gutter="10">
       <el-col :span="18">
-        <vab-card style="height: 350px; position: relative;">
+        <vab-card style="position: relative; height: 350px;">
           <div ref="chartContainer1" style="width: 100%; height: 350px"></div>
           <div style="position: absolute; top: 5px; right: 10px;">
-            <el-select placeholder="退货原因" size="small" style="max-width: 5em; margin-right: 10px; margin-top: 8px"/>
+            <el-select placeholder="退货原因" size="small" style="max-width: 5em; margin-top: 8px; margin-right: 10px;"/>
             <el-radio-group v-model="radio" size="small" @change="handleSwitchTime">
               <el-radio-button label="日" value="day"/>
               <el-radio-button label="周" value="week"/>
@@ -23,7 +23,7 @@
     </el-row>
     <vab-query-form style="margin-bottom: 10px;">
       <vab-query-form-left-panel>
-        <span style="line-height: normal; font-size: 18px;">退货订单反馈</span>
+        <span style="font-size: 18px; line-height: normal;">退货订单反馈</span>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-select placeholder="退货原因" style="max-width: 6em; "/>
@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import * as echarts from 'echarts'
 import { colorList } from '../constantOption'
-import { getWeekOfYear } from '~/src/utils/dateUtils'
+import { getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'VabReturnAnalysis'
@@ -120,28 +120,29 @@ type IData = {
   date: string
   returnQuantity: number
   returnMargin: number
+  returnFund: number
 }
-type IYProp = 'returnQuantity' | 'returnMargin'
+type IYProp = 'returnQuantity' | 'returnMargin' | 'returnFund'
 const data1 = ref<IData[]>([
-  { date: '2024-11-08', returnQuantity: 1, returnMargin: 50 },
-  { date: '2024-11-09', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-10', returnQuantity: 1, returnMargin: 30 },
-  { date: '2024-11-11', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-12', returnQuantity: 1, returnMargin: 10 },
-  { date: '2024-11-13', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-14', returnQuantity: 1, returnMargin: 10 },
-  { date: '2024-11-15', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-16', returnQuantity: 1, returnMargin: 10 },
-  { date: '2024-11-17', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-18', returnQuantity: 1, returnMargin: 30 },
-  { date: '2024-11-19', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-20', returnQuantity: 1, returnMargin: 30 },
-  { date: '2024-11-21', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-22', returnQuantity: 1, returnMargin: 40 },
-  { date: '2024-11-23', returnQuantity: 2, returnMargin: 30 },
-  { date: '2024-11-24', returnQuantity: 0, returnMargin: 0 },
-  { date: '2024-11-25', returnQuantity: 1, returnMargin: 40 },
-  { date: '2024-11-26', returnQuantity: 0, returnMargin: 0 },
+  { date: '2024-11-08', returnQuantity: 1, returnMargin: 50, returnFund: 50 },
+  { date: '2024-11-09', returnQuantity: 0, returnMargin: 0, returnFund: 10 },
+  { date: '2024-11-10', returnQuantity: 1, returnMargin: 30, returnFund: 50 },
+  { date: '2024-11-11', returnQuantity: 0, returnMargin: 0, returnFund: 50 },
+  { date: '2024-11-12', returnQuantity: 1, returnMargin: 10, returnFund: 10 },
+  { date: '2024-11-13', returnQuantity: 0, returnMargin: 0, returnFund: 0 },
+  { date: '2024-11-14', returnQuantity: 1, returnMargin: 10, returnFund: 10 },
+  { date: '2024-11-15', returnQuantity: 0, returnMargin: 0, returnFund: 50 },
+  { date: '2024-11-16', returnQuantity: 1, returnMargin: 10, returnFund: 50 },
+  { date: '2024-11-17', returnQuantity: 0, returnMargin: 0, returnFund: 10 },
+  { date: '2024-11-18', returnQuantity: 1, returnMargin: 30, returnFund: 0 },
+  { date: '2024-11-19', returnQuantity: 0, returnMargin: 0, returnFund: 0 },
+  { date: '2024-11-20', returnQuantity: 1, returnMargin: 30, returnFund: 10 },
+  { date: '2024-11-21', returnQuantity: 0, returnMargin: 0, returnFund: 50 },
+  { date: '2024-11-22', returnQuantity: 1, returnMargin: 40, returnFund: 10 },
+  { date: '2024-11-23', returnQuantity: 2, returnMargin: 30, returnFund: 50 },
+  { date: '2024-11-24', returnQuantity: 0, returnMargin: 0, returnFund: 10 },
+  { date: '2024-11-25', returnQuantity: 1, returnMargin: 40, returnFund: 50 },
+  { date: '2024-11-26', returnQuantity: 0, returnMargin: 0, returnFund: 0 },
 ])
 
 const data2 = ref<any[]>([
@@ -179,7 +180,7 @@ const initChart1 = () => {
           return `<div style="display: flex;align-items:center;">
             ${item.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px 0 2px;">${name}</div>
-            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${item.value}${name === '退货率' ? '%' : '' }</span>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${item.value}${name === '退货率' || name === '退款率' ? '%' : '' }</span>
           </div>`
         })
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
@@ -241,6 +242,25 @@ const initChart1 = () => {
         },
         boundaryGap: [0, 0.1]  // 为顶部留出空间
       },
+      {
+        type: 'value',
+        name: '',
+        position: 'right',
+        axisLabel: {
+          formatter: '{value}%',
+        },
+        min: 0,
+        axisLine: {
+          show: true,
+          lineStyle: {
+            color: '#999',
+          },
+        },
+        splitLine: {
+          show: false,
+        },
+        boundaryGap: [0, 0.1]  
+      },
     ],
     series: [
       {
@@ -268,7 +288,20 @@ const initChart1 = () => {
         symbol: 'none',
         symbolSize: 6,
       },
-      
+      {
+        name: '退款率',
+        type: 'line',
+        yAxisIndex: 1,
+        data: data1.value.map((item: any) => item.returnFund),
+        barWidth: 20,
+        itemStyle: {
+          color: '#ce82fa',
+        },
+        opacity: 0.9,
+        smooth: true,
+        symbol: 'none',
+        symbolSize: 6,
+      },
     ],
   };
 
@@ -283,30 +316,35 @@ const handleSwitchTime = () => {
 
   let returnQuantity: any[] = []
   let returnMargin: any[] = []
+  let returnFund: any[] = []
   switch (radio.value) {
-  case 'day': {
-  returnQuantity = data1.value
-  returnMargin = data1.value
-  
-  break;
-  }
-  case 'week': {
-  returnQuantity = getWeeklyData(data1.value, 'returnQuantity')
-  returnMargin = getWeeklyData(data1.value, 'returnMargin')
-  
-  break;
-  }
-  case 'month': {
-  returnQuantity = getMonthlyData(data1.value, 'returnQuantity')
-  returnMargin = getMonthlyData(data1.value, 'returnMargin')
-  
-  break;
-  }
+    case 'day': {
+      returnQuantity = data1.value
+      returnMargin = data1.value
+      returnFund = data1.value
+
+      break;
+    }
+    case 'week': {
+      returnQuantity = getWeeklyData(data1.value, 'returnQuantity')
+      returnMargin = getWeeklyData(data1.value, 'returnMargin')
+      returnFund = getWeeklyData(data1.value, 'returnFund')
+
+      break;
+    }
+    case 'month': {
+      returnQuantity = getMonthlyData(data1.value, 'returnQuantity')
+      returnMargin = getMonthlyData(data1.value, 'returnMargin')
+      returnFund = getMonthlyData(data1.value, 'returnFund')
+      
+      break;
+    }
   // No default
   }
   option1.value.xAxis.data = returnQuantity.map((item: any) => item.date)
   option1.value.series[0].data = returnQuantity.map((d: any) => d.returnQuantity)
   option1.value.series[1].data = returnMargin.map((d: any) => d.returnMargin)
+  option1.value.series[2].data = returnFund.map((d: any) => d.returnFund)
 
   updateChart1()
 }
@@ -477,8 +515,8 @@ const handleSizeChange = (value: number) => {
   }
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>
