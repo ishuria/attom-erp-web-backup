@@ -2112,7 +2112,7 @@ onBeforeMount(() => {
           
           .copySku {
             display: inline-block; /* 使宽度适应内容，方便点击 */
-            padding: 5px; 
+            padding: 5px 5px 5px 0; 
             cursor: pointer;
             -webkit-user-select: text;
             user-select: text;
