@@ -196,7 +196,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(taskingList, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
                 {{ row._sku[0] }}
@@ -224,7 +224,7 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>    
-          <el-table-column  label="产品经理" min-width="100" prop="productManager"/>
+          <el-table-column label="产品经理" min-width="100" prop="productManager"/>
           <el-table-column fixed="right" label="操作" width="530" >
             <template #default="{ row }">
               <el-space>
@@ -1285,7 +1285,6 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { calculateBrColumnWidth } from '/@/utils/tableColum'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1322,9 +1321,11 @@ import {
   updatePackageTaskSite,
   updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
+import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
-import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import handleClipboard from '/@/utils/clipboard'
+import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTaskTable',
@@ -1690,10 +1691,16 @@ const endTaskList = ref<any>([])
 const currentTaskList = ref<any>([])
 // 下班任务的列表
 const goOffWorkList = ref<any>([])
+// 获取当前用户
+const useUser = useUserStore()
+const currentUser = useUser.getUsername
 // 当前任务加人显示
 const handleShowCurrentTask = async () => {
   const { data } = await getFreeList()
-  currentTaskList.value = data
+  // 排除掉自己,自己已在任务中
+  if (data) {
+    currentTaskList.value = data.filter((item) => item.userName !== currentUser)
+  }
   currentTaskVisible.value = true
 }
 // 下班人员显示
@@ -1747,7 +1754,7 @@ const handleConfirmCurrentTask = async () => {
   })
   if (data) {
     $baseMessage('当前任务加人成功!', 'success')
-    fetchData()
+    queryTaskingData()
   }
   handleCloseCurrentTask()
 }
@@ -1803,7 +1810,7 @@ const handleConfirmFinishTask = async () => {
   })
   if (data) {
     $baseMessage('结束任务成功', 'success')
-    fetchData()
+    queryTaskingData()
   }
   handleCloseFinishTask()
   // selectRows.value = []

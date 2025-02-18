@@ -85,7 +85,7 @@
         </el-form>
       </el-col>
       <el-col :span="12">
-        <el-image :src="addNewForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer;" @click="imagePreviewShow(addNewForm.skuImageUrl)">
+        <el-image :src="addNewForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer; border: 2px #DCDFE6 solid; border-radius: 2%;" @click="imagePreviewShow(addNewForm.skuImageUrl)">
           <template #error>
             <el-icon/>
           </template>
