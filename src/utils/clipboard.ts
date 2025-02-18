@@ -12,12 +12,21 @@ const clipboardError = (text: any) => {
  * @description 复制数据
  * @param text
  */
-const handleClipboard = (text: string) => {
+const handleClipboard = (event: Event, text: string) => {
   const { isSupported, copy } = useClipboard({ legacy: true })
   if (!isSupported) usePermission('clipboard-write')
+  
+  const target = event.target as HTMLElement
+  const skuElement = target.closest('.copySku') as HTMLElement
+  if (!skuElement) return
 
   copy(text)
     .then(() => {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(skuElement);
+      selection?.removeAllRanges(); // 使用可选链避免可能的空指针
+      selection?.addRange(range); // 使用可选链避免可能的空指针
       clipboardSuccess(text)
     })
     .catch(() => {

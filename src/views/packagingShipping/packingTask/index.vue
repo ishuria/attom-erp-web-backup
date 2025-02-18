@@ -59,21 +59,25 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
           </el-table-column>   
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -180,23 +184,27 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
-          </el-table-column>   
+          </el-table-column>    
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)"/>
@@ -299,21 +307,25 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
           </el-table-column>   
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -418,21 +430,25 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
           </el-table-column>   
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -537,21 +553,25 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
           </el-table-column>   
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -655,21 +675,25 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
-          <el-table-column label="产品图片" width="77">
+          <el-table-column label="产品图片" width="75">
             <template #header>
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
             <template #default="{ row }">
-              <span v-html="row.sku"></span>
+              <span class="copySku" @click="handleClipboard($event, row._sku[0])" >
+                {{ row._sku[0] }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
+              {{ row._sku[1] }}
             </template>
           </el-table-column>   
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -1261,7 +1285,7 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { calculateBrColumnWidth } from '~/src/utils/tableColum'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1300,11 +1324,17 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import handleClipboard from '~/src/utils/clipboard'
 
 defineOptions({
   name: 'PackingTaskTable',
 })
 
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 const testVisible = ref<boolean>(false)
 const testList = ref<any[]>([])
 const handleOpenTest = async () => {
@@ -2163,17 +2193,10 @@ const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement) =
  */
 
 let _row: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any) => { 
 
   if (column.label === '打包注意事项') {
     handleShowQualityInspectionReport(row)
-  }
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
   }
 }
 // 开始确定选择后的的质检列表col合并方法
@@ -2215,6 +2238,7 @@ const fetchData = async () => {
       list.value = data.list
       list.value.forEach((item: any) => {
         item.packageRemarkList = item.packageRemarkList.join('<br>')
+        item._sku = item.sku.split('<br/>')
       })
     }
   } catch (error) {
@@ -2283,6 +2307,15 @@ onBeforeMount(() => {
             .cell {
               padding-right: 0;
               padding-left: 0;
+            }
+          }
+          .copySku {
+            cursor: pointer;
+            -webkit-user-select: text;
+            user-select: text;
+            transition: all 0.3s;
+            &:hover {
+              color: #000;
             }
           }
         }

@@ -1028,7 +1028,7 @@ const copySku = async (event: Event, sku: string) => {
 
   try {
     if (!navigator.clipboard) {
-      console.warn('Clipboard API is not supported, falling back to execCommand.');
+      // console.warn('Clipboard API is not supported, falling back to execCommand.');
       // 创建临时 textarea 元素
       const textarea = document.createElement('textarea');
       textarea.value = sku;
