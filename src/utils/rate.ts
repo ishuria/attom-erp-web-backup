@@ -9,18 +9,19 @@
     2星半： [2.3,2.8)
     2星：    [1.8,2.3)
     1星半： [1.3,1.8)
-    1星：    [0,1.3)
+    1星：    [0,1.3) && 有评论 展示1星 0 没评论 展示0星
 */
-export function getAmazonStars(score: number) {
-  if (score >= 4.8) return 5;
-  if (score >= 4.3) return 4.5;
-  if (score >= 3.8) return 4;
-  if (score >= 3.3) return 3.5;
-  if (score >= 2.8) return 3;
-  if (score >= 2.3) return 2.5;
-  if (score >= 1.8) return 2;
-  if (score >= 1.3) return 1.5;
-  return 1;
+export function getAmazonStars(score: number, commentNumbers: number) {
+  if (score >= 4.8) return 5
+  if (score >= 4.3) return 4.5
+  if (score >= 3.8) return 4
+  if (score >= 3.3) return 3.5
+  if (score >= 2.8) return 3
+  if (score >= 2.3) return 2.5
+  if (score >= 1.8) return 2
+  if (score >= 1.3) return 1.5
+  if (score >= 0 && commentNumbers > 0) return 1
+  return 0
 }
 
 /**

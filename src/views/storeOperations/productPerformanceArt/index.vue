@@ -179,13 +179,13 @@
 
 <script lang="ts" setup>
 import { Search, Star } from '@element-plus/icons-vue'
-import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { flexColumnWidth } from '/@/utils/tableColum'
-import type { CSSProperties } from 'vue'
 import type { CheckboxValueType } from 'element-plus'
-import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
+import type { CSSProperties } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { getAmazonStars } from '/@/utils/rate'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductPerformanceArt'
@@ -491,7 +491,7 @@ const fetchData = async () => {
     total.value = data.total
     list.value = data.list
     list.value.forEach((item: any) => {
-      item.displayRating = computed(() => getAmazonStars(item.rating!));
+      item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers));
       item.saleTrendList = {
         xAxis: [
           "21-04-1",

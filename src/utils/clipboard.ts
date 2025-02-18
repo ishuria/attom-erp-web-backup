@@ -22,11 +22,11 @@ const handleClipboard = (event: Event, text: string) => {
 
   copy(text)
     .then(() => {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(skuElement);
-      selection?.removeAllRanges(); // 使用可选链避免可能的空指针
-      selection?.addRange(range); // 使用可选链避免可能的空指针
+      const selection = window.getSelection()
+      const range = document.createRange()
+      range.selectNodeContents(skuElement)
+      selection?.removeAllRanges() 
+      selection?.addRange(range) 
       clipboardSuccess(text)
     })
     .catch(() => {

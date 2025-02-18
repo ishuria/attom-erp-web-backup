@@ -633,7 +633,7 @@ const fetchData = async () => {
   list.value.forEach((item) => {
     processField(item, 'sku', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!))
+    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
   })
   listLoading.value = false
 }

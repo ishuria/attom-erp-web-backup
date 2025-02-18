@@ -1324,7 +1324,7 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import handleClipboard from '~/src/utils/clipboard'
+import handleClipboard from '/@/utils/clipboard'
 
 defineOptions({
   name: 'PackingTaskTable',

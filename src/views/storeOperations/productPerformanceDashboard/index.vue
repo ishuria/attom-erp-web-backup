@@ -209,7 +209,7 @@
               </span>
               <!-- SKU 展示-->
               <span v-if="item.label === 'SKU'">
-                <span class="copySku" data-sku="row.sku" @click="copySku($event, row.sku)" >
+                <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
                   {{ row.sku }}
                   <vab-icon icon="file-copy-2-fill" />
                 </span>
@@ -257,6 +257,12 @@
                 <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
                 <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
                 <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
+              </span>
+              <span v-if="item.label === '状态'">
+                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
+                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
+                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
+                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
               </span>
               <span v-if="item.label === '广告'">
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
@@ -561,6 +567,12 @@
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
+              <span v-if="item.label === '状态'">
+                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
+                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
+                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
+                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
+              </span>
               <span v-if="item.label === '运营备注'">
                 <el-tooltip content=" " effect="dark" placement="top">
                   <template #content>
@@ -835,6 +847,12 @@
                 <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
                 <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
               </span>
+              <span v-if="item.label === '状态'">
+                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
+                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
+                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
+                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
+              </span>
               <span v-if="item.label === '饼图'">
                 <div style="width: 100%; height: 60px">
                   <vab-echarts-chart-pie :data="row?.pieList || []" />
@@ -946,6 +964,7 @@ import type {
   IGetOperationColumnList,
   IGetOperationParentAsinList,
 } from '/@/type/storeOperation/productPerformanceType'
+import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
@@ -1020,61 +1039,6 @@ const asinList = ref<IGetOperationAsinList[]>([])
 const pAsinList = ref<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
    
-const copySku = async (event: Event, sku: string) => {
-  const target = event.target as HTMLElement;
-  const skuElement = target.closest('.copySku') as HTMLElement;
-
-  if (!skuElement) return;
-
-  try {
-    if (!navigator.clipboard) {
-      // console.warn('Clipboard API is not supported, falling back to execCommand.');
-      // 创建临时 textarea 元素
-      const textarea = document.createElement('textarea');
-      textarea.value = sku;
-      document.body.appendChild(textarea);
-
-      // 选择文本内容
-      textarea.select();
-      textarea.setSelectionRange(0, textarea.value.length); //  For mobile devices
-      try {
-        const successful = document.execCommand('copy');
-        if(successful){
-          $baseMessage('SKU 已复制到剪贴板!', 'success')
-          // 选中 SKU 元素的内容
-          const selection = window.getSelection();
-          const range = document.createRange();
-          range.selectNodeContents(skuElement);
-          selection?.removeAllRanges(); // 使用可选链避免可能的空指针
-          selection?.addRange(range); // 使用可选链避免可能的空指针
-        } else {
-          $baseMessage(`复制失败: execCommand failed`, 'error');
-        }
-
-
-      } catch (error) {
-        $baseMessage(`复制失败: ${error}`, 'error')
-      } finally {
-        // 移除临时元素
-        document.body.removeChild(textarea);
-      }
-      return;
-    }
-
-    await navigator.clipboard.writeText(sku);
-    $baseMessage('SKU 已复制到剪贴板!', 'success')
-
-    // 选择 SKU 元素的内容
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(skuElement);
-    selection?.removeAllRanges(); // 使用可选链避免可能的空指针
-    selection?.addRange(range); // 使用可选链避免可能的空指针
-
-  } catch (error) {
-    $baseMessage(`复制失败: ${error}`, 'error')
-  }
-};
 const handleConfirmFilter = async (filterForm: any) => {
   if (activeName.value === 0) {
     const { site, ...filterQueryForm } = queryForm
@@ -1865,7 +1829,7 @@ const fetchData = async () => {
   list.value.forEach((item) => {
     processField(item, 'developName', 2)
     if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!))
+    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
     item.storageAge = `
       <div class="storage-list">
         <div class="storage-item">
@@ -1901,7 +1865,7 @@ const fetchAsinData = async () => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!))
+    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
     item.storageAge = `
       <div class="storage-list">
         <div class="storage-item">
@@ -1937,7 +1901,7 @@ const fetchPAsinData = async () => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!))
+    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
   })
   listLoading.value = false
 }

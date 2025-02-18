@@ -55,14 +55,14 @@
               v-for="item in columns"
               :key="item.label"
               :class="{'non-draggable': item.disableCheck}"
-              style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
+              style="display: flex; align-items: center; font-size: var(--el-font-size-base);" 
             >
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
               <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
                 <el-icon><view /></el-icon>
               </span>
-              <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer;" @click="handleChecked(item)">
                 <el-icon v-show="!item.checked"><hide /></el-icon>
                 <el-icon v-show="item.checked"><view /></el-icon>
               </span>
@@ -110,7 +110,7 @@
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image fit="fill" :src="row.componentImage" style="width: 75px; height: 75px; display: block;" @click="imagePreviewShow(row.componentImage)" >
+            <el-image fit="fill" :src="row.componentImage" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.componentImage)" >
               <template #error>
                 <el-icon/>
               </template>
@@ -980,9 +980,9 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 .rate-wrapper {
   display: flex; 
-  align-items: center; 
   gap: 8px;
-
+  align-items: center; 
+  
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -1008,8 +1008,8 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 
   }
   .rate-count {
-    color: #36788C;
     margin-left: -11px;
+    color: #36788C;
   }
 }
 .icon-hover {
@@ -1017,16 +1017,16 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   border-radius: 4px; /* 圆角 */
   transition: background-color 0.3s; /* 动画过渡效果 */
   &:hover {
-    background-color: #f2f2f2; /* 浅灰色背景 */
     color: var(--el-color-primary);
+    background-color: #f2f2f2; /* 浅灰色背景 */
   }
 }
 .disabled-handle {
   cursor: not-allowed;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

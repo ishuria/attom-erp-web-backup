@@ -36,8 +36,8 @@
     </el-form>
     <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="addNewVisible = true">新增</el-button>
     <el-table border :data="skuDetailList" :header-cell-style="{ textAlign: 'center' }" max-height="35vh" stripe>
-      <el-table-column label="SKU" min-width="100" prop="sku"/>
-      <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc"/>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
+      <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
       <el-table-column label="说明" min-width="160" prop="productName"/>
       <el-table-column align="center" label="数量" min-width="50" prop="count"/>
       <el-table-column align="center" fixed="right" label="操作" width="140">
@@ -215,10 +215,11 @@
 <script lang="ts" setup>
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { addQualityCheck, getQualityCheck } from '~/src/api/devlocal/packagingShipping'
+import { addQualityCheck, getQualityCheck } from '/@/api/devlocal/packagingShipping'
 import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementUpdate, updateEncasement } from '/@/api/devlocal/encasement'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const dflag = ref<boolean>(false)
 // 新增可见
