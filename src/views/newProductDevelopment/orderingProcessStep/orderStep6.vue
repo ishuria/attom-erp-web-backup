@@ -48,13 +48,13 @@
                 />
               </el-select>
             </template>
-            <template v-if="row['column0'] === 'packagingSize'">
+            <!-- <template v-if="row['column0'] === 'packagingSize'">
               {{ row[prop] }} cm
             </template>
             <template v-if="row['column0'] === 'productSize'">
               {{ row[prop] }} inch
-            </template>
-            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'productSize' && row['column0'] !== 'packagingSize' && row['column0'] !== 'sampleRetentionStatus'">
+            </template> -->
+            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'">
               {{ row[prop] }}
             </template>
           </template>

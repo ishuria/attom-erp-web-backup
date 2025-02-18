@@ -32,12 +32,12 @@
             <template v-if="row['column0'] === 'oem'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
             </template>
-            <template v-if="row['column0'] === 'packagingSize'">
+            <!-- <template v-if="row['column0'] === 'packagingSize'">
                 {{ row[prop] }} cm
             </template>
             <template v-if="row['column0'] === 'productSize'">
                 {{ row[prop] }} inch
-            </template>
+            </template> -->
             <template v-if="row['column0'] === 'sampleRetentionStatus'">
               <span v-show="row[prop] === 0">已有拍照样品,大货无需留样</span>
               <span v-show="row[prop] === 1">大货需要留样拍照</span>
@@ -46,8 +46,7 @@
               {{ Number(row[prop]).toFixed(2) }}
             </template>
             <template 
-              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'packagingSize'
-                && row['column0'] !== 'productSize' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
               {{ row[prop] }}
             </template>
             

@@ -336,7 +336,7 @@ v-model="row.supplier" autofocus type="text"
             <div class="none">
               <el-input v-model="row.packagingLength" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
-            <span>{{ row.packagingLength != null ? row.packagingLength + 'cm' : '' }}</span>
+            <span>{{ row.packagingLength != null ? row.packagingLength : '' }}</span>
           </template>
         </el-table-column>
 
@@ -345,7 +345,7 @@ v-model="row.supplier" autofocus type="text"
             <div class="none">
               <el-input v-model="row.packagingWidth" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
-            <span>{{ row.packagingWidth != null ? row.packagingWidth + 'cm' : '' }}</span>
+            <span>{{ row.packagingWidth != null ? row.packagingWidth : '' }}</span>
           </template>
         </el-table-column>
 
@@ -354,7 +354,7 @@ v-model="row.supplier" autofocus type="text"
             <div class="none">
               <el-input v-model="row.packagingHeight" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
-            <span>{{ row.packagingHeight != null ? row.packagingHeight + 'cm' : '' }}</span>
+            <span>{{ row.packagingHeight != null ? row.packagingHeight : '' }}</span>
           </template>
         </el-table-column>
 
@@ -363,7 +363,7 @@ v-model="row.supplier" autofocus type="text"
             <div class="none">
               <el-input v-model="row.weight" @blur="clickVariantsCancel($event, row)" @keyup.enter="clickVariantsCancel($event, row)" />
             </div>
-            <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+            <span>{{ row.weight != null ? row.weight : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="尾程" min-width="70" prop="lastMile" >
@@ -550,9 +550,6 @@ const isValueAllInput = (row: IreviewStepNo3VariantList) => {
     return false
   } else if (row.firstMileChannel == null) {
     $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
-    return false
-  } else if (row.finalSellingPrice == null) {
-    $baseMessage('产品的最终售价不能为空，请填写后再进行逆算', 'warning')
     return false
   } else if (row.weightCoefficient == null) {
     $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')

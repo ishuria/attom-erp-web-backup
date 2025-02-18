@@ -241,6 +241,8 @@ const remotePeopleMethod = async (query: string) => {
 }
 const handleInsertSku = async (row: any, prop: string) => {
   try {
+    // console.log(exchangeList.value);
+    
     const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[13][prop] })
     if (data) {
       exchangeList.value[1][prop] = data.productLength
