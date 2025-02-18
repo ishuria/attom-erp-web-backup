@@ -1165,17 +1165,17 @@ const fetchDataComponent = async () =>{
       variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
 
       // 排序
-      componentList.value.sort((a: any, b: any) => {
-      if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
-          return -1; // a 在前
-      }
-      if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
-          return 1; // b 在前
-      }
-          return 0; // 不排序
-      });
+      // componentList.value.sort((a: any, b: any) => {
+      // if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
+      //     return -1; // a 在前
+      // }
+      // if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
+      //     return 1; // b 在前
+      // }
+      //     return 0; // 不排序
+      // });
     }catch(error){
-        console.error(error as Error)
+      console.error(error as Error)
     }
   }
 }

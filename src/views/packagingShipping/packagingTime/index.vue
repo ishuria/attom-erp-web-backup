@@ -9,7 +9,7 @@
           <vab-query-form-right-panel >
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item >
-                <el-select placeholder="选择人员" style="margin-right: 10px; width: 30px"/>
+                <el-select placeholder="选择人员" style="width: 30px; margin-right: 10px;"/>
               </el-form-item>
               <el-form-item>
                 <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -55,7 +55,7 @@
                 <span v-html="row.productName"></span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="70">
+            <el-table-column v-permissions="{ permission: ['system:package:time:update'] }" label="操作" width="70" >
               <template #default="{ row }">
                 <span style="color: #4E88F3; cursor: pointer;" @click="showModify(row)">修改</span>
               </template>
@@ -85,7 +85,7 @@
               value-format="YYYY-MM-DD"
               @change="queryRightData"
             />
-            <el-select placeholder="选择人员" style="margin-left: 10px; width: 30px"/>
+            <el-select placeholder="选择人员" style="width: 30px; margin-left: 10px;"/>
           </vab-query-form-left-panel>
         </vab-query-form>
         <div class="flex-container">
@@ -123,7 +123,7 @@
       width="20%"
       @close="closeModify"
     >
-      <el-form  ref="modifyFormRef" :model="modifyForm" style="margin-left: 20px; margin-right: 20px">
+      <el-form  ref="modifyFormRef" :model="modifyForm" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="开始时间" prop="startTime">
           <el-date-picker
             v-model="modifyForm.startTime"
@@ -209,13 +209,13 @@ const confirmModify = async () => {
   })
 }
 const queryForm = reactive<any>({
-  userId: 1,
+  userId: '',
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
 const queryRightForm = reactive<any>({
-  userId: 1,
+  userId: '',
   startTime: date.value[0],
   endTime: date.value[1],
   pageNo: 1,
