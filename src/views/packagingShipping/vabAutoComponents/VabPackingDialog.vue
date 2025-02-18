@@ -47,7 +47,7 @@
     title="确认"
     width="660px"
   >
-    <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-left: 1px; margin-right: 1px">
+    <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-right: 1px; margin-left: 1px;">
       <el-form-item label="数量(箱)" prop="encaseCount">
         <el-input v-model="confirmForm.encaseCount" clearable style="width: 100%" />
       </el-form-item>

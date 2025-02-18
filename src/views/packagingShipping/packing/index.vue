@@ -10,7 +10,7 @@
         <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
-        <el-select clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0">
+        <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
             v-for="item in printerOption"
             :key="item.value"
@@ -411,11 +411,12 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
-import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getEncasementUserPrinter, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, updateEncasementUserPrinter, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const printer = ref<string>('')
 const listLoading = ref<boolean>(false)
 const list = ref<IEncasementList[]>([])
 const total = ref<number>(0)
@@ -1003,8 +1004,21 @@ const fetchData = async () => {
   list.value = data.list
   listLoading.value = false
 }
+const handleChangePrinter = async () => {
+  try {
+    await updateEncasementUserPrinter({ printer: printer.value })
+  } catch (error) {
+    $baseMessage(error, 'error')
+  }
+}
+// 获取默认打印机
+const fetchDefaultPrinter = async () => {
+  const { data } = await getEncasementUserPrinter()
+  printer.value = data
+}
 onBeforeMount(() => {
   fetchSiteData()
+  fetchDefaultPrinter()
   fetchData()
 })
 </script>

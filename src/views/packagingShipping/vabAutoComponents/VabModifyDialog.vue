@@ -34,12 +34,19 @@
         </el-select>
       </el-form-item>
     </el-form>
-    <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="addNewVisible = true">新增</el-button>
-    <el-table border :data="skuDetailList" :header-cell-style="{ textAlign: 'center' }" max-height="35vh" stripe>
+    <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="handleOpenAdd">新增</el-button>
+    <el-table border class="noneHoverTable" :data="skuDetailList" :header-cell-style="{ textAlign: 'center' }" max-height="35vh" stripe @cell-click="changeInput">
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
       <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
       <el-table-column label="说明" min-width="160" prop="productName"/>
-      <el-table-column align="center" label="数量" min-width="50" prop="count"/>
+      <el-table-column align="center" label="数量" min-width="50" prop="count">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.count" type="number" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.count }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="140">
         <template #default="{ row, $index }">
           <el-link type="danger" :underline="false" @click="handleDelEncasementDetail(row, $index)">删除</el-link>
@@ -69,14 +76,16 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form ref="addNewFormRef" label-position="top" :model="addNewForm" :rules="addNewFormRules">
-          <el-form-item label="FNSKU" prop="fnSkuOrUpc"><el-input v-model="addNewForm.fnSkuOrUpc" disabled /></el-form-item>
+          <el-form-item label="FNSKU" prop="fnSkuOrUpc">
+            <el-input ref="barcodeInput" v-model="addNewForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" />
+          </el-form-item>
           <el-form-item label="SKU" prop="sku"><el-input v-model="addNewForm.sku" disabled /></el-form-item>
           <el-form-item label="产品名称" prop="productName"><el-input v-model="addNewForm.productName" disabled /></el-form-item>
-          <el-form-item label="数量" prop="count"><el-input v-model="addNewForm.count" clearable /></el-form-item>
+          <el-form-item label="数量" prop="count"><el-input ref="packingCount" v-model="addNewForm.count" clearable /></el-form-item>
         </el-form>
       </el-col>
       <el-col :span="12">
-        <el-image src="https://picsum.photos/200/200" style="width: 300px; height: 300px; cursor: pointer;" @click="imagePreviewShow('https://picsum.photos/200/200')">
+        <el-image :src="addNewForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer;" @click="imagePreviewShow(addNewForm.skuImageUrl)">
           <template #error>
             <el-icon/>
           </template>
@@ -215,12 +224,17 @@
 <script lang="ts" setup>
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { isEqual } from 'lodash'
+import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementSku, getEncasementUpdate, updateEncasement, updateEncasementDetailCount } from '/@/api/devlocal/encasement'
 import { addQualityCheck, getQualityCheck } from '/@/api/devlocal/packagingShipping'
-import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementUpdate, updateEncasement } from '/@/api/devlocal/encasement'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const barcodeDisabled = ref<boolean>(false)
+const barcodeInput = ref<HTMLInputElement | null>(null)
+const packingCount = ref<HTMLInputElement | null>(null)
 const dflag = ref<boolean>(false)
 // 新增可见
 const addNewVisible = ref<boolean>(false)
@@ -244,6 +258,90 @@ let props = defineProps<{
   encasementId: number
   siteList: ISiteOption[]
 }>()
+let _row: any
+
+// 打开新增
+const handleOpenAdd = () => {
+  addNewVisible.value = true
+  barcodeDisabled.value = false
+}
+// 监听回车键扫描事件（包括用户回车和扫枪回车）
+const handleKeyPress = async (event: any) => {
+
+if (event.code === 'Enter') {
+  const barcodeValue = (event.target as HTMLInputElement).value
+  addNewForm.fnSkuOrUpc = barcodeValue;
+
+  // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
+  const { data } = await getEncasementSku({
+    site: modifyForm.siteId,
+    fnSkuOrUpc: addNewForm.fnSkuOrUpc
+  })
+  if (data) {
+    Object.assign(addNewForm, data)
+    // tempCurId.value = generateUUID()
+    // let flag = _addPacking(packingForm, tempCurId.value)
+    // if (flag) {
+    //   // 如果是有相同的，就清空
+    //   packingFormRef.value?.resetFields()
+    //   packingForm.skuImageUrl = ''  
+    //   return
+    // }
+    // console.log('packingData', packingStore.packingData)
+    barcodeDisabled.value = true
+    if (packingCount.value) {
+      packingCount.value.focus()
+      packingCount.value.select()
+    }
+  } else {
+    addNewForm.fnSkuOrUpc = ''
+    $baseMessage(`找不到该FNSKU，请重新扫描`, 'error')
+  }
+}
+}
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+  
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  _row = JSON.parse(JSON.stringify(row));
+
+  // 如果是第一次点击（firstChild 有 'none' 类名），执行以下逻辑
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none');
+    secondChild.classList.add('none');
+
+    // 聚焦并全选输入框或文本框
+    focusAndSelectInput(cell);
+  }
+
+}
+// 处理零件table blur事件
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, ".cell")
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add("none")
+    if (t2) t2.classList.remove("none")
+  }
+
+  // 只有在数据变化时才处理更新
+  if (isEqual(value, _row)) {
+    return; // 数据没有变化，不执行更新
+  }
+
+  if (event.type === 'blur') {
+    // 执行失去焦点时的处理逻辑
+    await updateEncasementDetailCount({ encasementDetailId: value.id, count: value.count })
+  }
+};
 const fetchData = async () => {
   const { data } = await getEncasementUpdate({
     encasementId: props.encasementId
@@ -274,7 +372,8 @@ const modifyFormRef = ref<FormInstance>()
 const addNewForm = reactive<any>({})
 const addNewFormRef = ref<FormInstance>()
 const addNewFormRules = reactive<FormRules<IAddDetailEncasementReq>>({
-  count: [{ required: true, message: '请输入数量', trigger: 'blur' }]
+  fnSkuOrUpc: [{ required: true, message: '请输入FNSKU', trigger: 'blur' }],
+  count: [{ required: true, message: '请输入数量', trigger: 'blur' }],
 })
 interface IAddForm {
   good: number | null
@@ -355,7 +454,8 @@ const confirmUpdateEncasement = async () => {
     length: modifyForm.length,
     width: modifyForm.width,
     height: modifyForm.height,
-    site: modifyForm.siteId
+    site: modifyForm.siteId,
+    boxNumber: modifyForm.boxNumber
   })
   if (data) {
     $baseMessage('修改成功', 'success')
@@ -488,5 +588,13 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
 .noneHoveTable :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.none {
+  display: none;
+}
+// 设置行高
+.noneHoverTable :deep(.el-table__body .cell) {
+  min-height: 31px;
+  line-height: 33px;
 }
 </style>

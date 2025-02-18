@@ -203,6 +203,7 @@ export interface IUpdateEncasementReq {
   width?: number
   height?: number
   site?: number
+  boxNumber?: number
 }
 /**
  * @description 装箱-修改页面-新增新的明细

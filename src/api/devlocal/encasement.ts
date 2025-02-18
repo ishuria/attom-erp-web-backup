@@ -578,3 +578,35 @@ export const checkEncasementShipment = (data: { encasementIds: string }): Promis
     data
   })
 }
+
+/**
+ * @description 装箱-修改页面-修改装箱明细数量
+ * @param data 
+ * @returns 
+ */
+export const updateEncasementDetailCount = (data: { encasementDetailId: number, count: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/awaiting/shipment/encasement/detail/update/count`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * @description 装箱-获取默认打印机
+ */
+export const getEncasementUserPrinter = (): Promise<{ data: string }> => {
+  return request({
+    url: `${BASE_API}/encasement/user/printer`,
+    method: 'get',
+  })
+}
+/**
+ * @description 装箱-更新打印机名称
+ */
+export const updateEncasementUserPrinter = (params: { printer: string }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/encasement/user/printer/update`,
+    method: 'post',
+    params
+  })
+}
