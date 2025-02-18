@@ -6,59 +6,57 @@
     width="60%"
     @close="handlerCloseDialog"
   >
+    <vab-query-form>
+      <vab-query-form-right-panel :span="24">
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
 
-      <vab-query-form>
-        <vab-query-form-right-panel :span="24">
-          <el-form inline :model="queryForm" @submit.prevent>
-            <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-:icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                @click="queryData"/>
-            </el-form-item>
-          </el-form>
-        </vab-query-form-right-panel>
-      </vab-query-form>
-
-      <el-table 
-        ref="tableRef" 
-        border :cell-class-name="getCellStyle" 
-        :cell-style="cellStyle"
-        :data="list"
-        :header-cell-style="{ 'text-align': 'center' }"
-        max-height="550px"
-        stripe
-        @cell-click="changeInput"
-      >
-        <el-table-column  class="image-wall" label="图片" width="82">
-          <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.imageUrl" style="width: 100%; height: 100%"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="零件ID" prop="id" width="100"/>
-        <el-table-column label="SKU" prop="sku" width="200"/>
-        <el-table-column label="供应商" min-width="200" prop="suppliser"/>
-        <el-table-column label="零件名" min-width="200" prop="componentName"/>
-        <el-table-column label="添加数量" min-width="100" prop="count">
-          <template #default="{ row }">
-              <el-input v-model="row.count" clearable />
-          </template>
-        </el-table-column>
-        <el-table-column label="单位" min-width="70" prop="unit"/>
-        <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
+    <el-table 
+      ref="tableRef" 
+      border :cell-class-name="getCellStyle" 
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ 'text-align': 'center' }"
+      max-height="550px"
+      stripe
+    >
+      <el-table-column  class="image-wall" label="图片" width="75">
+        <template #default="{ row }">
+          <el-image fit="fill" :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.imageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
         </template>
-      </el-table>
+      </el-table-column>
+      <el-table-column label="零件ID" prop="id" width="100"/>
+      <el-table-column label="SKU" prop="sku" width="200"/>
+      <el-table-column label="供应商" min-width="200" prop="suppliser"/>
+      <el-table-column label="零件名" min-width="200" prop="componentName"/>
+      <el-table-column label="添加数量" min-width="100" prop="count">
+        <template #default="{ row }">
+            <el-input v-model="row.count" clearable />
+        </template>
+      </el-table-column>
+      <el-table-column label="单位" min-width="70" prop="unit"/>
+      <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
 
-      <vab-pagination
-        :current-page="queryForm.pageNo"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
   
     <template #footer>
       <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
@@ -72,7 +70,6 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getAddComponentList } from '/@/api/devlocal/purchasePo'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'VabCreateComponent'
@@ -161,16 +158,12 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-    // 处理图片放大预览
-    let el = getSpecificChildren(cell, "img")[0];
-    if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-      imagePreviewVisible.value = true
-      imagePreviewList.value = []
-      imagePreviewList.value.push(el.src!)
-    }
-}
 
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 /**
 * 获取样品进度数据
 */
@@ -197,9 +190,9 @@ onActivated(() => {
 #table-height-container {
   display: flex;
   flex-direction: column;
-  max-height: calc(80vh - 192px);
   height: calc(80vh - 192px);
-
+  max-height: calc(80vh - 192px);
+  
   .el-table {
       flex: 1; // 使表格占据剩余空间
       overflow: auto; // 确保表格内容可以滚动
@@ -217,8 +210,8 @@ transform-origin: center;
   display: none;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 .el-table :deep(.clear-padding) {
   padding-top: 0;

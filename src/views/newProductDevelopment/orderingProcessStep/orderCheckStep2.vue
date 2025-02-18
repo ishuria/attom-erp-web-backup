@@ -27,7 +27,7 @@
             零件<br />图片
           </template>
           <template #default="{ row }">
-            <el-image data-img="img" :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px">
+            <el-image :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentImgUrl)">
               <template #error><el-icon /></template>
             </el-image>
           </template>
@@ -247,7 +247,6 @@ import wangEditor from '../newProductProgress/wangEditor.vue'
 import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -306,7 +305,7 @@ const clickContractCancel = (val: any) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any) => { 
 
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
@@ -326,14 +325,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && el){
-    emit("update:previewListValue", row.componentImgUrl)
-    emit("update:imagePreviewVisible", true)
-  }
-
 }
-
+const showPreviewImage = (url: string) => {
+  emit("update:previewListValue", url)
+  emit("update:imagePreviewVisible", true)
+}
 // 当点击下一步的时候
 const handleSave = async () => {
   emit('changeCheck-step', 2)

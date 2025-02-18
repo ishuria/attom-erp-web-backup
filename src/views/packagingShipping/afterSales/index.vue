@@ -42,7 +42,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -143,7 +143,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -296,7 +296,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -339,7 +339,7 @@
               凭证<br>上传
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.voucherUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.voucherUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -414,7 +414,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -515,7 +515,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -586,7 +586,7 @@
       width="23%"
       @close="closeMove"
     >
-      <el-form ref="contactedFormRef" label-position="right" label-width="auto" :model="contactedForm" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="contactedFormRef" label-position="right" label-width="auto" :model="contactedForm" style="margin-right: 10px; margin-left: 10px;">
         <el-form-item label="选择售后方式" prop="type">
           <el-select v-model="contactedForm.type">
             <el-option
@@ -691,7 +691,6 @@ import {
   uploadAfterSales
 } from '/@/api/devlocal/packagingShipping'
 
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
@@ -937,7 +936,7 @@ const imagePreviewClose = () => {
 //   }
 // }
 const clickRow = ref<any>()
-const contactedInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
+const contactedInputChange = async (row: any, column: any) => {
   if (column.property === 'salesLog') {
     clickRow.value = row
     const { data } = await getAfterSalesLogs({ id: row.id })
@@ -947,13 +946,11 @@ const contactedInputChange = async (row: any, column: any, cell: HTMLTableCellEl
     classify.value = 'salesLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0]
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
+}
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const handlePreview = (file: UploadFile) => {
   imagePreviewVisible.value = true
@@ -1079,8 +1076,8 @@ onBeforeMount(() => {
             padding-top: 0;
             padding-bottom: 0;
             .cell {
-              padding-left: 0;
               padding-right: 0;
+              padding-left: 0;
             }
           }
         }
@@ -1120,23 +1117,23 @@ onBeforeMount(() => {
 .component-upload :deep( .el-upload-list--picture-card .el-upload-list__item) {
  width: 100%;
  height: 100%;
- transition: none;
  margin: 0;
- border-radius: 0;
  border: 0;
+ border-radius: 0;
+ transition: none;
 }
 .component-upload :deep( .el-upload--picture-card) {
   width: 100%;
   height: 100%;
 }
 .overflow-text {
+  display: block;
   max-height: 65.2px;
   overflow-y: auto;
-  display: block;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

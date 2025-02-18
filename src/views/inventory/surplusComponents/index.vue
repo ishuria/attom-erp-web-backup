@@ -1,15 +1,15 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick" :lazy="true">
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="有库存" :name="0">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -17,38 +17,37 @@
         <el-table 
           ref="tableRef" 
           border 
+          :cell-class-name="getCellClass"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
-          @cell-click="changeInput"
-          class="noneHoveTable"
-          :cell-style="cellStyle"
-          :cell-class-name="getCellClass"
           :span-method="objectSpanMethod"
         >
-          <el-table-column label="图片" class="image-wall" width="73">
-            <template #default="{ row, $index }">
-              <el-image :src="row.componentUrl" fit="contain" style="display: block; width: 100%; height: 100%" data-img="img">
+          <el-table-column label="图片" width="75">
+            <template #default="{ row }">
+              <el-image fit="fill" :src="row.componentUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentUrl)">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>  
             </template>
           </el-table-column>
-          <el-table-column label="零件ID" prop="existingPartsId" width="100"></el-table-column>   
-          <el-table-column label="PO" width="100" prop="po" ></el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
+          <el-table-column label="零件ID" prop="existingPartsId" width="100"/>   
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="零件名" prop="componentName" width="250"/>
           <!-- <el-table-column label="可用SKU" width="250" prop="componentQuantity"></el-table-column> -->
-          <el-table-column label="多订总数" width="100" prop="moreCount"></el-table-column>
-          <el-table-column label="剩余库存" width="100" prop="residueStock"></el-table-column>
-          <el-table-column label="已用库存" prop="useCount" min-width="100"></el-table-column>    
-          <el-table-column label="使用的PO" width="105" prop="usePo" ></el-table-column>
-          <el-table-column label="单位" width="70" prop="unit" ></el-table-column>
-          <el-table-column label="仓库" min-width="250" prop="repositoryName"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="采购方" min-width="100" prop="companyAbbreviation"></el-table-column>
-          <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
+          <el-table-column label="多订总数" prop="moreCount" width="100"/>
+          <el-table-column label="剩余库存" prop="residueStock" width="100"/>
+          <el-table-column label="已用库存" min-width="100" prop="useCount"/>    
+          <el-table-column label="使用的PO" prop="usePo" width="105" />
+          <el-table-column label="单位" prop="unit" width="70" />
+          <el-table-column label="仓库" min-width="250" prop="repositoryName"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliserName"/>
+          <el-table-column label="采购方" min-width="100" prop="companyAbbreviation"/>
+          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default = "{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+              <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
           <template #empty>
@@ -68,10 +67,10 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" @input="queryData" @keyup.enter.native="queryData" clearable placeholder="请输入搜索关键词" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -79,37 +78,36 @@
         <el-table 
           ref="tableRef" 
           border 
+          :cell-class-name="getCellClass"
+          :cell-style="cellStyle"
+          class="noneHoveTable"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
-          @cell-click="changeInput"
-          class="noneHoveTable"
-          :cell-style="cellStyle"
-          :cell-class-name="getCellClass"
           :span-method="objectSpanMethod"
         >  
-          <el-table-column label="图片" class="image-wall" width="73">
-            <template #default="{ row, $index }">
-              <el-image :src="row.componentUrl" fit="contain" style="display: block; width: 100%; height: 100%" data-img="img">
+          <el-table-column class="image-wall" label="图片" width="73">
+            <template #default="{ row }">
+              <el-image fit="fill" :src="row.componentUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentUrl)">
                 <template #error>
-                  <el-icon></el-icon>
+                  <el-icon/>
                 </template>
               </el-image>  
             </template>
           </el-table-column>
-          <el-table-column label="零件ID" prop="existingPartsId" width="100"></el-table-column>   
-          <el-table-column label="PO" width="100" prop="po" ></el-table-column>
-          <el-table-column label="零件名" prop="componentName" width="250"></el-table-column>
-          <el-table-column label="多订总数" width="100" prop="moreCount"></el-table-column>
-          <el-table-column label="剩余库存" width="100" prop="residueStock"></el-table-column>
-          <el-table-column label="已用库存" prop="useCount" min-width="100"></el-table-column>    
-          <el-table-column label="使用的PO" width="105" prop="usePo" ></el-table-column>
-          <el-table-column label="单位" width="70" prop="unit" ></el-table-column>
-          <el-table-column label="仓库" min-width="250" prop="repositoryName"></el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliserName"></el-table-column>
-          <el-table-column label="采购方" min-width="100" prop="companyAbbreviation"></el-table-column>
-          <el-table-column label="不报关" prop="customsDeclarationStatus" min-width="75">
+          <el-table-column label="零件ID" prop="existingPartsId" width="100"/>   
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="零件名" prop="componentName" width="250"/>
+          <el-table-column label="多订总数" prop="moreCount" width="100"/>
+          <el-table-column label="剩余库存" prop="residueStock" width="100"/>
+          <el-table-column label="已用库存" min-width="100" prop="useCount"/>    
+          <el-table-column label="使用的PO" prop="usePo" width="105" />
+          <el-table-column label="单位" prop="unit" width="70" />
+          <el-table-column label="仓库" min-width="250" prop="repositoryName"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliserName"/>
+          <el-table-column label="采购方" min-width="100" prop="companyAbbreviation"/>
+          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default = "{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" :true-value="1" :false-value="0" class="custom-checkbox" disabled/>
+              <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
           <template #empty>
@@ -125,7 +123,7 @@
         /> 
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer @close="imagePreviewClose" :url-list="imagePreviewList" v-if ="imagePreviewVisible" hide-on-click-modal/>
+    <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>
 
@@ -133,21 +131,12 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { getOrderMoreComponent } from '~/src/api/devlocal/purchasePo'
-import { useRoutesStore } from '/@/store/modules/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getOrderMoreComponent } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
-  name: 'surplusComponentsTable',
+  name: 'SurplusComponentsTable',
 })
 
-const router = useRouter()
-const routesStore = useRoutesStore()
-const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
-const tabsStore = useTabsStore()
-const { changeTabsMeta, addVisitedRoute } = tabsStore
-const editRef = ref<any>(null)
 const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 
@@ -184,7 +173,11 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 
 
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
@@ -195,27 +188,11 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   // fetchData()
 }
 
-
-
-
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   if (data.columnIndex !== 3 && data.columnIndex !== 9 && data.columnIndex !== 10){        
     return {
       textAlign:'center'
     }
-  }
-}
-
-/**
- * 当点击时切换输入框，修改输入
- */
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
   }
 }
 
@@ -229,7 +206,6 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
 // 零件清单列表col合并方法
 const objectSpanMethod = ({
     row,
-    column,
     rowIndex,
     columnIndex,
 }: any) => {
@@ -319,8 +295,8 @@ onBeforeMount(() => {
             padding-top: 0;
             padding-bottom: 0;
             .cell {
-              padding-left: 0;
               padding-right: 0;
+              padding-left: 0;
             }
           }
           // .el-table__body {

@@ -8,12 +8,11 @@
       :header-cell-style="{'text-align': 'center'}" 
       stripe
       style="width: 80%"
-      @cell-click="tableInputChange"
       @selection-change="setSelectRows"
     >
       <el-table-column label="图片" min-width="90" prop="componentImg">
         <template #default="{ row }">
-          <el-image data-img="img" fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
+          <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" @click="showPreviewImage(row.componentImg)" />
         </template>
       </el-table-column>
       <el-table-column label="已有零件ID" width="120"/>   
@@ -61,7 +60,6 @@ import { reviewProgressId, reviewStepNo2Savetw } from '/@/api/devlocal/orderProc
 import { getComponentList } from '/@/api/devlocal/progressSample'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 
 const route: any = useRoute()
@@ -86,16 +84,10 @@ const suppliserIds = ref<number[]>([])
 // 拿样零件添加列表
 const progressProductList = ref<IComponentAdd[]>([])
 
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-    emit("update:previewListValue", row.componentImg)
-    emit("update:imagePreviewVisible", true)
-  }
+const showPreviewImage = (url: string) => {
+  emit("update:previewListValue", url)
+  emit("update:imagePreviewVisible", true)
 }
-
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }

@@ -12,11 +12,11 @@
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border class="noneHoveTable" :data="list" stripe @cell-click="tableInputChange" @selection-change="setSelectRows">
+    <el-table ref="tableRef" v-loading="listLoading" border class="noneHoveTable" :data="list" stripe @selection-change="setSelectRows">
       <el-table-column fixed type="selection" width="38"/>
       <el-table-column align="center" label="图片" prop="skuUrl" width="100" >
         <template #default="{ row }">
-          <el-image data-img="img" fit="fill" :src="row.skuUrl" style="width: 75px; height: 75px" >
+          <el-image fit="fill" :src="row.skuUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuUrl)">
             <template #error>
               <el-icon/>
             </template>
@@ -74,10 +74,8 @@
   
 <script lang="ts" setup>
 import type { FormInstance, FormRules, TableInstance } from 'element-plus';
-
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
     name: 'ReplenishmentSetting',
@@ -104,6 +102,11 @@ const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
+}
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
 }
 const formRef = ref<FormInstance>()
 // 批量修改数据表单
@@ -157,16 +160,7 @@ const handleSubmit = async () => {
   })
   
 }
-// table单击修改
-const tableInputChange = async(row: any, column: any, cell: HTMLTableCellElement) =>{
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el,'img') && getSpecificChildren(cell,"img")[0]){
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src)
-  }
-}
+
 const handleChangeSite = (value: any) => {
   queryForm.site = value
   fetchData()

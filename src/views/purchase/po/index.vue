@@ -39,7 +39,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -66,7 +65,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -163,7 +162,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -190,7 +188,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" fit="contain" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image fit="fill" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -287,7 +285,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -314,7 +311,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" fit="contain" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image fit="fill" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -411,7 +408,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -438,7 +434,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" fit="contain" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image fit="fill" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -534,7 +530,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO" min-width="100" prop="po">
             <template #default="{ row }">
@@ -553,7 +548,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" fit="contain" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image fit="fill" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -637,7 +632,6 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
-          @cell-click="changeInput"
         >
           <el-table-column label="PO" min-width="100" prop="po">
             <template #default="{ row }">
@@ -656,7 +650,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-               <el-image data-img="img" fit="contain" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+               <el-image fit="fill" :lazy="true" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -734,7 +728,6 @@
           :data="paymentProgressList"
           :header-cell-style="{ 'text-align': 'center' }"
           stripe
-          @cell-click="changeInput"
         >
           <el-table-column label="付款日期" min-width="180" prop="createTime"/>
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
@@ -754,7 +747,7 @@
           </el-table-column>
           <el-table-column label="退款凭证" prop="refundVoucher" width="89">
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.refundVoucher" style="display: block; width: 89px; height: 82px;">
+              <el-image fit="contain" :src="row.refundVoucher" style="display: block; width: 89px; height: 82px;" @click="showPreviewImage(row.refundVoucher)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -964,7 +957,6 @@ import { downloadFile } from '/@/api/devlocal/download'
 import { aggregationContract, applyPurchaseReductionCost, delPayRecord, deletePo, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
@@ -1762,19 +1754,12 @@ const handleDelPoDetail = (row: any) => {
   };
   sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 }
-/**
- * 当点击时切换输入框，修改输入
- */
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-}
 
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 const handleTabClick = (tab: TabsPaneContext) => {
   Object.assign(poList.value, [])
   // tableRef.value?.clearSelection()

@@ -72,7 +72,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -196,7 +196,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -282,7 +282,7 @@ import {
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
-import { focusAndSelectInput, getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -663,13 +663,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     classify.value = 'purchaseMatters'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -686,7 +679,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   }
 
 }
-
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
   
 /**
  * 当点击确认时，子组件传递给父组件的新的val

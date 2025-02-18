@@ -30,11 +30,12 @@
         :header-cell-style="{ 'text-align': 'center' }"
         max-height="550px"
         stripe
-        @cell-click="changeInput"
       >
-        <el-table-column  class="image-wall" label="图片" width="82">
+        <el-table-column label="图片" width="75">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.imageUrl" style="width: 100%; height: 100%"/>
+            <el-image fit="fill" :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.imageUrl)">
+              <template #error><el-icon /></template>
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column label="零件ID" prop="id" width="100"/>
@@ -71,7 +72,6 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getAddConsumableList } from '~/src/api/devlocal/purchasePo'
-import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'VabCreateConsumable'
@@ -121,7 +121,6 @@ const list = ref<any>([])
 
 const tableRef = ref<TableInstance>()
 
-const route: any = useRoute()
 const emit = defineEmits(['update:createConsumableVisible', 'update:tableValue'])
 
 const handlerCloseDialog = () => {
@@ -161,16 +160,12 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => { 
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && getSpecificChildren(cell, "img")[0]) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-}
 
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 
 /**
 * 获取添加耗材数据
@@ -200,8 +195,8 @@ onActivated(() => {
 #table-height-container {
   display: flex;
   flex-direction: column;
-  max-height: calc(80vh - 192px);
   height: calc(80vh - 192px);
+  max-height: calc(80vh - 192px);
 
   .el-table {
       flex: 1; // 使表格占据剩余空间
@@ -224,7 +219,7 @@ transform-origin: center;
   padding-bottom: 0;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 </style>

@@ -50,7 +50,7 @@
               零件<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.componentUrl" style="width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -77,7 +77,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -196,7 +196,7 @@
               零件<br>图片
             </template>
             <template #default="{ row }">
-                <el-image data-img="img" fit="contain" :src="row.componentUrl" style="width: 100%; height: 100%">
+                <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
                   <template #error>
                     <el-icon/>
                   </template>
@@ -227,7 +227,7 @@
               SKU<br>图片
             </template>
             <template #default="{ row }">
-              <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="width: 100%; height: 100%">
+              <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -479,7 +479,7 @@ import {
 
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
-import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 import { isEqual } from 'lodash'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -797,7 +797,7 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any) => { 
   // console.log(column);
   if (column.property === 'log') {
     clickRow.value = row
@@ -808,15 +808,12 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } 
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0];
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
 }
-
+const showPreviewImage = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 let _row: any
 /**
  * 当点击修改时切换输入框，修改输入
@@ -983,8 +980,8 @@ onBeforeMount(() => {
             padding-bottom: 0px;
           }
           .clear-padding .cell {
-            padding-left: 0px;
             padding-right: 0px;
+            padding-left: 0px;
           }
         }
       }
@@ -1001,9 +998,9 @@ onBeforeMount(() => {
   display: none;
 }
 .overflow-text {
+  display: block;
   max-height: 65.2px;
   overflow-y: auto;
-  display: block;
 }
 // /* 取消没有条纹的行的悬停背景色 */
 // :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
@@ -1015,8 +1012,8 @@ onBeforeMount(() => {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

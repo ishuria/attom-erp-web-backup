@@ -756,12 +756,11 @@
         :header-cell-style="{ textAlign: 'center' }"
         max-height="500px"
         stripe
-        @cell-click="changePartsListInput"
       >
         <el-table-column label="零件ID" prop="existingPartsListId"/>
         <el-table-column label="图片" prop="componentUrl" width="60">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.componentUrl" style="display: block; width: 100%; height: 100%">
+            <el-image fit="fill" :src="row.componentUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
               <template #error>
                 <el-icon/>
               </template>
@@ -878,13 +877,12 @@
         :data="currentTaskList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
-        @cell-click="changePartsListInput"
         @selection-change="setSelectTaskAddRows"
       >
         <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
         <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
+            <el-image fit="fill" :src="row.headerImage" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.headerImage)">
               <template #error>
                 <el-icon/>
               </template>
@@ -912,13 +910,12 @@
         :data="goOffWorkList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
-        @cell-click="changePartsListInput"
         @selection-change="setSelectGetOffRows"
       >
         <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
         <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
+            <el-image fit="fill" :src="row.headerImage" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.headerImage)">
               <template #error>
                 <el-icon/>
               </template>
@@ -946,13 +943,12 @@
         :data="startTaskList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
-        @cell-click="changePartsListInput"
         @selection-change="setSelectPersonRows"
       >
         <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
         <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
+            <el-image fit="fill" :src="row.headerImage" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.headerImage)">
               <template #error>
                 <el-icon/>
               </template>
@@ -981,13 +977,12 @@
         :header-cell-style="{ textAlign: 'center' }"
         max-height="700"
         stripe
-        @cell-click="changePartsListInput"
         @selection-change="setSelectFinishTaskRows"
       >
         <el-table-column align="center" label="姓名" min-width="100" prop="userName"/>
         <el-table-column align="center" label="头像" prop="headerImage" width="65">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.headerImage" style="display: block; width: 100%; height: 100%">
+            <el-image fit="fill" :src="row.headerImage" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.headerImage)">
               <template #error>
                 <el-icon/>
               </template>
@@ -1541,16 +1536,7 @@ const partsListCellClassName = (data: { row: any, column: any, rowIndex: number,
   }
   return ''
 }
-// 零件清单放大预览
-const changePartsListInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  // 处理图片放大预览
-  let el = getSpecificChildren(cell, "img")[0]
-  if (getDataAttribute(el, 'img') && el) {
-    imagePreviewVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(el.src!)
-  }
-}
+
 // 质检报告是否可见
 const qualityInspectionReportVisible = ref<boolean>(false)
 // 质检报告表单
