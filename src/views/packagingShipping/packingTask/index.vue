@@ -1016,10 +1016,10 @@
         stripe
         @cell-click="changeProjectInput"
       >
-        <el-table-column label="SKU" min-width="100" prop="sku"/>
-        <el-table-column label="图片" width="82">
+        <el-table-column label="SKU" min-width="100" prop="sku" :width="flexColumnWidth(skuQualityList, 'SKU', 'sku')" />
+        <el-table-column label="图片" width="75">
           <template #default="{ row }">
-            <el-image data-img="img" fit="contain" :src="row.skuImageUrl" style="display: block; width: 100%; height: 100%;">
+            <el-image fit="fill" :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px;" @click="showPreviewImage(row.skuImageUrl)">
               <template #error>
                 <el-icon/>
               </template>
@@ -1325,7 +1325,7 @@ import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
-import { calculateBrColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTaskTable',
@@ -2117,6 +2117,7 @@ const fetchTaskingData = async () => {
     taskingList.value = data.list
     taskingList.value.forEach((item: any) => {
       item.packageRemarkList = item.packageRemarkList.join('<br>')
+      item._sku = item.sku.split('<br/>')
     })
     listLoading.value = false
   }
