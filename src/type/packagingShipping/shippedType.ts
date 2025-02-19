@@ -142,6 +142,7 @@ export interface IEncasementProduct {
   productName: string
   skuImageUrl: string
   count?: number
+  [property: string]: any
 }
 /**
  * @description 开始装箱-根据站点和fnSku查询产品信息返回值

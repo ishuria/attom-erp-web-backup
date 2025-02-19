@@ -27,6 +27,8 @@ export const usePackingStore = defineStore('packing', {
       const index = this.packingData.findIndex((item) => item.tempId === updatedPacking.tempId);
       if (index !== -1) {
         this.packingData[index] = updatedPacking;
+        console.log('更新装箱', this.packingData);
+        
       }
     },
     // 删除 SKU

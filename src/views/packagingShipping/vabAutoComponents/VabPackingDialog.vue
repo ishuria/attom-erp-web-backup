@@ -43,9 +43,9 @@
   <!-- 确认 -->
   <vab-dialog
     v-model="confirmVisible"
-    :before-close="goBack"
     title="确认"
     width="660px"
+    @close="closeConfirm"
   >
     <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-right: 1px; margin-left: 1px;">
       <el-form-item label="数量(箱)" prop="encaseCount">
@@ -65,8 +65,8 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table border :data="list" :header-cell-style="{ textAlign: 'center' }" height="22vh" max-height="30vh" stripe>
-      <el-table-column label="SKU" min-width="200" prop="sku"/>
-      <el-table-column :label="upcOrFnSku" min-width="100" prop="fnSkuOrUpc"/>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
+      <el-table-column :label="upcOrFnSku" min-width="100" prop="fnSkuOrUpc" :width="flexColumnWidth(list, 'FNSKU', 'fnSkuOrUpc')" />
       <el-table-column label="Description" min-width="200" prop="productName"/>
       <el-table-column align="center" label="数量" min-width="70" prop="count"/>
     </el-table>
@@ -80,7 +80,6 @@
     <template #footer>
       <div style="text-align: center;">
         <el-button type="primary" @click="saveAndPrint">保存并打印条形码</el-button>
-        <el-button @click="goBack">返回</el-button>
         <el-button @click="closeConfirm">关闭</el-button>
       </div>
     </template>
@@ -96,6 +95,7 @@ import { usePackingStore } from '/@/store/modules/packing'
 import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 let props = defineProps<{
   packingVisible: boolean
@@ -205,7 +205,7 @@ const fetchData = () => {
   );
   total.value = packingStore.packingData.length
 }
-// 展示确认
+// 展示确认/完成
 const showConfirm = () => {
   // 先判断存入数据是否为空
   if (packingStore.packingData.length === 0) {
@@ -228,10 +228,7 @@ const showConfirm = () => {
     fetchData()
   }
 }
-// 确认的返回
-const goBack = () => {
-  confirmVisible.value = false
-}
+
 // 关闭确认
 const closeConfirm = () => {
   confirmForm.encaseCount = undefined
@@ -255,7 +252,6 @@ const saveAndPrint = async () => {
       if (code === 0) {
         const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
         if (res) {
-          goBack()
           handleCloseDialog()
           emit('update:finish')
         }
@@ -281,7 +277,6 @@ function generateUUID() {
   });
 }
 
-
 // 监听回车键扫描事件（包括用户回车和扫枪回车）
 const handleKeyPress = async (event: any) => {
 
@@ -295,7 +290,15 @@ const handleKeyPress = async (event: any) => {
       fnSkuOrUpc: packingForm.fnSkuOrUpc
     })
     if (data) {
-      Object.assign(packingForm, data)
+      // Object.assign(packingForm, data)
+      // 更新 packingForm
+      for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(packingForm, key)) {
+          packingForm[key] = (data as any)[key];
+        }
+      }
+      console.log('扫码后的form', packingForm);
+      
       tempCurId.value = generateUUID()
       let flag = _addPacking(packingForm, tempCurId.value)
       if (flag) {
@@ -319,7 +322,11 @@ const handleKeyPress = async (event: any) => {
 
 // 更新表单
 const handleUpdate = () => {
+  console.log('更新count后的', packingForm);
+  
   const updatePacking = { tempId: tempCurId.value, ...packingForm }
+  console.log('updatePacking', updatePacking);
+  
   _updatePacking(updatePacking)
   console.log('更新', packingStore.packingData);
 }
