@@ -3,10 +3,10 @@
     <el-row :gutter="30" style="height: calc(100% - 52px)">
       <el-col :span="17" style="height: 100%">
         <vab-query-form>
-          <vab-query-form-left-panel>
+          <!-- <vab-query-form-left-panel>
             <el-button type="primary">请假申请</el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel >
+          </vab-query-form-left-panel> -->
+          <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item >
                 <el-select v-model="queryForm.userId" clearable placeholder="全部人员" style="width: 30px; margin-right: 10px;" @change="queryData">

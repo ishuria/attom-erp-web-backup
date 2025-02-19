@@ -3,6 +3,7 @@
   <vab-dialog
     v-model="dflag"
     :before-close="handleCloseDialog"
+    :draggable="false"
     title="修改"
     top="7vh"
     width="35%"
@@ -369,7 +370,11 @@ watchEffect(() => {
 const modifyForm = reactive<any>({})
 const modifyFormRef = ref<FormInstance>()
 // 新增新的明细
-const addNewForm = reactive<any>({})
+const addNewForm = reactive<any>({
+  fnSkuOrUpc: '',
+  count: '',
+  skuImageUrl: ''
+})
 const addNewFormRef = ref<FormInstance>()
 const addNewFormRules = reactive<FormRules<IAddDetailEncasementReq>>({
   fnSkuOrUpc: [{ required: true, message: '请输入FNSKU', trigger: 'blur' }],
@@ -540,18 +545,22 @@ const closeAddNewDetail = () => {
 }
 // 确认新增新的明细
 const confirmAddNewDetail = async () => {
-  const { data } = await addDetailEncasement({
-    id: props.encasementId,
-    fnSkuOrUpc: addNewForm.fnSkuOrUpc,
-    sku: addNewForm.sku,
-    productName: addNewForm.productName,
-    count: addNewForm.count
+  addNewFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await addDetailEncasement({
+        id: props.encasementId,
+        fnSkuOrUpc: addNewForm.fnSkuOrUpc,
+        sku: addNewForm.sku,
+        productName: addNewForm.productName,
+        count: addNewForm.count
+      })
+      if (data) {
+        $baseMessage('新增成功', 'success')
+        fetchData()
+        closeAddNewDetail()
+      }
+    }
   })
-  if (data) {
-    $baseMessage('新增成功', 'success')
-    fetchData()
-    closeAddNewDetail()
-  }
 }
 const queryForm = reactive<any>({
   keyWord: '',

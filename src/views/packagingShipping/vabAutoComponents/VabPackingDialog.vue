@@ -91,10 +91,10 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getCurrentFormatDate } from '~/src/utils/dateUtils'
 import { getEncasementSku, printBarcodeEncasement, printBarcodeEncasementSuccess, submitEncasementSku } from '/@/api/devlocal/encasement'
 import { usePackingStore } from '/@/store/modules/packing'
 import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
+import { getCurrentFormatDate } from '/@/utils/dateUtils'
 import { _addPacking, _clearPacking, _updatePacking } from '/@/utils/packing'
 
 let props = defineProps<{
@@ -223,6 +223,7 @@ const showConfirm = () => {
       $baseMessage(`${upcOrFnSku.value}不能为空`, 'error');
       return
     }
+    confirmForm.encaseCount = undefined // 每次打开数量置空
     confirmVisible.value = true
     fetchData()
   }
@@ -236,6 +237,7 @@ const closeConfirm = () => {
   confirmForm.encaseCount = undefined
   confirmVisible.value = false
   handleCloseDialog()
+  emit('update:finish')
 }
 // 保存并打印
 const saveAndPrint = async () => {
@@ -324,9 +326,28 @@ const handleUpdate = () => {
 
 // 切换上一个
 const switchPrevious = () => {
+  // 如果表单什么也没输入，可以切换到上一个
+  if (!packingForm.fnSkuOrUpc && packingForm.count == null) {
+    const data = packingStore.packingData
+    const index = data.length - 1
+    console.log('上一个的数据是', data[index]);
+    console.log('index', index);
+
+    if (index === 0) {
+      previousVisible.value = false
+    }
+    Object.assign(packingForm, data[index])
+    // id赋值
+    tempCurId.value = data[index].tempId
+    // 扫抢扫码不能输入
+    barcodeDisabled.value = true
+    return
+  }
   // 首先判断是否都输入
   packingFormRef.value?.validate((isValid: boolean) => {
     if (isValid) {
+      console.log(packingForm);
+      
       // 上一个一定是有数据的
       const data = packingStore.packingData
       const index = data.findIndex((item: PackingType) => item.tempId === tempCurId.value)
