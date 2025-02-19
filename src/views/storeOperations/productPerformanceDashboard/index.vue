@@ -214,7 +214,7 @@
                   <vab-icon icon="file-copy-2-fill" />
                 </span>
                 <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rating }}</span>
+                  <span class="rate-value">{{ row.rating === 0 ? 0 : row.rating.toFixed(1) }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
@@ -523,7 +523,7 @@
               <span v-if="item.label === 'ASIN'">
                 <el-link type="primary">{{ row.asin }}</el-link>
                 <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rating }}</span>
+                  <span class="rate-value">{{ row.rating === 0 ? 0 : row.rating.toFixed(1) }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>
@@ -816,7 +816,7 @@
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
                 <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rating }}</span>
+                  <span class="rate-value">{{ row.rating === 0 ? 0 : row.rating.toFixed(1) }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                 </div>

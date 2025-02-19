@@ -9,7 +9,14 @@
           <vab-query-form-right-panel >
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item >
-                <el-select placeholder="选择人员" style="width: 30px; margin-right: 10px;"/>
+                <el-select v-model="queryForm.userId" clearable placeholder="全部人员" style="width: 30px; margin-right: 10px;" @change="queryData">
+                  <el-option 
+                    v-for="item in userList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -28,19 +35,19 @@
             :header-cell-style="{ textAlign: 'center' }"
             stripe
           >
-            <el-table-column label="姓名" min-width="90" prop="name"/>
-            <el-table-column label="开始时间" min-width="76" prop="startTime">
+            <el-table-column label="姓名" prop="name" width="100"/>
+            <el-table-column label="开始时间" prop="startTime" width="160">
               <template #default="{ row }">
                 {{ formatTime(row.startTime) }}
               </template>
             </el-table-column>
-            <el-table-column label="结束时间" min-width="76" prop="endTime">
+            <el-table-column label="结束时间" prop="endTime" width="160">
               <template #default="{ row }">
                 {{ formatTime(row.endTime) }}
               </template>
             </el-table-column>
-            <el-table-column label="工作时长(分钟)" min-width="70" prop="workerHouse"/>
-            <el-table-column label="PO" min-width="50" prop="po">
+            <el-table-column label="工作时长(分钟)" prop="workerHouse" width="130" />
+            <el-table-column label="PO" prop="po" width="100">
               <template #default="{ row }">
                 <span v-html="row.po"></span>
               </template>
@@ -60,6 +67,9 @@
                 <span style="color: #4E88F3; cursor: pointer;" @click="showModify(row)">修改</span>
               </template>
             </el-table-column>
+            <template #empty>
+              <el-empty class="vab-data-empty" />
+            </template>
           </el-table>
           <vab-pagination 
             class="pagination" 
@@ -85,7 +95,14 @@
               value-format="YYYY-MM-DD"
               @change="queryRightData"
             />
-            <el-select placeholder="选择人员" style="width: 30px; margin-left: 10px;"/>
+            <el-select v-model="queryRightForm.userId" clearable placeholder="全部人员" style="width: 30px; margin-left: 10px;" @change="queryRightData">
+              <el-option 
+                v-for="item in userList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </vab-query-form-left-panel>
         </vab-query-form>
         <div class="flex-container">
@@ -105,6 +122,9 @@
             </el-table-column>
             <el-table-column label="工时(分钟)" min-width="70" prop="workerHouse"/>
             <el-table-column label="餐补次数" min-width="60" prop=""/>
+            <template #empty>
+              <el-empty class="vab-data-empty" />
+            </template>
           </el-table>
           <vab-pagination 
             class="pagination" 
@@ -154,7 +174,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { getPackageTimeDay, getPackageTimeList, updatePackageTime } from '/@/api/devlocal/packagingShipping'
+import { getMorkPackageList, getPackageTimeDay, getPackageTimeList, updatePackageTime } from '/@/api/devlocal/packagingShipping'
 
 // 日期初始化
 const date = ref<string[]>(getDefaultStringTime()); // 初始化为两个空字符串
@@ -300,7 +320,20 @@ const cellStyle = () => {
     textAlign: 'center' as const
   }
 }
+// 人员列表
+const userList = ref<{ label: string, value: number }[]>([])
+// 获取人员
+const fetchUserList = async () => {
+  const { data } = await getMorkPackageList()
+  userList.value = data.map((item: any) => {
+    return {
+      label: item.userName,
+      value: item.userId
+    }
+  })
+}
 onBeforeMount(() => {
+  fetchUserList()
   fetchData()
   fetchRightData()
 })

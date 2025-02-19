@@ -11,7 +11,7 @@
     1星半： [1.3,1.8)
     1星：    [0,1.3) && 有评论 展示1星 0 没评论 展示0星
 */
-export function getAmazonStars(score: number, commentNumbers: number) {
+export function getAmazonStars(score: number, commentNumbers: number): number {
   if (score >= 4.8) return 5
   if (score >= 4.3) return 4.5
   if (score >= 3.8) return 4
