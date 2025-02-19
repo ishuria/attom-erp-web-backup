@@ -27,17 +27,21 @@
     >
       <el-table-column class="image-wall" label="图片" width="75">
         <template #default="{ row }">
-          <el-image v-if="row.skuImgUrl" fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row.skuImgUrl)">
+          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row.skuImgUrl)">
             <template #error><el-icon /></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" :min-width="tableColumnWidth" prop="sku">
+      <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 70, 50)" >
         <template #default="{ row }">
-          <span v-html="row.sku" ></span>
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row._sku[0])" >
+            {{ row._sku[0] }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span><br />
+          {{ row._sku[1] }}
         </template>
       </el-table-column>   
-      <el-table-column label="FNSKUUPC" prop="fnSkuUpc" :width="FNSKUColumnWidth" >
+      <el-table-column label="FNSKUUPC" prop="fnSkuUpc" :width="calculateBrColumnWidth(list, (row: any) => row.fnSkuUpc, 70)" >
         <template #header>
           FNSKU<br>UPC
         </template>
@@ -150,6 +154,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
+import handleClipboard from '~/src/utils/clipboard'
 
 defineOptions({
   name: 'Consumable',
@@ -221,8 +226,6 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const tableColumnWidth = ref<number>(90)
-const FNSKUColumnWidth = ref<number>(90)
 
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
@@ -262,11 +265,9 @@ const fetchData = async () =>{
   total.value = data.total
   list.value.forEach((item: any) => {
     item.fnSkuUpc = item.fnSkuUpc.replaceAll(',', '<br>')
+    item._sku = item.sku.split('<br/>')
   })
   listLoading.value = false
-  // calculateColumnWidth()
-  tableColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.sku, 70);
-  FNSKUColumnWidth.value = calculateBrColumnWidth(list.value, (row: any) => row.fnSkuUpc, 70);
 }
 
 // 在组件加载时执行
@@ -322,6 +323,15 @@ onBeforeMount(() => {
   display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>
 

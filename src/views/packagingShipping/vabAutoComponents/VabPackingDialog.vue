@@ -44,10 +44,10 @@
   <vab-dialog
     v-model="confirmVisible"
     title="确认"
-    width="660px"
+    width="700px"
     @close="closeConfirm"
   >
-    <el-form :model="confirmForm" :rules="confirmFormRules" style="margin-right: 1px; margin-left: 1px;">
+    <el-form ref="confirmFormRef" :model="confirmForm" :rules="confirmFormRules" style="margin-right: 1px; margin-left: 1px;">
       <el-form-item label="数量(箱)" prop="encaseCount">
         <el-input v-model="confirmForm.encaseCount" clearable style="width: 100%" />
       </el-form-item>
@@ -67,8 +67,19 @@
     <el-table border :data="list" :header-cell-style="{ textAlign: 'center' }" height="22vh" max-height="30vh" stripe>
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
       <el-table-column :label="upcOrFnSku" min-width="100" prop="fnSkuOrUpc" :width="flexColumnWidth(list, 'FNSKU', 'fnSkuOrUpc')" />
-      <el-table-column label="Description" min-width="200" prop="productName"/>
-      <el-table-column align="center" label="数量" min-width="70" prop="count"/>
+      <el-table-column label="Description" prop="productName">
+        <template #default="{ row }">
+          <el-tooltip content="" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip" >{{ row.productName }}</div>
+            </template>
+            <span style="display: flex; align-items: center;">
+              <el-text truncated>{{ row.productName }}</el-text>
+            </span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="数量" prop="count" :width="flexColumnWidth(list, '数量', 'count')"/>
     </el-table>
     <vab-pagination 
       :current-page="queryForm.pageNo"
@@ -80,6 +91,7 @@
     <template #footer>
       <div style="text-align: center;">
         <el-button type="primary" @click="saveAndPrint">保存并打印条形码</el-button>
+        <el-button type="success" @click="save">保存</el-button>
         <el-button @click="closeConfirm">关闭</el-button>
       </div>
     </template>
@@ -118,6 +130,7 @@ const imagePreviewShow = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value.push(url)
 }
+const confirmFormRef = ref<FormInstance>()
 // 确认的form
 const confirmForm = reactive<{encaseCount: number | undefined}>({
   encaseCount: undefined
@@ -238,28 +251,46 @@ const closeConfirm = () => {
 }
 // 保存并打印
 const saveAndPrint = async () => {
-  if (confirmForm.encaseCount != undefined && confirmForm.encaseCount != null) {
-    const { data } = await submitEncasementSku({
-      encaseCount: confirmForm.encaseCount,
-      encasementNo: props.encasementNo,
-      planSite: props.site,
-      encasementDetailList: packingStore.packingData
-    })
-    if (data) {
-      $baseMessage('保存并打印条形码成功', 'success')
-      const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
-      const { data, code } = await printBarcodeEncasement({ code: req })
-      if (code === 0) {
-        const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
-        if (res) {
-          handleCloseDialog()
-          emit('update:finish')
+  confirmFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await submitEncasementSku({
+        encaseCount: confirmForm.encaseCount,
+        encasementNo: props.encasementNo,
+        planSite: props.site,
+        encasementDetailList: packingStore.packingData
+      })
+      if (data) {
+        $baseMessage('保存并打印条形码成功', 'success')
+        const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
+        const { data, code } = await printBarcodeEncasement({ code: req })
+        if (code === 0) {
+          const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
+          if (res) {
+            handleCloseDialog()
+            emit('update:finish')
+          }
         }
       }
     }
-  } else {
-    $baseMessage('请先输入箱数', 'error')
-  }
+  })
+}
+// 保存
+const save = async () => {
+  confirmFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await submitEncasementSku({
+        encaseCount: confirmForm.encaseCount,
+        encasementNo: props.encasementNo,
+        planSite: props.site,
+        encasementDetailList: packingStore.packingData
+      })
+      if (data) {
+        $baseMessage('保存成功', 'success')
+      } else {
+        $baseMessage("保存失败", 'error')
+      }
+    }
+  })
 }
 // 打开装箱时自动聚焦到FNSKU输入框
 const handlePackingOpen = () => {
@@ -297,7 +328,7 @@ const handleKeyPress = async (event: any) => {
           packingForm[key] = (data as any)[key];
         }
       }
-      console.log('扫码后的form', packingForm);
+      // console.log('扫码后的form', packingForm);
       
       tempCurId.value = generateUUID()
       let flag = _addPacking(packingForm, tempCurId.value)
@@ -307,7 +338,7 @@ const handleKeyPress = async (event: any) => {
         packingForm.skuImageUrl = ''  
         return
       }
-      console.log('packingData', packingStore.packingData)
+      // console.log('packingData', packingStore.packingData)
       barcodeDisabled.value = true
       if (packingCount.value) {
         packingCount.value.focus()
@@ -322,13 +353,13 @@ const handleKeyPress = async (event: any) => {
 
 // 更新表单
 const handleUpdate = () => {
-  console.log('更新count后的', packingForm);
+  // console.log('更新count后的', packingForm);
   
   const updatePacking = { tempId: tempCurId.value, ...packingForm }
-  console.log('updatePacking', updatePacking);
+  // console.log('updatePacking', updatePacking);
   
   _updatePacking(updatePacking)
-  console.log('更新', packingStore.packingData);
+  // console.log('更新', packingStore.packingData);
 }
 
 // 切换上一个
@@ -337,8 +368,8 @@ const switchPrevious = () => {
   if (!packingForm.fnSkuOrUpc && packingForm.count == null) {
     const data = packingStore.packingData
     const index = data.length - 1
-    console.log('上一个的数据是', data[index]);
-    console.log('index', index);
+    // console.log('上一个的数据是', data[index]);
+    // console.log('index', index);
 
     if (index === 0) {
       previousVisible.value = false
@@ -353,7 +384,7 @@ const switchPrevious = () => {
   // 首先判断是否都输入
   packingFormRef.value?.validate((isValid: boolean) => {
     if (isValid) {
-      console.log(packingForm);
+      // console.log(packingForm);
       
       // 上一个一定是有数据的
       const data = packingStore.packingData
@@ -382,7 +413,7 @@ const switchNext = () => {
       if (length - 1 === index) { // 如果就是最后一个，创建一个新的
         packingFormRef.value?.resetFields()
         packingForm.skuImageUrl = ''
-        console.log('最后一个下一个后的数据', packingStore.packingData)
+        // console.log('最后一个下一个后的数据', packingStore.packingData)
         // 上一个按钮展示
         previousVisible.value = true
         // 聚焦到FNSKU
@@ -393,7 +424,7 @@ const switchNext = () => {
         Object.assign(packingForm, data[index + 1])
         // 当前id变换
         tempCurId.value = data[index + 1].tempId
-        console.log('中间的下一个后的数据', packingStore.packingData);
+        // console.log('中间的下一个后的数据', packingStore.packingData);
         // 上一个按钮展示
         previousVisible.value = true
         // 扫抢扫码不能输入
@@ -404,3 +435,11 @@ const switchNext = () => {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.custom-tooltip {
+  max-width: 400px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
+}
+</style>
