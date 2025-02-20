@@ -23,7 +23,7 @@
       </el-steps>
       <order-step1 
         v-if="active === 0" 
-        @change-step="handleSetStep" 
+        @change-step="handleSetStep"
         @send-data-to-step2="setStep2Data"
       />
       <order-step2 
@@ -96,12 +96,13 @@ defineOptions({
 
 // route
 const route: any = useRoute()
+const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
-const active = ref<number>(0)
+const active = ref<number | undefined>(undefined)
 // 查看跳转,从0开始
-const activeCheck = ref<number>(0)
+const activeCheck = ref<number | undefined>(undefined)
 const isNone1 = ref<boolean>(false)
 const isNone2 = ref<boolean>(false)
 
@@ -140,37 +141,37 @@ const setStep2Data = (res: any) => {
 // back
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
-  history.back()
+  if (route.query.progressId) {
+    router.push({
+      path: '/newProductDevelopment/newProductProgress',
+    })
+  } else {
+    router.push({
+      path: '/newProductDevelopment/newProductApprovalAndRecords',
+    })
+  }
 }
 onMounted(() => {
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'，编辑和订大货显示
   if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
     isNone1.value = false;
-    nextTick(() => {
-      if (route.query.stepNo) {
-        // console.log(active.value); 
-        active.value = parseInt(route.query.stepNo)
-        // console.log(active.value);
-        console.log('加载');
-        
-      } else {
-        active.value = 0 // 订大货的是0
-      }
-    })
-    
+    if (route.query.stepNo) {
+      active.value = parseInt(route.query.stepNo)
+    } else {
+      active.value = 0 // 订大货的是0
+    }
+
   } else { // 查看显示
     isNone2.value = false;
     isNone1.value = true;
-    nextTick(() => {
-      if (route.query.stepNo) {
-        const stepNo = parseInt(route.query.stepNo)
-        activeCheck.value = stepNo
-        if (stepNo === 5) {
-          activeCheck.value = 0
-        }
+    if (route.query.stepNo) {
+      const stepNo = parseInt(route.query.stepNo)
+      activeCheck.value = stepNo
+      if (stepNo === 5) {
+        activeCheck.value = 0
       }
-    })
+    }
   }
 })
 

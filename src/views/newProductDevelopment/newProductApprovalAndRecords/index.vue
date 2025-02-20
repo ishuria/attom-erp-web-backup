@@ -326,7 +326,6 @@ const handleOrderReview = (row: IReviewQueryItem) => {
       reviewId: row.reviewMainId,
       reviewStatus: row.reviewStatus,
       reviewStepNo: row.reviewStepNo,
-      timestamp: Date.now(),
     },
   })
 }
@@ -335,7 +334,6 @@ const handleOrderProcess = (row: IReviewQueryItem) => {
   router.push({
     path: '/newProductDevelopment/orderingProcess',
     query: {
-      timestamp: Date.now(),
       reviewStatus: row.reviewStatus,
       reviewId: row.reviewMainId,
       stepNo: row.stepNo,

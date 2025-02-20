@@ -95,6 +95,7 @@
     </div>
 
     <div class="pay-button-group">
+      <el-button type="danger" @click="goBackToStep1">不通过</el-button>
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
@@ -223,11 +224,23 @@ const handleSaveAndContinue = async () => {
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords'
       })
+      // 审核通过后需要将第一步的可填项标灰
+
     }
 
   })
 }
-
+// 当点击不通过
+const goBackToStep1 = () => {
+  $baseConfirm('确定要点击审核不通过吗？', null, async () => {
+    // 发送链接不通过
+    // 跳回主界面
+    await delVisitedRoute(handleActivePath(route, true))
+    router.push({
+      path: '/newProductDevelopment/newProductApprovalAndRecords'
+    })
+  })
+}
 const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await getSkuVariantList({ reviewId: props.reviewId })

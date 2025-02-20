@@ -363,12 +363,13 @@ const handleSaveAndContinue = async () => {
     const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。","success","hey")
+
       emit('change-step', 4)
-      if (route.query.reviewId) {
+      if (route.query.reviewId) { //编辑进来的，要更改stepNo
         await delVisitedRoute(handleActivePath(route, true))
-        const {...query} = route.query;
-        router.replace({query: {...query, stepNo: 4}});
-      }
+        const { ...query } = route.query;
+        router.replace({ query: { ...query, stepNo: 4 } });
+      } 
     }
   } catch (error) {
     console.error(error)
