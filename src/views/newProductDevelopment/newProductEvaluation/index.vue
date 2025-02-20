@@ -167,7 +167,7 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 跑分明细 -->
-    <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="750">
+    <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="870">
       <el-table :cell-style="{ textAlign: 'center' }" :data="benchmarkScoreList" :header-cell-style="{ 'text-align': 'center' }">
         <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label" :prop="item.prop" />
       </el-table>
