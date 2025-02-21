@@ -65,7 +65,7 @@
       <el-table-column label="总重量(kg)" prop="totalWeight" :width="flexColumnWidth(list, '总重量(kg)', 'totalWeight')"/>
       <el-table-column label="总体积(m3)" prop="totalVolume" :width="flexColumnWidth(list, '总体积(m3)', 'totalVolume')"/>
       <el-table-column label="箱规号" prop="encasementNo" :width="flexColumnWidth(list, '箱规号', 'encasementNo')"/>
-      <el-table-column label="发往站点" prop="planSiteName" width="130"/>
+      <el-table-column label="发往站点" prop="planSiteName" :width="flexColumnWidth(list, '发往站点', 'planSiteName')"/>
       <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
       <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
