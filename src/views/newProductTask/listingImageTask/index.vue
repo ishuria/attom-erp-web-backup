@@ -735,7 +735,13 @@ const marginSettingFormRules = reactive<FormRules<IArtDesignTaskMargin>>({
   proportionMargin: [{ required: true, message: '比例', trigger: 'blur' }],
 })
 const assignTaskVisible = ref<boolean>(false)
-const assignTaskForm = reactive<any>({})
+const assignTaskForm = reactive<any>({
+  baseImageUrlPerson: [],
+  moldingPerson: [],
+  aPlus: [],
+  videoPerson: [],
+  instructionPerson: []
+})
 const selectedRows = ref<IGetArtDesignTaskList[]>([])
 const setSelectedRows = (value: IGetArtDesignTaskList[]) => {
   selectedRows.value = value
