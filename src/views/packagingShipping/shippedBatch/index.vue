@@ -88,7 +88,7 @@
       <el-table-column fixed="right" label="操作" width="260">
         <template #default="{ row }">
           <el-space :size="20">
-            <el-link type="primary" :underline="false" @click="showDetails">明细</el-link>
+            <el-link type="primary" :underline="false" @click="showDetails(row)">明细</el-link>
             <el-link type="primary" :underline="false" @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
           </el-space>
         </template>
@@ -132,7 +132,7 @@
       >
         <el-table-column label="图片" width="70">
           <template #default="{ row }">
-            <el-image fit="contain" :src="row.skuImgUrl" style="width: 70px; height: 70px; display: block" @click="showImagePreview(row)">
+            <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 70px; height: 70px;" @click="showImagePreview(row)">
               <template #error>
                 <el-icon/>
               </template>
@@ -164,7 +164,7 @@
       width="20%"
       @close="closeUpdateStorageTime"
     >
-      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-left: 20px; margin-right: 20px">
+      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-right: 20px; margin-left: 20px;">
         <el-form-item label="最新预计入库时间" prop="date">
           <el-date-picker 
             v-model="storageTimeForm.date" 
@@ -187,7 +187,7 @@
       width="26%"
       @close="closeFilter"
     >
-      <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="margin-left: 10px; margin-right: 10px">
+      <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="margin-right: 10px; margin-left: 10px;">
         <el-form-item label="缺数">
           <div class="flex">
             <el-input-number
@@ -295,10 +295,11 @@ const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
 const storageTimeFormRef = ref<FormInstance>()
 // 传给明细的id
-const _id = ref<number>(0)
+const _id = ref<number | undefined>(0)
 // 展示明细
-const showDetails = () => {
+const showDetails = (row: IGetShipmentFbaList) => {
   detailsVisible.value = true
+  _id.value = row.id
   fetchDetailData()
 }
 const fetchDetailData = async () => {
@@ -432,8 +433,8 @@ onBeforeMount(() => {
   padding-bottom: 0;
 }
 .detailsTable :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 .flex {
   display: flex;

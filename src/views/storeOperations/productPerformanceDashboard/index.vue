@@ -430,6 +430,7 @@
           :cell-style="cellStyle"
           class="noneHoverTable"
           :data="asinList"
+          :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
         >
@@ -734,6 +735,7 @@
           :cell-style="cellStyle"
           class="noneHoverTable"
           :data="pAsinList"
+          :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center' }"
           @cell-click="cellClick"
         >
@@ -1829,7 +1831,7 @@ const fetchData = async () => {
   list.value.forEach((item) => {
     processField(item, 'developName', 2)
     if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
     item.storageAge = `
       <div class="storage-list">
         <div class="storage-item">
@@ -1865,7 +1867,8 @@ const fetchAsinData = async () => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+  
     item.storageAge = `
       <div class="storage-list">
         <div class="storage-item">
@@ -1901,7 +1904,7 @@ const fetchPAsinData = async () => {
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
   })
   listLoading.value = false
 }
@@ -1944,7 +1947,7 @@ const fetchColumn = async () => {
       item.minWidth = '120'
     }
     if (item.prop === 'currentSalesPrice') {
-       item.sortable = true
+      item.sortable = true
       item.minWidth = '130'
     }
     if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
@@ -1987,7 +1990,11 @@ const fetchAsinColumn = async () => {
     }
     if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
       item.sortable = true
-      item.minWidth = '110'
+      item.minWidth = '120'
+    }
+    if (item.prop === 'currentSalesPrice') {
+      item.sortable = true
+      item.minWidth = '130'
     }
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
@@ -2017,7 +2024,11 @@ const fetchPAsinColumn = async () => {
     }
     if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
       item.sortable = true
-      item.minWidth = '110'
+      item.minWidth = '120'
+    }
+    if (item.prop === 'currentSalesPrice') {
+      item.sortable = true
+      item.minWidth = '130'
     }
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
