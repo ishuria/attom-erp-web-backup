@@ -23,7 +23,7 @@
       stripe
       @cell-click="changeInput"
     >
-      <el-table-column align="center" label="图片" width="75">
+      <el-table-column label="图片" width="75">
         <template #default="{ row }">
           <el-upload 
             class="component-upload"
@@ -107,11 +107,7 @@
           <span>{{ row.numberFullCartons }}</span>
         </template>
       </el-table-column> 
-      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
-        <template #default="{row}">
-          <span style="color: rgb(192, 192, 192)">{{ row.suppliser }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
       <el-table-column label="开票" prop="oem" width="130">
         <template #default = "{ row }">
           <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleCurrencyChange(row)">
@@ -123,18 +119,12 @@
         <template #header>
           实际<br>税点
         </template>
-        <template #default="{ row }">
-          <span style="color: rgb(192, 192, 192)">{{ row.actualTaxRate }}</span>
-        </template>
       </el-table-column>
 
       <el-table-column label="开票税点" min-width="60" prop="invoicingTaxRate">
-          <template #header>
-              开票<br>税点
-          </template>
-          <template #default="{ row }">
-              <span style="color: rgb(192, 192, 192)">{{ row.invoicingTaxRate }}</span>
-          </template>
+        <template #header>
+          开票<br>税点
+        </template>
       </el-table-column>
 
       <el-table-column label="默认采购方" min-width="160" prop="purchaseId">
@@ -168,7 +158,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
             </template>
-            <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+            <el-text truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -178,7 +168,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
             </template>
-            <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+            <el-text truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
