@@ -48,27 +48,27 @@
       @selection-change="setSelectRows"
     >
       <el-table-column fixed="left" type="selection" />
-      <el-table-column label="发货计划" min-width="115" prop="shipmentPlanDate">
+      <el-table-column label="发货计划" prop="shipmentPlanDate" width="115">
         <template #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱日期" min-width="115" prop="createTime">
+      <el-table-column label="装箱日期" prop="createTime" width="115">
         <template #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight"/>
-      <el-table-column label="长(cm)" min-width="90" prop="length"/>
-      <el-table-column label="宽(cm)" min-width="90" prop="width"/>
-      <el-table-column label="高(cm)" min-width="90" prop="height"/>
-      <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
-      <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
-      <el-table-column label="箱规号" min-width="110" prop="encasementNo"/>
-      <el-table-column label="发往站点" min-width="130" prop="planSiteName"/>
+      <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight" :width="flexColumnWidth(list, '毛重(kg)', 'grossWeight')"/>
+      <el-table-column label="长(cm)" prop="length" :width="flexColumnWidth(list, '长(cm)-', 'length')"/>
+      <el-table-column label="宽(cm)" prop="width" :width="flexColumnWidth(list, '宽(cm)-', 'width')"/>
+      <el-table-column label="高(cm)" prop="height" :width="flexColumnWidth(list, '高(cm)-', 'height')"/>
+      <el-table-column label="总重量(kg)" prop="totalWeight" :width="flexColumnWidth(list, '总重量(kg)', 'totalWeight')"/>
+      <el-table-column label="总体积(m3)" prop="totalVolume" :width="flexColumnWidth(list, '总体积(m3)', 'totalVolume')"/>
+      <el-table-column label="箱规号" prop="encasementNo" :width="flexColumnWidth(list, '箱规号', 'encasementNo')"/>
+      <el-table-column label="发往站点" prop="planSiteName" width="130"/>
       <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
-      <el-table-column label="箱数" min-width="150" prop="numberOfBoxes">
+      <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
         <template #default="{ row }">
           <el-input-number 
             v-model="row.numberOfBoxes" 
@@ -78,9 +78,9 @@
         />
         </template>
       </el-table-column>
-      <el-table-column label="数量" min-width="90" prop="number"/>
-      <el-table-column label="产品总数" min-width="100" prop="productTotalNumber"/>
-      <el-table-column label="备注" min-width="100" prop="remarks"/>
+      <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')"/>
+      <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')"/>
+      <el-table-column label="备注" prop="remarks"/>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
