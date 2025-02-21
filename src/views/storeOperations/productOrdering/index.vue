@@ -95,7 +95,7 @@
           <span v-if="item.label === 'ASIN'">
             <el-link type="primary">{{ row.asin }}</el-link>
             <div class="rate-wrapper">
-              <span class="rate-value">{{ row.rating }}</span>
+              <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
               <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
               <span class="rate-count">{{ row.commentsNumbers }}</span>
             </div>
@@ -146,6 +146,13 @@
           </span>
           <span v-if="item.label === '操作'">
             <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
+          </span>
+          <span v-if="item.label === 'VOC满意度'">
+            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -633,7 +640,7 @@ const fetchData = async () => {
   list.value.forEach((item) => {
     processField(item, 'sku', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers!))
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
   })
   listLoading.value = false
 }
@@ -715,6 +722,29 @@ onBeforeMount(() => {
   width: 9em;
   :deep(.el-input__inner) {
     text-align: left;
+  }
+}
+.customTag {
+  width: 7em;
+  padding: 0 30px;
+  color: #fff;
+  border: 0;
+  border-radius: 17px;
+
+  &-veryPoor {
+    background-color: #e32e00;
+  }
+  &-good {
+    background-color: #bad411;
+  }
+  &-fair {
+    background-color: #ffc400;
+  }
+  &-poor {
+    background-color: #ff9900;
+  }
+  &-excellent {
+    background-color: #49850f;
   }
 }
 </style>

@@ -854,11 +854,11 @@ const showShippingAmazon = async () => {
     $baseMessage('您未选中任何行', 'error')
     return
   }
-  // 判断箱数是否大于500
-  if (totalBoxNumber.value > 500) {
-    $baseMessage('总箱数不能大于500，请重新勾选', 'error')
-    return
-  }
+  // // 判断箱数是否大于500
+  // if (totalBoxNumber.value > 500) {
+  //   $baseMessage('总箱数不能大于500，请重新勾选', 'error')
+  //   return
+  // }
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {

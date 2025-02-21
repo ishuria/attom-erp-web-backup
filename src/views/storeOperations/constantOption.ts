@@ -430,4 +430,14 @@ export const orderColumns = [
     prop: 'monthReturnGoods',
     minWidth: 100,
   },
+  {
+    label: 'VOC满意度',
+    prop: 'vocSatisfaction',
+    minWidth: 130,
+  },
+  {
+    label: 'VOC缺陷%',
+    prop: 'vocDefect',
+    minWidth: 110,
+  },
 ]
