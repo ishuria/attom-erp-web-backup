@@ -725,9 +725,18 @@ const handleSaveAndContinue = async () => {
   } else {
       classReviewId = route.query.reviewId
   }
+  
   // 校验是否为空
   for (const item of exchangeList.value) {
     const column0 = item.column0
+    if (column0 === 'productImgUrl') {
+      for (const key of Object.keys(item)) {
+        if (key !== 'column0' && key !== 'variantSame' && item[key].imgUrl && item[key].imgUrl.length === 0) {
+          $baseMessage(`${key}变体的图片不能为空!`, 'warning')
+          return 
+        }
+      }
+    }
     if (['productLength', 'productWidth', 'productHeight', 'material', 'battery', 'benchmarkAsin', 'productManager'].includes(column0)) {
       for (const key of Object.keys(item)) {
         if (key !== 'column0' && key !== 'variantsSame' && !item[key]) {
