@@ -22,7 +22,7 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
     >
-      <el-table-column label="FBA SHIPMENT ID" min-width="180" prop="fbaShipmentId"/>
+      <el-table-column label="FBA SHIPMENT ID" prop="fbaShipmentId" :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId')" />
       <el-table-column label="站点" min-width="130" prop="site"/>
       <el-table-column label="状态" min-width="100" prop="status"/>
       <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')"/>
@@ -241,10 +241,10 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
-import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
-import { formatDate } from '/@/utils/dateUtils'
 import type { CSSProperties } from 'vue'
+import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
+import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
+import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const listLoading = ref<boolean>(true)
@@ -352,20 +352,41 @@ const confirmFilter = async () => {
     $baseMessage('最小值不能大于最大值，请重新填写', 'error')
     return
   }
+  let shipmentDateStart = ''
+  let shipmentDateEnd = ''
+  let arrivalDateStart = ''
+  let arrivalDateEnd = ''
+  // console.log(filterForm);
+  
+  if (!filterForm.date1 || filterForm.date1 === '') {
+    shipmentDateStart = ''
+    shipmentDateEnd = ''
+  } else {
+    shipmentDateStart = filterForm.date1[0]
+    shipmentDateEnd = filterForm.date1[1]
+  }
+  if (!filterForm.date2 || filterForm.date2 === '') {
+    arrivalDateStart = ''
+    arrivalDateEnd = ''
+  } else {
+    arrivalDateStart = filterForm.date2[0]
+    arrivalDateEnd = filterForm.date2[1]
+  }
   const { data } = await filterShipmentFbaList({
     pageNo: queryForm.pageNo,
     pageSize: queryForm.pageSize,
     lackCountStart: filterForm.number1,
     lackCountEnd: filterForm.number2,
-    shipmentDateStart: filterForm.date1[0],
-    shipmentDateEnd: filterForm.date1[1],
-    arrivalDateStart: filterForm.date2[0],
-    arrivalDateEnd: filterForm.date2[1]
+    shipmentDateStart,
+    shipmentDateEnd,
+    arrivalDateStart,
+    arrivalDateEnd
   })
   if (data) {
     $baseMessage('筛选成功!', 'success')
     filterVisible.value = false
-    fetchData()
+    list.value = data.list!
+    total.value = data.total!
   }
 }
 const queryData = () => {

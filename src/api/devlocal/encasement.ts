@@ -524,11 +524,11 @@ export const getShipmentFbaDetailList = (params: IGetShipmentFbaDetailListReq): 
 /**
  * @description FBA-筛选获取列表
  */
-export const filterShipmentFbaList = (params: IFilterShipmentFbaList): Promise<IGetShipmentFbaListRes> => {
+export const filterShipmentFbaList = (data: IFilterShipmentFbaList): Promise<IGetShipmentFbaListRes> => {
   return request({
     url: `${BASE_API}/shipment/fba/filter/list`,
     method: 'post',
-    params
+    data
   })
 }
 /**
