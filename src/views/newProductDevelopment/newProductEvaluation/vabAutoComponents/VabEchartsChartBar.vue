@@ -25,6 +25,7 @@ const { theme } = storeToRefs(settingsStore)
   
 const option = reactive<any>({
   tooltip: {
+    trigger: 'axis',
     show: true,
     confine: true,
     formatter: '{c}',
@@ -32,6 +33,7 @@ const option = reactive<any>({
       fontSize: 14, // 设置字体大小
     },
     padding: [0, 5], // 设置内边距，调整提示框的宽高
+    borderColor: '#4e88f3'
   },
   grid: {
     top:1,
@@ -67,7 +69,6 @@ const option = reactive<any>({
       barCategoryGap: '1',
       emphasis: {
         itemStyle: {
-          color: '#4e88f3',  // 设置鼠标悬停时的颜色
           opacity: 0.5
         }
       }
@@ -84,6 +85,7 @@ watch(
   theme.value,
   () => {
     option.color = [theme.value.color]
+    option.tooltip.borderColor = `${theme.value.color}`
   },
   { immediate: true }
 )

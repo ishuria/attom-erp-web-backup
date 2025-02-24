@@ -1,178 +1,185 @@
 <template>
-  <div class="comprehensive-table-container auto-height-container">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-form inline>
-          <el-form-item label="站点">
-            <el-select
-              v-model="queryForm.site"
-              clearable
-              collapse-tags
-              collapse-tags-tooltip
-              :max-collapse-tags="1"
-              multiple
-              placeholder="全部站点"
-              style="width: 220px"
-              @change="queryData"
-            >
-              <template #header>
-                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
-                  所有
-                </el-checkbox>
+  <div class="tabs-table-container no-background-container">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
+      <el-tab-pane label="亚马逊" :name="0">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="站点">
+                <el-select
+                  v-model="queryForm.site"
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                  multiple
+                  placeholder="全部站点"
+                  style="width: 220px"
+                  @change="queryData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
+                      所有
+                    </el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="币种">
+                <el-select v-model="currency" clearable placeholder="请选择币种" @change="changeCurrency">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: bold;" >数据更新时间: 2025年1月16日09:34</el-text>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
               </template>
-              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="币种">
-            <el-select v-model="currency" clearable placeholder="请选择币种" @change="changeCurrency">
-              <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-text style="margin-left: 10px; font-weight: bold;" >数据更新时间: 2025年1月16日09:34</el-text>
-          </el-form-item>
-        </el-form>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
-          <template #reference>
-            <el-button>
-              <vab-icon icon="settings-line" />
-            </el-button>
+              <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+                <div
+                  v-for="item in columns"
+                  :key="item.label"
+                  :class="{'non-draggable': item.disableCheck}"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base); " 
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer; " @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+            <el-form inline :model="queryForm" @submit.prevent >
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @click="queryData" @keyup.enter="queryData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table 
+          border
+          :cell-class-name="clearPadding"
+          :cell-style="cellStyle" class="noneHoverTable" :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+        >
+          <el-table-column
+            v-for="(item, index) in checkList"
+            :key="index"
+            :fixed="item.isFixed"
+            :label="item.label"
+            :min-width="handleWidth(item)"
+            :prop="item.prop"
+            :width="item.width"
+          >
+            <template #header>
+              <span v-if="item.label === '销量趋势(点击看明细)'">
+                销量趋势<br />(点击看明细)
+              </span>
+            </template>
+            <template #default="{ row }">
+              <span v-if="item.label === '图片'">
+                <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)" >
+                  <template #error><el-icon/></template>
+                </el-image>
+              </span>
+              <span v-if="item.label === 'SKU'">
+                {{ row.sku }}
+                <div class="rate-wrapper">
+                  <span class="rate-value">{{ row.rating }}</span>
+                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+                  <span class="rate-count">{{ row.commentsNumbers }}</span>
+                </div>
+              </span>
+              <span v-if="item.label === 'ASIN'" >
+                <el-link type="primary" >{{ row.asin }}</el-link>
+              </span>
+              <span v-if="item.label === '父体ASIN'">
+                <el-link type="primary" >{{ row.parentAsin }}</el-link>
+              </span>
+              <span v-if="item.label === '销量趋势(点击看明细)'">
+                <div style="width: 100%; height: 50px;">
+                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                </div>
+              </span>
+              <span v-if="item.label === '上新'">
+                {{ row.newArrivalDay != null ? row.newArrivalDay + '天' : '' }}
+              </span>
+              <span v-if="item.label === '停产'">
+                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
+              </span>
+              <span v-if="item.label === 'VOC满意度'">
+                <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">
+                  Very poor
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">
+                  Fair
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">
+                  Poor
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">
+                  Good
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">
+                  Excellent
+                </el-tag>
+              </span>
+              <span v-if="item.label === '小类排名'">
+                {{ row.nowSubcategoryRanking }}
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
+                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+              </span>
+              <span v-if="item.label === '大类排名'">
+                {{ row.nowMajorCategoryRanking }}
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
+                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
+                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+              </span>
+              <span v-if="item.label === '开发人员'">
+                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
+                  </template>
+                  <span v-html="row._developName"></span>
+                </el-tooltip>
+              </span>
+              <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
+                {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}
+              </span>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty"/>
           </template>
-          <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
-            <div
-              v-for="item in columns"
-              :key="item.label"
-              :class="{'non-draggable': item.disableCheck}"
-              style="display: flex; align-items: center; font-size: var(--el-font-size-base); " 
-            >
-              <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
-              <span style="flex: 1">{{ item.label }}</span>
-              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
-                <vab-icon v-show="item.checked" icon="eye-line" />
-              </span>
-              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer; " @click="handleChecked(item)">
-                <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                <vab-icon v-show="item.checked" icon="eye-line" />
-              </span>
-            </div>
-          </vab-draggable>
-        </el-popover>
-        <el-form inline :model="queryForm" @submit.prevent >
-          <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @click="queryData" @keyup.enter="queryData" />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table 
-      border
-      :cell-class-name="clearPadding"
-      :cell-style="cellStyle" class="noneHoverTable" :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
-    >
-      <el-table-column
-        v-for="(item, index) in checkList"
-        :key="index"
-        :fixed="item.isFixed"
-        :label="item.label"
-        :min-width="handleWidth(item)"
-        :prop="item.prop"
-        :width="item.width"
-      >
-        <template #header>
-          <span v-if="item.label === '销量趋势(点击看明细)'">
-            销量趋势<br />(点击看明细)
-          </span>
-        </template>
-        <template #default="{ row }">
-          <span v-if="item.label === '图片'">
-            <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)" >
-              <template #error><el-icon/></template>
-            </el-image>
-          </span>
-          <span v-if="item.label === 'SKU'">
-            {{ row.sku }}
-            <div class="rate-wrapper">
-              <span class="rate-value">{{ row.rating }}</span>
-              <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-              <span class="rate-count">{{ row.commentsNumbers }}</span>
-            </div>
-          </span>
-          <span v-if="item.label === 'ASIN'" >
-            <el-link type="primary" >{{ row.asin }}</el-link>
-          </span>
-          <span v-if="item.label === '父体ASIN'">
-            <el-link type="primary" >{{ row.parentAsin }}</el-link>
-          </span>
-          <span v-if="item.label === '销量趋势(点击看明细)'">
-            <div style="width: 100%; height: 50px;">
-              <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
-            </div>
-          </span>
-          <span v-if="item.label === '上新'">
-            {{ row.newArrivalDay != null ? row.newArrivalDay + '天' : '' }}
-          </span>
-          <span v-if="item.label === '停产'">
-            <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
-          </span>
-          <span v-if="item.label === 'VOC满意度'">
-            <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">
-              Very poor
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">
-              Fair
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">
-              Poor
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">
-              Good
-            </el-tag>
-            <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">
-              Excellent
-            </el-tag>
-          </span>
-          <span v-if="item.label === '小类排名'">
-            {{ row.nowSubcategoryRanking }}
-            <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-            <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-            <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
-          </span>
-          <span v-if="item.label === '大类排名'">
-            {{ row.nowMajorCategoryRanking }}
-            <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
-            <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-            <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
-          </span>
-          <span v-if="item.label === '开发人员'">
-            <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ row._developNameFull }}</div>
-              </template>
-              <span v-html="row._developName"></span>
-            </el-tooltip>
-          </span>
-          <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
-            {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}
-          </span>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty"/>
-      </template>
-    </el-table>
-    <vab-pagination 
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
+        </el-table>
+        <vab-pagination 
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="沃尔玛" :name="1" />
+      <el-tab-pane label="Tiktok" :name="2" />
+    </el-tabs>
+    
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -190,6 +197,7 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'ProductPerformanceArt'
 })
+const activeName = ref<number>(0)
 const currency = ref<number | undefined>(0)
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
@@ -247,7 +255,7 @@ const columns = ref<any>([
     label: '站点',
     prop: 'siteName',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '上新',
@@ -370,7 +378,9 @@ const columns = ref<any>([
     minWidth: 100,
   },
 ])
-
+const handleTabClick = () => {
+  //
+}
 watch(site, (val) => {
   if (val.length === 0) {
     checkAll.value = false
@@ -539,6 +549,47 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+.tabs-table-container {
+  :deep() {
+    .el-tabs {
+      border-radius: var(--el-border-radius-base);
+
+      &__header {
+        border-top-left-radius: var(--el-border-radius-base);
+        border-top-right-radius: var(--el-border-radius-base);
+      }
+
+      &__nav-wrap {
+        border-radius: var(--el-border-radius-base);
+      }
+
+      .el-tab-pane {
+        display: flex;
+        flex-direction: column;
+        height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
+
+        .vab-query-form {
+          .left-panel {
+            margin-bottom: 0;
+          }
+          .el-form {
+            .el-form-item:first-child {
+              .el-check-tag,
+              .el-form-item__label {
+                margin: 0 5px 5px 0;
+                border-radius: 99px;
+              }
+            }
+          }
+        }
+
+        .el-table {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
 .icon-hover {
   padding: 6px;
   border-radius: 4px; /* 圆角 */

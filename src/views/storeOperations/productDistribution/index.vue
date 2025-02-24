@@ -57,12 +57,12 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="200">
+      <el-table-column label="SKU" :width="flexColumnWidth(list, 'SKU', 'sku')">
         <template #default="{ row }">
           {{ row.sku }}<br />{{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="ASIN" min-width="130" prop="asin"/>
+      <el-table-column label="ASIN" prop="asin" :width="flexColumnWidth(list, 'ASIN', 'asin')" />
       <el-table-column label="站点" min-width="130" prop="siteName"/>
       <el-table-column label="预计上架日期" min-width="115" prop="estimateInboundDate"/>
       <el-table-column label="最近入库" min-width="110" prop="recentlyInboundStorage"/>
@@ -70,7 +70,7 @@
       <el-table-column label="头部产品#" min-width="100" prop="headerCount"/>
       <el-table-column label="同赛道ASIN" min-width="200" prop="benchmarkAsin"/>
       <el-table-column label="产品经理" min-width="130" prop="productManagerName"/>
-      <el-table-column label="运营" min-width="100" prop="userId">
+      <el-table-column label="运营" min-width="110" prop="userId">
         <template #default="{ row }">
           <el-select v-model="row.userId" placeholder="请选择运营人员" @change="handleChangeUser(row)">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
@@ -150,6 +150,7 @@ import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { addDistributionList, delDistributionList, getDistributionList, getDistributionOptionUserList, getDistributionProductList, getDistributionSiteList, getDistributionUserTypeList, updateDistributionAsinUser, updateDistributionUserType } from '/@/api/devlocal/productDistribution'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductDistribution'
