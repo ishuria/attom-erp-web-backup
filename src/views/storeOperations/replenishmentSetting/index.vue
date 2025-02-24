@@ -12,9 +12,18 @@
       </vab-query-form-left-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border class="noneHoveTable" :data="list" stripe @selection-change="setSelectRows">
-      <el-table-column fixed type="selection" width="38"/>
-      <el-table-column align="center" label="图片" prop="skuUrl" width="100" >
+    <el-table 
+      ref="tableRef" 
+      v-loading="listLoading" 
+      border 
+      :cell-class-name="clearPadding" class="noneHoveTable" 
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }" 
+      stripe 
+      @selection-change="setSelectRows"
+    >
+      <el-table-column align="center" fixed type="selection" width="45" />
+      <el-table-column align="center" label="图片" prop="skuUrl" width="75" >
         <template #default="{ row }">
           <el-image fit="fill" :src="row.skuUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuUrl)">
             <template #error>
@@ -23,7 +32,12 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="SKU" min-width="200" prop="sku" />
+      <el-table-column label="SKU" min-width="200" prop="sku" >
+        <template #default="{ row }">
+          {{ row._sku[0] }}<br />
+          {{ row._sku[1] }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="产品分类" min-width="200" prop="type1" />
       <el-table-column align="center" label="维持库存天数" min-width="230" prop="stockPileNumberDays" />
       <el-table-column align="center" label="最小维持库存数量" min-width="160" prop="minStockPilNumber" />
@@ -169,12 +183,21 @@ const fetchData = async () => {
   listLoading.value = true
   const { data } = await getProductReplenList(queryForm)
   list.value = data.list
+  list.value.forEach((item: any) => {
+    item._sku = item.sku.split('\n')
+  })
   total.value = data.total
   listLoading.value = false
 }
 const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
   siteList.value = data
+}
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.columnIndex === 1) {
+    return 'clear-padding'
+  }
+  return ''
 }
 onActivated(() => {
   tableRef.value?.doLayout()
@@ -202,5 +225,16 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.noneHoveTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoveTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+:deep(.el-checkbox) {
+  transform: scale(1.2);
 }
 </style>

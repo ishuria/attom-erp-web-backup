@@ -11,7 +11,7 @@
               collapse-tags-tooltip
               :max-collapse-tags="1"
               multiple
-              placeholder="请选择站点"
+              placeholder="全部站点"
               style="width: 220px"
               @change="queryData"
             >
@@ -166,7 +166,7 @@ const queryForm = reactive<IQueryForm>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  site: [0],
+  site: [],
   status: -1
 })
 const listLoading = ref<boolean>(false)

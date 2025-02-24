@@ -659,6 +659,7 @@ const submitSplitCsv = async () => {
   if (data) {
     $baseMessage('上传拆分成功', 'success')
     closeUploadSplit()
+    fetchData()
   }
 }
 // 生成装箱表格文件的fileName
@@ -705,6 +706,7 @@ const submitShipmentAmazon = async () => {
     if (res) {
       $baseMessage('发货（亚马逊）提交成功', 'success')
       closeShipmentAmazon()
+      fetchData()
     }
   }
 }
