@@ -273,12 +273,12 @@ export const generateWalmartShipment = (params: IEncasementIds): Promise<IString
 /**
  * @description 装箱文件上传
  */
-export const uploadEncasementFile = (params: FormData): Promise<IStringRes> => {
+export const uploadEncasementFile = (data: FormData): Promise<IStringRes> => {
   return request({
     url: `${BASE_API}/encasement/file/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    params
+    data
   })
 }
 

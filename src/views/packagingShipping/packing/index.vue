@@ -319,13 +319,10 @@
           <el-input v-model="uploadSplitForm.remarks" resize="none" :rows="2" type="textarea" />
         </el-form-item>
         <el-upload
-          v-model:file-list="splitFileList"
-          action="#"
-          :auto-upload="true"
           class="upload-demo"
           drag
           :http-request="uploadSplitFile" 
-          multiple :show-file-list="true"
+          :show-file-list="true"
           width="100%"
         >
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -347,13 +344,10 @@
       width="25%"
     >
       <el-upload
-        v-model:file-list="pdfFileList"
-        action="#"
-        :auto-upload="true"
         class="upload-demo"
         drag
         :http-request="uploadPdf" 
-        multiple :show-file-list="true"
+        :show-file-list="true"
         width="100%"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -502,8 +496,6 @@ const shipmentAmazonForm = reactive<any>({
 const shipmentAmazonFormRef = ref<FormInstance>()
 // 发货亚马逊文件上传
 const fileList = ref<any>([])
-// 上传拆分文件
-const splitFileList = ref<any>([])
 // 修改发货计划可见
 const modifyPlanVisible = ref<boolean>(false)
 // 发货计划表单
@@ -644,14 +636,18 @@ const handleDownloadEncasementFile = async () => {
 // 上传拆分的文件名
 const splitFileName = ref<string>('')
 // 上传拆分文件
-const uploadSplitFile = async () => {
+const uploadSplitFile = async (file: any) => {
+  // console.log(file);
+  
   let formData = new FormData()
-  splitFileList.value.forEach((item: any) => {
-    formData.append('file', item.raw)
-  })
+  formData.append('file', file.file)
+  
+  // for (const [key, value] of formData.entries()) {
+  //   console.log(`${key}: ${value}`);
+  // }
+  
   const { data } = await uploadEncasementFile(formData)
   splitFileName.value = data
-
 }
 // 完成上传拆分
 const submitSplitCsv = async () => {
@@ -712,14 +708,11 @@ const submitShipmentAmazon = async () => {
     }
   }
 }
-const pdfFileList = ref<any>([])
 const pdfFileName = ref<string>('')
 // 上传pdf
-const uploadPdf = async () => {
+const uploadPdf = async (file: any) => {
   let formData = new FormData()
-  pdfFileList.value.forEach((item: any) => {
-    formData.append('file', item.raw)
-  })
+  formData.append('file', file.file)
   const { data } = await uploadEncasementFile(formData)
   pdfFileName.value = data
 }

@@ -143,7 +143,7 @@ const barcodeDisabled = ref<boolean>(false)
 watchEffect(() => {
   dflag.value = props.packingVisible
   if (props.site === 4) {
-    upcOrFnSku.value = 'UPC'
+    upcOrFnSku.value = 'GTIN'
   }
   if (dflag.value) {
     // 首次打开先清空
@@ -314,11 +314,15 @@ const handleKeyPress = async (event: any) => {
   if (event.code === 'Enter') {
     const barcodeValue = (event.target as HTMLInputElement).value
     packingForm.fnSkuOrUpc = barcodeValue;
-
+    let str = barcodeValue
+    if (props.site === 4 && barcodeValue.startsWith("00")) {
+      str = barcodeValue.substring(2); // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+    }
+   
     // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
     const { data } = await getEncasementSku({
       site: props.site!,
-      fnSkuOrUpc: packingForm.fnSkuOrUpc
+      fnSkuOrUpc: str
     })
     if (data) {
       // Object.assign(packingForm, data)

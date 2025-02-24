@@ -290,16 +290,31 @@
                 <el-link type="primary" @click="handleRouterPush(row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
+                  <div>{{ row.nowSubcategoryRanking }}</div>
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
+                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
+                </div>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowSubcategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0">
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0" class="arrow-down" icon="arrow-down-fill"/>
+                  <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                </div>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowMajorCategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
@@ -593,16 +608,31 @@
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
+                  <div>{{ row.nowSubcategoryRanking }}</div>
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
+                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
+                </div>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowSubcategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0">
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0" class="arrow-down" icon="arrow-down-fill"/>
+                  <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                </div>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowMajorCategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
               <span v-if="item.label === '库龄'">
@@ -861,16 +891,31 @@
                 </div>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
+                  <div>{{ row.nowSubcategoryRanking }}</div>
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
+                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
+                </div>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowSubcategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0">
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0" class="arrow-down" icon="arrow-down-fill"/>
+                  <span style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                </div>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowMajorCategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '开发人员'">
                 <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
@@ -1150,7 +1195,6 @@ const label2 = [
   '2周广告点击',
   '2周总转化',
   '月净利率',
-  '月广告%',
   '月ACOS',
   '月TACOS',
   '1年ACOS',
@@ -1160,7 +1204,7 @@ const label2 = [
   'VOC缺陷%',
 ]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
-const label4 = ['今广%', '半年有货率']
+const label4 = ['今广%', '半年有货率', '月广告%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
@@ -1181,7 +1225,6 @@ const label2Map = new Map([
   ['2周广告点击', 'tWksClickRate'],
   ['2周总转化', 'tWksTotalConv'],
   ['月净利率', 'monthNetProfitMargin'],
-  ['月广告%', 'monthAdv'],
   ['月ACOS', 'monthAcos'],
   ['月TACOS', 'monthTacos'],
   ['1年ACOS', 'yearAcos'],
@@ -1198,7 +1241,8 @@ const label3Map = new Map([
 ])
 const label4Map = new Map([
   ['今广%', 'currentAdvertisement'],
-  ['半年有货率', 'availableRate']
+  ['半年有货率', 'availableRate'],
+  ['月广告%', 'monthAdv'],
 ])
 let _seasonalCoefficient = {
   actualList: [],
