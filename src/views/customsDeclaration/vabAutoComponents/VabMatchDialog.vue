@@ -53,7 +53,7 @@
         </el-table-column>
         <el-table-column label="有已发未报" min-width="110" prop="flag">
           <template #default="{ row }">
-            <el-icon v-show="row.flag === true"><select /></el-icon>
+            <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" />
           </template>
         </el-table-column>
       </el-table-column>
@@ -297,9 +297,9 @@
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getQualityCheck } from '~/src/api/devlocal/packagingShipping'
-import type { IGetQualityCheck } from '~/src/type/packagingShipping/packagingType'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
+import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 
