@@ -624,7 +624,7 @@ const clickCancel = async (event:any,value:any) =>{
     // 执行失去焦点处理逻辑
     await updateProductCustoms(
       {
-        pId: value.pId,
+        id: value.pId,
         statutoryUnit: value.statutoryUnit,
         statutoryCount: value.statutoryCount,
         brank: value.brank,
@@ -647,12 +647,15 @@ const handleUpdateStatus = async (row: any) => {
 }
 // 修改不报关
 const handleCustomsChange = async (row: any) => {
-  await updateProductCustoms(row)
+  await updateProductCustoms({
+    ...row,
+    id: row.pId
+  })
 }
 // 修改报关实际净重
 const handleWeightStatusChange = async (row: any) => { 
   await updateProductCustoms({
-    pId: row.pId,
+    id: row.pId,
     statutoryUnit: row.statutoryUnit,
     statutoryCount: row.statutoryCount,
     brank: row.brank,
