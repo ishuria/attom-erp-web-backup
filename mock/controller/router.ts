@@ -1459,10 +1459,11 @@ const list: VabRouteRecord[] = [
       guard: ['Admin'],
     },
     children: [
+
       {
         path: 'chatGPT',
         name: 'ChatGPT',
-        component: '/@/views/chatGPT/ChatGPT.vue',
+        component: () =>('/@/views/GPT/ChatGPT.vue'),
         meta: {
           title: 'ChatGPT',
           icon: 'openai-line',
@@ -1472,44 +1473,27 @@ const list: VabRouteRecord[] = [
       {
         path: 'speechSynthesis',
         name: 'SpeechSynthesis',
-        component: '/@/views/chatGPT/SpeechSynthesis.vue',
+        component: () => ('/@/views/GPT/SpeechSynthesis.vue'),
         meta: {
           title: '语音合成',
           icon: 'customer-service-line',
         },
       },
       {
-        path: '//bard.google.com/chat',
-        name: 'Bard',
+        path: '//chat.deepseek.com/',
+        name: 'DeepSeek',
         meta: {
-          title: 'Bard',
+          title: 'DeepSeek',
           target: '_blank',
-          icon: 'bard-line',
+          isCustomSvg: true,
+          icon: 'deepSeek',
+          badge: 'Hot',
         },
-      },
-      {
-        path: '//copilot.microsoft.com',
-        name: 'Copilot',
-        meta: {
-          title: 'Copilot',
-          target: '_blank',
-          icon: 'copilot-line',
-        },
-      },
-      {
-        path: '//claude.ai/chat',
-        name: 'Claude',
-        meta: {
-          title: 'Claude',
-          target: '_blank',
-          icon: 'brain-line',
-        },
-      },
-      {
+      },      {
         path: '//yiyan.baidu.com',
         name: 'Yiyan',
         meta: {
-          title: '文心一言',
+          title: '文小言',
           target: '_blank',
           icon: 'baidu-line',
         },
@@ -1527,7 +1511,7 @@ const list: VabRouteRecord[] = [
         path: '//qianwen.aliyun.com/chat',
         name: 'Qianwen',
         meta: {
-          title: '通义千问',
+          title: '通义',
           target: '_blank',
           icon: 'taobao-line',
         },
