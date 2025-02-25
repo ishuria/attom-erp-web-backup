@@ -209,8 +209,8 @@
               </span>
               <!-- SKU 展示-->
               <span v-if="item.label === 'SKU'">
+                <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
                 <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
-                  {{ row.sku }}
                   <vab-icon icon="file-copy-2-fill" />
                 </span>
                 <div class="rate-wrapper">
@@ -2138,7 +2138,7 @@ onBeforeMount(() => {
             cursor: pointer;
             -webkit-user-select: text;
             user-select: text;
-            transition: all 0.3s;
+            // transition: all 0.3s;
             &:hover {
               color: #000;
             }
