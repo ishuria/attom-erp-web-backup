@@ -169,41 +169,32 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HS" min-width="100" prop="hs" >
+      <el-table-column label="HS" min-width="160" prop="hs" >
         <template #default="{ row }">
-          <div class="none">
-              <el-input v-model="row.hs" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.hs }}</span>
+          <el-select
+            v-model="row.hs"
+            clearable
+            default-first-option
+            filterable
+            :loading="peopleLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remotePeopleMethod"
+          >
+            <el-option
+              v-for="item in peopleOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="" min-width="90" prop="taxRate" >
         <template #header>
           出口退<br>税税率
         </template>
-        <template #default="{ row }">
-          <div class="none">
-              <el-input v-model="row.taxRate" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.taxRate }}</span>
-        </template>
       </el-table-column>
-      <!-- <el-table-column label="HTS美国" min-width="100" prop="htsUs" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.htsUs" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.htsUs }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="HTS欧洲" min-width="100" prop="htsEurope" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.htsEurope" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.htsEurope }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="申报要素" min-width="200" prop="declarationElements" >
         <template #default="{ row }">
           <div class="none">
@@ -220,38 +211,6 @@
           <span>{{ row.declarationElementsAbbreviation }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.manufacturerEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.manufacturerEn }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.manufacturerAddressEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.manufacturerAddressEn }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="装箱单英文清关品名" min-width="180" prop="packgeClearanceNameEn" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.packgeClearanceNameEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.packgeClearanceNameEn }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="装箱单中文清关品名" min-width="180" prop="packgeClearanceNameZh" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.packgeClearanceNameZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.packgeClearanceNameZh }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="云舟采购合同品名" min-width="180" prop="contractName" >
         <template #default="{ row }">
           <div class="none">
@@ -260,82 +219,6 @@
           <span>{{ row.contractName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="材质(英文)" min-width="100" prop="materialEn" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.materialEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.materialEn }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="材质(中文)" min-width="100" prop="materialZh" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.materialZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.materialZh }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="用途(中文)" min-width="100" prop="usageZh" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.usageZh" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.usageZh }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="用途(英文)" min-width="100" prop="usageEn" >
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.usageEn" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.usageEn }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="云舟采购价(RMB)" min-width="120" prop="purchasePrice" >
-        <template #header>
-          云舟采购价<br>(RMB)
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.purchasePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.purchasePrice }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="UPC" min-width="120" prop="salePrice" >
-        <template #header>
-          云舟售价<br>(USD)
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.salePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.salePrice }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="UPC" min-width="120" prop="clearancePrice" >
-        <template #header>
-          清关价格<br>(美元)
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.clearancePrice" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.clearancePrice }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="UPC" min-width="120" prop="componentWeight" >
-        <template #header>
-          零件重量<br>(g)
-        </template>
-        <template #default="{ row }">
-          <div class="none">
-              <el-input type="text" v-model="row.componentWeight" @keypress.enter="clickCancle($event, row)" @blur="clickCancle($event, row)" />
-          </div>
-          <span>{{ row.componentWeight }}</span>
-        </template>
-      </el-table-column> -->
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -401,7 +284,30 @@ import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'SharedComponents',
 })
-  
+
+const peopleLoading = ref(false) //搜索产品经理和产品设计loading
+const peopleOptions = ref<any[]>([]) //搜索选项
+const peopleList = ref<any[]>([]) //搜索列表
+const remotePeopleMethod = async (query: string) => {
+  if (query) {
+    // const { data } = await getProductAllName({
+    //     name: query
+    // })
+
+    // peopleList.value = data.map((item: any) => {
+    //     return { value: `${item}`, label: `${item}` }
+    // })
+    // peopleLoading.value = true
+    // setTimeout(() => {
+    //     peopleLoading.value = false
+    //     peopleOptions.value = peopleList.value.filter((item) => {
+    //         return item.label.toLowerCase().includes(query.toLowerCase())
+    //   })
+    // }, 200)
+  } else {
+    peopleOptions.value = []
+  }
+}
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)

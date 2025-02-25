@@ -63,8 +63,48 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS美国" prop="htsUs" :width="flexColumnWidth(list, 'HTS美国', 'htsUs')" />
-      <el-table-column label="HTS欧洲" prop="htsEurope" :width="flexColumnWidth(list, 'HTS欧洲', 'htsEurope')" />
+      <el-table-column label="HTS美国" prop="htsUs" width="160" >
+        <template #default="{ row }">
+          <el-select
+            v-model="row.htsUs"
+            clearable
+            default-first-option
+            filterable
+            :loading="peopleLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remotePeopleMethod"
+          >
+            <el-option
+              v-for="item in peopleOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="HTS欧洲" prop="htsEurope" width="160" >
+        <template #default="{ row }">
+          <el-select
+            v-model="row.htsEurope"
+            clearable
+            default-first-option
+            filterable
+            :loading="peopleLoading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remotePeopleMethod"
+          >
+            <el-option
+              v-for="item in peopleOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
@@ -213,7 +253,30 @@ import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'SkuDeclaration',
 })
-  
+
+const peopleLoading = ref(false) //搜索产品经理和产品设计loading
+const peopleOptions = ref<any[]>([]) //搜索选项
+const peopleList = ref<any[]>([]) //搜索列表
+const remotePeopleMethod = async (query: string) => {
+  if (query) {
+    // const { data } = await getProductAllName({
+    //     name: query
+    // })
+
+    // peopleList.value = data.map((item: any) => {
+    //     return { value: `${item}`, label: `${item}` }
+    // })
+    // peopleLoading.value = true
+    // setTimeout(() => {
+    //     peopleLoading.value = false
+    //     peopleOptions.value = peopleList.value.filter((item) => {
+    //         return item.label.toLowerCase().includes(query.toLowerCase())
+    //   })
+    // }, 200)
+  } else {
+    peopleOptions.value = []
+  }
+}
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(false)

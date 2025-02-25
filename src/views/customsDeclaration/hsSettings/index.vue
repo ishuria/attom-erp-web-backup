@@ -31,14 +31,6 @@
           <span>{{ row.statutoryUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="每零件单位有多少个法定第1单位" min-width="" prop="statutoryCount">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.statutoryCount" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.statutoryCount }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="出口退税税率" min-width="" prop="taxRate">
         <template #default="{ row }">
           <div class="none">
@@ -66,7 +58,7 @@
     <vab-dialog
       v-model="addVisible"
       title="新增"
-      width="25%"
+      width="20%"
       @close="handleCloseAdd"
     >
       <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0;">
@@ -75,9 +67,6 @@
         </el-form-item>
         <el-form-item label="法定第1单位" prop="statutoryUnit">
           <el-input v-model="addForm.statutoryUnit" />
-        </el-form-item>
-        <el-form-item label="每零件单位有多少个法定第1单位" prop="statutoryCount">
-          <el-input v-model="addForm.statutoryCount" type="number" />
         </el-form-item>
         <el-form-item label="出口退税税率" prop="taxRate">
           <el-input v-model="addForm.taxRate" type="number" />
