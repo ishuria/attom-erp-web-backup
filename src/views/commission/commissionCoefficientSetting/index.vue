@@ -9,72 +9,72 @@
           <vab-query-form-right-panel>
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model="keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="fetchData" @input="fetchData" />
+                <el-input v-model="keyWord" clearable placeholder="请输入搜索关键词" @input="fetchData" @keyup.enter="fetchData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="fetchData"></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-          border stripe
-          class="noneHoverTable" :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="list"
+          border :cell-style="cellStyle"
+          class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
+          stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="姓名" prop="userName" min-width=""></el-table-column>
-          <el-table-column label="角色" prop="roleName" min-width=""></el-table-column>
-          <el-table-column label="图片提成天数" prop="pictureDay" min-width="">
+          <el-table-column label="姓名" min-width="" prop="userName"/>
+          <el-table-column label="角色" min-width="" prop="roleName"/>
+          <el-table-column label="图片提成天数" min-width="" prop="pictureDay">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.pictureDay" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.pictureDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.pictureDay }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="图片提成单人比例" prop="singlePersonProportion" min-width="">
+          <el-table-column label="图片提成单人比例" min-width="" prop="singlePersonProportion">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.singlePersonProportion" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.singlePersonProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.singlePersonProportion ? row.singlePersonProportion + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="长期提成天数" prop="longDay" min-width="">
+          <el-table-column label="长期提成天数" min-width="" prop="longDay">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.longDay" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.longDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.longDay }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="长期提成单人比例" prop="longSinglePersonProportion" min-width="">
+          <el-table-column label="长期提成单人比例" min-width="" prop="longSinglePersonProportion">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.longSinglePersonProportion" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.longSinglePersonProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.longSinglePersonProportion ? row.longSinglePersonProportion + '%' : '' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="合作权重" prop="cooperationWeight" min-width="">
+          <el-table-column label="合作权重" min-width="" prop="cooperationWeight">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.cooperationWeight" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.cooperationWeight" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.cooperationWeight }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="合作加成倍数" prop="addition" min-width="">
+          <el-table-column label="合作加成倍数" min-width="" prop="addition">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.addition" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.addition" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.addition }}</span>
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
       </el-tab-pane>
@@ -83,28 +83,28 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model="keyWord2" placeholder="请输入搜索关键词" clearable @keyup.enter="fetchData2" @input="fetchData2" />
+                <el-input v-model="keyWord2" clearable placeholder="请输入搜索关键词" @input="fetchData2" @keyup.enter="fetchData2" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :icon="Search" :loading="listLoading" @click="fetchData2"></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData2"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-          border stripe
-          class="noneHoverTable" :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="list2"
+          border :cell-style="cellStyle"
+          class="noneHoverTable" :data="list2" :header-cell-style="{ textAlign: 'center' }"
+          stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="姓名" prop="userName"></el-table-column>
-          <el-table-column label="角色" prop="roleName"></el-table-column>
+          <el-table-column label="姓名" prop="userName"/>
+          <el-table-column label="角色" prop="roleName"/>
           <el-table-column label="产品开发类型">
             <el-table-column label="净利提成模式">
               <el-table-column label="产品经理净利提成比例" prop="productManagerProportion">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.productManagerProportion" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                    <el-input v-model="row.productManagerProportion" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                   </div>
                   <span>{{ row.productManagerProportion ? row.productManagerProportion + '%' : '' }}</span>
                 </template>
@@ -112,7 +112,7 @@
               <el-table-column label="产品设计净利提成比例" prop="productDesignProportion">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.productDesignProportion" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                    <el-input v-model="row.productDesignProportion" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                   </div>
                   <span>{{ row.productDesignProportion ? row.productDesignProportion + '%' : '' }}</span>
                 </template>
@@ -122,7 +122,7 @@
               <el-table-column label="达标递增" prop="delivery">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.delivery" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                    <el-input v-model="row.delivery" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                   </div>
                   <span>{{ row.delivery ? row.delivery + '%' : '' }}</span>
                 </template>
@@ -133,7 +133,7 @@
             <el-table-column label="云舟计件" prop="yunzhouCount">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.yunzhouCount" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                  <el-input v-model="row.yunzhouCount" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.yunzhouCount }}</span>
               </template>
@@ -141,7 +141,7 @@
             <el-table-column label="埃托姆计件" prop="aiTuoMCount">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.aiTuoMCount" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                  <el-input v-model="row.aiTuoMCount" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.aiTuoMCount }}</span>
               </template>
@@ -149,7 +149,7 @@
             <el-table-column label="Attom计件" prop="attomCount">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.attomCount" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                  <el-input v-model="row.attomCount" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.attomCount }}</span>
               </template>
@@ -157,7 +157,7 @@
             <el-table-column label="降本提成比例" prop="proportion">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.proportion" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                  <el-input v-model="row.proportion" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.proportion ? row.proportion + '%' : '' }}</span>
               </template>
@@ -165,51 +165,60 @@
             <el-table-column label="降本提成天数" prop="day">
               <template #default="{ row }">
                 <div class="none">
-                  <el-input v-model="row.day" @keyup.enter="clickCancel2($event, row)" @blur="clickCancel2($event, row)" />
+                  <el-input v-model="row.day" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.day }}</span>
               </template>
             </el-table-column>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
       </el-tab-pane>
     </el-tabs>
     <vab-dialog
-      title="参数设定"
       v-model="paramSetting"
+      title="参数设定"
       width="20%"
     >
-      <el-form ref="formRef" :rules="formRules" :model="form" label-position="right" label-width="auto" style="margin: 0 0 20px 0;">
+      <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 0 20px 0;">
         <el-form-item label="初始目标ACOS" prop="acos">
-          <el-input type="number" v-model="form.acos" />
+          <el-input v-model="form.acos" type="number" />
         </el-form-item>
         <el-form-item label="转化率加成上限" prop="upperLimit">
-          <el-input type="number" v-model="form.upperLimit" />
+          <el-input v-model="form.upperLimit" type="number" />
         </el-form-item>
         <el-form-item label="图片优化任务最低要求转化率" prop="minConversionRate">
-          <el-input type="number" v-model="form.minConversionRate" />
+          <el-input v-model="form.minConversionRate" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="断货补偿天数上限" prop="compensationDay">
-          <el-input type="number" v-model="form.compensationDay" />
+          <el-input v-model="form.compensationDay" type="number" />
+        </el-form-item>
+        <el-form-item label="新品要求转化率打折比例" prop="newDiscountRatio">
+          <el-input v-model="form.newDiscountRatio" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="说明书/包装提成比例">
-          <el-input v-model="form.instructionManualRate" disabled />
+          <el-input v-model="form.instructionManualRate" disabled >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
       </el-form>
       <el-table 
-        class="noneHoverTable"
-        border stripe 
-        :data="list3"
+        border
+        class="noneHoverTable" :data="list3" 
+        stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="客单价" prop="unitPrice"></el-table-column>
+        <el-table-column label="客单价" prop="unitPrice"/>
         <el-table-column label="初始目标转化率" prop="targetRate">
           <template #default="{ row }">
             <div class="none">
-              <el-input type="number" v-model="row.targetRate" @keyup.enter="clickCancel3($event, row)" @blur="clickCancel3($event, row)" />
+              <el-input v-model="row.targetRate" type="number" @blur="clickCancel3($event, row)" @keyup.enter="clickCancel3($event, row)" />
             </div>
             <span>{{ row.targetRate ? row.targetRate + '%' : '' }}</span>
           </template>
@@ -225,11 +234,11 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
-import { CSSProperties } from 'vue'
+import type { CSSProperties } from 'vue'
 import { getCommissionArtTypeList, getCommissionProductTypeList, getCommissionSetting, updateCommissionArtType, updateCommissionProductType, updateCommissionSetting1, updateCommissionSetting2 } from '/@/api/devlocal/commission'
-import { IGetCommissionArtTypeList, IGetCommissionProductTypeList, IGetCommissionSettingTableList, IUpdateCommissionSetting1Req } from '/@/type/commission/commissionType'
+import type { IGetCommissionArtTypeList, IGetCommissionProductTypeList, IGetCommissionSettingTableList, IUpdateCommissionSetting1Req } from '/@/type/commission/commissionType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -244,15 +253,14 @@ const list = ref<IGetCommissionArtTypeList[]>([])
 const list2 = ref<IGetCommissionProductTypeList[]>([])
 const list3 = ref<IGetCommissionSettingTableList[]>([])
 let copyRow: any
-const form = reactive<any>({
-
-})
+const form = reactive<any>({})
 const formRef = ref<FormInstance>()
 const formRules = reactive<FormRules<IUpdateCommissionSetting1Req>>({
   acos: [{ required: true, message: '请输入初始acos转化率', trigger: 'blur' }],
   upperLimit: [{ required: true, message: '请输入转化率加成上限', trigger: 'blur' }],
   minConversionRate: [{ required: true, message: '请输入最低转化率', trigger: 'blur' }],
   compensationDay: [{ required: true, message: '请输入断货补偿天数上限', trigger: 'blur' }],
+  newDiscountRatio: [{ required: true, message: '请输入新品要求转化率打折比例', trigger: 'blur' }]
 })
 const handleConfirmParamSetting = async () => {
   formRef.value?.validate(async (isValid) => {
@@ -260,8 +268,9 @@ const handleConfirmParamSetting = async () => {
       const { data } = await updateCommissionSetting1({
         acos: form.acos,
         upperLimit: form.upperLimit,
-        minConversionRate: form.minConversionRate,
-        compensationDay: form.compensationDay
+        minConversionRate: Number(form.minConversionRate) / 100,
+        compensationDay: form.compensationDay,
+        newDiscountRatio: Number(form.newDiscountRatio) / 100
       })
       if (data) {
         $baseMessage('提交成功！', 'success')
@@ -279,9 +288,8 @@ const showParamSetting = async () => {
   list3.value.forEach((item) => {
     item.targetRate = parseFloat((item.targetRate * 100).toFixed(2))
   })
-  form.instructionManualRate = data.instructionManualRate * 100 + '%'
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement, event: Event) => {
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
