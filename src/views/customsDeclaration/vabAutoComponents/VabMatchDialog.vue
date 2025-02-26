@@ -165,51 +165,126 @@
     class="dialog"
     title="已发未报"
     top="10vh"
-    width="60%"
+    width="65%"
   >
     <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button type="primary" @click="handleArchive">归档</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-top-panel>
         <el-form inline :model="querySentForm" @submit.prevent>
-          <el-form-item>
-            <el-input v-model="querySentForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="querySentData" @keyup.enter="querySentData" />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="sentListLoading" native-type="submit" type="primary" @click="querySentData"/>
+          <el-form-item label="分类">
+            <el-check-tag :checked="querySentForm.status === 0" @change="onChangeStatus(0)">聚合</el-check-tag>
+            <el-check-tag :checked="querySentForm.status === 1" @change="onChangeStatus(1)">明细</el-check-tag>
           </el-form-item>
         </el-form>
-      </vab-query-form-right-panel>
+      </vab-query-form-top-panel>
+    
     </vab-query-form>
-    <el-table
-      border :cell-style="sentCellStyle"
-      class="noneHoveTable"
-      :data="sentList"
-      :header-cell-style="{ textAlign: 'center' }"
-      stripe
-      @selection-change="setSelectRows"
-    >
-      <el-table-column type="selection"/>
-      <el-table-column label="SKU" min-width="200" prop="sku"/>
-      <el-table-column label="描述" min-width="200" prop="desc"/>
-      <el-table-column label="PO" min-width="100" prop="po"/>
-      <el-table-column label="未报已发" min-width="100" prop="yfwbCount"/>
-      <el-table-column label="已报未发" min-width="100" prop="ybwfCount"/>
-      <el-table-column label="采购方" min-width="90" prop="purchase"/>
-      <el-table-column label="备注" min-width="100" prop=""/>
-    </el-table>
-    <vab-pagination 
-      :current-page="querySentForm.pageNo"
-      :page-size="querySentForm.pageSize"
-      :total="sentTotal"
-      @current-change="handleCurrentSentChange"
-      @size-change="handleSizeSentChange"
-    />
+    <div v-if="querySentForm.status === 1">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="handleArchive">归档</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline :model="querySentForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model.trim="querySentForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="querySentData" @keyup.enter="querySentData" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="sentListLoading" native-type="submit" type="primary" @click="querySentData"/>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table
+        border :cell-style="sentCellStyle"
+        class="noneHoveTable"
+        :data="sentList"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
+        @cell-click="changeInput"
+      >
+        <!-- <el-table-column type="selection"/> -->
+        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')"/>
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')"/>
+        <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')"/>
+        <el-table-column label="PO" prop="po" width="100"/>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sentList, '零件名', 'componentName')" />
+        <el-table-column label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"/>
+        <el-table-column label="已发未报" prop="yfwbCount" width="100"/>
+        <el-table-column label="已报未发" prop="ybwfCount" width="100"/>
+        <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(sentList, '采购方', 'purchase')"/>
+        <el-table-column label="备注" min-width="100" prop="remark">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+              </template>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <vab-pagination 
+        :current-page="querySentForm.pageNo"
+        :page-size="querySentForm.pageSize"
+        :total="sentTotal"
+        @current-change="handleCurrentSentChange"
+        @size-change="handleSizeSentChange"
+      />
+    </div>
+    <div v-if="querySentForm.status === 0">
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="querySentForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model.trim="querySentForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="querySentData" @keyup.enter="querySentData" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="sentListLoading" native-type="submit" type="primary" @click="querySentData"/>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table
+        border :cell-style="sentCellStyle"
+        class="noneHoveTable"
+        :data="sentList"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
+        @selection-change="setSelectRows"
+      >
+        <el-table-column type="selection"/>
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')"/>
+        <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')"/>
+        <el-table-column label="PO" prop="po" width="100"/>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sentList, '零件名', 'componentName')" />
+        <el-table-column label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"/>
+        <el-table-column label="已发未报" prop="yfwbCount" width="100"/>
+        <el-table-column label="已报未发" prop="ybwfCount" width="100"/>
+        <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(sentList, '采购方', 'purchase')"/>
+        <el-table-column label="备注" min-width="100" prop="remark">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+              </template>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <vab-pagination 
+        :current-page="querySentForm.pageNo"
+        :page-size="querySentForm.pageSize"
+        :total="sentTotal"
+        @current-change="handleCurrentSentChange"
+        @size-change="handleSizeSentChange"
+      />
+    </div>
+   
     <template #footer>
-      <div style="text-align: center;" >
+      <div v-if="querySentForm.status === 0" style="text-align: center;" >
         <el-button @click="sentButNotReportedVisible = false">取消</el-button>
-        <el-button type="primary">确认</el-button>
+        <el-button type="primary" @click="handleConfirmSent">确认</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -291,18 +366,27 @@
       <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
     </template>
   </vab-dialog>
+  <vab-remark-dialog 
+    :remark="remark"
+    :remark-visible="remarkVisible"
+    title="修改备注"
+    @update:remark="handleUpdateRemark"
+    @update:remark-visible="handleCloseRemark"
+  />
 </template>
 
 <script lang="ts" setup>
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchSentList, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
-import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
-import { flexColumnWidth } from '/@/utils/tableColum'
-import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+const remark = ref<string>('')
+const remarkVisible = ref<boolean>(false)
 const dflag = ref<boolean>(false)
 const match2Visible = ref<boolean>(false)
 // eslint-disable-next-line vue/no-dupe-keys
@@ -343,6 +427,38 @@ const matchList = ref<IGetMatchPackageList[]>([])
 const _sku = ref<string>('')
 const _desc = ref<string>('')
 const _id = ref<number>(0)
+
+const onChangeStatus = (value: number) => {
+  querySentForm.status = value
+}
+const handleConfirmSent = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage("您未选中任何行!", 'warning')
+    return
+  }
+  const idList = selectRows.value.map((item) => item.id!)
+  const id = list.value[0].id
+  const { data } = await submitMatchSentList({
+    id,
+    idList
+  })
+  if (data) {
+    $baseMessage("已发未报确认成功!", 'success')
+    sentButNotReportedVisible.value = false
+  }
+}
+const handleUpdateRemark = (value: string) => {
+  //
+}
+const handleCloseRemark = (value: boolean) => {
+  remarkVisible.value = value
+}
+const changeInput = (row: any, column: any) => {
+  if (column.label === "备注") {
+    remarkVisible.value = true
+    remark.value = row.remark
+  }
+}
 // 关闭匹配2
 const handleCloseMatch2 = () => {
   match2Visible.value = false
@@ -592,7 +708,8 @@ const sentButNotReportedVisible = ref<boolean>(false)
 const querySentForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  status: 1
 })
 const sentTotal = ref<number>(0)
 const sentListLoading = ref<boolean>(false)
@@ -1016,7 +1133,7 @@ const match2Style = (data: { row: any, column: any, rowIndex: number, columnInde
   }
 }
 const sentCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 2) {
+  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 4 || data.columnIndex === 9) {
     return {
       textAlign: 'left'
     }
@@ -1042,5 +1159,27 @@ const sentCellStyle = (data: { row: any, column: any, rowIndex: number, columnIn
 }
 .add-icon:hover {
   color: var(--el-color-primary); 
+}
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
+}
+.dialog {
+  .vab-query-form {
+    .top-panel {
+      .el-form {
+        .el-form-item:first-child {
+          // margin: 0 !important;
+
+          .el-check-tag,
+          .el-form-item__label {
+            margin: 0 10px 5px 0;
+            border-radius: 99px;
+          }
+        }
+      }
+    }
+  }
 }
 </style>
