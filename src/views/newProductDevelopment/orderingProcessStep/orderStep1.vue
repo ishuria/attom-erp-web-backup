@@ -83,7 +83,6 @@ defineOptions({
 })
 
 const route: any = useRoute()
-const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
@@ -195,8 +194,6 @@ const handleSubmit = () => {
               "hey"
             )
             await delVisitedRoute(handleActivePath(route, true))
-            const { ...query } = route.query;
-            router.replace({ query: { ...query, stepNo: 0 } });
         }
       }
       saveOn()
@@ -239,8 +236,6 @@ const handleSubmitAndContinue = async () => {
   
               emit('change-step', 1)
               await delVisitedRoute(handleActivePath(route, true))
-              const {...query} = route.query;
-              router.replace({query: {...query, stepNo: 1}});
           }
         } catch (error) {
           console.error('保存过程出错:', error)

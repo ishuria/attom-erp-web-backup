@@ -63,7 +63,6 @@ import type { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 
 const route: any = useRoute()
-const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
@@ -150,8 +149,6 @@ const handleContinue = async () => {
       emit('change-step', 2)
       if (route.query.reviewId) {
         await delVisitedRoute(handleActivePath(route, true))
-        const { ...query } = route.query;
-        router.replace({ query: { ...query, stepNo: 2 } });
       }
     }
   } catch (error) {

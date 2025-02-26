@@ -165,7 +165,6 @@ import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const route: any = useRoute()
-const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 defineOptions({
@@ -349,8 +348,6 @@ const handleSave = async () => {
     if (data === true) {
       $baseMessage("当前信息已保存。", "success", "hey")
       await delVisitedRoute(handleActivePath(route, true))
-      const {...query} = route.query;
-      router.replace({query: {...query, stepNo: 3}});
     }
   } catch (error) {
     console.error(error)
@@ -367,8 +364,6 @@ const handleSaveAndContinue = async () => {
       emit('change-step', 4)
       if (route.query.reviewId) { //编辑进来的，要更改stepNo
         await delVisitedRoute(handleActivePath(route, true))
-        const { ...query } = route.query;
-        router.replace({ query: { ...query, stepNo: 4 } });
       } 
     }
   } catch (error) {

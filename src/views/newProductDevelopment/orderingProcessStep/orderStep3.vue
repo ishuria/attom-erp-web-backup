@@ -515,7 +515,6 @@ defineOptions({
 })
 
 const route: any = useRoute()
-const router = useRouter()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const props = defineProps<{ step1Data: number }>()
@@ -998,8 +997,6 @@ const handleSave = async () => {
     $baseMessage("当前信息已保存。", "success", "hey")
     if (route.query.reviewId) {
       await delVisitedRoute(handleActivePath(route, true))
-      const { ...query } = route.query;
-      router.replace({ query: { ...query, stepNo: 2 } });
     }
   }
 }
@@ -1117,8 +1114,6 @@ const handleSaveAndContinue = async () => {
         emit('change-step', 3);
         if (route.query.reviewId) {
           await delVisitedRoute(handleActivePath(route, true))
-          const { ...query } = route.query;
-          router.replace({ query: { ...query, stepNo: 3 } });
         }
       }
     } else {
