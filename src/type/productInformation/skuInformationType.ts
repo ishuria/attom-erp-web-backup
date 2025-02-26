@@ -896,48 +896,16 @@ export interface IupdateProductCustoms {
   contractName?: string
   // 每套有多少开票单位
   count?: number
-  // 报关覆盖实际重量 0 × 1√
-  coveredWeightStatus?: number
-  // 创建者id
-  createUserId?: number
-  // 我国报关品名
-  customsDeclarationNameZh?: string
-  // 报关状态 0报关 1不报关
-  customsDeclarationStatus?: string
   // 申报要素
   declarationElements?: string
   // 申报要素缩写
   declarationElementsAbbreviation?: string
+  // 北美FNSKU
+  northAmericaFnSku?: string
   // 欧洲FNSKU
   europeFnSku?: string
   // HS
   hs?: string
-  // HTS欧洲
-  htsEurope?: string
-  // HTS美国
-  htsUs?: string
-  // 零件报关id
-  id?: number
-  // 制造商英文地址
-  manufacturerAddressEn?: string
-  // 制造商英文名称
-  manufacturerEn?: string
-  // 材质英文
-  materialEn?: string
-  // 材质中文
-  materialZh?: string
-  // 北美FNSKU
-  northAmericaFnSku?: string
-  // 装箱单英文清关品名
-  packageClearanceNameEn?: string
-  // 装箱单中文清关品名
-  packageClearanceNameZh?: string
-  // 货源地
-  placeOrigin?: string
-  // 采购价(RMB)
-  purchasePrice?: number
-  // 销售价(USD)
-  salePrice?: number
   // 每套多少法定第1单位
   statutoryCount?: number
   // 法定第1单位
@@ -950,12 +918,72 @@ export interface IupdateProductCustoms {
   unit?: string
   // UPC
   upc?: string
-  // 用途英文
-  usageEn?: string
-  // 用途中文
-  usageZh?: string
   pId?: number
-  [property: string]: any
+  cId?: number
+  hsId?: number
+  componentImgUrl?: string
+  componentName?: string
+  suppliser?: string
+  sku?: string
+  customsDeclarationStatus?: number // 报关状态 0报关 1不报关
+  placeOrigin?: string // 货源地
+  customsDeclarationNameZh?: string // 我国报关品名
+  bgWeightStatus?: number // 报关重量使用开票重量 0不使用 1使用
+  // [property: string]: any
+}
+// 零件报关信息 - 修改报关零件供应商信息
+export interface IUpdateProductCustomsClearanceSuppliserInfoReq {
+   /**
+     * 报关重量使用开票重量 0不使用 1使用
+     */
+   bgWeightStatus?: number
+   /**
+    * 每套有多少开票单位
+    */
+   count?: number
+   /**
+    * 我国报关品名
+    */
+   customsDeclarationNameZh?: string
+   /**
+    * 报关状态 0报关 1不报关
+    */
+   customsDeclarationStatus?: string
+   /**
+    * hsId
+    */
+   hsId?: number
+   /**
+    * 零件报关id
+    */
+   id?: number
+   /**
+    * 货源地
+    */
+   placeOrigin?: string
+   /**
+    * 每套多少法定第1单位
+    */
+   statutoryCount?: number
+   /**
+    * 法定第1单位
+    */
+   statutoryUnit?: string
+   /**
+    * 开票型号
+    */
+   type?: string
+   /**
+    * 开票单位
+    */
+   unit?: string
+}
+// 零件报关信息 - 修改零件报关信息
+export interface IUpdateProductCustomsClearanceReq {
+  id?: number
+  brank?: string
+  declarationElements?: string
+  declarationElementsAbbreviation?: string
 }
 // SKU质检清单-查询
 export interface IgetProductQualityInspection {

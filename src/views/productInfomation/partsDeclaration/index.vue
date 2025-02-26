@@ -54,12 +54,13 @@
         </template>
       </el-table-column>
       <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
-      <el-table-column fixed="left" label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
+      <el-table-column fixed="left" label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
+      <el-table-column  label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
         <template #default="{ row }">
           <div v-html="row.sku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
+      
       <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any) => row.upc, 40)">
         <template #default="{ row }">
           <div v-html="row.upc"></div>
@@ -136,14 +137,14 @@
           <span>{{ row.unit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报关重量使用开票重量" min-width="140" prop="status">
+      <el-table-column label="报关重量使用开票重量" min-width="140" prop="bgWeightStatus">
         <template #header>
           报关重量使用
           <br />
           开票重量
         </template>
         <template #default="{ row }">
-          <el-select style="min-width: 100%" @change="handleUpdateStatus(row)">
+          <el-select style="min-width: 100%" @change="handleCustomsChange(row)">
             <el-option v-for="item in option" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </template>
@@ -164,7 +165,7 @@
         </template>
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.statutoryUnit" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
+            <el-input v-model="row.statutoryUnit" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
           </div>
           <span>{{ row.statutoryUnit }}</span>
         </template>
@@ -177,7 +178,7 @@
         </template>
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.statutoryCount" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
+            <el-input v-model="row.statutoryCount" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
           </div>
           <span>{{ row.statutoryCount }}</span>
         </template>
@@ -198,19 +199,15 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HS" min-width="160" prop="hs">
+      <el-table-column label="HS" min-width="160" prop="hsId">
         <template #default="{ row }">
           <el-select
-            v-model="row.hs"
-            clearable
-            default-first-option
+            v-model="row.hsId"
             filterable
-            :loading="peopleLoading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remotePeopleMethod"
+            placeholder="请选择HS"
+            @change="handleCustomsChange"
           >
-            <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
@@ -223,19 +220,15 @@
       </el-table-column>
       <el-table-column label="申报要素" min-width="200" prop="declarationElements">
         <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model="row.declarationElements"
-              data-declaretion="specialElements"
-              type="textarea"
-              @blur="clickCancel($event, row)"
-              @keypress.enter="clickCancel($event, row)"
-            />
-          </div>
-          <span>{{ row.declarationElements }}</span>
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.declarationElements }}</div>
+            </template>
+            <el-text truncated>{{ row.declarationElements }}</el-text>
+          </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="申报要素缩写" min-width="200" prop="declarationElementsAbbreviation">
+      <el-table-column label="申报要素缩写" min-width="230" prop="declarationElementsAbbreviation">
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -268,7 +261,6 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <vab-dialog v-model="priceCoefficientSettingVisible" title="价格系数设定" width="47em" @close="closePriceCoefficientSetting">
       <el-form :model="priceCoefficientSettingForm">
         <el-form-item>
@@ -318,6 +310,13 @@
         </div>
       </template>
     </vab-dialog>
+    <vab-remark-dialog 
+      :remark="remark"
+      :remark-visible="remarkVisible"
+      title="修改申报要素"
+      @update:remark="handleUpdateRemark"
+      @update:remark-visible="handleCloseRemark"
+    />
   </div>
 </template>
 
@@ -328,40 +327,23 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
   getCustomsClearanceRatio,
+  getHsSelectList,
   getProductCustomsList,
   updateCustomsClearanceRatio,
-  updateProductCustoms,
-  updateProductCustomsClearanceStatus,
+  updateProductCustomsClearance,
+  updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
-import { focusAndSelectInput, getDataAttribute, getRootElement } from '/@/utils/nodeUtils'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'SharedComponents',
 })
 
-const peopleLoading = ref(false) //搜索产品经理和产品设计loading
-const peopleOptions = ref<any[]>([]) //搜索选项
-const peopleList = ref<any[]>([]) //搜索列表
-const remotePeopleMethod = async (query: string) => {
-  if (query) {
-    // const { data } = await getProductAllName({
-    //     name: query
-    // })
-    // peopleList.value = data.map((item: any) => {
-    //     return { value: `${item}`, label: `${item}` }
-    // })
-    // peopleLoading.value = true
-    // setTimeout(() => {
-    //     peopleLoading.value = false
-    //     peopleOptions.value = peopleList.value.filter((item) => {
-    //         return item.label.toLowerCase().includes(query.toLowerCase())
-    //   })
-    // }, 200)
-  } else {
-    peopleOptions.value = []
-  }
-}
+const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
+const hsOption = ref<{ id: number, label: string }[]>([]) //搜索选项
+
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -455,11 +437,16 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     data.columnIndex === 6
   ) {
     return {
-      color: '#bbb',
+      color: '#999',
       cursor: 'not-allowed',
       textAlign: 'left',
     }
-  } else {
+  } else if (data.column.label === "申报要素" || data.column.label === "申报要素缩写") {
+    return {
+      textAlign: 'left',
+    }
+  }
+  else {
     return {
       textAlign: 'center',
     }
@@ -472,8 +459,15 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
   return ''
 }
 let copyRow: any
+let _row: any
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === "申报要素") {
+    _row = row
+    remarkVisible.value = true
+    remark.value = row.declarationElements
+    return
+  }
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -504,6 +498,78 @@ const clickCancel2 = async (event: Event, value: any) => {
   if (isEqual(copyRow, value)) {
     return
   }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    await updateProductCustomsClearanceSuppliserInfo({
+      id: value.pId,
+      customsDeclarationStatus: value.customsDeclarationStatus,
+      placeOrigin: value.placeOrigin,
+      customsDeclarationNameZh: value.customsDeclarationNameZh,
+      count: value.count,
+      unit: value.unit, 
+      type: value.type,
+      statutoryUnit: value.statutoryUnit,
+      statutoryCount: value.statutoryCount,
+      hsId: value.hsId,
+      bgWeightStatus: value.bgWeightStatus
+    })
+    fetchData()
+  }
+}
+const handleCloseRemark = (value: boolean) => {
+  remarkVisible.value = value
+}
+const handleUpdateRemark = async (value: string) => {
+  _row.declarationElementsAbbreviation = processDeclarationElements(value)
+  // 执行失去焦点处理逻辑
+  await updateProductCustomsClearance({
+    id: _row.pId,
+    declarationElements: value,
+    declarationElementsAbbreviation: _row.declarationElementsAbbreviation,
+  })
+  fetchData()
+  handleCloseRemark(false)
+}
+// 处理申报要素缩写
+const processDeclarationElements = (declarationElements: string): string => {
+  if (!declarationElements) {
+    return ''
+  }
+  function extractText(element: string, startDelimiter: string, endDelimiter: string): string[] | null {
+    const startIndex = element.indexOf(startDelimiter)
+    if (startIndex === -1) {
+      return null
+    }
+    const parts: string[] = element.split(startDelimiter)
+    let extractedValues: string[] = []
+    for (let i = 1; i < parts.length; i++) {
+      const text = parts[i].split(endDelimiter)[0]
+      extractedValues.push(text)
+    }
+    return extractedValues
+  }
+
+  const textReplacements: { [key: string]: string } = {
+    '无': '0',
+    '境内品牌': '1',
+    '境外贴牌': '3'
+  }
+
+  let extractedTexts: string[] | null = extractText(declarationElements, '【', '】')
+  if (!extractedTexts) {
+    extractedTexts = extractText(declarationElements, '[', ']')
+  }
+
+  if (!extractedTexts) {
+    return ''
+  }
+
+  const builder = extractedTexts.map((text: string, index: number) => {
+    const replacement = textReplacements[text]
+    return replacement !== undefined && (index === 0 || !extractedTexts.slice(0, index).join('|').includes('|')) ? replacement : text
+  }).join('|')
+
+  return builder
 }
 // 后面几列table blur事件
 const clickCancel = async (event: any, value: any) => {
@@ -519,117 +585,29 @@ const clickCancel = async (event: any, value: any) => {
   if (isEqual(copyRow, value)) {
     return
   }
-  // 处理申报要素简写
-  let builder
-  if (getRootElement(event['srcElement'], '.el-textarea')) {
-    let textAreaEl = getRootElement(event['srcElement'], '.el-textarea').children[0]
-    if (getDataAttribute(textAreaEl, 'declaretion')) {
-      let element = value.declarationElements
-      if (element.indexOf('【') > 0) {
-        let s = element.split('【')
-        for (let i = 1; i < s.length; i++) {
-          if (i == 1) {
-            let text = s[i].split('】')[0]
-            if (text == '无') {
-              text = '0'
-            } else if (text == '境内品牌') {
-              text = '1'
-            } else if (text == '境外贴牌') {
-              text = '3'
-            }
-            builder = text
-          } else {
-            let text = s[i].split('】')[0]
-            if (text == '无' && !builder!.includes('|')) {
-              text = '0'
-            } else if (text == '境内品牌' && !builder!.includes('|')) {
-              text = '1'
-            } else if (text == '境外贴牌' && !builder!.includes('|')) {
-              text = '3'
-            }
-            builder = `${builder}|${text}`
-          }
-        }
-      } else if (element.indexOf('[') > 0) {
-        let s = element.split('[')
-        for (let i = 1; i < s.length; i++) {
-          if (i == 1) {
-            let text = s[i].split(']')[0]
-            if (text == '无') {
-              text = '0'
-            } else if (text == '境内品牌') {
-              text = '1'
-            } else if (text == '境外贴牌') {
-              text = '3'
-            }
-            builder = text
-          } else {
-            let text = s[i].split(']')[0]
-            if (text == '无' && !builder!.includes('|')) {
-              text = '0'
-            } else if (text == '境内品牌' && !builder!.includes('|')) {
-              text = '1'
-            } else if (text == '境外贴牌' && !builder!.includes('|')) {
-              text = '3'
-            }
-            builder = `${builder}|${text}`
-          }
-        }
-      }
-    }
-  }
-
-  if (builder) {
-    value.declarationElementsAbbreviation = builder
-  } else {
-    value.declarationElementsAbbreviation = ''
-  }
-
+  
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductCustoms({
+    await updateProductCustomsClearance({
       id: value.pId,
-      statutoryUnit: value.statutoryUnit,
-      statutoryCount: value.statutoryCount,
       brank: value.brank,
-      hs: value.hs,
-      taxRate: value.taxRate,
       declarationElements: value.declarationElements,
       declarationElementsAbbreviation: value.declarationElementsAbbreviation,
-      contractName: value.contractName,
     })
     fetchData()
   }
 }
-// 修改报关重量使用开票重量
-const handleUpdateStatus = async (row: any) => {
-  await updateProductCustomsClearanceStatus({
-    id: row.id,
-    status: row.status,
-  })
-}
+
 // 修改不报关
 const handleCustomsChange = async (row: any) => {
-  await updateProductCustoms({
-    ...row,
+  await updateProductCustomsClearanceSuppliserInfo({
     id: row.pId,
+    customsDeclarationStatus: row.customsDeclarationStatus,
+    bgWeightStatus: row.bgWeightStatus,
+    hsId: row.hsId
   })
 }
-// 修改报关实际净重
-const handleWeightStatusChange = async (row: any) => {
-  await updateProductCustoms({
-    id: row.pId,
-    statutoryUnit: row.statutoryUnit,
-    statutoryCount: row.statutoryCount,
-    brank: row.brank,
-    hs: row.hs,
-    taxRate: row.taxRate,
-    declarationElements: row.declarationElements,
-    declarationElementsAbbreviation: row.declarationElementsAbbreviation,
-    contractName: row.contractName,
-  })
-  fetchData()
-}
+
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
@@ -697,11 +675,17 @@ const stripedRowClass = (_row: any) => {
   // 根据当前组索引设置条纹样式
   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
 }
+// 获取hs下拉列表
+const fetchHsSelectList = async () => {
+  const { data } = await getHsSelectList()
+  hsOption.value = data
+}
 onActivated(() => {
   tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {
+  fetchHsSelectList()
   fetchData()
 })
 </script>
@@ -735,5 +719,10 @@ onBeforeMount(() => {
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

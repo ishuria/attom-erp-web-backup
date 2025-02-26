@@ -31,7 +31,9 @@ import type {
   IUpdateCustomsClearanceRatioReq,
   IUpdateCustomsClearanceSku,
   IUpdateProductAlreadyComponent,
+  IUpdateProductCustomsClearanceReq,
   IUpdateProductCustomsClearanceStatus,
+  IUpdateProductCustomsClearanceSuppliserInfoReq,
   IaddConsumablesOtherSku,
   IaddProductComponentOtherSku,
   IaddProductQualityInspection,
@@ -63,7 +65,6 @@ import type {
   IupdateProductComponent,
   IupdateProductComponentName,
   IupdateProductComponentSuppliser,
-  IupdateProductCustoms,
   IupdateProductReplenParams,
   IupdateProductSku,
   IupdateProductSkuRemark,
@@ -194,6 +195,29 @@ export function getProductCustomsList(params: IgetProductCustomsListQuery): Prom
       method: 'get',
       params
     })
+}
+// 零件报关信息 - 修改报关零件供应商信息
+export function updateProductCustomsClearanceSuppliserInfo(data: IUpdateProductCustomsClearanceSuppliserInfoReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/customs/clearance/suppliser/info/update`,
+    method: 'post',
+    data
+  })
+}
+// 零件报关信息 - 修改零件报关信息
+export function updateProductCustomsClearance(data: IUpdateProductCustomsClearanceReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/customs/clearance/update`,
+    method: 'post',
+    data
+  })
+}
+// 查询hs下拉列表
+export function getHsSelectList() {
+  return request({
+    url: `${BASE_API}/hs/select/list`,
+    method: 'get',
+  })
 }
 // SKU质检清单-查询
 export function getProductQualityInspection(params: ISkuId): Promise<IgetProductQualityInspectionResp> {
@@ -472,16 +496,7 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
     data,
   })
 }
-/**
- * 零件报关信息 - 修改零件报关信息
- */
-export function updateProductCustoms(data: IupdateProductCustoms) {
-    return request({
-      url: `${BASE_API}/product/customs/clearance/update`,
-      method: 'post',
-      data,
-    })
-}
+
 /**
  * SKU质检清单-添加质检清单
  */
