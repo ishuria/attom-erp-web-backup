@@ -59,8 +59,8 @@
       </el-table-column>
       <el-table-column v-if="!disabled3 && (!disabled1 && !disabled2)" fixed="right" label="操作" width="150">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="handleShowMatch2(row)">匹配</el-link>
-          <el-link type="danger" :underline="false" @click="handleCheckClear(row)">清空</el-link>
+          <el-link v-if="row.delStatus === 0" type="primary" :underline="false" @click="handleShowMatch2(row)">匹配</el-link>
+          <el-link v-if="row.delStatus === 0" type="danger" :underline="false" @click="handleCheckClear(row)">清空</el-link>
           <el-link v-if="row.delStatus === 1" type="danger" :underline="false" @click="handleDelCheckMatch(row)">删除</el-link>
         </template>
       </el-table-column>
@@ -171,14 +171,14 @@
       <vab-query-form-top-panel>
         <el-form inline :model="querySentForm" @submit.prevent>
           <el-form-item label="分类">
-            <el-check-tag :checked="querySentForm.status === 0" @change="onChangeStatus(0)">聚合</el-check-tag>
-            <el-check-tag :checked="querySentForm.status === 1" @change="onChangeStatus(1)">明细</el-check-tag>
+            <el-check-tag :checked="tab === 0" @change="onChangeStatus(0)">聚合</el-check-tag>
+            <el-check-tag :checked="tab === 1" @change="onChangeStatus(1)">明细</el-check-tag>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
-    
     </vab-query-form>
-    <div v-if="querySentForm.status === 1">
+    <!-- 明细 -->
+    <div v-if="tab === 1">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="handleArchive">归档</el-button>
@@ -195,22 +195,24 @@
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table
-        border :cell-style="sentCellStyle"
+        v-loading="sentListLoading"
+        border 
         class="noneHoveTable"
         :data="sentList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
         @cell-click="changeInput"
+        @selection-change="setSelectRows"
       >
-        <!-- <el-table-column type="selection"/> -->
+        <el-table-column align="center" type="selection"/>
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')"/>
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')"/>
         <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')"/>
-        <el-table-column label="PO" prop="po" width="100"/>
+        <el-table-column align="center" label="PO" prop="po" width="100"/>
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sentList, '零件名', 'componentName')" />
-        <el-table-column label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"/>
-        <el-table-column label="已发未报" prop="yfwbCount" width="100"/>
-        <el-table-column label="已报未发" prop="ybwfCount" width="100"/>
+        <el-table-column align="center" label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"/>
+        <el-table-column align="center" label="已发未报" prop="yfwbCount" width="100"/>
+        <el-table-column align="center" label="已报未发" prop="ybwfCount" width="100"/>
         <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(sentList, '采购方', 'purchase')"/>
         <el-table-column label="备注" min-width="100" prop="remark">
           <template #default="{ row }">
@@ -231,60 +233,57 @@
         @size-change="handleSizeSentChange"
       />
     </div>
-    <div v-if="querySentForm.status === 0">
+    <!-- 聚合 -->
+    <div v-if="tab === 0">
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
-          <el-form inline :model="querySentForm" @submit.prevent>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="handleArchiveAgg">归档</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline :model="aggregationReq" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="querySentForm.keyWord" clearable placeholder="请输入搜索关键词"  @input="querySentData" @keyup.enter="querySentData" />
+              <el-input v-model.trim="aggregationReq.keyWord" clearable placeholder="请输入搜索关键词"  @input="queryAggregationData" @keyup.enter="queryAggregationData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="sentListLoading" native-type="submit" type="primary" @click="querySentData"/>
+              <el-button :icon="Search" :loading="aggregationListLoading" native-type="submit" type="primary" @click="queryAggregationData"/>
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table
-        border :cell-style="sentCellStyle"
+        v-loading="aggregationListLoading"
+        border
         class="noneHoveTable"
-        :data="sentList"
+        :data="aggregationList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
-        @selection-change="setSelectRows"
+        @selection-change="setSelectAggRows"
       >
-        <el-table-column type="selection"/>
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')"/>
-        <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')"/>
-        <el-table-column label="PO" prop="po" width="100"/>
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sentList, '零件名', 'componentName')" />
-        <el-table-column label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"/>
-        <el-table-column label="已发未报" prop="yfwbCount" width="100"/>
-        <el-table-column label="已报未发" prop="ybwfCount" width="100"/>
-        <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(sentList, '采购方', 'purchase')"/>
-        <el-table-column label="备注" min-width="100" prop="remark">
-          <template #default="{ row }">
-            <el-tooltip content=" " effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-              </template>
-              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
-            </el-tooltip>
-          </template>
-        </el-table-column>
+        <el-table-column align="center" type="selection"/>
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(aggregationList, 'SKU', 'sku')"/>
+        <el-table-column label="描述" prop="desc" :width="flexColumnWidth(aggregationList, '描述', 'desc')"/>
+        <el-table-column align="center" label="PO" prop="po" width="100"/>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(aggregationList, '零件名', 'componentName')"/>
+        <el-table-column align="center" label="PO零件数" prop="purchaseCount" :width="flexColumnWidth(aggregationList, 'PO零件数', 'purchaseCount')"/>
+        <el-table-column align="center" label="已发未报" min-width="120" prop="yfwbCount"/>
+        <el-table-column align="center" label="已报未发" min-width="120" prop="ybwfCount"/>
+        <el-table-column align="center" label="待发货" min-width="100" prop="pendingShipment"/>
+        <el-table-column align="center" label="待报关" min-width="100" prop="pendingCustomsClearance"/>
+        <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(aggregationList, '采购方', 'purchase')"/>
       </el-table>
       <vab-pagination 
-        :current-page="querySentForm.pageNo"
-        :page-size="querySentForm.pageSize"
-        :total="sentTotal"
-        @current-change="handleCurrentSentChange"
-        @size-change="handleSizeSentChange"
+        :current-page="aggregationReq.pageNo"
+        :page-size="aggregationReq.pageSize"
+        :total="aggregationTotal"
+        @current-change="handleCurrentAggChange"
+        @size-change="handleSizeAggChange"
       />
     </div>
    
     <template #footer>
-      <div v-if="querySentForm.status === 0" style="text-align: center;" >
+      <div v-if="tab === 0" style="text-align: center;" >
         <el-button @click="sentButNotReportedVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirmSent">确认</el-button>
+        <el-button type="primary" @click="handleConfirmAgg">确认</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -379,12 +378,22 @@
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, insertAllMatchComponent, lockMatchShipment, submitMatchSentList, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { archiveMatchSentList, archiveShipmentYfwbAggregation, clearAllMatchComponent, clearAllMatchShipment, clearMatchComponent, clearMatchShipment, clearUnlockMatchShipment, delMatchShipment, getCheckMatchList, getMatchPackageList, getMatchSentList, getShipmentYfwbAggregationList, insertAllMatchComponent, lockMatchShipment, submitMatchSentList, submitMatchShipment, updateMatchComponentCustomCount, updateMatchQuality, updateMatchSkuActualCount, updateShipmentYfwbRemark } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
-import type { IGetCheckMatchList, IGetMatchPackageList, IGetMatchSentList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import type { IGetCheckMatchList, IGetMatchPackageList, IGetMatchPoListReq, IGetMatchSentList, IGetYfwbAggregationList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+const aggregationTotal = ref<number>(0)
+const aggregationListLoading = ref<boolean>(false)
+// 0聚合 1明细 默认在聚合页
+const tab = ref<number>(0)
+const aggregationList = ref<IGetYfwbAggregationList[]>([])
+const aggregationReq = reactive<IGetMatchPoListReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
 const remark = ref<string>('')
 const remarkVisible = ref<boolean>(false)
 const dflag = ref<boolean>(false)
@@ -427,34 +436,61 @@ const matchList = ref<IGetMatchPackageList[]>([])
 const _sku = ref<string>('')
 const _desc = ref<string>('')
 const _id = ref<number>(0)
+let copyRow: any
 
 const onChangeStatus = (value: number) => {
-  querySentForm.status = value
+  tab.value = value
+  if (tab.value === 0) {
+    queryAggregationData()
+  } else {
+    querySentData()
+  }
 }
-const handleConfirmSent = async () => {
-  if (selectRows.value.length === 0) {
+const handleConfirmAgg = async () => {
+  if (selectAggRows.value.length === 0) {
     $baseMessage("您未选中任何行!", 'warning')
     return
   }
-  const idList = selectRows.value.map((item) => item.id!)
-  const id = list.value[0].id
-  const { data } = await submitMatchSentList({
-    id,
-    idList
+  const valid = selectAggRows.value.every((item) => item.pendingCustomsClearance && item.pendingCustomsClearance > 0)
+  const req = selectAggRows.value.map((item) => {
+    return {
+      poId: item.poId!,
+      poComponentId: item.poComponentId!,
+      sku: item.sku!
+    }
   })
-  if (data) {
-    $baseMessage("已发未报确认成功!", 'success')
-    sentButNotReportedVisible.value = false
+  if (valid) {
+    const { data } = await submitMatchSentList({
+      id: props.shipId,
+      list: req
+    })
+    if (data) {
+      $baseMessage("确认成功！", 'success')
+      sentButNotReportedVisible.value = false
+      queryData()
+    }
+  } else {
+    $baseMessage("待报关数量不能为空或者不能为0", 'error')
+    return
   }
 }
-const handleUpdateRemark = (value: string) => {
-  //
+const handleUpdateRemark = async (value: string) => {
+  const { data } = await updateShipmentYfwbRemark({
+    id: copyRow.id,
+    remark: value
+  })
+  if (data) {
+    $baseMessage("修改备注成功!", 'success')
+    remarkVisible.value = false
+    copyRow.remark = value
+  }
 }
 const handleCloseRemark = (value: boolean) => {
   remarkVisible.value = value
 }
 const changeInput = (row: any, column: any) => {
   if (column.label === "备注") {
+    copyRow = row
     remarkVisible.value = true
     remark.value = row.remark
   }
@@ -467,10 +503,15 @@ const handleCloseMatch2 = () => {
   Object.keys(customsDeclarationCountMap).forEach(key => delete customsDeclarationCountMap[key]);
   fetchData()
 }
-// 已发未报的多选
+// 已发未报-明细多选
 const selectRows = ref<IGetMatchSentList[]>([]) 
 const setSelectRows = (value: IGetMatchSentList[]) => {
   selectRows.value = value
+}
+// 已发未报-聚合多选
+const selectAggRows = ref<IGetYfwbAggregationList[]>([])
+const setSelectAggRows = (value: IGetYfwbAggregationList[]) => {
+  selectAggRows.value = value
 }
 // 打包总数是否可见
 const packingCountVisible = ref<boolean>(false)
@@ -709,7 +750,6 @@ const querySentForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  status: 1
 })
 const sentTotal = ref<number>(0)
 const sentListLoading = ref<boolean>(false)
@@ -730,9 +770,10 @@ const handleSizeSentChange = (value: number) => {
 // 展示已发未报
 const showSentButNotReported = () => {
   sentButNotReportedVisible.value = true
-  fetchSentData()
+  tab.value = 0
+  fetchAggregationData()
 }
-// 已发未报的归档
+// 已发未报-明细归档
 const handleArchive = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选择任何行!', 'warning')
@@ -742,17 +783,38 @@ const handleArchive = async () => {
     $baseMessage('只能选择一项进行归档!', 'warning')
     return
   }
-  // $baseConfirm('确定要归档吗?', null, async () => {
-  //   const { data } = await archiveMatchSentList({
-  //     id: selectRows.value[0].id!
-  //   })
-  //   if (data) {
-  //     $baseMessage('归档成功', 'success')
-      
-  //   }
-  // })
+  $baseConfirm('确定要归档吗?', null, async () => {
+    const { data } = await archiveMatchSentList({
+      id: selectRows.value[0].id!
+    })
+    if (data) {
+      $baseMessage('归档成功', 'success')
+      querySentData()
+    }
+  })
 }
-// 确定已发未报
+// 已发未报-聚合归档
+const handleArchiveAgg = async () => {
+  if (selectAggRows.value.length === 0) {
+    $baseMessage('您未选择任何行!', 'warning')
+    return
+  }
+  $baseConfirm("确定要归档吗？", null, async () => {
+    const req = selectAggRows.value.map((item) => {
+      return {
+        poId: item.poId!,
+        poComponentId: item.poComponentId!,
+        sku: item.sku!
+      }
+    })
+    const { data } = await archiveShipmentYfwbAggregation(req)
+    if (data) {
+      $baseMessage("聚合归档成功！", 'success')
+      queryAggregationData()
+    }
+  })
+}
+// 已发未报明细 获取数据
 const fetchSentData = async () => {
   sentListLoading.value = true
   const { data } = await getMatchSentList(querySentForm)
@@ -760,7 +822,27 @@ const fetchSentData = async () => {
   sentList.value = data.list
   sentListLoading.value = false
 }
-
+// 已发未报 聚合获取数据
+const fetchAggregationData = async () => {
+  aggregationListLoading.value = true
+  const { data } = await getShipmentYfwbAggregationList(aggregationReq)
+  aggregationTotal.value = data.total
+  aggregationList.value = data.list
+  aggregationListLoading.value = false
+}
+const queryAggregationData = () => {
+  aggregationReq.pageNo = 1
+  fetchAggregationData()
+}
+const handleCurrentAggChange = (value: number) => {
+  aggregationReq.pageNo = value
+  fetchAggregationData()
+}
+const handleSizeAggChange = (value: number) => {
+  aggregationReq.pageNo = 1
+  aggregationReq.pageSize = value
+  fetchAggregationData()
+}
 // 关闭匹配
 const handleCloseCheck = () => {
   emit('updateMatchVisible', false)
@@ -841,6 +923,10 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
 }
 // 填入全部
 const handleInsertAll = async (row: IGetMatchPackageList) => {
+  if (row.goodCount !== null && row.goodCount > _encasementCount.value) {
+    $baseMessage("打包完成数(好)的数量不能大于剩余未匹配数量，无法填入全部！", 'error')
+    return
+  }
   try {
     const { data } = await insertAllMatchComponent({
       id: _id.value,
@@ -1132,16 +1218,7 @@ const match2Style = (data: { row: any, column: any, rowIndex: number, columnInde
     textAlign: 'left'
   }
 }
-const sentCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 4 || data.columnIndex === 9) {
-    return {
-      textAlign: 'left'
-    }
-  }
-  return {
-    textAlign: 'center'
-  }
-}
+
 </script>
 
 <style lang="scss" scoped>

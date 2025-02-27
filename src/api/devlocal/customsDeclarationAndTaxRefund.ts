@@ -22,6 +22,7 @@ import type {
   IGetMatchPoListReq,
   IGetMatchPoListRes,
   IGetMatchSentListRes,
+  IGetYfwbAggregationListRes,
   IId,
   IIds,
   IInsertAllMatchComponent,
@@ -174,9 +175,45 @@ export const archiveMatchSentList = (params: IId): Promise<IBooleanRes> => {
 /**
  * @description 匹配PO、报关资料已报未发列表-确定
  */
-export const submitMatchSentList = (data: ISubmitMatchSentList): Promise<IBooleanRes> => {
+export const submitMatchSentList = (data: ISubmitMatchSentList): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/shipment/match/ybwf/submit`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 匹配、报关资料已报未发-修改备注
+ * @param data id: number, remark: string
+ * @returns boolean
+ */
+export const updateShipmentYfwbRemark = (data: { id: number, remark: string }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/yfwb/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 匹配PO、报关资料已发未报-聚合列表查询
+ * @param data IGetMatchPoListReq
+ * @returns IGetYfwbAggregationListRes
+ */
+export const getShipmentYfwbAggregationList = (data: IGetMatchPoListReq): Promise<IGetYfwbAggregationListRes> => {
+  return request({
+    url: `${BASE_API}/shipment/yfwb/aggregation/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 匹配PO、报关资料已发未报-聚合归档
+ * @param data IGetMatchPoListReq
+ * @returns IGetYfwbAggregationListRes
+ */
+export const archiveShipmentYfwbAggregation = (data: { poId: number, poComponentId: number, sku: string }[]): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/yfwb/aggregation/batch/archiving`,
     method: 'post',
     data
   })

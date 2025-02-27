@@ -24,7 +24,7 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      stripe
+      :row-class-name="tableRowClassName"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection"/>
@@ -84,15 +84,11 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="状态" min-width="160" prop="status">
+      <el-table-column label="状态" min-width="160" prop="status" >
         <template #default="{ row }">
           <span 
             :style="{ 
-              color: row.lockStatus === 0 && row.status === 1 
-                ? 'var(--el-color-warning)'  // 黄色 
-                : row.matchStatus === 0 
-                  ? 'var(--el-color-danger)' // 红色 
-                  : 'var(--el-color-success)' // 绿色 
+              color: row.matchStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' // 绿色 
             }">
             {{ row.matchStatus === 0 ? '待匹配' : '已匹配' }}
           </span><br />
@@ -894,9 +890,20 @@ const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     return {
       textAlign: 'left'
     }
-  }
+  } 
   return {
     textAlign: 'center'
+  }
+}
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.lockStatus === 0 && row.status === 1) {
+    return 'warning-row'
   }
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
@@ -1039,16 +1046,20 @@ onActivated(() => {
   background-color: var(--el-color-success);
   border-color: var(--el-color-success);
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
+// /* 取消没有条纹的行的悬停背景色 */
+// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+// }
 
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// }
+.noneHoveTable :deep(.warning-row) {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
 .none {
   display: none;
 }
+
 </style>

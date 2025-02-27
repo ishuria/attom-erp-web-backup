@@ -358,7 +358,11 @@ export interface IClearUnlockMatchShipment {
 }
 export interface ISubmitMatchSentList {
   id: number
-  idList: number[]
+  list: {
+    poId: number
+    poComponentId: number
+    sku: string
+  }[]
 }
 
 export interface IUpdateMatchQuality {
@@ -418,4 +422,62 @@ export interface IUpdateShipmentLeg {
 export interface IUpdateBgShipmentLeg {
   id: number
   status: number
+}
+
+export interface IGetYfwbAggregationListRes {
+  data: {
+    list: IGetYfwbAggregationList[]
+    total: number
+  }
+}
+
+export interface IGetYfwbAggregationList {
+  /**
+   * 零件名
+   */
+  componentName?: string
+  /**
+   * 描述
+   */
+  desc?: string
+  /**
+   * 待报关
+   */
+  pendingCustomsClearance?: number
+  /**
+   * 待发货
+   */
+  pendingShipment?: number
+  /**
+   * PO
+   */
+  po?: string
+  /**
+   * po的零件id
+   */
+  poComponentId?: number
+  /**
+   * PO的id
+   */
+  poId?: number
+  /**
+   * 采购方
+   */
+  purchase?: string
+  /**
+   * 零件采购数量
+   */
+  purchaseCount?: string
+  /**
+   * SKU
+   */
+  sku?: string
+  /**
+   * 已报未发数量
+   */
+  ybwfCount?: number
+  /**
+   * 已发未报数量
+   */
+  yfwbCount?: number
 }
