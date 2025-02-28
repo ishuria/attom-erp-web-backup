@@ -54,7 +54,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.productCategory }}</div>
                 </template>
-                <el-text truncated>{{ row.productCategory }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.productCategory }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -64,7 +64,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryOne }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryOne }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryOne }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -74,7 +74,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryTwo }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryTwo }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryTwo }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -84,7 +84,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryThree }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryThree }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryThree }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -158,7 +158,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.productCategory }}</div>
                 </template>
-                <el-text truncated>{{ row.productCategory }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.productCategory }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -168,7 +168,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryOne }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryOne }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryOne }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -178,7 +178,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryTwo }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryTwo }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryTwo }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -188,7 +188,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.categoryThree }}</div>
                 </template>
-                <el-text truncated>{{ row.categoryThree }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.categoryThree }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -222,19 +222,29 @@
           <el-input v-model="addForm.hts" clearable />
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="关税率" prop="tariffRate">
-          <el-input v-model="addForm.tariffRate" type="number" />
+          <el-input v-model="addForm.tariffRate" type="number" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="301关税率" prop="threeZeroOne">
-          <el-input v-model="addForm.threeZeroOne" type="number" />
+          <el-input v-model="addForm.threeZeroOne" type="number" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="德国关税率" prop="deTariffRate">
-          <el-input v-model="addForm.deTariffRate" type="number" />
+          <el-input v-model="addForm.deTariffRate" type="number" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="英国关税率" prop="ukTariffRate">
-          <el-input v-model="addForm.ukTariffRate" type="number" />
+          <el-input v-model="addForm.ukTariffRate" type="number" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="杂费" prop="extras">
-          <el-input v-model="addForm.extras" type="number" />
+          <el-input v-model="addForm.extras" type="number" >
+            <template #append>%</template>
+          </el-input>
         </el-form-item>
         <el-form-item label="产品大类" prop="productCategory">
           <el-input v-model="addForm.productCategory" resize="none" :rows="3" type="textarea" />
