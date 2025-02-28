@@ -923,10 +923,10 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
 }
 // 填入全部
 const handleInsertAll = async (row: IGetMatchPackageList) => {
-  if (row.goodCount !== null && row.goodCount > _encasementCount.value) {
-    $baseMessage("打包完成数(好)的数量不能大于剩余未匹配数量，无法填入全部！", 'error')
-    return
-  }
+  // if (row.goodCount !== null && row.goodCount > _encasementCount.value) {
+  //   $baseMessage("打包完成数(好)的数量不能大于剩余未匹配数量，无法填入全部！", 'error')
+  //   return
+  // }
   try {
     const { data } = await insertAllMatchComponent({
       id: _id.value,
@@ -969,6 +969,7 @@ const handleClear = async (row: IGetMatchPackageList) => {
       if (data) {
         $baseMessage('清空成功', 'success')
         fetchMatchData()
+        skuActualCountMap[row.mId] = 0
       }
     } catch (error) {
       console.error(error)
@@ -1012,6 +1013,7 @@ const handleClearAll = async () => {
       if (data) {
         $baseMessage('清空全部成功', 'success')
         fetchMatchData()
+        Object.keys(skuActualCountMap).forEach(key => skuActualCountMap[key] = 0);
       }
     } catch (error) {
       console.error(error)
@@ -1074,7 +1076,9 @@ const fetchData = async () => {
   list.value = data.list
   let idSet = new Set()
   list.value.forEach((item: any) => {
-    idSet.add(item.id)
+    if (item.delStatus === 0) {
+      idSet.add(item.id)
+    }
   })
   idList.value = Array.from(idSet)
   list.value.sort((a, b) => {

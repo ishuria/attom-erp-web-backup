@@ -126,7 +126,7 @@
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
                   <el-link type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleArchiveOutbound(row)">
+                <el-dropdown-item @click="handleArchiveOutbound(row)" >
                   <el-link type="primary" :underline="false" >出库归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="showFirstLegFreight(row)">
@@ -136,13 +136,13 @@
                   <el-link type="primary" :underline="false" >合同导入</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchivePackage(row)">
-                  <el-link type="primary" :underline="false" >撤销打包归档</el-link>
+                  <el-link :disabled="row.packArchiveStatus === 0" type="primary" :underline="false">撤销打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchiveTaxRefund(row)">
-                  <el-link type="primary" :underline="false" >撤销退税归档</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 0" type="primary" :underline="false" >撤销退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchiveOutbound(row)">
-                  <el-link type="primary" :underline="false">撤销出库</el-link>
+                  <el-link :disabled="row.outboundStatus === 0" type="primary" :underline="false">撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelEncasement(row)">
                   <el-link type="primary" :underline="false">撤销装箱(删除)</el-link>
@@ -604,6 +604,7 @@ const handleArchivePackage = async (row: any) => {
     }
   })
 }
+
 // 撤销打包归档
 const handleCancelArchivePackage = async (row: any) => {
   if (row.packArchiveStatus === 0) {

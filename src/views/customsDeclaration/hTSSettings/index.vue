@@ -298,9 +298,6 @@ const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<FormRules>({
   hts: [{ required: true, message: '请输入HTS', trigger: 'blur' }],
   productCategory: [{ required: true, message: '请输入产品大类', trigger: 'blur' }],
-  categoryOne: [{ required: true, message: '请输入1级大类', trigger: 'blur' }],
-  categoryTwo: [{ required: true, message: '请输入2级大类', trigger: 'blur' }],
-  categoryThree: [{ required: true, message: '请输入3级大类', trigger: 'blur' }],
 })
 const updateVisible = ref<boolean>(false)
 const title = ref<string>('')
