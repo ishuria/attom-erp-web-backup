@@ -9,7 +9,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -29,7 +29,7 @@
               <div class="none">
                 <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.tariffRate ? row.tariffRate + '%' : '' }}</span>
+              <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="301税率" min-width="100" prop="threeZeroOne">
@@ -37,7 +37,7 @@
               <div class="none">
                 <el-input v-model="row.threeZeroOne" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.threeZeroOne ? row.threeZeroOne + '%' : '' }}</span>
+              <span>{{ row.threeZeroOne != null ? row.threeZeroOne + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="杂费" min-width="90" prop="extras" >
@@ -45,7 +45,7 @@
               <div class="none">
                 <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.extras ? row.extras + '%' : '' }}</span>
+              <span>{{ row.extras != null ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="产品大类" min-width="250" prop="productCategory">
@@ -113,7 +113,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -133,7 +133,7 @@
               <div class="none">
                 <el-input v-model="row.deTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.deTariffRate ? row.deTariffRate + '%' : '' }}</span>
+              <span>{{ row.deTariffRate != null ? row.deTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="英国关税率" min-width="110" prop="ukTariffRate">
@@ -141,7 +141,7 @@
               <div class="none">
                 <el-input v-model="row.ukTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.ukTariffRate ? row.ukTariffRate + '%' : '' }}</span>
+              <span>{{ row.ukTariffRate != null ? row.ukTariffRate + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="杂费" min-width="90" prop="extras">
@@ -149,7 +149,7 @@
               <div class="none">
                 <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.extras ? row.extras + '%' : '' }}</span>
+              <span>{{ row.extras != null ? row.extras + '%' : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="产品大类" min-width="250" prop="productCategory">
@@ -499,7 +499,7 @@ const fetchData = async () => {
       item.ukTariffRate = parseFloat((item.ukTariffRate * 100).toFixed(2))
     }
     if (item.extras) {
-      item.extras = parseFloat((item.extras * 100).toFixed(2))
+      item.extras = parseFloat((item.extras * 100).toFixed(4))
     }
   })
   listLoading.value = false
