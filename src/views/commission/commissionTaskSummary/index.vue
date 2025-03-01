@@ -7,76 +7,78 @@
             <el-form>
               <el-form-item label="站点">
                 <el-select v-model="queryForm.site" @change="queryData">
-                  <el-option v-for="item in siteList" :label="item.label" :value="item.id" :key="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
-            <el-form :model="queryForm" inline @submit.prevent>
+            <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" @input="queryData" />
+                <el-input
+                  v-model="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="queryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          border stripe
-          :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="list"
-        >
-          <el-table-column label="实际完成日期" prop="actualFinishDate" min-width="120">
+        <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+          <el-table-column label="实际完成日期" min-width="120" prop="actualFinishDate">
             <template #default="{ row }">
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(list, '人员', 'userName')"></el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"></el-table-column>
-          <el-table-column label="状态" prop="status" min-width="100">
+          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(list, '人员', 'userName')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
+          <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
-              <el-tag v-if="row.status === '未上架'" type="info" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="任务ID" prop="taskId" min-width="100"></el-table-column>
-          <el-table-column label="站点" prop="siteName" min-width="130"></el-table-column>
-          <el-table-column label="提成模式" prop="mold" min-width="100"></el-table-column>
-          <el-table-column label="设计任务" prop="designTask" min-width="110"></el-table-column>
-          <el-table-column label="提前完成天数" prop="advanceDays" min-width="120">
+          <el-table-column label="任务ID" min-width="100" prop="taskId" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
+          <el-table-column label="提成模式" min-width="100" prop="mold" />
+          <el-table-column label="设计任务" min-width="110" prop="designTask" />
+          <el-table-column label="提前完成天数" min-width="120" prop="advanceDays">
             <template #default="{ row }">
               <el-text v-if="row.advanceDays >= 0" type="success">{{ row.advanceDays }}</el-text>
               <el-text v-if="row.advanceDays < 0" type="danger">{{ row.advanceDays }}</el-text>
             </template>
           </el-table-column>
-          <el-table-column label="要求完成日期" prop="dueDate" min-width="120">
+          <el-table-column label="要求完成日期" min-width="120" prop="dueDate">
             <template #default="{ row }">
               {{ row.dueDate ? formatDate(new Date(row.dueDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="提成天数" prop="commissionDay" min-width="100"></el-table-column>
-          <el-table-column label="合作提成比例" prop="cooperationProportion" min-width="120">
+          <el-table-column label="提成天数" min-width="100" prop="commissionDay" />
+          <el-table-column label="合作提成比例" min-width="120" prop="cooperationProportion">
             <template #default="{ row }">
               {{ row.cooperationProportion ? row.cooperationProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="单人提成比例" prop="singleProportion" min-width="120">
+          <el-table-column label="单人提成比例" min-width="120" prop="singleProportion">
             <template #default="{ row }">
               {{ row.singleProportion ? row.singleProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合作权重" prop="cooperationWeight" min-width="100"></el-table-column>
-          <el-table-column label="合作加成" prop="cooperationBonus" min-width="100"></el-table-column>
-          <el-table-column label="最低要求转化率" prop="lowRate" min-width="130">
+          <el-table-column label="合作权重" min-width="100" prop="cooperationWeight" />
+          <el-table-column label="合作加成" min-width="100" prop="cooperationBonus" />
+          <el-table-column label="最低要求转化率" min-width="130" prop="lowRate">
             <template #default="{ row }">
               {{ row.lowRate ? row.lowRate + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showPictureUpdate(row)">修改</el-link>
               <el-link type="danger" :underline="false" @click="handlePausePicture(row)">暂停</el-link>
@@ -84,10 +86,10 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -98,56 +100,58 @@
       <el-tab-pane label="美工长期" :name="1">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
-            <el-form :model="longQueryForm" inline @submit.prevent>
+            <el-form inline :model="longQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="longQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="longQueryData" @input="longQueryData" />
+                <el-input
+                  v-model="longQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="longQueryData"
+                  @keyup.enter="longQueryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="longQueryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="longQueryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          border stripe
-          :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="longList"
-        >
-          <el-table-column label="提成开始日期" prop="startDate" min-width="120">
+        <el-table border :cell-style="cellStyle" :data="longList" :header-cell-style="{ textAlign: 'center' }" stripe>
+          <el-table-column label="提成开始日期" min-width="120" prop="startDate">
             <template #default="{ row }">
               {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(longList, '人员', 'userName')"></el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku')"></el-table-column>
-          <el-table-column label="状态" prop="status" min-width="100">
+          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(longList, '人员', 'userName')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku')" />
+          <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
-              <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="任务ID" prop="taskId" min-width="100"></el-table-column>
-          <el-table-column label="任务类型" prop="type" min-width="100"></el-table-column>
-          <el-table-column label="提成结束日期" prop="endDate" min-width="100">
+          <el-table-column label="任务ID" min-width="100" prop="taskId" />
+          <el-table-column label="任务类型" min-width="100" prop="type" />
+          <el-table-column label="提成结束日期" min-width="100" prop="endDate">
             <template #default="{ row }">
               {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="提成天数" prop="commissionDay" min-width="100"></el-table-column>
-          <el-table-column label="合作提成比例" prop="cooperationProportion" min-width="120">
+          <el-table-column label="提成天数" min-width="100" prop="commissionDay" />
+          <el-table-column label="合作提成比例" min-width="120" prop="cooperationProportion">
             <template #default="{ row }">
               {{ row.cooperationProportion ? row.cooperationProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="单人提成比例" prop="singleProportion" min-width="120">
+          <el-table-column label="单人提成比例" min-width="120" prop="singleProportion">
             <template #default="{ row }">
               {{ row.singleProportion ? row.singleProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合作权重" prop="cooperationWeight" min-width="100"></el-table-column>
-          <el-table-column label="合作加成" prop="cooperationBonus" min-width="100"></el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column label="合作权重" min-width="100" prop="cooperationWeight" />
+          <el-table-column label="合作加成" min-width="100" prop="cooperationBonus" />
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showLongUpdate(row)">修改</el-link>
               <el-link type="danger" :underline="false" @click="handlePauseLong(row)">暂停</el-link>
@@ -155,10 +159,10 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="longQueryForm.pageNo"
           :page-size="longQueryForm.pageSize"
           :total="total"
@@ -169,47 +173,49 @@
       <el-tab-pane label="产品开发设计" :name="2">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
-            <el-form :model="developQueryForm" inline @submit.prevent>
+            <el-form inline :model="developQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="developQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="developQueryData" @input="developQueryData" />
+                <el-input
+                  v-model="developQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="developQueryData"
+                  @keyup.enter="developQueryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="developQueryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="developQueryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          border stripe
-          :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="developList"
-        >
-          <el-table-column label="采购计划发布日期" prop="releaseData" min-width="120">
+        <el-table border :cell-style="cellStyle" :data="developList" :header-cell-style="{ textAlign: 'center' }" stripe>
+          <el-table-column label="采购计划发布日期" min-width="120" prop="releaseData">
             <template #default="{ row }">
               {{ row.releaseData ? formatDate(new Date(row.releaseData)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="人员" prop="userName" min-width="120"></el-table-column>
-          <el-table-column label="SKU" prop="sku" min-width="200"></el-table-column>
-          <el-table-column label="状态" prop="status" min-width="100">
+          <el-table-column label="人员" min-width="120" prop="userName" />
+          <el-table-column label="SKU" min-width="200" prop="sku" />
+          <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
-              <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="本职角色" prop="jobRole" min-width="100"></el-table-column>
-          <el-table-column label="提成角色" prop="commissionRole" min-width="100"></el-table-column>
-          <el-table-column label="净利提成基础比例" prop="baseProportion" min-width="120">
+          <el-table-column label="本职角色" min-width="100" prop="jobRole" />
+          <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
+          <el-table-column label="净利提成基础比例" min-width="120" prop="baseProportion">
             <template #default="{ row }">
               {{ row.baseProportion ? row.baseProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="超额完成奖励" prop="rewardProportion" min-width="120">
+          <el-table-column label="超额完成奖励" min-width="120" prop="rewardProportion">
             <template #default="{ row }">
               {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showDevelopUpdate(row)">修改</el-link>
               <el-link type="danger" :underline="false" @click="handlePauseDevelop(row)">暂停</el-link>
@@ -217,10 +223,10 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="developQueryForm.pageNo"
           :page-size="developQueryForm.pageSize"
           :total="total"
@@ -231,72 +237,68 @@
       <el-tab-pane label="采购降本" :name="3">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
-            <el-form :model="costQueryForm" inline @submit.prevent>
+            <el-form inline :model="costQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="costQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="costQueryData" @input="costQueryData" />
+                <el-input
+                  v-model="costQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="costQueryData"
+                  @keyup.enter="costQueryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="costQueryData" ></el-button>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="costQueryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          border stripe
-          :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle"
-          :data="costList"
-        >
-          <el-table-column label="提成开始日期" prop="startDate" min-width="120">
+        <el-table border :cell-style="cellStyle" :data="costList" :header-cell-style="{ textAlign: 'center' }" stripe>
+          <el-table-column label="提成开始日期" min-width="120" prop="startDate">
             <template #default="{ row }">
               {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(costList, '人员', 'userName')"></el-table-column>
-          <el-table-column label="降本PO" prop="po" min-width="100"></el-table-column>
-          <el-table-column label="状态" prop="status" min-width="100">
+          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(costList, '人员', 'userName')" />
+          <el-table-column label="降本PO" min-width="100" prop="po" />
+          <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
-              <el-tag v-if="row.status === '暂停'" type="warning" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger" >{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '待审核'" type="primary" >{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '待审核'" type="primary">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku')"></el-table-column>
-         
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(costList, '零件名', 'componentName')"></el-table-column>
-          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(costList, '供应商', 'suppliserName')"></el-table-column>
-          <el-table-column label="优化前成本￥" prop="optimizationBefore" min-width="110">
-            <template #default="{ row }">
-              ￥{{ row.optimizationBefore }}
-            </template>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku')" />
+
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(costList, '零件名', 'componentName')" />
+          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(costList, '供应商', 'suppliserName')" />
+          <el-table-column label="优化前成本￥" min-width="110" prop="optimizationBefore">
+            <template #default="{ row }">￥{{ row.optimizationBefore }}</template>
           </el-table-column>
-          <el-table-column label="优化后成本￥" prop="optimizationAfter" min-width="110">
-            <template #default="{ row }">
-              ￥{{ row.optimizationAfter }}
-            </template>
+          <el-table-column label="优化后成本￥" min-width="110" prop="optimizationAfter">
+            <template #default="{ row }">￥{{ row.optimizationAfter }}</template>
           </el-table-column>
-          <el-table-column label="降本金额￥" prop="costReductionPrice" min-width="120">
-            <template #default="{ row }">
-              ￥{{ row.costReductionPrice }}
-            </template>
+          <el-table-column label="降本金额￥" min-width="120" prop="costReductionPrice">
+            <template #default="{ row }">￥{{ row.costReductionPrice }}</template>
           </el-table-column>
-          <el-table-column label="降本比例" prop="costReductionProportion" min-width="120">
+          <el-table-column label="降本比例" min-width="120" prop="costReductionProportion">
             <template #default="{ row }">
               {{ row.costReductionProportion ? row.costReductionProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="提成比例" prop="commissionProportion" min-width="120">
+          <el-table-column label="提成比例" min-width="120" prop="commissionProportion">
             <template #default="{ row }">
               {{ row.commissionProportion ? row.commissionProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="提成天数" prop="commissionDays" min-width="100"></el-table-column>
-          <el-table-column label="提成结束日期" prop="endDate" min-width="120">
+          <el-table-column label="提成天数" min-width="100" prop="commissionDays" />
+          <el-table-column label="提成结束日期" min-width="120" prop="endDate">
             <template #default="{ row }">
               {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="280" fixed="right">
+          <el-table-column fixed="right" label="操作" width="280">
             <template #default="{ row }">
               <el-link type="success" :underline="false" @click="handlePassCost(row)">审核通过</el-link>
               <el-link type="danger" :underline="false" @click="handleNotPassCost(row)">不通过</el-link>
@@ -306,10 +308,10 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"></el-empty>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="costQueryForm.pageNo"
           :page-size="costQueryForm.pageSize"
           :total="total"
@@ -319,17 +321,20 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 美工图片修改 -->
-    <vab-dialog
-      title="美工图片修改"
-      width="20%"
-      v-model="pictureUpdateVisible"
-    >
-      <el-form ref="pictureUpdateFormRef" :rules="pictureUpdateFormRules" label-position="right" label-width="auto" :model="pictureUpdateForm" style="margin: 0;">
+    <vab-dialog v-model="pictureUpdateVisible" title="美工图片修改" width="20%">
+      <el-form
+        ref="pictureUpdateFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="pictureUpdateForm"
+        :rules="pictureUpdateFormRules"
+        style="margin: 0"
+      >
         <el-form-item label="要求完成日期" prop="requiredCompletionDate">
-          <el-date-picker v-model="pictureUpdateForm.requiredCompletionDate" type="date" value-format="YYYY-MM-DD"></el-date-picker>
+          <el-date-picker v-model="pictureUpdateForm.requiredCompletionDate" type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="提成天数" prop="commissionDays">
-          <el-input v-model="pictureUpdateForm.commissionDays" type="number" disabled />
+          <el-input v-model="pictureUpdateForm.commissionDays" disabled type="number" />
         </el-form-item>
         <el-form-item label="合作提成比例" prop="cooperationCommissionRatio">
           <el-input v-model="pictureUpdateForm.cooperationCommissionRatio" type="number" />
@@ -353,14 +358,10 @@
       </template>
     </vab-dialog>
     <!-- 美工长期修改 -->
-    <vab-dialog
-      title="美工长期修改"
-      width="20%"
-      v-model="longUpdateVisible"
-    >
-      <el-form ref="longFormRef" :model="longForm" :rules="longFormRules" style="margin: 0;" label-position="right" label-width="auto" >
+    <vab-dialog v-model="longUpdateVisible" title="美工长期修改" width="20%">
+      <el-form ref="longFormRef" label-position="right" label-width="auto" :model="longForm" :rules="longFormRules" style="margin: 0">
         <el-form-item label="提成天数" prop="commissionDays">
-          <el-input v-model="longForm.commissionDays" type="number" disabled />
+          <el-input v-model="longForm.commissionDays" disabled type="number" />
         </el-form-item>
         <el-form-item label="合作提成比例" prop="cooperationCommissionRatio">
           <el-input v-model="longForm.cooperationCommissionRatio" type="number" />
@@ -381,12 +382,15 @@
       </template>
     </vab-dialog>
     <!-- 产品开发设计修改 -->
-    <vab-dialog
-      title="产品开发设计修改"
-      width="20%"
-      v-model="developUpdateVisible"
-    >
-      <el-form ref="developFormRef" :model="developForm" :rules="developFormRules" style="margin: 0;" label-position="right" label-width="auto" >
+    <vab-dialog v-model="developUpdateVisible" title="产品开发设计修改" width="20%">
+      <el-form
+        ref="developFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="developForm"
+        :rules="developFormRules"
+        style="margin: 0"
+      >
         <el-form-item label="基础比例" prop="baseProportion">
           <el-input v-model="developForm.baseProportion" type="number" />
         </el-form-item>
@@ -400,12 +404,8 @@
       </template>
     </vab-dialog>
     <!-- 采购降本修改 -->
-    <vab-dialog
-      title="采购降本修改"
-      width="20%"
-      v-model="costUpdateVisible"
-    >
-      <el-form ref="costFormRef" :model="costForm" :rules="costFormRules" style="margin: 0;" label-position="right" label-width="auto" >
+    <vab-dialog v-model="costUpdateVisible" title="采购降本修改" width="20%">
+      <el-form ref="costFormRef" label-position="right" label-width="auto" :model="costForm" :rules="costFormRules" style="margin: 0">
         <el-form-item label="优化前成本￥" prop="beforePrice">
           <el-input v-model="costForm.beforePrice" type="number" />
         </el-form-item>
@@ -416,7 +416,7 @@
           <el-input v-model="costForm.commissionProportion" type="number" />
         </el-form-item>
         <el-form-item label="提成天数" prop="commissionDays">
-          <el-input v-model="costForm.commissionDays" type="number" disabled />
+          <el-input v-model="costForm.commissionDays" disabled type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -429,16 +429,42 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
-import { CSSProperties } from 'vue'
-import { continueCommissionTaskPicture, continueDevelopDesignTask, continueLongCommissionTask, continueReductionCostTask, getCommissionTaskPictureList, getDevelopDesignTaskList, getLongCommissionTaskList, getReductionCostList, notPassReductionCostTask, passReductionCostTask, pauseCommissionTaskPicture, pauseDevelopDesignTask, pauseLongCommissionTask, pauseReductionCostTask, updateCommissionTaskPicture, updateDevelopDesignTask, updateLongCommissionTask, updateReductionCostTask } from '/@/api/devlocal/commission'
+import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import type { CSSProperties } from 'vue'
+import {
+  continueCommissionTaskPicture,
+  continueDevelopDesignTask,
+  continueLongCommissionTask,
+  continueReductionCostTask,
+  getCommissionTaskPictureList,
+  getDevelopDesignTaskList,
+  getLongCommissionTaskList,
+  getReductionCostList,
+  notPassReductionCostTask,
+  passReductionCostTask,
+  pauseCommissionTaskPicture,
+  pauseDevelopDesignTask,
+  pauseLongCommissionTask,
+  pauseReductionCostTask,
+  updateCommissionTaskPicture,
+  updateDevelopDesignTask,
+  updateLongCommissionTask,
+  updateReductionCostTask,
+} from '/@/api/devlocal/commission'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { IGetCommissionTaskPictureList, IGetCommissionTaskPictureListReq, IGetDevelopDesignTaskList, IGetLongCommissionTaskList, IGetLongCommissionTaskListReq, IGetReductionCostList } from '/@/type/commission/commissionType'
+import type {
+  IGetCommissionTaskPictureList,
+  IGetCommissionTaskPictureListReq,
+  IGetDevelopDesignTaskList,
+  IGetLongCommissionTaskList,
+  IGetLongCommissionTaskListReq,
+  IGetReductionCostList,
+} from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'CommissionTask'
+  name: 'CommissionTask',
 })
 const list = ref<IGetCommissionTaskPictureList[]>([])
 const longList = ref<IGetLongCommissionTaskList[]>([])
@@ -447,27 +473,27 @@ const costList = ref<IGetReductionCostList[]>([])
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
-const siteList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   site: -1,
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const costQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const pictureUpdateVisible = ref<boolean>(false)
 const pictureUpdateForm = reactive<any>({})
@@ -515,7 +541,7 @@ const handleConfirmCostUpdate = async () => {
       const { data } = await updateReductionCostTask({
         id: _id.value,
         ...filterForm,
-        commissionProportion: Number(filterForm.commissionProportion) / 100
+        commissionProportion: Number(filterForm.commissionProportion) / 100,
       })
       if (data) {
         $baseMessage('修改采购降本任务成功！', 'success')
@@ -540,7 +566,7 @@ const handlePauseCost = async (row: IGetReductionCostList) => {
   }
   $baseConfirm('确定暂停当前采购降本任务吗？', null, async () => {
     const { data } = await pauseReductionCostTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('暂停成功！', 'success')
@@ -555,7 +581,7 @@ const handleContinueCost = async (row: IGetReductionCostList) => {
   }
   $baseConfirm('确定继续当前采购降本任务吗？', null, async () => {
     const { data } = await continueReductionCostTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('继续成功！', 'success')
@@ -570,7 +596,7 @@ const handleNotPassCost = async (row: IGetReductionCostList) => {
   }
   $baseConfirm('确定不通过当前采购降本任务吗？', null, async () => {
     const { data } = await notPassReductionCostTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('不通过成功！', 'success')
@@ -585,7 +611,7 @@ const handlePassCost = async (row: IGetReductionCostList) => {
   }
   $baseConfirm('确定审核通过当前采购降本任务吗？', null, async () => {
     const { data } = await passReductionCostTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('审核通过成功！', 'success')
@@ -599,7 +625,7 @@ const handleConfirmDevelopUpdate = async () => {
       const { data } = await updateDevelopDesignTask({
         id: _id.value,
         baseProportion: Number(developForm.baseProportion) / 100,
-        rewardProportion: Number(developForm.rewardProportion) / 100
+        rewardProportion: Number(developForm.rewardProportion) / 100,
       })
       if (data) {
         $baseMessage('修改产品开发设计任务成功！', 'success')
@@ -612,7 +638,7 @@ const handleConfirmDevelopUpdate = async () => {
 const handlePauseDevelop = async (row: IGetDevelopDesignTaskList) => {
   $baseConfirm('确定暂停当前产品开发设计任务吗？', null, async () => {
     const { data } = await pauseDevelopDesignTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('暂停成功！', 'success')
@@ -627,7 +653,7 @@ const handleContinueDevelop = async (row: IGetDevelopDesignTaskList) => {
   }
   $baseConfirm('确定继续当前产品开发设计任务吗？', null, async () => {
     const { data } = await continueDevelopDesignTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('继续成功！', 'success')
@@ -638,7 +664,7 @@ const handleContinueDevelop = async (row: IGetDevelopDesignTaskList) => {
 const handlePauseLong = async (row: IGetLongCommissionTaskList) => {
   $baseConfirm('确定暂停当前美工长期任务吗？', null, async () => {
     const { data } = await pauseLongCommissionTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('暂停成功！', 'success')
@@ -653,7 +679,7 @@ const handleContinueLong = async (row: IGetLongCommissionTaskList) => {
   }
   $baseConfirm('确定继续当前美工长期任务吗？', null, async () => {
     const { data } = await continueLongCommissionTask({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('继续成功！', 'success')
@@ -696,14 +722,25 @@ const showLongUpdate = (row: IGetLongCommissionTaskList) => {
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   const name = tab.props.name
-  if (name === 0) {
-    queryData()
-  } else if (name === 1) {
-    longQueryData()
-  } else if (name === 2) {
-    developQueryData()
-  } else {
-    costQueryData()
+  switch (name) {
+    case 0: {
+      queryData()
+
+      break
+    }
+    case 1: {
+      longQueryData()
+
+      break
+    }
+    case 2: {
+      developQueryData()
+
+      break
+    }
+    default: {
+      costQueryData()
+    }
   }
 }
 const handleConfirmUpdatePicture = async () => {
@@ -715,7 +752,7 @@ const handleConfirmUpdatePicture = async () => {
         ...filterForm,
         cooperationCommissionRatio: Number(filterForm.cooperationCommissionRatio) / 100,
         individualCommissionRate: Number(filterForm.individualCommissionRate) / 100,
-        lowRate: Number(filterForm.lowRate) / 100
+        lowRate: Number(filterForm.lowRate) / 100,
       })
       if (data) {
         $baseMessage('修改美工图片任务成功！', 'success')
@@ -739,7 +776,7 @@ const showPictureUpdate = (row: IGetCommissionTaskPictureList) => {
 const handlePausePicture = async (row: IGetCommissionTaskPictureList) => {
   $baseConfirm('确定暂停当前美工图片任务吗？', null, async () => {
     const { data } = await pauseCommissionTaskPicture({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('暂停成功！', 'success')
@@ -754,7 +791,7 @@ const handleContinuePicture = async (row: IGetCommissionTaskPictureList) => {
   }
   $baseConfirm('确定继续当前美工图片任务吗？', null, async () => {
     const { data } = await continueCommissionTaskPicture({
-      id: row.id!
+      id: row.id!,
     })
     if (data) {
       $baseMessage('继续成功！', 'success')
@@ -888,15 +925,15 @@ const fetchCostData = async () => {
   }
   listLoading.value = false
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === 'SKU' || label === '零件名' || label === '供应商') {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 onBeforeMount(() => {

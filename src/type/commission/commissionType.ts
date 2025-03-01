@@ -512,6 +512,10 @@ export interface IGetCommissionDetailLongList {
    */
   exchangeRate?: number
   /**
+   * 当月销售
+   */
+  monthSales?: number
+  /**
    * 主键id
    */
   id?: number
@@ -553,7 +557,6 @@ export interface IGetCommissionDetailDevelopListReq {
   pageSize: number
 }
 export interface IGetCommissionDetailDevelopListRes {
-
   data?: {
     list: IGetCommissionDetailDevelopList[]
     total: number
@@ -577,6 +580,10 @@ export interface IGetCommissionDetailDevelopList {
    * 当月提成
    */
   currentMonthBonus?: number
+  /**
+   * 提成角色
+   */
+  commissionRole?: string
   /**
    * 描述
    */
@@ -636,7 +643,7 @@ export interface IGetCommissionDetailDevelopList {
   /**
    * 用户名
    */
-  userName?: string;
+  userName?: string
 }
 export interface IGetReductionCostDetailListReq {
   keyWord: string
