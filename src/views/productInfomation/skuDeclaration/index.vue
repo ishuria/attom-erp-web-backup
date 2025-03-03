@@ -30,7 +30,7 @@
     >
       <el-table-column fixed="left" label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImgUrl" style="width: 75px; height: 75px; display: block;" @click="showImagePreview(row.skuImgUrl)">
+          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="showImagePreview(row.skuImgUrl)">
             <template #error>
               <div class="image-slot">
                 <el-icon/>
@@ -67,42 +67,32 @@
         <template #default="{ row }">
           <el-select
             v-model="row.htsUs"
-            clearable
-            default-first-option
+            
             filterable
-            :loading="peopleLoading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remotePeopleMethod"
-          >
-            <el-option
+
+          />
+            <!-- <el-option
               v-for="item in peopleOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
-          </el-select>
+          </el-select> -->
         </template>
       </el-table-column>
       <el-table-column label="HTS欧洲" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.htsEurope"
-            clearable
-            default-first-option
             filterable
-            :loading="peopleLoading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remotePeopleMethod"
-          >
-            <el-option
+          />
+            <!-- <el-option
               v-for="item in peopleOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
-          </el-select>
+          </el-select> -->
         </template>
       </el-table-column>
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
@@ -254,29 +244,7 @@ defineOptions({
   name: 'SkuDeclaration',
 })
 
-const peopleLoading = ref(false) //搜索产品经理和产品设计loading
-const peopleOptions = ref<any[]>([]) //搜索选项
-const peopleList = ref<any[]>([]) //搜索列表
-const remotePeopleMethod = async (query: string) => {
-  if (query) {
-    // const { data } = await getProductAllName({
-    //     name: query
-    // })
 
-    // peopleList.value = data.map((item: any) => {
-    //     return { value: `${item}`, label: `${item}` }
-    // })
-    // peopleLoading.value = true
-    // setTimeout(() => {
-    //     peopleLoading.value = false
-    //     peopleOptions.value = peopleList.value.filter((item) => {
-    //         return item.label.toLowerCase().includes(query.toLowerCase())
-    //   })
-    // }, 200)
-  } else {
-    peopleOptions.value = []
-  }
-}
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(false)
@@ -475,13 +443,13 @@ onBeforeMount(() => {
   padding-bottom: 0;
 }
 .el-table :deep(.clear-padding .cell) {
-  padding-left: 0;
   padding-right: 0;
+  padding-left: 0;
 }
 .custom-tooltip {
-  white-space: pre-wrap; 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>
   

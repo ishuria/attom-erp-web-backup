@@ -100,8 +100,16 @@
       <el-table-column label="宽(cm)" min-width="90" prop="width"/>
       <el-table-column label="高(cm)" min-width="90" prop="height"/>
       <el-table-column label="重量(g)" prop="weight"/>
-      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
-      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
+      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient" :width="flexColumnWidth(list, '重量系数', 'weightCoefficient')">
+        <template #default="{ row }">
+          {{ row.weightCoefficient != null ? row.weightCoefficient.toFixed(4) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient" :width="flexColumnWidth(list, '体积系数', 'volumeCoefficient')">
+        <template #default="{ row }">
+          {{ row.volumeCoefficient != null ? row.volumeCoefficient.toFixed(4) : '' }}
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template #default="{ row }">
           <el-dropdown>
@@ -153,7 +161,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import { handleMatched, handleTabs } from '/@/utils/routes'
-import { calculateBrColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 import handleClipboard from '~/src/utils/clipboard'
 
 defineOptions({

@@ -4,12 +4,17 @@
       <el-tab-pane label="明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker v-model="queryForm.date" style="max-width: 300px;" type="monthrange" />
+            <el-date-picker 
+              v-model="queryForm.date" 
+              style="max-width: 300px;" 
+              type="monthrange" 
+  
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -98,7 +103,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-date-picker v-model="queryForm.date" style="max-width: 300px;" type="monthrange" />
+                <el-date-picker v-model.trim="queryForm.date" style="max-width: 300px;" type="monthrange"/>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
@@ -108,7 +113,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -157,12 +162,13 @@
     <vab-dialog
       v-model="settingVisible"
       title="产品经理考核设定和追踪"
+      top="10vh"
     >
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="settingQueryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="settingQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="querySettingData" @keyup.enter="querySettingData" />
+              <el-input v-model.trim="settingQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="querySettingData" @keyup.enter="querySettingData" />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="settingListLoading" type="primary" @click="querySettingData" />
@@ -171,36 +177,40 @@
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table 
-        border 
+        v-loading="settingListLoading" 
+        border
         :cell-style="cellStyle" 
         class="noneHoverTable" 
-        :data="fakeData" 
+        :data="settingList" 
         :header-cell-style="{ textAlign: 'center' }" 
-        stripe 
+        max-height="700" 
+        stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="姓名" min-width="100" prop="name"/>
+        <el-table-column label="姓名" min-width="100" prop="userName"/>
         <el-table-column label="月份" min-width="100" prop="month"/>
-        <el-table-column label="总考核完成数" min-width="120" prop=""/>
-        <el-table-column label="总考核数" min-width="100" prop="">
+        <el-table-column label="总考核完成数" min-width="120" prop="assessmentNumberFinish"/>
+        <el-table-column label="总考核数" min-width="100" prop="assessmentNumber">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.number1" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.assessmentNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
-            <span>{{ row.number1 }}</span>
+            <span>{{ row.assessmentNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="OEM完成数" min-width="110" prop=""/>
-        <el-table-column label="OEM考核数" min-width="110">
+        <el-table-column label="OEM完成数" min-width="110" prop="oemFinish"/>
+        <el-table-column label="OEM考核数" min-width="110" prop="oem">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.number2" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.oem" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
-            <span>{{ row.number2 }}</span>
+            <span>{{ row.oem }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="考核未达标" min-width="110" prop="">
-          <el-checkbox :false-value="0" :true-value="1" />
+        <el-table-column label="考核未达标" min-width="110" prop="status">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
+          </template>
         </el-table-column>
       </el-table>
       <vab-pagination
@@ -219,21 +229,22 @@ import { Search } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import type { CSSProperties } from 'vue'
+import { getProductManagerAssessmentList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
+import type { IGetProductManagerAssessmentList } from '/@/type/employeeManagement/performanceStatistics'
 
 defineOptions({
   name: 'PerformanceStatistics'
 })
 
-const fakeData = [
-  { month: '2025-12', number1: 33, number2: 66 }
-]
+
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  date: []
 })
 const settingVisible = ref<boolean>(false)
 const settingQueryForm = reactive<any>({
@@ -243,28 +254,27 @@ const settingQueryForm = reactive<any>({
 })
 const settingTotal = ref<number>(0)
 const settingListLoading = ref<boolean>(false)
+const settingList = ref<IGetProductManagerAssessmentList[]>([])
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+const changeInput = async (row: IGetProductManagerAssessmentList, column: any, cell: HTMLTableCellElement) => {
 
-const firstChild = cell?.children[0]?.children[0]
-const secondChild = cell?.children[0]?.children[1]
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
-if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-  return
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+    focusAndSelectInput(cell)
+  }
 }
-
-copyRow = JSON.parse(JSON.stringify(row))
-
-if (firstChild.classList.contains('none')) {
-  firstChild.classList.remove('none')
-  secondChild.classList.add('none')
-
-  focusAndSelectInput(cell)
-}
-
-}
-// table blur事件
-const clickCancel = async (event: any, value: any) => {
+// 考核数设定修改
+const clickCancel = async (event: any, value: IGetProductManagerAssessmentList) => {
   const rootElement = getRootElement(event.srcElement, ".cell")
 
   if (rootElement) {
@@ -279,17 +289,39 @@ const clickCancel = async (event: any, value: any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-  
+    await updateProductManagerAssessment({
+      id: value.id,
+      oem: value.oem,
+      totalAssessment: value.assessmentNumber,
+      status: value.status,
+    })
   }
 }
-const fetchSettingData = () => {}
+// 修改考核数设定的status
+const handleChangeSettingStatus = async (row: IGetProductManagerAssessmentList) => {
+  await updateProductManagerAssessment({
+    id: row.id,
+    status: row.status,
+    oem: row.oem,
+    totalAssessment: row.assessmentNumber
+  })
+}
+// 考核数设定获取数据 
+const fetchSettingData = async () => {
+  settingListLoading.value = true
+  const { data } = await getProductManagerAssessmentList(settingQueryForm)
+  settingTotal.value = data.total
+  settingList.value = data.list
+  settingListLoading.value = false
+}
 const querySettingData = () => {
   settingQueryForm.pageNo = 1
   fetchSettingData()
 }
+// 展示考核数设定
 const showSetting = () => {
-  // fetchSettingData()
   settingVisible.value = true
+  fetchSettingData()
 }
 const handleSettingCurrentChange = (value: number) => {
   settingQueryForm.pageNo = value
@@ -334,6 +366,12 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'center'
   }
 }
+onMounted(() => {
+  queryForm.date = [
+    new Date(new Date().getFullYear(), new Date().getMonth()), // 当前月份的第一天
+    new Date(new Date().getFullYear(), new Date().getMonth()) // 当前月份的最后一天
+  ]
+})
 </script>
 
 <style lang="scss" scoped>
