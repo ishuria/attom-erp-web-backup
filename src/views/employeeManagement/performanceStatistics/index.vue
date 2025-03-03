@@ -161,6 +161,7 @@
     <!-- 考核数设定 -->
     <vab-dialog
       v-model="settingVisible"
+      :draggable="false"
       title="产品经理考核设定和追踪"
       top="10vh"
     >

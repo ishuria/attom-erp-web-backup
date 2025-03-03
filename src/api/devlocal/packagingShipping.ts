@@ -540,3 +540,16 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
     params
   })
 }
+
+// ---------------------工时合并----------------------
+
+/**
+ * 获取全部sku信息
+ * @returns 
+ */
+export function getProductAllSkuSelectList(): Promise<{ data: { skuId: number, sku: string }[] }> {
+  return request({
+    url: `${BASE_API}/product/getSku/select/list`,
+    method: 'get'
+  })
+}
