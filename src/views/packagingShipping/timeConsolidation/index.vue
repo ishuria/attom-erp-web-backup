@@ -78,7 +78,7 @@
       <template #footer>
         <div style="text-align: center;">
           <el-button type="danger" @click="addClassVisible = false">取消</el-button>
-          <el-button type="success">确定</el-button>
+          <el-button type="success" @click="handleConfirmAddClass">确定</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -148,6 +148,12 @@ const queryForm = reactive<any>({
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 
+const handleConfirmAddClass = () => {
+  console.log(transferData.value);
+  console.log(transferValue.value);
+  
+  
+}
 const handleOpenAddClass = async () => {
   addClassVisible.value = true
   states.value= []

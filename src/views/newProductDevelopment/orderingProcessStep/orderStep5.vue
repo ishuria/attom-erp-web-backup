@@ -560,6 +560,12 @@ const handleChangeProductManager = async (row: any, prop: any) => {
           
           // 点击了修改,manager对应的就是id,让managerId就等于id
           exchangeList.value[16][key] = exchangeList.value[8][key]
+          if (exchangeList.value[16][key] === exchangeList.value[17][key]) {
+            $baseMessage("产品经理和产品设计不能相同！", 'error')
+            row[key] = ''
+            row[prop] = ''
+            exchangeList.value[16][key] = null
+          }
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
               productLength: exchangeList.value[1][key],
@@ -581,6 +587,11 @@ const handleChangeProductManager = async (row: any, prop: any) => {
       })
   } else {
     exchangeList.value[16][prop] = exchangeList.value[8][prop]
+    if (exchangeList.value[16][prop] === exchangeList.value[17][prop]) {
+      $baseMessage("产品经理和产品设计不能相同！", 'error')
+      row[prop] = ''
+      exchangeList.value[16][prop] = null
+    }
     await reviewStepNo5SkuInfoPerfect({
       productLength: exchangeList.value[1][prop],
       productWidth: exchangeList.value[2][prop],
@@ -604,11 +615,18 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
     const newValue = row[prop];  
 
       Object.keys(row).forEach(async key => {
+        
         if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue // 将其他单元格的值更新为当前输入框的值
           
           // 点击了修改,design对应的就是id,让designId就等于id
           exchangeList.value[17][key] = exchangeList.value[9][key]
+          if (exchangeList.value[16][key] === exchangeList.value[17][key]) {
+            $baseMessage("产品经理和产品设计不能相同！", 'error')
+            row[key] = ''
+            row[prop] = ''
+            exchangeList.value[17][key] = null
+          }
           const update = async () => {
             await reviewStepNo5SkuInfoPerfect({
               productLength: exchangeList.value[1][key],
@@ -630,6 +648,11 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
       })
   } else {
     exchangeList.value[17][prop] = exchangeList.value[9][prop]
+    if (exchangeList.value[16][prop] === exchangeList.value[17][prop]) {
+      $baseMessage("产品经理和产品设计不能相同！", 'error')
+      row[prop] = ''
+      exchangeList.value[17][prop] = null
+    }
     await reviewStepNo5SkuInfoPerfect({
       productLength: exchangeList.value[1][prop],
       productWidth: exchangeList.value[2][prop],
