@@ -116,7 +116,7 @@ const setFullscreen = () => {
 }
 
 watch(
-  props,
+  () => props.fullscreen,
   () => {
     isFullscreen.value = props.fullscreen
   },
