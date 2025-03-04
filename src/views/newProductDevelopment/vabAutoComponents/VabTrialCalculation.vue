@@ -110,7 +110,7 @@
         <el-table-column label="售价" prop="sellingPrice">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+              <el-input v-model="row.sellingPrice" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
@@ -452,6 +452,24 @@ const clickCancel = async (event:any,value:IProgressSample) =>{
   await updateTrialCalculation({ ...value, tariff: `${parseInt(value.tariff!) / 100}`, grossMarginRate: `${parseInt(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
 }
 
+// 修改售价 重新刷新
+const clickSaleCancel = async (event:any,value:IProgressSample) =>{  
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+    
+  await updateTrialCalculation({ ...value, tariff: `${parseInt(value.tariff!) / 100}`, grossMarginRate: `${parseInt(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  fetchData()
+}
 const fetchData = async () => {
   sampleList.value = []
 
