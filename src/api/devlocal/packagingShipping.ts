@@ -1,6 +1,7 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
+
 import type {
   IAddQualityCheckReq,
   IBooleanResp,
@@ -54,6 +55,13 @@ import type {
   IUpdateSignLog,
   IUserIds
 } from '/@/type/packagingShipping/packagingType'
+
+import type {
+  IAddPackagingTimeConsolidationReq,
+  IAddSkuPackagingTimeConsolidationReq,
+  IGetPackagingTimeConsolidationListReq,
+  IGetPackagingTimeConsolidationListRes
+} from '/@/type/packagingShipping/timeConsolidationType'
 
 export function getSignList(params: IGetSignListQuery): Promise<IGetSignListResp> {
   return request({
@@ -541,7 +549,7 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
   })
 }
 
-// ---------------------工时合并----------------------
+// ------------------------------------------- 工时合并 --------------------------------------------
 
 /**
  * 获取全部sku信息
@@ -551,5 +559,67 @@ export function getProductAllSkuSelectList(): Promise<{ data: { skuId: number, s
   return request({
     url: `${BASE_API}/product/getSku/select/list`,
     method: 'get'
+  })
+}
+/**
+ * 获取工时合并列表
+ * @param params 
+ * @returns 
+ */
+export function getPackagingTimeConsolidationList(params: IGetPackagingTimeConsolidationListReq): Promise<IGetPackagingTimeConsolidationListRes> {
+  return request({
+    url: `${BASE_API}/packaging/time/consolidation/list`,
+    method: 'get',
+    params
+  })
+}
+
+/**
+ * 工时合并-新增合并分类
+ * @param data 
+ * @returns 
+ */
+export function addPackagingTimeConsolidation(data: IAddPackagingTimeConsolidationReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/packaging/time/consolidation/add`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 工时合并-添加SKU
+ * @param data 
+ * @returns 
+ */
+export function addSkuPackagingTimeConsolidation(data: IAddSkuPackagingTimeConsolidationReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/packaging/time/consolidation/add/sku`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 工时合并-删除分类
+ * @param data 
+ * @returns 
+ */
+export function deletePackagingTimeConsolidation(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/packaging/time/consolidation/delete`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 工时合并-删除SKU
+ * @param data 
+ * @returns 
+ */
+export function deleteSkuPackagingTimeConsolidation(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/packaging/time/consolidation/delete/sku`,
+    method: 'post',
+    params
   })
 }

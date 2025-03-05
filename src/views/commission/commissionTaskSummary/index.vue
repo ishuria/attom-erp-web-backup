@@ -16,7 +16,7 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="queryForm.keyWord"
+                  v-model.trim="queryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -103,7 +103,7 @@
             <el-form inline :model="longQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="longQueryForm.keyWord"
+                  v-model.trim="longQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="longQueryData"
@@ -176,7 +176,7 @@
             <el-form inline :model="developQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="developQueryForm.keyWord"
+                  v-model.trim="developQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="developQueryData"
@@ -240,7 +240,7 @@
             <el-form inline :model="costQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model="costQueryForm.keyWord"
+                  v-model.trim="costQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="costQueryData"
@@ -298,13 +298,13 @@
               {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="280">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-link type="success" :underline="false" @click="handlePassCost(row)">审核通过</el-link>
-              <el-link type="danger" :underline="false" @click="handleNotPassCost(row)">不通过</el-link>
-              <el-link type="primary" :underline="false" @click="showCostUpdate(row)">修改</el-link>
-              <el-link type="primary" :underline="false" @click="handlePauseCost(row)">暂停</el-link>
-              <el-link type="primary" :underline="false" @click="handleContinueCost(row)">继续</el-link>
+              <el-link v-if="row.status === '待审核'" type="success" :underline="false" @click="handlePassCost(row)">审核通过</el-link>
+              <el-link v-if="row.status === '待审核'" type="danger" :underline="false" @click="handleNotPassCost(row)">不通过</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="showCostUpdate(row)">修改</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="handlePauseCost(row)">暂停</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="handleContinueCost(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>

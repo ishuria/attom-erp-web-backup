@@ -542,3 +542,17 @@ export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq
     data,
   })
 }
+
+
+/**
+ * @description 采购订单-查询采购降本默认金额
+ * @param params 
+ * @returns 
+ */
+export function getPurchaseCostReduction(params: { poComponentId: number }): Promise<{ data: { beforePrice: number, afterPrice: number } }> {
+  return request({
+    url: `${BASE_API}/purchase/cost/reduction/get`,
+    method: 'post',
+    params,
+  })
+}

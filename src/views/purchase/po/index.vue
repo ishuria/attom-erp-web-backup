@@ -954,7 +954,7 @@ import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { ref } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
-import { aggregationContract, applyPurchaseReductionCost, delPayRecord, deletePo, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
+import { aggregationContract, applyPurchaseReductionCost, delPayRecord, deletePo, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, getPurchaseCostReduction, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
@@ -1599,7 +1599,7 @@ const handleConfirmGenerateMoneyTransfer = async () => {
 }
 
 // 降本提成申请PO
-const handleReduceCost = () => {
+const handleReduceCost = async () => {
   // 判断是否选中零件操作
   if (selectedCompArray.value.length === 0) {
     $baseMessage('您未选中零件操作列的任何行！', 'warning')
@@ -1611,6 +1611,9 @@ const handleReduceCost = () => {
   }
   reductionCostVisible.value = true
   _poComponentId.value = selectedCompArray.value[0].componentId
+  const { data } = await getPurchaseCostReduction({ poComponentId: _poComponentId.value })
+  reductionCostForm.beforePrice = data.beforePrice
+  reductionCostForm.afterPrice = data.afterPrice
 }
 // 打开自动签收设定弹窗
 const handleShowAutomaticSignature = () => {
