@@ -77,8 +77,7 @@
         <div class="transfer-container">
           <el-transfer 
             v-model="transferValue" 
-            :data="addList" 
-         
+            :data="addList"
             filterable
             :titles="['源列', '目的列']"
           >
@@ -180,8 +179,6 @@ const useUser = useUserStore()
 const currentUser = useUser.getUsername
 const groupName = ref<string>('')
 
-// // 从后端获取的所有数据
-// const allData = ref<any[]>([])
 // // SKU的总数
 // const totalSku = computed(() => allData.value.length)
 // const currentPageData = computed(() => {
@@ -194,11 +191,10 @@ const fetchAddData = async () => {
   const { data } = await getPackagingSkuSelectList(addQueryForm)
   addTotal.value = data.total
   addList.value = data.list
-  addList.value.forEach((item) => {
-    item.label = item.sku
-    item.key = item.skuId
-  })
-  // console.log(addList.value);
+  addList.value = data.list.map(item => ({
+    label: item.sku,
+    key: item.skuId,
+  }))
 }
 const handleOpenAddClass = async () => {
   addClassVisible.value = true
