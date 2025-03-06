@@ -423,18 +423,18 @@
                 </div>
               </vab-draggable>
             </el-popover>
-            <el-form inline :model="queryForm">
+            <el-form inline :model="asinQueryForm">
               <el-form-item>
                 <el-input
-                  v-model.trim="queryForm.keyWord"
+                  v-model.trim="asinQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keyup.enter="queryData"
+                  @input="queryAsinData"
+                  @keyup.enter="queryAsinData"
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryAsinData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -744,18 +744,18 @@
                 </div>
               </vab-draggable>
             </el-popover>
-            <el-form inline :model="queryForm">
+            <el-form inline :model="pAsinQueryForm">
               <el-form-item>
                 <el-input
-                  v-model.trim="queryForm.keyWord"
+                  v-model.trim="pAsinQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keyup.enter="queryData"
+                  @input="queryPAsinData"
+                  @keyup.enter="queryPAsinData"
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryPAsinData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -986,33 +986,33 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
-  filterAmazonSKUList,
-  filterOperationAmazonAsinList,
-  getCurrencyASINAmazonOperation,
-  getCurrencyList,
-  getCurrencyParentASINAmazonOperation,
-  getCurrencySKUAmazonOperation,
-  getDevelopUserList,
-  getOperationAmazonSKUList,
-  getOperationAsinList,
-  getOperationColumnList,
-  getOperationParentAsinList,
-  getUserAmazonOperation,
-  hideOrShowOperationColumn,
-  updateCurrencyASINAmazonOperation,
-  updateCurrencyParentASINAmazonOperation,
-  updateCurrencySKUAmazonOperation,
-  updateOperationASINOperateTypeList,
-  updateOperationSKUDisContinuedStatus,
-  updateOperationSKUOperateTypeList,
-  updateRemarkAmazonOperation,
-  updateSortOperationColumn,
+filterAmazonSKUList,
+filterOperationAmazonAsinList,
+getCurrencyASINAmazonOperation,
+getCurrencyList,
+getCurrencyParentASINAmazonOperation,
+getCurrencySKUAmazonOperation,
+getDevelopUserList,
+getOperationAmazonSKUList,
+getOperationAsinList,
+getOperationColumnList,
+getOperationParentAsinList,
+getUserAmazonOperation,
+hideOrShowOperationColumn,
+updateCurrencyASINAmazonOperation,
+updateCurrencyParentASINAmazonOperation,
+updateCurrencySKUAmazonOperation,
+updateOperationASINOperateTypeList,
+updateOperationSKUDisContinuedStatus,
+updateOperationSKUOperateTypeList,
+updateRemarkAmazonOperation,
+updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import type {
-  IGetOperationAmazonSKUList,
-  IGetOperationAsinList,
-  IGetOperationColumnList,
-  IGetOperationParentAsinList,
+IGetOperationAmazonSKUList,
+IGetOperationAsinList,
+IGetOperationColumnList,
+IGetOperationParentAsinList,
 } from '/@/type/storeOperation/productPerformanceType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
@@ -1867,6 +1867,7 @@ const fetchOperateUserList = async () => {
 }
 
 const fetchData = async () => {
+  if (listLoading.value) return
   listLoading.value = true
   const { site, ...filterQueryForm } = queryForm
   const { data } = await getOperationAmazonSKUList({

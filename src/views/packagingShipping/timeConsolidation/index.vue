@@ -75,7 +75,6 @@
       <div style="margin-top: 20px; text-align: center;">
         <div style="margin-bottom: 20px; font-size: medium;">选择合并计算工时的SKU</div>
         <div class="transfer-container">
-          
           <el-transfer 
             v-model="transferValue" 
             :data="addList" 
@@ -92,6 +91,9 @@
                 @size-change="handlePageSizeChange"
               />
             </template>
+            <template #right-footer >
+              <div></div>
+            </template>
           </el-transfer>
         </div>
       </div>
@@ -107,14 +109,14 @@
     <vab-dialog
       v-model="addVisible"
       title="添加SKU"
-      width="55%"
+      width="75%"
     >
       <div style="text-align: center;">
         <div style="margin-bottom: 20px; font-size: medium;">选择合并计算工时的SKU</div>
         <div class="transfer-container">
           <el-transfer 
             v-model="transferValue" 
-            :data="transferData" 
+            :data="addList" 
             filterable 
             :titles="['源列', '目的列']"
           >
@@ -126,6 +128,9 @@
                 @current-change="handlePageChange"
                 @size-change="handlePageSizeChange"
               />
+            </template>
+            <template #right-footer >
+              <div></div>
             </template>
           </el-transfer>
         </div>
@@ -159,8 +164,6 @@ const addQueryForm = reactive<IGetPackagingTimeConsolidationListReq>({
   pageNo: 1,
   pageSize: 20
 })
-
-const transferData = ref<any[]>([]) // 初始化为空数组
 const transferValue = ref<number[]>([])
 const addVisible = ref<boolean>(false)
 const addClassVisible = ref<boolean>(false)
@@ -177,6 +180,16 @@ const useUser = useUserStore()
 const currentUser = useUser.getUsername
 const groupName = ref<string>('')
 
+// // 从后端获取的所有数据
+// const allData = ref<any[]>([])
+// // SKU的总数
+// const totalSku = computed(() => allData.value.length)
+// const currentPageData = computed(() => {
+
+//   const start = (addQueryForm.pageNo - 1) * addQueryForm.pageSize
+//   return allData.value.slice(start, start + addQueryForm.pageSize)
+
+// })
 const fetchAddData = async () => {
   const { data } = await getPackagingSkuSelectList(addQueryForm)
   addTotal.value = data.total
@@ -185,21 +198,8 @@ const fetchAddData = async () => {
     item.label = item.sku
     item.key = item.skuId
   })
-  console.log(addList.value);
+  // console.log(addList.value);
 }
-// const filterMethod = debounce((query: string, item: Record<string, any>) => {
-//   addQueryForm.keyWord = query
-//   queryAddData()
-// }, 500)
-// 监听 `keyWord` 变化
-// watch(() => addQueryForm.keyWord, (newVal) => {
-//   if (!newVal) fetchData(); // 关键词为空时，恢复分页查询
-// });
-// const queryAddData = () => {
-//   addQueryForm.pageNo = 1
-//   fetchAddData()
-// }
-
 const handleOpenAddClass = async () => {
   addClassVisible.value = true
   transferValue.value = []
@@ -269,8 +269,6 @@ const handleConfirmAddClass = async () => {
     addClassVisible.value = false
     queryData()
   }
-  // console.log(transferData.value);
-  // console.log(transferValue.value);
 }
 
 const handleOpenAdd = (row: IGetPackagingTimeConsolidationList) => {

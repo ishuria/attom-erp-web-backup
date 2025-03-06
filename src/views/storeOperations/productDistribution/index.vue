@@ -199,6 +199,7 @@ const handleChangeUser = async (row: IGetDistributionProductList) => {
     if (data) {
       const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
       row.userTypeList = typeList
+      row.typeId = undefined
     }
   } catch {}
 }
