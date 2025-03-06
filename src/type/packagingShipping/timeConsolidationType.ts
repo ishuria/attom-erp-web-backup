@@ -60,3 +60,10 @@ export interface IAddSkuPackagingTimeConsolidationReq {
   skuIds: number[]
   addPerson: string
 }
+
+export interface IGetPackagingSkuSelectListRes {
+  data: {
+    total: number
+    list: { skuId: number, sku: string }[]
+  }
+}

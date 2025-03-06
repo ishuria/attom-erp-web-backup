@@ -113,7 +113,7 @@
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div style="width: 100%; height: 50px;">
-                  <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
                 </div>
               </span>
               <span v-if="item.label === '上新'">
@@ -197,6 +197,7 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'ProductPerformanceArt'
 })
+const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const activeName = ref<number>(0)
 const currency = ref<number | undefined>(0)
 const checkAll = ref<boolean>(false)

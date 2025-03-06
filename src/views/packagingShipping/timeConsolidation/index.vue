@@ -75,10 +75,11 @@
       <div style="margin-top: 20px; text-align: center;">
         <div style="margin-bottom: 20px; font-size: medium;">选择合并计算工时的SKU</div>
         <div class="transfer-container">
+          
           <el-transfer 
             v-model="transferValue" 
-            :data="currentPageData" 
-            :filter-method="filterMethod" 
+            :data="addList" 
+         
             filterable
             :titles="['源列', '目的列']"
           >
@@ -86,7 +87,7 @@
               <vab-pagination
                 :current-page="addQueryForm.pageNo"
                 :page-size="addQueryForm.pageSize"
-                :total="totalItems"
+                :total="addTotal"
                 @current-change="handlePageChange"
                 @size-change="handlePageSizeChange"
               />
@@ -116,7 +117,17 @@
             :data="transferData" 
             filterable 
             :titles="['源列', '目的列']"
-          />
+          >
+            <template #left-footer>
+              <vab-pagination
+                :current-page="addQueryForm.pageNo"
+                :page-size="addQueryForm.pageSize"
+                :total="addTotal"
+                @current-change="handlePageChange"
+                @size-change="handlePageSizeChange"
+              />
+            </template>
+          </el-transfer>
         </div>
       </div>
     
@@ -132,7 +143,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { addPackagingTimeConsolidation, addSkuPackagingTimeConsolidation, deletePackagingTimeConsolidation, deleteSkuPackagingTimeConsolidation, getPackagingTimeConsolidationList, getProductAllSkuSelectList } from '/@/api/devlocal/packagingShipping'
+import { addPackagingTimeConsolidation, addSkuPackagingTimeConsolidation, deletePackagingTimeConsolidation, deleteSkuPackagingTimeConsolidation, getPackagingSkuSelectList, getPackagingTimeConsolidationList } from '/@/api/devlocal/packagingShipping'
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackagingTimeConsolidationList, IGetPackagingTimeConsolidationListReq } from '/@/type/packagingShipping/timeConsolidationType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -141,15 +152,16 @@ defineOptions({
   name: 'TimeConsolidation'
 })
 
-const addQueryForm = reactive<any>({
+const addList = ref<any[]>([])
+const addTotal = ref<number>(0)
+const addQueryForm = reactive<IGetPackagingTimeConsolidationListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
-const states = ref<string[]>([])
-const initials = ref<number[]>([])
+
 const transferData = ref<any[]>([]) // 初始化为空数组
-const transferValue = ref([])
+const transferValue = ref<number[]>([])
 const addVisible = ref<boolean>(false)
 const addClassVisible = ref<boolean>(false)
 const queryForm = reactive<IGetPackagingTimeConsolidationListReq>({
@@ -159,29 +171,49 @@ const queryForm = reactive<IGetPackagingTimeConsolidationListReq>({
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-const list = ref<IGetPackagingTimeConsolidationList[]>([])
+const list = ref<any[]>([])
 let copyRow: IGetPackagingTimeConsolidationList
 const useUser = useUserStore()
 const currentUser = useUser.getUsername
 const groupName = ref<string>('')
 
-// 计算当前页数据
-const totalItems = computed(() => transferData.value.length)
-const currentPageData = computed(() => {
+const fetchAddData = async () => {
+  const { data } = await getPackagingSkuSelectList(addQueryForm)
+  addTotal.value = data.total
+  addList.value = data.list
+  addList.value.forEach((item) => {
+    item.label = item.sku
+    item.key = item.skuId
+  })
+  console.log(addList.value);
+}
+// const filterMethod = debounce((query: string, item: Record<string, any>) => {
+//   addQueryForm.keyWord = query
+//   queryAddData()
+// }, 500)
+// 监听 `keyWord` 变化
+// watch(() => addQueryForm.keyWord, (newVal) => {
+//   if (!newVal) fetchData(); // 关键词为空时，恢复分页查询
+// });
+// const queryAddData = () => {
+//   addQueryForm.pageNo = 1
+//   fetchAddData()
+// }
 
-  const start = (addQueryForm.pageNo - 1) * addQueryForm.pageSize
-  return transferData.value.slice(start, start + addQueryForm.pageSize)
-})
-const filterMethod = (query: string, item: Record<string, any>): boolean => {
-  return item.label.includes(query)
+const handleOpenAddClass = async () => {
+  addClassVisible.value = true
+  transferValue.value = []
+  fetchAddData()
 }
 // 处理页码切换
 const handlePageChange = (value: number) => {
   addQueryForm.pageNo = value
+  fetchAddData()
 }
 const handlePageSizeChange = (value: number) => {
   addQueryForm.pageNo = 1
   addQueryForm.pageSize = value
+  fetchAddData()
 }
 const handleConfirmSku = async () => {
   if (transferValue.value.length === 0) {
@@ -217,18 +249,7 @@ const handleDelSku = async (row: IGetPackagingTimeConsolidationList, index: numb
     }
   })
 }
-// 生成数据
-const generateData = () => {
-  const data: any[] = []
-  states.value.forEach((sku, index) => {
-    data.push({
-      label: sku,
-      key: initials.value[index],
-      initial: initials.value[index],
-    })
-  })
-  return data
-}
+
 const handleConfirmAddClass = async () => {
   if (!groupName.value) {
     $baseMessage("请输入分类名！", 'warning')
@@ -251,22 +272,12 @@ const handleConfirmAddClass = async () => {
   // console.log(transferData.value);
   // console.log(transferValue.value);
 }
-const handleOpenAddClass = async () => {
-  addClassVisible.value = true
-  states.value= []
-  initials.value=[]
-  transferData.value=[]
-  transferValue.value = []
-  const { data } = await getProductAllSkuSelectList()
-  data.forEach((item: any) => {
-    states.value.push(item.sku)
-    initials.value.push(item.skuId)
-  })
-  transferData.value = generateData()
-}
+
 const handleOpenAdd = (row: IGetPackagingTimeConsolidationList) => {
   addVisible.value = true
   copyRow = row
+  transferValue.value = []
+  fetchAddData()
 }
 const objectSpanMethod = ({
     row,

@@ -106,7 +106,7 @@
       <el-tab-pane label="产品经理" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-form inline>
+            <el-form inline @submit.prevent>
               <el-form-item>
                 <el-date-picker    
                   v-model="assessmentDate" 
@@ -425,13 +425,13 @@ const handleSizeChange = (value: number) => {
 }
 // 计算每行总奖金
 const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
-  row.totalBonus = 0
-  if (row.procurementBonus != null) row.totalBonus += row.procurementBonus
-  if (row.procurementCostReduction != null) row.totalBonus += row.procurementCostReduction
-  if (row.artDesignPicture != null) row.totalBonus += row.artDesignPicture
-  if (row.artDesignLongTime != null) row.totalBonus += row.artDesignLongTime
-  if (row.developmentDesign != null) row.totalBonus += row.developmentDesign
-  return row.totalBonus
+  let totalBonus = 0
+  if (row.procurementBonus != null) totalBonus += row.procurementBonus
+  if (row.procurementCostReduction != null) totalBonus += row.procurementCostReduction
+  if (row.artDesignPicture != null) totalBonus += row.artDesignPicture
+  if (row.artDesignLongTime != null) totalBonus += row.artDesignLongTime
+  if (row.developmentDesign != null) totalBonus += row.developmentDesign
+  return totalBonus
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
   const index = data.columnIndex
@@ -460,7 +460,7 @@ const handleTabChange = () => {
   }
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   // 设置默认月份为当月
   const now = dayjs();
   const startOfMonth = now.startOf('month').format('YYYY-MM')

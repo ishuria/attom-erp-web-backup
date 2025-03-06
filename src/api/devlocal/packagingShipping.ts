@@ -59,6 +59,7 @@ import type {
 import type {
   IAddPackagingTimeConsolidationReq,
   IAddSkuPackagingTimeConsolidationReq,
+  IGetPackagingSkuSelectListRes,
   IGetPackagingTimeConsolidationListReq,
   IGetPackagingTimeConsolidationListRes
 } from '/@/type/packagingShipping/timeConsolidationType'
@@ -552,13 +553,14 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
 // ------------------------------------------- 工时合并 --------------------------------------------
 
 /**
- * 获取全部sku信息
+ * 获取sku信息
  * @returns 
  */
-export function getProductAllSkuSelectList(): Promise<{ data: { skuId: number, sku: string }[] }> {
+export function getPackagingSkuSelectList(params: IGetPackagingTimeConsolidationListReq): Promise<IGetPackagingSkuSelectListRes> {
   return request({
-    url: `${BASE_API}/product/getSku/select/list`,
-    method: 'get'
+    url: `${BASE_API}/packaging/time/consolidation/getSku/list`,
+    method: 'get',
+    params
   })
 }
 /**
