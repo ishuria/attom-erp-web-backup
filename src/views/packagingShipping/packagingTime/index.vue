@@ -3,13 +3,13 @@
     <el-row :gutter="30" style="height: calc(100% - 52px)">
       <el-col :span="17" style="height: 100%">
         <vab-query-form>
-          <!-- <vab-query-form-left-panel>
-            <el-button type="primary">请假申请</el-button>
-          </vab-query-form-left-panel> -->
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel>
+            <el-button type="primary" @click="showCost">打包成本设定</el-button>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item >
-                <el-select v-model="queryForm.userId" clearable placeholder="全部人员" style="width: 30px; margin-right: 10px;" @change="queryData">
+                <el-select v-model.trim="queryForm.userId" clearable placeholder="全部人员" style="width: 30px; margin-right: 10px;" @change="queryData">
                   <el-option 
                     v-for="item in userList"
                     :key="item.value"
@@ -47,6 +47,11 @@
               </template>
             </el-table-column>
             <el-table-column label="工作时长(分钟)" prop="workerHouse" width="130" />
+            <el-table-column label="任务编号" prop="packTaskId" width="90">
+              <template #default="{ row }"> 
+                <span v-html="row.packTaskId"></span>
+              </template>
+            </el-table-column>
             <el-table-column label="PO" prop="po" width="100">
               <template #default="{ row }">
                 <span v-html="row.po"></span>
@@ -83,13 +88,13 @@
       </el-col>
       <el-col :span="7" >
         <vab-query-form>
-          <vab-query-form-left-panel :span="20" style="margin-bottom: 10px;">
+          <vab-query-form-left-panel :span="18" style="margin-bottom: 10px;">
             <el-date-picker
               v-model="date"
               end-placeholder="结束日期"
               range-separator="至"
               start-placeholder="开始日期" 
-              style="width: 100px"
+              style="width: 200px"
               type="daterange"
               unlink-panels
               value-format="YYYY-MM-DD"
@@ -104,6 +109,9 @@
               />
             </el-select>
           </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="6">  
+            <el-button type="danger">查错</el-button>
+          </vab-query-form-right-panel>
         </vab-query-form>
         <div class="flex-container">
           <el-table
@@ -168,6 +176,22 @@
         <el-button type="primary" @click="confirmModify">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 打包成本设定 -->
+    <vab-dialog
+      v-model="costVisible"
+      title="打包成本设定"
+      width="20%"
+    >
+      <el-form ref="costFormRef" :model="costForm" :rules="costRules" style="margin: auto 0;">
+        <el-form-item label="每个工时成本" prop="cost">
+          <el-input v-model="costForm.cost" type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeCost">取消</el-button>
+        <el-button type="primary" @click="confirmCost">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -176,6 +200,14 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { getMorkPackageList, getPackageTimeDay, getPackageTimeList, updatePackageTime } from '/@/api/devlocal/packagingShipping'
 
+const costVisible = ref<boolean>(false)
+const costForm = reactive<any>({
+  cost: ''
+})
+const costFormRef = ref<FormInstance>()
+const costRules = reactive<any>({
+  cost: [{ required: true, message: '请输入每个工时成本', trigger: 'blur' }]
+})
 // 日期初始化
 const date = ref<string[]>(getDefaultStringTime()); // 初始化为两个空字符串
 function getDefaultStringTime(): [string, string] {
@@ -197,6 +229,24 @@ const modifyForm = reactive<any>({
 })
 const modifyFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
+
+const confirmCost = async () => {
+  costFormRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      // const { data } = await updatePackageTime(costForm)
+      // if (data) {
+      //   $baseMessage('修改成功','success')
+      //   closeCost()
+      // }
+    }
+  })
+}
+const closeCost = () => {
+  costVisible.value = false
+}
+const showCost = () => {
+  costVisible.value = true
+}
 // 修改展示
 const showModify = (row: any) => {
   modifyVisible.value = true
@@ -271,6 +321,7 @@ const fetchData = async () => {
     item.po = item.po.replaceAll(',', '<br>');
     item.sku = item.sku.replaceAll(',', '<br>');
     item.productName = item.productName.replaceAll(',', '<br>');
+    item.packTaskId = item.packTaskId.replaceAll(',', '<br>');
   })
   listLoading.value = false
 }
