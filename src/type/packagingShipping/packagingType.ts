@@ -827,3 +827,28 @@ export interface IGeneratePackageBarcodeReq {
   nippleClampWarning: number
   brand: string
 }
+
+/**
+ * 打包工时-工时查错
+ */
+export interface ICheckingPackagingTimeErrorReq {
+  startTime: string
+  endTime: string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface ICheckingPackagingTimeErrorRes {
+  data: {
+    total: number
+    list: ICheckingPackagingTimeError[]
+  }
+}
+export interface ICheckingPackagingTimeError {
+  startTime: string
+  endTime: string
+  packPersonName: string
+  workingHours: number
+  po: string
+  sku: string
+}

@@ -5,6 +5,8 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAddQualityCheckReq,
   IBooleanResp,
+  ICheckingPackagingTimeErrorReq,
+  ICheckingPackagingTimeErrorRes,
   IConfirmEndTask,
   IConfirmStartMoreTask,
   IConfirmStartTask,
@@ -623,5 +625,38 @@ export function deleteSkuPackagingTimeConsolidation(params: { id: number }): Pro
     url: `${BASE_API}/packaging/time/consolidation/delete/sku`,
     method: 'post',
     params
+  })
+}
+
+/**
+ * 打包工时-打包成本获取
+ * @returns 
+ */
+export function getPackagingCost(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/packaging/cost`,
+    method: 'get',
+  })
+}
+/**
+ * 打包工时-修改打包成本
+ * @returns 
+ */
+export function updatePackagingCost(params: { cost: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/packaging/cost/update`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 打包工时-工时查错
+ * @returns 
+ */
+export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq): Promise<ICheckingPackagingTimeErrorRes> {
+  return request({
+    url: `${BASE_API}/packaging/time/error/checking`,
+    method: 'post',
+    data
   })
 }

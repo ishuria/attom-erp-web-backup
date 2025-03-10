@@ -110,7 +110,7 @@
             </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">  
-            <el-button type="danger">查错</el-button>
+            <el-button type="danger" @click="showErrors">查错</el-button>
           </vab-query-form-right-panel>
         </vab-query-form>
         <div class="flex-container">
@@ -129,7 +129,7 @@
               </template>
             </el-table-column>
             <el-table-column label="工时(分钟)" min-width="70" prop="workerHouse"/>
-            <el-table-column label="餐补次数" min-width="60" prop=""/>
+            <el-table-column label="餐补次数" min-width="60" prop="mealSupplement"/>
             <template #empty>
               <el-empty class="vab-data-empty" />
             </template>
@@ -192,14 +192,68 @@
         <el-button type="primary" @click="confirmCost">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 查错 -->
+    <vab-dialog
+      v-model="errorsVisible"
+      title="查错"
+      width="40%"
+    >
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="errorsQueryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model.trim="errorsQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryErrorsData" @keyup.enter="queryErrorsData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryErrorsData"/>
+              </el-form-item>
+            </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table border :data="errorList" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table-column align="center" label="开始时间" prop="startTime" width="120" >
+          <template #default="{ row }">
+            {{ row.startTime ? row.startTime.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="结束时间" prop="endTime" width="120" >
+          <template #default="{ row }">
+            {{ row.endTime ? row.endTime.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="打包人姓名" prop="packPersonName" />
+        <el-table-column align="center" label="工作时长(分钟)" prop="workingHours" />
+        <el-table-column align="center" label="PO" prop="po" width="100" />
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(errorList, 'SKU', 'sku')" />
+      </el-table>
+      <vab-pagination 
+        :current-page="errorsQueryForm.pageNo"
+        :page-size="errorsQueryForm.pageSize"
+        :total="errorsTotal"
+        @current-change="handleErrorsCurrentChange"
+        @size-change="handleErrorsSizeChange"
+      />
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { getMorkPackageList, getPackageTimeDay, getPackageTimeList, updatePackageTime } from '/@/api/devlocal/packagingShipping'
+import { checkingPackagingTimeError, getMorkPackageList, getPackageTimeDay, getPackageTimeList, getPackagingCost, updatePackageTime, updatePackagingCost } from '/@/api/devlocal/packagingShipping'
+import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '@/type/packagingShipping/packagingType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
+const errorList = ref<ICheckingPackagingTimeError[]>([])
+const errorsTotal = ref<number>(0)
+const errorsQueryForm = reactive<ICheckingPackagingTimeErrorReq>({
+  startTime: '',
+  endTime: '',
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const errorsVisible = ref<boolean>(false)
 const costVisible = ref<boolean>(false)
 const costForm = reactive<any>({
   cost: ''
@@ -230,22 +284,51 @@ const modifyForm = reactive<any>({
 const modifyFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
 
+const fetchErrorsData = async () => {
+  errorsQueryForm.startTime = date.value[0]
+  errorsQueryForm.endTime = date.value[1]
+  const { data } = await checkingPackagingTimeError(errorsQueryForm)
+  errorsTotal.value = data.total
+  errorList.value = data.list
+}
+const queryErrorsData = () => {
+  errorsQueryForm.pageNo = 1
+  fetchErrorsData()
+}
+const handleErrorsCurrentChange = (value: number) => {
+  errorsQueryForm.pageNo = value
+  fetchErrorsData()
+}
+const handleErrorsSizeChange = (value: number) => {
+  errorsQueryForm.pageNo = 1
+  errorsQueryForm.pageSize = value
+  fetchErrorsData()
+}
+const showErrors = async () => {
+  errorsVisible.value = true
+  // console.log(date.value);
+  fetchErrorsData()
+}
 const confirmCost = async () => {
   costFormRef.value?.validate(async (valid: any) => {
     if (valid) {
-      // const { data } = await updatePackageTime(costForm)
-      // if (data) {
-      //   $baseMessage('修改成功','success')
-      //   closeCost()
-      // }
+      const { data } = await updatePackagingCost({
+        cost: costForm.cost
+      })
+      if (data) {
+        $baseMessage('修改成功','success')
+        closeCost()
+      }
     }
   })
 }
 const closeCost = () => {
   costVisible.value = false
 }
-const showCost = () => {
+const showCost = async () => {
   costVisible.value = true
+  const { data } = await getPackagingCost()
+  costForm.cost = data
 }
 // 修改展示
 const showModify = (row: any) => {
