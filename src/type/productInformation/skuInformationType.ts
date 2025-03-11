@@ -984,6 +984,7 @@ export interface IUpdateProductCustomsClearanceReq {
   brank?: string
   declarationElements?: string
   declarationElementsAbbreviation?: string
+  [property: string]: any
 }
 // SKU质检清单-查询
 export interface IgetProductQualityInspection {

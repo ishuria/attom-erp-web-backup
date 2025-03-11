@@ -217,6 +217,9 @@
           <br />
           税税率
         </template>
+        <template #default="{ row }">
+          {{ row.taxRate != null ? row.taxRate + '%' : '' }}
+        </template>
       </el-table-column>
       <el-table-column label="申报要素" min-width="200" prop="declarationElements">
         <template #default="{ row }">
@@ -326,12 +329,12 @@ import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
-  getCustomsClearanceRatio,
-  getHsSelectList,
-  getProductCustomsList,
-  updateCustomsClearanceRatio,
-  updateProductCustomsClearance,
-  updateProductCustomsClearanceSuppliserInfo,
+getCustomsClearanceRatio,
+getHsSelectList,
+getProductCustomsList,
+updateCustomsClearanceRatio,
+updateProductCustomsClearance,
+updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -598,13 +601,14 @@ const clickCancel = async (event: any, value: any) => {
   }
 }
 
-// 修改不报关
+// 修改HS
 const handleCustomsChange = async (row: any) => {
-  await updateProductCustomsClearanceSuppliserInfo({
+  await updateProductCustomsClearance({
     id: row.pId,
-    customsDeclarationStatus: row.customsDeclarationStatus,
-    bgWeightStatus: row.bgWeightStatus,
-    hsId: row.hsId
+    hsId: row.hsId,
+    brank: row.brank,
+    declarationElements: row.declarationElements,
+    declarationElementsAbbreviation: row.declarationElementsAbbreviation,
   })
 }
 
