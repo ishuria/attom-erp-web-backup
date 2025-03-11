@@ -5,7 +5,18 @@ const List = [
     id: '@id',
     role: 'admin',
     btnRolesCheckedList: ['read:system', 'write:system', 'delete:system'],
-    menuCheckedList: ['/', '/vab', '/other', '/operate', '/template', '/noColumn', '/setting', '/goods', '/chat', '/portal'],
+    menuCheckedList: [
+      '/',
+      '/vab',
+      '/other',
+      '/operate',
+      '/template',
+      '/noColumn',
+      '/setting',
+      '/goods',
+      '/chat',
+      '/portal',
+    ],
   },
   {
     id: '@id',
@@ -22,7 +33,9 @@ export default [
     response({ query }: any) {
       const { role, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter((item: any) => !(role && !item.role.includes(role)))
-      const list = mockList.filter((item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
+      const list = mockList.filter(
+        (item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      )
       return {
         code: 200,
         msg: 'success',

@@ -69,7 +69,10 @@ watch(
       //处理query传参
       const matched = route.fullPath.match(/\?(.*)$/)
       const name: any = route.name
-      if (matched) name.includes('?') ? (searchValue.value = route.name) : (searchValue.value = `${route.name as string}?${matched[1]}`)
+      if (matched)
+        name.includes('?')
+          ? (searchValue.value = route.name)
+          : (searchValue.value = `${route.name as string}?${matched[1]}`)
       // 详情页显示搜索项
       if (route.meta.hidden && name.includes('Detail')) searchValue.value = ''
     } else searchValue.value = route.name

@@ -53,8 +53,12 @@ export default [
     method: 'get',
     response: ({ query }: any) => {
       const { name, pageNo = 1, pageSize = 20 } = query
-      const mockList = List.filter((item: { name: string | any[] }) => !(name && !item.name.includes(name)))
-      const list = mockList.filter((item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
+      const mockList = List.filter(
+        (item: { name: string | any[] }) => !(name && !item.name.includes(name))
+      )
+      const list = mockList.filter(
+        (item: any, index: number) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      )
       list.sort(() => Math.random() - 0.5)
       return {
         code: 200,

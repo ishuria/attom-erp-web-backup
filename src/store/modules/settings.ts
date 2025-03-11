@@ -107,7 +107,10 @@ export const useSettingsStore = defineStore('settings', {
       Object.getOwnPropertyNames(obj).forEach((key) => {
         // @ts-ignore
         this[key] = obj[key]
-        localStorage.setItem(key, typeof obj[key] == 'string' ? `{"${key}":"${obj[key]}"}` : `{"${key}":${obj[key]}}`)
+        localStorage.setItem(
+          key,
+          typeof obj[key] == 'string' ? `{"${key}":"${obj[key]}"}` : `{"${key}":${obj[key]}}`
+        )
       })
     },
     updateMode(value: any) {
@@ -152,7 +155,8 @@ export const useSettingsStore = defineStore('settings', {
       const el = ref<HTMLElement | null>(null)
 
       //菜单宽度
-      if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px')) useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
+      if (this.theme.menuWidth && this.theme.menuWidth.endsWith('px'))
+        useCssVar('--el-left-menu-width', el).value = this.theme.menuWidth
       else useCssVar('--el-left-menu-width', el).value = '266px'
       //tabs处理
       if (this.theme.showTabs) {
@@ -182,10 +186,14 @@ export const useSettingsStore = defineStore('settings', {
       useCssVar('--el-color-primary-dark-2', el).value = this.theme.color
       useCssVar('--el-color-primary', el).value = this.theme.color
       for (let index = 1; index < 10; index++) {
-        useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(this.theme.color, 1 - index * 0.1)
+        useCssVar(`--el-color-primary-light-${index}`, el).value = colorRgba(
+          this.theme.color,
+          1 - index * 0.1
+        )
       }
       //色弱处理
-      if (this.theme.colorWeakness) document.querySelectorAll('body')[0].classList.add('color-weakness')
+      if (this.theme.colorWeakness)
+        document.querySelectorAll('body')[0].classList.add('color-weakness')
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')
       //字体大小处理
       useCssVar('--el-font-size-base', el).value = this.theme.fontSize
@@ -229,7 +237,11 @@ export const useSettingsStore = defineStore('settings', {
         scrollTop: number
       }
 
-      function updateArray(arr: Item[], routeNameToCheck: string, newScrollTopValue: number): Item[] {
+      function updateArray(
+        arr: Item[],
+        routeNameToCheck: string,
+        newScrollTopValue: number
+      ): Item[] {
         let found = false
         const newArr = arr.map((item) => {
           if (item.routeName === routeNameToCheck) {

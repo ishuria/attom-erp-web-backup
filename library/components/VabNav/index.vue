@@ -13,7 +13,11 @@
         <template v-for="item in routes" :key="item.name">
           <el-tab-pane :name="item.name">
             <template #label>
-              <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+              <vab-icon
+                v-if="item.meta.icon"
+                :icon="item.meta.icon"
+                :is-custom-svg="item.meta.isCustomSvg"
+              />
               {{ translate(item.meta.title) }}
             </template>
           </el-tab-pane>

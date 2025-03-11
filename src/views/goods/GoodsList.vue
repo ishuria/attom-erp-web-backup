@@ -7,7 +7,15 @@
             <el-input v-model="queryForm.title" placeholder="商品名称" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -16,13 +24,23 @@
     <el-scrollbar>
       <div class="vab-auto-box">
         <el-row :gutter="20">
-          <el-col v-for="(item, index) in list" :key="index" :lg="8" :md="8" :sm="8" :xl="6" :xs="24">
+          <el-col
+            v-for="(item, index) in list"
+            :key="index"
+            :lg="8"
+            :md="8"
+            :sm="8"
+            :xl="6"
+            :xs="24"
+          >
             <vab-card :body-style="{ padding: '0px' }">
               <div class="card-body">
                 <div class="tag-group">
                   <el-space wrap>
                     <el-tag v-if="item.isRecommend" effect="dark" type="success">推荐</el-tag>
-                    <el-tag v-if="item.status === '已下架'" effect="dark" type="danger">缺货</el-tag>
+                    <el-tag v-if="item.status === '已下架'" effect="dark" type="danger">
+                      缺货
+                    </el-tag>
                   </el-space>
                 </div>
                 <div class="image-group">

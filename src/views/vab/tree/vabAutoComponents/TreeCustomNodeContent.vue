@@ -10,7 +10,13 @@
       show-checkbox
     />
     <p>使用 scoped slot</p>
-    <el-tree :data="dataSource" default-expand-all :expand-on-click-node="false" node-key="id" show-checkbox>
+    <el-tree
+      :data="dataSource"
+      default-expand-all
+      :expand-on-click-node="false"
+      node-key="id"
+      show-checkbox
+    >
       <template #default="{ node, data }">
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>

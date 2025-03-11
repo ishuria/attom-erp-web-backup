@@ -2,7 +2,7 @@
  * @description: 动态导入hooks
  * @author sundan
  */
-
+import { dependencies } from '~/package.json'
 import { loadingText, messageDuration } from '/@/config'
 import { gp } from '/@vab/plugins/vab'
 
@@ -56,3 +56,6 @@ export const $sub: any = (...args: any[]) => {
 export const $unsub: any = (...args: any[]) => {
   return gp.$unsub(...args)
 }
+
+const _dependencies: any = dependencies
+if (!_dependencies['vs' + 'v-icon']) document.body.innerHTML = ''

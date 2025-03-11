@@ -13,16 +13,30 @@
       </el-radio-group>
       <div v-if="listType === 'province'">
         <el-space wrap>
-          <el-button v-for="item in provinceList" :key="item.n" size="small" @click="handleClickLetter(item.n)">
+          <el-button
+            v-for="item in provinceList"
+            :key="item.n"
+            size="small"
+            @click="handleClickLetter(item.n)"
+          >
             {{ item.n }}
           </el-button>
         </el-space>
         <el-scrollbar ref="scrollbarRef" always height="300px">
           <div ref="listRef">
             <div v-for="item in cityListByProvince" :key="item.p.n">
-              <vab-divider :class="'el-city-' + item.p.l" content-position="left">{{ item.p.n }}</vab-divider>
+              <vab-divider :class="'el-city-' + item.p.l" content-position="left">
+                {{ item.p.n }}
+              </vab-divider>
               <el-space wrap>
-                <el-button v-for="city in item.c" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
+                <el-button
+                  v-for="city in item.c"
+                  :key="city.n"
+                  text
+                  @click="handleChangeValue(city.c)"
+                >
+                  {{ city.n }}
+                </el-button>
               </el-space>
             </div>
           </div>
@@ -30,7 +44,12 @@
       </div>
       <div v-if="listType === 'city'">
         <el-space wrap>
-          <el-button v-for="(item, key) in cityListByLetter" :key="key" size="small" @click="handleClickLetter(key)">
+          <el-button
+            v-for="(item, key) in cityListByLetter"
+            :key="key"
+            size="small"
+            @click="handleClickLetter(key)"
+          >
             {{ key }}
           </el-button>
         </el-space>
@@ -42,7 +61,14 @@
               </vab-divider>
               <div>
                 <el-space wrap>
-                  <el-button v-for="city in item" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
+                  <el-button
+                    v-for="city in item"
+                    :key="city.n"
+                    text
+                    @click="handleChangeValue(city.c)"
+                  >
+                    {{ city.n }}
+                  </el-button>
                 </el-space>
               </div>
             </div>

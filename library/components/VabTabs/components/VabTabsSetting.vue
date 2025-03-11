@@ -3,7 +3,12 @@
     <el-form ref="form" label-position="top" :model="theme">
       <el-form-item v-if="theme.showTabs" :label="translate('标签风格')">
         <el-radio-group v-model="theme.tabsBarStyle">
-          <el-radio-button v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
+          <el-radio-button
+            v-for="item in tabsBarStyleList"
+            :key="item.value"
+            :label="translate(item.label)"
+            :value="item.value"
+          />
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="translate('标签图标')">

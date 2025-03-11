@@ -2,10 +2,20 @@
   <div class="custom-style">
     <el-row :gutter="20">
       <el-col :span="24">
-        <el-segmented v-model="value1" :options="options" size="large" style="margin-bottom: var(--el-margin)" />
+        <el-segmented
+          v-model="value1"
+          :options="options"
+          size="large"
+          style="margin-bottom: var(--el-margin)"
+        />
       </el-col>
       <el-col :span="24">
-        <el-segmented v-model="value2" :options="options" size="default" style="margin-bottom: var(--el-margin)" />
+        <el-segmented
+          v-model="value2"
+          :options="options"
+          size="default"
+          style="margin-bottom: var(--el-margin)"
+        />
       </el-col>
       <el-col :span="24">
         <el-segmented v-model="value3" :options="options" size="small" />

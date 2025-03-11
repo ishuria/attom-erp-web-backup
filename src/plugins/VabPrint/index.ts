@@ -129,7 +129,9 @@ Print.prototype = {
           return obj instanceof HTMLElement
         }
       : function (obj: { nodeType: number; nodeName: any }) {
-          return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
+          return (
+            obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string'
+          )
         },
 }
 

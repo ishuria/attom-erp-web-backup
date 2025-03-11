@@ -10,21 +10,48 @@
             <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" min-width="180" prop="id" show-overflow-tooltip />
-      <el-table-column align="center" label="商品名称" min-width="120" prop="name" show-overflow-tooltip sortable />
+      <el-table-column
+        align="center"
+        label="商品ID"
+        min-width="180"
+        prop="id"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        label="商品名称"
+        min-width="120"
+        prop="name"
+        show-overflow-tooltip
+        sortable
+      />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
           <el-popover placement="top-start">
@@ -40,11 +67,32 @@
           <el-rate v-model="row.rate" disabled />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="评论内容" min-width="200" prop="comment" show-overflow-tooltip />
-      <el-table-column align="center" label="回复内容" min-width="200" prop="reply" show-overflow-tooltip />
+      <el-table-column
+        align="center"
+        label="评论内容"
+        min-width="200"
+        prop="comment"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        label="回复内容"
+        min-width="200"
+        prop="reply"
+        show-overflow-tooltip
+      />
       <el-table-column align="center" label="回复状态" min-width="100">
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.replyStatus == '已回复' ? 'success' : row.replyStatus == '未回复' ? 'warning' : 'info'">
+          <el-tag
+            effect="dark"
+            :type="
+              row.replyStatus == '已回复'
+                ? 'success'
+                : row.replyStatus == '未回复'
+                  ? 'warning'
+                  : 'info'
+            "
+          >
             {{ row.replyStatus }}
           </el-tag>
         </template>

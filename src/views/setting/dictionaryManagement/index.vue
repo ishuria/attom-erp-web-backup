@@ -3,7 +3,9 @@
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card class="auto-height-card">
-          <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">添加字典分类</el-button>
+          <el-button class="tree-button" :icon="Plus" type="primary" @click="handleAdd">
+            添加字典分类
+          </el-button>
           <el-input v-model="filterText" clearable placeholder="请输入字典名称" />
           <el-tree
             ref="treeRef"
@@ -26,7 +28,14 @@
         <vab-card class="auto-height-card">
           <vab-query-form>
             <vab-query-form-top-panel :span="12">
-              <el-button :disabled="isRoot" :icon="Plus" type="primary" @click="handleEdit({ parentKey })">添加</el-button>
+              <el-button
+                :disabled="isRoot"
+                :icon="Plus"
+                type="primary"
+                @click="handleEdit({ parentKey })"
+              >
+                添加
+              </el-button>
             </vab-query-form-top-panel>
           </vab-query-form>
           <el-table ref="tableRef" v-loading="listLoading" border :data="list">

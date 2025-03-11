@@ -5,7 +5,9 @@
         <vab-card>
           <template #header>
             密码生成器
-            <el-button class="password-generator-button" type="primary" @click="generatePassword">生成密码</el-button>
+            <el-button class="password-generator-button" type="primary" @click="generatePassword">
+              生成密码
+            </el-button>
           </template>
           <el-form :model="form">
             <el-form-item label="密码长度">

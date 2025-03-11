@@ -3,7 +3,12 @@
     <vab-alert title="路由1.1">
       <vab-alert title="路由1.1.1">
         <vab-alert title="路由1.1.1.1">
-          <el-input v-model="value" clearable style="width: 250px; margin-bottom: 20px" type="textarea" />
+          <el-input
+            v-model="value"
+            clearable
+            style="width: 250px; margin-bottom: 20px"
+            type="textarea"
+          />
         </vab-alert>
       </vab-alert>
     </vab-alert>

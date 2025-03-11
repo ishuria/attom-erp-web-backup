@@ -36,12 +36,18 @@ const props = defineProps({
 const settingsStore = useSettingsStore()
 const { collapse } = storeToRefs(settingsStore)
 const routesStore = useRoutesStore()
-const { getRoutes: routes, getActiveMenu: activeMenu, getPartialRoutes: partialRoutes } = storeToRefs(routesStore)
+const {
+  getRoutes: routes,
+  getActiveMenu: activeMenu,
+  getPartialRoutes: partialRoutes,
+} = storeToRefs(routesStore)
 
 const handleRoutes = computed(() =>
   props.layout === 'comprehensive'
     ? partialRoutes.value
-    : routes.value.flatMap((route: any) => (route.meta.levelHidden && route.children ? [...route.children] : route))
+    : routes.value.flatMap((route: any) =>
+        route.meta.levelHidden && route.children ? [...route.children] : route
+      )
 )
 </script>
 

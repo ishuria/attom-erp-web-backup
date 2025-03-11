@@ -30,7 +30,15 @@
                   <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
                 </el-form-item>
                 <el-form-item>
-                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+                  <el-button
+                    :icon="Search"
+                    :loading="listLoading"
+                    native-type="submit"
+                    type="primary"
+                    @click="queryData"
+                  >
+                    查询
+                  </el-button>
                 </el-form-item>
               </el-form>
             </vab-query-form-top-panel>
@@ -50,9 +58,21 @@
             </vab-query-form-left-panel>
           </vab-query-form>
           <el-row v-loading="listLoading" class="explorer-image-box" :gutter="20">
-            <el-col v-for="(item, index) in list" :key="index" :lg="6" :md="8" :sm="12" :xl="6" :xs="12">
+            <el-col
+              v-for="(item, index) in list"
+              :key="index"
+              :lg="6"
+              :md="8"
+              :sm="12"
+              :xl="6"
+              :xs="12"
+            >
               <vab-card :body-style="{ padding: '0', position: 'relative' }">
-                <el-checkbox v-model="item.id" :label="item.title" @change="handleCheckboxChange($event, item)" />
+                <el-checkbox
+                  v-model="item.id"
+                  :label="item.title"
+                  @change="handleCheckboxChange($event, item)"
+                />
                 <el-image :preview-src-list="previewSrcList" preview-teleported :src="item.image" />
               </vab-card>
             </el-col>

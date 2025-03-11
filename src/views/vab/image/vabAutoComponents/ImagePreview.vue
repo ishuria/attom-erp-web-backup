@@ -1,6 +1,13 @@
 <template>
   <div class="demo-image__preview">
-    <el-image fit="cover" :initial-index="4" :preview-src-list="srcList" :src="url" style="width: 100px; height: 100px" :zoom-rate="1.2" />
+    <el-image
+      fit="cover"
+      :initial-index="4"
+      :preview-src-list="srcList"
+      :src="url"
+      style="width: 100px; height: 100px"
+      :zoom-rate="1.2"
+    />
   </div>
 </template>
 

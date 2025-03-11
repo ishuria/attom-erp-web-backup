@@ -10,18 +10,36 @@
             <el-input v-model="queryForm.wechatPaymentNo" clearable placeholder="微信支付单号" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
             <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
               <span v-if="fold">展开</span>
               <span v-else>合并</span>
-              <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
+              <vab-icon
+                class="vab-dropdown"
+                :class="{ 'vab-dropdown-active': fold }"
+                icon="arrow-up-s-line"
+              />
             </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
@@ -38,11 +56,42 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="交易时间" min-width="160" prop="transactionTime" show-overflow-tooltip sortable />
-      <el-table-column align="center" label="商户订单号" min-width="120" prop="merchantOrderId" show-overflow-tooltip />
-      <el-table-column align="center" label="微信支付单号" min-width="120" prop="wechatPaymentNo" show-overflow-tooltip />
-      <el-table-column align="center" label="支付场景" min-width="120" prop="paymentScene" sortable />
-      <el-table-column align="center" label="交易状态" min-width="120" prop="transactionStatus" sortable>
+      <el-table-column
+        align="center"
+        label="交易时间"
+        min-width="160"
+        prop="transactionTime"
+        show-overflow-tooltip
+        sortable
+      />
+      <el-table-column
+        align="center"
+        label="商户订单号"
+        min-width="120"
+        prop="merchantOrderId"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        label="微信支付单号"
+        min-width="120"
+        prop="wechatPaymentNo"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        label="支付场景"
+        min-width="120"
+        prop="paymentScene"
+        sortable
+      />
+      <el-table-column
+        align="center"
+        label="交易状态"
+        min-width="120"
+        prop="transactionStatus"
+        sortable
+      >
         <template #default="{ row }">
           <el-tag
             effect="dark"

@@ -21,12 +21,25 @@
         </span>
       </template>
       <template #level3="{ slotScope }">
-        <a v-for="(level3, index) in slotScope" :key="index" :href="level3.url" @click="handleLink(level3)">
+        <a
+          v-for="(level3, index) in slotScope"
+          :key="index"
+          :href="level3.url"
+          @click="handleLink(level3)"
+        >
           - {{ translate(level3.meta.title) }}
-          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" :type="level3.meta.badgeType || 'danger'">
+          <el-tag
+            v-if="level3.meta && level3.meta.badge"
+            effect="dark"
+            size="small"
+            :type="level3.meta.badgeType || 'danger'"
+          >
             {{ level3.meta.badge }}
           </el-tag>
-          <vab-dot v-if="level3.meta && level3.meta.dot" :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'" />
+          <vab-dot
+            v-if="level3.meta && level3.meta.dot"
+            :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'"
+          />
         </a>
       </template>
     </fall-menu>
@@ -62,7 +75,9 @@ const { enter, exit } = useFullscreen()
 const mousePosition = ref({ x: 0, y: 0 })
 
 const handleRoutes = computed(() =>
-  routes.value.flatMap((route: any) => (route.meta.levelHidden && route.children ? [...route.children] : route))
+  routes.value.flatMap((route: any) =>
+    route.meta.levelHidden && route.children ? [...route.children] : route
+  )
 )
 
 const handleLink = (slotScope: any) => {
@@ -75,7 +90,8 @@ const handleLink = (slotScope: any) => {
       if (isExternal(routePath)) {
         window.open(routePath)
         router.push('/redirect')
-      } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
+      } else if (route.path !== routePath)
+        isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
       router.push('/redirect')
     } else {
       if (isExternal(routePath)) globalThis.location.href = routePath
@@ -100,7 +116,10 @@ useEventListener('mousemove', (e: MouseEvent) => {
     x: e.clientX,
     y: e.clientY,
   }
-  if ((mousePosition.value.x < 265 && !collapse.value) || (mousePosition.value.x < 65 && collapse.value)) {
+  if (
+    (mousePosition.value.x < 265 && !collapse.value) ||
+    (mousePosition.value.x < 65 && collapse.value)
+  ) {
     const element: any = document.querySelector('.vab-fall-bar .tiny-fall-menu__box')
     const base = 60
     const intervalSize = 48

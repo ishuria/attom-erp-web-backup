@@ -2,7 +2,11 @@
   <blockquote
     v-if="props.blockquote"
     class="vab-blockquote"
-    :class="props.isBorder ? 'vab-blockquote-' + props.type + ' is-border' : 'vab-blockquote-' + props.type"
+    :class="
+      props.isBorder
+        ? 'vab-blockquote-' + props.type + ' is-border'
+        : 'vab-blockquote-' + props.type
+    "
   >
     <slot></slot>
   </blockquote>
@@ -10,7 +14,12 @@
     <legend>{{ props.title }}</legend>
     <slot></slot>
   </fieldset>
-  <el-divider v-else :border-style="props.borderStyle" :content-position="props.contentPosition" :direction="props.direction">
+  <el-divider
+    v-else
+    :border-style="props.borderStyle"
+    :content-position="props.contentPosition"
+    :direction="props.direction"
+  >
     <template #default>
       <slot></slot>
     </template>

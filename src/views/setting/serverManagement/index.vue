@@ -31,14 +31,18 @@
                 Swap
                 <el-progress
                   :percentage="percentageSwap1"
-                  :status="percentageSwap1 <= 50 ? 'success' : percentageSwap1 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageSwap1 <= 50 ? 'success' : percentageSwap1 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
                 Disk
                 <el-progress
                   :percentage="percentageDisk1"
-                  :status="percentageDisk1 <= 50 ? 'success' : percentageDisk1 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageDisk1 <= 50 ? 'success' : percentageDisk1 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
@@ -73,14 +77,18 @@
                 Swap
                 <el-progress
                   :percentage="percentageSwap2"
-                  :status="percentageSwap2 <= 50 ? 'success' : percentageSwap2 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageSwap2 <= 50 ? 'success' : percentageSwap2 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
                 Disk
                 <el-progress
                   :percentage="percentageDisk2"
-                  :status="percentageDisk2 <= 50 ? 'success' : percentageDisk2 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageDisk2 <= 50 ? 'success' : percentageDisk2 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
@@ -119,14 +127,18 @@
                 Swap
                 <el-progress
                   :percentage="percentageSwap3"
-                  :status="percentageSwap3 <= 50 ? 'success' : percentageSwap3 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageSwap3 <= 50 ? 'success' : percentageSwap3 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
                 Disk
                 <el-progress
                   :percentage="percentageDisk3"
-                  :status="percentageDisk3 <= 50 ? 'success' : percentageDisk3 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageDisk3 <= 50 ? 'success' : percentageDisk3 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
@@ -161,14 +173,18 @@
                 Swap
                 <el-progress
                   :percentage="percentageSwap4"
-                  :status="percentageSwap4 <= 50 ? 'success' : percentageSwap4 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageSwap4 <= 50 ? 'success' : percentageSwap4 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />
                 Disk
                 <el-progress
                   :percentage="percentageDisk4"
-                  :status="percentageDisk4 <= 50 ? 'success' : percentageDisk4 <= 80 ? '' : 'warning'"
+                  :status="
+                    percentageDisk4 <= 50 ? 'success' : percentageDisk4 <= 80 ? '' : 'warning'
+                  "
                   :stroke-width="15"
                   :text-inside="true"
                 />

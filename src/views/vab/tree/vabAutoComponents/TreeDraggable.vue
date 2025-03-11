@@ -1,5 +1,12 @@
 <template>
-  <el-tree :allow-drag="allowDrag" :allow-drop="allowDrop" :data="data" default-expand-all draggable node-key="id" />
+  <el-tree
+    :allow-drag="allowDrag"
+    :allow-drop="allowDrop"
+    :data="data"
+    default-expand-all
+    draggable
+    node-key="id"
+  />
 </template>
 
 <script lang="ts" setup>

@@ -1,7 +1,15 @@
 <template>
   <div class="new-container no-background-container">
     <el-row :gutter="20">
-      <el-col v-for="(item, index) in list" :key="index" :lg="item.span" :md="12" :sm="12" :xl="item.span" :xs="24">
+      <el-col
+        v-for="(item, index) in list"
+        :key="index"
+        :lg="item.span"
+        :md="12"
+        :sm="12"
+        :xl="item.span"
+        :xs="24"
+      >
         <vab-card :body-style="{ padding: 0 }">
           <div class="card-body" @click="handleDetail(item)">
             <div class="image-group">

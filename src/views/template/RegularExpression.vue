@@ -37,7 +37,15 @@
 </template>
 
 <script lang="ts" setup>
-import { isChinese, isEmail, isEnglish, isIdCard, isNumber, isPhone, isUrl } from '/@/utils/validate'
+import {
+  isChinese,
+  isEmail,
+  isEnglish,
+  isIdCard,
+  isNumber,
+  isPhone,
+  isUrl,
+} from '/@/utils/validate'
 
 defineOptions({
   name: 'RegularExpression',

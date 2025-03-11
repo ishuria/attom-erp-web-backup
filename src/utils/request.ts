@@ -50,10 +50,14 @@ const requestConfig = (config: any): any => {
   // 规范写法 不可随意自定义
   if (token) config.headers['Authorization'] = `Bearer ${token}`
 
-  if (config.data && config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8')
+  if (
+    config.data &&
+    config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8'
+  )
     config.data = stringify(config.data)
 
-  if (debounce.some((item: string) => config.url.includes(item))) loadingInstance = gp.$baseLoading()
+  if (debounce.some((item: string) => config.url.includes(item)))
+    loadingInstance = gp.$baseLoading()
   return config
 }
 

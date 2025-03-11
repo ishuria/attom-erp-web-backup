@@ -19,7 +19,11 @@
               :title="translate(item.meta.title)"
             >
               <div>
-                <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+                <vab-icon
+                  v-if="item.meta.icon"
+                  :icon="item.meta.icon"
+                  :is-custom-svg="item.meta.isCustomSvg"
+                />
                 <span v-if="translate(item.meta.title).length < 4">
                   {{ translate(item.meta.title) }}
                 </span>
@@ -90,10 +94,15 @@ const setDefaultOpeneds = () => {
 
 const handleTabClick = () => {
   nextTick(() => {
-    const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
+    const openPath = (path: any, target: string) =>
+      target === '_blank' ? window.open(path) : (location.href = path)
     if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
       openPath(
-        isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
+        isExternal(tabMenu.value.path)
+          ? tabMenu.value.path
+          : isHashRouterMode
+            ? `#${tabMenu.value.path}`
+            : tabMenu.value.path,
         '_blank'
       )
       router.push('/redirect')
@@ -112,7 +121,9 @@ onMounted(() => {
         () => {
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
-            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, { id: 'fold-unfold-useStyleTag' })
+            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, {
+              id: 'fold-unfold-useStyleTag',
+            })
           } else {
             if (device.value !== 'mobile') openSideBar()
             useStyleTag('', { id: 'fold-unfold-useStyleTag' })

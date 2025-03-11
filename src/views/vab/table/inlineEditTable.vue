@@ -7,7 +7,15 @@
             <el-input v-model="queryForm.title" clearable placeholder="标题" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -37,7 +45,9 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="150">
         <template #default="{ row }">
-          <el-button v-if="!row.edit" text type="primary" @click="row.edit = !row.edit">编辑</el-button>
+          <el-button v-if="!row.edit" text type="primary" @click="row.edit = !row.edit">
+            编辑
+          </el-button>
           <el-button v-if="row.edit" text type="primary" @click="confirmEdit(row)">保存</el-button>
           <el-button v-if="row.edit" text type="danger" @click="cancelEdit(row)">取消</el-button>
         </template>

@@ -13,7 +13,15 @@
           </el-form>
         </vab-card>
       </el-col>
-      <el-col v-for="(item, index) in lllustrationsArray" :key="index" :lg="span" :md="12" :sm="12" :xl="span" :xs="24">
+      <el-col
+        v-for="(item, index) in lllustrationsArray"
+        :key="index"
+        :lg="span"
+        :md="12"
+        :sm="12"
+        :xl="span"
+        :xs="24"
+      >
         <vab-card class="lllustration-card" @click="handleCopyIcon(item)">
           <vab-icon
             class="vab-lllustration"

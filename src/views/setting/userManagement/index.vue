@@ -11,13 +11,21 @@
             <el-input v-model.trim="queryForm.username" clearable placeholder="请输入用户名" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
@@ -26,7 +34,13 @@
       </el-table-column>
       <el-table-column align="center" label="id" min-width="180" prop="id" show-overflow-tooltip />
       <el-table-column align="center" label="用户名" min-width="120" prop="username" />
-      <el-table-column align="center" label="邮箱" min-width="120" prop="email" show-overflow-tooltip />
+      <el-table-column
+        align="center"
+        label="邮箱"
+        min-width="120"
+        prop="email"
+        show-overflow-tooltip
+      />
 
       <el-table-column align="center" label="角色" min-width="155">
         <template #default="{ row }">
@@ -38,7 +52,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="修改时间" min-width="160" prop="datetime" show-overflow-tooltip />
+      <el-table-column
+        align="center"
+        label="修改时间"
+        min-width="160"
+        prop="datetime"
+        show-overflow-tooltip
+      />
       <el-table-column align="center" label="操作" width="150">
         <template #default="{ row }">
           <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>

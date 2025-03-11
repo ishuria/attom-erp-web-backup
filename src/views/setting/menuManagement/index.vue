@@ -3,7 +3,13 @@
     <el-row :gutter="20">
       <el-col :lg="4" :md="8" :sm="24" :xl="4" :xs="24">
         <vab-card class="auto-height-card">
-          <el-tree :data="treeList" :default-expanded-keys="['root']" node-key="id" :props="defaultProps" @node-click="handleNodeClick" />
+          <el-tree
+            :data="treeList"
+            :default-expanded-keys="['root']"
+            node-key="id"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          />
         </vab-card>
       </el-col>
       <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
@@ -21,9 +27,27 @@
             row-key="path"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           >
-            <el-table-column align="center" label="标题" min-width="140" prop="meta.title" show-overflow-tooltip />
-            <el-table-column align="center" label="name" min-width="120" prop="name" show-overflow-tooltip />
-            <el-table-column align="center" label="路径" min-width="140" prop="path" show-overflow-tooltip />
+            <el-table-column
+              align="center"
+              label="标题"
+              min-width="140"
+              prop="meta.title"
+              show-overflow-tooltip
+            />
+            <el-table-column
+              align="center"
+              label="name"
+              min-width="120"
+              prop="name"
+              show-overflow-tooltip
+            />
+            <el-table-column
+              align="center"
+              label="路径"
+              min-width="140"
+              prop="path"
+              show-overflow-tooltip
+            />
             <!-- <el-table-column align="center" label="是否隐藏">
                 <template #default="{ row }">
                   {{ row.meta.hidden ? '是' : '否' }}
@@ -38,7 +62,13 @@
                     {{ row.meta.levelHidden ? '是' : '否' }}
                   </template>
                 </el-table-column> -->
-            <el-table-column align="center" label="vue文件路径" min-width="120" prop="component" show-overflow-tooltip />
+            <el-table-column
+              align="center"
+              label="vue文件路径"
+              min-width="120"
+              prop="component"
+              show-overflow-tooltip
+            />
             <!-- <el-table-column align="center" label="重定向">
                 <template #default="{ row }">
                   {{ row.redirect || '无' }}

@@ -9,7 +9,11 @@
     <span :title="translate(itemOrMenu.meta.title)">
       {{ translate(itemOrMenu.meta.title) }}
     </span>
-    <el-tag v-if="itemOrMenu.meta && itemOrMenu.meta.badge" effect="dark" :type="itemOrMenu.meta.badgeType || 'danger'">
+    <el-tag
+      v-if="itemOrMenu.meta && itemOrMenu.meta.badge"
+      effect="dark"
+      :type="itemOrMenu.meta.badgeType || 'danger'"
+    >
       {{ translate(itemOrMenu.meta.badge) }}
     </el-tag>
     <vab-dot
@@ -54,7 +58,8 @@ const handleLink = () => {
       if (isExternal(routePath)) {
         window.open(routePath)
         router.push('/redirect')
-      } else if (route.path !== routePath) isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
+      } else if (route.path !== routePath)
+        isHashRouterMode ? window.open(`#${routePath}`) : window.open(routePath)
       router.push('/redirect')
     } else {
       if (isExternal(routePath)) globalThis.location.href = routePath

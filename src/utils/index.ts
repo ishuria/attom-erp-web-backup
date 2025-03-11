@@ -83,7 +83,9 @@ export function translateDataToTree(data: any[]) {
           const temp = JSON.parse(JSON.stringify(children))
           temp.splice(index, 1)
           translator([current], temp)
-          _parent.children === undefined ? (_parent.children = [current]) : _parent.children.push(current)
+          _parent.children === undefined
+            ? (_parent.children = [current])
+            : _parent.children.push(current)
         }
       })
     })

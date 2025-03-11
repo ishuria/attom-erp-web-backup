@@ -41,8 +41,11 @@ export const hasPermission = (targetRoleOrPermission: string[] | GuardType) => {
 const can = (roleOrPermission: (string | boolean)[], target: CanType): boolean => {
   let hasRole = false
   const { permission = [], mode = 'oneOf' } = target
-  if (mode === 'allOf') hasRole = permission.every((item: string | boolean) => roleOrPermission.includes(item))
-  if (mode === 'oneOf') hasRole = permission.some((item: string | boolean) => roleOrPermission.includes(item))
-  if (mode === 'except') hasRole = !permission.every((item: string | boolean) => roleOrPermission.includes(item))
+  if (mode === 'allOf')
+    hasRole = permission.every((item: string | boolean) => roleOrPermission.includes(item))
+  if (mode === 'oneOf')
+    hasRole = permission.some((item: string | boolean) => roleOrPermission.includes(item))
+  if (mode === 'except')
+    hasRole = !permission.every((item: string | boolean) => roleOrPermission.includes(item))
   return hasRole
 }

@@ -36,14 +36,26 @@ const option = reactive<any>({
     trigger: 'item',
   },
   radar: {
-    indicator: [{ name: '销售' }, { name: '管理' }, { name: '信息技术' }, { name: '客服' }, { name: '研发' }],
+    indicator: [
+      { name: '销售' },
+      { name: '管理' },
+      { name: '信息技术' },
+      { name: '客服' },
+      { name: '研发' },
+    ],
   },
   series: {
     name: '预算分配',
     type: 'radar',
     data: [
       {
-        value: [random(50, 1000), random(50, 1000), random(50, 1000), random(50, 1000), random(50, 1000)],
+        value: [
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+        ],
         name: '预算分配',
       },
     ],
@@ -62,7 +74,13 @@ onMounted(() => {
   timer = setInterval(() => {
     option.series.data = [
       {
-        value: [random(50, 1000), random(50, 1000), random(50, 1000), random(50, 1000), random(50, 1000)],
+        value: [
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+          random(50, 1000),
+        ],
         name: '预算分配',
       },
     ]

@@ -53,7 +53,15 @@ const option = reactive<any>({
     type: 'value',
   },
   series: {
-    data: [random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200), random(50, 200)],
+    data: [
+      random(50, 200),
+      random(50, 200),
+      random(50, 200),
+      random(50, 200),
+      random(50, 200),
+      random(50, 200),
+      random(50, 200),
+    ],
     type: 'bar',
   },
 })

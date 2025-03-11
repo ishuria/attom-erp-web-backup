@@ -32,7 +32,15 @@
           <div v-show="index === '1'">
             <el-tabs v-model="activeName">
               <el-tab-pane label="推荐" name="first">
-                <div v-for="item in list" :key="item" :lg="item.span" :md="12" :sm="12" :xl="item.span" :xs="24">
+                <div
+                  v-for="item in list"
+                  :key="item"
+                  :lg="item.span"
+                  :md="12"
+                  :sm="12"
+                  :xl="item.span"
+                  :xs="24"
+                >
                   <div class="blog-item" @click="handleDetail(item)">
                     <div class="blog-title">{{ item.title }}</div>
                     <div class="blog-abstract">{{ item.content }}</div>

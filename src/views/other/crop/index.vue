@@ -10,7 +10,12 @@
 
           <el-form-item label="裁剪比例">
             <el-select v-model="aspectRatio" @change="handleChange">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
 

@@ -1,7 +1,12 @@
 <template>
   <div class="wang-editor-container">
     <toolbar :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
-    <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @on-created="handleCreated" />
+    <editor
+      v-model="html"
+      class="wang-editor-content"
+      :default-config="editorConfig"
+      @on-created="handleCreated"
+    />
     <div class="wang-editor-footer">
       <el-button type="primary" @click="handlePreview">预览</el-button>
       <el-button type="primary" @click="handleSave">保存</el-button>

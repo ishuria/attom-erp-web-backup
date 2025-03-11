@@ -1,5 +1,13 @@
 <template>
-  <el-tree ref="treeRef" :data="data" default-expand-all highlight-current node-key="id" :props="defaultProps" show-checkbox />
+  <el-tree
+    ref="treeRef"
+    :data="data"
+    default-expand-all
+    highlight-current
+    node-key="id"
+    :props="defaultProps"
+    show-checkbox
+  />
 
   <div style="margin-top: 20px">
     <el-button type="primary" @click="getCheckedNodes">按节点获取</el-button>

@@ -74,7 +74,9 @@ const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
 const finish = ref<boolean>(true)
 
 const radio = ref<string>('GPT3.5')
-const url = ref<string>('https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text=')
+const url = ref<string>(
+  'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
+)
 
 const loading = ref<boolean>(false)
 let timer: ReturnType<typeof setInterval>
@@ -83,8 +85,11 @@ const result =
 
 const changeGPT = (value: any) => {
   if (value == 'GPT3.5')
-    url.value = 'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
-  if (value == 'GPT4.0') url.value = 'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-4&text='
+    url.value =
+      'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-3.5-turbo&text='
+  if (value == 'GPT4.0')
+    url.value =
+      'https://fc-mp-851edf02-46eb-43e6-828d-64c7e483ea41.next.bspapp.com/chatGPT?version=gpt-4&text='
   $baseMessage(`切换${value}成功！`, 'success', 'hey')
 }
 
@@ -177,7 +182,8 @@ onMounted(() => {
 
 onActivated(() => {
   timer = setInterval(() => {
-    if (scrollbarRef.value && innerRef.value) scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
+    if (scrollbarRef.value && innerRef.value)
+      scrollbarRef.value.setScrollTop(innerRef.value.clientHeight - 380)
   }, 500)
 })
 

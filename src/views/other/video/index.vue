@@ -12,25 +12,45 @@
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <vab-card title="Mp4">
-          <vab-player :config="configMp4" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance0" />
+          <vab-player
+            :config="configMp4"
+            style="background-color: rgba(0, 0, 0, 0.87)"
+            @player="playerInstance0"
+          />
         </vab-card>
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <vab-card title="直播推流">
           <el-row :gutter="1">
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls :config="configHls1" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance1" />
+              <vab-player-hls
+                :config="configHls1"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance1"
+              />
             </el-col>
             <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-              <vab-player-hls :config="configHls2" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance2" />
+              <vab-player-hls
+                :config="configHls2"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance2"
+              />
             </el-col>
           </el-row>
           <el-row :gutter="1">
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls :config="configHls3" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance3" />
+              <vab-player-hls
+                :config="configHls3"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance3"
+              />
             </el-col>
             <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="24">
-              <vab-player-hls :config="configHls4" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance4" />
+              <vab-player-hls
+                :config="configHls4"
+                style="background-color: rgba(0, 0, 0, 0.87)"
+                @player="playerInstance4"
+              />
             </el-col>
           </el-row>
         </vab-card>

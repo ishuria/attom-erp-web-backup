@@ -7,7 +7,9 @@
             <el-input v-model.trim="queryForm.title" clearable placeholder="请输入标题" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>

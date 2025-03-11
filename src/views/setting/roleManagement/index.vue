@@ -11,13 +11,21 @@
             <el-input v-model.trim="queryForm.role" clearable placeholder="请输入角色" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" show-overflow-tooltip width="55">
         <template #default="{ $index }">

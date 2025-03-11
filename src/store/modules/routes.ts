@@ -20,7 +20,8 @@ const filterHidden = (data: any) => {
 const filterBreadcrumb = (data: any) => {
   return data.reduce((acc: any, item: any) => {
     const newItem = { ...item }
-    if (item.children && item.children.length > 0) newItem.children = filterBreadcrumb(item.children)
+    if (item.children && item.children.length > 0)
+      newItem.children = filterBreadcrumb(item.children)
     return [...acc, newItem]
   }, [])
 }
@@ -40,11 +41,17 @@ export const useRoutesStore = defineStore('routes', {
   }),
   getters: {
     getTab: (state) => state.tab,
-    getTabMenu: (state) => (state.tab.data ? state.routes.find((route) => route.name === state.tab.data) : { meta: { title: '' } }),
+    getTabMenu: (state) =>
+      state.tab.data
+        ? state.routes.find((route) => route.name === state.tab.data)
+        : { meta: { title: '' } },
     getActiveMenu: (state) => state.activeMenu,
-    getRoutes: (state) => state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
-    getAllRoutes: (state) => state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
-    getBreadcrumbRoutes: (state) => state.breadcrumbRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getRoutes: (state) =>
+      state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getAllRoutes: (state) =>
+      state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
+    getBreadcrumbRoutes: (state) =>
+      state.breadcrumbRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getPartialRoutes: (state) =>
       state.tab.data
         ? state.routes.find((route) => route.name === state.tab.data) &&
@@ -90,7 +97,8 @@ export const useRoutesStore = defineStore('routes', {
       function handleRoutes(routes: any[]) {
         return routes.map((route) => {
           if (route.name === options.name) Object.assign(route.meta, options.meta)
-          if (route.children && route.children.length > 0) route.children = handleRoutes(route.children)
+          if (route.children && route.children.length > 0)
+            route.children = handleRoutes(route.children)
           return route
         })
       }

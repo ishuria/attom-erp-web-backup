@@ -12,7 +12,11 @@
         <el-avatar class="user-avatar" :src="avatar" />
         <div class="username">
           <span class="hidden-xs-only">{{ username }}</span>
-          <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': active }" icon="arrow-down-s-line" />
+          <vab-icon
+            class="vab-dropdown"
+            :class="{ 'vab-dropdown-active': active }"
+            icon="arrow-down-s-line"
+          />
         </div>
       </div>
     </template>
@@ -176,7 +180,8 @@ const handleCommand = async (command: any) => {
     padding: calc(var(--el-padding) / 1.5);
 
     .user-avatar {
-      margin-left: calc(var(--el-margin) / 2) calc(var(--el-margin) / 2) calc(var(--el-margin) / 2) 0 !important;
+      margin-left: calc(var(--el-margin) / 2) calc(var(--el-margin) / 2) calc(var(--el-margin) / 2)
+        0 !important;
     }
 
     .username {

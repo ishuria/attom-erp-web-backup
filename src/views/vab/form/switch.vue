@@ -2,7 +2,11 @@
   <div class="switch-container no-background-container">
     <vab-card>
       <template #header>基础用法</template>
-      <el-switch v-model="value" active-color="var(--el-color-success)" inactive-color="var(--el-color-warning)" />
+      <el-switch
+        v-model="value"
+        active-color="var(--el-color-success)"
+        inactive-color="var(--el-color-warning)"
+      />
     </vab-card>
     <vab-card>
       <template #header>文字描述</template>

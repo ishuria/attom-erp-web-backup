@@ -13,7 +13,11 @@
       :with-header="false"
     >
       <div class="vab-screen-lock">
-        <div id="vab-screen-lock-background" class="vab-screen-lock-background" :style="style"></div>
+        <div
+          id="vab-screen-lock-background"
+          class="vab-screen-lock-background"
+          :style="style"
+        ></div>
         <div class="vab-screen-lock-content">
           <div class="vab-screen-lock-content-title">
             <el-avatar :size="180" :src="avatar" />
@@ -23,7 +27,13 @@
           <div class="vab-screen-lock-content-form">
             <el-form ref="formRef" :model="form" :rules="rules" @submit.prevent>
               <el-form-item prop="password">
-                <el-input v-model="form.password" v-focus autocomplete="off" :placeholder="translate('请输入密码123456')" type="password" />
+                <el-input
+                  v-model="form.password"
+                  v-focus
+                  autocomplete="off"
+                  :placeholder="translate('请输入密码123456')"
+                  type="password"
+                />
                 <el-button native-type="submit" type="primary" @click="handleUnLock">
                   <vab-icon icon="rotate-lock-2-line" />
                   <span>{{ translate('解锁') }}</span>

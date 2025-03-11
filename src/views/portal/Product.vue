@@ -18,7 +18,14 @@
           >
             立即购买
           </el-button>
-          <el-button href="https://vuejs-core.cn/shop-vite" plain rel="noopener noreferrer" tag="a" target="_blank" type="primary">
+          <el-button
+            href="https://vuejs-core.cn/shop-vite"
+            plain
+            rel="noopener noreferrer"
+            tag="a"
+            target="_blank"
+            type="primary"
+          >
             进入产品
           </el-button>
 
@@ -42,7 +49,15 @@
           </div>
 
           <el-row :gutter="20" style="margin-top: 50px">
-            <el-col v-for="item in list" :key="item.title" :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
+            <el-col
+              v-for="item in list"
+              :key="item.title"
+              :lg="8"
+              :md="8"
+              :sm="24"
+              :xl="8"
+              :xs="24"
+            >
               <div class="solution-box">
                 <div class="solution-box-item">
                   <div class="solution-box-title">{{ item.title }}</div>

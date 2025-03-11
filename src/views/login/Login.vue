@@ -6,7 +6,13 @@
         <div class="title">hello !</div>
         <div class="title-tips">{{ translate('欢迎来到') }} {{ title }}</div>
         <el-form-item prop="username">
-          <el-input v-model.trim="form.username" v-focus clearable :placeholder="translate('请输入用户名')" type="text">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            clearable
+            :placeholder="translate('请输入用户名')"
+            type="text"
+          >
             <template #prefix>
               <vab-icon icon="user-line" />
             </template>
@@ -28,7 +34,11 @@
         </el-form-item>
         <!-- 验证码验证逻辑需自行开发，如不需要验证码功能建议注释 -->
         <el-form-item prop="verificationCode">
-          <el-input v-model.trim="form.verificationCode" :placeholder="translate('验证码') + previewText" type="text">
+          <el-input
+            v-model.trim="form.verificationCode"
+            :placeholder="translate('验证码') + previewText"
+            type="text"
+          >
             <template #prefix>
               <vab-icon icon="barcode-box-line" />
             </template>

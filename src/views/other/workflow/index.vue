@@ -12,10 +12,27 @@
       :style="addPanelStyle"
       @add-node-finish="hideAddPanel"
     />
-    <el-drawer v-model="dialogVisible" :before-close="closeDialog" direction="rtl" size="400px" title="设置节点属性">
-      <property-dialog v-if="dialogVisible" :lf="lf" :node-data="clickNode" @set-properties-finish="closeDialog" />
+    <el-drawer
+      v-model="dialogVisible"
+      :before-close="closeDialog"
+      direction="rtl"
+      size="400px"
+      title="设置节点属性"
+    >
+      <property-dialog
+        v-if="dialogVisible"
+        :lf="lf"
+        :node-data="clickNode"
+        @set-properties-finish="closeDialog"
+      />
     </el-drawer>
-    <vab-dialog v-model="dataVisible" append-to-body class="graph-data-dialog" height="100px" title="数据">
+    <vab-dialog
+      v-model="dataVisible"
+      append-to-body
+      class="graph-data-dialog"
+      height="100px"
+      title="数据"
+    >
       <data-dialog :graph-data="graphData" />
     </vab-dialog>
   </div>

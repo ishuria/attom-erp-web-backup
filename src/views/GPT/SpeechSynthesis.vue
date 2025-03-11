@@ -9,15 +9,24 @@
             </el-form-item>
             <el-form-item label="语言">
               <el-select v-model="voice">
-                <el-option v-for="item in voices" :key="item.name" :label="item.name" :value="item" />
+                <el-option
+                  v-for="item in voices"
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item"
+                />
               </el-select>
             </el-form-item>
             <el-form-item label="操作">
               <el-button :disabled="speech.isPlaying.value" type="primary" @click="play">
                 {{ speech.status.value === 'pause' ? '继续' : '播放' }}
               </el-button>
-              <el-button :disabled="!speech.isPlaying.value" type="warning" @click="pause">暂停</el-button>
-              <el-button :disabled="!speech.isPlaying.value" type="danger" @click="stop">结束</el-button>
+              <el-button :disabled="!speech.isPlaying.value" type="warning" @click="pause">
+                暂停
+              </el-button>
+              <el-button :disabled="!speech.isPlaying.value" type="danger" @click="stop">
+                结束
+              </el-button>
             </el-form-item>
           </el-form>
         </vab-card>

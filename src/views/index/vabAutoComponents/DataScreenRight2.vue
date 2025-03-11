@@ -84,7 +84,14 @@ const option = reactive<any>({
     {
       name: '销售额',
       type: 'bar',
-      data: [random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50)],
+      data: [
+        random(20, 50),
+        random(20, 50),
+        random(20, 50),
+        random(20, 50),
+        random(20, 50),
+        random(20, 50),
+      ],
       itemStyle: {
         borderRadius: [10, 10, 0, 0],
         color: new graphic.LinearGradient(0, 0, 1, 0, [
@@ -138,13 +145,34 @@ const option = reactive<any>({
         shadowColor: 'rgba(0,179,244, 0.9)',
         shadowBlur: 20,
       },
-      data: [random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100)],
+      data: [
+        random(0, 100),
+        random(0, 100),
+        random(0, 100),
+        random(0, 100),
+        random(0, 100),
+        random(0, 100),
+      ],
     },
   ],
 })
 
 setInterval(() => {
-  option.series[0].data = [random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50), random(20, 50)]
-  option.series[1].data = [random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100), random(0, 100)]
+  option.series[0].data = [
+    random(20, 50),
+    random(20, 50),
+    random(20, 50),
+    random(20, 50),
+    random(20, 50),
+    random(20, 50),
+  ]
+  option.series[1].data = [
+    random(0, 100),
+    random(0, 100),
+    random(0, 100),
+    random(0, 100),
+    random(0, 100),
+    random(0, 100),
+  ]
 }, 1000 * 5)
 </script>

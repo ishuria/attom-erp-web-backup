@@ -12,7 +12,12 @@
           mode="horizontal"
           text-color="var(--el-menu-color-text)"
         >
-          <vab-menu v-for="(item, index) in handleRoutes" :key="index + item['name']" :item="item" :layout="layout" />
+          <vab-menu
+            v-for="(item, index) in handleRoutes"
+            :key="index + item['name']"
+            :item="item"
+            :layout="layout"
+          />
         </el-menu>
         <vab-right-tools is-horizontal />
       </div>
@@ -38,7 +43,9 @@ const routesStore = useRoutesStore()
 const { getActiveMenu: activeMenu, getRoutes: routes } = storeToRefs(routesStore)
 
 const handleRoutes = computed(() =>
-  routes.value.flatMap((route) => (route.meta && route.meta.levelHidden && route.children ? [...route.children] : route))
+  routes.value.flatMap((route) =>
+    route.meta && route.meta.levelHidden && route.children ? [...route.children] : route
+  )
 )
 </script>
 

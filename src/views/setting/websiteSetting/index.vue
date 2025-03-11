@@ -3,12 +3,24 @@
     <el-row :gutter="20">
       <el-col :lg="12" :md="20" :sm="24" :xl="10" :xs="24">
         <vab-card title="网站设置">
-          <el-form ref="formRef" label-position="top" :model="form" :rules="formRules" @submit="submitForm">
+          <el-form
+            ref="formRef"
+            label-position="top"
+            :model="form"
+            :rules="formRules"
+            @submit="submitForm"
+          >
             <el-form-item label="网站名称" prop="siteName">
               <el-input v-model="form.siteName" clearable />
             </el-form-item>
             <el-form-item label="logo" prop="logo">
-              <el-upload v-model:file-list="fileList" action="/uploadFile" drag multiple style="width: 100%">
+              <el-upload
+                v-model:file-list="fileList"
+                action="/uploadFile"
+                drag
+                multiple
+                style="width: 100%"
+              >
                 <el-icon class="el-icon--upload">
                   <upload-filled />
                 </el-icon>

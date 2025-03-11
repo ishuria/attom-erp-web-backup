@@ -22,7 +22,8 @@ export const useTabsStore = defineStore('tabs', {
       if (target && !route.meta.dynamicNewTab) Object.assign(target, route)
       else if (!target) this.visitedRoutes.push(Object.assign({}, route))
       //应对极特殊情况：没有配置noClosable的情况，默认使当前tab不可关闭
-      if (!this.visitedRoutes.find((route) => route.meta.noClosable)) this.visitedRoutes[0].meta.noClosable = true
+      if (!this.visitedRoutes.find((route) => route.meta.noClosable))
+        this.visitedRoutes[0].meta.noClosable = true
     },
     /**
      * @description 删除当前标签页
@@ -38,7 +39,9 @@ export const useTabsStore = defineStore('tabs', {
      * @returns
      */
     delOthersVisitedRoutes(path: string) {
-      this.visitedRoutes = this.visitedRoutes.filter((route) => route.meta.noClosable || route.path === path)
+      this.visitedRoutes = this.visitedRoutes.filter(
+        (route) => route.meta.noClosable || route.path === path
+      )
     },
     /**
      * @description 删除当前标签页左边全部标签页
@@ -80,8 +83,10 @@ export const useTabsStore = defineStore('tabs', {
     changeTabsMeta(options: any) {
       const handleVisitedRoutes = (visitedRoutes: any[]) => {
         return visitedRoutes.map((route: any) => {
-          if (route.name === options.name || route.meta.title === options.title) Object.assign(route.meta, options.meta)
-          if (route.children && route.children.length > 0) route.children = handleVisitedRoutes(route.children)
+          if (route.name === options.name || route.meta.title === options.title)
+            Object.assign(route.meta, options.meta)
+          if (route.children && route.children.length > 0)
+            route.children = handleVisitedRoutes(route.children)
           return route
         })
       }
@@ -92,7 +97,8 @@ export const useTabsStore = defineStore('tabs', {
      */
     handleCaughtRoutes() {
       const settingsStore = useSettingsStore()
-      if (settingsStore.persistenceTab) localStorage.setItem('caughtRoutes', JSON.stringify(this.visitedRoutes))
+      if (settingsStore.persistenceTab)
+        localStorage.setItem('caughtRoutes', JSON.stringify(this.visitedRoutes))
       else {
         this.caughtRoutes = []
         localStorage.removeItem('caughtRoutes')

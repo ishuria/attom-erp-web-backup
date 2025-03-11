@@ -17,7 +17,14 @@
             </el-radio-group>
           </vab-query-form-left-panel>
         </vab-query-form>
-        <el-form ref="formRef" class="demo-form" :label-position="labelPosition" label-width="100px" :model="form" :rules="rules">
+        <el-form
+          ref="formRef"
+          class="demo-form"
+          :label-position="labelPosition"
+          label-width="100px"
+          :model="form"
+          :rules="rules"
+        >
           <el-form-item label="活动名称" prop="name">
             <el-input v-model="form.name" clearable />
           </el-form-item>
@@ -54,7 +61,13 @@
             <el-rate v-model="form.rate" show-text />
           </el-form-item>
           <el-form-item label="行政区划">
-            <el-cascader v-model="form.area" clearable filterable :options="areaOptions" :props="{ label: 'name', value: 'code' }" />
+            <el-cascader
+              v-model="form.area"
+              clearable
+              filterable
+              :options="areaOptions"
+              :props="{ label: 'name', value: 'code' }"
+            />
           </el-form-item>
           <el-form-item label="穿梭框">
             <el-transfer

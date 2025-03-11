@@ -6,7 +6,12 @@
           <template #header>常规风格</template>
 
           <el-timeline>
-            <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
+            <el-timeline-item
+              v-for="(item, index) in activities"
+              :key="index"
+              :color="item.color"
+              :timestamp="item.timestamp"
+            >
               <template v-if="!item.color" #dot>
                 <vab-icon v-if="item.icon" :icon="item.icon" />
                 <vab-dot v-if="item.waver" :type="item.waver" />
@@ -26,7 +31,12 @@
           <template #header>卡片风格</template>
 
           <el-timeline>
-            <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
+            <el-timeline-item
+              v-for="(item, index) in activities"
+              :key="index"
+              :color="item.color"
+              :timestamp="item.timestamp"
+            >
               <template v-if="!item.color" #dot>
                 <vab-icon v-if="item.icon" :icon="item.icon" />
                 <vab-dot v-if="item.waver" :type="item.waver" />

@@ -78,7 +78,14 @@
                 <el-timeline-item placement="top" timestamp="2023/10/14">
                   <vab-card>
                     <el-row :gutter="20">
-                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                      <el-col
+                        class="item-content-wrap"
+                        :lg="12"
+                        :md="24"
+                        :sm="24"
+                        :xl="12"
+                        :xs="24"
+                      >
                         <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
@@ -104,7 +111,14 @@
                 <el-timeline-item placement="top" timestamp="2023/10/14">
                   <vab-card>
                     <el-row :gutter="20">
-                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                      <el-col
+                        class="item-content-wrap"
+                        :lg="12"
+                        :md="24"
+                        :sm="24"
+                        :xl="12"
+                        :xs="24"
+                      >
                         <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
@@ -130,7 +144,14 @@
                 <el-timeline-item placement="top" timestamp="2023/10/14">
                   <vab-card>
                     <el-row :gutter="20">
-                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                      <el-col
+                        class="item-content-wrap"
+                        :lg="12"
+                        :md="24"
+                        :sm="24"
+                        :xl="12"
+                        :xs="24"
+                      >
                         <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>
@@ -156,7 +177,14 @@
                 <el-timeline-item placement="top" timestamp="2023/10/14">
                   <vab-card>
                     <el-row :gutter="20">
-                      <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+                      <el-col
+                        class="item-content-wrap"
+                        :lg="12"
+                        :md="24"
+                        :sm="24"
+                        :xl="12"
+                        :xs="24"
+                      >
                         <el-image :src="handelImage()" />
                         <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
                       </el-col>

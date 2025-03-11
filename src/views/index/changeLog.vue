@@ -7,7 +7,9 @@
             <vab-icon icon="file-word-line" />
             更新日志
 
-            <el-button class="card-header-button" type="primary" @click="update">检查更新</el-button>
+            <el-button class="card-header-button" type="primary" @click="update">
+              检查更新
+            </el-button>
           </template>
 
           <vab-alert
@@ -30,7 +32,12 @@
           />
           <el-scrollbar style="height: calc(100% - 60px)">
             <el-timeline>
-              <el-timeline-item v-for="(item, index) in activities" :key="index" :color="item.color" :timestamp="item.timestamp">
+              <el-timeline-item
+                v-for="(item, index) in activities"
+                :key="index"
+                :color="item.color"
+                :timestamp="item.timestamp"
+              >
                 <template v-if="item.waver" #dot>
                   <vab-dot :type="item.waver" />
                 </template>
@@ -148,7 +155,11 @@ const update = async () => {
 }
 
 onBeforeMount(() => {
-  if (location.hostname !== 'localhost' && !location.hostname.includes('127') && !location.hostname.includes('192')) {
+  if (
+    location.hostname !== 'localhost' &&
+    !location.hostname.includes('127') &&
+    !location.hostname.includes('192')
+  ) {
     update()
   }
 })

@@ -22,7 +22,9 @@
     :overflow="props.overflow"
     :show-close="props.showClose"
     :style="{
-      transition: props.animated ? 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),transform 0s' : '',
+      transition: props.animated
+        ? 'all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),transform 0s'
+        : '',
     }"
     :top="props.top"
     :width="props.width"
@@ -32,13 +34,27 @@
       <slot name="header">
         <div class="el-dialog__title" @dblclick="setFullscreen">{{ props.title }}</div>
       </slot>
-      <button v-if="props.showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
+      <button
+        v-if="props.showClose"
+        class="el-dialog__headerbtn"
+        type="button"
+        @click="closeDialog"
+      >
         <el-icon class="el-dialog__close">
           <close />
         </el-icon>
       </button>
-      <button v-if="props.showFullscreen" class="el-dialog__headerbtn" style="right: 51px" type="button" @click="setFullscreen">
-        <vab-icon class="el-dialog__close el-dialog__fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" />
+      <button
+        v-if="props.showFullscreen"
+        class="el-dialog__headerbtn"
+        style="right: 51px"
+        type="button"
+        @click="setFullscreen"
+      >
+        <vab-icon
+          class="el-dialog__close el-dialog__fullscreen"
+          :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+        />
       </button>
     </template>
     <div v-loading="props.loading">

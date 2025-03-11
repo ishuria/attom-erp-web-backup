@@ -11,20 +11,40 @@
             <el-input v-model="queryForm.name" clearable placeholder="请输入商品名称" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button
+              :icon="Search"
+              :loading="listLoading"
+              native-type="submit"
+              type="primary"
+              @click="queryData"
+            >
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :data="list"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="序号" width="55">
         <template #default="{ $index }">
           {{ $index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="商品ID" min-width="180" prop="id" show-overflow-tooltip />
+      <el-table-column
+        align="center"
+        label="商品ID"
+        min-width="180"
+        prop="id"
+        show-overflow-tooltip
+      />
       <el-table-column align="center" label="商品名称" min-width="120" prop="name" />
       <el-table-column align="center" label="商品图" prop="image">
         <template #default="{ row }">
@@ -42,7 +62,10 @@
       <el-table-column align="center" label="库存" prop="stock" sortable />
       <el-table-column align="center" label="状态" min-width="100" prop="status" sortable>
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'">
+          <el-tag
+            effect="dark"
+            :type="row.status == '已上架' ? 'success' : row.status == '待上架' ? 'warning' : 'info'"
+          >
             {{ row.status }}
           </el-tag>
         </template>

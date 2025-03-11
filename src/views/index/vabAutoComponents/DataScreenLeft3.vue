@@ -3,7 +3,11 @@
     <div class="scroll" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
       <div ref="scrollRef" class="scroll-box">
         <div v-for="item in listData" :key="item.id" class="scroll-item">
-          <el-avatar fit="fill" :size="25" src="https://i.gtimg.cn/club/item/face/img/2/16022_100.gif" />
+          <el-avatar
+            fit="fill"
+            :size="25"
+            src="https://i.gtimg.cn/club/item/face/img/2/16022_100.gif"
+          />
           <span class="name">{{ item.name }}</span>
           <span class="address">{{ item.address }}</span>
         </div>

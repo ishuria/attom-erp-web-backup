@@ -1,5 +1,12 @@
 <template>
-  <vab-dialog v-model="show" append-to-body class="vab-update" :show-close="false" :show-fullscreen="false" width="410px">
+  <vab-dialog
+    v-model="show"
+    append-to-body
+    class="vab-update"
+    :show-close="false"
+    :show-fullscreen="false"
+    width="410px"
+  >
     <template #header></template>
     <div class="vab-update-icon">
       <vab-icon icon="upload-cloud-2-fill" />
@@ -116,7 +123,10 @@ onBeforeMount(() => {
     bottom: 70px;
     font-size: 80px;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(var(--el-color-primary-light-7), var(--el-color-primary-light-9));
+    background-image: linear-gradient(
+      var(--el-color-primary-light-7),
+      var(--el-color-primary-light-9)
+    );
     background-clip: text;
   }
 }

@@ -2,7 +2,11 @@
   <div class="context-menu-container">
     <el-button type="primary" @contextmenu="onContextMenu($event)">点击右键触发</el-button>
     <vab-context-menu v-model:show="show" :options="options">
-      <vab-context-menu-item :click-close="false" label="测试item动态显示和隐藏" @click="showItem = !showItem" />
+      <vab-context-menu-item
+        :click-close="false"
+        label="测试item动态显示和隐藏"
+        @click="showItem = !showItem"
+      />
       <vab-context-menu-item v-if="showItem" label="单击上面的item显示/隐藏我" />
       <vab-context-menu-separator v-if="showItem" />
       <vab-context-menu-item :click-close="false" :label="itemText" @click="changeLabelText" />
@@ -20,7 +24,12 @@
 </template>
 
 <script lang="ts" setup>
-import { VabContextMenu, VabContextMenuGroup, VabContextMenuItem, VabContextMenuSeparator } from '/@/plugins/VabContextMenu'
+import {
+  VabContextMenu,
+  VabContextMenuGroup,
+  VabContextMenuItem,
+  VabContextMenuSeparator,
+} from '/@/plugins/VabContextMenu'
 
 defineOptions({
   name: 'ContextMenu',

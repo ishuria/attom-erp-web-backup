@@ -1119,7 +1119,8 @@ export const asyncRoutes: VabRouteRecord[] = [
                     meta: {
                       title: '路由1.1.1.1',
                     },
-                    component: () => import('/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue'),
+                    component: () =>
+                      import('/@/views/operate/nested/menu1/menu11/menu111/menu1111/index.vue'),
                   },
                 ],
               },
@@ -1532,7 +1533,6 @@ export const asyncRoutes: VabRouteRecord[] = [
       guard: ['Admin'],
     },
     children: [
-
       {
         path: 'chatGPT',
         name: 'ChatGPT',
@@ -1551,7 +1551,8 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '语音合成',
           icon: 'customer-service-line',
         },
-      }, {
+      },
+      {
         path: '//chat.deepseek.com/',
         name: 'DeepSeek',
         meta: {

@@ -1,7 +1,12 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="24">
-      <el-segmented v-model="value1" disabled :options="options" style="margin-bottom: var(--el-margin)" />
+      <el-segmented
+        v-model="value1"
+        disabled
+        :options="options"
+        style="margin-bottom: var(--el-margin)"
+      />
     </el-col>
     <el-col :span="24">
       <el-segmented v-model="value2" :options="options" />

@@ -8,7 +8,12 @@
         <el-avatar :size="50" :src="avatar" />
         <div class="username">{{ username }}</div>
         <ul class="menu">
-          <li v-for="(item, index) in menuList" :key="index" :class="item.active ? 'menu-item-active' : ''" @click="openWindow(item)">
+          <li
+            v-for="(item, index) in menuList"
+            :key="index"
+            :class="item.active ? 'menu-item-active' : ''"
+            @click="openWindow(item)"
+          >
             <vab-icon :icon="item.icon" />
             <div>{{ item.title }}</div>
           </li>
@@ -166,7 +171,16 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-$breakpoints: (480px 95%, 768px 95%, 960px 95%, 1280px 95%, 1440px 95%, 1680px 95%, 1920px 80%, 2560px 70%);
+$breakpoints: (
+  480px 95%,
+  768px 95%,
+  960px 95%,
+  1280px 95%,
+  1440px 95%,
+  1680px 95%,
+  1920px 80%,
+  2560px 70%
+);
 .iot-container {
   position: fixed;
   inset: 0;

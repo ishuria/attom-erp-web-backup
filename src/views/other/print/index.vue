@@ -5,7 +5,12 @@
       <el-button type="primary" @click="print('tableRef')">打印表格</el-button>
       <el-button type="primary" @click="remotePrint">自定义打印</el-button>
     </el-space>
-    <img ref="imageRef" alt="" :src="landscape" style="display: block; width: 520px; margin-top: 15px" />
+    <img
+      ref="imageRef"
+      alt=""
+      :src="landscape"
+      style="display: block; width: 520px; margin-top: 15px"
+    />
     <br />
     <el-table ref="tableRef" :data="tableData" style="width: 520px">
       <el-table-column label="姓名" prop="name" width="120px" />

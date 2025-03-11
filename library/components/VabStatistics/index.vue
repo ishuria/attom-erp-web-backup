@@ -10,7 +10,11 @@ defineOptions({
 
 // 网站访问量统计 如不需要请自行注释
 onBeforeMount(() => {
-  if (location.hostname !== 'localhost' && !location.hostname.includes('127') && !location.hostname.includes('192')) {
+  if (
+    location.hostname !== 'localhost' &&
+    !location.hostname.includes('127') &&
+    !location.hostname.includes('192')
+  ) {
     ;(function () {
       const hm = document.createElement('script')
       let k = '820b686671af452e8a4e18952ce946d8'

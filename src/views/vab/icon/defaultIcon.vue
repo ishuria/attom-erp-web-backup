@@ -9,7 +9,9 @@
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button :disabled="!queryForm.colorful" :icon="Refresh" @click="fetchData">随机颜色</el-button>
+            <el-button :disabled="!queryForm.colorful" :icon="Refresh" @click="fetchData">
+              随机颜色
+            </el-button>
           </el-form-item>
           <el-form-item label="文字大小（px）">
             <el-slider v-model="queryForm.num" :max="40" :min="28" />
@@ -22,7 +24,9 @@
             <el-input v-model="queryForm.title" clearable placeholder="请输入图标名称" />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -31,7 +35,15 @@
     <el-scrollbar>
       <div class="vab-auto-box">
         <el-row :gutter="20">
-          <el-col v-for="(item, index) in queryIcon" :key="index" :lg="3" :md="4" :sm="6" :xl="2" :xs="6">
+          <el-col
+            v-for="(item, index) in queryIcon"
+            :key="index"
+            :lg="3"
+            :md="4"
+            :sm="6"
+            :xl="2"
+            :xs="6"
+          >
             <vab-card
               :body-style="{
                 'min-height': '65px',

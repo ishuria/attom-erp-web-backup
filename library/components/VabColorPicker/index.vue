@@ -1,5 +1,9 @@
 <template>
-  <div v-if="'technology' != theme.themeName" class="vab-color-picker" style="margin-left: var(--el-margin)">
+  <div
+    v-if="'technology' != theme.themeName"
+    class="vab-color-picker"
+    style="margin-left: var(--el-margin)"
+  >
     <el-color-picker
       v-model="theme.color"
       popper-class="vab-color-picker-popper"

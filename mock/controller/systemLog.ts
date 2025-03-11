@@ -29,7 +29,9 @@ export default [
     response: ({ query }: any) => {
       const { account, pageNo = 1, pageSize = 20 } = query
       const mockList = List.filter((item: any) => !(account && !item.account.includes(account)))
-      const list = mockList.filter((item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1))
+      const list = mockList.filter(
+        (item: any, index: any) => index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      )
       return {
         code: 200,
         msg: 'success',

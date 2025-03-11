@@ -1,5 +1,9 @@
 <template>
-  <vab-icon class="vab-fullscreen" :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'" @click="toggle" />
+  <vab-icon
+    class="vab-fullscreen"
+    :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+    @click="toggle"
+  />
 </template>
 
 <script lang="ts" setup>

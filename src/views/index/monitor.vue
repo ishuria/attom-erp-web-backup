@@ -2,15 +2,25 @@
   <div class="monitor-container no-background-container">
     <el-row :gutter="20">
       <el-col :lg="5" :md="24" :sm="24" :xl="5" :xs="24">
-        <vab-card :body-style="{ padding: '20px 0 20px 20px' }" style="height: var(--el-container-height)">
+        <vab-card
+          :body-style="{ padding: '20px 0 20px 20px' }"
+          style="height: var(--el-container-height)"
+        >
           <template #header>
             <vab-icon icon="chat-1-line" />
             聊天窗口
           </template>
           <el-select v-model="value" style="width: 80px">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
           </el-select>
-          <el-scrollbar style="height: calc(var(--el-container-height) - 160px); padding-right: 20px">
+          <el-scrollbar
+            style="height: calc(var(--el-container-height) - 160px); padding-right: 20px"
+          >
             <div class="chat-list">
               <div class="chat-item">
                 <div class="chat-item-user">用户admin</div>
@@ -57,7 +67,11 @@
             <vab-icon icon="vidicon-line" />
             直播预览
           </template>
-          <vab-player-hls :config="configHls" style="background-color: rgba(0, 0, 0, 0.87)" @player="playerInstance" />
+          <vab-player-hls
+            :config="configHls"
+            style="background-color: rgba(0, 0, 0, 0.87)"
+            @player="playerInstance"
+          />
         </vab-card>
         <vab-card style="height: 130px">
           <template #header>
@@ -85,7 +99,9 @@
           <template #header>
             <vab-icon icon="stack-line" />
             直播状态
-            <el-tag style="position: absolute; top: 15px; right: var(--el-margin)" type="success">流畅</el-tag>
+            <el-tag style="position: absolute; top: 15px; right: var(--el-margin)" type="success">
+              流畅
+            </el-tag>
           </template>
 
           <el-row :gutter="20">

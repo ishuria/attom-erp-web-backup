@@ -1,5 +1,12 @@
 <template>
-  <el-tree :data="data" :default-checked-keys="[5]" :default-expanded-keys="[2, 3]" node-key="id" :props="defaultProps" show-checkbox />
+  <el-tree
+    :data="data"
+    :default-checked-keys="[5]"
+    :default-expanded-keys="[2, 3]"
+    node-key="id"
+    :props="defaultProps"
+    show-checkbox
+  />
 </template>
 
 <script lang="ts" setup>

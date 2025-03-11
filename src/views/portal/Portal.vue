@@ -7,7 +7,11 @@
         <el-row :gutter="0">
           <el-col :span="6">
             <div class="left-tab">
-              <el-menu active-text-color="var(--el-color-white)" background-color="#39364d" text-color="var(--el-color-white)">
+              <el-menu
+                active-text-color="var(--el-color-white)"
+                background-color="#39364d"
+                text-color="var(--el-color-white)"
+              >
                 <el-menu-item index="1" @click="openWindow('https://vuejs-core.cn/admin-pro')">
                   <template #title>Vue Admin Pro：企业级中后台前端框架</template>
                 </el-menu-item>
@@ -75,7 +79,13 @@
         </el-row>
       </main>
       <main>
-        <el-carousel arrow="always" class="hidden-sm-and-up" height="200px" :interval="3000" style="margin-top: 70px">
+        <el-carousel
+          arrow="always"
+          class="hidden-sm-and-up"
+          height="200px"
+          :interval="3000"
+          style="margin-top: 70px"
+        >
           <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-pro')" />
           <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-plus')" />
           <el-carousel-item @click="openWindow('https://vuejs-core.cn/shop-vite')" />
@@ -95,7 +105,11 @@
           </el-col>
           <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
             <div class="news-tit"><h2>互动留言</h2></div>
-            <el-table :data="tableData" :height="395" style="border: 1px solid var(--el-border-color)">
+            <el-table
+              :data="tableData"
+              :height="395"
+              style="border: 1px solid var(--el-border-color)"
+            >
               <el-table-column label="Date" prop="date" />
               <el-table-column label="Name" prop="name" />
               <el-table-column label="Address" prop="address" show-overflow-tooltip />

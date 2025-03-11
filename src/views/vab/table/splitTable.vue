@@ -30,7 +30,12 @@
                   <el-input v-model="queryForm.author" clearable placeholder="请输入作者" />
                 </el-form-item>
                 <el-form-item v-show="!fold" label="时间">
-                  <el-date-picker v-model="queryForm.datetime" format="YYYY/MM/DD HH:mm:ss" placeholder="请选择时间" type="datetime" />
+                  <el-date-picker
+                    v-model="queryForm.datetime"
+                    format="YYYY/MM/DD HH:mm:ss"
+                    placeholder="请选择时间"
+                    type="datetime"
+                  />
                 </el-form-item>
                 <el-form-item v-show="!fold" label="状态">
                   <el-select v-model="queryForm.status" placeholder="请选择状态">
@@ -40,11 +45,23 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">查询</el-button>
+                  <el-button
+                    :icon="Search"
+                    :loading="listLoading"
+                    native-type="submit"
+                    type="primary"
+                    @click="queryData"
+                  >
+                    查询
+                  </el-button>
                   <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
                     <span v-if="fold">展开</span>
                     <span v-else>合并</span>
-                    <vab-icon class="vab-dropdown" :class="{ 'vab-dropdown-active': fold }" icon="arrow-up-s-line" />
+                    <vab-icon
+                      class="vab-dropdown"
+                      :class="{ 'vab-dropdown-active': fold }"
+                      icon="arrow-up-s-line"
+                    />
                   </el-button>
                 </el-form-item>
               </el-form>
@@ -53,10 +70,18 @@
               <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
               <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
               <el-button type="primary" @click="handleDetail">详情</el-button>
-              <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
+              <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">
+                后台打开详情
+              </el-button>
             </vab-query-form-left-panel>
           </vab-query-form>
-          <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+          <el-table
+            ref="tableRef"
+            v-loading="listLoading"
+            border
+            :data="list"
+            @selection-change="setSelectRows"
+          >
             <el-table-column type="selection" width="38" />
             <el-table-column align="center" label="序号" width="55">
               <template #default="{ $index }">

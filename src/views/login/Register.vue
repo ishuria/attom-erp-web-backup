@@ -6,21 +6,39 @@
         <div class="title">hello !</div>
         <div class="title-tips">{{ title }} {{ translate('账号注册') }}</div>
         <el-form-item prop="username">
-          <el-input v-model.trim="form.username" v-focus auto-complete="off" clearable :placeholder="translate('请输入用户名')" type="text">
+          <el-input
+            v-model.trim="form.username"
+            v-focus
+            auto-complete="off"
+            clearable
+            :placeholder="translate('请输入用户名')"
+            type="text"
+          >
             <template #prefix>
               <vab-icon icon="user-line" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="phone">
-          <el-input v-model.trim="form.phone" clearable maxlength="11" :placeholder="translate('请输入手机号')" show-word-limit type="text">
+          <el-input
+            v-model.trim="form.phone"
+            clearable
+            maxlength="11"
+            :placeholder="translate('请输入手机号')"
+            show-word-limit
+            type="text"
+          >
             <template #prefix>
               <vab-icon icon="smartphone-line" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="phoneCode" style="position: relative">
-          <el-input v-model.trim="form.phoneCode" :placeholder="translate('请输入手机验证码')" type="text">
+          <el-input
+            v-model.trim="form.phoneCode"
+            :placeholder="translate('请输入手机验证码')"
+            type="text"
+          >
             <template #prefix>
               <vab-icon icon="barcode-box-line" />
             </template>
@@ -30,13 +48,24 @@
           </el-button>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model.trim="form.password" clearable :placeholder="translate('请输入密码')" type="password">
+          <el-input
+            v-model.trim="form.password"
+            clearable
+            :placeholder="translate('请输入密码')"
+            type="password"
+          >
             <template #prefix>
               <vab-icon icon="lock-line" />
             </template>
           </el-input>
         </el-form-item>
-        <el-button v-throttle="handleRegister" class="login-btn" :loading="loading" native-type="submit" type="primary">
+        <el-button
+          v-throttle="handleRegister"
+          class="login-btn"
+          :loading="loading"
+          native-type="submit"
+          type="primary"
+        >
           {{ translate('注册') }}
         </el-button>
         <router-link to="/login">

@@ -7,10 +7,17 @@
             <el-input v-model.trim="queryForm.account" clearable placeholder="请输入账号" />
           </el-form-item>
           <el-form-item label="周期">
-            <el-date-picker v-model="queryForm.searchDate" end-placeholder="结束日期" start-placeholder="开始日期" type="daterange" />
+            <el-date-picker
+              v-model="queryForm.searchDate"
+              end-placeholder="结束日期"
+              start-placeholder="开始日期"
+              type="daterange"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">
+              查询
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>

@@ -1,7 +1,13 @@
 <template>
   <el-scrollbar ref="scrollbarRef" wrap-class="scroll-wrap" @scroll="handleScroll">
     <div class="vue-shop-vite-box" :class="{ mobile }">
-      <component :is="layout" :collapse="collapse" :device="device" :fixed-header="theme.fixedHeader" :show-tabs="theme.showTabs" />
+      <component
+        :is="layout"
+        :collapse="collapse"
+        :device="device"
+        :fixed-header="theme.fixedHeader"
+        :show-tabs="theme.showTabs"
+      />
     </div>
     <vab-theme-drawer />
     <vab-theme-setting />
@@ -65,7 +71,8 @@ onBeforeUnmount(() => {
 })
 
 watch(visibility, (current, previous) => {
-  if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
+  if (current === 'visible' && previous === 'hidden')
+    $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
 })
 
 watch(mobile, (value) => {

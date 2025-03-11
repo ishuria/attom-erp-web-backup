@@ -14,7 +14,9 @@
           <vab-divider blockquote is-border type="success">占位符</vab-divider>
           <vab-divider blockquote is-border type="warning">占位符</vab-divider>
           <vab-divider blockquote is-border type="danger">占位符</vab-divider>
-          <vab-divider blockquote is-border style="margin-bottom: 0px" type="info">占位符</vab-divider>
+          <vab-divider blockquote is-border style="margin-bottom: 0px" type="info">
+            占位符
+          </vab-divider>
         </vab-card>
         <vab-card title="字段集">
           <vab-divider fieldset style="margin-bottom: 0px" title="占位符">占位符</vab-divider>

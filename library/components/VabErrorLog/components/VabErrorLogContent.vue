@@ -2,7 +2,16 @@
   <el-table border :data="errorLogs">
     <el-table-column label="报错路由">
       <template #default="{ row }">
-        <el-button :href="row.url" rel="noopener noreferrer" tag="a" target="_blank" text type="success">{{ row.url }}</el-button>
+        <el-button
+          :href="row.url"
+          rel="noopener noreferrer"
+          tag="a"
+          target="_blank"
+          text
+          type="success"
+        >
+          {{ row.url }}
+        </el-button>
       </template>
     </el-table-column>
     <el-table-column label="错误信息">

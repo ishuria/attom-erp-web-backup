@@ -1,5 +1,11 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close">
+  <vab-dialog
+    v-model="dialogFormVisible"
+    append-to-body
+    :title="title"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="角色码" prop="role">
         <el-input v-model="form.role" clearable />

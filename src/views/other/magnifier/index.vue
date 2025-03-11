@@ -31,8 +31,12 @@
             <el-button type="primary" @click="addScale">增加放大倍数</el-button>
             <el-button type="warning" @click="subScale">减小放大倍数</el-button>
             <el-button type="primary" @click="changeType">更换放大镜类型</el-button>
-            <el-button class="hidden-md-and-down" type="warning" @click="changeShowType">更换放大方式</el-button>
-            <el-button class="hidden-md-and-down" type="primary" @click="changeToTaobao">淘宝放大镜</el-button>
+            <el-button class="hidden-md-and-down" type="warning" @click="changeShowType">
+              更换放大方式
+            </el-button>
+            <el-button class="hidden-md-and-down" type="primary" @click="changeToTaobao">
+              淘宝放大镜
+            </el-button>
             <el-button type="warning" @click="reset">重置</el-button>
           </el-space>
         </el-col>

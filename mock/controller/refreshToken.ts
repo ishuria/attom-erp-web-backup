@@ -28,8 +28,10 @@ export default [
     response(request) {
       const authorization = request.headers.authorization || request.headers.Authorization
       let token = ''
-      if (authorization.includes('admin-token')) token = `admin-token-${Random.guid()}-${Date.now()}`
-      if (authorization.includes('editor-token')) token = `editor-token-${Random.guid()}-${Date.now()}`
+      if (authorization.includes('admin-token'))
+        token = `admin-token-${Random.guid()}-${Date.now()}`
+      if (authorization.includes('editor-token'))
+        token = `editor-token-${Random.guid()}-${Date.now()}`
       if (authorization.includes('test-token')) token = `test-token-${Random.guid()}-${Date.now()}`
 
       return {

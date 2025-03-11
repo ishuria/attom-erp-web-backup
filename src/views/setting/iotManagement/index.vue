@@ -7,7 +7,12 @@
             <el-input v-model.trim="queryForm.taskName" clearable placeholder="请输入名称" />
           </el-form-item>
           <el-form-item label="周期">
-            <el-date-picker v-model="queryForm.date" end-placeholder="结束日期" start-placeholder="开始日期" type="daterange" />
+            <el-date-picker
+              v-model="queryForm.date"
+              end-placeholder="结束日期"
+              start-placeholder="开始日期"
+              type="daterange"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" type="primary" @click="queryData">查询</el-button>
@@ -46,7 +51,11 @@
             </div>
 
             <div>
-              <el-popconfirm title="您确定要执行当前操作吗？" width="240px" @confirm="handlePlay(item.status)">
+              <el-popconfirm
+                title="您确定要执行当前操作吗？"
+                width="240px"
+                @confirm="handlePlay(item.status)"
+              >
                 <template #reference>
                   <el-button v-if="item.status == 1" circle type="warning">
                     <vab-icon icon="pause-line" />

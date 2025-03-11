@@ -6,7 +6,15 @@
     </template>
 
     <el-row :gutter="20">
-      <el-col v-for="(item, index) in iconList" :key="index" :lg="6" :md="8" :sm="8" :xl="6" :xs="24">
+      <el-col
+        v-for="(item, index) in iconList"
+        :key="index"
+        :lg="6"
+        :md="8"
+        :sm="8"
+        :xl="6"
+        :xs="24"
+      >
         <vab-link :to="item.link">
           <vab-card class="icon-panel">
             <el-badge class="item" :value="item.value">

@@ -41,8 +41,16 @@
           </el-form-item>
           <el-form-item label="Offset">
             <el-space>
-              <el-input-number v-model="config.offset[0]" controls-position="right" placeholder="offsetLeft" />
-              <el-input-number v-model="config.offset[1]" controls-position="right" placeholder="offsetTop" />
+              <el-input-number
+                v-model="config.offset[0]"
+                controls-position="right"
+                placeholder="offsetLeft"
+              />
+              <el-input-number
+                v-model="config.offset[1]"
+                controls-position="right"
+                placeholder="offsetTop"
+              />
             </el-space>
           </el-form-item>
         </el-form>
@@ -62,7 +70,11 @@
     </vab-card>
 
     <vab-card title="局部图片水印">
-      <el-watermark :height="30" image="https://element-plus.org/images/element-plus-logo.svg" :width="130">
+      <el-watermark
+        :height="30"
+        image="https://element-plus.org/images/element-plus-logo.svg"
+        :width="130"
+      >
         <div style="height: 200px"></div>
       </el-watermark>
     </vab-card>

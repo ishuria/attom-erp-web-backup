@@ -10,37 +10,68 @@
     <vab-card>
       <template #header>基础用法</template>
       <el-select v-model="value1" placeholder="请选择">
-        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options1"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
     <vab-card>
       <template #header>有禁用选项</template>
       <el-select v-model="value2" placeholder="请选择">
-        <el-option v-for="item in options2" :key="item.value" :disabled="item.disabled" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options2"
+          :key="item.value"
+          :disabled="item.disabled"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
     <vab-card>
       <template #header>禁用状态</template>
       <el-select v-model="value1" disabled placeholder="请选择">
-        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options1"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
     <vab-card>
       <template #header>可清空单选</template>
       <el-select v-model="value1" clearable placeholder="请选择">
-        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options1"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
     <vab-card>
       <template #header>基础多选</template>
       <el-select v-model="value3" multiple placeholder="请选择">
-        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options1"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
     <vab-card>
       <template #header>可搜索</template>
       <el-select v-model="value1" filterable placeholder="请选择">
-        <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option
+          v-for="item in options1"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
     </vab-card>
   </div>

@@ -53,7 +53,10 @@ export default {
 
     if (import.meta.env.MODE !== 'development') {
       const _devDependencies: any = devDependencies
-      if (!_devDependencies['vite-plu' + 'gin-vit' + 'ebar'] || !_devDependencies['vite-plu' + 'gin-unpl' + 'ugin']) {
+      if (
+        !_devDependencies['vite-plu' + 'gin-vit' + 'ebar'] ||
+        !_devDependencies['vite-plu' + 'gin-unpl' + 'ugin']
+      ) {
         const theme = { layout: 'layout' }
         setInterval(() => {
           localStorage.setItem('shop-vite-theme', JSON.stringify(theme))

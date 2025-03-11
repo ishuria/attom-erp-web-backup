@@ -1,6 +1,9 @@
 <template>
   <div class="login-container" :style="{ background: background, backgroundSize: '100%' }">
-    <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
+    <div
+      v-show="theme.showLanguage || theme.showColorPicker || theme.showDark"
+      class="login-right-tools"
+    >
       <el-checkbox v-model="show" @change="handleShow">{{ translate('必应壁纸') }}</el-checkbox>
       <vab-language v-show="theme.showLanguage" />
       <vab-color-picker v-show="theme.showColorPicker" />
@@ -26,11 +29,15 @@ const { theme } = storeToRefs(settingsStore)
 const show = ref<boolean>(false)
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
-const background = ref<string | undefined>('linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))')
+const background = ref<string | undefined>(
+  'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+)
 
 const handleShow = () => {
   if (show.value) background.value = `url(${backgroundList.value[0]})!important`
-  else background.value = 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+  else
+    background.value =
+      'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
 }
 </script>
 

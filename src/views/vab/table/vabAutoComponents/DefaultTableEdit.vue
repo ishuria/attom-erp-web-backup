@@ -1,5 +1,11 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close">
+  <vab-dialog
+    v-model="dialogFormVisible"
+    append-to-body
+    :title="title"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="标题" prop="title">
         <el-input v-model.trim="form.title" clearable />
@@ -12,7 +18,12 @@
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="form.status" clearable>
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="数量" prop="count">

@@ -1,7 +1,13 @@
 <template>
   <div class="slider-verify-container">
     <el-button type="primary" @click="onShow">开始验证</el-button>
-    <vab-slider-verify :imgs="imgs" :show="isShow" @close="onClose" @fail="onFail" @success="onSuccess" />
+    <vab-slider-verify
+      :imgs="imgs"
+      :show="isShow"
+      @close="onClose"
+      @fail="onFail"
+      @success="onSuccess"
+    />
   </div>
 </template>
 
@@ -15,7 +21,10 @@ defineOptions({
 
 const isShow = ref<any>(false)
 
-const imgs = ref<any>(['https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png', landscape])
+const imgs = ref<any>([
+  'https://res.hc-cdn.com/tiny-vue-web-doc/3.10.5.20230903162611/static/images/mountain.png',
+  landscape,
+])
 
 const onShow = () => {
   isShow.value = true

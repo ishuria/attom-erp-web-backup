@@ -150,7 +150,16 @@ use([
 
 provide(THEME_KEY, theme)
 
-const emit = defineEmits(['click', 'contextmenu', 'dblclick', 'mousemove', 'mouseout', 'mouseover', 'mousedown', 'mouseup'])
+const emit = defineEmits([
+  'click',
+  'contextmenu',
+  'dblclick',
+  'mousemove',
+  'mouseout',
+  'mouseover',
+  'mousedown',
+  'mouseup',
+])
 
 const handleClick = (event: any) => {
   emit('click', event)

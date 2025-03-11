@@ -4,7 +4,13 @@
       <vab-city v-model="cityCode" />
     </vab-card>
     <vab-card title="行政区划（默认）">
-      <el-cascader v-model="area" clearable filterable :options="areaOptions" :props="{ label: 'name', value: 'code' }" />
+      <el-cascader
+        v-model="area"
+        clearable
+        filterable
+        :options="areaOptions"
+        :props="{ label: 'name', value: 'code' }"
+      />
     </vab-card>
   </div>
 </template>

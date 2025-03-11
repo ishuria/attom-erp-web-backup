@@ -16,7 +16,9 @@
         :titles="['左列表', '右列表']"
       >
         <template #default="{ option }">
-          <span class="transfer-avatar" :class="'transfer-avatar-' + option.key">{{ option.label.slice(0, 1) }}</span>
+          <span class="transfer-avatar" :class="'transfer-avatar-' + option.key">
+            {{ option.label.slice(0, 1) }}
+          </span>
           <span>{{ option.label }}</span>
         </template>
       </el-transfer>
@@ -69,7 +71,15 @@ interface Option2 {
 
 const generateData2 = () => {
   const data: Option2[] = []
-  const states = ['California', 'Illinois', 'Maryland', 'Texas', 'Florida', 'Colorado', 'Connecticut ']
+  const states = [
+    'California',
+    'Illinois',
+    'Maryland',
+    'Texas',
+    'Florida',
+    'Colorado',
+    'Connecticut ',
+  ]
   const initials = ['CA', 'IL', 'MD', 'TX', 'FL', 'CO', 'CT']
   states.forEach((city, index) => {
     data.push({

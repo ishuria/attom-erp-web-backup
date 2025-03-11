@@ -4,7 +4,8 @@ const List = [
   {
     email: '@email',
     image: 'https://i.gtimg.cn/club/item/face/img/8/15918_100.gif',
-    notice: 'github开源地址：<a target="_blank" href="https://github.com/zxwk1998/vue-admin-better">点我</a>',
+    notice:
+      'github开源地址：<a target="_blank" href="https://github.com/zxwk1998/vue-admin-better">点我</a>',
   },
   {
     email: '@email',

@@ -1,8 +1,19 @@
 <template>
-  <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" :size="size" :title="translate('主题配置')">
+  <el-drawer
+    v-model="drawerVisible"
+    append-to-body
+    class="vab-drawer"
+    direction="rtl"
+    :size="size"
+    :title="translate('主题配置')"
+  >
     <el-scrollbar height="calc(var(--vh, 1vh) * 100 - 120px)">
       <el-form ref="form" label-position="left" :model="theme">
-        <el-form-item v-if="device !== 'mobile' && routeName !== 'SeparateLayout'" class="vab-shop-layout-item" :label="translate('布局')">
+        <el-form-item
+          v-if="device !== 'mobile' && routeName !== 'SeparateLayout'"
+          class="vab-shop-layout-item"
+          :label="translate('布局')"
+        >
           <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
             <el-radio-button v-for="item in layoutList" :key="item" :label="item" :value="item">
               <template #default>
@@ -13,11 +24,20 @@
         </el-form-item>
         <el-form-item :label="translate('主题')">
           <el-radio-group v-model="theme.themeName" @change="_updateTheme">
-            <el-radio-button v-for="item in themeNameList" :key="item.value" :label="translate(item.label)" :value="item.value" />
+            <el-radio-button
+              v-for="item in themeNameList"
+              :key="item.value"
+              :label="translate(item.label)"
+              :value="item.value"
+            />
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
+          v-if="
+            'technology' != theme.themeName &&
+            'plain' != theme.themeName &&
+            route.path !== '/goods/posterDesign'
+          "
           :label="translate('暗黑模式')"
         >
           <vab-dark />
@@ -25,7 +45,10 @@
         <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
-        <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
+        <el-form-item
+          v-if="'default' === theme.themeName && mode !== 'dark'"
+          :label="translate('菜单背景跟随配色')"
+        >
           <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
         </el-form-item>
         <el-form-item v-if="theme.layout !== 'horizontal'" :label="translate('菜单宽度')">
@@ -47,7 +70,12 @@
         </el-form-item>
         <el-form-item v-if="theme.showTabs" :label="translate('标签风格')">
           <el-select v-model="theme.tabsBarStyle">
-            <el-option v-for="item in tabsBarStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
+            <el-option
+              v-for="item in tabsBarStyleList"
+              :key="item.value"
+              :label="translate(item.label)"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item v-if="device !== 'mobile' && theme.showTabs" :label="translate('标签拖拽')">
@@ -58,7 +86,12 @@
         </el-form-item>
         <el-form-item v-if="theme.layout === 'column'" :label="translate('分栏风格')">
           <el-select v-model="theme.columnStyle">
-            <el-option v-for="item in columnStyleList" :key="item.value" :label="translate(item.label)" :value="item.value" />
+            <el-option
+              v-for="item in columnStyleList"
+              :key="item.value"
+              :label="translate(item.label)"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
         <el-form-item :label="translate('国际化')">
@@ -67,13 +100,19 @@
         <el-form-item :label="translate('圆角')">
           <el-input-number v-model="theme.radius" :max="26" :min="3" @change="handleRadius" />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('色弱')">
+        <el-form-item
+          v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
+          :label="translate('色弱')"
+        >
           <el-switch v-model="theme.colorWeakness" @change="handleColorWeakness" />
         </el-form-item>
         <el-form-item v-if="theme.layout !== 'comprehensive'" :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑组件')">
+        <el-form-item
+          v-if="'technology' != theme.themeName && 'plain' != theme.themeName"
+          :label="translate('暗黑组件')"
+        >
           <el-switch v-model="theme.showDark" />
         </el-form-item>
         <el-form-item :label="translate('字体')">
@@ -108,7 +147,12 @@
         </el-form-item>
         <el-form-item :label="translate('页面动画')">
           <el-select v-model="theme.pageTransition">
-            <el-option v-for="item in pageTransitionList" :key="item.value" :label="translate(item.label)" :value="item.value" />
+            <el-option
+              v-for="item in pageTransitionList"
+              :key="item.value"
+              :label="translate(item.label)"
+              :value="item.value"
+            />
           </el-select>
         </el-form-item>
       </el-form>

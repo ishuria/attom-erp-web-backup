@@ -8,7 +8,13 @@
         <el-tab-pane label="按数值" name="first">
           <el-form :model="queryForm1" style="width: 600px" @submit.prevent>
             <el-form-item label="数值(800px - 1500px)">
-              <el-slider v-model="queryForm1.count" :max="1500" :min="800" show-input @change="handleChange1" />
+              <el-slider
+                v-model="queryForm1.count"
+                :max="1500"
+                :min="800"
+                show-input
+                @change="handleChange1"
+              />
             </el-form-item>
             <el-form-item label="是否居中">
               <el-switch v-model="queryForm1.isChecked" @change="handleChecked" />
@@ -18,7 +24,13 @@
         <el-tab-pane label="按百分比" name="second">
           <el-form :model="queryForm2" style="width: 600px" @submit.prevent>
             <el-form-item label="百分比(50% - 100%)">
-              <el-slider v-model="queryForm2.count" :max="100" :min="50" show-input @change="handleChange2" />
+              <el-slider
+                v-model="queryForm2.count"
+                :max="100"
+                :min="50"
+                show-input
+                @change="handleChange2"
+              />
             </el-form-item>
             <el-form-item label="是否居中">
               <el-switch v-model="queryForm1.isChecked" @change="handleChecked" />

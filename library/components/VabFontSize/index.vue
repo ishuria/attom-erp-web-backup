@@ -3,7 +3,9 @@
     <vab-icon icon="font-size-2" />
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item v-for="item in fontSizeList" :key="item" :command="item">{{ item }}</el-dropdown-item>
+        <el-dropdown-item v-for="item in fontSizeList" :key="item" :command="item">
+          {{ item }}
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>

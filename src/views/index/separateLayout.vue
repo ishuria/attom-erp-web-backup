@@ -9,7 +9,9 @@
           <vab-fullscreen />
         </template>
       </el-page-header>
-      <vab-alert title="当前页面允许独立于默认布局之外并禁用主题配置，当切换至其他页面时回到默认布局" />
+      <vab-alert
+        title="当前页面允许独立于默认布局之外并禁用主题配置，当切换至其他页面时回到默认布局"
+      />
       <tile />
     </div>
   </div>
@@ -41,7 +43,8 @@ watch(
       if (route.path === '/separateLayout') theme.value.layout = 'horizontal'
       else {
         if (localStorage.getItem('shop-vite-theme'))
-          theme.value.layout = JSON.parse(localStorage.getItem('shop-vite-theme') as string).layout || layout
+          theme.value.layout =
+            JSON.parse(localStorage.getItem('shop-vite-theme') as string).layout || layout
         else theme.value.layout = layout
       }
     }

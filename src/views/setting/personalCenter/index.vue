@@ -12,7 +12,14 @@
               {{ form.description }}
             </div>
             <div class="user-info-follow">
-              <el-button href="https://github.com/zxwk1998" rel="noopener noreferrer" round tag="a" target="_blank" type="primary">
+              <el-button
+                href="https://github.com/zxwk1998"
+                rel="noopener noreferrer"
+                round
+                tag="a"
+                target="_blank"
+                type="primary"
+              >
                 <vab-icon icon="group-line" />
                 <span>Follow me</span>
               </el-button>
@@ -83,15 +90,29 @@
                       <div style="margin-bottom: 10px">标签</div>
                     </template>
                     <el-space wrap>
-                      <el-tag v-for="tag in dynamicTags" :key="tag" closable :disable-transitions="false" @close="handleClose(tag)">
+                      <el-tag
+                        v-for="tag in dynamicTags"
+                        :key="tag"
+                        closable
+                        :disable-transitions="false"
+                        @close="handleClose(tag)"
+                      >
                         {{ tag }}
                       </el-tag>
-                      <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" size="small" @blur="handleInputConfirm" />
+                      <el-input
+                        v-if="inputVisible"
+                        ref="inputRef"
+                        v-model="inputValue"
+                        size="small"
+                        @blur="handleInputConfirm"
+                      />
                       <el-button v-else size="small" @click="showInput">添加</el-button>
                     </el-space>
                   </el-form-item>
                   <el-form-item>
-                    <el-button native-type="submit" type="primary" @click="onSubmit">保存</el-button>
+                    <el-button native-type="submit" type="primary" @click="onSubmit">
+                      保存
+                    </el-button>
                   </el-form-item>
                 </el-form>
               </el-col>

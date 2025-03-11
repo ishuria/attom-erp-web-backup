@@ -45,7 +45,14 @@ const option = reactive<any>({
     barWidth: 18,
     name: '',
     type: 'bar',
-    data: [random(50, 100), random(10, 100), random(10, 100), random(10, 100), random(10, 100), random(50, 100)],
+    data: [
+      random(50, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(50, 100),
+    ],
     itemStyle: {
       color: new graphic.LinearGradient(0, 0, 1, 0, [
         { offset: 0, color: lightenColor(theme.value.color, 20) },
@@ -68,7 +75,14 @@ watch(
 
 onMounted(() => {
   timer = setInterval(() => {
-    option.series.data = [random(50, 100), random(10, 100), random(10, 100), random(10, 100), random(10, 100), random(50, 100)]
+    option.series.data = [
+      random(50, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(10, 100),
+      random(50, 100),
+    ]
     option.series.type = sample(pull(['bar', 'line'], option.series.type))
   }, 3000)
 })

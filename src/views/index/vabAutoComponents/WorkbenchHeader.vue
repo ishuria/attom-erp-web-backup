@@ -63,7 +63,13 @@
     font-size: 30px;
     font-weight: bold;
     color: #33e6fa;
-    background: linear-gradient(-90deg, #7cedfb 0%, #2ba3ff 0%, #02efff 50.2685546875%, #2ea5f9 100%);
+    background: linear-gradient(
+      -90deg,
+      #7cedfb 0%,
+      #2ba3ff 0%,
+      #02efff 50.2685546875%,
+      #2ea5f9 100%
+    );
     background-clip: text;
     -webkit-text-fill-color: transparent;
 

@@ -10,7 +10,13 @@
     </vab-card>
     <vab-card>
       <template #header>只读</template>
-      <el-rate v-model="value3" disabled score-template="{value}" show-score text-color="var(--el-color-warning)" />
+      <el-rate
+        v-model="value3"
+        disabled
+        score-template="{value}"
+        show-score
+        text-color="var(--el-color-warning)"
+      />
     </vab-card>
   </div>
 </template>

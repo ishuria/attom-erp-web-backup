@@ -25,7 +25,14 @@
       v-if="outZoomer"
       v-show="!hideOutZoomer"
       :class="['img-out-show', { 'base-line': baseline }]"
-      :style="[outZoomerStyle, outZoomerSize, outZoomerPosition, zoomerBgUrl, zoomerBgSize, zoomerBgPosition]"
+      :style="[
+        outZoomerStyle,
+        outZoomerSize,
+        outZoomerPosition,
+        zoomerBgUrl,
+        zoomerBgSize,
+        zoomerBgPosition,
+      ]"
     >
       <div v-if="pointer" class="img-zoomer-point"></div>
       <slot name="outZoomer"></slot>
@@ -336,8 +343,10 @@ export default {
         const y = pageY - absoluteTop
         const zoomerLeft = x > leftBound ? Math.min(x, rightBound) : leftBound
         const zoomerTop = y > topBound ? Math.min(y, bottomBound) : topBound
-        const vZoomerX = x * scale > vZoomerLeftBound ? Math.min(x * scale, vZoomerRightBound) : vZoomerLeftBound
-        const vZoomerY = y * scale > vZoomerTopBound ? Math.min(y * scale, vZoomerBottomBound) : vZoomerTopBound
+        const vZoomerX =
+          x * scale > vZoomerLeftBound ? Math.min(x * scale, vZoomerRightBound) : vZoomerLeftBound
+        const vZoomerY =
+          y * scale > vZoomerTopBound ? Math.min(y * scale, vZoomerBottomBound) : vZoomerTopBound
         zoomerRect.left = zoomerLeft - zoomerHalfWidth
         zoomerRect.top = zoomerTop - zoomerHalfHeight
         zoomerBgRect.left = -vZoomerX + vZoomerHalfWidth

@@ -10,7 +10,15 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-row :gutter="20">
-      <el-col v-for="(item, index) in iconList" :key="index" :lg="3" :md="6" :sm="8" :xl="3" :xs="12">
+      <el-col
+        v-for="(item, index) in iconList"
+        :key="index"
+        :lg="3"
+        :md="6"
+        :sm="8"
+        :xl="3"
+        :xs="12"
+      >
         <vab-card>
           <vab-icon
             :icon="item"

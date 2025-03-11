@@ -6,7 +6,10 @@
         <div class="banner">
           <main>
             <div class="banner-title">合作伙伴计划</div>
-            <div class="banner-description">虚位以待，合作共赢，国内Vue3前端付费模板连续多年销量Top1，Vue Shop Vite期待与您共同成长</div>
+            <div class="banner-description">
+              虚位以待，合作共赢，国内Vue3前端付费模板连续多年销量Top1，Vue Shop
+              Vite期待与您共同成长
+            </div>
 
             <el-button
               href="https://vuejs-core.cn/authorization/shop-vite.html"
@@ -17,7 +20,14 @@
             >
               立即购买
             </el-button>
-            <el-button href="https://vuejs-core.cn/shop-vite" plain rel="noopener noreferrer" tag="a" target="_blank" type="primary">
+            <el-button
+              href="https://vuejs-core.cn/shop-vite"
+              plain
+              rel="noopener noreferrer"
+              tag="a"
+              target="_blank"
+              type="primary"
+            >
               进入产品
             </el-button>
 

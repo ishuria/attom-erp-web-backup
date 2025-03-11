@@ -109,18 +109,27 @@ const toggleShowHide = () => {
   show.value = !show.value
 }
 
-const shuffle = (val: any, list: any) => list.filter((item: any) => item !== val)[(Math.random() * (list.length - 1)) | 0]
+const shuffle = (val: any, list: any) =>
+  list.filter((item: any) => item !== val)[(Math.random() * (list.length - 1)) | 0]
 
 const randomTheme = async () => {
   const loading = $baseLoading()
 
   setTimeout(() => {
     const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
-    const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
+    const columnStyle = shuffle(theme.value.columnStyle, [
+      'vertical',
+      'horizontal',
+      'card',
+      'arrow',
+      'semicircle',
+    ])
     const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
     const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
     const layout =
-      device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall']) : 'vertical'
+      device.value === 'desktop'
+        ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall'])
+        : 'vertical'
     const _color = shuffle(theme.value.color, [
       '#1e90ff',
       '#4e88f3',

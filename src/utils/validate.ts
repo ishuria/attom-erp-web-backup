@@ -111,7 +111,8 @@ export const isArray = (value: any) => {
  * @returns {boolean}
  */
 export const isPort = (value: string) => {
-  const reg = /^(\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+  const reg =
+    /^(\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
   return reg.test(value)
 }
 
@@ -161,7 +162,13 @@ export const isChina = (value: string) => {
  * @returns {boolean}
  */
 export const isBlank = (value: string) => {
-  return value === null || false || value === '' || value.trim() === '' || value.toLocaleLowerCase().trim() === 'null'
+  return (
+    value === null ||
+    false ||
+    value === '' ||
+    value.trim() === '' ||
+    value.toLocaleLowerCase().trim() === 'null'
+  )
 }
 
 /**

@@ -91,7 +91,13 @@ const handleSaveImg = () => {
   el.dispatchEvent(event)
 }
 
-const paint = (startX: number, startY: number, endX: number, endY: number, ctx: CanvasRenderingContext2D) => {
+const paint = (
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  ctx: CanvasRenderingContext2D
+) => {
   ctx.beginPath()
   ctx.globalAlpha = 1
   ctx.lineWidth = 2

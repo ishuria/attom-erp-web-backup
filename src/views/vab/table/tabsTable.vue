@@ -6,10 +6,18 @@
           <vab-query-form-top-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item label="分类">
-                <el-check-tag :checked="queryForm.checked1" @change="onChange1">分类一</el-check-tag>
-                <el-check-tag :checked="queryForm.checked2" @change="onChange2">分类二</el-check-tag>
-                <el-check-tag :checked="queryForm.checked3" @change="onChange3">分类三</el-check-tag>
-                <el-check-tag :checked="queryForm.checked4" @change="onChange4">分类四</el-check-tag>
+                <el-check-tag :checked="queryForm.checked1" @change="onChange1">
+                  分类一
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked2" @change="onChange2">
+                  分类二
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked3" @change="onChange3">
+                  分类三
+                </el-check-tag>
+                <el-check-tag :checked="queryForm.checked4" @change="onChange4">
+                  分类四
+                </el-check-tag>
               </el-form-item>
             </el-form>
           </vab-query-form-top-panel>
@@ -17,11 +25,19 @@
             <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
             <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
             <el-button type="primary" @click="handleDetail">详情</el-button>
-            <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
+            <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">
+              后台打开详情
+            </el-button>
           </vab-query-form-left-panel>
         </vab-query-form>
 
-        <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
+          border
+          :data="list"
+          @selection-change="setSelectRows"
+        >
           <el-table-column type="selection" width="38" />
           <el-table-column align="center" label="序号" width="55">
             <template #default="{ $index }">

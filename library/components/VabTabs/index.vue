@@ -8,11 +8,20 @@
         @tab-click="handleTabClick"
         @tab-remove="handleTabRemove"
       >
-        <el-tab-pane v-for="item in visitedRoutes" :key="item" :closable="!isNoClosable(item)" :name="item.path">
+        <el-tab-pane
+          v-for="item in visitedRoutes"
+          :key="item"
+          :closable="!isNoClosable(item)"
+          :name="item.path"
+        >
           <template #label>
             <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
               <template v-if="theme.showTabsIcon">
-                <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+                <vab-icon
+                  v-if="item.meta && item.meta.icon"
+                  :icon="item.meta.icon"
+                  :is-custom-svg="item.meta.isCustomSvg"
+                />
                 <vab-icon v-else :icon="item.parentIcon" />
               </template>
               <span v-if="!isNoClosable(item)" @dblclick="handleTabRemove(item.path)">
@@ -80,16 +89,28 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <ul v-if="visible" class="contextmenu el-dropdown-menu" :style="{ left: left + 'px', top: top + 'px' }">
+    <ul
+      v-if="visible"
+      class="contextmenu el-dropdown-menu"
+      :style="{ left: left + 'px', top: top + 'px' }"
+    >
       <li class="el-dropdown-menu__item" @click="refresh">
         <vab-icon icon="refresh-line" />
         <span>{{ translate('刷新') }}</span>
       </li>
-      <li class="el-dropdown-menu__item" :class="{ 'is-disabled': visitedRoutes.length === 1 }" @click="closeOthersTabs">
+      <li
+        class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
+        @click="closeOthersTabs"
+      >
         <vab-icon icon="close-line" />
         <span>{{ translate('关闭其他') }}</span>
       </li>
-      <li class="el-dropdown-menu__item" :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }" @click="closeLeftTabs">
+      <li
+        class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
+        @click="closeLeftTabs"
+      >
         <vab-icon icon="arrow-left-line" />
         <span>{{ translate('关闭左侧') }}</span>
       </li>
@@ -290,7 +311,9 @@ const closeAllTabs = async () => {
  * 跳转最后一个标签页
  */
 const toLastTab = async () => {
-  const latestView = visitedRoutes.value.findLast((item) => item.path !== handleActivePath(route, true))
+  const latestView = visitedRoutes.value.findLast(
+    (item) => item.path !== handleActivePath(route, true)
+  )
   if (latestView) await router.push(latestView)
   else await router.push('/')
 }
@@ -321,7 +344,11 @@ const handleTabDrag = () => {
         draggable: '.el-tabs__item.is-top.is-closable',
         filter: '.el-tabs__active-bar.is-top',
         onEnd(e: any) {
-          const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex) - 1, parseInt(e.newIndex) - 1)
+          const routes = moveElement(
+            [...visitedRoutes.value],
+            parseInt(e.oldIndex) - 1,
+            parseInt(e.newIndex) - 1
+          )
           updateVisitedRoutes(routes)
           _visitedRoutes.value = routes
         },

@@ -1,11 +1,23 @@
 <template>
-  <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close">
+  <vab-dialog
+    v-model="dialogFormVisible"
+    append-to-body
+    :title="title"
+    width="500px"
+    @close="close"
+  >
     <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="商品名称" prop="name">
         <el-input v-model.trim="form.name" clearable />
       </el-form-item>
       <el-form-item label="商品图">
-        <el-upload v-model:file-list="fileList" action="/uploadFile" drag multiple style="width: 100%">
+        <el-upload
+          v-model:file-list="fileList"
+          action="/uploadFile"
+          drag
+          multiple
+          style="width: 100%"
+        >
           <el-icon class="el-icon--upload">
             <upload-filled />
           </el-icon>
@@ -20,12 +32,22 @@
       </el-form-item>
       <el-form-item label="商品类型" prop="type">
         <el-select v-model="form.type">
-          <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option
+            v-for="item in typeList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="form.status">
-          <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option
+            v-for="item in statusList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="商品售价" prop="price">

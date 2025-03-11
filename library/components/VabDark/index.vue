@@ -1,6 +1,10 @@
 <template>
   <el-switch
-    v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
+    v-if="
+      'technology' != theme.themeName &&
+      'plain' != theme.themeName &&
+      route.path !== '/goods/posterDesign'
+    "
     v-model="mode"
     :active-icon="Moon"
     active-value="dark"

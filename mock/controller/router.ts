@@ -1459,11 +1459,10 @@ const list: VabRouteRecord[] = [
       guard: ['Admin'],
     },
     children: [
-
       {
         path: 'chatGPT',
         name: 'ChatGPT',
-        component: () =>('/@/views/GPT/ChatGPT.vue'),
+        component: () => '/@/views/GPT/ChatGPT.vue',
         meta: {
           title: 'ChatGPT',
           icon: 'openai-line',
@@ -1473,7 +1472,7 @@ const list: VabRouteRecord[] = [
       {
         path: 'speechSynthesis',
         name: 'SpeechSynthesis',
-        component: () => ('/@/views/GPT/SpeechSynthesis.vue'),
+        component: () => '/@/views/GPT/SpeechSynthesis.vue',
         meta: {
           title: '语音合成',
           icon: 'customer-service-line',
@@ -1489,7 +1488,8 @@ const list: VabRouteRecord[] = [
           icon: 'deepSeek',
           badge: 'Hot',
         },
-      },      {
+      },
+      {
         path: '//yiyan.baidu.com',
         name: 'Yiyan',
         meta: {

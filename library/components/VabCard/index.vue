@@ -1,5 +1,10 @@
 <template>
-  <el-card :body-class="props.bodyClass" :body-style="props.bodyStyle" class="vab-card" :shadow="props.shadow">
+  <el-card
+    :body-class="props.bodyClass"
+    :body-style="props.bodyStyle"
+    class="vab-card"
+    :shadow="props.shadow"
+  >
     <template v-if="$slots.header || props.title" #header>
       <slot v-if="$slots.header" name="header"></slot>
       <template v-else>{{ props.title }}</template>

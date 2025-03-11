@@ -177,7 +177,16 @@ defineOptions({
 </script>
 
 <style lang="scss" scoped>
-$breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680px 75%, 1920px 70%, 2560px 60%);
+$breakpoints: (
+  480px 100%,
+  768px 100%,
+  960px 100%,
+  1280px 90%,
+  1440px 80%,
+  1680px 75%,
+  1920px 70%,
+  2560px 60%
+);
 
 .tile-container {
   position: relative;

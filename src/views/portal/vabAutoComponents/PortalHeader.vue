@@ -7,7 +7,12 @@
       </div>
 
       <el-tabs v-model="activeName" class="hidden-xs-only" @tab-click="handleClick">
-        <el-tab-pane v-for="(item, index) in tabsList" :key="index" :label="item.label" :name="item.name" />
+        <el-tab-pane
+          v-for="(item, index) in tabsList"
+          :key="index"
+          :label="item.label"
+          :name="item.name"
+        />
       </el-tabs>
 
       <el-dropdown class="hidden-sm-and-up" @command="handleCommand">
