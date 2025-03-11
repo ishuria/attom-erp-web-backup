@@ -163,12 +163,12 @@
           <br />
           1单位
         </template>
-        <template #default="{ row }">
+        <!-- <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.statutoryUnit" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
           </div>
           <span>{{ row.statutoryUnit }}</span>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="每零件单位有多少个法定第1单位" min-width="160" prop="statutoryCount">
         <template #header>
@@ -205,7 +205,7 @@
             v-model="row.hsId"
             filterable
             placeholder="请选择HS"
-            @change="handleCustomsChange"
+            @change="handleCustomsChange(row)"
           >
             <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
@@ -657,9 +657,9 @@ const fetchData = async () => {
     item.upc = item.upc.replaceAll(',', '<br />')
     item.europeFnSku = item.europeFnSku.replaceAll(',', '<br />')
   })
-  list.value.sort((a: any, b: any) => {
-    return b.pId - a.pId
-  })
+  // list.value.sort((a: any, b: any) => {
+  //   return b.pId - a.pId
+  // })
 }
 let previous: any = null
 let currentGroupIndex = 0 // 当前组索引
