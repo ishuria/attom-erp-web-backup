@@ -187,14 +187,14 @@
                     v-for="item in columns"
                     :key="item.label"
                     :class="{ 'non-draggable' : item.disableCheck }"
-                    style="font-size: var(--el-font-size-base); display: flex; align-items: center;"
+                    style=" display: flex; align-items: center;font-size: var(--el-font-size-base);"
                   >
                     <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
                     <span style="flex: 1">{{ item.label }}</span>
                     <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
                       <el-icon><view /></el-icon>
                     </span>
-                    <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+                    <span v-else class="icon-hover" style=" display: flex; align-items: center;cursor: pointer;" @click="handleChecked(item)">
                       <el-icon v-show="!item.checked"><hide /></el-icon>
                       <el-icon v-show="item.checked"><view /></el-icon>
                     </span>
@@ -1445,36 +1445,36 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
-  addPoSKU,
-  createPlanPo,
-  deleteComponentImg,
-  deletePoSku,
-  deletePoSkuComponent,
-  deleteSkuImg,
-  getPoContractTerms,
-  getPoDetail,
-  getPoPurchaseMatters,
-  getPoSkuComponentList,
-  getPoSkuIdList,
-  getPoSkuList,
-  getPurchaseSKU,
-  submitPurchaseComponent,
-  submitPurchaseConsumable,
-  updateAllComponentPrice,
-  updateBuyerAndCustomsDeclaration,
-  updateComponentPrice,
-  updateCreateComponent,
-  updateCreateSkuCount,
-  updatePoContractTerms,
-  updatePoPurchaseMatters,
-  updatePoRemarks,
-  updatePoSite,
-  updatePoSkuComponent,
-  updatePoSkuComponentSuppliser,
-  updateSkuCount,
-  updateSkuDetail,
-  updateSkuImg,
-  uploadComponentImg
+addPoSKU,
+createPlanPo,
+deleteComponentImg,
+deletePoSku,
+deletePoSkuComponent,
+deleteSkuImg,
+getPoContractTerms,
+getPoDetail,
+getPoPurchaseMatters,
+getPoSkuComponentList,
+getPoSkuIdList,
+getPoSkuList,
+getPurchaseSKU,
+submitPurchaseComponent,
+submitPurchaseConsumable,
+updateAllComponentPrice,
+updateBuyerAndCustomsDeclaration,
+updateComponentPrice,
+updateCreateComponent,
+updateCreateSkuCount,
+updatePoContractTerms,
+updatePoPurchaseMatters,
+updatePoRemarks,
+updatePoSite,
+updatePoSkuComponent,
+updatePoSkuComponentSuppliser,
+updateSkuCount,
+updateSkuDetail,
+updateSkuImg,
+uploadComponentImg
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
@@ -2496,7 +2496,7 @@ const handleDeclareCustoms = async (row: any) => {
       $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
     } 
   } else {
-    updateSkuComponent(row)
+    // updateSkuComponent(row)
   }
   try {
     const { data } = await updatePoSkuComponent(row)
@@ -3261,10 +3261,10 @@ onMounted(() => {
 :deep(input[type="number"]) {
   -moz-appearance: textfield;
 }
-.custom-tooltip {
-  white-space: pre-wrap; 
+.custom-tooltip { 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 .icon-hover {
   padding: 6px;
@@ -3273,8 +3273,8 @@ onMounted(() => {
 }
 
 .icon-hover:hover {
-  background-color: #f2f2f2; /* 浅灰色背景 */
   color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 
 .disabled-handle {
