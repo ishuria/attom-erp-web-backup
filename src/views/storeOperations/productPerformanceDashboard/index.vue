@@ -1548,6 +1548,12 @@ const handleWidth = (item: any) => {
       case '开发人员': {
         return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
       }
+      case '月销售额': {
+        return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)
+      }
+      case '月净利润': {
+        return flexColumnWidth(list.value, '月净利润','monthNetProfit', 50)
+      }
       default: {
         return item.minWidth
       }

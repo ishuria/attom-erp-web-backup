@@ -91,12 +91,13 @@
           <vab-query-form-left-panel :span="18" style="margin-bottom: 10px;">
             <el-date-picker
               v-model="date"
+              :disabled-date="disabledDate"
+              :editable="false"
               end-placeholder="结束日期"
-              range-separator="至"
-              start-placeholder="开始日期" 
+              range-separator="至" 
+              start-placeholder="开始日期"
               style="width: 200px"
               type="daterange"
-              unlink-panels
               value-format="YYYY-MM-DD"
               @change="queryRightData"
             />
@@ -239,9 +240,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 import type { FormInstance } from 'element-plus'
 import { checkingPackagingTimeError, getMorkPackageList, getPackageTimeDay, getPackageTimeList, getPackagingCost, updatePackageTime, updatePackagingCost } from '/@/api/devlocal/packagingShipping'
-import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '@/type/packagingShipping/packagingType'
+import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '/@/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 const errorList = ref<ICheckingPackagingTimeError[]>([])
@@ -263,17 +265,23 @@ const costRules = reactive<any>({
   cost: [{ required: true, message: '请输入每个工时成本', trigger: 'blur' }]
 })
 // 日期初始化
-const date = ref<string[]>(getDefaultStringTime()); // 初始化为两个空字符串
+const date = ref<string[]>(getDefaultStringTime()) // 初始化为两个空字符串
+const disabledDate = (time: Date) => {
+  const date = dayjs(time)
+  const now = dayjs()
+  const lastMonth = now.subtract(1, 'month').startOf('month')
+  // 不能选择早于上月的1号，不能选择晚于今天的日期
+  return date.isBefore(lastMonth, 'day') || date.isAfter(now, 'day')
+}
+
 function getDefaultStringTime(): [string, string] {
-  const today = new Date();
-  // 上月的26日
-  const lastMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 27);
-  // 今天的日期
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-  // 格式化为字符串形式
-  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0];
-  const formattedTodayDate = todayDate.toISOString().split('T')[0];
-  return [formattedLastMonthDate, formattedTodayDate];
+  const now = dayjs()
+  // 获取当月1号
+  const monthStart = now.startOf('month').format('YYYY-MM-DD')
+  // 获取今天
+  const today = now.format('YYYY-MM-DD')
+  
+  return [monthStart, today]
 }
 // 修改可见
 const modifyVisible = ref<boolean>(false)

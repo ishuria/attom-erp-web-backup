@@ -69,7 +69,11 @@
           <el-input v-model="addForm.statutoryUnit" />
         </el-form-item>
         <el-form-item label="出口退税税率" prop="taxRate">
-          <el-input v-model="addForm.taxRate" type="number" />
+          <el-input v-model="addForm.taxRate" type="number" >
+            <template #append>
+              %
+            </template>
+          </el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -106,7 +110,6 @@ const addForm = reactive<any>({})
 const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<FormRules<IAddHSListReq>>({
   hs: [{ required: true, message: '请输入HS', trigger: 'blur' }],
-  statutoryUnit: [{ required: true, message: '请输入法定第1单位', trigger: 'blur' }],
   statutoryCount: [{ required: true, message: '请输入每零件单位有多少个法定第1单位', trigger: 'blur' }],
   taxRate: [{ required: true, message: '请输入出口退税税率', trigger: 'blur' }],
 })
