@@ -30,6 +30,7 @@ import type {
   ISuppliserName,
   IUpdateCustomsClearanceRatioReq,
   IUpdateCustomsClearanceSku,
+  IUpdateCustomsClearanceSkuHtsReq,
   IUpdateProductAlreadyComponent,
   IUpdateProductCustomsClearanceReq,
   IUpdateProductCustomsClearanceStatus,
@@ -773,5 +774,34 @@ export function getSkuInfo(params: { sku: string }): Promise<IGetSkuInfoRes> {
     url: `${BASE_API}/get/skuInfo`,
     method: 'get',
     params
+  })
+}
+
+/**
+ * HTS 欧洲下拉列表
+ */
+export function getHtsEuropeList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/hts/europe/list`,
+    method: 'get'
+  })
+}
+/**
+ * HTS 美国下拉列表
+ */
+export function getHtsUsaList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/hts/usa/list`,
+    method: 'get'
+  })
+}
+/**
+ * SKU-报关 更新HTS
+ */
+export function updateCustomsClearanceSkuHts(data: IUpdateCustomsClearanceSkuHtsReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/hts/update`,
+    method: 'post',
+    data
   })
 }

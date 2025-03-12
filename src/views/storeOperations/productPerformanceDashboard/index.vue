@@ -252,11 +252,12 @@
                 {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
               </span>
               <span v-if="item.label === 'VOC满意度'">
-                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
+                {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
+                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
               </span>
               <span v-if="item.label === '状态'">
                 <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
@@ -1960,48 +1961,33 @@ const fetchPAsinData = async () => {
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 0 })
   columns.value = data
-  columns.value.forEach((item: IGetOperationColumnList) => {
+  const indicesToDelete: number[] = [] // 存储要删除的索引
+
+  columns.value.forEach((item: IGetOperationColumnList, index: number) => {
     item.minWidth = item.width;
     if (item.prop !== 'skuImgUrl') {
       delete item.width
     }
-    if (item.prop === 'siteName') {
-      item.minWidth = '150'
-    }
-    if (item.prop === 'outletDeal') {
-      item.minWidth = '110'
-    }
-    if (item.prop === 'lowVolumeDelivery') {
-      item.minWidth = '130'
-    }
-    if (item.prop === 'currentAdvertisement') {
-      item.minWidth = '100'
-    }
-    if (item.prop === 'headerCount') {
-      item.minWidth = '120'
-    }
-    if (item.prop === 'differenceFba') {
-      item.minWidth = '120'
-    }
-    if (item.prop === 'monthAdv') {
-      item.minWidth = '110'
-    }
-    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(item.prop)) {
       item.sortable = true
-      item.minWidth = '100'
-    }
-    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
-      item.sortable = true
-      item.minWidth = '120'
-    }
-    if (item.prop === 'currentSalesPrice') {
-      item.sortable = true
-      item.minWidth = '130'
     }
     if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
+    if (item.prop === 'vocDefect') {
+      indicesToDelete.push(index)
+    }
+    if (item.prop === 'vocNcxCount') {
+      indicesToDelete.push(index)
+    }
+    if (item.prop === 'vocTotalOrderCount') {
+      indicesToDelete.push(index)
+    }
   })
+   
+  for (let i = indicesToDelete.length - 1; i >= 0; i--) {
+    columns.value.splice(indicesToDelete[i], 1); //删除项
+  }
 }
 const fetchAsinColumn = async () => {
   const { data } = await getOperationColumnList({ type: 1 })
@@ -2011,38 +1997,8 @@ const fetchAsinColumn = async () => {
     if (item.prop !== 'asinImgUrl') {
       delete item.width
     }
-    if (item.prop === 'siteName') {
-      item.minWidth = '150'
-    }
-    if (item.prop === 'outletDeal') {
-      item.minWidth = '110'
-    }
-    if (item.prop === 'lowVolumeDelivery') {
-      item.minWidth = '130'
-    }
-    if (item.prop === 'currentAdvertisement') {
-      item.minWidth = '100'
-    }
-    if (item.prop === 'headerCount') {
-      item.minWidth = '120'
-    }
-    if (item.prop === 'monthAdv') {
-      item.minWidth = '110'
-    }  
-    if (item.label === '大类排名') {
-      item.minWidth = '120'
-    }
-    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(item.prop)) {
       item.sortable = true
-      item.minWidth = '100'
-    }
-    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
-      item.sortable = true
-      item.minWidth = '120'
-    }
-    if (item.prop === 'currentSalesPrice') {
-      item.sortable = true
-      item.minWidth = '130'
     }
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
@@ -2057,26 +2013,8 @@ const fetchPAsinColumn = async () => {
     if (item.prop !== 'asinImgUrl') {
       delete item.width
     }
-    if (item.prop === 'siteName') {
-      item.minWidth = '150'
-    }
-    if (item.prop === 'currentAdvertisement') {
-      item.minWidth = '100'
-    }
-    if (item.prop === 'monthAdv') {
-      item.minWidth = '110'
-    }
-    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume'].includes(item.prop)) {
+    if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(item.prop)) {
       item.sortable = true
-      item.minWidth = '100'
-    }
-    if (['monthNetProfit', 'monthSalesPrice'].includes(item.prop)) {
-      item.sortable = true
-      item.minWidth = '120'
-    }
-    if (item.prop === 'currentSalesPrice') {
-      item.sortable = true
-      item.minWidth = '130'
     }
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true

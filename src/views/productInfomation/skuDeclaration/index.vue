@@ -67,17 +67,17 @@
         <template #default="{ row }">
           <el-select
             v-model="row.htsUs"
-            
             filterable
-
-          />
-            <!-- <el-option
-              v-for="item in peopleOptions"
-              :key="item.value"
+            placeholder="请选择HTS美国"
+            @change="handleChangeHtsUsa(row)"
+          >
+            <el-option
+              v-for="item in usaList"
+              :key="item.id"
               :label="item.label"
-              :value="item.value"
+              :value="item.id"
             />
-          </el-select> -->
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="HTS欧洲" prop="htsEurope" width="160" >
@@ -85,14 +85,16 @@
           <el-select
             v-model="row.htsEurope"
             filterable
-          />
-            <!-- <el-option
-              v-for="item in peopleOptions"
-              :key="item.value"
+            placeholder="请选择HTS欧洲"
+            @change="handleChangeHtsEurope(row)"
+          >
+            <el-option
+              v-for="item in europeList"
+              :key="item.id"
               :label="item.label"
-              :value="item.value"
+              :value="item.id"
             />
-          </el-select> -->
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
@@ -236,7 +238,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getCustomsClearanceRatio, getCustomsClearanceSkuList, updateCustomsClearanceRatio, updateCustomsClearanceSku } from '/@/api/devlocal/productInformation'
+import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsEuropeList, getHtsUsaList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
@@ -244,7 +246,8 @@ defineOptions({
   name: 'SkuDeclaration',
 })
 
-
+const europeList = ref<{ id: number, label: string }[]>([])
+const usaList = ref<{ id: number, label: string }[]>([])
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(false)
@@ -258,6 +261,21 @@ const queryForm = reactive<any>({
 // 价格系数设定
 const priceCoefficientSettingVisible = ref<boolean>(false)
 const priceCoefficientSettingForm = reactive<any>({})
+
+const handleChangeHtsUsa = async (row: any) => {
+  await updateCustomsClearanceSkuHts({
+    id: row.id,
+    htsId: row.htsUs,
+    type: 0
+  })
+}
+const handleChangeHtsEurope = async (row: any) => {
+  await updateCustomsClearanceSkuHts({
+    id: row.id,
+    htsId: row.htsEurope,
+    type: 1
+  })
+}
 // 打开价格系数设定
 const showPriceCoefficientSetting = async () => {
   priceCoefficientSettingVisible.value = true
@@ -407,11 +425,23 @@ const cellClassName = (data: {row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
+// 获取HTS欧洲列表
+const fetchHtsEuropeList = async () => {
+  const { data } = await getHtsEuropeList()
+  europeList.value = data
+}
+// 获取HTS美国列表
+const fetchHtsUsaList = async () => {
+  const { data } = await getHtsUsaList()
+  usaList.value = data
+}
 onActivated(() => {
   tableRef.value?.doLayout()
 })
 
 onBeforeMount(() => {
+  fetchHtsEuropeList()
+  fetchHtsUsaList()
   fetchData()
 })
 </script>

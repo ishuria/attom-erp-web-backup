@@ -1279,4 +1279,12 @@ export interface IGetSkuInfoRes {
     productManagerName: string
   }
 }
+/**
+ * SKU报关-更新hts
+ */
+export interface IUpdateCustomsClearanceSkuHtsReq {
+  id: number
+  htsId: number
+  type: number
+}
 
