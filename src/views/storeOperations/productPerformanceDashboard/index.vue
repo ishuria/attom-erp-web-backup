@@ -195,6 +195,102 @@
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '月销售额'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利润'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利润 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利率'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润率</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退款%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退款占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退货%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退货占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告销售'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告销售 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告销售</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告支出'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告支出 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告支出</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === 'FBA仓储费'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">FBA仓储费 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的FBA仓储费</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -524,6 +620,102 @@
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '月销售额'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利润'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利润 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利率'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润率</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退款%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退款占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退货%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退货占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告销售'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告销售 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告销售</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告支出'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告支出 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告支出</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === 'FBA仓储费'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">FBA仓储费 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的FBA仓储费</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -829,6 +1021,102 @@
                   <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月销售额'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利润'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利润 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月净利率'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的净利润率</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退款%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退款占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退货%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退货占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告销售'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告销售 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告销售</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月广告支出'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月广告支出 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的广告支出</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年ACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年ACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的ACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '1年TACOS'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">1年TACOS <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去360天的TACOS</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === 'FBA仓储费'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">FBA仓储费 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的FBA仓储费</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1548,12 +1836,21 @@ const handleWidth = (item: any) => {
       case '开发人员': {
         return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
       }
-      case '月销售额': {
-        return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)
-      }
-      case '月净利润': {
-        return flexColumnWidth(list.value, '月净利润','monthNetProfit', 50)
-      }
+      // case '月销售额': {
+      //   return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)
+      // }
+      // case '月净利润': {
+      //   return flexColumnWidth(list.value, '月净利润','monthNetProfit', 50)
+      // }
+      // case '今销量': {
+      //   return flexColumnWidth(list.value, '今销量','currentSalesNumber', 50)
+      // }
+      // case '今单量': {
+      //   return flexColumnWidth(list.value, '今单量','currentSalesOrder', 50)
+      // }
+      // case '今广%': {
+      //   return flexColumnWidth(list.value, '今广%','currentAdvertisement', 50)
+      // }
       default: {
         return item.minWidth
       }
@@ -1803,7 +2100,7 @@ const changeCurrencyPASIN = async () => {
   }
 }
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (data.column.label === '今销') {
+  if (['今销', '月净利润', '月销售额'].includes(data.column.label)) {
     return 'header-cell'
   }
   return ''

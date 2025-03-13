@@ -480,7 +480,8 @@
           <el-button v-if="previousVisible" type="primary" @click="handleFetchPreviousData">上一个</el-button>
           <el-button v-if="nextVisible" type="primary" @click="handleFetchNextData">下一个</el-button>
           <el-button type="warning" @click="handleAddSKU">添加SKU</el-button>
-          <el-button type="danger" @click="handleDelSKU">删除SKU</el-button>
+          <el-button v-if="poSkuIdList.length > 1 && route.query.from !== 'plannedPoDetail'" type="danger" @click="handleDelSKU">删除SKU</el-button>
+          <el-button v-if="poSkuIdList.length > 1 && route.query.from === 'plannedPoDetail'" type="danger" @click="handleDelPlanPoSKU">删除SKU</el-button>
         </el-footer>
       </div>
     </div>
@@ -1450,6 +1451,7 @@ createPlanPo,
 deleteComponentImg,
 deletePoSku,
 deletePoSkuComponent,
+deletePurchasePlanPoSkuComponent,
 deleteSkuImg,
 getPoContractTerms,
 getPoDetail,
@@ -2593,7 +2595,7 @@ const createSku = async () => {
     }
   }
 }
-// PO详情删除SKU
+// 采购订单PO详情删除SKU
 const handleDelSKU = async () => {
   // 只有一个sku的 删除的是po 
   if (poSkuIdList.value.length === 1) {
@@ -2634,6 +2636,47 @@ const handleDelSKU = async () => {
     }
   }
 }
+// 采购计划详情删除SKU
+const handleDelPlanPoSKU = async () => {
+  // 只有一个sku的 删除的是po 
+  if (poSkuIdList.value.length === 1) {
+    $baseConfirm('确定要删除PO吗', '系统提示', async () => {
+      try {
+        const { data } = await deletePurchasePlanPo({
+          poSkuId: poDetailData.value.poSkuId
+        })
+        if (data === true) {
+          $baseMessage('删除PO成功', 'success', 'hey')
+          goBack()
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    })
+  } else if (poSkuIdList.value.length > 1) { // 有多个sku的 删除当前sku
+    try {
+      $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
+        const { data } = await deletePurchasePlanPo({
+          poSkuId: poDetailData.value.poSkuId
+        })
+        if (data === true) {
+          $baseMessage('删除SKU成功', 'success', 'hey')
+          // 如果是最后一个 就去上一个
+          if (poSkuIdIndex.value === poSkuIdList.value.length - 1 ) {
+            const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! - 1] };
+            router.push({ path: '/purchase/poDetail', query });
+          } else {
+            // 如果是第一个或者和中间 就去下一个
+            const query = { ...router.currentRoute.value.query, poSkuId: poSkuIdList.value[poSkuIdIndex.value! + 1] };
+            router.push({ path: '/purchase/poDetail', query });
+          }
+        }
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+}
 // 零件创建删除
 const handleCreateDelComponent = (index: number) => {
   skuComponentList.value.splice(index, 1)
@@ -2641,21 +2684,40 @@ const handleCreateDelComponent = (index: number) => {
 }
 // po-sku零配件删除
 const handleDelPoSKuComponent = async (row: any, index: number) => {
-  $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
-    try {
-      const { data } = await deletePoSkuComponent({
-        id: row.id
-      });
-      if (data === true) {
-        skuComponentList.value.splice(index, 1)
-        fetchSkuComponent()
-        fetchData()
-        $baseMessage('该条零件删除成功', 'success', 'hey');
+  console.log(route.query.from)
+  if (route.query.from === 'plannedPoDetail') { //采购计划的详情
+    $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
+      try {
+        const { data } = await deletePurchasePlanPoSkuComponent({
+          id: row.id
+        });
+        if (data === true) {
+          skuComponentList.value.splice(index, 1)
+          fetchSkuComponent()
+          fetchData()
+          $baseMessage('该条零件删除成功', 'success', 'hey');
+        }
+      } catch (error) {
+        console.error('删除失败:', error);
       }
-    } catch (error) {
-      console.error('删除失败:', error);
-    }
-  })
+    })
+  } else {
+    $baseConfirm('确定要删除该条零件信息吗', "系统提示", async () => {
+      try {
+        const { data } = await deletePoSkuComponent({
+          id: row.id
+        });
+        if (data === true) {
+          skuComponentList.value.splice(index, 1)
+          fetchSkuComponent()
+          fetchData()
+          $baseMessage('该条零件删除成功', 'success', 'hey');
+        }
+      } catch (error) {
+        console.error('删除失败:', error);
+      }
+    })
+  }
 }
 
 // 预览图片列表

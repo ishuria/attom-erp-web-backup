@@ -267,17 +267,17 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import {
-  deleteAllPlanPo,
-  deletePlanPo,
-  deletePoSku,
-  getPlanPoList,
-  getPoPurchaseMatters,
-  planPoNrMoq,
-  planPorMoq,
-  releaseBatchPlanPo,
-  releasePlanPo,
-  updatePlanPoStatus,
-  updatePoPurchaseMatters
+deleteAllPlanPo,
+deletePlanPo,
+deletePurchasePlanPo,
+getPlanPoList,
+getPoPurchaseMatters,
+planPoNrMoq,
+planPorMoq,
+releaseBatchPlanPo,
+releasePlanPo,
+updatePlanPoStatus,
+updatePoPurchaseMatters
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -286,7 +286,7 @@ import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import type { CurrencyCode} from '/@/views/purchase/constantOption';
+import type { CurrencyCode } from '/@/views/purchase/constantOption'
 import { currencyMap } from '/@/views/purchase/constantOption'
 defineOptions({
   name: 'PlannedPoTable',
@@ -467,7 +467,7 @@ const handleAllDelete = async () => {
 const handleDelSkuPlannedPo = (row: any) => {
   try {
     $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
-      const { data } = await deletePoSku({
+      const { data } = await deletePurchasePlanPo({
         poSkuId: row.poSkuId
       })
       if (data === true) {

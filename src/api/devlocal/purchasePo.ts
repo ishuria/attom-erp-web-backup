@@ -349,6 +349,30 @@ export function deletePo(params: IIds): Promise<IBooleanResp> {
     params,
   })
 }
+/**
+ * 采购计划 - poSku零件清单删除
+ * @param params 
+ * @returns 
+ */
+export function deletePurchasePlanPoSkuComponent(params: { id: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/planPo/skuComponent/delete`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 采购计划-SKU删除
+ * @param params 
+ * @returns 
+ */
+export function deletePurchasePlanPo(params: { poSkuId: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/delete/planPo/sku`,
+    method: 'post',
+    params,
+  })
+}
 // 采购订单-已付尾款/全款
 export function updateComponentAllPay(data: IUpdateComponentAllPay) {
   return request({
