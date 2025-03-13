@@ -37,14 +37,31 @@
         <el-table-column label="汇率" prop="foreignExchange" />
         <el-table-column label="图片" prop="imgUrl" width="76px">
           <template #default="{ row }">
-            <el-upload 
+            <div class="image-cell">
+              <!-- 有图片时显示 -->
+              <div v-if="row.imageList?.length" class="image-preview">
+                <img alt="" :src="row.imageList[0].url" @click="handlePreview(row.imageList[0])" />
+                <div class="image-actions">
+                  <el-icon @click="handlePreview(row.imageList[0])"><zoom-in /></el-icon>
+                  <el-icon @click="removeImage(row)"><delete /></el-icon>
+                </div>
+              </div>
+              <!-- 无图片时显示 -->
+              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
+            <!-- <el-upload 
               class="component-upload" 
               :class="{ hide: row.hide }" 
               :file-list="row.imageList"
               :http-request="(file) => uploadImage(file, row)"
               list-type="picture-card" 
             >
-              <el-icon><plus /></el-icon> 
+              <div @click="imageUploadVisible = true" >
+                <el-icon ><plus /></el-icon> 
+              </div>
+              
               <template #file="{ file }">
                 <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
                 <span class="el-upload-list__item-actions">
@@ -56,7 +73,7 @@
                   </span>
                 </span>
               </template>
-            </el-upload>
+            </el-upload> -->
           </template>
         </el-table-column>
         <el-table-column label="产品描述" min-width="200" prop="desc">
@@ -309,6 +326,8 @@
       <el-button type="primary" @click="confirmUpdate3Dialog">确认</el-button>
     </template>
   </vab-dialog>
+  <!-- 上传图片 -->
+  <vab-image-upload :image-upload-visible="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
 </template>
 
 <script lang="ts" setup>
@@ -320,17 +339,17 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
-  addEstimatedCostAccounting,
-  addEstimatedCostAccountingProductRelease,
-  copyEstimatedCostAccounting,
-  deleteEstimatedCostAccounting,
-  evaluationCostDeleteImg,
-  getExchangeRate,
-  reverseCalculateEstimatedCostAccounting,
-  updateEstimatedCostAccounting,
-  updateEstimatedCostAccountingFirstMileChannel,
-  updateEstimatedCostAccountingSort,
-  uploadFileBoBakend,
+addEstimatedCostAccounting,
+addEstimatedCostAccountingProductRelease,
+copyEstimatedCostAccounting,
+deleteEstimatedCostAccounting,
+evaluationCostDeleteImg,
+getExchangeRate,
+reverseCalculateEstimatedCostAccounting,
+updateEstimatedCostAccounting,
+updateEstimatedCostAccountingFirstMileChannel,
+updateEstimatedCostAccountingSort,
+uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
 import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -341,6 +360,7 @@ defineOptions({
   name: 'VabEstimatedCostAccounting'
 })
 
+const imageUploadVisible = ref<boolean>(false)
 let props = defineProps<{
   flag: boolean
   evaluationId: string
@@ -375,8 +395,15 @@ const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
 let { evaluationId } = toRefs(props)
 
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+}
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
 // 上传图片
 const uploadImage = async (file: any, row: any) => {
+  imageUploadVisible.value = true
   row.hide = true
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
@@ -799,6 +826,77 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     .el-upload--picture-card {
       width: 100%;
       height: 100%;
+    }
+  }
+}
+// 图片样式
+.image-cell {
+  width: 100%;
+  height: 75px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

@@ -232,6 +232,7 @@ declare module 'vue' {
     VabGraphicStrokeAnimation: typeof import('./../../../src/views/other/echarts/vabAutoComponents/VabGraphicStrokeAnimation.vue')['default']
     VabHeader: typeof import('./../../components/VabHeader/index.vue')['default']
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']
+    VabImageUpload: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabImageUpload.vue')['default']
     VabInvoiceMatching: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabInvoiceMatching.vue')['default']
     VabKeyWordRankTrend: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabKeyWordRankTrend.vue')['default']
     VabLanguage: typeof import('./../../components/VabLanguage/index.vue')['default']

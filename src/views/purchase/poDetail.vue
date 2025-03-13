@@ -1451,6 +1451,7 @@ createPlanPo,
 deleteComponentImg,
 deletePoSku,
 deletePoSkuComponent,
+deletePurchasePlanPo,
 deletePurchasePlanPoSkuComponent,
 deleteSkuImg,
 getPoContractTerms,
@@ -1810,7 +1811,8 @@ const afterGetSku = async (_sku: string) => {
       poDetailData.value.hide = false
       poDetailData.value.imageList = []
     }
-    Object.assign(skuComponentList.value, data.componentList)
+    // Object.assign(skuComponentList.value, data.componentList)
+    skuComponentList.value = data.componentList
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
       if(!item.componentUrl) {
@@ -2064,7 +2066,7 @@ const handleUpdateCreateSkuCount = async () => {
       // 旧的等于新的
       oldPurchaseNumber.value = Number(poDetailData.value.purchaseSkuNumber)
       poDetailData.value.orderTotalPrice = data.skuTotalPrice
-      Object.assign(skuComponentList.value, data.componentList)
+      skuComponentList.value = data.componentList
       updateCreate()
       
       skuComponentList.value.forEach((item: any) => {
@@ -2317,7 +2319,7 @@ const clickCreateCancel = async (event:any,value:any) => {
     // 执行失去焦点处理逻辑
     // 修改请求
     const { data } = await updateCreateComponent(value)
-    Object.assign(skuComponentList.value, data.componentList)
+    skuComponentList.value = data.componentList
     poDetailData.value.orderTotalPrice = data.skuTotalPrice
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)

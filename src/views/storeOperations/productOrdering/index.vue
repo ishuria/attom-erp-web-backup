@@ -154,6 +154,9 @@
             <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
             <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
           </span>
+          <span v-if="item.label === 'VOC缺陷%'" >
+            {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
+          </span>
         </template>
       </el-table-column>
       <template #empty>
