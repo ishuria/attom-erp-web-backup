@@ -1317,15 +1317,20 @@ import {
   updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
 import { useUserStore } from '/@/store/modules/user'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
+import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'PackingTaskTable',
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 1))
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
@@ -1479,7 +1484,7 @@ const selectFinishTaskRows = ref<any>([])
 const setSelectFinishTaskRows = (value: string) => {
   selectFinishTaskRows.value = value
 }
-const activeName = ref<number>(1)
+
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -2113,6 +2118,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   // selectRows.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
+    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryForm.status = Number(tab.props.name);  
   }
   if (queryForm.status !== 5) {

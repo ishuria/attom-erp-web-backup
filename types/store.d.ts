@@ -124,3 +124,9 @@ declare interface PackingType {
 declare interface PackingModuleType {
   packingData: PackingType[]
 }
+/**
+ * 存储tab切换的状态
+ */
+declare interface TabState {
+  [key: string]: number // 使用路径作为key，存储对应的tab值
+}
