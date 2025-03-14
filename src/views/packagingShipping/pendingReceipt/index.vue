@@ -84,9 +84,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="160" prop="sku"/>    
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>    
           <el-table-column label="剩余可售" min-width="100" prop="sellableDay"/>
-          <el-table-column  label="供应商" min-width="250" prop="suppliserName"/>
+          <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
           <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
@@ -203,7 +203,7 @@
                 </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" min-width="250" prop="componentName"/>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
           <el-table-column label="单位" min-width="60" prop="unit" />
           <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
@@ -234,9 +234,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="160" prop="sku"/>
-          <el-table-column  label="供应商" min-width="250" prop="suppliserName"/>
-          <el-table-column label="站点" min-width="100" prop="site">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
+          <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>
@@ -458,31 +458,31 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import type { siteValue } from '../constantOption';
+import type { siteValue } from '../constantOption'
 import { siteMap } from '../constantOption'
 import {
-  deleteSign,
-  deleteSignRecord,
-  getSignList,
-  getSignLog,
-  getSignRecord,
-  printSign,
-  printSignSuccess,
-  signBatch,
-  signComponent,
-  signMoreRecord,
-  updateProductDate,
-  updateRecordCount,
-  updateRecordOrder,
-  updateSignLog
+deleteSign,
+deleteSignRecord,
+getSignList,
+getSignLog,
+getSignRecord,
+printSign,
+printSignSuccess,
+signBatch,
+signComponent,
+signMoreRecord,
+updateProductDate,
+updateRecordCount,
+updateRecordOrder,
+updateSignLog
 } from '/@/api/devlocal/packagingShipping'
 
+import { isEqual } from 'lodash'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import { isEqual } from 'lodash'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
   name: 'PendingReceiptTable',
@@ -693,6 +693,7 @@ const handleIfShowRecord = async (row: any) => {
     })
     if (data) {
       $baseMessage('取消签收成功', 'success')
+      fetchData()
     }
   }
 }
@@ -763,7 +764,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 14 && data.columnIndex !== 17) {
+  if (data.columnIndex !== 5 && data.columnIndex !== 9  && data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 17) {
     return {
       textAlign:'center'
     } 

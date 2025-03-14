@@ -195,7 +195,7 @@
                </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="180"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')"/>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -318,7 +318,7 @@
                </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="180"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')"/>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -441,7 +441,7 @@
                </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="180"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')"/>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -555,7 +555,7 @@
                </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="180"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')"/>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -657,7 +657,7 @@
                </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" width="180"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')"/>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -954,7 +954,23 @@ import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { ref } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
-import { aggregationContract, applyPurchaseReductionCost, delPayRecord, deletePo, generatePoContract, generateRemittance, getComponentPayRecord, getPoList, getPurchaseCostReduction, purchaseTotalAp, updateComponentAllPay, updateComponentPayPart, updateComponentRefund, updatePayRecord } from '/@/api/devlocal/purchasePo'
+import {
+  aggregationContract,
+  applyPurchaseReductionCost, 
+  checkPurchasePo, 
+  delPayRecord, 
+  deletePo, 
+  generatePoContract, 
+  generateRemittance, 
+  getComponentPayRecord, 
+  getPoList, 
+  getPurchaseCostReduction, 
+  purchaseTotalAp, 
+  updateComponentAllPay, 
+  updateComponentPayPart, 
+  updateComponentRefund,
+  updatePayRecord
+} from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
@@ -1658,6 +1674,15 @@ const handlePoDetail = async (row: any) => {
   //     timestamp: Date.now(),
   //   },
   // })
+  let del = 'true'
+  // 前置接口
+  const { data } = await checkPurchasePo({ poId: row.id })
+  if (data) {
+    // po详情不能改
+    del = 'true'
+  } else {
+    del = 'false'
+  }
 
   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
@@ -1704,6 +1729,7 @@ const handlePoDetail = async (row: any) => {
         from: row.po,
         poSkuId: row.poSkuId,
         poId: row.id,
+        del,
         // timestamp: Date.now(),
       },
     })
@@ -1726,7 +1752,7 @@ const handleDelPoDetail = (row: any) => {
       from: row.po,
       poSkuId: row.poSkuId,
       poId: row.id,
-      timestamp: Date.now(),
+      // timestamp: Date.now(),
       del: 'true'
     },
   })

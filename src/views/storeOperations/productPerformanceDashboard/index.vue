@@ -145,11 +145,6 @@
                 <br />
                 可售
               </span>
-              <span v-if="item.label === '可售含在途'">
-                可售
-                <br />
-                含在途
-              </span>
               <span v-if="item.prop === 'outletDeal'">
                 可报
                 <br />
@@ -291,6 +286,19 @@
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '可售含在途'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '自量FBA'">
+                自量FBA
+                <br />
+                亚马逊FBA
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -333,6 +341,9 @@
               </span>
               <span v-if="item.label === '停产'">
                 <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
+              </span>
+              <span v-if="item.label === '自量FBA'">
+                {{ row.currencyIcon + row.selfAssessmentFba ?? '' }} <br /> {{ row.currencyIcon + row.amazonFba ?? '' }}
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
@@ -578,11 +589,6 @@
                 <br />
                 可售
               </span>
-              <span v-if="item.label === '可售含在途'">
-                可售
-                <br />
-                含在途
-              </span>
               <span v-if="item.prop === 'outletDeal'">
                 可报
                 <br />
@@ -713,6 +719,14 @@
                   <div class="questionIcon">FBA仓储费 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的FBA仓储费</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '可售含在途'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -995,11 +1009,6 @@
                 <br />
                 可售
               </span>
-              <span v-if="item.label === '可售含在途'">
-                可售
-                <br />
-                含在途
-              </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
@@ -1117,6 +1126,14 @@
                   <div class="questionIcon">FBA仓储费 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的FBA仓储费</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '可售含在途'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1470,8 +1487,6 @@ const showRemark = () => {
 const label1 = [
   '今销',
   'FBA仓储费',
-  '自量FBA',
-  '亚马逊FBA',
   'FBA差异',
   '月净利润',
   '月销售额',
@@ -1493,15 +1508,12 @@ const label2 = [
   '1年TACOS',
   '月退货%',
   '月退款%',
-  'VOC缺陷%',
 ]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
 const label4 = ['今广%', '半年有货率', '月广告%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
-  ['自量FBA', 'selfAssessmentFba'],
-  ['亚马逊FBA', 'amazonFba'],
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
   ['月销售额', 'monthSalesPrice'],
@@ -1523,7 +1535,6 @@ const label2Map = new Map([
   ['1年TACOS', 'yearTacos'],
   ['月退货%', 'monthReturnGoods'],
   ['月退款%', 'monthRefund'],
-  ['VOC缺陷%', 'vocDefect'],
 ])
 const label3Map = new Map([
   ['上新', 'newArrivalDay'],
@@ -2285,6 +2296,12 @@ const fetchColumn = async () => {
     }
     if (item.prop === 'vocTotalOrderCount') {
       indicesToDelete.push(index)
+    }
+    if (item.prop === 'amazonFba') {
+      indicesToDelete.push(index)
+    }
+    if (item.prop === 'selfAssessmentFba') {
+      item.minWidth = '120'
     }
   })
    

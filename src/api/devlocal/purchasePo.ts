@@ -580,3 +580,15 @@ export function getPurchaseCostReduction(params: { poComponentId: number }): Pro
     params,
   })
 }
+/**
+ * @description 采购订单-详情前置check
+ * @param params 
+ * @returns 
+ */
+export function checkPurchasePo(params: { poId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/purchase/po/check`,
+    method: 'get',
+    params,
+  })
+}

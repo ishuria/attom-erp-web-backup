@@ -80,6 +80,16 @@
           </el-table-column>
           <el-table-column label="奖金">
             <el-table-column label="采购奖金" min-width="100" prop="procurementBonus"/>
+            <el-table-column label="采购奖金跨月调整" min-width="100" prop="procurementBonusCrossMonth">
+              <template #header>
+                采购奖金<br />跨月调整
+              </template>
+              <template #default="{ row }">
+                <span :class="{ 'negative-value': row.procurementBonusCrossMonth < 0 }">
+                  {{ row.procurementBonusCrossMonth ?? '' }}
+                </span>
+              </template>
+            </el-table-column>  
             <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction"/>
             <el-table-column label="美工图片" min-width="100" prop="artDesignPicture"/>
             <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime"/>
@@ -522,5 +532,8 @@ onBeforeMount(() => {
       transform: scale(1.3);
     }
   }
+}
+.negative-color {
+  color: var(--el-color-danger);
 }
 </style>
