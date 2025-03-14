@@ -67,6 +67,7 @@ const option = reactive<any>({
       data: props.yAxisData,
       barGap:'10',
       barCategoryGap: '1',
+      barMinHeight: 1.5,
       emphasis: {
         itemStyle: {
           opacity: 0.5

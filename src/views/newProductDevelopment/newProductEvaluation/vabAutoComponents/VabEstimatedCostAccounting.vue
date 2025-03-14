@@ -51,29 +51,6 @@
                 <el-icon><plus /></el-icon>
               </div>
             </div>
-            <!-- <el-upload 
-              class="component-upload" 
-              :class="{ hide: row.hide }" 
-              :file-list="row.imageList"
-              :http-request="(file) => uploadImage(file, row)"
-              list-type="picture-card" 
-            >
-              <div @click="imageUploadVisible = true" >
-                <el-icon ><plus /></el-icon> 
-              </div>
-              
-              <template #file="{ file }">
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span class="el-upload-list__item-preview" @click="handlePreview(file)">
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span class="el-upload-list__item-delete" @click="removeImage(row)">
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
-              </template>
-            </el-upload> -->
           </template>
         </el-table-column>
         <el-table-column label="产品描述" min-width="200" prop="desc">
@@ -807,29 +784,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
 }
-// 图片上传的样式
-// .component-upload {
-//   width: 75px;
-//   height: 75px;
-//   :deep() {
-//     .el-upload-list--picture-card {
-//       width: 100%;
-//       height: 100%;
-//       .el-upload-list__item {
-//         width: 100%;
-//         height: 100%;
-//         margin: 0;
-//         border: 0;
-//         border-radius: 0;
-//         transition: none;
-//       }
-//     }
-//     .el-upload--picture-card {
-//       width: 100%;
-//       height: 100%;
-//     }
-//   }
-// }
+
 // 图片样式
 .image-cell {
   width: 100%;

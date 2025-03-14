@@ -145,16 +145,11 @@ onBeforeUnmount(() => {
     
     .upload-zone {
       width: 100%;
-   
+
       .image-icon {
         margin-bottom: 8px;
         font-size: 28px;
         color: #999;
-      }
-      
-      .upload-text {
-        font-size: 14px;
-        color: #606266;
       }
     }
     
