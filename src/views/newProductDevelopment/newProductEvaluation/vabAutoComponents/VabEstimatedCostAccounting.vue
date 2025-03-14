@@ -39,10 +39,10 @@
           <template #default="{ row }">
             <div class="image-cell">
               <!-- 有图片时显示 -->
-              <div v-if="row.imageList?.length" class="image-preview">
-                <img alt="" :src="row.imageList[0].url" @click="handlePreview(row.imageList[0])" />
+              <div v-if="row.imgUrl" class="image-preview">
+                <img alt="" :src="row.imgUrl" />
                 <div class="image-actions">
-                  <el-icon @click="handlePreview(row.imageList[0])"><zoom-in /></el-icon>
+                  <el-icon @click="handlePreview(row.imgUrl)"><zoom-in /></el-icon>
                   <el-icon @click="removeImage(row)"><delete /></el-icon>
                 </div>
               </div>
@@ -327,7 +327,7 @@
     </template>
   </vab-dialog>
   <!-- 上传图片 -->
-  <vab-image-upload :image-upload-visible="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
+  <vab-image-upload :image-upload-visible="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
 </template>
 
 <script lang="ts" setup>
@@ -394,26 +394,29 @@ const imagePreviewList = ref<string[]>([])
 const selectRows = ref<IEstimatedCostAccounting[]>([])
 const router = useRouter()
 let { evaluationId } = toRefs(props)
+let copyRow: any
 
+// 打开上传图片弹窗
 const showUploadDialog = (row: any) => {
   imageUploadVisible.value = true
+  copyRow = row
 }
+// 关闭上传弹窗
 const closeImageUpload = () => {
   imageUploadVisible.value = false
 }
 // 上传图片
-const uploadImage = async (file: any, row: any) => {
-  imageUploadVisible.value = true
-  row.hide = true
+const uploadImage = async (file: File) => {
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file.file);
-    uploadImgForm.append('id', `${row.id}`);
+    uploadImgForm.append('file', file);
+    uploadImgForm.append('id', `${copyRow.id}`);
 
     const { data } = await uploadFileBoBakend(uploadImgForm)
     if (data) {
-      Object.assign(row.imageList, [{ url: data }])
+      copyRow.imgUrl = data
       $baseMessage('图片上传成功！', 'success')
+      closeImageUpload()
     } else {
       $baseMessage('图片上传失败！', 'error')
     }
@@ -423,15 +426,13 @@ const uploadImage = async (file: any, row: any) => {
 }
 // 删除图片
 const removeImage = (row: any) => {
-  //
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await evaluationCostDeleteImg({
         id: row.id
       })
       if (data) {
-        row.imageList = []
-        row.hide = false
+        row.imgUrl = ''
         $baseMessage("图片删除成功!","success","hey")
       }
     })
@@ -440,10 +441,10 @@ const removeImage = (row: any) => {
   }
 }
 // 图片预览
-const handlePreview = (file: any) => {
+const handlePreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
-  imagePreviewList.value.push(file.url)
+  imagePreviewList.value.push(url)
 }
 const isValueAllInput = (row: IEstimatedCostAccounting) => {
   if (row.site == null) {
@@ -807,28 +808,28 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   white-space: pre-wrap;
 }
 // 图片上传的样式
-.component-upload {
-  width: 75px;
-  height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
-      width: 100%;
-      height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
-      }
-    }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
+// .component-upload {
+//   width: 75px;
+//   height: 75px;
+//   :deep() {
+//     .el-upload-list--picture-card {
+//       width: 100%;
+//       height: 100%;
+//       .el-upload-list__item {
+//         width: 100%;
+//         height: 100%;
+//         margin: 0;
+//         border: 0;
+//         border-radius: 0;
+//         transition: none;
+//       }
+//     }
+//     .el-upload--picture-card {
+//       width: 100%;
+//       height: 100%;
+//     }
+//   }
+// }
 // 图片样式
 .image-cell {
   width: 100%;

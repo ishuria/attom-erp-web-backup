@@ -477,15 +477,6 @@ const handleClick = async (row: any) => {
 const fetchEstimatedCostAccounting = async (id: number) => {
   const { data } = await getEstimatedCostAccountingList({ evaluationId: convertString(id) })
   estimatedCostAccountingList.value = data
-  estimatedCostAccountingList.value.forEach((item) => {
-    if (!item.imgUrl) {
-      item.hide = false
-      item.imageList = []
-    } else if (item.imgUrl){
-      item.hide = true
-      item.imageList = [{ url: item.imgUrl }]
-    }
-  })
   estimatedCostAccountingVisible.value = true
 }
 

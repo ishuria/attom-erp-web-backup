@@ -29,8 +29,10 @@
         <el-input
           v-model="imageUrl"
           class="url-input"
-          placeholder="粘贴截图 / 图片链接"
-          @keyup.enter="handleImageUrl"
+          clearable
+          placeholder="粘贴截图"
+          @change="handleImageUrl"
+          @clear="handleClearImageUrl"
         />
       </div>
       
@@ -56,11 +58,17 @@ const dflag = ref<boolean>(false)
 const props = defineProps<{ imageUploadVisible: boolean }>()
 const emit = defineEmits<{
   (e: 'update:imageUploadVisible', value: boolean): void
+  (e: 'imageUpload', value: File): void
 }>()
 watchEffect(() => {
   dflag.value = props.imageUploadVisible
+  if (dflag.value) {
+    imageUrl.value = ''
+    previewUrl.value = ''
+  }
 })
-
+// 要上传的图片文件
+let imageFile: File
 // 预览的图片链接
 const previewUrl = ref('')
 // 图片链接
@@ -76,19 +84,11 @@ const imagePreviewOpen = (url: string) => {
   imagePreviewList.value = [url]
 }
 // 处理图片链接
-const handleImageUrl = async () => {
-  if (!imageUrl.value) {
-    $baseMessage('请输入图片链接', 'warning')
-    return
-  }
-  
-  try {
-    // 尝试加载图片
-    previewUrl.value = imageUrl.value
-  } catch (error) {
-    console.error(error)
-    $baseMessage('无效的图片链接', 'error')
-  }
+const handleImageUrl = () => {
+  previewUrl.value = imageUrl.value
+}
+const handleClearImageUrl = () => {
+  previewUrl.value = ''
 }
 const closeImageUploadDialog = () => {
   emit('update:imageUploadVisible', false)
@@ -96,36 +96,43 @@ const closeImageUploadDialog = () => {
 
 // 预览图片
 const previewImage = (file: File) => {
-  const reader = new FileReader()
-  reader.addEventListener('load', (e) => {
-    previewUrl.value = e.target?.result as string
-  })
-  reader.readAsDataURL(file)
+  previewUrl.value = URL.createObjectURL(file)
 }
-
+// 生成预览链接
 const handleImageBeforeUpload = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  //
-  console.log(uploadFile)
-  console.log(uploadFiles)
+  // console.log(uploadFile)
+  // console.log(uploadFiles)
+  if (uploadFile.raw) {
+    imageFile = uploadFile.raw
+    previewImage(imageFile!)
+  }
 }
 // 确认上传
-const confirmUpload = async () => {
-  //
+const confirmUpload = () => {
+  // console.log(previewUrl.value)
+  if (previewUrl.value.startsWith('blob:')) {
+    emit('imageUpload', imageFile)
+  }
 }
-
 // 处理粘贴事件
 const handlePaste = (event: ClipboardEvent) => {
   const items = event.clipboardData?.items
   if (!items) return
-
   const imageItem = Array.from(items).find(item => item.type.includes('image'))
   if (imageItem) {
     const file = imageItem.getAsFile()
     if (file) {
+      imageFile = file
       previewImage(file)
     }
   }
 }
+// 组件销毁时释放 URL
+onBeforeUnmount(() => {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
