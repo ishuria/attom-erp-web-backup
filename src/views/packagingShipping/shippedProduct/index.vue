@@ -61,7 +61,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -138,7 +138,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style="width: 100%; height: 100%; display: block;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -179,8 +179,10 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
+import { useRoute } from 'vue-router'
 import { getShipmentArrivedList, updateLostGoodsStatus } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -189,18 +191,18 @@ defineOptions({
   name: 'ShippedProductTable',
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
 const tableRef = ref<TableInstance>()
 const list = ref<IGetShipmentArrivedList[]>([])
 const listLoading = ref<boolean>(true)
-
 const total = ref<number>(0)
-
 const queryForm = reactive<IGetShipmentArrivedListReq>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
   site: -1,
-  status: 0
+  status: tabStateStore.getTabState(route.path, 0)
 })
 
 const imagePreviewVisible = ref<boolean>(false)
@@ -216,6 +218,7 @@ const imagePreviewShow = (row: any) => {
 const handleClick = (tab: TabsPaneContext) => {
   list.value = []
   queryForm.status = Number(tab.props.name)
+  tabStateStore.setTabState(route.path, Number(tab.props.name));
   queryData()
 }
 // 修改丢货状态
@@ -386,8 +389,8 @@ onBeforeMount(() => {
 
         .vab-query-form {
           .left-panel {
-            margin-left: 5px;
             margin-top: -3px;
+            margin-left: 5px;
           }
           .el-form {
             .el-form-item:first-child {
@@ -411,8 +414,8 @@ onBeforeMount(() => {
             padding-top: 0;
             padding-bottom: 0;
             .cell {
-              padding-left: 0;
               padding-right: 0;
+              padding-left: 0;
             }
           }
           .text-center {

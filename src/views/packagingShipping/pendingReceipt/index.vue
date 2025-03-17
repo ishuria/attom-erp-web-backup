@@ -478,6 +478,8 @@ updateSignLog
 } from '/@/api/devlocal/packagingShipping'
 
 import { isEqual } from 'lodash'
+import { useRoute } from 'vue-router'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -488,6 +490,9 @@ defineOptions({
   name: 'PendingReceiptTable',
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const printCountVisible = ref<boolean>(false)
 const printForm = reactive<{ count: number | undefined }>({
   count: undefined 
@@ -503,7 +508,6 @@ const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 const list = ref<IGetSignList[]>([])
-const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 // 批量签收可见
@@ -751,6 +755,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
+    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryForm.status = Number(tab.props.name);  
   }
   queryData()

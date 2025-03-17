@@ -87,9 +87,9 @@
 </template>
   
 <script lang="ts" setup>
-import type { TableInstance } from 'element-plus';
-import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import type { TableInstance } from 'element-plus'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
+import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 
 defineOptions({
     name: 'ReplenishmentSetting',
@@ -145,7 +145,7 @@ const merchandiseTypeList = ref<{id: number, label: string}[]>([])
 const handleUpdate = async () => {
   if(selectRows.value.length > 0) {
     updateVisible.value = true
-    formRef.value?.resetFields()
+    // formRef.value?.resetFields()
     const { data } = await getSeasonalCoefficientSite({ site: site.value })
     merchandiseTypeList.value = data
   } else {

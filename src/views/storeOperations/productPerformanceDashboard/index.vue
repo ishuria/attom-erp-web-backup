@@ -343,7 +343,7 @@
                 <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
               </span>
               <span v-if="item.label === '自量FBA'">
-                {{ row.currencyIcon + row.selfAssessmentFba ?? '' }} <br /> {{ row.currencyIcon + row.amazonFba ?? '' }}
+                {{ (row.currencyIcon + (row.selfAssessmentFba ?? '')) }} <br /> {{ (row.currencyIcon + (row.amazonFba ?? '')) }}
               </span>
               <span v-if="label1.includes(item.label)">
                 {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
