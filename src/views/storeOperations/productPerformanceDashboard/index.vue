@@ -1847,7 +1847,9 @@ const handleWidth = (item: any) => {
         return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
       }
       case '剩余库存': {
-        return flexColumnWidth(list.value, '剩余库存','availableInventory') + flexColumnWidth(list.value, '/','fbaCount')
+        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory').slice(0, -2)
+        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0).slice(0, -2)
+        return `${Number(availableWidth) + Number(fbaWidth)}px`
       }
       // case '月销售额': {
       //   return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)

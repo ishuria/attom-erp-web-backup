@@ -56,7 +56,7 @@ const option = reactive<any>({
 watch(
   () => [props.xAxisData,props.yAxisData,theme.value],
   () => {
-      option.series.data = props.yAxisData
+      option.series[0].data = props.yAxisData
       option.xAxis.data = props.xAxisData
       option.color = [theme.value.color]
   },
