@@ -1851,21 +1851,6 @@ const handleWidth = (item: any) => {
         const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0).slice(0, -2)
         return `${Number(availableWidth) + Number(fbaWidth)}px`
       }
-      // case '月销售额': {
-      //   return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)
-      // }
-      // case '月净利润': {
-      //   return flexColumnWidth(list.value, '月净利润','monthNetProfit', 50)
-      // }
-      // case '今销量': {
-      //   return flexColumnWidth(list.value, '今销量','currentSalesNumber', 50)
-      // }
-      // case '今单量': {
-      //   return flexColumnWidth(list.value, '今单量','currentSalesOrder', 50)
-      // }
-      // case '今广%': {
-      //   return flexColumnWidth(list.value, '今广%','currentAdvertisement', 50)
-      // }
       default: {
         return item.minWidth
       }
