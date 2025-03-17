@@ -80,7 +80,12 @@
       <el-table-column label="运营分类" min-width="150" prop="typeId">
         <template #default="{ row }">
           <el-select v-model="row.typeId" placeholder="请选择运营分类" @change="handleChangeType(row)">
-            <el-option v-for="item in row.userTypeList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option 
+              v-for="item in (typeList.get(String(row.userId)) ?? [])"
+              :key="item.id" 
+              :label="item.label" 
+              :value="item.id" 
+            />
           </el-select>
         </template>
       </el-table-column>
@@ -148,7 +153,16 @@
 import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { addDistributionList, delDistributionList, getDistributionList, getDistributionOptionUserList, getDistributionProductList, getDistributionSiteList, getDistributionUserTypeList, updateDistributionAsinUser, updateDistributionUserType } from '/@/api/devlocal/productDistribution'
+import {
+addDistributionList,
+delDistributionList,
+getDistributionList,
+getDistributionOptionUserList,
+getDistributionProductList,
+getDistributionSiteList,
+getDistributionUserType,
+updateDistributionUserType
+} from '/@/api/devlocal/productDistribution'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -191,17 +205,17 @@ const handleChangeUser = async (row: IGetDistributionProductList) => {
     row.userId = undefined
     return
   }
-  try {
-    const { data } = await updateDistributionAsinUser({
-      id: row.id,
-      userId: row.userId!
-    })
-    if (data) {
-      const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
-      row.userTypeList = typeList
-      row.typeId = undefined
-    }
-  } catch {}
+  // try {
+  //   const { data } = await updateDistributionAsinUser({
+  //     id: row.id,
+  //     userId: row.userId!
+  //   })
+  //   if (data) {
+  //     const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
+  //     row.userTypeList = typeList
+  //     row.typeId = undefined
+  //   }
+  // } catch {}
 }
 const handleChangeType = async (row: IGetDistributionProductList) => {
   try {
@@ -346,18 +360,28 @@ const fetchData = async () => {
   })
   total.value = data.total
   list.value = data.list
-  list.value.forEach(async (item) => {
-    if (item.userId != null && item.userId != undefined) {
-      const { data } = await getDistributionUserTypeList({ userId: item.userId })
-      item.userTypeList = data
-    }
-  })
+  // list.value.forEach(async (item) => {
+  //   if (item.userId != null && item.userId != undefined) {
+  //     const { data } = await getDistributionUserTypeList({ userId: item.userId })
+  //     item.userTypeList = data
+  //   }
+  // })
   listLoading.value = false
+  // fetchUserType()
+}
+const typeList = ref<any>()
+const fetchUserType = async () => {
+  const { data } = await getDistributionUserType()
+  typeList.value = new Map(Object.entries(data)); // 确保转换成 Map
+  // console.log(typeList.value instanceof Map); 
+  // console.log(typeList.value);
+  // console.log(typeList.value.get('28'))
 }
 onBeforeMount(() => {
   fetchSiteList()
   fetchUserList()
   fetchData()
+  fetchUserType()
 })
 </script>
 

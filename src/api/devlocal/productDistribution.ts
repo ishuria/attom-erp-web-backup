@@ -99,3 +99,14 @@ export function updateDistributionUserType(data: IUpdateDistributionUserType): P
     data
   })
 }
+
+/**
+ * 产品分配-查询全部运营人对应的运营分类列表
+ * @returns 
+ */
+export function getDistributionUserType() {
+  return request({
+    url: `${BASE_API}/distribution/option/user/all/list`,
+    method: 'get',
+  })
+}
