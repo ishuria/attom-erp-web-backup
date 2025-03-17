@@ -261,7 +261,7 @@ defineOptions({
 
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({
-  siteId: 1,
+  siteId: 0,
   pageNo: 1,
   pageSize: 20
 })

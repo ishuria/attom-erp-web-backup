@@ -58,7 +58,7 @@
       width="500"
     >
       <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="formRules" style="max-width: 340px; margin: 0 auto;">
+      <el-form class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
         <el-form-item label="产品分类" prop="kindId">
           <el-select v-model="form.kindId" placeholder="请选择产品类别">
             <el-option 
@@ -87,7 +87,7 @@
 </template>
   
 <script lang="ts" setup>
-import type { FormInstance, FormRules, TableInstance } from 'element-plus';
+import type { TableInstance } from 'element-plus';
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 
@@ -122,7 +122,6 @@ const showPreviewImage = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const formRef = ref<FormInstance>()
 // 批量修改数据表单
 const form = reactive<any>({
   ids: '',
@@ -130,11 +129,11 @@ const form = reactive<any>({
   stockPileNumberDays: null,
   minStockPilNumber: null,
 })
-const formRules = reactive<FormRules>({
-  kindId: [{ required: true, message: '请选择产品类别', trigger: 'change' }],
-  stockPileNumberDays: [{ required: true, message: '请填写维持库存天数', trigger: 'blur' }],
-  minStockPilNumber: [{ required: true, message: '请填写最小维持库存数量', trigger: 'blur' }],
-})
+// const formRules = reactive<FormRules>({
+//   kindId: [{ required: true, message: '请选择产品类别', trigger: 'change' }],
+//   stockPileNumberDays: [{ required: true, message: '请填写维持库存天数', trigger: 'blur' }],
+//   minStockPilNumber: [{ required: true, message: '请填写最小维持库存数量', trigger: 'blur' }],
+// })
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
@@ -156,8 +155,8 @@ const handleUpdate = async () => {
 }
 const ids = ref<any>([]) // 产品补货计ids使用
 const handleSubmit = async () => {
-  formRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
+  // formRef.value?.validate(async (isValid: boolean) => {
+  //   if (isValid) {
       selectRows.value.forEach((item: any) => {
         ids.value.push(item.id)
       })
@@ -170,9 +169,8 @@ const handleSubmit = async () => {
         fetchData()
         $baseMessage('批量修改成功', 'success', 'hey')
       }
-    }
-  })
-  
+  //   }
+  // })
 }
 
 const handleChangeSite = (value: any) => {

@@ -360,11 +360,11 @@
               </span>
               <span v-if="item.label === 'VOC满意度'">
                 {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
-                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 - {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
               </span>
               <span v-if="item.label === '状态'">
                 <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
@@ -1608,7 +1608,6 @@ const initChart1 = () => {
     yAxis: {
       name: '系数',
       type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
       axisLine: {
         show: true,
@@ -1846,6 +1845,9 @@ const handleWidth = (item: any) => {
       }
       case '开发人员': {
         return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
+      }
+      case '剩余库存': {
+        return flexColumnWidth(list.value, '剩余库存','availableInventory') + flexColumnWidth(list.value, '/','fbaCount')
       }
       // case '月销售额': {
       //   return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 50)
