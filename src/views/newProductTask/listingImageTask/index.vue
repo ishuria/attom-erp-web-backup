@@ -679,10 +679,12 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import { useRoute } from 'vue-router'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -886,7 +888,9 @@ const postTaskRules = reactive<FormRules<IAddArtDesignTaskReq>>({
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const list = ref<IGetArtDesignTaskList[]>([])
-const activeName = ref<number>(0)
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const queryForm = reactive<IGetArtDesignTaskListReq>({
   keyWord: '',
   pageNo: 1,
@@ -1099,6 +1103,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     queryForm.status = Number(tab.props.name)
+    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryData()
   }
 }
@@ -1272,6 +1277,7 @@ const fetchUserList = async () => {
 const useUser = useUserStore()
 const currentUser = useUser.getUsername
 onBeforeMount(() => { 
+  queryForm.status = activeName.value
   fetchSiteList()
   fetchUserList()
   fetchData()

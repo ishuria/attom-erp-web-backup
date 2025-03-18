@@ -1289,6 +1289,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { useRoute } from 'vue-router'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -1314,6 +1315,7 @@ updateOperationSKUOperateTypeList,
 updateRemarkAmazonOperation,
 updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
 IGetOperationAmazonSKUList,
 IGetOperationAsinList,
@@ -1324,10 +1326,14 @@ import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'ProductPerformance',
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const seasonalVisible = ref<boolean>(false)
 const sRankVisible = ref<boolean>(false)
 const bRankVisible = ref<boolean>(false)
@@ -1345,7 +1351,6 @@ const option2 = ref<any>({})
 const option3 = ref<any>({})
 const seasonalXData = months.map((item) => item.label)
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-const activeName = ref<number>(0)
 const router = useRouter()
 // 运营备注
 const remarkVisible = ref<boolean>(false)
@@ -1803,6 +1808,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
     fetchPAsinCurrency()
     activeName.value = 2
   }
+  tabStateStore.setTabState(route.path, activeName.value);
 }
 // 运营分类设定可见
 const opeClassifyVisible = ref<boolean>(false)
@@ -2337,8 +2343,16 @@ onBeforeMount(() => {
   fetchOperateUserList()
   fetchDevelopUserList()
   fetchUser()
-  fetchColumn()
-  fetchData()
+  if (activeName.value === 0) {
+    fetchColumn()
+    fetchData()
+  } else if(activeName.value === 1) {
+    fetchAsinColumn()
+    fetchAsinData()
+  } else {
+    fetchPAsinColumn()
+    fetchPAsinData()
+  }
 })
 </script>
 

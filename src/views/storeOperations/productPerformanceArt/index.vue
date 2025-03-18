@@ -189,8 +189,10 @@ import { Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { useRoute } from 'vue-router'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import { getAmazonStars } from '/@/utils/rate'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -198,7 +200,9 @@ defineOptions({
   name: 'ProductPerformanceArt'
 })
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
-const activeName = ref<number>(0)
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const currency = ref<number | undefined>(0)
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
@@ -380,7 +384,7 @@ const columns = ref<any>([
   },
 ])
 const handleTabClick = () => {
-  //
+  tabStateStore.setTabState(route.path, activeName.value);
 }
 watch(site, (val) => {
   if (val.length === 0) {

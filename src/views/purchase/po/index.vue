@@ -953,26 +953,28 @@ v-model:file-list="contractList" action="#"
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
-  aggregationContract,
-  applyPurchaseReductionCost, 
-  checkPurchasePo, 
-  delPayRecord, 
-  deletePo, 
-  generatePoContract, 
-  generateRemittance, 
-  getComponentPayRecord, 
-  getPoList, 
-  getPurchaseCostReduction, 
-  purchaseTotalAp, 
-  updateComponentAllPay, 
-  updateComponentPayPart, 
-  updateComponentRefund,
-  updatePayRecord
+aggregationContract,
+applyPurchaseReductionCost,
+checkPurchasePo,
+delPayRecord,
+deletePo,
+generatePoContract,
+generateRemittance,
+getComponentPayRecord,
+getPoList,
+getPurchaseCostReduction,
+purchaseTotalAp,
+updateComponentAllPay,
+updateComponentPayPart,
+updateComponentRefund,
+updatePayRecord
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
@@ -1022,8 +1024,11 @@ const tableRef5 = ref<TableInstance>()
 const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
-const activeName = ref<number>(2)
-  const defaultTime2: [Date, Date] = [
+
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 2))
+const defaultTime2: [Date, Date] = [
   new Date(2000, 1, 1, 0, 0, 0),
   new Date(2000, 2, 1, 23, 59, 59),
 ] // '12:00:00', '08:00:00'
@@ -1794,6 +1799,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   // tableRef.value?.clearSelection()
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name);  
+    tabStateStore.setTabState(route.path, Number(tab.props.name));
   }
   fetchData()
   activeName.value = queryForm.status
@@ -2044,6 +2050,7 @@ onBeforeMount(() => {
     activeName.value = _activeName
     queryForm.status = _activeName
   }
+  queryForm.status = activeName.value
   fetchData()
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {

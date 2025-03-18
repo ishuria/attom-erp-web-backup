@@ -22,7 +22,6 @@
     </vab-query-form>
     <el-table
       border 
-      :data="fakeData"
       :header-cell-style="{ textAlign: 'center' }"
     >
       <el-table-column align="center" label="调整日期" min-width="115" prop=""/>
@@ -89,11 +88,11 @@ const queryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-const fakeData = [
-  {
-    po: 'PO123456'
-  }
-]
+// const fakeData = [
+//   {
+//     po: 'PO123456'
+//   }
+// ]
 // 修改可见
 // const modifyVisible = ref<boolean>(false)
 // const showModify = (row: any) => {

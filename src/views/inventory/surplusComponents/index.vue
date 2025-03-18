@@ -131,13 +131,17 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { getOrderMoreComponent } from '/@/api/devlocal/purchasePo'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 
 defineOptions({
   name: 'SurplusComponentsTable',
 })
 
-const activeName = ref<number>(0)
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const tableRef = ref<TableInstance>()
 
 // 表格加载loading状态
@@ -183,9 +187,10 @@ const showPreviewImage = (url: string) => {
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   // list.value = []
   // if (tab.props.name !== undefined) {
-  //   queryForm.status = Number(tab.props.name);  
+  //   queryForm.status = Number(tab.props.name);
   // }
   // fetchData()
+  tabStateStore.setTabState(route.path, Number(tab.props.name));
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {

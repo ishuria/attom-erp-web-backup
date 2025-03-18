@@ -145,7 +145,7 @@
       width="20%"
       @close="closeInvoiceCollection"
     >
-      <el-form ref="invoiceCollectionFormRef" label-position="top" :model="invoiceCollectionForm" :rules="invoiceCollectionFormRules" style="margin-left: 10px; margin-right: 10px;">
+      <el-form ref="invoiceCollectionFormRef" label-position="top" :model="invoiceCollectionForm" :rules="invoiceCollectionFormRules" style=" margin-right: 10px;margin-left: 10px;">
         <el-form-item label="归档路径" prop="path">
           <el-input v-model="invoiceCollectionForm.path" clearable />
         </el-form-item>
@@ -191,14 +191,20 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { useRoute } from 'vue-router'
 import { getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
+
 defineOptions({
   name: 'TaxRefundBatch'
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const queryForm = reactive<IGetTaxRefundBatchListQuery>({
   keyWord: '',
   status: 0,
@@ -208,7 +214,6 @@ const queryForm = reactive<IGetTaxRefundBatchListQuery>({
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const list = ref<IGetTaxRefundBatchList[]>([])
-const activeName = ref<number>(0)
 let _row: IGetTaxRefundBatchList = {}
 const selectRows = ref<IGetTaxRefundBatchList[]>([])
 // 修改备注可见
@@ -236,6 +241,7 @@ const handleTabClick = (pane: TabsPaneContext) => {
     activeName.value = Number(pane.props.name)
     queryData()
     selectRows.value = []
+    tabStateStore.setTabState(route.path, Number(pane.props.name));
   }
 }
 const handleExportAiTuoMu = async () => {
@@ -375,6 +381,7 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  queryForm.status = activeName.value
   fetchData()
 })
 </script>
@@ -427,9 +434,9 @@ onBeforeMount(() => {
     }
   }
 }
-.custom-tooltip {
-  white-space: pre-wrap; 
+.custom-tooltip { 
   max-width: 400px; 
   font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>

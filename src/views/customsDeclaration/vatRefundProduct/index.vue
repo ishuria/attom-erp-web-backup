@@ -24,7 +24,7 @@
               />
             </span>
             <span style="margin: 0 0 calc(var(--el-margin) / 2) 0;">
-              <el-text >该区间剩余可退税金额：<span style="color: rgb(83, 186, 177); font-weight: 600;">23234.56元</span></el-text>
+              <el-text >该区间剩余可退税金额：<span style=" font-weight: 600;color: rgb(83, 186, 177);">23234.56元</span></el-text>
             </span>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="4">
@@ -326,9 +326,11 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import { useRoute } from 'vue-router'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -366,7 +368,9 @@ const closeInvoiceMatchExport = () => {
   invoiceMatchExportFormRef.value?.resetFields()
   invoiceMatchExportVisible.value = false
 }
-const activeName = ref<number>(0)
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const listLoading = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -391,6 +395,7 @@ const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
     queryForm.taxRefundStatus = Number(pane.props.name)
     activeName.value = Number(pane.props.name)
+    tabStateStore.setTabState(route.path, Number(pane.props.name));
     queryData()
   }
 }
@@ -612,6 +617,7 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  queryForm.taxRefundStatus = activeName.value
   fetchData()
 })
 </script>

@@ -1,7 +1,7 @@
 handleSubmit<template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="进行中" name="0">
+      <el-tab-pane label="进行中" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
@@ -206,7 +206,7 @@ handleSubmit<template>
         />
         <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
-      <el-tab-pane label="已归档" name="1">
+      <el-tab-pane label="已归档" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleArchivedPersonselect">参与人员筛选</el-button>
@@ -569,31 +569,33 @@ import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
-import type { CSSProperties} from 'vue';
+import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import { useRoute } from 'vue-router'
 import { indexColumns } from './indexColumns'
 import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
 import wangEditor from './wangEditor.vue'
 import {
-  copyProgress,
-  deleteImage,
-  getByIdQueryEvaluation,
-  getList,
-  getProgressComponentList,
-  getProgressFilter,
-  getProgressLog,
-  getProgressPersonList,
-  getProgressSharelist,
-  getProgressSuppliserList,
-  updateProgressArchive,
-  updateProgressImgSort,
-  updateProgressManage,
-  updateProgressMoldAdd,
-  updateProgressSharelist,
-  uploadFile
+copyProgress,
+deleteImage,
+getByIdQueryEvaluation,
+getList,
+getProgressComponentList,
+getProgressFilter,
+getProgressLog,
+getProgressPersonList,
+getProgressSharelist,
+getProgressSuppliserList,
+updateProgressArchive,
+updateProgressImgSort,
+updateProgressManage,
+updateProgressMoldAdd,
+updateProgressSharelist,
+uploadFile
 } from '/@/api/devlocal/progress'
+import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -604,11 +606,12 @@ defineOptions({
   name: 'ProgressTable',
 })
 
+const route = useRoute()
+const tabStateStore = useTabStateStore()
+const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const router = useRouter()
 
 const editRef = ref<any>(null)
-
-const activeName = ref("0")
 const fixed = ref<string>('right')
 const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()
@@ -735,7 +738,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value=[]
   if (tab.props.name === '0')  queryForm.status = 0
   else queryForm.status = 1
-
+  tabStateStore.setTabState(route.path, Number(tab.props.name));
   fetchData()
 }
 // 处理已归档
