@@ -5,6 +5,8 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IGetOperationOrderListReq,
   IGetOperationOrderListRes,
+  IGetOperationOrderSkuReq,
+  IGetOperationOrderSkuRes,
   IGetOperationOrderSpringFestival,
   IGetOperationOrdersSmoothness,
   IReleaseOperationPlanPoReq
@@ -59,6 +61,14 @@ export function getOperationOrderShippingInspection(): Promise<{ data: any }> {
 export function releaseOperationPlanPo(data: IReleaseOperationPlanPoReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/release/planPo`,
+    method: 'post',
+    data
+  })
+}
+// 产品订货-发布订货查询
+export function getOperationOrderSku(data: IGetOperationOrderSkuReq): Promise<IGetOperationOrderSkuRes> {
+  return request({
+    url: `${BASE_API}/operation/order/get/sku`,
     method: 'post',
     data
   })

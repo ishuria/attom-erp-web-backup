@@ -232,3 +232,18 @@ export interface IReleaseOperationPlanPoReq {
   sku: string
   number: number
 } 
+export interface IGetOperationOrderSkuReq {
+  id: number
+  sku: string
+}
+export interface IGetOperationOrderSkuRes {
+  data: {
+    sku: string
+    skuImageUrl: string
+    description: string
+    moq: number
+    numberOfCartons: number
+    productManagerName: string
+    orderQuantity: number
+  }
+}

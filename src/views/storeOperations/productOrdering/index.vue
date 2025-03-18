@@ -397,8 +397,16 @@ import type { CheckboxValueType, FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getSkuInfo } from '/@/api/devlocal/productInformation'
-import { getOperationOrderList, getOperationOrderShippingInspection, getOperationOrderSmoothness, getOperationOrderSpringFestival, releaseOperationPlanPo, updateOperationOrderSmoothness, updateOperationOrderSpringFestival } from '/@/api/devlocal/productOrdering'
+import {
+getOperationOrderList,
+getOperationOrderShippingInspection,
+getOperationOrderSku,
+getOperationOrderSmoothness,
+getOperationOrderSpringFestival,
+releaseOperationPlanPo,
+updateOperationOrderSmoothness,
+updateOperationOrderSpringFestival
+} from '/@/api/devlocal/productOrdering'
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
 import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
@@ -500,12 +508,21 @@ const handleReleaseOrder = async () => {
     queryData()
   }
 }
+let copyRow: IGetOperationOrderList
 const handleSwitchSku = async () => {
-  const { data } = await getSkuInfo({ sku: releaseOrderForm.sku })
+  // const { data } = await getSkuInfo({ sku: releaseOrderForm.sku })
+  // Object.assign(releaseOrderForm, data)
+  const { data } = await getOperationOrderSku({
+    id: copyRow.id!,
+    sku: releaseOrderForm.sku
+  })
+  // const { data } = await getSkuInfo({ sku: skuArray[0] })
   Object.assign(releaseOrderForm, data)
+  releaseOrderForm.number = data.orderQuantity
 }
 // 打开发布订货
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
+  copyRow = row
   releaseOrderVisible.value = true
   if (row.sku) {
     orderListLoading.value = true
@@ -516,9 +533,13 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
         value: item
       }
     })
-    const { data } = await getSkuInfo({ sku: skuArray[0] })
+    const { data } = await getOperationOrderSku({
+      id: row.id!,
+      sku: skuArray[0]
+    })
+    // const { data } = await getSkuInfo({ sku: skuArray[0] })
     Object.assign(releaseOrderForm, data)
-    releaseOrderForm.number = 0
+    releaseOrderForm.number = data.orderQuantity
     asinId.value = row.id!
     orderListLoading.value = false
   } else {
