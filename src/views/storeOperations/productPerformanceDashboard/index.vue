@@ -7,12 +7,12 @@
             <!-- 骨架屏模板 -->
             <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
               <!-- 头部骨架 -->
-              <div style="padding: 15px 15px 0">
+              <div style="padding: 15px 10px 0">
                 <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
               </div>
 
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
@@ -485,12 +485,12 @@
             <!-- 骨架屏模板 -->
             <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
               <!-- 头部骨架 -->
-              <div style="padding: 15px 15px 0">
+              <div style="padding: 15px 10px 0">
                 <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
               </div>
 
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
@@ -928,12 +928,12 @@
             <!-- 骨架屏模板 -->
             <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
               <!-- 头部骨架 -->
-              <div style="padding: 15px 15px 0">
+              <div style="padding: 15px 10px 0">
                 <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
               </div>
 
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
