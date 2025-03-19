@@ -1345,11 +1345,33 @@
     </vab-dialog>
     <!-- 小类排名 -->
     <vab-dialog v-model="sRankVisible" title="小类排名" width="40%" @open="handleSRankOpened">
+      <div style="text-align: center">
+        <el-date-picker 
+          v-model="sRankDate"
+          :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
+          :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          end-placeholder="结束日期"
+          :shortcuts="shortcuts"
+          start-placeholder="开始日期"
+          type="daterange"
+        />
+      </div>
       <div ref="chartContainer2" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 大类排名 -->
     <vab-dialog v-model="bRankVisible" title="大类排名" width="40%" @open="handleBRankOpened">
+      <div style="text-align: center">
+        <el-date-picker 
+          v-model="bRankDate"
+          :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
+          :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          end-placeholder="结束日期"
+          :shortcuts="shortcuts"
+          start-placeholder="开始日期"
+          type="daterange"
+        />
+      </div>
       <div ref="chartContainer3" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
@@ -1404,6 +1426,69 @@ defineOptions({
   name: 'ProductPerformance',
 })
 
+const sRankDate = ref<[Date, Date]>([
+  new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+  new Date() // 今天
+])
+const bRankDate = ref<[Date, Date]>([
+  new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+  new Date() // 今天
+])
+const shortcuts = [
+  {
+    text: '近30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 30)
+      return [start, end]
+    },
+  },
+  {
+    text: '近60天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 60)
+      return [start, end]
+    },
+  },
+  {
+    text: '近90天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 90)
+      return [start, end]
+    },
+  },
+  {
+    text: '近半年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setMonth(start.getMonth() - 6)
+      return [start, end]
+    },
+  },
+  {
+    text: '近1年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setFullYear(start.getFullYear() - 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '全部',
+    value: () => {
+      const end = new Date()
+      const start = new Date('2024-12-20') // 设置一个较早的起始日期
+      return [start, end]
+    },
+  },
+]
 const route = useRoute()
 const tabStateStore = useTabStateStore()
 const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
