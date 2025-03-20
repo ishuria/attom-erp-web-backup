@@ -4,8 +4,12 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IFilterAmazonSKUListReq,
+  IGetOperationAmazonAsinRankListReq,
+  IGetOperationAmazonParentAsinRankListReq,
   IGetOperationAmazonSKUListReq,
   IGetOperationAmazonSKUListRes,
+  IGetOperationAmazonSkuRankListReq,
+  IGetOperationAmazonSkuRankListRes,
   IGetOperationArtListReq,
   IGetOperationArtListRes,
   IGetOperationAsinListRes,
@@ -273,5 +277,72 @@ export function getUserAmazonOperation(): Promise<IGetUserAmazonOperationRes> {
   return request({
     url: `${BASE_API}/operation/amazon/user`,
     method: 'get',
+  })
+}
+
+/**
+ * 产品表现SKU-查询小类排名
+ * @returns 
+ */
+export function getOperationAmazonSkuRankList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/rank`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 产品表现SKU-查询大类排名
+ * @returns 
+ */
+export function getOperationAmazonSkuRankCateList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/cateRank`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 产品表现ASIN-查询小类排名
+ * @returns 
+ */
+export function getOperationAmazonAsinRankList(data: IGetOperationAmazonAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/asin/rank`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 产品表现ASIN-查询大类排名
+ * @returns 
+ */
+export function getOperationAmazonAsinRankCateList(data: IGetOperationAmazonAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/asin/cateRank`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 产品表现ParentAsin-查询小类排名
+ * @returns 
+ */
+export function getOperationAmazonParentAsinRankList(data: IGetOperationAmazonParentAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/parent/asin/rank`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 产品表现ParentAsin-查询大类排名
+ * @returns 
+ */
+export function getOperationAmazonParentAsinRankCateList(data: IGetOperationAmazonParentAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/parent/asin/cateRank`,
+    method: 'post',
+    data
   })
 }

@@ -1254,3 +1254,29 @@ export interface IGetUserAmazonOperationRes {
     developUserId: number
   }
 }
+
+export interface IGetOperationAmazonSkuRankListReq {
+  sku: string
+  siteId: number
+  startDate: string
+  endDate: string
+}
+export interface IGetOperationAmazonAsinRankListReq {
+  asin: string
+  siteId: number
+  startDate: string
+  endDate: string
+}
+export interface IGetOperationAmazonParentAsinRankListReq {
+  parentAsin: string
+  siteId: number
+  startDate: string
+  endDate: string
+}
+export interface IOperationAmazonSkuRankList {
+  rank: number
+  updateDate: string
+}
+export interface IGetOperationAmazonSkuRankListRes {
+  data: IOperationAmazonSkuRankList[]
+}

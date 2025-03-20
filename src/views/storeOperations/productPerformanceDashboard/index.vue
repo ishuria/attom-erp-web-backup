@@ -1348,15 +1348,18 @@
       <div style="text-align: center">
         <el-date-picker 
           v-model="sRankDate"
+          :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
           :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          :editable="false"
           end-placeholder="结束日期"
           :shortcuts="shortcuts"
           start-placeholder="开始日期"
           type="daterange"
+          @change="fetchSkuRankData"
         />
       </div>
-      <div ref="chartContainer2" style="width: 100%; height: 400px"></div>
+      <div ref="chartContainer2" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 大类排名 -->
@@ -1364,15 +1367,18 @@
       <div style="text-align: center">
         <el-date-picker 
           v-model="bRankDate"
+          :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
           :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          :editable="false"
           end-placeholder="结束日期"
           :shortcuts="shortcuts"
           start-placeholder="开始日期"
           type="daterange"
+          @change="fetchSkuCateRankData"
         />
       </div>
-      <div ref="chartContainer3" style="width: 100%; height: 400px"></div>
+      <div ref="chartContainer3" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
   </div>
@@ -1396,6 +1402,12 @@ getCurrencyParentASINAmazonOperation,
 getCurrencySKUAmazonOperation,
 getDevelopUserList,
 getOperationAmazonSKUList,
+getOperationAmazonSkuRankCateList,
+getOperationAmazonSkuRankList,
+getOperationAmazonAsinRankCateList,
+getOperationAmazonAsinRankList,
+getOperationAmazonParentAsinRankCateList,
+getOperationAmazonParentAsinRankList,
 getOperationAsinList,
 getOperationColumnList,
 getOperationParentAsinList,
@@ -1408,7 +1420,7 @@ updateOperationASINOperateTypeList,
 updateOperationSKUDisContinuedStatus,
 updateOperationSKUOperateTypeList,
 updateRemarkAmazonOperation,
-updateSortOperationColumn,
+updateSortOperationColumn
 } from '/@/api/devlocal/productPerformance'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
@@ -1416,11 +1428,13 @@ IGetOperationAmazonSKUList,
 IGetOperationAsinList,
 IGetOperationColumnList,
 IGetOperationParentAsinList,
+IOperationAmazonSkuRankList
 } from '/@/type/storeOperation/productPerformanceType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
+import dayjs from 'dayjs'
 
 defineOptions({
   name: 'ProductPerformance',
@@ -1818,7 +1832,7 @@ const initChart2 = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-01', '2025-01-02'],
+      data: () => sRankValue.value.map((item) => item.updateDate),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1831,7 +1845,6 @@ const initChart2 = () => {
     yAxis: {
       name: '小类排名',
       type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
       axisLine: {
         show: true,
@@ -1844,7 +1857,7 @@ const initChart2 = () => {
       {
         name: '小类排名',
         type: 'line',
-        data: [0, 1, 2, 3, 4, 5, 6, 7],
+        data: () => sRankValue.value.map((item) => item.rank),
         itemStyle: {
           color: '#52bfff',
         },
@@ -1870,7 +1883,7 @@ const initChart3 = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['2024-12-26', '2024-12-27', '2024-12-28', '2024-12-29', '2024-12-30', '2024-12-31', '2025-01-01', '2025-01-02'],
+      data: () => bRankValue.value.map((item) => item.updateDate),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1883,7 +1896,6 @@ const initChart3 = () => {
     yAxis: {
       name: '大类排名',
       type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
       axisLine: {
         show: true,
@@ -1896,7 +1908,7 @@ const initChart3 = () => {
       {
         name: '大类排名',
         type: 'line',
-        data: [0, 1, 2, 3, 4, 5, 6, 7],
+        data: () => bRankValue.value.map((item) => item.rank),
         itemStyle: {
           color: '#52bfff',
         },
@@ -2063,8 +2075,95 @@ const handleWidth = (item: any) => {
     }
   }
 }
+let copyRow: any
+const chartLoading = ref<boolean>(false)
+// 小类排名数据
+const sRankValue = ref<IOperationAmazonSkuRankList[]>([])
+// 大类排名数据
+const bRankValue = ref<IOperationAmazonSkuRankList[]>([])
 
-const cellClick = (row: any, column: any) => {
+// 获取小类排名数据
+const fetchSkuRankData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = sRankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  // console.log('日期范围：', formatStartDate, formatEndDate)
+  if (activeName.value === 0) {
+    const { data } = await getOperationAmazonSkuRankList({
+      sku: copyRow.sku,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    sRankValue.value = data
+  } else if (activeName.value === 1) {
+    const { data } = await getOperationAmazonAsinRankList({
+      asin: copyRow.asin,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    sRankValue.value = data
+  } else {
+    const { data } = await getOperationAmazonParentAsinRankList({
+      parentAsin: copyRow.parentAsin,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    sRankValue.value = data
+  }
+  
+  // 更新图表数据
+  if (chartInstance2) {
+    option2.value.xAxis.data = sRankValue.value.map(item => item.updateDate)
+    option2.value.series[0].data = sRankValue.value.map(item => item.rank)
+    chartInstance2.setOption(option2.value)
+  }
+  chartLoading.value = false
+}
+const fetchSkuCateRankData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = bRankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  // console.log('日期范围：', formatStartDate, formatEndDate)
+  if (activeName.value === 0) {
+    const { data } = await getOperationAmazonSkuRankCateList({
+      sku: copyRow.sku,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    bRankValue.value = data
+  } else if(activeName.value === 1) {
+    const { data } = await getOperationAmazonAsinRankCateList({
+      asin: copyRow.asin,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    bRankValue.value = data
+  } else {
+    const { data } = await getOperationAmazonParentAsinRankCateList({
+      parentAsin: copyRow.parentAsin,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    bRankValue.value = data
+  }
+  
+  // 更新图表数据
+  if (chartInstance3) {
+    option3.value.xAxis.data = bRankValue.value.map(item => item.updateDate)
+    option3.value.series[0].data = bRankValue.value.map(item => item.rank)
+    chartInstance3.setOption(option3.value)
+  }
+  chartLoading.value = false
+}
+const cellClick = async (row: any, column: any) => {
   const label = column.label
   switch (label) {
     case '销量趋势(点击看明细)': {
@@ -2100,12 +2199,23 @@ const cellClick = (row: any, column: any) => {
     }
     case '小类排名': {
       sRankVisible.value = true
-
+      // 默认打开是近30天
+      sRankDate.value = [
+        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      fetchSkuRankData()
       break
     }
     case '大类排名': {
       bRankVisible.value = true
-
+      bRankDate.value = [
+        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      fetchSkuCateRankData()
       break
     }
     // No default
