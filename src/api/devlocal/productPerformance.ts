@@ -10,6 +10,7 @@ import type {
   IGetOperationAmazonSKUListRes,
   IGetOperationAmazonSkuRankListReq,
   IGetOperationAmazonSkuRankListRes,
+  IGetOperationAmazonSkuVocListRes,
   IGetOperationArtListReq,
   IGetOperationArtListRes,
   IGetOperationAsinListRes,
@@ -342,6 +343,18 @@ export function getOperationAmazonParentAsinRankList(data: IGetOperationAmazonPa
 export function getOperationAmazonParentAsinRankCateList(data: IGetOperationAmazonParentAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/parent/asin/cateRank`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 产品表现SKU-查询Voc满意度趋势
+ * @returns 
+ */
+export function getOperationAmazonSkuVocList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuVocListRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/voc`,
     method: 'post',
     data
   })

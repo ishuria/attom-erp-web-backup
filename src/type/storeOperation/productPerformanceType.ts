@@ -1280,3 +1280,10 @@ export interface IOperationAmazonSkuRankList {
 export interface IGetOperationAmazonSkuRankListRes {
   data: IOperationAmazonSkuRankList[]
 }
+export interface IOperationAmazonSkuVocList {
+  eventDate: string
+  ncxRate: number
+}
+export interface IGetOperationAmazonSkuVocListRes {
+  data: IOperationAmazonSkuVocList[]
+}

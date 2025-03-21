@@ -1343,11 +1343,11 @@
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
-    <!-- 小类排名 -->
-    <vab-dialog v-model="sRankVisible" title="小类排名" width="40%" @open="handleSRankOpened">
+    <!-- 小类排名/大类排名 -->
+    <vab-dialog v-model="rankVisible" :title="title" width="40%" @open="handleRankOpened">
       <div style="text-align: center">
         <el-date-picker 
-          v-model="sRankDate"
+          v-model="rankDate"
           :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
           :disabled-date="(time: Date) => time.getTime() > Date.now()"
@@ -1356,17 +1356,17 @@
           :shortcuts="shortcuts"
           start-placeholder="开始日期"
           type="daterange"
-          @change="fetchSkuRankData"
+          @change="handleRankChange"
         />
       </div>
       <div ref="chartContainer2" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
-    <!-- 大类排名 -->
-    <vab-dialog v-model="bRankVisible" title="大类排名" width="40%" @open="handleBRankOpened">
+    <!-- VOC满意度 -->
+    <vab-dialog v-model="vocVisible" title="VOC满意度" width="40%" @open="handleVocOpened">
       <div style="text-align: center">
         <el-date-picker 
-          v-model="bRankDate"
+          v-model="rankDate"
           :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
           :disabled-date="(time: Date) => time.getTime() > Date.now()"
@@ -1375,7 +1375,7 @@
           :shortcuts="shortcuts"
           start-placeholder="开始日期"
           type="daterange"
-          @change="fetchSkuCateRankData"
+          @change="fetchSkuVocData"
         />
       </div>
       <div ref="chartContainer3" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
@@ -1386,6 +1386,7 @@
 
 <script lang="ts" setup>
 import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
@@ -1401,13 +1402,14 @@ getCurrencyList,
 getCurrencyParentASINAmazonOperation,
 getCurrencySKUAmazonOperation,
 getDevelopUserList,
-getOperationAmazonSKUList,
-getOperationAmazonSkuRankCateList,
-getOperationAmazonSkuRankList,
 getOperationAmazonAsinRankCateList,
 getOperationAmazonAsinRankList,
 getOperationAmazonParentAsinRankCateList,
 getOperationAmazonParentAsinRankList,
+getOperationAmazonSKUList,
+getOperationAmazonSkuRankCateList,
+getOperationAmazonSkuRankList,
+getOperationAmazonSkuVocList,
 getOperationAsinList,
 getOperationColumnList,
 getOperationParentAsinList,
@@ -1428,24 +1430,24 @@ IGetOperationAmazonSKUList,
 IGetOperationAsinList,
 IGetOperationColumnList,
 IGetOperationParentAsinList,
-IOperationAmazonSkuRankList
+IOperationAmazonSkuRankList,
+IOperationAmazonSkuVocList
 } from '/@/type/storeOperation/productPerformanceType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
-import dayjs from 'dayjs'
 
 defineOptions({
   name: 'ProductPerformance',
 })
 
-const sRankDate = ref<[Date, Date]>([
-  new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
-  new Date() // 今天
-])
-const bRankDate = ref<[Date, Date]>([
-  new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+const vocVisible = ref<boolean>(false)
+const vocValue = ref<IOperationAmazonSkuVocList[]>([])
+const title = ref<string>('')
+const rankVisible = ref<boolean>(false)
+const rankDate = ref<[Date, Date]>([
+  new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
   new Date() // 今天
 ])
 const shortcuts = [
@@ -1454,7 +1456,7 @@ const shortcuts = [
     value: () => {
       const end = new Date()
       const start = new Date()
-      start.setDate(start.getDate() - 30)
+      start.setDate(start.getDate() - 29)
       return [start, end]
     },
   },
@@ -1463,7 +1465,7 @@ const shortcuts = [
     value: () => {
       const end = new Date()
       const start = new Date()
-      start.setDate(start.getDate() - 60)
+      start.setDate(start.getDate() - 59)
       return [start, end]
     },
   },
@@ -1472,7 +1474,7 @@ const shortcuts = [
     value: () => {
       const end = new Date()
       const start = new Date()
-      start.setDate(start.getDate() - 90)
+      start.setDate(start.getDate() - 89)
       return [start, end]
     },
   },
@@ -1507,8 +1509,7 @@ const route = useRoute()
 const tabStateStore = useTabStateStore()
 const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const seasonalVisible = ref<boolean>(false)
-const sRankVisible = ref<boolean>(false)
-const bRankVisible = ref<boolean>(false)
+
 const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
 const chartContainer3 = ref<HTMLElement | null>(null)
@@ -1572,6 +1573,13 @@ const asinList = ref<IGetOperationAsinList[]>([])
 const pAsinList = ref<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
    
+const handleRankChange = () => {
+  if (title.value === '小类排名') {
+    fetchSkuRankData()
+  } else if(title.value === '大类排名') {
+    fetchSkuCateRankData()
+  }
+}
 const handleConfirmFilter = async (filterForm: any) => {
   if (activeName.value === 0) {
     const { site, ...filterQueryForm } = queryForm
@@ -1832,7 +1840,7 @@ const initChart2 = () => {
     },
     xAxis: {
       type: 'category',
-      data: () => sRankValue.value.map((item) => item.updateDate),
+      data: () => rankValue.value.map((item) => item.updateDate),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1857,7 +1865,7 @@ const initChart2 = () => {
       {
         name: '小类排名',
         type: 'line',
-        data: () => sRankValue.value.map((item) => item.rank),
+        data: () => rankValue.value.map((item) => item.rank),
         itemStyle: {
           color: '#52bfff',
         },
@@ -1873,6 +1881,25 @@ const initChart3 = () => {
     tooltip: {
       trigger: 'axis',
       confine: true,
+      formatter: (params: any[]) => {
+        // tooltip标题
+        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">不满意率</div>`
+
+        // tooltip详情内容
+        const itemHtmlStrArr = params.map((item) => {
+          return `<div style="display: flex;align-items:center;">
+            ${item.marker}
+            <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px -1px 2px;">${params[0].name}</div>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${item.value}%</span>
+          </div>`
+        })
+        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
+          ${itemHtmlStrArr.join('')}
+        </div>`
+        // 最终html字符串
+        const resHtmlStr = titleHtmlStr + contentHtmlStr
+        return resHtmlStr
+      }
     },
     grid: {
       top: 50,
@@ -1883,7 +1910,7 @@ const initChart3 = () => {
     },
     xAxis: {
       type: 'category',
-      data: () => bRankValue.value.map((item) => item.updateDate),
+      data: () => vocValue.value.map((item) => item.eventDate),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1894,7 +1921,7 @@ const initChart3 = () => {
       },
     },
     yAxis: {
-      name: '大类排名',
+      name: '不满意率(%)',
       type: 'value',
       boundaryGap: [0, 0.1],
       axisLine: {
@@ -1906,9 +1933,9 @@ const initChart3 = () => {
     },
     series: [
       {
-        name: '大类排名',
+        name: '不满意率',
         type: 'line',
-        data: () => bRankValue.value.map((item) => item.rank),
+        data: () => vocValue.value.map((item) => item.ncxRate),
         itemStyle: {
           color: '#52bfff',
         },
@@ -1933,7 +1960,7 @@ const handleSeasonalOpened = () => {
     }
   })
 }
-const handleSRankOpened = () => {
+const handleRankOpened = () => {
   nextTick(() => {
     if (chartContainer2.value) {
       chartInstance2 = echarts.init(chartContainer2.value)
@@ -1947,7 +1974,7 @@ const handleSRankOpened = () => {
     }
   })
 }
-const handleBRankOpened = () => {
+const handleVocOpened = () => {
   nextTick(() => {
     if (chartContainer3.value) {
       chartInstance3 = echarts.init(chartContainer3.value)
@@ -2077,15 +2104,11 @@ const handleWidth = (item: any) => {
 }
 let copyRow: any
 const chartLoading = ref<boolean>(false)
-// 小类排名数据
-const sRankValue = ref<IOperationAmazonSkuRankList[]>([])
-// 大类排名数据
-const bRankValue = ref<IOperationAmazonSkuRankList[]>([])
-
+const rankValue = ref<IOperationAmazonSkuRankList[]>([])
 // 获取小类排名数据
 const fetchSkuRankData = async () => {
   chartLoading.value = true
-  const [startDate, endDate] = sRankDate.value
+  const [startDate, endDate] = rankDate.value
   const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
   const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
   // console.log('日期范围：', formatStartDate, formatEndDate)
@@ -2096,7 +2119,7 @@ const fetchSkuRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    sRankValue.value = data
+    rankValue.value = data
   } else if (activeName.value === 1) {
     const { data } = await getOperationAmazonAsinRankList({
       asin: copyRow.asin,
@@ -2104,7 +2127,7 @@ const fetchSkuRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    sRankValue.value = data
+    rankValue.value = data
   } else {
     const { data } = await getOperationAmazonParentAsinRankList({
       parentAsin: copyRow.parentAsin,
@@ -2112,20 +2135,22 @@ const fetchSkuRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    sRankValue.value = data
+    rankValue.value = data
   }
   
   // 更新图表数据
   if (chartInstance2) {
-    option2.value.xAxis.data = sRankValue.value.map(item => item.updateDate)
-    option2.value.series[0].data = sRankValue.value.map(item => item.rank)
+    option2.value.yAxis.name = '小类排名'
+    option2.value.series[0].name = '小类排名'
+    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map(item => item.rank)
     chartInstance2.setOption(option2.value)
   }
   chartLoading.value = false
 }
 const fetchSkuCateRankData = async () => {
   chartLoading.value = true
-  const [startDate, endDate] = bRankDate.value
+  const [startDate, endDate] = rankDate.value
   const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
   const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
   // console.log('日期范围：', formatStartDate, formatEndDate)
@@ -2136,7 +2161,7 @@ const fetchSkuCateRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    bRankValue.value = data
+    rankValue.value = data
   } else if(activeName.value === 1) {
     const { data } = await getOperationAmazonAsinRankCateList({
       asin: copyRow.asin,
@@ -2144,7 +2169,7 @@ const fetchSkuCateRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    bRankValue.value = data
+    rankValue.value = data
   } else {
     const { data } = await getOperationAmazonParentAsinRankCateList({
       parentAsin: copyRow.parentAsin,
@@ -2152,13 +2177,36 @@ const fetchSkuCateRankData = async () => {
       startDate: formatStartDate,
       endDate: formatEndDate,
     })
-    bRankValue.value = data
+    rankValue.value = data
   }
   
   // 更新图表数据
+  if (chartInstance2) {
+    option2.value.yAxis.name = '大类排名'
+    option2.value.series[0].name = '大类排名'
+    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map(item => item.rank)
+    chartInstance2.setOption(option2.value)
+  }
+  chartLoading.value = false
+}
+// sku获取voc满意度趋势
+const fetchSkuVocData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = rankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  const { data } = await getOperationAmazonSkuVocList({
+    sku: copyRow.sku,
+    siteId: copyRow.site,
+    startDate: formatStartDate,
+    endDate: formatEndDate,
+  })
+  vocValue.value = data
+  // 更新图表数据
   if (chartInstance3) {
-    option3.value.xAxis.data = bRankValue.value.map(item => item.updateDate)
-    option3.value.series[0].data = bRankValue.value.map(item => item.rank)
+    option3.value.xAxis.data = vocValue.value.map(item => item.eventDate)
+    option3.value.series[0].data = vocValue.value.map(item => item.ncxRate)
     chartInstance3.setOption(option3.value)
   }
   chartLoading.value = false
@@ -2198,24 +2246,37 @@ const cellClick = async (row: any, column: any) => {
       break
     }
     case '小类排名': {
-      sRankVisible.value = true
+      rankVisible.value = true
       // 默认打开是近30天
-      sRankDate.value = [
-        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
         new Date() // 今天
       ]
       copyRow = row
+      title.value = '小类排名'
       fetchSkuRankData()
       break
     }
     case '大类排名': {
-      bRankVisible.value = true
-      bRankDate.value = [
-        new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30天前
+      rankVisible.value = true
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
         new Date() // 今天
       ]
       copyRow = row
+      title.value = '大类排名'
       fetchSkuCateRankData()
+      break
+    }
+    case 'VOC满意度': {
+      vocVisible.value = true
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      title.value = 'VOC满意度'
+      fetchSkuVocData()
       break
     }
     // No default
