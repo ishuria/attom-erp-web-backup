@@ -172,7 +172,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.purchaseLink }}</div>
             </template>
-            <el-text truncated>{{ row.purchaseLink }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -182,7 +182,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
             </template>
-            <el-text truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -192,7 +192,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
             </template>
-            <el-text truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

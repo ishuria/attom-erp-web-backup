@@ -242,7 +242,7 @@
               <template #content>
                 <div class="custom-tooltip" >{{ row.supplier }}</div>
               </template>
-              <el-text truncated>{{ row.supplier }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ row.supplier }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -300,7 +300,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
             </template>
-            <el-text truncated>{{ row.purchaseLink }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -311,7 +311,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.remarks }}</div>
             </template>
-            <el-text truncated>{{ row.remarks }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

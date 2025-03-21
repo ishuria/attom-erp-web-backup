@@ -227,7 +227,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.declarationElements }}</div>
             </template>
-            <el-text truncated>{{ row.declarationElements }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.declarationElements }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

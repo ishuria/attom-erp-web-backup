@@ -71,7 +71,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.remarks }}</div>
             </template>
-            <el-text truncated>{{ row.remarks }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

@@ -59,7 +59,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.desc }}</div>
               </template>
-              <el-text truncated>{{ row.desc }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ row.desc }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -69,7 +69,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.priceInfo }}</div>
               </template>
-              <el-text truncated>{{ row.priceInfo }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ row.priceInfo }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -79,7 +79,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.url1688 }}</div>
               </template>
-              <el-text truncated>{{ row.url1688 }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ row.url1688 }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>

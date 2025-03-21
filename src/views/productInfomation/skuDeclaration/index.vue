@@ -110,7 +110,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.manufacturerEn }}</div>
             </template>
-            <el-text truncated>{{ row.manufacturerEn }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.manufacturerEn }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -127,7 +127,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.manufacturerAddressEn }}</div>
             </template>
-            <el-text truncated>{{ row.manufacturerAddressEn }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.manufacturerAddressEn }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

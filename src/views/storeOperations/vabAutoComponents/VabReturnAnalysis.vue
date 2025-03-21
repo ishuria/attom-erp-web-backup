@@ -42,7 +42,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.buyerRemarks }}</div>
             </template>
-            <el-text truncated>{{ row.buyerRemarks }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.buyerRemarks }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>

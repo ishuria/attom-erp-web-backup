@@ -83,7 +83,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.requiredAddress }}</div>
                 </template>
-                <el-text truncated>{{ row.requiredAddress }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.requiredAddress }}</el-text>
               </el-tooltip>
               <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
             </template>
@@ -249,7 +249,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.requiredAddress }}</div>
                 </template>
-                <el-text truncated>{{ row.requiredAddress }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.requiredAddress }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>

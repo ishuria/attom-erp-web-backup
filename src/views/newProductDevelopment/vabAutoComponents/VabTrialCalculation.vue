@@ -33,7 +33,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
               </template>
-              <el-text truncated @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</el-text>
+              <el-text style="vertical-align: middle;" truncated @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>

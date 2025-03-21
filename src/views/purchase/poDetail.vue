@@ -429,7 +429,7 @@
                   <template #content>
                     <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                   </template>
-                  <el-text truncated>{{ row.purchaseLink }}</el-text>
+                  <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '起订量'">
@@ -926,7 +926,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
                 <template #content>
                   <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                 </template>
-                <el-text truncated>{{ row.purchaseLink }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1309,7 +1309,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
                 <template #content>
                   <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                 </template>
-                <el-text truncated>{{ row.purchaseLink }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>

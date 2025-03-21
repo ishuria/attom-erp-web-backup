@@ -74,7 +74,7 @@
               <div class="custom-tooltip" >{{ row.productName }}</div>
             </template>
             <span style="display: flex; align-items: center;">
-              <el-text truncated>{{ row.productName }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ row.productName }}</el-text>
             </span>
           </el-tooltip>
         </template>

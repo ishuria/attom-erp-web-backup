@@ -1021,6 +1021,11 @@ export interface IsaveProductContractTerms {
   contractTerms: string
 }
 
+export interface IsaveProductComponentSuitDetail {
+  id: number
+  componentSuitDetail: string
+}
+
 export interface IgetProductSupplier {
   code: number
   msg: string

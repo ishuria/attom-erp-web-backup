@@ -59,6 +59,7 @@ import type {
   IgetProductSupplierListQuery,
   IgetProductSupplierListResp,
   Iid,
+  IsaveProductComponentSuitDetail,
   IsaveProductContractTerms,
   IsaveProductPurchaseMatters,
   IsuppliserId,
@@ -547,6 +548,16 @@ export function saveProductContractTerms(params: IsaveProductContractTerms) {
       method: 'post',
       params,
     })
+}
+/**
+ * SKU零配件清单-保存零件套装明细
+ */
+export function saveProductComponentSuitDetail(params: IsaveProductComponentSuitDetail): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/save/componentSuitDetail`,
+    method: 'post',
+    params,
+  })
 }
 
 // 添加零件提交

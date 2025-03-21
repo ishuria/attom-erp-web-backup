@@ -72,7 +72,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
               </template>
-              <el-text truncated>{{ removeHtmlTags(row.desc) }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.desc) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -83,7 +83,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.priceInfo) }}</div>
               </template>
-              <el-text truncated>{{ removeHtmlTags(row.priceInfo) }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.priceInfo) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>

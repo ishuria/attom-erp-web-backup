@@ -181,7 +181,7 @@ v-model="row.supplier" autofocus type="text"
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.supplier) }}</div>
                   </template>
-                  <el-text truncated>{{ removeHtmlTags(row.supplier) }}</el-text>
+                  <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.supplier) }}</el-text>
                 </el-tooltip>
             </template>
         </el-table-column>
@@ -226,7 +226,7 @@ v-model="row.supplier" autofocus type="text"
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseLink) }}</div>
               </template>
-              <el-text truncated>{{ removeHtmlTags(row.purchaseLink) }}</el-text>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseLink) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>

@@ -404,7 +404,7 @@
                       <template #content>
                         <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
                       </template>
-                      <el-text truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
+                      <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
                     </el-tooltip>
                   </span>
                   <span v-if="item.label === '饼图'">
@@ -850,7 +850,7 @@
                       <template #content>
                         <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
                       </template>
-                      <el-text truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
+                      <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
                     </el-tooltip>
                   </span>
                   <span v-if="item.label === '饼图'">

@@ -392,7 +392,7 @@
                 <template #content>
                   <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                 </template>
-                <el-text truncated>{{ row.purchaseLink }}</el-text>
+                <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
               </el-tooltip>
             </span>
             <span v-if="item.label === '默认收货仓库'">
@@ -410,7 +410,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
               </el-tooltip>
             </span>
             <span v-if="item.label === '合同条款'">
@@ -418,7 +418,15 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+              </el-tooltip>
+            </span>
+            <span v-if="item.label === '套装零件明细'">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
               </el-tooltip>
             </span>
           </template>
@@ -459,20 +467,13 @@
 
     <wang-editor
       :classify="classify"
-      :content="attentionCopy"
+      :content="editorContent"
       :title="wangEditorTitle"
-      :wang-editor-visible="wangEditorAttentionVisible"
-      @click-boolean="clickAttentionCancel"
-      @click-child="clickAttentionConfirm"
+      :wang-editor-visible="wangEditorVisible"
+      @click-boolean="clickEditorCancel"
+      @click-child="clickEditorConfirm"
     />
-    <wang-editor
-      :classify="classify"
-      :content="contractCopy"
-      :title="wangEditorTitle"
-      :wang-editor-visible="wangEditorContractVisible"
-      @click-boolean="clickContractCancel"
-      @click-child="clickContractConfirm"
-    />
+
     <!-- 创建零件 / 耗材 -->
     <vab-dialog 
       v-model="addComponentVisible" 
@@ -648,7 +649,34 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
-import { addProductComponentOtherSku, createProductComponent, delComponentImage, delProductComponent, delSkuImage, getProductAllName, getProductAllSupplier, getProductComponentPurchase, getProductComponentStore, getProductConsumablesType, getProductDefaultListComponent, getProductQualityInspection, getProductSkuDetail, getProductSkuList, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, submitProductComponent, submitProductConsumable, updateProductComponent, updateProductComponentName, updateProductSku, updateProductSkuRemark, uploadComponentImage, uploadSkuImage } from '/@/api/devlocal/productInformation'
+import {
+addProductComponentOtherSku,
+createProductComponent,
+delComponentImage,
+delProductComponent,
+delSkuImage,
+getProductAllName,
+getProductAllSupplier,
+getProductComponentPurchase,
+getProductComponentStore,
+getProductConsumablesType,
+getProductDefaultListComponent,
+getProductQualityInspection,
+getProductSkuDetail,
+getProductSkuList,
+getProductSupplier,
+saveProductComponentSuitDetail,
+saveProductContractTerms,
+saveProductPurchaseMatters,
+submitProductComponent,
+submitProductConsumable,
+updateProductComponent,
+updateProductComponentName,
+updateProductSku,
+updateProductSkuRemark,
+uploadComponentImage,
+uploadSkuImage
+} from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -721,6 +749,12 @@ const columns = ref<any>([
     checked: true,
     minWidth: null,
     isFixed: 'left'
+  },
+  {
+    label: '套装零件明细',
+    prop: 'componentSuitDetail',
+    checked: true,
+    minWidth: 120,
   },
   {
     label: '零件ID',
@@ -1183,38 +1217,38 @@ const handleRemarksChange = async () => {
 const wangEditorTitle = ref<string>('')
 // 分类
 const classify = ref<string>('')
-// 点击零件采购注意事项弹出富文本框是否显示
-const wangEditorAttentionVisible = ref<boolean>(false)
-// 点击合同条款弹出富文本框是否显示
-const wangEditorContractVisible = ref<boolean>(false)
-const attentionCopy = ref<string>('')
-const contractCopy = ref<string>('')
+const wangEditorVisible = ref<boolean>(false)
+const editorContent = ref<string>('')
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
-const clickAttentionConfirm = async (val: any) => {
-    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
+const clickEditorConfirm = async (val: any) => {
+  if (classify.value === 'purchaseMatters') {
+    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val })
     if (data === true) {
-        attentionCopy.value = val
-        clickRow.value.purchaseMatters = val
+      editorContent.value = val
+      clickRow.value.purchaseMatters = val
     }
-    // await updateProductComponent(clickRow.value)
-}
-const clickContractConfirm = async (val: any) => {
+  } else if (classify.value === 'contractTerms') { 
     const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
     if (data === true) {
-        contractCopy.value = val
-        clickRow.value.contractTerms = val
+      editorContent.value = val
+      clickRow.value.contractTerms = val
     }
+  } else {
+    const { data } = await saveProductComponentSuitDetail({ id: clickRow.value.id, componentSuitDetail: val})
+    if (data === true) {
+      editorContent.value = val
+      clickRow.value.componentSuitDetail = val
+    }
+  }
 }
+
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickAttentionCancel = (val: any) => {
-  wangEditorAttentionVisible.value = val
-}
-const clickContractCancel = (val: any) => {
-  wangEditorContractVisible.value = val
+const clickEditorCancel = (val: any) => {
+  wangEditorVisible.value = val
 }
 
 const rules = reactive({
@@ -1433,22 +1467,36 @@ const clickRow = ref<any>()
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   // 解构 row 和 column 属性，便于后续使用
-  const { purchaseMatters, contractTerms } = row;
+  const { purchaseMatters, contractTerms, componentSuitDetail } = row;
   const { property } = column;
   // 根据 column 的属性执行不同的逻辑
-  if (property === 'purchaseMatters') {
-    clickRow.value = row;
-    attentionCopy.value = purchaseMatters;
-    wangEditorTitle.value = '零件采购注意事项';
-    classify.value = 'purchaseMatters';
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value;
-  } else if (property === 'contractTerms') {
-    clickRow.value = row;
-    contractCopy.value = contractTerms;
-    wangEditorTitle.value = '合同条款';
-    classify.value = 'contractTerms';
-    wangEditorContractVisible.value = !wangEditorContractVisible.value;
-  } 
+  switch (property) {
+    case 'purchaseMatters': {
+      clickRow.value = row;
+      editorContent.value = purchaseMatters;
+      wangEditorTitle.value = '零件采购注意事项';
+      classify.value = 'purchaseMatters';
+      wangEditorVisible.value = true
+      break;
+    }
+    case 'contractTerms': {
+      clickRow.value = row;
+      editorContent.value = contractTerms;
+      wangEditorTitle.value = '合同条款';
+      classify.value = 'contractTerms';
+      wangEditorVisible.value = true
+      break;
+    }
+    case 'componentSuitDetail': {
+      clickRow.value = row;
+      editorContent.value = componentSuitDetail;
+      wangEditorTitle.value = '套装零件明细';
+      classify.value = 'componentSuitDetail';
+      wangEditorVisible.value = true
+      break;
+    }
+  // No default
+  }
   // 缓存 cell 内部的 DOM 元素，避免重复访问
   const firstChild = cell?.children[0]?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[0]?.children[1];
@@ -1674,36 +1722,37 @@ const fetchInspection = async () => { //获取质检清单数据
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   switch (data.column.property) {
-  case 'existingPartsListId': 
-  case 'componentUnit': 
-  case 'preTaxPrice': 
-  case 'actualTaxRate': 
-  case 'invoicingTaxRate': {
-    return {
-      textAlign: 'center',
-      color: '#bbb',
-      cursor: 'not-allowed'
+    case 'existingPartsListId': 
+    case 'componentUnit': 
+    case 'preTaxPrice': 
+    case 'actualTaxRate': 
+    case 'invoicingTaxRate': {
+      return {
+        textAlign: 'center',
+        color: '#999',
+        cursor: 'not-allowed'
+      }
     }
-  }
-  case 'componentName': {
-    return {
-      textAlign: 'left',
-      color: '#bbb',
-      cursor: 'not-allowed'
+    case 'componentName': {
+      return {
+        textAlign: 'left',
+        color: '#999',
+        cursor: 'not-allowed'
+      }
     }
-  }
-  case 'purchaseMatters': 
-  case 'contractTerms': 
-  case 'purchaseLink': {
-    return {
-      textAlign: 'left'
+    case 'purchaseMatters': 
+    case 'contractTerms': 
+    case 'purchaseLink':
+    case 'componentSuitDetail': {
+      return {
+        textAlign: 'left'
+      }
     }
-  }
-  default: {
-    return {
-      textAlign: 'center'
+    default: {
+      return {
+        textAlign: 'center'
+      }
     }
-  }
   }
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
