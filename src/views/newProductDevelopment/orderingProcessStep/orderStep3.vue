@@ -74,6 +74,16 @@
             <span>{{ row.componentName }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
         <el-table-column align="center"  label="每个SKU需要数量" prop="quantity" width="100">
             <template #header>
                 每个SKU<br>需要数量
@@ -248,7 +258,7 @@ v-model="row.supplier" autofocus type="text"
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
               </el-tooltip>
             </template>
         </el-table-column>
@@ -258,7 +268,7 @@ v-model="row.supplier" autofocus type="text"
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
               </el-tooltip>
             </template>
         </el-table-column>
@@ -281,20 +291,13 @@ v-model="row.supplier" autofocus type="text"
       </vab-alert>
       <wang-editor
         :classify="classify"
-        :content="attentionCopy"
+        :content="editorContent"
         :title="wangEditorTitle"
-        :wang-editor-visible="wangEditorAttentionVisible"
-        @click-boolean="clickAttentionCancel"
-        @click-child="clickAttentionConfirm"
+        :wang-editor-visible="wangEditorVisible"
+        @click-boolean="clickEditorCancel"
+        @click-child="clickEditorConfirm"
       />
-      <wang-editor
-        :classify="classify"
-        :content="contractCopy"
-        :title="wangEditorTitle"
-        :wang-editor-visible="wangEditorContractVisible"
-        @click-boolean="clickContractCancel"
-        @click-child="clickContractConfirm"
-      />
+
       <!-- 添加零件 -->
       <vab-create-component 
         :create-component-visible="createComponentVisible"
@@ -489,6 +492,7 @@ import {
   reviewStepNo3ComponentDel,
   reviewStepNo3ComponentImtDel,
   reviewStepNo3ComponentList,
+  reviewStepNo3ComponentSuitDetail,
   reviewStepNo3ComponentUpdate,
   reviewStepNo3ComponentUpload,
   reviewStepNo3ContractTerms,
@@ -500,7 +504,8 @@ import {
   reviewStepNo3VariantList,
   reviewStepNo3VariantUpdate,
   submitReviewComponent,
-  submitReviewConsumable
+  submitReviewConsumable,
+  updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -657,37 +662,49 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const wangEditorTitle = ref<string>('')
 // 分类
 const classify = ref<string>('')
-// 点击零件采购注意事项弹出富文本框是否显示
-const wangEditorAttentionVisible = ref<boolean>(false)
-// 点击合同条款弹出富文本框是否显示
-const wangEditorContractVisible = ref<boolean>(false)
-const attentionCopy = ref<string>('')
-const contractCopy = ref<string>('')
+const wangEditorVisible = ref<boolean>(false)
+// const attentionCopy = ref<string>('')
+// const contractCopy = ref<string>('')
+const editorContent = ref<string>('')
+
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
-const clickAttentionConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
-  if (data === true) {
-    attentionCopy.value = val
-    clickRow.value.purchaseMatters = val
+const clickEditorConfirm = async (val: any) => {
+  switch (classify.value) {
+    case 'purchaseMatters': {
+      const { data } = await reviewStepNo3UpdatePurchaseMatters({ reviewComponentId: clickRow.value.reviewComponentId, purchaseMatters: val})
+      if (data === true) {
+        editorContent.value = val
+        clickRow.value.purchaseMatters = val
+      }
+    
+      break;
+    }
+    case 'contractTerms': {
+      const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
+      if (data === true) {
+        editorContent.value = val
+        clickRow.value.contractTerms = val
+      }
+    
+      break;
+    }
+    case 'componentSuitDetail': {
+      const { data } = await updateReviewStepNo3ComponentSuitDetail({ reviewComponentId: clickRow.value.reviewComponentId, componentSuitDetail: val})
+      if (data === true) {
+        editorContent.value = val
+        clickRow.value.componentSuitDetail = val
+      }
+    
+      break;
+    }
+  // No default
   }
 }
-const clickContractConfirm = async (val: any) => {
-  const { data } = await reviewStepNo3UpdateContractTerms({ reviewComponentId: clickRow.value.reviewComponentId, contractTerms: val})
-  if (data === true) {
-    contractCopy.value = val
-    clickRow.value.contractTerms = val
-  }
-}
-/**
- * 当点击取消，确认时，子组件传递给父组件 false
- */
-const clickAttentionCancel = (val: any) => {
-  wangEditorAttentionVisible.value = val
-}
-const clickContractCancel = (val: any) => {
-  wangEditorContractVisible.value = val
+
+const clickEditorCancel = (val: any) => {
+  wangEditorVisible.value = val
 }
 
 // 零件信息完善与售价核对修改站点
@@ -905,24 +922,43 @@ let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
   const { property } = column;
-  if (property === 'purchaseMatters') {
-    // 查询零件采购注意事项
-    clickRow.value = row;
-    const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId });
-    attentionCopy.value = data;
-    row.purchaseMatters = data;
-    wangEditorTitle.value = '零件采购注意事项';
-    classify.value = 'purchaseMatters';
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value;
-  } else if (property === 'contractTerms') {
-    clickRow.value = row;
-    const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId });
-    contractCopy.value = data;
-    row.contractTerms = data;
-    wangEditorTitle.value = '合同条款';
-    classify.value = 'contractTerms';
-    wangEditorContractVisible.value = !wangEditorContractVisible.value;
-  } 
+  switch (property) {
+    case 'purchaseMatters': {
+      // 查询零件采购注意事项
+      clickRow.value = row;
+      const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId });
+      editorContent.value = data;
+      row.purchaseMatters = data;
+      wangEditorTitle.value = '零件采购注意事项';
+      classify.value = 'purchaseMatters';
+      wangEditorVisible.value = true
+    
+      break;
+    }
+    case 'contractTerms': {
+      clickRow.value = row;
+      const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId });
+      editorContent.value = data;
+      row.contractTerms = data;
+      wangEditorTitle.value = '合同条款';
+      classify.value = 'contractTerms';
+      wangEditorVisible.value = true
+    
+      break;
+    }
+    case 'componentSuitDetail': {
+      clickRow.value = row;
+      const { data } = await reviewStepNo3ComponentSuitDetail({ reviewComponentId: row.reviewComponentId });
+      editorContent.value = data;
+      row.componentSuitDetail = data;
+      wangEditorTitle.value = '零件明细';
+      classify.value = 'componentSuitDetail';
+      wangEditorVisible.value = true
+    
+      break;
+    }
+  // No default
+  }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 

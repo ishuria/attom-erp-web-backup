@@ -592,3 +592,27 @@ export function checkPurchasePo(params: { poId: number }): Promise<{ data: boole
     params,
   })
 }
+/**
+ * 查询po sku 零件的零件明细
+ * @param params 
+ * @returns 
+ */
+export function getPoSkuComponentSuitDetail(params: { id: number }): Promise<{ data: string }> {
+  return request({
+    url: `${BASE_API}/purchase/poSkuComponent/componentSuitDetail`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 更新po sku 零件套装明细
+ * @param params 
+ * @returns 
+ */
+export function updatePoSkuComponentSuitDetail(params: { id: number, componentSuitDetail: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/purchase/poSkuComponent/update/componentSuitDetail`,
+    method: 'post',
+    params,
+  })
+}

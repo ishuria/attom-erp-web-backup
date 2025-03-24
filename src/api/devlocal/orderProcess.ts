@@ -61,6 +61,26 @@ export function reviewStepNo3ContractTerms(params?: IreviewComponentId) {
     })
 }
 /**
+ * 新品订货流程-零件信息完善与售价核对-查询零件套装明细
+ */
+export function reviewStepNo3ComponentSuitDetail(params: IreviewComponentId): Promise<{ data: string }> {
+  return request({
+    url: `${BASE_API}/review/stepsNo3/componentSuitDetail`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 新品订货流程-零件信息完善与售价核对-更新零件套装明细
+ */
+export function updateReviewStepNo3ComponentSuitDetail(params: { reviewComponentId: number; componentSuitDetail: string}): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/stepsNo3/update/componentSuitDetail`,
+    method: 'post',
+    params,
+  })
+}
+/**
  * 新品订货流程-零件信息完善与售价核对-查询下拉变体列表
  */
 export function reviewStepNo3GetSelectVariantList(params?: IreviewId) {

@@ -192,11 +192,11 @@
                     <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
                     <span style="flex: 1">{{ item.label }}</span>
                     <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
-                      <el-icon><view /></el-icon>
+                      <vab-icon icon="eye-line" />
                     </span>
                     <span v-else class="icon-hover" style=" display: flex; align-items: center;cursor: pointer;" @click="handleChecked(item)">
-                      <el-icon v-show="!item.checked"><hide /></el-icon>
-                      <el-icon v-show="item.checked"><view /></el-icon>
+                      <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                      <vab-icon v-show="item.checked" icon="eye-line" />
                     </span>
                   </div>
                 </vab-draggable>
@@ -297,6 +297,14 @@
                   <el-input v-model="row.componentName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.componentName }}</span>
+              </span>
+              <span v-if="item.label === '零件明细'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+                  </template>
+                  <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+                </el-tooltip>
               </span>
               <span v-if="item.label === '订货总数'">
                 <div class="none">
@@ -724,6 +732,16 @@
               <span>{{ row.componentName }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="零件明细" min-width="120" prop="componentSuitDetail">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="订货总数" prop="purchaseCount" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
             <template #header>
               订货<br>总数
@@ -966,7 +984,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1184,6 +1202,16 @@ v-for="dict in invoicingNumList" :key="dict.value"
           </el-table-column>
           <el-table-column align="center" fixed="left" label="零件ID" prop="existingPartsListId" width="80"/>   
           <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(skuComponentList, '零件名', 'componentName')"/>
+          <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="订货总数" prop="purchaseCount" :width="flexColumnWidth(skuComponentList, '订货', 'purchaseCount')">
             <template #header>
               订货<br>总数
@@ -1335,7 +1363,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1347,20 +1375,20 @@ v-for="dict in invoicingNumList" :key="dict.value"
     </div>
     <wang-editor
       :classify="classify"
-      :content="attentionCopy"
+      :content="editorContent"
       :title="wangEditorTitle"
-      :wang-editor-visible="wangEditorAttentionVisible"
-      @click-boolean="clickAttentionCancel"
-      @click-child="clickAttentionConfirm"
+      :wang-editor-visible="wangEditorVisible"
+      @click-boolean="clickEditorCancel"
+      @click-child="clickEditorConfirm"
     />
-    <wang-editor
+    <!-- <wang-editor
       :classify="classify"
       :content="contractCopy"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorContractVisible"
       @click-boolean="clickContractCancel"
       @click-child="clickContractConfirm"
-    />
+    /> -->
     <!-- 添加零件 -->
     <vab-create-component 
       :create-component-visible="createComponentVisible"
@@ -1458,6 +1486,7 @@ getPoContractTerms,
 getPoDetail,
 getPoPurchaseMatters,
 getPoSkuComponentList,
+getPoSkuComponentSuitDetail,
 getPoSkuIdList,
 getPoSkuList,
 getPurchaseSKU,
@@ -1473,6 +1502,7 @@ updatePoPurchaseMatters,
 updatePoRemarks,
 updatePoSite,
 updatePoSkuComponent,
+updatePoSkuComponentSuitDetail,
 updatePoSkuComponentSuppliser,
 updateSkuCount,
 updateSkuDetail,
@@ -1520,6 +1550,12 @@ const columns = ref<any>([
     checked: true,
     minWidth: 100,
     isFixed: 'left'
+  },
+  {
+    label: '零件明细',
+    prop: 'componentSuitDetail',
+    checked: true,
+    minWidth: 120,
   },
   {
     label: '零件ID',
@@ -2146,41 +2182,55 @@ const handleRemarksChange = async () => {
 const wangEditorTitle = ref<string>('')
 // 分类
 const classify = ref<string>('')
-// 点击零件采购注意事项弹出富文本框是否显示
-const wangEditorAttentionVisible = ref<boolean>(false)
-// 点击合同条款弹出富文本框是否显示
-const wangEditorContractVisible = ref<boolean>(false)
-const attentionCopy = ref<string>('')
-const contractCopy = ref<string>('')
+const wangEditorVisible = ref<boolean>(false)
+const editorContent = ref<string>('')
 /**
 * 当点击确认时，子组件传递给父组件的新的val
 */
-const clickAttentionConfirm = async (val: any) => {
-  await updatePoPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
-   
-  attentionCopy.value = val
-  clickRow.value.purchaseMatters = val
-  if (route.query.from === 'plannedPoCreate') {
-   updateCreate() 
+const clickEditorConfirm = async (val: any) => {
+  switch (classify.value) {
+    case 'purchaseMatters': {
+      await updatePoPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
+    
+      editorContent.value = val
+      clickRow.value.purchaseMatters = val
+      if (route.query.from === 'plannedPoCreate') {
+        updateCreate() 
+      }
+    
+      break;
+    }
+    case 'contractTerms': {
+      await updatePoContractTerms({ id: clickRow.value.id, contractTerms: val})
+    
+      editorContent.value = val
+      clickRow.value.contractTerms = val
+      if (route.query.from === 'plannedPoCreate') {
+        updateCreate() 
+      }
+    
+      break;
+    }
+    case 'componentSuitDetail': {
+      await updatePoSkuComponentSuitDetail({ id: clickRow.value.id, componentSuitDetail: val})
+
+      editorContent.value = val
+      clickRow.value.componentSuitDetail = val
+      if (route.query.from === 'plannedPoCreate') {
+        updateCreate()
+      }
+    
+      break;
+    }
+  // No default
   }
 }
-const clickContractConfirm = async (val: any) => {
-  await updatePoContractTerms({ id: clickRow.value.id, contractTerms: val})
-  
-  contractCopy.value = val
-  clickRow.value.contractTerms = val
-  if (route.query.from === 'plannedPoCreate') {
-   updateCreate() 
-  }
-}
+
 /**
 * 当点击取消，确认时，子组件传递给父组件 false
 */
-const clickAttentionCancel = (val: any) => {
-  wangEditorAttentionVisible.value = val
-}
-const clickContractCancel = (val: any) => {
-  wangEditorContractVisible.value = val
+const clickEditorCancel = (val: any) => {
+  wangEditorVisible.value = val
 }
 
 /**
@@ -2190,23 +2240,42 @@ const clickRow = ref<any>()
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
 
-  if (column.property == 'purchaseMatters') {
-    // 查询零件采购注意事项
-    clickRow.value = row
-    const { data } = await getPoPurchaseMatters({ id: row.id })
-    attentionCopy.value = data
-    row.purchaseMatters = data
-    wangEditorTitle.value = '零件采购注意事项'
-    classify.value = 'purchaseMatters'
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
-  } else if (column.property == 'contractTerms'){
-    clickRow.value = row
-    const { data } = await getPoContractTerms({ id: row.id })
-    contractCopy.value = data
-    row.contractTerms = data
-    wangEditorTitle.value = '合同条款'
-    classify.value = 'contractTerms'
-    wangEditorContractVisible.value = !wangEditorContractVisible.value
+  switch (column.property) {
+    case 'purchaseMatters': {
+      // 查询零件采购注意事项
+      clickRow.value = row
+      const { data } = await getPoPurchaseMatters({ id: row.id })
+      editorContent.value = data
+      row.purchaseMatters = data
+      wangEditorTitle.value = '零件采购注意事项'
+      classify.value = 'purchaseMatters'
+      wangEditorVisible.value = true
+    
+      break;
+    }
+    case 'contractTerms': {
+      clickRow.value = row
+      const { data } = await getPoContractTerms({ id: row.id })
+      editorContent.value = data
+      row.contractTerms = data
+      wangEditorTitle.value = '合同条款'
+      classify.value = 'contractTerms'
+      wangEditorVisible.value = true
+    
+      break;
+    }
+    case 'componentSuitDetail': {
+      clickRow.value = row
+      const { data } = await getPoSkuComponentSuitDetail({ id: row.id })
+      editorContent.value = data
+      row.componentSuitDetail = data
+      wangEditorTitle.value = '零件明细'
+      classify.value = 'componentSuitDetail'
+      wangEditorVisible.value = true
+    
+      break;
+    }
+  // No default
   }
   const firstChild = cell?.children[0]?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[0]?.children[1];
@@ -2228,16 +2297,22 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
-    attentionCopy.value = row.purchaseMatters
+    editorContent.value = row.purchaseMatters
     wangEditorTitle.value = '零件采购注意事项'
     classify.value = 'purchaseMatters'
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
+    wangEditorVisible.value = true
   } else if (column.property == 'contractTerms'){
     clickRow.value = row
-    contractCopy.value = row.contractTerms
+    editorContent.value = row.contractTerms
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
-    wangEditorContractVisible.value = !wangEditorContractVisible.value
+    wangEditorVisible.value = true
+  } else if (column.property == 'componentSuitDetail'){
+    clickRow.value = row
+    editorContent.value = row.componentSuitDetail
+    wangEditorTitle.value = '零件明细'
+    classify.value = 'componentSuitDetail'
+    wangEditorVisible.value = true
   }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -3033,14 +3108,14 @@ const handleShowCreatePreviousOrNext = () => {
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
- const column = data.column 
-  if (column.property === 'existingPartsListId' || column.property === 'stock' || column.property === 'preTaxPrice'){        
+ const property = data.column.property
+  if (property === 'existingPartsListId' || property === 'stock' || property === 'preTaxPrice'){        
     return {
-      color: '#bbb',
+      color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
-  } else if (column.property === 'componentName' || column.property === 'purchaseLink' || column.property === 'purchaseMatters' || column.property === 'contractTerms') {
+  } else if (property === 'componentName' || property === 'purchaseLink' || property === 'purchaseMatters' || property === 'contractTerms' || property === 'componentSuitDetail') {
     return {
       textAlign: 'left'
     }

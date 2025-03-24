@@ -34,6 +34,16 @@
         </el-table-column>
         <el-table-column align="center" label="零件ID" min-width="70" prop="" width="100"/>   
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')"/>
+        <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
+              </template>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column align="center"  label="每个SKU需要数量" prop="quantity" width="100">
           <template #header>
             每个SKU<br>需要数量
@@ -125,7 +135,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </template>
-              <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -135,7 +145,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
               </template>
-              <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -149,20 +159,13 @@
       </vab-alert>
       <wang-editor
         :classify="classify"
-        :content="attentionCopy"
+        :content="editorContent"
         :title="wangEditorTitle"
-        :wang-editor-visible="wangEditorAttentionVisible"
-        @click-boolean="clickAttentionCancel"
-        @click-child="clickAttentionConfirm"
+        :wang-editor-visible="wangEditorVisible"
+        @click-boolean="clickEditorCancel"
+        @click-child="clickEditorConfirm"
       />
-      <wang-editor
-        :classify="classify"
-        :content="contractCopy"
-        :title="wangEditorTitle"
-        :wang-editor-visible="wangEditorContractVisible"
-        @click-boolean="clickContractCancel"
-        @click-child="clickContractConfirm"
-      />
+    
     </div>
     <div class="table-container">
       <el-table 
@@ -244,7 +247,7 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
 <script lang="ts" setup>
 import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { reviewStepNo3ComponentList, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
+import { reviewStepNo3ComponentList, reviewStepNo3ComponentSuitDetail, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
@@ -276,30 +279,19 @@ const list = ref<any>([])
 const wangEditorTitle = ref<string>('')
 // 分类
 const classify = ref<string>('')
-// 点击零件采购注意事项弹出富文本框是否显示
-const wangEditorAttentionVisible = ref<boolean>(false)
-// 点击合同条款弹出富文本框是否显示
-const wangEditorContractVisible = ref<boolean>(false)
-const attentionCopy = ref<string>('')
-const contractCopy = ref<string>('')
-/**
- * 当点击确认时，子组件传递给父组件的新的val
- */
-const clickAttentionConfirm = async () => {
-    wangEditorAttentionVisible.value = false
-}
-const clickContractConfirm = async () => {
-    wangEditorContractVisible.value = false
+const wangEditorVisible = ref<boolean>(false)
+const editorContent = ref<string>('')
+
+const clickEditorConfirm = async () => {
+    wangEditorVisible.value = false
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickAttentionCancel = (val: any) => {
-  wangEditorAttentionVisible.value = val
+const clickEditorCancel = (val: any) => {
+  wangEditorVisible.value = val
 }
-const clickContractCancel = (val: any) => {
-  wangEditorContractVisible.value = val
-}
+
 
 /**
  * 当点击时切换输入框，修改输入
@@ -311,19 +303,27 @@ const changeInput = async (row: any, column: any) => {
     // 查询零件采购注意事项
     clickRow.value = row
     const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
-    attentionCopy.value = data
+    editorContent.value = data
     row.purchaseMatters = data
     wangEditorTitle.value = '零件采购注意事项'
     classify.value = 'purchaseMatters'
-    wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
+    wangEditorVisible.value = true
   } else if (column.property == 'contractTerms'){
     clickRow.value = row
     const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
-    contractCopy.value = data
+    editorContent.value = data
     row.contractTerms = data
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
-    wangEditorContractVisible.value = !wangEditorContractVisible.value
+    wangEditorVisible.value = true
+  } else if (column.property == 'componentSuitDetail') {
+    clickRow.value = row
+    const { data } = await reviewStepNo3ComponentSuitDetail({ reviewComponentId: row.reviewComponentId })
+    editorContent.value = data
+    row.componentSuitDetail = data
+    wangEditorTitle.value = '零件明细'
+    classify.value = 'componentSuitDetail'
+    wangEditorVisible.value = true
   }
 }
 const showPreviewImage = (url: string) => {

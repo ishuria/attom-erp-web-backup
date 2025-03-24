@@ -1,4 +1,4 @@
-import { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
 // 新品订货流程-删除变体信息
 export interface IreviewStepNo1Del {
     orderEntryId: number
@@ -252,7 +252,11 @@ export interface IreviewStepNo3ComponentList {
     * 零件所属变体
     */
     variant: string;
-    cropData?: string
+  cropData?: string
+  /**
+   * 零件明细
+   */
+  componentSuitDetail: string
 }
 // 新品订货流程-零件信息完善与售价核对-修改零件采购注意事项
 export interface IreviewStepNo3UpdatePurchaseMatters {

@@ -2673,6 +2673,7 @@ const disabledDev = ref<boolean>(false)
 const operationAndDevelopSelect = () => {
   const role = aclStore.getRole[0]
   switch (role) {
+    // 老板和运营主管
     case 'ROLE_BOSS': 
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
       disabledOpe.value = false
@@ -2680,18 +2681,23 @@ const operationAndDevelopSelect = () => {
     
       break;
     }
+    // 运营
     case 'ROLE_ECOMMERCEOPERATOR': {
       disabledOpe.value = true
       disabledDev.value = false
 
       break;
     }
-    case 'ROLE_PRODUCTMANAGER': {
+    // 产品经理,产品设计,工业设计
+    case 'ROLE_PRODUCTMANAGER': 
+    case 'ROLE_PRODUCTDESIGNER': 
+    case 'ROLE_INDUSTRIAL_DESIGN': {
       disabledOpe.value = false
       disabledDev.value = true
       
       break;
     }
+    // 产品主管, 行政主管
     case 'ROLE_PRODUCTMANNAGERLEAD':
     case 'ROLE_ADMINBUYERLEAD': {
       disabledOpe.value = false
