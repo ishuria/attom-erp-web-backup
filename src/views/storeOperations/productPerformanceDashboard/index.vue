@@ -53,12 +53,12 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="运营">
-                    <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
+                    <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
                       <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="开发人">
-                    <el-select v-model="queryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryData">
+                    <el-select v-model="queryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryData">
                       <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
@@ -530,12 +530,12 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="运营">
-                    <el-select v-model="asinQueryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
+                    <el-select v-model="asinQueryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
                       <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
                   <el-form-item label="开发人">
-                    <el-select v-model="asinQueryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryAsinData">
+                    <el-select v-model="asinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryAsinData">
                       <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
@@ -973,6 +973,7 @@
                   <el-form-item label="运营">
                     <el-select
                       v-model="pAsinQueryForm.operationUserId"
+                       :disabled="disabledOpe"
                       placeholder="请选择运营人员"
                       style="width: 5em"
                       @change="queryPAsinData"
@@ -981,7 +982,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="开发人">
-                    <el-select v-model="pAsinQueryForm.developUserId" placeholder="请选择开发人" style="width: 5em" @change="queryPAsinData">
+                    <el-select v-model="pAsinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryPAsinData">
                       <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
@@ -1424,6 +1425,7 @@ updateOperationSKUOperateTypeList,
 updateRemarkAmazonOperation,
 updateSortOperationColumn
 } from '/@/api/devlocal/productPerformance'
+import { useAclStore } from '/@/store/modules/acl'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
 IGetOperationAmazonSKUList,
@@ -1572,7 +1574,8 @@ const list = ref<IGetOperationAmazonSKUList[]>([])
 const asinList = ref<IGetOperationAsinList[]>([])
 const pAsinList = ref<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
-   
+const aclStore = useAclStore()
+
 const handleRankChange = () => {
   if (title.value === '小类排名') {
     fetchSkuRankData()
@@ -2609,7 +2612,7 @@ const fetchColumn = async () => {
     if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(item.prop)) {
       item.sortable = true
     }
-    if (['skuImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
+    if (['skuImgUrl', 'sku'].includes(item.prop)) {
       item.isFixed = true
     }
     if (item.prop === 'vocDefect') {
@@ -2665,6 +2668,43 @@ const fetchPAsinColumn = async () => {
     }
   })
 }
+const disabledOpe = ref<boolean>(false)
+const disabledDev = ref<boolean>(false)
+const operationAndDevelopSelect = () => {
+  const role = aclStore.getRole[0]
+  switch (role) {
+    case 'ROLE_BOSS': 
+    case 'ROLE_ECOMMERCEOPERATIONLEAD': {
+      disabledOpe.value = false
+      disabledDev.value = false
+    
+      break;
+    }
+    case 'ROLE_ECOMMERCEOPERATOR': {
+      disabledOpe.value = true
+      disabledDev.value = false
+
+      break;
+    }
+    case 'ROLE_PRODUCTMANAGER': {
+      disabledOpe.value = false
+      disabledDev.value = true
+      
+      break;
+    }
+    case 'ROLE_PRODUCTMANNAGERLEAD':
+    case 'ROLE_ADMINBUYERLEAD': {
+      disabledOpe.value = false
+      disabledDev.value = false
+      
+      break;
+    }
+  // No default
+  }
+}
+const developSelect = () => {
+  return aclStore.getRole[0] === 'ROLE_PRODUCTMANNAGERLEAD' || aclStore.getRole[0] === 'ROLE_BOSS'
+}
 onBeforeMount(() => {
   if (activeName.value === 0) {
     fetchData()
@@ -2682,6 +2722,8 @@ onBeforeMount(() => {
   fetchOperateUserList()
   fetchDevelopUserList()
   fetchUser()
+  // console.log(aclStore.getRole)
+  operationAndDevelopSelect()
 })
 </script>
 
