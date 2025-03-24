@@ -1,12 +1,12 @@
 <template>
   <vab-dialog
-    :model-value="props.trendEchartsVisible"
     :before-close="handlerClose"
-    width="75%"
+    :model-value="props.trendEchartsVisible"
     title="关键词趋势"
     top="10vh"
+    width="75%"
   >
-    <el-select v-model="idxKeyWordValue" :reserve-keyword="false" @change="idxUpdateKeyWordTrend" style="width: 200px">
+    <el-select v-model="idxKeyWordValue" :reserve-keyword="false" style="width: 200px" @change="idxUpdateKeyWordTrend">
       <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
     <vab-echarts-chart-line class="chart-line" :x-axis-data="trendData.xAxis" :y-axis-data="trendData.yAxis" />
@@ -20,7 +20,7 @@ import { getEvaluationTrendList, } from '/@/api/devlocal/evaluation'
 import {
   idxKeyWordOptions
 } from '/@/const/selectoptions'
-import { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
+import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 
 defineOptions({
   name: 'VabTrend',
@@ -36,9 +36,7 @@ let props = withDefaults(defineProps<{
     trendEchartsVisible: boolean
     keyWord: string
     trendData: IKeyWordTrend
-}>(),{
-
-});
+}>(),{});
 
 // 关键词趋势列表下拉框默认选中值
 const idxKeyWordValue = ref<string>('0')

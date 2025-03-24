@@ -421,7 +421,7 @@
                 <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
               </el-tooltip>
             </span>
-            <span v-if="item.label === '套装零件明细'">
+            <span v-if="item.label === '零件明细'">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
@@ -751,7 +751,7 @@ const columns = ref<any>([
     isFixed: 'left'
   },
   {
-    label: '套装零件明细',
+    label: '零件明细',
     prop: 'componentSuitDetail',
     checked: true,
     minWidth: 120,

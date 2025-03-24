@@ -111,25 +111,6 @@ export const adStatusOption = [
   }
 ]
 
-export const keyWordTrendOption = [
-  {
-    label: '全部',
-    value: -1
-  },
-  {
-    label: '近半年',
-    value: 0
-  },
-  {
-    label: '近一年',
-    value: 1
-  },
-  {
-    label: '近两年',
-    value: 2
-  }
-]
-
 export const pieSelectOption = [
   {
     label: '花费',
