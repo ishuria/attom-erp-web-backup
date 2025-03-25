@@ -746,9 +746,9 @@
             <template #header>
               订货<br>总数
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.purchaseCount" class="reduce-input" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.purchaseCount" class="reduce-input" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.purchaseCount }}</span>
             </template>
@@ -757,9 +757,9 @@
             <template #header>
               多订<br>数量
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.moreCount" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.moreCount" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.moreCount }}</span>
             </template>
@@ -768,9 +768,9 @@
             <template #header>
               使用已<br>有库存
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.useStockCount" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.useStockCount" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.useStockCount }}</span>
             </template>
@@ -792,9 +792,9 @@
             <template #header>
               出厂<br>单价
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.unitPrice" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.unitPrice" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.unitPrice }}</span>
             </template>
@@ -803,9 +803,9 @@
             <template #header>
               出厂<br>总价
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.totalPrice" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.totalPrice" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.totalPrice }}</span>
             </template>
@@ -814,9 +814,9 @@
             <template #header>
                 含税<br>运费
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.freight" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.freight" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.freight }}</span>
             </template>
@@ -825,9 +825,9 @@
             <template #header>
               模具费<br>含税
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.moldCost" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.moldCost" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.moldCost }}</span>
             </template>
@@ -841,9 +841,9 @@
             <template #header>
                 总含<br>税价
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.taxIncludedPrice" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.taxIncludedPrice" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.taxIncludedPrice }}</span>
             </template>
@@ -871,7 +871,7 @@ v-for="dict in currencyNumList" :key="dict.value"
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -900,9 +900,9 @@ v-for="dict in invoicingNumList" :key="dict.value"
             <template #header>
                 实际<br>税点
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.actualTaxRate" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.actualTaxRate" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.actualTaxRate }}</span>
             </template>
@@ -911,9 +911,9 @@ v-for="dict in invoicingNumList" :key="dict.value"
             <template #header>
                 开票<br>税点
             </template>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <div class="none">
-                <el-input v-model="row.invoicingTaxRate" type="number" @blur="clickCreateCancel($event, row)" @keyup.enter="clickCreateCancel($event, row)" />
+                <el-input v-model="row.invoicingTaxRate" type="number" @blur="clickCreateCancel($event, row, $index)" @keyup.enter="clickCreateCancel($event, row, $index)" />
               </div>
               <span>{{ row.invoicingTaxRate }}</span>
             </template>
@@ -1381,14 +1381,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
       @click-boolean="clickEditorCancel"
       @click-child="clickEditorConfirm"
     />
-    <!-- <wang-editor
-      :classify="classify"
-      :content="contractCopy"
-      :title="wangEditorTitle"
-      :wang-editor-visible="wangEditorContractVisible"
-      @click-boolean="clickContractCancel"
-      @click-child="clickContractConfirm"
-    /> -->
+
     <!-- 添加零件 -->
     <vab-create-component 
       :create-component-visible="createComponentVisible"
@@ -2377,7 +2370,7 @@ const clickCreateOtherCancel = async (event: any, value: any) => {
   updateCreate()
 }
 // 创建blur修改
-const clickCreateCancel = async (event:any,value:any) => {
+const clickCreateCancel = async (event: any, value: any, index: number) => {
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {
@@ -2393,19 +2386,21 @@ const clickCreateCancel = async (event:any,value:any) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     // 修改请求
+    // console.log('value:', value)
+    // console.log('skuComponentList.value:', skuComponentList.value)
     const { data } = await updateCreateComponent(value)
-    skuComponentList.value = data.componentList
+    
+    skuComponentList.value[index] = data.componentList[0]
     poDetailData.value.orderTotalPrice = data.skuTotalPrice
-    skuComponentList.value.forEach((item: any) => {
-      item.unitPrice = formattedPrice(item.unitPrice)
-      if(!item.componentUrl) {
-          item.hide = false
-          item.imageList = []
-      } else if (item.componentUrl){
-          item.hide = true
-          item.imageList = [{ url: item.componentUrl }]
-      }
-    })
+    const item = skuComponentList.value[index]
+    item.unitPrice = formattedPrice(item.unitPrice)
+    if (!item.componentUrl) {
+      item.hide = false
+      item.imageList = []
+    } else if (item.componentUrl){
+      item.hide = true
+      item.imageList = [{ url: item.componentUrl }]
+    }
     updateCreate()
   }
 }

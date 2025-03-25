@@ -93,10 +93,10 @@
                     <el-form-item label="默认收货仓库">
                         <el-select v-model="sku.defaultRepository" placeholder="请选择默认收货仓库" @change="handleUpdateSku">
                             <el-option
-                                v-for="item in defaultRepositoryOption"
-                                :key="item.value"
+                                v-for="item in repositoryOption"
+                                :key="item.id"
                                 :label="item.label"
-                                :value="item.value"
+                                :value="item.id"
                             />
                         </el-select>
                     </el-form-item>
@@ -1082,11 +1082,6 @@ const sku = ref<any>({})
 const componentType = [
   { label: '零件', value: 0 },
   { label: '耗材', value: 1 },
-]
-const defaultRepositoryOption = [
-  { label: '云舟', value: 1 },
-  { label: '云梧舟', value: 2 },
-  { label: '埃托姆', value: 3 },
 ]
 const currencyNumList = [
   {
