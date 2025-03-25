@@ -2,17 +2,112 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="SKU" :name="0">
+        <vab-query-form >
+          <vab-query-form-left-panel :span="20">
+            <el-form inline :model="queryForm">
+              <el-form-item label="站点">
+                <el-select
+                  v-model="queryForm.site"
+                  class="multiple-select"
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                  multiple
+                  placeholder="全部站点"
+                  style="width: 220px"
+                  @change="queryData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="币种">
+                <el-select v-model="currencySKU" clearable placeholder="请选择币种" @change="changeCurrencySKU">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="运营">
+                <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
+                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="开发人">
+                <el-select v-model="queryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryData">
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="4">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd1"
+                :on-move="handleMove1"
+              >
+                <div
+                  v-for="item in columns"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center;">
+                    <vab-icon icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+            <el-form inline :model="queryForm">
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
         <el-skeleton animated :loading="listLoading">
           <template #template>
             <!-- 骨架屏模板 -->
-            <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
-              <!-- 头部骨架 -->
-              <div style="padding: 15px 10px 0">
-                <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-              </div>
-
+            <div style="display: flex; flex-direction: column; height: calc(100vh - 280px);">
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 0">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
@@ -25,106 +120,6 @@
     
           <!-- 实际内容 -->
           <template #default>
-            <vab-query-form >
-              <vab-query-form-left-panel :span="20">
-                <el-form inline :model="queryForm">
-                  <el-form-item label="站点">
-                    <el-select
-                      v-model="queryForm.site"
-                      class="multiple-select"
-                      clearable
-                      collapse-tags
-                      collapse-tags-tooltip
-                      :max-collapse-tags="1"
-                      multiple
-                      placeholder="全部站点"
-                      style="width: 220px"
-                      @change="queryData"
-                    >
-                      <template #header>
-                        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
-                      </template>
-                      <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="币种">
-                    <el-select v-model="currencySKU" clearable placeholder="请选择币种" @change="changeCurrencySKU">
-                      <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="运营">
-                    <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
-                      <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="开发人">
-                    <el-select v-model="queryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryData">
-                      <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="filterVisible = true">筛选</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel :span="4">
-                <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
-                  <template #reference>
-                    <el-button>
-                      <vab-icon icon="settings-line" />
-                    </el-button>
-                  </template>
-                  <vab-draggable
-                    v-model="columns"
-                    :animation="600"
-                    filter=".non-draggable"
-                    handle=".handle"
-                    :on-end="handleEnd1"
-                    :on-move="handleMove1"
-                  >
-                    <div
-                      v-for="item in columns"
-                      :key="item.label"
-                      :class="{ 'non-draggable': item.disableCheck }"
-                      style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                    >
-                      <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
-                      <span style="flex: 1">{{ item.label }}</span>
-                      <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center;">
-                        <vab-icon icon="eye-line" />
-                      </span>
-                      <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-                        <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                        <vab-icon v-show="item.checked" icon="eye-line" />
-                      </span>
-                    </div>
-                  </vab-draggable>
-                </el-popover>
-                <el-form inline :model="queryForm">
-                  <el-form-item>
-                    <el-input
-                      v-model.trim="queryForm.keyWord"
-                      clearable
-                      placeholder="请输入搜索关键词"
-                      @input="queryData"
-                      @keyup.enter="queryData"
-                    />
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-right-panel>
-            </vab-query-form>
             <el-table
               v-loading="listLoading"
               border
@@ -480,17 +475,104 @@
         </el-skeleton>
       </el-tab-pane>
       <el-tab-pane label="ASIN" :name="1">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="20">
+            <el-form inline :model="queryForm">
+              <el-form-item label="站点">
+                <el-select
+                  v-model="asinQueryForm.site"
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                  multiple
+                  placeholder="全部站点"
+                  style="width: 220px"
+                  @change="queryAsinData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="币种">
+                <el-select v-model="currencyAsin" clearable placeholder="请选择币种" @change="changeCurrencyASIN">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="运营">
+                <el-select v-model="asinQueryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
+                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="开发人">
+                <el-select v-model="asinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryAsinData">
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="4">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable v-model="columnsAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd2" :on-move="handleMove2">
+                <div
+                  v-for="item in columnsAsin"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+            <el-form inline :model="asinQueryForm">
+              <el-form-item>
+                <el-input
+                  v-model.trim="asinQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryAsinData"
+                  @keyup.enter="queryAsinData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryAsinData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
         <el-skeleton animated :loading="listLoading">
           <template #template>
             <!-- 骨架屏模板 -->
-            <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
-              <!-- 头部骨架 -->
-              <div style="padding: 15px 10px 0">
-                <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-              </div>
-
+            <div style="display: flex; flex-direction: column; height: calc(100vh - 280px);">
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 0">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
@@ -503,98 +585,6 @@
     
           <!-- 实际内容 -->
           <template #default>
-            <vab-query-form>
-              <vab-query-form-left-panel :span="20">
-                <el-form inline :model="queryForm">
-                  <el-form-item label="站点">
-                    <el-select
-                      v-model="asinQueryForm.site"
-                      clearable
-                      collapse-tags
-                      collapse-tags-tooltip
-                      :max-collapse-tags="1"
-                      multiple
-                      placeholder="全部站点"
-                      style="width: 220px"
-                      @change="queryAsinData"
-                    >
-                      <template #header>
-                        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
-                      </template>
-                      <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="币种">
-                    <el-select v-model="currencyAsin" clearable placeholder="请选择币种" @change="changeCurrencyASIN">
-                      <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="运营">
-                    <el-select v-model="asinQueryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
-                      <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="开发人">
-                    <el-select v-model="asinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryAsinData">
-                      <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="filterVisible = true">筛选</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel :span="4">
-                <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
-                  <template #reference>
-                    <el-button>
-                      <vab-icon icon="settings-line" />
-                    </el-button>
-                  </template>
-                  <vab-draggable v-model="columnsAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd2" :on-move="handleMove2">
-                    <div
-                      v-for="item in columnsAsin"
-                      :key="item.label"
-                      :class="{ 'non-draggable': item.disableCheck }"
-                      style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                    >
-                      <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
-                      <span style="flex: 1">{{ item.label }}</span>
-                      <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                        <vab-icon v-show="item.checked" icon="eye-line" />
-                      </span>
-                      <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-                        <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                        <vab-icon v-show="item.checked" icon="eye-line" />
-                      </span>
-                    </div>
-                  </vab-draggable>
-                </el-popover>
-                <el-form inline :model="asinQueryForm">
-                  <el-form-item>
-                    <el-input
-                      v-model.trim="asinQueryForm.keyWord"
-                      clearable
-                      placeholder="请输入搜索关键词"
-                      @input="queryAsinData"
-                      @keyup.enter="queryAsinData"
-                    />
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryAsinData" />
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-right-panel>
-            </vab-query-form>
             <el-table
               v-loading="listLoading"
               border
@@ -923,17 +913,107 @@
         </el-skeleton>
       </el-tab-pane>
       <el-tab-pane label="父体ASIN" :name="2">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="20">
+            <el-form inline :model="pAsinQueryForm">
+              <el-form-item label="站点">
+                <el-select
+                  v-model="pAsinQueryForm.site"
+                  clearable
+                  collapse-tags
+                  collapse-tags-tooltip
+                  :max-collapse-tags="1"
+                  multiple
+                  placeholder="全部站点"
+                  style="width: 220px"
+                  @change="queryPAsinData"
+                >
+                  <template #header>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
+                  </template>
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="币种">
+                <el-select v-model="currencyPAsin" clearable placeholder="请选择币种" @change="changeCurrencyPASIN">
+                  <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="运营">
+                <el-select
+                  v-model="pAsinQueryForm.operationUserId"
+                    :disabled="disabledOpe"
+                  placeholder="请选择运营人员"
+                  style="width: 5em"
+                  @change="queryPAsinData"
+                >
+                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="开发人">
+                <el-select v-model="pAsinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryPAsinData">
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="4">
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable v-model="columnsParentAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd3" :on-move="handleMove3">
+                <div
+                  v-for="item in columnsParentAsin"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
+            <el-form inline :model="pAsinQueryForm">
+              <el-form-item>
+                <el-input
+                  v-model.trim="pAsinQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryPAsinData"
+                  @keyup.enter="queryPAsinData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryPAsinData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
         <el-skeleton animated :loading="listLoading">
           <template #template>
             <!-- 骨架屏模板 -->
-            <div style="display: flex; flex-direction: column; height: calc(100vh - 210px);">
-              <!-- 头部骨架 -->
-              <div style="padding: 15px 10px 0">
-                <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-              </div>
-
+            <div style="display: flex; flex-direction: column; height: calc(100vh - 280px);">
               <!-- 表格骨架 -->
-              <div style=" display: flex;flex: 1; flex-direction: column; padding: 15px 10px">
+              <div style=" display: flex;flex: 1; flex-direction: column; padding: 0">
                 <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
                 
                 <!-- 分页骨架 -->
@@ -944,101 +1024,6 @@
             </div>
           </template>
           <template #default>
-            <vab-query-form>
-              <vab-query-form-left-panel :span="20">
-                <el-form inline :model="pAsinQueryForm">
-                  <el-form-item label="站点">
-                    <el-select
-                      v-model="pAsinQueryForm.site"
-                      clearable
-                      collapse-tags
-                      collapse-tags-tooltip
-                      :max-collapse-tags="1"
-                      multiple
-                      placeholder="全部站点"
-                      style="width: 220px"
-                      @change="queryPAsinData"
-                    >
-                      <template #header>
-                        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
-                      </template>
-                      <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="币种">
-                    <el-select v-model="currencyPAsin" clearable placeholder="请选择币种" @change="changeCurrencyPASIN">
-                      <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="运营">
-                    <el-select
-                      v-model="pAsinQueryForm.operationUserId"
-                       :disabled="disabledOpe"
-                      placeholder="请选择运营人员"
-                      style="width: 5em"
-                      @change="queryPAsinData"
-                    >
-                      <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="开发人">
-                    <el-select v-model="pAsinQueryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryPAsinData">
-                      <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel :span="4">
-                <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
-                  <template #reference>
-                    <el-button>
-                      <vab-icon icon="settings-line" />
-                    </el-button>
-                  </template>
-                  <vab-draggable v-model="columnsParentAsin" :animation="600" filter=".non-draggable" handle=".handle" :on-end="handleEnd3" :on-move="handleMove3">
-                    <div
-                      v-for="item in columnsParentAsin"
-                      :key="item.label"
-                      :class="{ 'non-draggable': item.disableCheck }"
-                      style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
-                    >
-                      <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
-                      <span style="flex: 1">{{ item.label }}</span>
-                      <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
-                        <vab-icon v-show="item.checked" icon="eye-line" />
-                      </span>
-                      <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-                        <vab-icon v-show="!item.checked" icon="eye-off-line" />
-                        <vab-icon v-show="item.checked" icon="eye-line" />
-                      </span>
-                    </div>
-                  </vab-draggable>
-                </el-popover>
-                <el-form inline :model="pAsinQueryForm">
-                  <el-form-item>
-                    <el-input
-                      v-model.trim="pAsinQueryForm.keyWord"
-                      clearable
-                      placeholder="请输入搜索关键词"
-                      @input="queryPAsinData"
-                      @keyup.enter="queryPAsinData"
-                    />
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryPAsinData" />
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-right-panel>
-            </vab-query-form>
             <el-table
               v-loading="listLoading"
               border

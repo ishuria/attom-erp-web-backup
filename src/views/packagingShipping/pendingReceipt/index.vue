@@ -930,6 +930,11 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  if (activeName.value === 0) {
+    queryForm.status = 0
+  } else {
+    queryForm.status = 1
+  }
   fetchData()
 })
 </script>

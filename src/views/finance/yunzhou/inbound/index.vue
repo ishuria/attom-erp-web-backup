@@ -32,8 +32,10 @@
     <el-table
       border
       :cell-style="cellStyle"
+      class="noneHoverTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="tableRowClassName"
     >
       <el-table-column label="签收日期" min-width="120" prop="signDate">
         <template #default="{ row }">
@@ -43,7 +45,7 @@
       <el-table-column label="供应商名称" min-width="130" prop="suppliser"/>
       <el-table-column label="PO" min-width="90" prop="po"/>
       <el-table-column label="产品名称/型号" min-width="130" prop="sku"/>
-      <el-table-column label="品名" min-width="90" prop="componentName"/>
+      <el-table-column label="品名" prop="componentName" :width="flexColumnWidth(list, '品名', 'componentName')" />
       <el-table-column label="数量" min-width="90" prop="purchaseCount"/>
       <el-table-column label="价格" min-width="90" prop="preTaxPrice"/>
       <el-table-column label="备注" min-width="90" prop="remark"/>
@@ -129,6 +131,7 @@ import { downloadFilePD } from '~/src/api/devlocal/download'
 import { getInboundList } from '/@/api/devlocal/finance'
 import type { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 const date = ref<[string, string]>(getDefaultStringTime())
 const total = ref<number>(0)
@@ -141,6 +144,18 @@ const queryForm = reactive<IGetOutBoundListReq>({
   fromDate: date.value[0],
   toDate: date.value[1]
 })
+
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.purchaseCount < 0) {
+    return 'danger-row'
+  }
+}
 // 调增调减可见
 // const inOrDeVisible = ref<boolean>(false)
 // const inOrDeForm = reactive<any>({
@@ -211,5 +226,8 @@ onBeforeMount(() => {
     //   border-color: var(--el-color-danger);
     // }
   }
+}
+.noneHoverTable :deep(.danger-row) {
+  --el-table-tr-bg-color: var(--el-color-danger-light-9);
 }
 </style>

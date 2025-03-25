@@ -866,7 +866,7 @@
     <!-- 当前任务加人 - 人员选择 -->
     <vab-dialog
       v-model="currentTaskVisible"
-      title="人员选择"
+      title="当前任务加人-人员选择"
       width="20%"
       @close="handleCloseCurrentTask"
     >
@@ -899,7 +899,7 @@
     <!-- 下班人员 - 人员选择 -->
     <vab-dialog
       v-model="getOffWorkVisible"
-      title="人员选择"
+      title="下班人员-人员选择"
       width="20%"
       @close="handleCloseGetOffWork"
     >
@@ -932,7 +932,7 @@
     <!-- 开始任务 - 人员选择 -->
     <vab-dialog
       v-model="personSelectVisible"
-      title="人员选择"
+      title="开始任务-人员选择"
       width="20%"
       @close="handleCloseStartTask"
     >
@@ -965,7 +965,7 @@
      <!-- 结束任务 - 人员选择 -->
      <vab-dialog
       v-model="finishTaskVisible"
-      title="人员选择"
+      title="结束任务-人员选择"
       width="20%"
       @close="handleCloseFinishTask"
     >

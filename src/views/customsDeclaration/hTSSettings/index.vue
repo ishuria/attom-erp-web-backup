@@ -88,8 +88,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" width="100">
+          <el-table-column align="center" label="操作" width="160">
             <template #default="{ row, $index }">
+              <el-button text type="primary" @click="handleShowView">查看</el-button>
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
@@ -192,8 +193,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" min-width="">
+          <el-table-column align="center" label="操作" width="160">
             <template #default="{ row, $index }">
+              <el-button text type="primary" @click="handleShowView">查看</el-button>
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
@@ -276,6 +278,43 @@
         <el-button type="primary" @click="handleConfirmUpdate">确认</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 查看 -->
+    <vab-dialog
+      v-model="viewVisible"
+      title="查看"
+      width="50%"
+    >
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="viewQueryForm" @submit.prevent>
+            <el-form-item>
+              <el-input v-model.trim="viewQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="viewQueryData" @keyup.enter="viewQueryData" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" type="primary" @click="viewQueryData" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+        <el-table
+          border
+          :data="viewList"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="图片" />
+          <el-table-column label="SKU" />
+          <el-table-column label="Descriptions" />
+        </el-table>
+        <vab-pagination
+          :current-page="viewQueryForm.pageNo"
+          :page-size="viewQueryForm.pageSize"
+          :total="viewTotal"
+          @current-change="handleViewCurrentChange"
+          @size-change="handleViewSizeChange"
+        />
+      </vab-query-form>
+    </vab-dialog>
   </div>
 </template>
 
@@ -293,6 +332,14 @@ defineOptions({
   name: 'HTSSettings'
 })
 
+const viewList = ref<any>([])
+const viewTotal = ref<number>(0)
+const viewQueryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const viewVisible = ref<boolean>(false)
 const route = useRoute()
 const tabStateStore = useTabStateStore()
 const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
@@ -319,6 +366,25 @@ const content = ref<string>('')
 const _id = ref<number>(0)
 const prop = ref<string>('')
 
+const handleShowView = () => {
+  viewVisible.value = true
+  viewFetchData()
+}
+const viewQueryData = async () => {
+  //
+}
+const viewFetchData = async () => {
+  //
+}
+const handleViewCurrentChange = (val: number) => {
+  viewQueryForm.pageNo = val
+  viewFetchData()
+}
+const handleViewSizeChange = (val: number) => {
+  viewQueryForm.pageNo = 1
+  viewQueryForm.pageSize = val
+  viewFetchData()
+}
 const handleConfirmUpdate = async () => {
   
   const { data } = await updateHTSList({
