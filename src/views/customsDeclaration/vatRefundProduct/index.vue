@@ -467,17 +467,28 @@ const closeTicketReminder = () => {
 const handleConfirmTicketReminder = async () => {
   ticketReminderFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      await downloadFilePD('/taxRefund/hasten/invoice', {
-        fromDate: ticketReminderForm.dateRange[0],
-        toDate: ticketReminderForm.dateRange[1],
-        suppliser: ticketReminderForm.suppliser
-      }).then((value: any) => {
-      
-          $baseMessage(value.msg, 'error')
+      try {
+        const response = await downloadFilePD('/taxRefund/hasten/invoice', {
+          fromDate: ticketReminderForm.dateRange[0],
+          toDate: ticketReminderForm.dateRange[1],
+          suppliser: ticketReminderForm.suppliser
+        })
         
-      }).catch((error) => {
-        console.log(error);
-      })
+        // 如果返回的是 JSON 类型，说明可能是错误信息
+        if (response.type === 'application/json') {
+          const reader = new FileReader()
+          reader.addEventListener('load', () => {
+            const result = JSON.parse(reader.result as string)
+            if (result.code === 5000) {
+              $baseMessage(result.msg, 'error')
+            }
+          })
+          reader.readAsText(response)
+        } 
+      } catch (error) {
+        console.error(error)
+        $baseMessage("下载失败，请稍后重试", 'error')
+      }
     }
   })
 }
