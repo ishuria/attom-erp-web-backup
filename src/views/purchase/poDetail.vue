@@ -13,147 +13,205 @@
         </template>
       </el-page-header>
       <el-card class="product-details-card" shadow="never" >
+        <!-- <el-skeleton animated :loading="listLoading">
+          <template #template>
+            <el-row style="display: flex; width: 100%">
+              <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }">
+                <el-form label-position="top">
+                  <el-skeleton-item style="width: 100%; height: 40px; margin-bottom: 20px" variant="text" />
+                  <el-skeleton-item style="width: 100%; height: 300px" variant="image" />
+                </el-form>
+              </el-col>
+              <el-col style="flex: 1.3; padding: 0 20px">
+                <el-row style="width: 100%">
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                </el-row>
+                <el-row style="width: 100%">
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                </el-row>
+                <el-row style="width: 100%">
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                  <el-col :span="12">
+                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
+                  </el-col>
+                </el-row>
+                <el-row style="width: 100%">
+                  <el-col :span="6">
+                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
+                  </el-col>
+                  <el-col :span="6">
+                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
+                  </el-col>
+                  <el-col :span="6">
+                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
+                  </el-col>
+                  <el-col :span="6">
+                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
+                  </el-col>
+                </el-row>
+              </el-col>
+              <el-col style="flex: 1; padding: 0 20px">
+                <el-skeleton-item style="width: 100%; height: 300px" variant="text" />
+              </el-col>
+            </el-row>
+          </template>
+          <template #default>
+           
+          </template>
+        </el-skeleton> -->
         <el-row style="display: flex; width: 100%">
-          <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
-            <el-form label-position="top" >
-              <el-form-item label="订货套数" >
-                <el-input v-model="poDetailData.purchaseSkuNumber" :disabled="orderCount"  @change="handleUpdateSkuCount" />
-              </el-form-item>
-              <el-form-item >
-                <el-upload 
-                  class="upload-align" 
-                  :class="{ hide: poDetailData.hide }" 
-                  :file-list="poDetailData.imageList"
-                  :http-request="uploadImage"
-                  list-type="picture-card"
-                  :style="{ height: imageColumnHeight + 'px' }"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                        <span
-                          class="el-upload-list__item-delete"
-                          @click="handleRemove"
-                        >
-                          <el-icon><delete /></el-icon>
-                        </span>
-                      </span>
-                    </div>
-                  </template>
-                </el-upload>
-              </el-form-item>
-            </el-form>
-          </el-col>
-          <el-col style="flex: 1.3; padding: 0">
-            <el-form :inline="true" label-position="top">
-              <el-row style="width: 100%">
-                <el-col :span="12">
-                  <el-form-item label="SKU">
-                    <el-input v-model="poDetailData.sku" disabled/>
+              <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
+                <el-form label-position="top" >
+                  <el-form-item label="订货套数" >
+                    <el-input v-model="poDetailData.purchaseSkuNumber" :disabled="orderCount"  @change="handleUpdateSkuCount" />
                   </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="产品名称">
-                    <el-input v-model="poDetailData.productName" @change="handleUpdateSku"/>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row style="width: 100%">
-                <el-col :span="12">
-                  <el-form-item data-label="创建日期" label="创建日期">
-                    <el-input v-model="poDetailData.createTime" disabled/>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="产品经理">
-                    <el-input v-model="poDetailData.productManager" disabled/>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-
-              <el-row style="width: 100%">
-                  <el-col :span="12">
-                    <el-form-item label="PO站点">
-                      <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite">
-                        <el-option
-                          v-for="item in siteList"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                      <el-form-item label="收货仓库">
-                          <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" @change="handleUpdateSku">
-                              <el-option
-                                  v-for="item in repositoryOption"
-                                  :key="item.id"
-                                  :label="item.label"
-                                  :value="item.id"
-                              />
-                          </el-select>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-
-              <el-row style="width: 100%">
-                <el-col :span="4">
-                  <el-form-item data-label="SKU总含税价" label="SKU总含税价">
-                    <el-input v-model="poDetailData.orderTotalPrice" disabled/>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item label="起订量" >
-                    <el-input v-model="poDetailData.minQuantity" disabled/>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item label="整箱数" >
-                    <el-input v-model="poDetailData.numCartons" disabled/>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12"> 
-                  <el-form-item label="我方打包整箱数(近10次)">
-                    <el-input v-model="poDetailData.packedTenRecord" disabled/>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
-          </el-col>
-          <el-col style="flex: 1; padding: 0">
-            <el-form label-position="top" >
-              <el-row>
-                <el-col :span="12">
                   <el-form-item >
-                    <el-space>
-                        <span style="font-size: var(--el-form-label-font-size);">SKU备注</span>
-                    </el-space>
-                    <el-input v-model="poDetailData.skuRemarks" disabled resize="none" :rows="11" type="textarea"/>
+                    <el-upload 
+                      class="upload-align" 
+                      :class="{ hide: poDetailData.hide }" 
+                      :file-list="poDetailData.imageList"
+                      :http-request="uploadImage"
+                      list-type="picture-card"
+                      :style="{ height: imageColumnHeight + 'px' }"
+                    >
+                      <el-icon ><plus /></el-icon>
+                      <template #file="{ file }">
+                        <div>
+                          <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
+                          <span class="el-upload-list__item-actions">
+                            <span
+                              class="el-upload-list__item-preview"
+                              @click="handlePreview(file)"
+                            >
+                              <el-icon><zoom-in /></el-icon>
+                            </span>
+                            <span
+                              class="el-upload-list__item-delete"
+                              @click="handleRemove"
+                            >
+                              <el-icon><delete /></el-icon>
+                            </span>
+                          </span>
+                        </div>
+                      </template>
+                    </el-upload>
                   </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item style="margin-right: 0">
-                      <el-space>
-                          <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
-                      </el-space>
-                      <el-input v-model="poDetailData.poRemarks" resize="none" :rows="11" type="textarea" @change="handleRemarksChange"/>
-                    </el-form-item>
-                  </el-col>
-              </el-row>
-            </el-form>
-          </el-col>
-        </el-row>
+                </el-form>
+              </el-col>
+              <el-col style="flex: 1.3; padding: 0">
+                <el-form :inline="true" label-position="top">
+                  <el-row style="width: 100%">
+                    <el-col :span="12">
+                      <el-form-item label="SKU">
+                        <el-input v-model="poDetailData.sku" disabled/>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="产品名称">
+                        <el-input v-model="poDetailData.productName" @change="handleUpdateSku"/>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                  <el-row style="width: 100%">
+                    <el-col :span="12">
+                      <el-form-item data-label="创建日期" label="创建日期">
+                        <el-input v-model="poDetailData.createTime" disabled/>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item label="产品经理">
+                        <el-input v-model="poDetailData.productManager" disabled/>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+
+                  <el-row style="width: 100%">
+                      <el-col :span="12">
+                        <el-form-item label="PO站点">
+                          <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite">
+                            <el-option
+                              v-for="item in siteList"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                            />
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                          <el-form-item label="收货仓库">
+                              <el-select v-model="poDetailData.repositoryId" placeholder="请选择收货仓库" @change="handleUpdateSku">
+                                  <el-option
+                                      v-for="item in repositoryOption"
+                                      :key="item.id"
+                                      :label="item.label"
+                                      :value="item.id"
+                                  />
+                              </el-select>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+
+                  <el-row style="width: 100%">
+                    <el-col :span="4">
+                      <el-form-item data-label="SKU总含税价" label="SKU总含税价">
+                        <el-input v-model="poDetailData.orderTotalPrice" disabled/>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-form-item label="起订量" >
+                        <el-input v-model="poDetailData.minQuantity" disabled/>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                      <el-form-item label="整箱数" >
+                        <el-input v-model="poDetailData.numCartons" disabled/>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12"> 
+                      <el-form-item label="我方打包整箱数(近10次)">
+                        <el-input v-model="poDetailData.packedTenRecord" disabled/>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-col>
+              <el-col style="flex: 1; padding: 0">
+                <el-form label-position="top" >
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item >
+                        <el-space>
+                            <span style="font-size: var(--el-form-label-font-size);">SKU备注</span>
+                        </el-space>
+                        <el-input v-model="poDetailData.skuRemarks" disabled resize="none" :rows="11" type="textarea"/>
+                      </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item style="margin-right: 0">
+                          <el-space>
+                              <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
+                          </el-space>
+                          <el-input v-model="poDetailData.poRemarks" resize="none" :rows="11" type="textarea" @change="handleRemarksChange"/>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+                </el-form>
+              </el-col>
+            </el-row>
       </el-card>
       <el-page-header  style="margin-bottom: 0px;" @back="goBack">
         <template #title>
@@ -381,7 +439,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                  <el-text style="vertical-align: center" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '供应商'">
@@ -467,7 +525,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                   </template>
-                  <span>{{ removeHtmlTags(row.contractTerms) }}</span>
+                  <el-text style="vertical-align: center" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
                 </el-tooltip>
               </span>
             </template>
@@ -3185,11 +3243,13 @@ const setImageColumnHeight3 = () => {
     imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
   }
 };
+const listLoading = ref<boolean>(false)
 // 订货套数是否可改
 const orderCount = ref<boolean>(false)
-onBeforeMount(() => {
+onBeforeMount(async () => {
   // 如果不是创建，订单详情div显示
   if (route.query.from !== 'plannedPoCreate') {
+    listLoading.value = true
     const routesStore = useRoutesStore()
     // 改变路由激活到采购订单
     if (route.query.from !== 'plannedPoDetail') {
@@ -3205,10 +3265,11 @@ onBeforeMount(() => {
       detailsNone.value = false
     }
     createNone.value = true
-    fetchPoSkuIdList()
-    fetchData()
-    fetchPurchaseAndRepository()
-    fetchSkuComponent()
+    await fetchPoSkuIdList()
+    await fetchPurchaseAndRepository()
+    await fetchData()
+    await fetchSkuComponent()
+    listLoading.value = false
   } else if (route.query.from === 'plannedPoCreate') {
     // 一进来 disable掉
     createDisabled.value = true

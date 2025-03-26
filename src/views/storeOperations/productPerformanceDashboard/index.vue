@@ -148,6 +148,21 @@
                     <br />
                     (点击看明细)
                   </span>
+                  <span v-if="item.label === '小类排名'">
+                    小类排名
+                    <br />
+                    (点击看明细)
+                  </span>
+                  <span v-if="item.label === '大类排名'">
+                    大类排名
+                    <br />
+                    (点击看明细)
+                  </span>
+                  <span v-if="item.label === 'VOC满意度'">
+                    VOC满意度
+                    <br />
+                    (点击看明细)
+                  </span>
                   <span v-if="item.label === '2周广告转化'">
                     2周广告
                     <br />
@@ -612,6 +627,16 @@
                     <br />
                     (点击看明细)
                   </span>
+                  <span v-if="item.label === '小类排名'">
+                    小类排名
+                    <br />
+                    (点击看明细)
+                  </span>
+                  <span v-if="item.label === '大类排名'">
+                    大类排名
+                    <br />
+                    (点击看明细)
+                  </span>
                   <span v-if="item.label === '2周广告转化'">
                     2周广告
                     <br />
@@ -1048,6 +1073,16 @@
                 <template #header>
                   <span v-if="item.label === '销量趋势(点击看明细)'">
                     销量趋势
+                    <br />
+                    (点击看明细)
+                  </span>
+                  <span v-if="item.label === '小类排名'">
+                    小类排名
+                    <br />
+                    (点击看明细)
+                  </span>
+                  <span v-if="item.label === '大类排名'">
+                    大类排名
                     <br />
                     (点击看明细)
                   </span>
@@ -2615,6 +2650,9 @@ const fetchColumn = async () => {
     if (item.prop === 'selfAssessmentFba') {
       item.minWidth = '120'
     }
+    if (item.prop === 'nowSubcategoryRanking') {
+      item.minWidth = '120'
+    }
   })
    
   for (let i = indicesToDelete.length - 1; i >= 0; i--) {
@@ -2635,6 +2673,9 @@ const fetchAsinColumn = async () => {
     if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
+    if (item.prop === 'nowSubcategoryRanking') {
+      item.minWidth = '120'
+    }
   })
 }
 const fetchPAsinColumn = async () => {
@@ -2650,6 +2691,9 @@ const fetchPAsinColumn = async () => {
     }
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
+    }
+    if (item.prop === 'nowSubcategoryRanking') {
+      item.minWidth = '120'
     }
   })
 }

@@ -9,7 +9,9 @@ import type {
   IGetHTSListReq,
   IGetHTSListRes,
   IUpdateHSListReq,
-  IUpdateHTSListReq
+  IUpdateHTSListReq,
+  IGetHtsSkuListReq,
+  IGetHtsSkuListRes
 } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import type {
   IBooleanRes,
@@ -770,6 +772,17 @@ export const addHTSList = (data: IAddHTSListReq): Promise<{ data: boolean }> => 
 export const updateHTSList = (data: IUpdateHTSListReq): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/hts/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * Hts查看Sku列表
+ * @returns 
+ */
+export const getHtsSkuList = (data: IGetHtsSkuListReq): Promise<IGetHtsSkuListRes> => {
+  return request({
+    url: `${BASE_API}/hts/sku/list`,
     method: 'post',
     data
   })

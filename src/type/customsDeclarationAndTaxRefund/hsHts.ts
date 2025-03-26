@@ -179,3 +179,22 @@ export interface IUpdateHTSListReq {
    */
   ukTariffRate?: number
 }
+
+export interface IGetHtsSkuListReq {
+  htsId: number
+  type: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IHtsSkuList {
+  sku: string
+  skuImageUrl: string
+  desc: string
+}
+export interface IGetHtsSkuListRes {
+  data: {
+    total: number
+    list: IHtsSkuList[]
+  }
+}

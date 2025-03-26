@@ -90,7 +90,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" width="160">
             <template #default="{ row, $index }">
-              <el-button text type="primary" @click="handleShowView">查看</el-button>
+              <el-button text type="primary" @click="handleShowView(row)">查看</el-button>
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
@@ -195,7 +195,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" width="160">
             <template #default="{ row, $index }">
-              <el-button text type="primary" @click="handleShowView">查看</el-button>
+              <el-button text type="primary" @click="handleShowView(row)">查看</el-button>
               <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
             </template>
           </el-table-column>
@@ -292,28 +292,37 @@
               <el-input v-model.trim="viewQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="viewQueryData" @keyup.enter="viewQueryData" />
             </el-form-item>
             <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" type="primary" @click="viewQueryData" />
+              <el-button :icon="Search" :loading="viewListLoading" type="primary" @click="viewQueryData" />
             </el-form-item>
           </el-form>
         </vab-query-form-right-panel>
-        <el-table
-          border
-          :data="viewList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-        >
-          <el-table-column label="图片" />
-          <el-table-column label="SKU" />
-          <el-table-column label="Descriptions" />
-        </el-table>
-        <vab-pagination
-          :current-page="viewQueryForm.pageNo"
-          :page-size="viewQueryForm.pageSize"
-          :total="viewTotal"
-          @current-change="handleViewCurrentChange"
-          @size-change="handleViewSizeChange"
-        />
       </vab-query-form>
+      <el-table
+        v-loading="viewListLoading"
+        border
+        :data="viewList"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
+      >
+        <el-table-column label="图片" prop="skuImageUrl" >
+          <template #default="{ row }">
+            <el-image :src="row.skuImageUrl" style="width: 100px; height: 100px;" >
+              <template #error>
+                <el-icon />
+              </template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="SKU" prop="sku" />
+        <el-table-column label="Descriptions" prop="desc" />
+      </el-table>
+      <vab-pagination
+        :current-page="viewQueryForm.pageNo"
+        :page-size="viewQueryForm.pageSize"
+        :total="viewTotal"
+        @current-change="handleViewCurrentChange"
+        @size-change="handleViewSizeChange"
+      />
     </vab-dialog>
   </div>
 </template>
@@ -323,21 +332,24 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { useRoute } from 'vue-router'
-import { addHTSList, delHTSList, getHTSList, updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addHTSList, delHTSList, getHTSList, getHtsSkuList, updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { useTabStateStore } from '/@/store/modules/tabsState'
-import type { IGetHTSList, IGetHTSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
+import type { IGetHTSList, IGetHTSListReq, IGetHtsSkuListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'HTSSettings'
 })
 
+const viewListLoading = ref<boolean>(false)
 const viewList = ref<any>([])
 const viewTotal = ref<number>(0)
-const viewQueryForm = reactive<any>({
+const viewQueryForm = reactive<IGetHtsSkuListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  type: 0,
+  htsId: 0
 })
 const viewVisible = ref<boolean>(false)
 const route = useRoute()
@@ -366,15 +378,22 @@ const content = ref<string>('')
 const _id = ref<number>(0)
 const prop = ref<string>('')
 
-const handleShowView = () => {
+const handleShowView = (row: IGetHTSList) => {
+  viewQueryForm.htsId = row.id
+  viewQueryForm.type = activeName.value
   viewVisible.value = true
   viewFetchData()
 }
 const viewQueryData = async () => {
-  //
+  viewQueryForm.pageNo = 1
+  viewFetchData()
 }
 const viewFetchData = async () => {
-  //
+  viewListLoading.value = true
+  const { data } = await getHtsSkuList(viewQueryForm)
+  viewTotal.value = data.total
+  viewList.value = data.list
+  viewListLoading.value = false
 }
 const handleViewCurrentChange = (val: number) => {
   viewQueryForm.pageNo = val
