@@ -64,15 +64,14 @@ const option = reactive<any>({
     ]
 })
 watch(
-    () => [props.xAxisData,props.yAxisData,theme.value],
-    () => {
-        option.series.data = props.yAxisData
-        option.xAxis.data = props.xAxisData
-        option.color = [theme.value.color]
-    },
-    { immediate: true },
+  () => [props.xAxisData, props.yAxisData, theme.value],
+  () => {
+    option.series[0].data = props.yAxisData
+    option.xAxis.data = props.xAxisData
+    option.color = [theme.value.color]
+  },
+  { immediate: true },
 )
-
 onMounted( async () => {
     await nextTick();
 })

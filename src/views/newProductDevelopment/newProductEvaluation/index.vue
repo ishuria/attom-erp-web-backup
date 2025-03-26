@@ -139,6 +139,7 @@
 
     <!-- 关键词趋势图表 -->
     <vab-trend
+      v-loading="chartLoading"
       :key-word="inputKeyWord"
       :trend-data="trendEcahts"
       :trend-echarts-visible="keyWordTrendEchatsVisible"
@@ -418,10 +419,15 @@ const toUpdateEvaluation = async (row: any) => {
     })
   }
 }
-
+const chartLoading = ref<boolean>(false)
 // 关键词趋势检索
 const searchKeyWordTrend = async () => {
-  keyWordTrend(inputKeyWord.value)
+  chartLoading.value = true
+  try {
+    await keyWordTrend(inputKeyWord.value)
+  } finally {
+    chartLoading.value = false
+  }
 }
 
 const cliekFontSearchKeyWord = async (row: any) => {

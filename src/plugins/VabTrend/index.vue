@@ -9,17 +9,14 @@
     <el-select v-model="idxKeyWordValue" :reserve-keyword="false" style="width: 200px" @change="idxUpdateKeyWordTrend">
       <el-option v-for="item in idxKeyWordOptions" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
-    <vab-echarts-chart-line class="chart-line" :x-axis-data="trendData.xAxis" :y-axis-data="trendData.yAxis" />
+    <vab-echarts-chart-line class="chart-line" :x-axis-data="props.trendData.xAxis" :y-axis-data="props.trendData.yAxis" />
     <template #footer></template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-
 import { getEvaluationTrendList, } from '/@/api/devlocal/evaluation'
-import {
-  idxKeyWordOptions
-} from '/@/const/selectoptions'
+import { idxKeyWordOptions } from '/@/const/selectoptions'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 
 defineOptions({
@@ -32,24 +29,25 @@ const emit = defineEmits<{
   (e: 'update:trendEchartsList', value: IKeyWordTrend): void
 }>()
 
-let props = withDefaults(defineProps<{
-    trendEchartsVisible: boolean
-    keyWord: string
-    trendData: IKeyWordTrend
-}>(),{});
+const props = defineProps<{
+  trendEchartsVisible: boolean
+  keyWord: string
+  trendData: IKeyWordTrend
+}>()
 
 // 关键词趋势列表下拉框默认选中值
 const idxKeyWordValue = ref<string>('0')
-
+// const chartData = computed(() => ({
+//   xAxis: props.trendData.xAxis,
+//   yAxis: props.trendData.yAxis
+// }))
 
 // 清除关键词趋势相关数据
 const handlerClose = () => {
-    setTimeout(() => {
-      idxKeyWordValue.value = "0"
-      emit('update:clearInputKeyWord', "")
-      emit('update:visibleValue', false)
-      emit('update:trendEchartsList',{xAxis:[],yAxis:[]})
-    }, 800);
+  idxKeyWordValue.value = "0"
+  emit('update:clearInputKeyWord', "")
+  emit('update:visibleValue', false)
+  emit('update:trendEchartsList',{xAxis:[],yAxis:[]})
 }
 
 /**
@@ -60,8 +58,6 @@ const handlerClose = () => {
   const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
   emit('update:trendEchartsList',{xAxis:data.xAxis,yAxis:data.y})
 }
-
-
 </script>
 
 <style lang="scss" scope>
