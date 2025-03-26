@@ -434,6 +434,14 @@ export interface IFilterAmazonSKUListReq {
    * 站点 全部：空字符串
    */
   siteIds?: string
+  /**
+   * 当前售价最小值
+   */
+  sellPriceMin?: number
+  /**
+   * 当前售价最大值
+   */
+  sellPriceMax?: number
   [property: string]: any;
 }
 export interface IGetOperationAsinListRes {

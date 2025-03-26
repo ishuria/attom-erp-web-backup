@@ -308,7 +308,7 @@
           <div class="none">
             <el-input v-model="row.storageFee" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}</span>
+          <span>{{ row.storageFee != null ? row.symbol + Number(row.storageFee).toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="110">

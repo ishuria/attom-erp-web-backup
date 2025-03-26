@@ -139,8 +139,8 @@
 
     <!-- 关键词趋势图表 -->
     <vab-trend
-      v-loading="chartLoading"
       :key-word="inputKeyWord"
+      :loading="chartLoading"
       :trend-data="trendEcahts"
       :trend-echarts-visible="keyWordTrendEchatsVisible"
       @update:clear-input-key-word="cleanKeyWordTrendData"

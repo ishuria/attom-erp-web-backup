@@ -36,9 +36,9 @@
         </template>
       </el-table-column>
       <el-table-column label="零件ID" prop="id" width="100"/>
-      <el-table-column label="SKU" prop="sku" width="200"/>
-      <el-table-column label="供应商" min-width="200" prop="suppliser"/>
-      <el-table-column label="零件名" min-width="200" prop="componentName"/>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"/>
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
       <el-table-column label="添加数量" min-width="100" prop="count">
         <template #default="{ row }">
             <el-input v-model="row.count" clearable />
@@ -70,6 +70,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getAddComponentList } from '/@/api/devlocal/purchasePo'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabCreateComponent'

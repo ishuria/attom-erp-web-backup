@@ -40,7 +40,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+                <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
@@ -92,7 +92,7 @@
                   v-model.trim="queryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
+                  @input="debouncedQueryData"
                   @keyup.enter="queryData"
                 />
               </el-form-item>
@@ -527,7 +527,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+                <el-button :loading="filterLoading" type="primary" @click="filterVisible = true">筛选</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
@@ -572,7 +572,7 @@
                   v-model.trim="asinQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryAsinData"
+                  @input="debouncedQueryAsinData"
                   @keyup.enter="queryAsinData"
                 />
               </el-form-item>
@@ -1023,7 +1023,7 @@
                   v-model.trim="pAsinQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryPAsinData"
+                  @input="debouncedQueryPAsinData"
                   @keyup.enter="queryPAsinData"
                 />
               </el-form-item>
@@ -1348,7 +1348,7 @@
     <!-- 运营分类 -->
     <vab-operational-classify :ope-classify-visible="opeClassifyVisible" @update-visible="closeOpeClassify" />
     <!-- 筛选 -->
-    <vab-filter-dialog :filter-visible="filterVisible" @update-filter="handleConfirmFilter" @update-visible="handleCloseFilterDialog" />
+    <vab-filter-dialog :classify="activeName" :filter-visible="filterVisible" :loading="filterLoading" @update-filter="handleConfirmFilter" @update-visible="handleCloseFilterDialog" />
     <!-- 关键词排名趋势 -->
     <vab-key-word-rank-trend :key-word-trend-visible="keyWordTrendVisible" @update-visible="handleCloseKeyWordTrend" />
     <!-- 运营备注 -->
@@ -1459,10 +1459,22 @@ import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
+import { debounce } from 'lodash'
 
 defineOptions({
   name: 'ProductPerformance',
 })
+
+// 防抖处理
+const debouncedQueryData = debounce(() => {
+  queryData()
+}, 700)
+const debouncedQueryAsinData = debounce(() => {
+  queryAsinData()
+}, 700)
+const debouncedQueryPAsinData = debounce(() => {
+  queryPAsinData()
+}, 700)
 
 const vocVisible = ref<boolean>(false)
 const vocValue = ref<IOperationAmazonSkuVocList[]>([])
@@ -1603,35 +1615,43 @@ const handleRankChange = () => {
     fetchSkuCateRankData()
   }
 }
+const filterLoading = ref<boolean>(false)
 const handleConfirmFilter = async (filterForm: any) => {
-  if (activeName.value === 0) {
-    const { site, ...filterQueryForm } = queryForm
-    const siteIds = site.join(',')
-    const { data } = await filterAmazonSKUList({
-      ...filterQueryForm,
-      ...filterForm,
-      siteIds,
-    })
-    if (data) {
-      $baseMessage('SKU运营筛选成功！', 'success')
-      filterVisible.value = false
-      total.value = data.total
-      list.value = data.list
+  filterLoading.value = true
+  try {
+    if (activeName.value === 0) {
+      const { site, ...filterQueryForm } = queryForm
+      const siteIds = site.join(',')
+      const { data } = await filterAmazonSKUList({
+        ...filterQueryForm,
+        ...filterForm,
+        siteIds,
+      })
+      if (data) {
+        $baseMessage('SKU运营筛选成功！', 'success')
+        filterVisible.value = false
+        total.value = data.total
+        list.value = data.list
+      }
+    } else if (activeName.value === 1) {
+      const { site, ...filterQueryForm } = asinQueryForm
+      const siteIds = site.join(',')
+      const { data } = await filterOperationAmazonAsinList({
+        ...filterQueryForm,
+        ...filterForm,
+        siteIds,
+      })
+      if (data) {
+        $baseConfirm('ASIN运营筛选成功！', 'success')
+        filterVisible.value = false
+        total.value = data.total
+        asinList.value = data.list
+      }
     }
-  } else if (activeName.value === 1) {
-    const { site, ...filterQueryForm } = asinQueryForm
-    const siteIds = site.join(',')
-    const { data } = await filterOperationAmazonAsinList({
-      ...filterQueryForm,
-      ...filterForm,
-      siteIds,
-    })
-    if (data) {
-      $baseConfirm('ASIN运营筛选成功！', 'success')
-      filterVisible.value = false
-      total.value = data.total
-      asinList.value = data.list
-    }
+  } catch {
+    $baseMessage('筛选失败，请重试', 'error')
+  } finally {
+    filterLoading.value = false
   }
 }
 const handleUpdateOpeType = async (row: IGetOperationAmazonSKUList) => {
