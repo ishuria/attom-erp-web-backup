@@ -2485,13 +2485,18 @@ const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '开发人员'].includes(label)) {
+  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述'].includes(label)) {
     return {
       textAlign: 'left',
     }
   } else if (label === '运营备注') {
     return {
       textAlign: 'left',
+      cursor: 'pointer'
+    }
+  } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
+    return {
+      textAlign: 'center',
       cursor: 'pointer'
     }
   }
