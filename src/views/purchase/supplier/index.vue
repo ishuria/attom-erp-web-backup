@@ -45,7 +45,7 @@
       <el-table-column align="center" label="税号" min-width="200" prop="taxNumber" >
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.taxNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.taxNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.taxNumber }}</span>
         </template>
@@ -62,7 +62,7 @@
       <el-table-column align="center" label="开票电话" min-width="150" prop="telephone" >
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.telephone" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.telephone" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.telephone }}</span>
         </template>
@@ -78,7 +78,7 @@
       <el-table-column align="center" label="开户账号" min-width="230" prop="accountNumber" >
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.accountNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.accountNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.accountNumber }}</span>
         </template>
@@ -86,7 +86,7 @@
       <el-table-column align="center" label="联行号" min-width="160" prop="bankRoutingNumber" >
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.bankRoutingNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.bankRoutingNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.bankRoutingNumber }}</span>
         </template>
@@ -102,7 +102,7 @@
       <el-table-column align="center" label="联系人电话" min-width="150" prop="contactNumber" >
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.contactNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.contactNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.contactNumber }}</span>
         </template>
@@ -113,7 +113,7 @@
         </template>
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.actualZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.actualZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.actualZTaxRate }}</span>
         </template>
@@ -124,7 +124,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.invoicingZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.invoicingZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.invoicingZTaxRate }}</span>
         </template>
@@ -135,7 +135,7 @@
         </template>
         <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.actualPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.actualPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.actualPTaxRate }}</span>
         </template>
@@ -146,7 +146,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.invoicingPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input v-model.trim="row.invoicingPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.invoicingPTaxRate }}</span>
         </template>
@@ -208,11 +208,11 @@
 
 <script lang="ts" setup>
 import { Delete, Document, Download, Plus, Search } from '@element-plus/icons-vue'
-import type { TableInstance , UploadUserFile } from 'element-plus'
+import type { TableInstance, UploadUserFile } from 'element-plus'
+import { isEqual } from 'lodash'
 import { downloadFile } from '/@/api/devlocal/download'
 import { getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash'
 import { flexColumnWidth } from '/@/utils/tableColum'
 // import * as XLSX from 'xlsx'
 defineOptions({

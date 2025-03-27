@@ -1410,6 +1410,7 @@ import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
+import { debounce } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { useRoute } from 'vue-router'
@@ -1459,7 +1460,6 @@ import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
-import { debounce } from 'lodash'
 
 defineOptions({
   name: 'ProductPerformance',

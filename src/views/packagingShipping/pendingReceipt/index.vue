@@ -9,7 +9,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -136,7 +136,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -477,7 +477,7 @@ updateRecordOrder,
 updateSignLog
 } from '/@/api/devlocal/packagingShipping'
 
-import { isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
@@ -899,7 +899,10 @@ const clickLog = async (val: any) => {
 const clickLogBool = ( val: any) => {
   wangEditorLogVisible.value = val
 }
-
+// 防抖处理
+const debouncedQueryData = debounce(() => {
+  queryData()
+}, 700)
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getSignList(queryForm)

@@ -1442,8 +1442,8 @@ v-for="dict in invoicingNumList" :key="dict.value"
 
     <!-- 添加零件 -->
     <vab-create-component 
-      :sku="sku"
       :create-component-visible="createComponentVisible"
+      :sku="sku"
       @update:create-component-visible="handleCloseCreateComponent"
       @update:table-value="handleSubmitComponent"
     />
@@ -1518,7 +1518,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
 </template>
 
 <script lang="ts" setup>
-import { Delete, Hide, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
@@ -1576,7 +1576,6 @@ defineOptions({
   name: 'PoDetailTable',
 })
 
-const sku = ref<string>(poDetailData.sku)
 const handleMove = (event: any) => {
   const { related  } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
@@ -1832,6 +1831,7 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const createDisabled = ref<boolean>(false)
 // po详情
 const poDetailData = ref<any>({})
+const sku = ref<string>('')
 // PoSku配件数据
 const skuComponentList = ref<any>([])
 // 添加SKU是否可见
@@ -3109,6 +3109,7 @@ const fetchData = async () =>{
     poDetailData.value.hide = false
     poDetailData.value.imageList = []
   }
+  sku.value = poDetailData.value.sku
 }
 
 // 获取po的skuId列表
