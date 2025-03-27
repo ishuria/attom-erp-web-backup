@@ -48,7 +48,6 @@ steps:
   - name: deploy-run
     pull: if-not-exists
     image: appleboy/drone-ssh
-    pull: true
     settings:
       host: 192.168.6.12
       port: 22
@@ -108,7 +107,6 @@ volumes:
   - name: cache
     host:
       path: /tmp/drone-cache
-
 
 # matster分支触发构建
 trigger:
