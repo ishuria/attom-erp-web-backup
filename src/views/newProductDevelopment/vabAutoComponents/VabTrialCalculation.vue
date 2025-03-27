@@ -74,7 +74,7 @@
         <el-table-column label="重量(g)" prop="weight">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+              <el-input v-model="row.weight" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
           </template>
@@ -432,7 +432,6 @@ const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTable
     focusAndSelectInput(cell);
   }
 }
-  
 
 // 输入input blur事件
 const clickCancel = async (event:any,value:IProgressSample) =>{  

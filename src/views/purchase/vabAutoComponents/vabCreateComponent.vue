@@ -75,8 +75,9 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'VabCreateComponent'
 })
-let props = defineProps<{
+const props = defineProps<{
   createComponentVisible: boolean
+  sku: string
 }>();
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
@@ -170,12 +171,16 @@ const showPreviewImage = (url: string) => {
 */
 const fetchData = async () => {
   listLoading.value = true
-  const { data } = await getAddComponentList(queryForm)
+  const req = queryForm
+  if (props.sku) {
+    req.sku = props.sku
+  }
+  const { data } = await getAddComponentList(req)
   if (data) {
     total.value = data.total
     list.value = data.list
-    listLoading.value = false
   }
+  listLoading.value = false
 }
 onActivated(() => {
   tableRef.value?.doLayout()

@@ -373,12 +373,6 @@ const isValueAllInput = (row: IProgressEstimatedCostAccounting) => {
   if (row.site == null) { 
     $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
     return false
-  } else if (!row.desc?.trim()) { 
-    $baseMessage('产品描述不能为空，请填写后再进行逆算', 'warning')
-    return false
-  } else if (!row.priceInfo?.trim()) {
-    $baseMessage('价格信息不能为空，请填写后再进行逆算', 'warning')
-    return false
   } else if (row.price == null) {
     $baseMessage('产品价格不能为空，请填写后再进行逆算', 'warning')
     return false

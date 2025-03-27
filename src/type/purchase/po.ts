@@ -511,6 +511,7 @@ export interface IGetAddComponentListQuery {
   keyWord: string
   pageNo: number
   pageSize: number
+  sku?: string
 }
 // 添加零件-列表数据获取
 export interface IGetAddComponentList {

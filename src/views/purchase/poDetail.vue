@@ -1442,6 +1442,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
 
     <!-- 添加零件 -->
     <vab-create-component 
+      :sku="sku"
       :create-component-visible="createComponentVisible"
       @update:create-component-visible="handleCloseCreateComponent"
       @update:table-value="handleSubmitComponent"
@@ -1575,6 +1576,7 @@ defineOptions({
   name: 'PoDetailTable',
 })
 
+const sku = ref<string>(poDetailData.sku)
 const handleMove = (event: any) => {
   const { related  } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)

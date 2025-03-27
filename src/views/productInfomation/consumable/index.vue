@@ -681,7 +681,7 @@ const rules = reactive({
   actualTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        if (form.invoicing !== 2 && (!value || value === '')) {
+        if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
           callback(new Error('请填写实际税点'));
         } else {
           callback();
@@ -698,7 +698,7 @@ const rules = reactive({
   invoicingTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        if (form.invoicing !== 2 && (!value || value === '')) {
+        if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
           callback(new Error('请填写开票税点'));
         } else {
           callback();
