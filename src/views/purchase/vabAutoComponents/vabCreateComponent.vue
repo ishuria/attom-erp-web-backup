@@ -80,13 +80,22 @@ const props = defineProps<{
   sku?: string
 }>();
 const dflag = ref<boolean>(false)
-watchEffect(()=>{
-  dflag.value = props.createComponentVisible
-  if(dflag.value === true) {
+
+watch(() => props.createComponentVisible, (newVal) => {
+  dflag.value = newVal
+  if (dflag.value === true) {
+    // 只在首次打开时加载数据
+    queryForm.keyWord = ''
     fetchData()
   }
-}
-)
+})
+// watchEffect(() => {
+//   dflag.value = props.createComponentVisible
+//   if (dflag.value === true) {
+//     console.log('加载')
+//     fetchData()
+//   }
+// })
 const getCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
