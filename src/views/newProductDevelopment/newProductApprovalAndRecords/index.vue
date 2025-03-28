@@ -49,26 +49,10 @@
           {{ formattedProgressLog(row.productName) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="首单PO" min-width="100" prop="po">
-        <template #default="{ row }">
-          {{ row.po }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="首单实际成本" prop="firstRealCost" width="130">
-        <template #default="{ row }">
-          {{ row.firstRealCost }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="审批成本" min-width="100" prop="totalCost">
-        <template #default="{ row }">
-          {{ row.totalCost }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="相差" min-width="70" prop="difference">
-        <template #default="{ row }">
-          {{ row.difference }}
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="首单PO" min-width="100" prop="po" />
+      <el-table-column align="center" label="首单实际成本" prop="firstRealCost" width="130" />
+      <el-table-column align="center" label="审批成本" min-width="100" prop="totalCost" />
+      <el-table-column align="center" label="相差" min-width="70" prop="difference" />
       <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70"/>
       <el-table-column align="center" label="OEM" min-width="70" prop="oem">
         <template #default="{ row }">
@@ -109,11 +93,7 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')">
-        <template #default="{ row }">
-          {{ row.reviewPersonName }}
-        </template>
-      </el-table-column>
+      <el-table-column align="center" label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')" />
 
       <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="{ row }">

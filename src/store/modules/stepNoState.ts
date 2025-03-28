@@ -8,9 +8,10 @@ export const useStepNoState = defineStore('stepNo', {
   actions: {
     setStepNo(reviewId: number, stepNo: number) {
       this.stepNoMap.set(reviewId, stepNo)
-      console.log(this.stepNoMap)
+      console.log('set:',this.stepNoMap)
     },
     getStepNo(reviewId: number) {
+      console.log('get:', this.stepNoMap)
       return this.stepNoMap.get(reviewId) || 0
     },
   }

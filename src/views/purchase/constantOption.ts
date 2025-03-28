@@ -56,3 +56,12 @@ export const currencyMap: Record<CurrencyCode, string> = {
   1: 'USD',
   2: 'EUR',
 }
+
+export const warehouseOption = [
+  { label: '自有', value: 0 },
+  { label: '供应商', value: 1 },
+]
+export const statusOption = [
+{ label: '正常', value: 0 },
+{ label: '停用', value: 1 },
+]

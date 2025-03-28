@@ -45,6 +45,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
+import { statusOption, warehouseOption } from '../constantOption.ts'
 
 defineOptions({
   name: 'VabAddRepository'
