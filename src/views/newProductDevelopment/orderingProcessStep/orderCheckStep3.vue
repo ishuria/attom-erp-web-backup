@@ -77,17 +77,14 @@ import {
 } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
-import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
     name: 'OrderCheckStep3',
 })
 
 const route: any = useRoute()
-const router = useRouter()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
-
 const emit = defineEmits(['changeCheck-step'])
 // const listLoading = ref<boolean>(true)
 const list = ref<any>([])
@@ -105,8 +102,9 @@ const qualityInspectionList = ref<IreviewStepNo4ListQualityInspection[]>([])
 // 当点击下一步的时候
 const handleSaveAndContinue = async () => {
   emit('changeCheck-step', 3)
-  await delVisitedRoute(handleActivePath(route, true))
-  router.replace({ query: { ...route.query, stepNo: 3 }});
+  _setStepNo(Number(route.query.reviewId), 3)
+  // await delVisitedRoute(handleActivePath(route, true))
+  // router.replace({ query: { ...route.query, stepNo: 3 }});
 }
 // 当点击上一步的时候
 const handleGoback = () => {

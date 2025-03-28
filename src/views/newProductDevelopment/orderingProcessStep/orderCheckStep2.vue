@@ -248,18 +248,16 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
 import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { reviewStepNo3ComponentList, reviewStepNo3ComponentSuitDetail, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
-import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
     name: 'OrderCheckStep2',
 })
+
 const route: any = useRoute()
-const router = useRouter()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
 
 const emit = defineEmits<{ 
   (e: 'changeCheck-step', value: number): void
@@ -333,8 +331,9 @@ const showPreviewImage = (url: string) => {
 // 当点击下一步的时候
 const handleSave = async () => {
   emit('changeCheck-step', 2)
-  await delVisitedRoute(handleActivePath(route, true))
-  router.replace({ query: { ...route.query, stepNo: 2 }});
+  _setStepNo(Number(route.query.reviewId), 2)
+  // await delVisitedRoute(handleActivePath(route, true))
+  // router.replace({ query: { ...route.query, stepNo: 2 }});
 }
 
 // 当点击上一步的时候

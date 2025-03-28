@@ -93,18 +93,14 @@
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
 import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
-import { handleActivePath } from '/@/utils/routes'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
   name: 'OrderCheckStep4',
 })
 
 const route: any = useRoute()
-const router = useRouter()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
-
 const emit = defineEmits<{ 
   (e: 'changeCheck-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
@@ -146,8 +142,9 @@ const setPreviewImage = (url: string) => {
 // 当点击保存的时候
 const handleSave = async () => {
   emit('changeCheck-step', 4)
-  await delVisitedRoute(handleActivePath(route, true))
-  router.replace({ query: { ...route.query, stepNo: 4 }});
+  _setStepNo(Number(route.query.reviewId), 4)
+  // await delVisitedRoute(handleActivePath(route, true))
+  // router.replace({ query: { ...route.query, stepNo: 4 }});
 }
 
 // 当点击上一步的时候

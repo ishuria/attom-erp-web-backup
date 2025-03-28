@@ -77,7 +77,7 @@ defineOptions({
 })
 const props = defineProps<{
   createComponentVisible: boolean
-  sku: string
+  sku?: string
 }>();
 const dflag = ref<boolean>(false)
 watchEffect(()=>{

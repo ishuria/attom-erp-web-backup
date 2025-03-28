@@ -58,20 +58,15 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 import { currencyList } from '../indexCommon'
 import { reviewProgressId, reviewStepNo2Savetw } from '/@/api/devlocal/orderProcess'
 import { getComponentList } from '/@/api/devlocal/progressSample'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
-import { handleActivePath } from '/@/utils/routes'
-
-const route: any = useRoute()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
+import { _setStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
     name: 'OrderStep2',
 })
 
+const route: any = useRoute()
 const props = defineProps<{ step1Data: number | undefined }>()
-
 const emit = defineEmits<{ 
     (e: 'change-step', value: number): void
     (e: 'update:imagePreviewVisible', value: boolean): void
@@ -147,9 +142,10 @@ const handleContinue = async () => {
     const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId })
     if (data === true) {
       emit('change-step', 2)
-      if (route.query.reviewId) {
-        await delVisitedRoute(handleActivePath(route, true))
-      }
+      _setStepNo(Number(classReviewId), 1)
+      // if (route.query.reviewId) {
+      //   await delVisitedRoute(handleActivePath(route, true))
+      // }
     }
   } catch (error) {
     console.error(error)

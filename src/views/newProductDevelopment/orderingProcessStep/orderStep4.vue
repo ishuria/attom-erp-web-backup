@@ -157,19 +157,18 @@ import {
   reviewStepNo4UpdateQualityInspection,
   reviewStepNo4UpdateSupplier
 } from '/@/api/devlocal/orderProcess'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { handleActivePath } from '/@/utils/routes'
+
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { _setStepNo } from '/@/utils/stepNoState'
 
-const route: any = useRoute()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
 defineOptions({
   name: 'OrderStep4',
 })
+
+const route: any = useRoute()
 const props = defineProps<{ step1Data: number }>()
 const emit = defineEmits(['change-step'])
 
@@ -347,7 +346,8 @@ const handleSave = async () => {
     const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。", "success", "hey")
-      await delVisitedRoute(handleActivePath(route, true))
+      _setStepNo(Number(classReviewId), 3)
+      // await delVisitedRoute(handleActivePath(route, true))
     }
   } catch (error) {
     console.error(error)
@@ -362,9 +362,10 @@ const handleSaveAndContinue = async () => {
       $baseMessage("当前信息已保存。","success","hey")
 
       emit('change-step', 4)
-      if (route.query.reviewId) { //编辑进来的，要更改stepNo
-        await delVisitedRoute(handleActivePath(route, true))
-      } 
+      _setStepNo(Number(classReviewId), 3)
+      // if (route.query.reviewId) { //编辑进来的，要更改stepNo
+      //   await delVisitedRoute(handleActivePath(route, true))
+      // } 
     }
   } catch (error) {
     console.error(error)

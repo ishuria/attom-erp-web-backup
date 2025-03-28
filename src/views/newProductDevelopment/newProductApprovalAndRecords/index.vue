@@ -198,14 +198,16 @@ v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.l
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance } from 'element-plus'
+import { indexColumns } from '../newProductProgress/indexColumns'
+import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
 import { getByIdQueryEvaluation } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
-import { indexColumns } from '../newProductProgress/indexColumns'
-import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
 import type { IReviewQueryItem, IReviewQueryReq } from '/@/type/review/review'
 import { formatDate } from '/@/utils/dateUtils'
+import { _setStepNo } from "/@/utils/stepNoState"
 import { flexColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'DefaultTable',
 })
@@ -331,12 +333,15 @@ const handleOrderReview = (row: IReviewQueryItem) => {
 }
 
 const handleOrderProcess = (row: IReviewQueryItem) => {
+  // 只有编辑的按照row的stepNo设置步骤
+  if (row.reviewStatus === 0 || row.reviewStatus === 2) {
+    _setStepNo(row.reviewMainId!, row.stepNo!)
+  }
   router.push({
     path: '/newProductDevelopment/orderingProcess',
     query: {
       reviewStatus: row.reviewStatus,
       reviewId: row.reviewMainId,
-      stepNo: row.stepNo,
     },
   })
 }

@@ -130,3 +130,10 @@ declare interface PackingModuleType {
 declare interface TabState {
   [key: string]: number // 使用路径作为key，存储对应的tab值
 }
+
+/**
+ * 存储步骤 reviewId -> stepNo
+ */
+declare interface StepNoState {
+  stepNoMap: Map<number, number>
+}

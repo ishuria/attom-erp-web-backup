@@ -486,42 +486,40 @@ import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
-  reverseCalculateReview,
-  reviewStepNo3ComponentAdd,
-  reviewStepNo3ComponentCopy,
-  reviewStepNo3ComponentDel,
-  reviewStepNo3ComponentImtDel,
-  reviewStepNo3ComponentList,
-  reviewStepNo3ComponentSuitDetail,
-  reviewStepNo3ComponentUpdate,
-  reviewStepNo3ComponentUpload,
-  reviewStepNo3ContractTerms,
-  reviewStepNo3GetSelectVariantList,
-  reviewStepNo3PurchaseMatters,
-  reviewStepNo3SaveTh,
-  reviewStepNo3UpdateContractTerms,
-  reviewStepNo3UpdatePurchaseMatters,
-  reviewStepNo3VariantList,
-  reviewStepNo3VariantUpdate,
-  submitReviewComponent,
-  submitReviewConsumable,
-  updateReviewStepNo3ComponentSuitDetail
+reverseCalculateReview,
+reviewStepNo3ComponentAdd,
+reviewStepNo3ComponentCopy,
+reviewStepNo3ComponentDel,
+reviewStepNo3ComponentImtDel,
+reviewStepNo3ComponentList,
+reviewStepNo3ComponentSuitDetail,
+reviewStepNo3ComponentUpdate,
+reviewStepNo3ComponentUpload,
+reviewStepNo3ContractTerms,
+reviewStepNo3GetSelectVariantList,
+reviewStepNo3PurchaseMatters,
+reviewStepNo3SaveTh,
+reviewStepNo3UpdateContractTerms,
+reviewStepNo3UpdatePurchaseMatters,
+reviewStepNo3VariantList,
+reviewStepNo3VariantUpdate,
+submitReviewComponent,
+submitReviewConsumable,
+updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
   name: 'OrderStep3',
 })
 
 const route: any = useRoute()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
 const props = defineProps<{ step1Data: number }>()
 
 const emit = defineEmits<{ 
@@ -1031,9 +1029,7 @@ const handleSave = async () => {
   const { data } = await reviewStepNo3SaveTh({ reviewId: classReviewId! })
   if (data === true) {
     $baseMessage("当前信息已保存。", "success", "hey")
-    if (route.query.reviewId) {
-      await delVisitedRoute(handleActivePath(route, true))
-    }
+    _setStepNo(Number(classReviewId), 2)
   }
 }
 
@@ -1148,9 +1144,7 @@ const handleSaveAndContinue = async () => {
       if (data === true) {
         $baseMessage("当前信息已保存。", "success", "hey");
         emit('change-step', 3);
-        if (route.query.reviewId) {
-          await delVisitedRoute(handleActivePath(route, true))
-        }
+        _setStepNo(Number(classReviewId), 2)
       }
     } else {
       $baseMessage('同一供应商的同一开票类型的实际税点和开票税点必须是一样的', 'error', 'hey')

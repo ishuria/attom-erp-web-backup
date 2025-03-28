@@ -90,6 +90,8 @@ import orderStep5 from './orderingProcessStep/orderStep5.vue'
 import orderStep6 from './orderingProcessStep/orderStep6.vue'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { _getStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
   name: 'OrderingProcess',
 })
@@ -156,8 +158,9 @@ onMounted(() => {
   if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     isNone2.value = true;
     isNone1.value = false;
-    if (route.query.stepNo) {
-      active.value = parseInt(route.query.stepNo)
+    if (route.query.reviewId) {
+      // active.value = parseInt(route.query.stepNo)
+      active.value = _getStepNo(Number(route.query.reviewId))
     } else {
       active.value = 0 // 订大货的是0
     }
@@ -165,8 +168,8 @@ onMounted(() => {
   } else { // 查看显示
     isNone2.value = false;
     isNone1.value = true;
-    if (route.query.stepNo) {
-      const stepNo = parseInt(route.query.stepNo)
+    if (route.query.reviewId) {
+      const stepNo = _getStepNo(Number(route.query.reviewId))
       activeCheck.value = stepNo
       if (stepNo === 5) {
         activeCheck.value = 0

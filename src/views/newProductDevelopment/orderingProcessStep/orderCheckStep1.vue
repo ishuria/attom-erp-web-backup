@@ -1,68 +1,70 @@
 <template>
-    <div>
-        <el-space direction="vertical" style="width: 100%">
-            <el-form 
-                ref="formRef" 
-                label-position="right" 
-                label-width="170px" 
-                :model="form" 
-                @submit.prevent
-            >
-                <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
-                    <el-input v-model="form.variantSku" disabled/>
-                </el-form-item>
-                <el-form-item label="产品主品名" prop="productName">
-                    <el-input v-model="form.productName" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳"/>
-                </el-form-item>
-                <el-form-item label="产品短描述" prop="productDesc">
-                    <el-input v-model="form.productDesc" disabled placeholder="eg:20管45×31.7CM" />
-                </el-form-item>
-            </el-form>
-            <div class="list-container auto-height-container">
-              <el-scrollbar>
-                    <ul class="vab-auto-box">
-                        <!-- list第一行 新增变体 -->
-                        <li class="list-item"> 
-                            <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
-                                <div class="list-item-meta-content" style="text-align: center">
-                                    <el-space>
-                                        <span style="width: 240px;">{{ "变体名" }}</span>
-                                    </el-space>
-                                </div>
-                                <div class="list-item-meta-content" style="text-align: center">
-                                    <el-space>
-                                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
-                                    </el-space>
-                                </div>
-                            </div>
-                        </li>
-                        <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
-                            <div class="list-item-meta">
-                                <div class="list-item-meta-content">
-                                  <el-input v-model="item.variantName" clearable disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
-                                </div>
-                                <div class="list-item-meta-content">
-                                  <el-input v-model="item.amazonUSVariantQuantity" clearable disabled style="width: 240px"/>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </el-scrollbar>
-            </div>
-            <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
-        </el-space>
-        <div class="pay-button-group">
-            <el-button @click="handleGoback">退出</el-button>
-            <el-button native-type="submit" type="primary" @click="handleSubmitAndContinue">下一步</el-button>
-        </div>
+  <div>
+    <el-space direction="vertical" style="width: 100%">
+      <el-form 
+        ref="formRef" 
+        label-position="right" 
+        label-width="170px" 
+        :model="form" 
+        @submit.prevent
+      >
+        <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
+          <el-input v-model="form.variantSku" disabled/>
+        </el-form-item>
+        <el-form-item label="产品主品名" prop="productName">
+          <el-input v-model="form.productName" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳"/>
+        </el-form-item>
+        <el-form-item label="产品短描述" prop="productDesc">
+          <el-input v-model="form.productDesc" disabled placeholder="eg:20管45×31.7CM" />
+        </el-form-item>
+      </el-form>
+      <div class="list-container auto-height-container">
+        <el-scrollbar>
+          <ul class="vab-auto-box">
+            <!-- list第一行 新增变体 -->
+            <li class="list-item"> 
+              <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
+                <div class="list-item-meta-content" style="text-align: center">
+                  <el-space>
+                    <span style="width: 240px;">{{ "变体名" }}</span>
+                  </el-space>
+                </div>
+                <div class="list-item-meta-content" style="text-align: center">
+                  <el-space>
+                    <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
+                  </el-space>
+                </div>
+              </div>
+            </li>
+            <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
+              <div class="list-item-meta">
+                <div class="list-item-meta-content">
+                  <el-input v-model="item.variantName" clearable disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
+                </div>
+                <div class="list-item-meta-content">
+                  <el-input v-model="item.amazonUSVariantQuantity" clearable disabled style="width: 240px"/>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </el-scrollbar>
+      </div>
+      <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
+    </el-space>
+    <div class="pay-button-group">
+      <el-button @click="handleGoback">退出</el-button>
+      <el-button native-type="submit" type="primary" @click="handleSubmitAndContinue">下一步</el-button>
     </div>
-  </template>
+  </div>
+</template>
   
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { reviewStepNo1 } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
     name: 'OrderCheckStep1',
 })
@@ -70,8 +72,6 @@ defineOptions({
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-
-
 const emit = defineEmits(['changeCheck-step'])
 const formRef = ref<FormInstance>()
 let form = reactive<any>({
@@ -91,8 +91,7 @@ const router = useRouter()
 // 当点击下一步的时候
 const handleSubmitAndContinue = async () => {
   emit('changeCheck-step', 1)
-  await delVisitedRoute(handleActivePath(route, true))
-  router.replace({ query: { ...route.query, stepNo: 1 }});
+  _setStepNo(Number(route.query.reviewId), 1)
 }
 // 当点击退出的时候
 const handleGoback = async () => {

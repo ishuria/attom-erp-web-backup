@@ -193,20 +193,16 @@ import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, UploadFile } from 'element-plus'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
-import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { handleActivePath } from '/@/utils/routes'
+import { _setStepNo } from '/@/utils/stepNoState'
+
 defineOptions({
   name: 'OrderStep5',
 })
 
 const route: any = useRoute()
-const tabsStore = useTabsStore()
-const { delVisitedRoute } = tabsStore
-
 const props = defineProps<{ step1Data: number }>()
-
 const emit = defineEmits<{ 
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
@@ -730,7 +726,8 @@ const handleSave = async () => {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage("当前信息已保存。", "success", "hey")
-      await delVisitedRoute(handleActivePath(route, true))
+      _setStepNo(Number(classReviewId), 4)
+      // await delVisitedRoute(handleActivePath(route, true))
     }
   } catch (error) {
     console.error(error)
@@ -772,9 +769,10 @@ const handleSaveAndContinue = async () => {
     if (data === true) {
       $baseMessage("当前信息已保存。","success","hey")
       emit('change-step', 5)
-      if (route.query.reviewId) {
-        await delVisitedRoute(handleActivePath(route, true))
-      }
+      _setStepNo(Number(classReviewId), 4)
+      // if (route.query.reviewId) {
+      //   await delVisitedRoute(handleActivePath(route, true))
+      // }
     }
   } catch (error) {
     console.error(error)
