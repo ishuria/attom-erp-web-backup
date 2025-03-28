@@ -31,10 +31,10 @@
       <el-table-column align="center" fixed="left" label="供应商ID" prop="suppliserId" width="75"/>
       <el-table-column fixed="left" label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')" >
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.suppliser }}</span>
+          <div class="none">
+            <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.suppliser }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="优先打包" prop="packing" width="100">
@@ -303,8 +303,13 @@ const clickCancel = async (event:any,value:any) =>{
   
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductSupplier(value)
-    fetchData()
+    try {
+      await updateProductSupplier(value)
+      await fetchData()
+    } catch {
+      // 更新失败时，恢复为原始值
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handlePackingChange = async (row: any) => {
