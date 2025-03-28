@@ -129,9 +129,11 @@ const rules = reactive<any>({
 })
 // 合并变体的主品名和短描述
 const handleVariantSkuMap = async () => {
-  const { data } = await reviewSkuInfo({ sku: form.variantSku })
-  form.productName = data.productName
-  form.productDesc = data.productDesc
+  if (form.variantSku) {
+    const { data } = await reviewSkuInfo({ sku: form.variantSku })
+    form.productName = data.productName
+    form.productDesc = data.productDesc
+  }
 }
 const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量

@@ -428,7 +428,11 @@ export interface IreviewStepNo3VariantUpdate {
      */
     weightCoefficient?: number;
     variant?: string;
-    orderEntryId?: number
+  orderEntryId?: number
+  /**
+   * 实际总成本
+   */
+  actualTotalCost?: number
 }
 // 完善新供应商信息与打包质检清单 - 查询质检清单列表
 export interface IreviewStepNo4ListQualityInspectionResp {

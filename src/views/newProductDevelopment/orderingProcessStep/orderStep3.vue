@@ -6,6 +6,7 @@
           <el-button type="primary" @click="handleCreateComponent">新增</el-button>
           <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
           <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
+          <el-button type="primary">新增收货仓库</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
         
@@ -727,6 +728,7 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
     volumeCoefficient: row.volumeCoefficient!,
     weight: row.weight!,
     weightCoefficient: row.weightCoefficient!,
+    actualTotalCost: row.actualTotalCost!,
   })
   fetchVariantsData()
 }
@@ -780,6 +782,7 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
     volumeCoefficient: row.volumeCoefficient!,
     weight: row.weight!,
     weightCoefficient: row.weightCoefficient!,
+    actualTotalCost: row.actualTotalCost!,
   })
   fetchVariantsData()
 }

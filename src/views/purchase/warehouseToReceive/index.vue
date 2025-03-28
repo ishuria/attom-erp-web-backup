@@ -15,7 +15,7 @@
         <el-table-column align="center" label="仓库名称" min-width="200" prop="name" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.name" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.name" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.name }}</span>
             </template>
@@ -30,7 +30,7 @@
         <el-table-column align="center" label="仓库状态" min-width="100" prop="status">
           <template #default="{ row }">
             <div class="none">
-                <el-input v-model="row.status" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                <el-input v-model="row.status" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
             </div>
             <span>
               <el-tag :type="row.status === '正常' ? 'success' : 'danger'">
@@ -42,7 +42,7 @@
         <el-table-column align="center" label="仓库地址" min-width="230" prop="address" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.address" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.address" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.address }}</span>
             </template>
@@ -50,7 +50,7 @@
         <el-table-column align="center" label="联系人" min-width="100" prop="associates" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.associates" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.associates" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.associates }}</span>
             </template>
@@ -58,7 +58,7 @@
         <el-table-column align="center" label="电话" min-width="150" prop="phone" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.phone" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.phone" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.phone }}</span>
             </template>
@@ -66,7 +66,7 @@
         <el-table-column align="center" label="添加人员" min-width="120" prop="createUserName" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.createUserName" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.createUserName" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.createUserName }}</span>
             </template>
@@ -74,7 +74,7 @@
         <el-table-column align="center" label="添加日期" min-width="130" prop="createTime" >
                         <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.createTime" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.createTime" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.createTime }}</span>
             </template>
@@ -82,7 +82,7 @@
         <el-table-column align="center" label="备注" min-width="160" prop="remarks" >
             <template #default="{ row }">
                 <div class="none">
-                    <el-input v-model="row.remarks" type="text" @blur="clickCancle($event, row)" @keypress.enter="clickCancle($event, row)" />
+                    <el-input v-model="row.remarks" type="text" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
                 </div>
                 <span>{{ row.remarks }}</span>
             </template>
@@ -98,7 +98,8 @@
       </el-table>
       <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
       <!-- 收货仓库 -->
-      <vab-dialog 
+      <vab-add-repository v-model="repositoryAddVisible" @submit="handleWarehouseSubmit" />
+      <!-- <vab-dialog 
         v-model="repositoryAddVisible" 
         :before-close="handlerCloseDialog" 
         class="moldDialog"
@@ -106,7 +107,7 @@
         width="600"
       >
         <el-divider style="margin-top: 0;"/>
-        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="rules" style="margin: 0 auto; width: 70%;">
+        <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="rules" style=" width: 70%;margin: 0 auto;">
           <el-form-item label="仓库名称" prop="name">
             <el-input v-model="form.name" clearable />
           </el-form-item>
@@ -139,7 +140,7 @@
             <el-button type="primary" @click="handleSubmit">确认</el-button>
           </span>
         </template>
-      </vab-dialog>
+      </vab-dialog> -->
     </div>
   </template>
   
@@ -205,25 +206,35 @@ const handleAdd = async () => {
   repositoryAddVisible.value = true
   formRef.value?.resetFields()
 }
-const handleSubmit = async () => {
-  formRef.value?.validate((valid: any) => {
-    if (valid) {
-      const addRepository = async () => {
+// const handleSubmit = async () => {
+//   formRef.value?.validate((valid: any) => {
+//     if (valid) {
+//       const addRepository = async () => {
   
-        const { data } = await addPurchaseRepository({...form})
-        if (data) {
-          $baseMessage('新增成功', 'success', 'hey')
-          list.value.push(form)
-          fetchData()
-        } else {
-          $baseMessage('新增失败', 'error', 'hey')
-        }
-      }
-      addRepository()
-      repositoryAddVisible.value = false
-    }
-    else $baseMessage('表单提交失败', 'error', 'hey')
-  })
+//         const { data } = await addPurchaseRepository({...form})
+//         if (data) {
+//           $baseMessage('新增成功', 'success', 'hey')
+//           list.value.push(form)
+//           fetchData()
+//         } else {
+//           $baseMessage('新增失败', 'error', 'hey')
+//         }
+//       }
+//       addRepository()
+//       repositoryAddVisible.value = false
+//     }
+//     else $baseMessage('表单提交失败', 'error', 'hey')
+//   })
+// }
+// 修改提交处理方法
+const handleWarehouseSubmit = async (formData: any) => {
+  const { data } = await addPurchaseRepository(formData)
+  if (data) {
+    $baseMessage('新增成功', 'success', 'hey')
+    fetchData()
+  } else {
+    $baseMessage('新增失败', 'error', 'hey')
+  }
 }
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
@@ -245,7 +256,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   }
 }
 // 零件table blur事件
-const clickCancle = async (event:any,value:any) =>{
+const clickCancel = async (event:any,value:any) =>{
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {

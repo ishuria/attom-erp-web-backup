@@ -178,6 +178,7 @@ declare module 'vue' {
     User: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/User.vue')['default']
     UserEdit: typeof import('./../../../src/views/system/user/vabAutoComponents/UserEdit.vue')['default']
     UserManagementEdit: typeof import('./../../../src/views/setting/userManagement/vabAutoComponents/UserManagementEdit.vue')['default']
+    VabAddRepository: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAddRepository.vue')['default']
     VabAdPieTab: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabAdPieTab.vue')['default']
     VabAlert: typeof import('./../../components/VabAlert/index.vue')['default']
     VabApp: typeof import('./../../components/VabApp/index.vue')['default']
