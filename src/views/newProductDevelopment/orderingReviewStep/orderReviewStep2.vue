@@ -43,10 +43,14 @@
               <span v-show="row[prop] === 1">大货需要留样拍照</span>
             </template>
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
-              {{ Number(row[prop]).toFixed(2) }}
+              {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : ''}}
+            </template>
+            <template v-if="row['column0'] === 'grossMarginRate'">
+              {{ row[prop] !== null ? Number(row[prop].slice(0, -1)) * 100 + '%' : ''}}
             </template>
             <template 
-              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'
+          && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'grossMarginRate'">
               {{ row[prop] }}
             </template>
             
@@ -151,7 +155,7 @@ const labelMap: Record<string, string> = {
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
-  actualTotalCost: '产品总实际成本',
+  actualTotalCost: '产品实际单价',
   grossMarginRate: '毛利率',
   packagingSize: '包装尺寸(cm)',
   productSize: '产品尺寸(in)',

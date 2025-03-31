@@ -616,3 +616,12 @@ export function updatePoSkuComponentSuitDetail(params: { id: number, componentSu
     params,
   })
 }
+/**
+ * 获取当前人的采购奖金
+ */
+export function getPurchaseBonus(): Promise<{ data: { procurementBonus: number, procurementBonusCrossMonth: number }}> {
+  return request({
+    url: `${BASE_API}/purchase/buns`,
+    method: 'get',
+  })
+}

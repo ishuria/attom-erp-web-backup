@@ -121,17 +121,32 @@
         <el-table-column label="打包￥" prop="packagingPrice" width="90" />
         <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel" />
         <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice" />
-        <el-table-column label="毛利率" prop="grossMarginRate"/>
-        <el-table-column label="ROI" prop="roi" />
+        <el-table-column label="毛利率" prop="grossMarginRate">
+          <template #default="{ row }">
+            <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+            <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+          </template>
+        </el-table-column>
+        <el-table-column label="ROI" prop="roi" >
+          <template #default="{ row }">
+            {{ row.roi != null ? row.roi + '%' : '' }}
+          </template>
+        </el-table-column>
         <el-table-column label="重量系数" min-width="100" prop="weightCoefficient" />
         <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient" />
         <el-table-column label="关税%" prop="tariff">
           <template #default="{ row }">
-            {{ row.tariff }}
+            {{ row.tariff != null ? row.tariff + '%' : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="平台佣金" min-width="100" prop="platformCommission" />
-        <el-table-column label="仓储费2个月$" min-width="140" prop="storageFee" />
+        <el-table-column label="平台佣金$" min-width="100" prop="platformCommission" />
+        <el-table-column label="仓储费2个月$" min-width="140" prop="storageFee" >
+          <template #default="{ row }">
+            {{ row.storageFee ? row.storageFee.toFixed(2): '' }}
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;" />
         </template>

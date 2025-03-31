@@ -413,11 +413,11 @@ export const updateChannelFreightForwarder = (data: IAddChannelFreightForwarderR
 /**
  * @description 货代渠道复制
  */
-export const copyChannelFreightForwarder = (params: IId): Promise<IBooleanRes> => {
+export const copyChannelFreightForwarder = (data: any): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/freight/forwarder/channel/copy`,
     method: 'post',
-    params
+    data
   })
 }
 /**
