@@ -606,25 +606,25 @@
             <el-form :inline="true" label-position="top">
               <el-row style="width: 100%">
                   <el-col :span="12">
-                      <el-form-item label="SKU">
-                        <el-select
-                          v-model="poDetailData.sku"
-                          default-first-option
-                          filterable
-                          :loading="skuLoading"
-                          placeholder="点击输入和搜索"
-                          remote
-                          :remote-method="remotePeopleMethod"
-                          @change="handleCreatePlanPo"
-                        >
-                          <el-option
-                            v-for="item in skuOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                      </el-form-item>
+                    <el-form-item label="SKU">
+                      <el-select
+                        v-model.trim="poDetailData.sku"
+                        default-first-option
+                        filterable
+                        :loading="skuLoading"
+                        placeholder="点击输入和搜索"
+                        remote
+                        :remote-method="remotePeopleMethod"
+                        @change="handleCreatePlanPo"
+                      >
+                        <el-option
+                          v-for="item in skuOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
                   </el-col>
                   <el-col :span="12">
                       <el-form-item label="产品名称">
@@ -1845,6 +1845,7 @@ const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<any[]>([]) //搜索选项
 const skuList = ref<any[]>([]) //搜索列表
 const remotePeopleMethod = async (query: string) => {
+  query = query.trim()
   if (query) {
     const { data } = await getPoSkuList({
         sku: query
@@ -2446,21 +2447,21 @@ const clickCreateCancel = async (event: any, value: any, index: number) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     // 修改请求
-    // console.log('value:', value)
-    // console.log('skuComponentList.value:', skuComponentList.value)
-    const { data } = await updateCreateComponent(value)
+    value.isUpdate = true
+    const { data } = await updateCreateComponent(skuComponentList.value)
     
-    skuComponentList.value[index] = data.componentList[0]
+    skuComponentList.value = data.componentList
     poDetailData.value.orderTotalPrice = data.skuTotalPrice
-    const item = skuComponentList.value[index]
-    item.unitPrice = formattedPrice(item.unitPrice)
-    if (!item.componentUrl) {
-      item.hide = false
-      item.imageList = []
-    } else if (item.componentUrl){
-      item.hide = true
-      item.imageList = [{ url: item.componentUrl }]
-    }
+    skuComponentList.value.forEach((item: any) => {
+      item.unitPrice = formattedPrice(item.unitPrice)
+      if (!item.componentUrl) {
+        item.hide = false
+        item.imageList = []
+      } else if (item.componentUrl){
+        item.hide = true
+        item.imageList = [{ url: item.componentUrl }]
+      }
+    })
     updateCreate()
   }
 }

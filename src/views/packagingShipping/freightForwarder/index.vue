@@ -17,7 +17,7 @@
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
-    </vab-query-form>
+    </vab-query-form> 
     <el-table
       border class="noneHoveTable"
       :data="list"

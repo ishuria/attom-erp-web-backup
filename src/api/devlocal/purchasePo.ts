@@ -530,7 +530,7 @@ export function updateCreateSkuCount(data?: IUpdateCreateSkuCountRequest): Promi
   })
 }
 // 创建planPo修改零件
-export function updateCreateComponent(data?: IUpdateCreateComponentRequest) {
+export function updateCreateComponent(data?: IUpdateCreateComponentRequest[]) {
   return request({
     url: `${BASE_API}/purchase/skuComponent/change`,
     method: 'post',

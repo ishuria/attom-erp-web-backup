@@ -252,11 +252,6 @@ export const orderColumns = [
     minWidth: 90,
   },
   {
-    label: '站点',
-    prop: 'siteName',
-    minWidth: 130,
-  },
-  {
     label: '销量趋势',
     prop: 'trend',
     minWidth: 180,
@@ -264,47 +259,22 @@ export const orderColumns = [
   {
     label: '库存可售',
     prop: 'esAvailableSaleDay',
-    minWidth: 100,
+    minWidth: 70,
   },
   {
     label: '可售含在途',
     prop: 'esAvailableSaleDayTotal',
-    minWidth: 110,
+    minWidth: 80,
   },
   {
     label: '断货',
     prop: 'outOfStock',
-    minWidth: 90,
+    minWidth: 70,
   },
   {
     label: '广告',
     prop: 'advertisementStatus',
     minWidth: 90,
-  },
-  {
-    label: '运营',
-    prop: 'operationUserName',
-    minWidth: 150,
-  },
-  {
-    label: '运营分类',
-    prop: 'operationTypeId',
-    minWidth: 150,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    minWidth: 90,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    minWidth: 100,
-  },
-  {
-    label: '月净利润',
-    prop: 'monthNetProfit',
-    minWidth: 100,
   },
   {
     label: '库龄',
@@ -359,7 +329,7 @@ export const orderColumns = [
   {
     label: '最晚补货',
     prop: 'latestRestock',
-    minWidth: 90,
+    minWidth: 115,
   },
   {
     label: '今补',
@@ -384,6 +354,36 @@ export const orderColumns = [
   {
     label: '毛利率',
     prop: 'grossProfit',
+    minWidth: 100,
+  },
+  {
+    label: '站点',
+    prop: 'siteName',
+    minWidth: 130,
+  },
+  {
+    label: '运营',
+    prop: 'operationUserName',
+    minWidth: 150,
+  },
+  {
+    label: '运营分类',
+    prop: 'operationTypeId',
+    minWidth: 150,
+  },
+  {
+    label: '月销量',
+    prop: 'monthSalesVolume',
+    minWidth: 90,
+  },
+  {
+    label: '月销售额',
+    prop: 'monthSalesPrice',
+    minWidth: 100,
+  },
+  {
+    label: '月净利润',
+    prop: 'monthNetProfit',
     minWidth: 100,
   },
   {

@@ -110,8 +110,8 @@
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
-          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
-          <el-table-column label="付款记录" min-width="200" prop="payRecordList">
+          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')"/>
+          <el-table-column label="付款记录" min-width="230" prop="payRecordList">
             <template #default="{ row }">
               <span v-html="row.payRecordList"></span>
             </template>
@@ -612,12 +612,12 @@ const fetchData = async () => {
         if (percentage < 0) {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage-red">${percentage}%</span>
+            <span class="percentage-red">${percentage * 100}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         } else {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage">${percentage}%</span>
+            <span class="percentage">${percentage * 100}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         }
       })

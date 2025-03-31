@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" @change="queryData">
+            <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" @change="queryData">
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -44,7 +44,7 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" /> 
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" /> 
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
@@ -123,10 +123,10 @@
             </el-select>
           </span>
           <span v-if="item.label === '今补'">
-            {{ row.nowSupplementActual }} / {{ row.nowSupplementCalcu }}
+            {{ row.nowSupplementCalcu }}
           </span>
           <span v-if="item.label === '今补广'">
-            {{ row.nowSupplementAdvActual }} / {{ row.nowSupplementAdvCalcu }}
+            {{ row.nowSupplementAdvCalcu }}
           </span>
           <span v-if="label3.includes(item.label)">
             <!-- 处理 天 -->
@@ -333,8 +333,6 @@
     <!-- 发布订货 -->
     <vab-dialog
       v-model="releaseOrderVisible"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
       :draggable="false"
       title="发布订货"
       width="59%"
@@ -411,6 +409,7 @@ import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerfo
 import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, processField } from '/@/utils/tableColum'
+import { useAclStore } from '/@/store/modules/acl'
 
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)
@@ -467,6 +466,28 @@ const asinId = ref<number>(-1)
 const smoothForm = reactive<any>({})
 const shipList = ref<any[]>([])
 const orderListLoading = ref<boolean>(false)
+const disabledOpe = ref<boolean>(false)
+const aclStore = useAclStore()
+
+const operationSelect = () => {
+  const role = aclStore.getRole[0]
+  switch (role) {
+    // 老板和运营主管
+    case 'ROLE_BOSS': 
+    case 'ROLE_ECOMMERCEOPERATIONLEAD': {
+      disabledOpe.value = false
+     
+      break;
+    }
+    // 运营
+    case 'ROLE_ECOMMERCEOPERATOR': {
+      disabledOpe.value = true
+    
+      break;
+    }
+  // No default
+  }
+}
 // 确定修改春节备货
 const handleConfirmSpringFestival = async () => {
   const { data } = await updateOperationOrderSpringFestival(stockUpForm)
@@ -633,7 +654,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '库龄', '运营'].includes(label)) {
+  if (['SKU', 'ASIN', '库龄'].includes(label)) {
     return {
       textAlign: 'left',
     }
@@ -672,6 +693,7 @@ onBeforeMount(() => {
   fetchSiteList()
   fetchOperateUserList()
   fetchData()
+  operationSelect()
 })
 </script>
 

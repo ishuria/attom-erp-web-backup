@@ -2762,9 +2762,6 @@ const operationAndDevelopSelect = () => {
   // No default
   }
 }
-const developSelect = () => {
-  return aclStore.getRole[0] === 'ROLE_PRODUCTMANNAGERLEAD' || aclStore.getRole[0] === 'ROLE_BOSS'
-}
 onBeforeMount(() => {
   if (activeName.value === 0) {
     fetchData()
