@@ -1441,14 +1441,14 @@ v-for="dict in invoicingNumList" :key="dict.value"
     />
 
     <!-- 添加零件 -->
-    <vab-create-component 
+    <vab-add-component 
       :create-component-visible="createComponentVisible"
       :sku="sku"
       @update:create-component-visible="handleCloseCreateComponent"
       @update:table-value="handleSubmitComponent"
     />
     <!-- 添加耗材 -->
-    <vab-create-consumable 
+    <vab-add-consumable 
       :create-consumable-visible="createConsumableVisible"
       @update:create-consumable-visible="handleCloseCreateConsumable"
       @update:table-value="handleSubmitConsumable"
@@ -1523,7 +1523,6 @@ import type { FormInstance, UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import VabCreateConsumable from './vabAutoComponents/vabCreateConsumable.vue'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
 addPoSKU,

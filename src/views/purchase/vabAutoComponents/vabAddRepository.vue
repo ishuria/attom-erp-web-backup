@@ -65,7 +65,7 @@ const visible = computed({
 
 const formRef = ref<FormInstance>()
 const form = reactive<any>({})
-  const rules = reactive<any>({
+const rules = reactive<any>({
   name: [
     { required: true, message: '请输入仓库名称', trigger: 'blur' },
   ],

@@ -295,13 +295,13 @@
       />
 
       <!-- 添加零件 -->
-      <vab-create-component 
+      <vab-add-component 
         :create-component-visible="createComponentVisible"
         @update:create-component-visible="handleCloseCreateComponent"
         @update:table-value="handleSubmitComponent"
       />
       <!-- 添加耗材 -->
-      <vab-create-consumable 
+      <vab-add-consumable 
         :create-consumable-visible="createConsumableVisible"
         @update:create-consumable-visible="handleCloseCreateConsumable"
         @update:table-value="handleSubmitConsumable"

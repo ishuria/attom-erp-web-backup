@@ -205,7 +205,7 @@
           <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下一档位" min-width="140" prop="nextGear">
+      <el-table-column label="下一档位" min-width="200" prop="nextGear">
         <template #default="{ row }">
           <span v-html="row.nextGear"></span>
         </template>
@@ -372,17 +372,17 @@
 
 
 <script lang="ts" setup>
+import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
+import type { FormInstance, FormRules } from 'element-plus'
+import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
-import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
-import type { IGetOperationAmazonCostList, IGetOperationAmazonCostListReq } from '/@/type/storeOperation/productAnalysisType'
 import { addOperationAmazonCost, copyOperationAmazonCost, deleteOperationAmazonCost, getOperationAmazonCostList, reverseCalcOperationAmazonCost, updateOperationAmazonCost } from '/@/api/devlocal/productAnalysis'
-import type { FormInstance, FormRules } from 'element-plus';
+import type { IGetOperationAmazonCostList, IGetOperationAmazonCostListReq } from '/@/type/storeOperation/productAnalysisType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'VabCostAnalysis'

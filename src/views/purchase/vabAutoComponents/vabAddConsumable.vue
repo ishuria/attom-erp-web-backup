@@ -1,13 +1,16 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="添加零件" 
+    title="添加耗材" 
     top="5%"
-    width="60%"
+    width="55%"
     @close="handlerCloseDialog"
   >
     <vab-query-form>
-      <vab-query-form-right-panel :span="24">
+      <vab-query-form-left-panel>
+        <el-button v-if="showCreateButton" type="primary" @click="handleOpenCreateConsumable">创建耗材</el-button>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel >
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -28,7 +31,7 @@
       max-height="550px"
       stripe
     >
-      <el-table-column  class="image-wall" label="图片" width="75">
+      <el-table-column label="图片" width="75">
         <template #default="{ row }">
           <el-image fit="fill" :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.imageUrl)">
             <template #error><el-icon /></template>
@@ -36,17 +39,16 @@
         </template>
       </el-table-column>
       <el-table-column label="零件ID" prop="id" width="100"/>
-      <el-table-column label="SKU" prop="sku" />
-      <el-table-column label="供应商" prop="suppliser" />
-      <el-table-column label="零件名" prop="componentName" />
-      <el-table-column label="添加数量" prop="count" width="130">
+      <el-table-column label="供应商" min-width="200" prop="suppliser"/>
+      <el-table-column label="耗材名" min-width="200" prop="componentName"/>
+      <el-table-column label="添加数量" prop="count" width="150">
         <template #default="{ row }">
-            <el-input v-model="row.count" clearable />
+          <el-input v-model="row.count" clearable />
         </template>
       </el-table-column>
       <el-table-column label="单位" prop="unit" width="130"/>
       <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+        <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
 
@@ -57,44 +59,66 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-  
+
     <template #footer>
       <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
       <el-button type="primary" @click="handleConfirm">确认</el-button>
     </template>
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+  <!-- 创建耗材组件 -->
+  <vab-create-consumable
+    v-model="createVisible"
+    :consumable-types="consumableTypes"
+    @submit="handleCreateSubmit"
+  />
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getAddComponentList } from '/@/api/devlocal/purchasePo'
+import { createConsumables, getProductConsumablesType } from '/@/api/devlocal/productInformation'
+import { getAddConsumableList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
-  name: 'VabCreateComponent'
+  name: 'VabAddConsumable'
 })
-const props = defineProps<{
-  createComponentVisible: boolean
-  sku?: string
-}>();
-const dflag = ref<boolean>(false)
 
-watch(() => props.createComponentVisible, (newVal) => {
-  dflag.value = newVal
-  if (dflag.value === true) {
-    // 只在首次打开时加载数据
-    queryForm.keyWord = ''
-    fetchData()
-  }
+const route = useRoute()
+const props = defineProps<{
+  createConsumableVisible: boolean
+}>()
+const dflag = ref<boolean>(false)
+// 创建耗材可见
+const createVisible = ref<boolean>(false)
+const consumableTypes = ref<{ consumablesName: string, id: number }[]>([])
+const showCreateButton = computed(() => {
+  // 根据路由判断是否显示按钮
+  return route.path === '/productInfomation/skuDetailView' || route.path === '/newProductDevelopment/orderingProcess'
 })
-// watchEffect(() => {
-//   dflag.value = props.createComponentVisible
-//   if (dflag.value === true) {
-//     console.log('加载')
-//     fetchData()
-//   }
-// })
+const handleOpenCreateConsumable = async () => {
+  createVisible.value = true
+  const { data } = await getProductConsumablesType() //获取耗材种类
+  consumableTypes.value = data  
+}
+const handleCreateSubmit = async (formData: any) => {
+  try {
+    const { data } = await createConsumables(formData)
+    if (data) {
+      fetchData()
+      createVisible.value = false
+      $baseMessage('创建耗材提交成功', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+watchEffect(()=>{
+  dflag.value = props.createConsumableVisible
+  if (dflag.value === true) {
+    fetchData()
+  }}
+)
 const getCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
@@ -129,31 +153,31 @@ const list = ref<any>([])
 
 const tableRef = ref<TableInstance>()
 
-const emit = defineEmits(['update:createComponentVisible', 'update:tableValue'])
+const emit = defineEmits(['update:createConsumableVisible', 'update:tableValue'])
 
 const handlerCloseDialog = () => {
   dflag.value = false
-  emit('update:createComponentVisible', dflag.value);
+  emit('update:createConsumableVisible', dflag.value);
 }
-const validateComponent = (item: any) => {
+const validateConsumable = (item: any) => {
   if (item.count) {
     return true;
   } 
-  return false; 
+  return false;
 };
 const handleConfirm = () => {
-  const countAllValid = list.value.some((item: any) => validateComponent(item));
+  const countAllValid = list.value.some((item: any) => validateConsumable(item));
   if (countAllValid) {
     emit('update:tableValue', list.value)
     dflag.value = false
-    emit('update:createComponentVisible', dflag.value);
+    emit('update:createConsumableVisible', dflag.value);
   } else {
-    $baseMessage('至少填写一个零件的添加数量', 'warning');
+    $baseMessage('至少填写一个耗材的添加数量', 'warning');
   }
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 6) {        
+  if  (data.columnIndex === 0 || data.columnIndex === 1 || data.columnIndex === 5){        
     return {
       textAlign:'center'
     } 
@@ -174,25 +198,24 @@ const showPreviewImage = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
+
 /**
-* 获取样品进度数据
+* 获取添加耗材数据
 */
 const fetchData = async () => {
   listLoading.value = true
-  const req = queryForm
-  if (props.sku) {
-    req.sku = props.sku
-  }
-  const { data } = await getAddComponentList(req)
+  const { data } = await getAddConsumableList(queryForm)
   if (data) {
     total.value = data.total
     list.value = data.list
+    listLoading.value = false
   }
-  listLoading.value = false
 }
+
 onActivated(() => {
   tableRef.value?.doLayout()
 })
+
 </script>
 
 <style lang="scss" scoped>
@@ -206,7 +229,7 @@ onActivated(() => {
   flex-direction: column;
   height: calc(80vh - 192px);
   max-height: calc(80vh - 192px);
-  
+
   .el-table {
       flex: 1; // 使表格占据剩余空间
       overflow: auto; // 确保表格内容可以滚动
@@ -223,12 +246,12 @@ transform-origin: center;
 .none {
   display: none;
 }
-.el-table :deep(.clear-padding .cell) {
-  padding-right: 0;
-  padding-left: 0;
-}
 .el-table :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>
