@@ -19,7 +19,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"  />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData"  />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -142,7 +142,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"  />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData"  />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -265,7 +265,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -388,7 +388,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -510,7 +510,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -612,7 +612,7 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
@@ -952,6 +952,7 @@ v-model:file-list="contractList" action="#"
 <script lang="ts" setup>
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { debounce } from 'lodash'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1124,6 +1125,10 @@ const automaticSignatureVisible = ref<boolean>(false)
 // 付款进度传的row
 const payHistoryRow = ref<any>()
 const tableColumnWidth = ref<number>(90)
+// 防抖处理
+const debouncedQueryData = debounce(() => {
+  queryData()
+}, 700)
 const calculateColumnWidth = () => {
   tableColumnWidth.value = 90
   const records = poList.value.map((row: any) => row.paymentRecord)

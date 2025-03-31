@@ -280,7 +280,7 @@
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 
   <!-- 产品描述 -->
-  <vab-dialog v-model="productDescriptionVisible" title="产品描述" width="25%">
+  <vab-dialog v-model="productDescriptionVisible" title="产品描述" width="35%">
     <el-input v-model="productDescription" :rows="20" type="textarea" />
     <template #footer>
       <el-button @click="productDescriptionVisible = false">取消</el-button>
@@ -288,7 +288,7 @@
     </template>
   </vab-dialog>
   <!-- 价格信息 -->
-  <vab-dialog v-model="priceInformationVisible" title="价格信息" width="25%">
+  <vab-dialog v-model="priceInformationVisible" title="价格信息" width="35%">
     <el-input v-model="priceInformation" :rows="20" type="textarea" />
     <template #footer>
       <el-button @click="priceInformationVisible = false">取消</el-button>
@@ -296,7 +296,7 @@
     </template>
   </vab-dialog>
   <!-- 1688链接 -->
-  <vab-dialog v-model="link1688Visible" title="1688链接" width="25%">
+  <vab-dialog v-model="link1688Visible" title="1688链接" width="35%">
     <el-input v-model="link1688" :rows="20" type="textarea" />
     <template #footer>
       <el-button @click="link1688Visible = false">取消</el-button>
@@ -780,7 +780,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   max-height: 75px;
 }
 .custom-tooltip {
-  max-width: 400px;
+  max-width: 650px;
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
 }

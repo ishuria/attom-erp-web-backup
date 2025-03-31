@@ -364,7 +364,7 @@ export const orderColumns = [
   {
     label: '运营',
     prop: 'operationUserName',
-    minWidth: 150,
+    minWidth: 100,
   },
   {
     label: '运营分类',
