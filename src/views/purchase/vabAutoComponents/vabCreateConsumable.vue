@@ -6,59 +6,56 @@
     width="55%"
     @close="handlerCloseDialog"
   >
- 
-      <vab-query-form>
-        <vab-query-form-right-panel :span="24">
-          <el-form inline :model="queryForm" @submit.prevent>
-            <el-form-item>
-              <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-:icon="Search" :loading="listLoading" native-type="submit" type="primary"
-                @click="queryData"/>
-            </el-form-item>
-          </el-form>
-        </vab-query-form-right-panel>
-      </vab-query-form>
+    <vab-query-form>
+      <vab-query-form-right-panel :span="24">
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
 
-      <el-table 
-        ref="tableRef" 
-        border :cell-class-name="getCellStyle" 
-        :cell-style="cellStyle"
-        :data="list"
-        :header-cell-style="{ 'text-align': 'center' }"
-        max-height="550px"
-        stripe
-      >
-        <el-table-column label="图片" width="75">
-          <template #default="{ row }">
-            <el-image fit="fill" :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.imageUrl)">
-              <template #error><el-icon /></template>
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="零件ID" prop="id" width="100"/>
-        <el-table-column label="供应商" min-width="200" prop="suppliser"/>
-        <el-table-column label="耗材名" min-width="200" prop="componentName"/>
-        <el-table-column label="添加数量" min-width="100" prop="count">
-            <template #default="{ row }">
-                <el-input v-model="row.count" clearable />
-            </template>
-        </el-table-column>
-        <el-table-column label="单位" min-width="70" prop="unit"/>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
+    <el-table 
+      ref="tableRef" 
+      border :cell-class-name="getCellStyle" 
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ 'text-align': 'center' }"
+      max-height="550px"
+      stripe
+    >
+      <el-table-column label="图片" width="75">
+        <template #default="{ row }">
+          <el-image fit="fill" :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.imageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
         </template>
-      </el-table>
+      </el-table-column>
+      <el-table-column label="零件ID" prop="id" width="100"/>
+      <el-table-column label="供应商" min-width="200" prop="suppliser"/>
+      <el-table-column label="耗材名" min-width="200" prop="componentName"/>
+      <el-table-column label="添加数量" prop="count" width="150">
+        <template #default="{ row }">
+          <el-input v-model="row.count" clearable />
+        </template>
+      </el-table-column>
+      <el-table-column label="单位" prop="unit" width="130"/>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
 
-      <vab-pagination
-        :current-page="queryForm.pageNo"
-        :page-size="queryForm.pageSize"
-        :total="total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
 
     <template #footer>
       <el-button type="danger" @click="handlerCloseDialog">取消</el-button>
@@ -71,12 +68,12 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getAddConsumableList } from '~/src/api/devlocal/purchasePo'
+import { getAddConsumableList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
   name: 'VabCreateConsumable'
 })
-let props = defineProps<{
+const props = defineProps<{
   createConsumableVisible: boolean
 }>();
 const dflag = ref<boolean>(false)
@@ -84,8 +81,7 @@ watchEffect(()=>{
   dflag.value = props.createConsumableVisible
   if(dflag.value === true) {
     fetchData()
-  }
-}
+  }}
 )
 const getCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 0) {

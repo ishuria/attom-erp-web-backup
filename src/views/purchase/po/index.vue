@@ -14,7 +14,8 @@
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">采购奖金：</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -137,7 +138,8 @@
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">采购奖金：</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -260,7 +262,8 @@
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">采购奖金：</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -383,7 +386,8 @@
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-button type="danger" @click="handleDelPo">删除</el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">采购奖金：</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -505,7 +509,8 @@
             <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
             <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;">采购奖金：</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -966,6 +971,7 @@ generatePoContract,
 generateRemittance,
 getComponentPayRecord,
 getPoList,
+getPurchaseBonus,
 getPurchaseCostReduction,
 purchaseTotalAp,
 updateComponentAllPay,
@@ -985,6 +991,8 @@ defineOptions({
   name: 'PoTable',
 })
 
+const procurementBonus = ref<number>(0)
+const procurementBonusCrossMonth = ref<number>(0)
 const _poComponentId = ref<number>(0)
 const reductionCostVisible = ref<boolean>(false)
 const reductionCostForm = reactive<any>({})
@@ -2035,8 +2043,13 @@ const paymentHistoryCellStyle = (data: { row: any, column: any, rowIndex: number
 onActivated(() => { 
   tableRef.value?.doLayout()
 })
-
+const fetchBonusData = async () => {
+  const { data } = await getPurchaseBonus()
+  procurementBonus.value = data.procurementBonus
+  procurementBonusCrossMonth.value = data.procurementBonusCrossMonth
+}
 onBeforeMount(() => {
+  fetchBonusData()
   selectedPORow.value = new Set()
   selectedCompArray.value = []
   const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
