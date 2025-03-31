@@ -51,7 +51,7 @@
           发票<br />图片
         </template>
         <template #default="{ row }">
-          <el-image :src="row.invoicePath" style="width: 75px; height: 75px; display: block" @click="showImagePreview(row.url)">
+          <el-image :src="row.invoicePath" style=" display: block;width: 75px; height: 75px" @click="showImagePreview(row.url)">
             <template #error>
               <el-icon/>
             </template>
@@ -205,7 +205,7 @@
       </el-upload>
     <template #footer>
       <div style="text-align: center;">
-        <el-button type="success" @click="handleFinishUpload">完成</el-button>
+        <el-button :loading="finishLoading" type="success" @click="handleFinishUpload">完成</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -323,10 +323,13 @@ const fileList = ref<any[]>([])
 
 // 展示上传发票
 const showUploadInvoice = () => {
+  fileList.value = []
   uploadInvoiceVisible.value = true
 }
+const finishLoading = ref<boolean>(false)
 // 完成发票导入
 const handleFinishUpload = async () => {
+  finishLoading.value = true
   const formData = new FormData()
   fileList.value.forEach((item: any) => {
     formData.append("files", item.raw)
@@ -337,15 +340,18 @@ const handleFinishUpload = async () => {
     if (data) {
       $baseMessage('上传成功', 'success')
       const { data: resData, msg } = await finishTaxRefundInvoice(data)
-      if (msg) {
+      if (resData) {
         $baseMessage(resData, 'error')
+      } else {
         uploadInvoiceVisible.value = false
+        fetchData()
       }
     }
   } catch {
     $baseMessage('上传失败', 'error')
+  } finally {
+    finishLoading.value = false
   }
-  
 }
 // 发票匹配清空
 const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
@@ -366,6 +372,7 @@ const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
     })
     if (data) {
       $baseMessage('删除成功！', 'success')
+      fetchData()
     }
   })
 }
@@ -602,8 +609,8 @@ const fetchData = async () => {
       padding-bottom: 0;
 
       .cell {
-        padding-left: 0;
         padding-right: 0;
+        padding-left: 0;
       }
     }
     .el-checkbox {
@@ -611,9 +618,9 @@ const fetchData = async () => {
       transform-origin: center;
     }
     .custom-radio {
+      margin-right: -10px;
       transform: scale(1.3);
       transform-origin: center;
-      margin-right: -10px;
     }
   }
 }
