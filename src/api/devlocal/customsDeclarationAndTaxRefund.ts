@@ -8,10 +8,10 @@ import type {
   IGetHSListRes,
   IGetHTSListReq,
   IGetHTSListRes,
-  IUpdateHSListReq,
-  IUpdateHTSListReq,
   IGetHtsSkuListReq,
-  IGetHtsSkuListRes
+  IGetHtsSkuListRes,
+  IUpdateHSListReq,
+  IUpdateHTSListReq
 } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import type {
   IBooleanRes,
@@ -668,10 +668,11 @@ export const submitTaxRefundInvoiceMatch = (data: ISubmitTaxRefundInvoiceMatch):
 /**
  * @description 退税管理-发票匹配第二次提交
  */
-export const submitConfirmTaxRefundInvoiceMatch = (): Promise<IBooleanRes> => {
+export const submitConfirmTaxRefundInvoiceMatch = (data: number[]): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/match/submitConfirm`,
     method: 'post',
+    data
   })
 }
 /**

@@ -413,6 +413,7 @@ const handleTabClick = (pane: TabsPaneContext) => {
 }
 const closeInvoiceMatching = (value: boolean) => {
   invoiceMatchingVisible.value = value
+  queryData()
 }
 const closeBatchProfitMargin = (value: boolean) => {
   batchProfitMarginVisible.value = value
@@ -454,6 +455,7 @@ const handleDeleteMatch = async (row: IGetTaxRefundBatchDetailList) => {
     })
     if (data) {
       $baseMessage('删除匹配成功！', 'success')
+      queryData()
     }
   })
 }

@@ -455,9 +455,21 @@ const handleConfirm = async () => {
   }
 }
 const handleSubmitConfirm = async () => {
-  const { data } = await submitConfirmTaxRefundInvoiceMatch()
-  if (data) {
-    $baseMessage('确认成功！', 'success')
+  let detailIds: number[] = []
+  let isNotNull = false
+  list.value.forEach((item) => {
+    if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit ) {
+      isNotNull = true
+      detailIds.push(item.detailId!)
+    }
+  })
+  if (isNotNull) {
+    const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds)
+    if (data) {
+      $baseMessage('确认成功！', 'success')
+      closeInvoiceMatching()
+    }
+  } else {
     closeInvoiceMatching()
   }
 }
