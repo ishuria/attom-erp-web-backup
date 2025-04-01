@@ -162,8 +162,12 @@ const clickCancle = async (event:any,value:any) =>{
   }
   
   if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
+    // 执行失去焦点处理逻辑
+    try {
       await updatePurchaseCompany(value)
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleModeChange = async (row: any) => {

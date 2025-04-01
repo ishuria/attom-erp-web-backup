@@ -788,10 +788,14 @@ const clickCancel = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateArtDesignDemandAddress({
-      id: value.id,
-      demandAddress: value.requiredAddress
-    })
+    try {
+      await updateArtDesignDemandAddress({
+        id: value.id,
+        demandAddress: value.requiredAddress
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const closeAddReason = () => {

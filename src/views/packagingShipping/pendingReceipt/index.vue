@@ -855,10 +855,14 @@ const clickModifyCountCancel = async (event: any, value: any) =>{
     return
   }
   if (event.type === 'blur') {
-    await updateRecordCount({
-      signRecordId: value.id,
-      count: value.signCount
-    })
+    try {
+      await updateRecordCount({
+        signRecordId: value.id,
+        count: value.signCount
+      })
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 const clickModifyOrderCancel = async (event: any, value: any) =>{
@@ -875,10 +879,14 @@ const clickModifyOrderCancel = async (event: any, value: any) =>{
     return
   }
   if (event.type === 'blur') {
-    await updateRecordOrder({
-      signRecordId: value.id,
-      order: value.signOrder
-    })
+    try {
+      await updateRecordOrder({
+        signRecordId: value.id,
+        order: value.signOrder
+      })
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 

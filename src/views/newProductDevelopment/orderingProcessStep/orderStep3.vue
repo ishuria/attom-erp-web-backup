@@ -1003,9 +1003,13 @@ const clickCancel = async (event:any,value:any) =>{
     return
   }
   if (event.type === 'blur') {
-    await reviewStepNo3ComponentUpdate(value)
-    fetchDataComponent()
-    fetchVariantsData()
+    try {
+      await reviewStepNo3ComponentUpdate(value)
+      await fetchDataComponent()
+      await fetchVariantsData()
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 // 变体table blur事件
@@ -1025,8 +1029,12 @@ const clickVariantsCancel = async (event:any, value:any) => {
   
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: value.roi / 100 })
-    fetchVariantsData()
+    try {
+      await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: value.roi / 100 })
+      await fetchVariantsData()
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 

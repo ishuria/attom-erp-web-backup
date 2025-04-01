@@ -509,13 +509,17 @@ const clickCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
     return
   }
   if (event.type === 'blur') {
-    await updateTaxRefundInvoice({
-      id: value.id!,
-      purchaseName: value.purchaseName,
-      invoiceCode: value.invoiceCode,
-      invoiceNumber: value.invoiceNumber,
-      suppliser: value.suppliser,
-    })
+    try {
+      await updateTaxRefundInvoice({
+        id: value.id!,
+        purchaseName: value.purchaseName,
+        invoiceCode: value.invoiceCode,
+        invoiceNumber: value.invoiceNumber,
+        suppliser: value.suppliser,
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const clickDetailCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
@@ -532,15 +536,19 @@ const clickDetailCancel = async (event: Event, value: IGetTaxRefundInvoiceList) 
     return
   }
   if (event.type === 'blur') {
-    await updateTaxRefundInvoiceDetail({
-      id: value.detailId!,
-      invoiceName: value.invoiceName!,
-      specificationModel: value.specificationModel!,
-      invoiceCount: value.invoiceCount!,
-      invoiceUnit: value.invoiceUnit!,
-      preTaxPrice: value.preTaxPrice!,
-      includingTaxPrice: value.includingTaxPrice!,
-    })
+    try {
+      await updateTaxRefundInvoiceDetail({
+        id: value.detailId!,
+        invoiceName: value.invoiceName!,
+        specificationModel: value.specificationModel!,
+        invoiceCount: value.invoiceCount!,
+        invoiceUnit: value.invoiceUnit!,
+        preTaxPrice: value.preTaxPrice!,
+        includingTaxPrice: value.includingTaxPrice!,
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const queryData = () => {

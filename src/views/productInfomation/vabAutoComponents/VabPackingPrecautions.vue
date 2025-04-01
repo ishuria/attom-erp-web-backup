@@ -184,9 +184,13 @@ const clickQualityInspectionCancle = async (event:any,value:any) =>{
     
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductQualityInspection(value)
-    fetchData()
-    value.status = 1
+    try {
+      await updateProductQualityInspection(value)
+      await fetchData()
+      value.status = 1
+    } catch {
+      Object.assign(value, copyRow);
+    }
   }
 }
 // 删除

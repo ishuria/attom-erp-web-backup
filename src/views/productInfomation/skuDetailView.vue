@@ -1533,36 +1533,41 @@ const clickCancel = async (event: any, value: any) => {
   }
 
   if (event.type === 'blur') {
-    // 执行失去焦点时的处理逻辑
-    await updateProductComponent({
-      id: value.id,
-      skuId: value.skuId,
-      componentId: value.componentId,
-      existingPartsListId: value.existingPartsListId,
-      suppliserId: value.suppliserId,
-      quantity: value.quantity,
-      unitPrice: value.unitPrice,
-      totalPrice: value.totalPrice,
-      preTaxPrice: value.preTaxPrice,
-      taxIncludedPrice: value.taxIncludedPrice,
-      currency: value.currency,
-      minimumOrderQuantity: value.minimumOrderQuantity,
-      numberFullCartons: value.numberFullCartons,
-      defaultSuppliserId: value.defaultSuppliserId,
-      invoicing: value.invoicing,
-      purchaseId: value.purchaseId,
-      declareCustomsStatus: value.declareCustomsStatus,
-      purchaseLink: value.purchaseLink,
-      defaultRepositoryId: value.defaultRepositoryId,
-      purchaseMatters: value.purchaseMatters,
-      contractTerms: value.contractTerms,
-    })
-    // 数据更新后，重新获取组件数据
-    fetchComponentData()
+    // 执行失去焦点处理逻辑
+    try {
+      await updateProductComponent({
+        id: value.id,
+        skuId: value.skuId,
+        componentId: value.componentId,
+        existingPartsListId: value.existingPartsListId,
+        suppliserId: value.suppliserId,
+        quantity: value.quantity,
+        unitPrice: value.unitPrice,
+        totalPrice: value.totalPrice,
+        preTaxPrice: value.preTaxPrice,
+        taxIncludedPrice: value.taxIncludedPrice,
+        currency: value.currency,
+        minimumOrderQuantity: value.minimumOrderQuantity,
+        numberFullCartons: value.numberFullCartons,
+        defaultSuppliserId: value.defaultSuppliserId,
+        invoicing: value.invoicing,
+        purchaseId: value.purchaseId,
+        declareCustomsStatus: value.declareCustomsStatus,
+        purchaseLink: value.purchaseLink,
+        defaultRepositoryId: value.defaultRepositoryId,
+        purchaseMatters: value.purchaseMatters,
+        contractTerms: value.contractTerms,
+      })
+      // 数据更新后，重新获取组件数据
+      await fetchComponentData()
+      // 重新获取实际总成本
+      await fetchData()
+    } catch {
+      // 更新失败时，恢复为原始值
+      Object.assign(value, copyRow)
+    }
   }
-  // 重新获取实际总成本
-  fetchData()
-};
+}
 
 // 处理默认采购方
 const handleDefaultPurchase = async (row: any) => {

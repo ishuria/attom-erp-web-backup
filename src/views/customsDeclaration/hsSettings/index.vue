@@ -167,10 +167,14 @@ const clickCancel = async (event: any, value: IGetHSList) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateHSList({
-      ...value,
-      taxRate: value.taxRate / 100
-    })
+    try {
+      await updateHSList({
+        ...value,
+        taxRate: value.taxRate / 100
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleDel = async (row: IGetHSList, index: number) => {

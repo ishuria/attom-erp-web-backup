@@ -398,12 +398,16 @@ const rootElement = getRootElement(event.srcElement, ".cell")
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductManagerAssessment({
-      id: value.id,
-      oem: value.oem,
-      totalAssessment: value.assessmentNumber,
-      status: value.status,
-    })
+    try {
+      await updateProductManagerAssessment({
+        id: value.id,
+        oem: value.oem,
+        totalAssessment: value.assessmentNumber,
+        status: value.status,
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 修改考核数设定的status

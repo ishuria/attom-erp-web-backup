@@ -503,20 +503,24 @@ const clickCancel2 = async (event: Event, value: any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductCustomsClearanceSuppliserInfo({
-      id: value.pId,
-      customsDeclarationStatus: value.customsDeclarationStatus,
-      placeOrigin: value.placeOrigin,
-      customsDeclarationNameZh: value.customsDeclarationNameZh,
-      count: value.count,
-      unit: value.unit, 
-      type: value.type,
-      statutoryUnit: value.statutoryUnit,
-      statutoryCount: value.statutoryCount,
-      hsId: value.hsId,
-      bgWeightStatus: value.bgWeightStatus
-    })
-    fetchData()
+    try {
+      await updateProductCustomsClearanceSuppliserInfo({
+        id: value.pId,
+        customsDeclarationStatus: value.customsDeclarationStatus,
+        placeOrigin: value.placeOrigin,
+        customsDeclarationNameZh: value.customsDeclarationNameZh,
+        count: value.count,
+        unit: value.unit, 
+        type: value.type,
+        statutoryUnit: value.statutoryUnit,
+        statutoryCount: value.statutoryCount,
+        hsId: value.hsId,
+        bgWeightStatus: value.bgWeightStatus
+      })
+      await fetchData()
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleCloseRemark = (value: boolean) => {
@@ -591,13 +595,17 @@ const clickCancel = async (event: any, value: any) => {
   
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateProductCustomsClearance({
-      id: value.pId,
-      brank: value.brank,
-      declarationElements: value.declarationElements,
-      declarationElementsAbbreviation: value.declarationElementsAbbreviation,
-    })
-    fetchData()
+    try {
+      await updateProductCustomsClearance({
+        id: value.pId,
+        brank: value.brank,
+        declarationElements: value.declarationElements,
+        declarationElementsAbbreviation: value.declarationElementsAbbreviation,
+      })
+      await fetchData()
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 

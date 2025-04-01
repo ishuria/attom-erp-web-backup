@@ -2411,7 +2411,12 @@ const clickCancel = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    updateSkuComponent(value) 
+    try {
+      await updateSkuComponent(value) 
+    } catch {
+      // 更新失败时，恢复为原始值
+      Object.assign(value, copyRow)
+    }
   }
 }
 const clickCreateOtherCancel = async (event: any, value: any) => {
@@ -2481,8 +2486,13 @@ const clickOtherCancel = async (event:any,value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    updateSkuComponent(value) 
-    fetchSkuComponent()
+    try {
+      await updateSkuComponent(value) 
+      await fetchSkuComponent()
+    } catch {
+      // 更新失败时，恢复为原始值
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 更新价格

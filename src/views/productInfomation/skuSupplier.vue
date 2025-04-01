@@ -532,24 +532,28 @@ const clickCancel = async (event:any,value:any) =>{
     return
   }
   if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
-    await updateProductComponentSuppliser({
-      id: value.id,
-      skuId: parseInt(route.query.skuId),
-      componentId:  parseInt(route.query.componentId),
-      defaultSuppliserId: value.suppliserId,
-      unitPrice: value.unitPrice,
-      taxIncludedPrice: value.taxIncludedPrice,
-      currency: value.currency,
-      minimumOrderQuantity: value.minimumOrderQuantity,
-      numberFullCartons: value.numberFullCartons,
-      invoicing: value.invoicing,
-      purchaseId: value.purchaseId,
-      purchaseLink: value.purchaseLink,
-      purchaseMatters: value.purchaseMatters,
-      contractTerms: value.contractTerms
-    })
-    fetchData()
+    // 执行失去焦点处理逻辑
+    try {
+      await updateProductComponentSuppliser({
+        id: value.id,
+        skuId: parseInt(route.query.skuId),
+        componentId:  parseInt(route.query.componentId),
+        defaultSuppliserId: value.suppliserId,
+        unitPrice: value.unitPrice,
+        taxIncludedPrice: value.taxIncludedPrice,
+        currency: value.currency,
+        minimumOrderQuantity: value.minimumOrderQuantity,
+        numberFullCartons: value.numberFullCartons,
+        invoicing: value.invoicing,
+        purchaseId: value.purchaseId,
+        purchaseLink: value.purchaseLink,
+        purchaseMatters: value.purchaseMatters,
+        contractTerms: value.contractTerms
+      })
+      await fetchData()
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleCurrencyChange = async (row: any) => {

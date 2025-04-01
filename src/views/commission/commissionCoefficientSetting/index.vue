@@ -330,15 +330,19 @@ const clickCancel = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateCommissionArtType({
-      id: value.id,
-      pictureDay: value.pictureDay,
-      singlePersonProportion: Number(value.singlePersonProportion) / 100,
-      longDay: value.longDay,
-      longSinglePersonProportion: Number(value.longSinglePersonProportion) / 100,
-      cooperationWeight: value.cooperationWeight,
-      addition: value.addition
-    })
+    try {
+      await updateCommissionArtType({
+        id: value.id,
+        pictureDay: value.pictureDay,
+        singlePersonProportion: Number(value.singlePersonProportion) / 100,
+        longDay: value.longDay,
+        longSinglePersonProportion: Number(value.longSinglePersonProportion) / 100,
+        cooperationWeight: value.cooperationWeight,
+        addition: value.addition
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // table blur事件
@@ -357,17 +361,21 @@ const clickCancel2 = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateCommissionProductType({
-      id: value.id,
-      productManagerProportion: Number(value.productManagerProportion) / 100,
-      productDesignProportion: Number(value.productDesignProportion) / 100,
-      delivery: Number(value.delivery) / 100,
-      yunzhouCount: value.yunzhouCount,
-      aiTuoMCount: value.aiTuoMCount,
-      attomCount: value.attomCount,
-      proportion: Number(value.proportion) / 100,
-      day: value.day
-    })
+    try {
+      await updateCommissionProductType({
+        id: value.id,
+        productManagerProportion: Number(value.productManagerProportion) / 100,
+        productDesignProportion: Number(value.productDesignProportion) / 100,
+        delivery: Number(value.delivery) / 100,
+        yunzhouCount: value.yunzhouCount,
+        aiTuoMCount: value.aiTuoMCount,
+        attomCount: value.attomCount,
+        proportion: Number(value.proportion) / 100,
+        day: value.day
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const clickCancel3 = async (event:any, value:any) => {
@@ -385,10 +393,14 @@ const clickCancel3 = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateCommissionSetting2({
-      id: value.id,
-      targetRate: Number(value.targetRate) / 100
-    })
+    try {
+      await updateCommissionSetting2({
+        id: value.id,
+        targetRate: Number(value.targetRate) / 100
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const fetchData = async () => {

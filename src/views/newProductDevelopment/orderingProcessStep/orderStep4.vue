@@ -264,8 +264,12 @@ const clickQualityInspectionCancel = async (event:any,value:any) =>{
 
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await reviewStepNo4UpdateQualityInspection(value)
-    fetchQualityInspectionData()
+    try {
+      await reviewStepNo4UpdateQualityInspection(value)
+      await fetchQualityInspectionData()
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 新供应商table blur事件
@@ -284,8 +288,12 @@ const supplierClickCancel = async (event: any, value: any) => {
     return
   }
   if (event.type === 'blur') { 
-    await reviewStepNo4UpdateSupplier(value)
-    fetchNewSupplier()
+    try {
+      await reviewStepNo4UpdateSupplier(value)
+      await fetchNewSupplier()
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 新增

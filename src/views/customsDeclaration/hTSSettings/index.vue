@@ -510,21 +510,29 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     if (activeName.value === 0) {
-      await updateHTSList({
-        id: value.id,
-        tariffRate: value.tariffRate! / 100,
-        threeZeroOne: value.threeZeroOne! / 100,
-        extras: value.extras! / 100,
-        type: 0
-      })
+      try {
+        await updateHTSList({
+          id: value.id,
+          tariffRate: value.tariffRate! / 100,
+          threeZeroOne: value.threeZeroOne! / 100,
+          extras: value.extras! / 100,
+          type: 0
+        })
+      } catch {
+        Object.assign(value, copyRow)
+      }
     } else if (activeName.value === 1) {
-      await updateHTSList({
-        id: value.id,
-        deTariffRate: value.deTariffRate! / 100,
-        ukTariffRate: value.ukTariffRate! / 100,
-        extras: value.extras! / 100,
-        type: 1
-      })
+      try {
+        await updateHTSList({
+          id: value.id,
+          deTariffRate: value.deTariffRate! / 100,
+          ukTariffRate: value.ukTariffRate! / 100,
+          extras: value.extras! / 100,
+          type: 1
+        })
+      } catch {
+        Object.assign(value, copyRow)
+      }
     }
   }
 }

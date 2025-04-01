@@ -364,13 +364,17 @@ const clickCancel = async (event: any, value: any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateEmailAfterSales({
-      id: value.id,
-      orderId: value.orderId,
-      customerName: value.customerName,
-      trackNewOrder: value.trackNewOrder,
-      followUp: value.followUp
-    })
+    try {
+      await updateEmailAfterSales({
+        id: value.id,
+        orderId: value.orderId,
+        customerName: value.customerName,
+        trackNewOrder: value.trackNewOrder,
+        followUp: value.followUp
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleCurrentChange = (value: number) => {

@@ -252,6 +252,18 @@
       @close="closeTicketReminder"
     >
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
+        <el-form-item label="发货日期">
+          <el-date-picker 
+          
+            :clearable="false"
+            :editable="false"
+            end-placeholder="最晚发货日期"
+            range-separator="至"
+            start-placeholder="最早发货日期"
+            type="daterange"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
         <el-form-item label="付款日期" prop="">
           <el-date-picker 
             v-model="ticketReminderForm.dateRange"
@@ -273,9 +285,9 @@
         <el-form-item label="采购方" prop="">
           <el-select ></el-select>
         </el-form-item> -->
-        <vab-alert type="error">
+        <!-- <vab-alert type="error">
           注意:系统生成催收文件的开票数量是按照PO数量，如果和供应商沟通拆分开票的系统无法识别，需要你手动处理。且当拆分的任何一张发票报关后，发票催收会跳过这个PO。
-        </vab-alert>
+        </vab-alert> -->
       </el-form>
       <template #footer>
         <el-button @click="closeTicketReminder">取消</el-button>

@@ -391,18 +391,22 @@ const clickCancel = async (event: any, value: any) => {
 
   if (event.type === 'blur') {
       // 执行失去焦点处理逻辑
-    await updateCustomsClearanceSku({
-      id: value.id,
-      brank: value.brank,
-      manufacturerEn: value.manufacturerEn,
-      manufacturerAddressEn: value.manufacturerAddressEn,
-      clearanceNameEn: value.clearanceNameEn,
-      clearanceNameZh: value.clearanceNameZh,
-      materialEn: value.materialEn,
-      materialZh: value.materialZh,
-      usageEn: value.usageEn,
-      usageZh: value.usageZh
-    })
+    try {
+      await updateCustomsClearanceSku({
+        id: value.id,
+        brank: value.brank,
+        manufacturerEn: value.manufacturerEn,
+        manufacturerAddressEn: value.manufacturerAddressEn,
+        clearanceNameEn: value.clearanceNameEn,
+        clearanceNameZh: value.clearanceNameZh,
+        materialEn: value.materialEn,
+        materialZh: value.materialZh,
+        usageEn: value.usageEn,
+        usageZh: value.usageZh
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 

@@ -466,7 +466,11 @@ const clickCancel = async (event:any, value:any) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    await updateSeasonalCoefficient(value)
+    try {
+      await updateSeasonalCoefficient(value)
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 

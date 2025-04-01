@@ -340,7 +340,11 @@ const clickCancel = async (event: any, value: any) => {
 
   if (event.type === 'blur') {
     // 执行失去焦点时的处理逻辑
-    await updateEncasementDetailCount({ encasementDetailId: value.id, count: value.count })
+    try {
+      await updateEncasementDetailCount({ encasementDetailId: value.id, count: value.count })
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 };
 const fetchData = async () => {

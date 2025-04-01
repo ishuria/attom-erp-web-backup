@@ -1655,11 +1655,15 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
   }
 
   if (event.type === 'blur') {
-    await updatePackageInspectionDetail({
-      id: value.id,
-      pass: value.pass,
-      remark: value.remark
-    })
+    try {
+      await updatePackageInspectionDetail({
+        id: value.id,
+        pass: value.pass,
+        remark: value.remark
+      })
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 // 开始任务人员选择展示与否

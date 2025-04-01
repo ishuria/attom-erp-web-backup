@@ -103,11 +103,11 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { addPurchaseRepository, delPurchaseRepository, getPurchaseRepository, updatePurchaseRepository } from '/@/api/devlocal/purchase';
-import type { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType';
 import { isEqual } from 'lodash'
 import { warehouseOption } from '../constantOption.ts'
+import { addPurchaseRepository, delPurchaseRepository, getPurchaseRepository, updatePurchaseRepository } from '/@/api/devlocal/purchase'
+import type { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
     name: 'WarehouseToReceive',
@@ -203,10 +203,14 @@ const clickCancel = async (event:any,value:any) =>{
   }
   let _status = null
   if (event.type === 'blur') {
+    try {
       // 执行失去焦点处理逻辑
       if (value.status === '正常') _status = 0
       else if (value.status === '停用') _status = 1
       await updatePurchaseRepository({...value, status: _status})
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 const handleCharacteristicChange = async (row: any) => {

@@ -813,14 +813,18 @@ const clickCancel = async (event: Event, value: any) => {
     return
   }
   if (event.type === 'blur') {
-    await updateShipmentLeg({
-      id: value.id,
-      count: value.count,
-      unitPrice: value.unitPrice,
-      estimateRate: value.estimateExchangeRate,
-      actualRate: value.actualExchangeRate,
-      cost: value.actualCost
-    })
+    try {
+      await updateShipmentLeg({
+        id: value.id,
+        count: value.count,
+        unitPrice: value.unitPrice,
+        estimateRate: value.estimateExchangeRate,
+        actualRate: value.actualExchangeRate,
+        cost: value.actualCost
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 头程运费：合计的方法
