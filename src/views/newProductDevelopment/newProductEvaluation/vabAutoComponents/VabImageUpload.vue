@@ -1,6 +1,6 @@
 <template>
   <vab-dialog
-    v-model="dflag"
+    v-model="visible"
     title="上传图片"
     width="20%"
     @close="closeImageUploadDialog"
@@ -54,15 +54,23 @@ import type { UploadFile, UploadFiles } from 'element-plus'
 defineOptions({
   name: 'VabImageUpload',
 })
-const dflag = ref<boolean>(false)
-const props = defineProps<{ imageUploadVisible: boolean }>()
+
+const props = defineProps<{ modelValue: boolean }>()
 const emit = defineEmits<{
-  (e: 'update:imageUploadVisible', value: boolean): void
+  (e: 'update:modelValue', value: boolean): void
   (e: 'imageUpload', value: File): void
 }>()
-watchEffect(() => {
-  dflag.value = props.imageUploadVisible
-  if (dflag.value) {
+const visible = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  },
+})
+
+watch((visible), (val) => {
+  if (val) {
     imageUrl.value = ''
     previewUrl.value = ''
   }
@@ -91,7 +99,7 @@ const handleClearImageUrl = () => {
   previewUrl.value = ''
 }
 const closeImageUploadDialog = () => {
-  emit('update:imageUploadVisible', false)
+  visible.value = false
 }
 
 // 预览图片

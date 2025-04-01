@@ -79,7 +79,7 @@
               <div class="none">
                 <el-input v-model="row.customsDeclarationUnit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
-              <span></span>
+              <span>{{ row.customsDeclarationUnit }}</span>
             </template>
           </el-table-column>
           <el-table-column label="CIF售价$" min-width="120" prop="cifPrice"/>
@@ -109,6 +109,7 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="PO零件名" min-width="110" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
           <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')"/>
           <el-table-column label="付款记录" min-width="230" prop="payRecordList">
@@ -325,7 +326,7 @@
       top="5vh"
       @close="pdfVisible = false"
     >
-      <div class="pdf-container" >
+      <div v-loading="pdfLoading" class="pdf-container" >
         <vab-pdf :source="source" />
       </div>
     </vab-dialog>
@@ -354,9 +355,12 @@ defineOptions({
 
 // const dialogWidth = ref<number>(0)
 const source = ref<string>('')
+const pdfLoading = ref<boolean>(false)
 const showPdf = (row: IGetTaxRefundBatchDetailList) => {
+  pdfLoading.value = true
   source.value = row.invoiceFilePath!
   pdfVisible.value = true
+  pdfLoading.value = false
 }
 // 当 PDF 加载完成时获取宽度
 // const onPdfLoaded = (pdf: any) => {

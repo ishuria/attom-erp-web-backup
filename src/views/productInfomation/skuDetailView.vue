@@ -10,35 +10,20 @@
     <el-card class="product-details-card" shadow="never" >
       <el-row style="display: flex; width: 100%">
         <el-col :style="{ maxWidth: imageColumnHeight + 'px', paddingLeft: '0',paddingRight: '10px' }"> 
-          <el-upload 
-            class="upload-align" 
-            :class="{ hide: sku.hide }" 
-            :file-list="sku.imageList"
-            :http-request="uploadImage"
-            list-type="picture-card"
-            :style="{ height: imageColumnHeight + 'px' }"
-          >
-            <el-icon ><plus /></el-icon>
-            <template #file="{ file }">
-              <div>
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePreview(file)"
-                  >
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove"
-                  >
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
+          <div class="image-cell" :style="{ height: imageColumnHeight + 'px', marginTop: 30 + 'px' }">
+            <!-- 有图片时显示 -->
+            <div v-if="sku.skuImgUrl" class="image-preview">
+              <img alt="" :src="sku.skuImgUrl" />
+              <div class="image-actions">
+                <el-icon @click="handlePreview(sku.skuImgUrl)"><zoom-in /></el-icon>
+                <el-icon @click="handleRemove"><delete /></el-icon>
               </div>
-            </template>
-          </el-upload>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showSkuUploadDialog">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
         </el-col>
         <el-col style="flex: 1.3; padding: 0">
           <el-form :inline="true" label-position="top">
@@ -84,90 +69,90 @@
             </el-row>
 
             <el-row style="width: 100%">
-                <el-col :span="6">
-                    <el-form-item data-label="UPC" label="UPC">
-                        <el-input v-model="sku.upc" disabled/>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="默认收货仓库">
-                        <el-select v-model="sku.defaultRepository" placeholder="请选择默认收货仓库" @change="handleUpdateSku">
-                            <el-option
-                                v-for="item in repositoryOption"
-                                :key="item.id"
-                                :label="item.label"
-                                :value="item.id"
-                            />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="产品经理" >
-                        <el-select
-                            v-model="sku.productManager"
-                            clearable
-                            default-first-option
-                            filterable
-                            :loading="peopleLoading"
-                            placeholder="点击输入和搜索"
-                            remote
-                            :remote-method="remotePeopleMethod"
-                            @change="handleUpdateSku"
-                        >
-                            <el-option
-                                v-for="item in peopleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6"> 
-                    <el-form-item label="产品设计" >
-                        <el-select
-                            v-model="sku.productDesign"
-                            clearable
-                            default-first-option
-                            filterable
-                            :loading="peopleLoading"
-                            placeholder="点击输入和搜索"
-                            remote
-                            :remote-method="remotePeopleMethod"
-                            @change="handleUpdateSku"
-                        >
-                            <el-option
-                                v-for="item in peopleOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            />
-                        </el-select>
-                    </el-form-item>
-                </el-col>
+              <el-col :span="6">
+                <el-form-item data-label="UPC" label="UPC">
+                  <el-input v-model="sku.upc" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="默认收货仓库">
+                  <el-select v-model="sku.defaultRepository" placeholder="请选择默认收货仓库" @change="handleUpdateSku">
+                    <el-option
+                      v-for="item in repositoryOption"
+                      :key="item.id"
+                      :label="item.label"
+                      :value="item.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                  <el-form-item label="产品经理" >
+                      <el-select
+                          v-model="sku.productManager"
+                          clearable
+                          default-first-option
+                          filterable
+                          :loading="peopleLoading"
+                          placeholder="点击输入和搜索"
+                          remote
+                          :remote-method="remotePeopleMethod"
+                          @change="handleUpdateSku"
+                      >
+                          <el-option
+                              v-for="item in peopleOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                          />
+                      </el-select>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="6"> 
+                  <el-form-item label="产品设计" >
+                      <el-select
+                          v-model="sku.productDesign"
+                          clearable
+                          default-first-option
+                          filterable
+                          :loading="peopleLoading"
+                          placeholder="点击输入和搜索"
+                          remote
+                          :remote-method="remotePeopleMethod"
+                          @change="handleUpdateSku"
+                      >
+                          <el-option
+                              v-for="item in peopleOptions"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                          />
+                      </el-select>
+                  </el-form-item>
+              </el-col>
             </el-row>
 
             <el-row style="width: 100%">
-                <el-col :span="4">
-                    <el-form-item label="总实际成本">
-                        <el-input v-model="sku.procurementCost" disabled/>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="起订量" >
-                        <el-input v-model="sku.minQuantity" type="number" @blur="handleUpdateSku"/>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="整箱数" >
-                        <el-input v-model="sku.numCartons" type="number" @blur="handleUpdateSku"/>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12"> 
-                    <el-form-item label="近10次打包装箱数">
-                        <el-input disabled/>
-                    </el-form-item>
-                </el-col>
+              <el-col :span="4">
+                <el-form-item label="总实际成本">
+                  <el-input v-model="sku.procurementCost" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="起订量" >
+                  <el-input v-model="sku.minQuantity" type="number" @blur="handleUpdateSku"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="整箱数" >
+                  <el-input v-model="sku.numCartons" type="number" @blur="handleUpdateSku"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12"> 
+                <el-form-item label="近10次打包装箱数">
+                  <el-input disabled/>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-form>
         </el-col>
@@ -284,26 +269,20 @@
           </template>
           <template #default="{ row }">
             <span v-if="item.label === '图片'">
-              <el-upload 
-                class="component-upload" 
-                :class="{ hide: row.hide }" 
-                :file-list="row.imageList"
-                :http-request="(file) => uploadSkuComponentImage(file, row)"
-                list-type="picture-card" 
-              >
-                <el-icon><plus /></el-icon>
-                <template #file="{ file }">
-                  <img  alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                  <span class="el-upload-list__item-actions">
-                    <span class="el-upload-list__item-preview" @click="handlePreview(file)">
-                      <el-icon><zoom-in /></el-icon>
-                    </span>
-                    <span class="el-upload-list__item-delete" @click="handleComponentRemove(file, row)">
-                      <el-icon><delete /></el-icon>
-                    </span>
-                  </span>
-                </template>
-              </el-upload>
+              <div class="image-cell">
+                <!-- 有图片时显示 -->
+                <div v-if="row.componentImage" class="image-preview">
+                  <img alt="" :src="row.componentImage" />
+                  <div class="image-actions">
+                    <el-icon @click="handlePreview(row.componentImage)"><zoom-in /></el-icon>
+                    <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
+                  </div>
+                </div>
+                <!-- 无图片时显示 -->
+                <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
             </span>
             <span v-if="item.label === '数量'">
               <div class="none">
@@ -639,12 +618,16 @@
       @update:table-value="handleSubmitConsumable"
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" @update:image-upload-visible="closeImageUpload" />
+    <!-- SKU上传图片 -->
+    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeSkuImageUpload" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { FormInstance, UploadFile } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -739,7 +722,7 @@ const columns = ref<any>([
     prop: 'componentImage',
     disableCheck: true,
     checked: true,
-    width: 75,
+    width: 77,
     isFixed: 'left'
   },
   {
@@ -1121,10 +1104,20 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false
 }
-const handlePreview = (file: UploadFile) => {
+const handlePreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
-  imagePreviewList.value.push(file.url!)
+  imagePreviewList.value.push(url)
+}
+const imageUploadVisible = ref<boolean>(false)
+const skuImageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
+}
+const showSkuUploadDialog = () => {
+  skuImageUploadVisible.value = true
 }
 /**
  * 图片删除功能
@@ -1136,8 +1129,7 @@ const handleRemove = async () => {
         skuId: sku.value.skuId
       })
       if (data == true) {
-        sku.value.imageList = []
-        sku.value.hide = false
+        sku.value.skuImgUrl = ''
         $baseMessage("SKU图片删除成功!","success","hey")
       }
     })
@@ -1145,15 +1137,14 @@ const handleRemove = async () => {
     console.error(error)
   }
 }
-const handleComponentRemove = async (file: UploadFile, row: any) => {
+const handleComponentRemove = async (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await delComponentImage({
         id: row.id
       })
       if (data == true) {
-        row.imageList = []
-        row.hide = false
+        row.componentImage = ''
         $baseMessage("SKU零配件图片删除成功!","success","hey")
       }
     })
@@ -1622,36 +1613,51 @@ const handleInvoicingChange = async (row: any) => {
 }
 
 /**
- * 上传图片
+ * 上传SKU图片
  */
-const uploadImgForm = ref(new FormData()) as any;
-
-async function uploadImage(params: any) {
-    sku.value.hide = true
-    try {
-        uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
-        uploadImgForm.value.append('file', params.file);
-        uploadImgForm.value.append('skuId', sku.value.skuId);
-
-        const { data } = await uploadSkuImage(uploadImgForm.value)
-        Object.assign(sku.value.imageList, [{ url: data }])
-    } catch (error) {
-        console.error(error)
-    }
-}
-async function uploadSkuComponentImage(params: any, row: any) {
-  row.hide = true
+async function uploadImage(file: File) {
   try {
-      uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
-      uploadImgForm.value.append('file', params.file);
-      uploadImgForm.value.append('id', row.id);
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('skuId', sku.value.skuId)
 
-      const { data } = await uploadComponentImage(uploadImgForm.value)
-      
-      Object.assign(row.imageList, [{ url: data }])
+    const { data } = await uploadSkuImage(uploadImgForm)
+    if (data) {   
+      sku.value.skuImgUrl = data
+      $baseMessage('图片上传成功！', 'success')
+      closeSkuImageUpload()
+    } else {
+      $baseMessage('图片上传失败！', 'error')
+    }
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
+}
+const uploadSkuComponentImage = async (file: File) => {
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file);
+    uploadImgForm.append('id', `${copyRow.id}`);
+
+    const { data } = await uploadComponentImage(uploadImgForm)
+    if (data) {
+      copyRow.componentImage = data
+      $baseMessage('图片上传成功！', 'success')
+      closeImageUpload()
+    } else {
+      $baseMessage('图片上传失败！', 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+// 关闭sku上传弹窗
+const closeSkuImageUpload = () => {
+  skuImageUploadVisible.value = false
 }
 // back
 const goBack = async () => {
@@ -1678,14 +1684,6 @@ const fetchData = async () =>{
     skuId: route.query.skuId
   })
   Object.assign(sku.value, data)
-  
-  if (sku.value.skuImgUrl) {
-    sku.value.hide = true
-    sku.value.imageList = [{ url: sku.value.skuImgUrl }]
-  } else {
-    sku.value.hide = false
-    sku.value.imageList = []
-  }
 }
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
@@ -1693,18 +1691,11 @@ const formattedPrice = (price: string) => {
 const purchaseOption = ref<any>()
 const repositoryOption = ref<any>()
 const fetchComponentData = async () => {
-    const { data } = await getProductDefaultListComponent({ skuId: route.query.skuId })
-    tableData.value = data
-    tableData.value.forEach(async (item: any) => {
-        item.unitPrice = formattedPrice(item.unitPrice)
-        if(!item.componentImage) {
-            item.hide = false
-            item.imageList = []
-        } else if (item.componentImage){
-            item.hide = true
-            item.imageList = [{ url: item.componentImage }]
-        }
-    })
+  const { data } = await getProductDefaultListComponent({ skuId: route.query.skuId })
+  tableData.value = data
+  tableData.value.forEach(async (item: any) => {
+    item.unitPrice = formattedPrice(item.unitPrice)
+  })
 }
 const fetchPurchaseAndRepository = async () => {
     const { data: purchase } = await getProductComponentPurchase()
@@ -1781,7 +1772,7 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 :deep(.el-form-item) {
     margin-right: 10px;
@@ -1806,29 +1797,29 @@ onMounted(() => {
   display: none;
 }
 
-.component-upload {
-  width: 75px;
-  height: 75px;
-}
-.component-upload :deep( .el-upload-list--picture-card) {
- width: 100%;
- height: 100%;
-}
-:deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  transition: none;
-}
-:deep(.component-upload .el-upload--picture-card) {
-  width: 100%;
-  height: 100%;
-}
-:deep(.el-table .el-table__body .cell) {
-  line-height: inherit;
-}
+// .component-upload {
+//   width: 75px;
+//   height: 75px;
+// }
+// .component-upload :deep( .el-upload-list--picture-card) {
+//  width: 100%;
+//  height: 100%;
+// }
+// :deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
+//   width: 100%;
+//   height: 100%;
+//   margin: 0;
+//   border: 0;
+//   border-radius: 0;
+//   transition: none;
+// }
+// :deep(.component-upload .el-upload--picture-card) {
+//   width: 100%;
+//   height: 100%;
+// }
+// :deep(.el-table .el-table__body .cell) {
+//   line-height: inherit;
+// }
 .overflow-text {
   display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
@@ -1917,5 +1908,76 @@ onMounted(() => {
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
+}
+// 图片样式
+.image-cell {
+  width: 100%;
+  height: 75px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
 }
 </style>

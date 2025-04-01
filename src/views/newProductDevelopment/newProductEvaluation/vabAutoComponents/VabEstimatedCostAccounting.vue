@@ -304,7 +304,7 @@
     </template>
   </vab-dialog>
   <!-- 上传图片 -->
-  <vab-image-upload :image-upload-visible="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
 </template>
 
 <script lang="ts" setup>
