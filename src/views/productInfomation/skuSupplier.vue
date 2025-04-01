@@ -25,34 +25,20 @@
     >
       <el-table-column label="图片" width="75">
         <template #default="{ row }">
-          <el-upload 
-            class="component-upload"
-            :class="{ hide: row.hide }" 
-            :file-list="row.imageList" 
-            :http-request="(file) => uploadSkuComponentImage(file, row)"
-            list-type="picture-card"
-          >
-            <el-icon ><plus /></el-icon>
-            <template #file="{ file }">
-              <div>
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePreview(file)"
-                  >
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleComponentRemove(file, row)"
-                  >
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="row.componentImage" class="image-preview">
+              <img alt="" :src="row.componentImage" />
+              <div class="image-actions">
+                <el-icon @click="handlePreview(row.componentImage)"><zoom-in /></el-icon>
+                <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
               </div>
-            </template>
-          </el-upload>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="单位" prop="componentUnit" width="60" />
@@ -253,23 +239,24 @@ v-for="dict in invoicingNumList" :key="dict.value"
       @click-boolean="clickContractCancel"
       @click-child="clickContractConfirm"
     />
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePriviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" @update:image-upload-visible="closeImageUpload" />
   </div>
  </template>
  
 <script lang="ts" setup>
-import { useTabsStore } from '/@/store/modules/tabs'
-import { handleActivePath } from '/@/utils/routes'
-
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { FormInstance, UploadFile } from 'element-plus'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import type { FormInstance } from 'element-plus'
+import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
 import { currencyNumList } from '../newProductDevelopment/indexCommon'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import { createConsumablesSupplier, createProductComponentSuppliser, delComponentImage, getProductAllSupplier, getProductComponentPurchase, getProductListSuppliser, getProductSupplier, saveProductContractTerms, saveProductPurchaseMatters, updateProductComponentSuppliser, uploadComponentImage } from '/@/api/devlocal/productInformation'
+import { useTabsStore } from '/@/store/modules/tabs'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash'
-import type { CSSProperties } from 'vue'
+import { handleActivePath } from '/@/utils/routes'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const route: any = useRoute()
 const tabsStore = useTabsStore()
@@ -429,54 +416,62 @@ const handleAddSupplier = async () => {
     formRef.value?.resetFields()
 }
 // 预览图片列表
-const imagePriviewList = ref<string[]>([])
+const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-const uploadImgForm = ref(new FormData()) as any;
-async function uploadSkuComponentImage(params: any, row: any) {
-    row.hide = true
-    try {
-        uploadImgForm.value = new FormData(); // 每次上传前重置 FormData
-        uploadImgForm.value.append('file', params.file);
-        uploadImgForm.value.append('id', row.id);
 
-        const { data } = await uploadComponentImage(uploadImgForm.value)
-        
-        row.imageList = [{ url: data }]
-    } catch (error) {
-        console.error(error)
-    }
+const imageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
 }
-const handleComponentRemove = async (file: UploadFile, row: any) => {
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+async function uploadSkuComponentImage(file: File) {
   try {
-    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+    let uploadImgForm = new FormData(); // 每次上传前重置 FormData
+    uploadImgForm.append('file', file);
+    uploadImgForm.append('id', copyRow.id);
 
-        const { data } = await delComponentImage({
-            id: row.id
-        })
-        if (data == true) {
-            row.imageList = []
-            row.hide = false
-            $baseMessage("图片删除成功!","success","hey")
-        }
-    })
-    
+    const { data } = await uploadComponentImage(uploadImgForm)
+    if (data) {
+      copyRow.componentImage = data
+      $baseMessage('图片上传成功', 'success', 'hey')
+      closeImageUpload()
+    } else {
+      $baseMessage('图片上传失败','error', 'hey')
+    }
   } catch (error) {
     console.error(error)
   }
 }
-
-
-const handlePreview = (file: any) => {
-    imagePreviewVisible.value = true
-    imagePriviewList.value = []
-    imagePriviewList.value.push(file.url)
+const handleComponentRemove = async (row: any) => {
+  try {
+    $baseConfirm('确定要删除这张图片吗',"系统提示", async () => {
+      const { data } = await delComponentImage({
+        id: row.id
+      })
+      if (data == true) {
+        row.componentImage = ''
+        $baseMessage("图片删除成功!","success","hey")
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
-
+const handlePreview = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -557,8 +552,8 @@ const clickCancel = async (event:any,value:any) =>{
   }
 }
 const handleCurrencyChange = async (row: any) => {
-    await updateProductComponentSuppliser({...row, defaultSuppliserId: row.suppliserId, skuId: parseInt(route.query.skuId), componentId: parseInt(route.query.componentId)})
-    fetchData()
+  await updateProductComponentSuppliser({...row, defaultSuppliserId: row.suppliserId, skuId: parseInt(route.query.skuId), componentId: parseInt(route.query.componentId)})
+  fetchData()
 }
 
 // 弹出框的标题
@@ -575,18 +570,18 @@ const contractCopy = ref<string>('')
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickAttentionConfirm = async (val: any) => {
-    const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
-    if (data === true) {
-        attentionCopy.value = val
-        clickRow.value.purchaseMatters = val
-    }
+  const { data } = await saveProductPurchaseMatters({ id: clickRow.value.id, purchaseMatters: val})
+  if (data === true) {
+    attentionCopy.value = val
+    clickRow.value.purchaseMatters = val
+  }
 }
 const clickContractConfirm = async (val: any) => {
-    const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
-    if (data === true) {
-        contractCopy.value = val
-        clickRow.value.contractTerms = val
-    }
+  const { data } = await saveProductContractTerms({ id: clickRow.value.id, contractTerms: val})
+  if (data === true) {
+    contractCopy.value = val
+    clickRow.value.contractTerms = val
+  }
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
@@ -600,28 +595,21 @@ const clickContractCancel = (val: any) => {
 
 // back
 const goBack = async () => {
-    await delVisitedRoute(handleActivePath(route, true))
-    history.back()
+  await delVisitedRoute(handleActivePath(route, true))
+  history.back()
 }
 const formattedPrice = (price: string) => {
-    return parseFloat(price).toFixed(2)
+  return parseFloat(price).toFixed(2)
 }
 const purchaseOption = ref<any>()
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getProductListSuppliser({
-      componentId: route.query.componentId
+    componentId: route.query.componentId
   })
   list.value = data
   list.value.forEach((item: any) => {
-      item.unitPrice = formattedPrice(item.unitPrice)
-      if(!item.componentImage) {
-          item.hide = false
-          item.imageList = []
-      } else if(item.componentImage) {
-          item.hide = true
-          item.imageList = [{ url: item.componentImage}]
-      }
+    item.unitPrice = formattedPrice(item.unitPrice)
   })
   listLoading.value = false
 }
@@ -728,26 +716,74 @@ onBeforeMount(() => {
   padding-right: 0;
   padding-left: 0;
 }
-// 图片上传的样式
-.component-upload {
-  width: 75px;
+// 图片样式
+.image-cell {
+  width: 100%;
   height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
       width: 100%;
       height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

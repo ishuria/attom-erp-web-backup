@@ -584,7 +584,7 @@ const headerCellStyle = (): CSSProperties => {
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3 || data.columnIndex === 25 || data.columnIndex === 27 || data.columnIndex === 28) {
+  if (data.columnIndex === 3 || data.columnIndex === 25 || data.columnIndex === 28 || data.columnIndex === 29) {
     return {
       cursor: 'not-allowed',
       textAlign: 'left'
@@ -625,17 +625,17 @@ const fetchData = async () => {
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
     if (Array.isArray(item.payRecordList)) {
       item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
-        const percentage = parseInt(record.percentage!.replace('%', '')) // 去掉%并转换为整数
+        const percentage = Number(record.percentage) * 100
         const createTime = record.createTime!.split(' ')[0]
         if (percentage < 0) {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage-red">${percentage * 100}%</span>
+            <span class="percentage-red">${percentage}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         } else {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage">${percentage * 100}%</span>
+            <span class="percentage">${percentage}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         }
       })

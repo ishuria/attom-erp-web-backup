@@ -28,34 +28,20 @@
     >
       <el-table-column label="图片" width="75">
         <template #default="{ row }">
-          <el-upload 
-            class="component-upload"
-            :class="{ hide: row.hide }" 
-            :file-list="row.imageList" 
-            :http-request="(File) => uploadImage(File, row)"
-            list-type="picture-card"
-          >
-            <el-icon ><plus /></el-icon>
-            <template #file="{ file }">
-              <div>
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file, row)"
-                  >
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="row.componentImage" class="image-preview">
+              <img alt="" :src="row.componentImage" />
+              <div class="image-actions">
+                <el-icon @click="handlePictureCardPreview(row.componentImage)"><zoom-in /></el-icon>
+                <el-icon @click="handleRemove(row)"><delete /></el-icon>
               </div>
-            </template>
-          </el-upload>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="零件ID" min-width="70" prop="existingPartsListId" width="100" />
@@ -309,12 +295,13 @@
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -602,21 +589,31 @@ const handleConsumablesUpdate = async (row: any) => {
   })
   fetchData()
 }
-
+const imageUploadVisible = ref<boolean>(false)
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
+}
 /**
 * 上传图片
 */
-async function uploadImage(params: any, row: any) {
+async function uploadImage(file: File) {
   try {
     const uploadForm = new FormData(); // 每次上传前重置 FormData
-    uploadForm.append('file', params.file);
-    uploadForm.append('id', row.id);
+    uploadForm.append('file', file);
+    uploadForm.append('id', copyRow.id);
 
     const { data } = await uploadComponentImage(uploadForm)
-    row.hide = true
     if (data) {
-      row.imageList = [{ url: data }]
+      copyRow.componentImage = data
+      closeImageUpload()
       $baseMessage('图片上传成功', 'success', 'hey')
+    } else {
+      $baseMessage('图片上传失败', 'error', 'hey')
     }
   } catch (error) {
     console.error(error)
@@ -634,23 +631,22 @@ const imagePreviewClose = () =>{
 /**
 * 图片预览事件
 */
-const handlePictureCardPreview = (file: UploadFile) => {
+const handlePictureCardPreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
-  imagePreviewList.value.push(file.url!)
+  imagePreviewList.value.push(url)
 }
 /**
 * 图片删除功能
 */
-const handleRemove = async (file: UploadFile, row: any) => {
+const handleRemove = async (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await delComponentImage({
         id: row.id
       })
       if (data == true) {
-        row.imageList = []
-        row.hide = false
+        row.componentImage = ''
         $baseMessage("图片删除成功!","success","hey")
       }
     })
@@ -743,13 +739,6 @@ const fetchData = async () => {
   total.value = data.total
   list.value.forEach((item: any) => {
     item.unitPrice = formattedPrice(item.unitPrice)
-    if(!item.componentImage) {
-      item.hide = false
-      item.imageList = []
-    } else if (item.componentImage){
-      item.hide = true
-      item.imageList = [{ url: item.componentImage }]
-    }
   })
   listLoading.value = false
 }
@@ -772,20 +761,20 @@ onBeforeMount(()=>{
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
+// // 控制添加图片图标显示与隐藏
+// .hide :deep(.el-upload--picture-card) {
+//   display: none
+// }
+// :deep(.el-upload-list--picture-card .el-upload-list__item) {
+//   width: 75px;
+//   height: 75px;
+//   margin: 0 8px 0 0;
+//   transition: none;
+// }
+// :deep(.el-upload--picture-card) {
+//   width: 75px;
+//   height: 75px;
+// }
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
@@ -823,25 +812,96 @@ onBeforeMount(()=>{
   padding-left: 0;
 }
 // 图片上传的样式
-.component-upload {
-  width: 75px;
+// .component-upload {
+//   width: 75px;
+//   height: 75px;
+//   :deep() {
+//     .el-upload-list--picture-card {
+//       width: 100%;
+//       height: 100%;
+//       .el-upload-list__item {
+//         width: 100%;
+//         height: 100%;
+//         margin: 0;
+//         border: 0;
+//         border-radius: 0;
+//         transition: none;
+//       }
+//     }
+//     .el-upload--picture-card {
+//       width: 100%;
+//       height: 100%;
+//     }
+//   }
+// }
+// 图片样式
+.image-cell {
+  width: 100%;
   height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
       width: 100%;
       height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

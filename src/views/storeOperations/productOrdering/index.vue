@@ -73,7 +73,7 @@
             库存<br />可售
           </span>
           <span v-if="item.label==='可售含在途'">
-            库存<br />含在途
+            可售<br />含在途
           </span>
           <span v-if="item.label === '月广告%'">
             <el-tooltip content="" effect="dark" placement="top">
@@ -406,10 +406,10 @@ updateOperationOrderSmoothness,
 updateOperationOrderSpringFestival
 } from '/@/api/devlocal/productOrdering'
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
+import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
 import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, processField } from '/@/utils/tableColum'
-import { useAclStore } from '/@/store/modules/acl'
 
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)

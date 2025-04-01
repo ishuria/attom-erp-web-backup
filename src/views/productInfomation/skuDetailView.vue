@@ -1797,29 +1797,6 @@ onMounted(() => {
   display: none;
 }
 
-// .component-upload {
-//   width: 75px;
-//   height: 75px;
-// }
-// .component-upload :deep( .el-upload-list--picture-card) {
-//  width: 100%;
-//  height: 100%;
-// }
-// :deep(.component-upload .el-upload-list--picture-card .el-upload-list__item) {
-//   width: 100%;
-//   height: 100%;
-//   margin: 0;
-//   border: 0;
-//   border-radius: 0;
-//   transition: none;
-// }
-// :deep(.component-upload .el-upload--picture-card) {
-//   width: 100%;
-//   height: 100%;
-// }
-// :deep(.el-table .el-table__body .cell) {
-//   line-height: inherit;
-// }
 .overflow-text {
   display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
@@ -1831,33 +1808,7 @@ onMounted(() => {
   align-items: center; 
   justify-content: center;
 }
-/* 上面的图片上传框对齐 */
-.upload-align {
-  width: 100%;
-  height: 100%;
-  margin-top: 30px;
-}
-:deep(.upload-align .el-upload-list--picture-card) {
-  width: 100%;
-  height: 100%;
-}
 
-:deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  transition: none;  
-}
-
-:deep(.upload-align .el-upload--picture-card) {
-  width: 100%;
-  height: 100%;
-}
-
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
