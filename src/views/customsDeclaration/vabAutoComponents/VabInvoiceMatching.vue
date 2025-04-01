@@ -296,22 +296,22 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
-  cleanTaxRefundInvoice,
-  deleteTaxRefundInvoice,
-  finishTaxRefundInvoice,
-  getTaxRefundInvoiceList,
-  getTaxRefundInvoiceMatch,
-  submitConfirmTaxRefundInvoiceMatch,
-  submitTaxRefundInvoiceMatch,
-  updateTaxRefundInvoice,
-  updateTaxRefundInvoiceDetail,
-  uploadTaxRefund,
+cleanTaxRefundInvoice,
+deleteTaxRefundInvoice,
+finishTaxRefundInvoice,
+getTaxRefundInvoiceList,
+getTaxRefundInvoiceMatch,
+submitConfirmTaxRefundInvoiceMatch,
+submitTaxRefundInvoiceMatch,
+updateTaxRefundInvoice,
+updateTaxRefundInvoiceDetail,
+uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type {
-  IGetTaxRefundInvoiceList,
-  IGetTaxRefundInvoiceListQuery,
-  IGetTaxRefundInvoiceMatchList,
-  IGetTaxRefundInvoiceMatchQuery,
+IGetTaxRefundInvoiceList,
+IGetTaxRefundInvoiceListQuery,
+IGetTaxRefundInvoiceMatchList,
+IGetTaxRefundInvoiceMatchQuery,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -391,6 +391,7 @@ const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
     })
     if (data) {
       $baseMessage('清空成功！', 'success')
+      fetchData()
     }
   })
 }
@@ -450,6 +451,7 @@ const handleConfirm = async () => {
   if (data) {
     $baseMessage('提交成功！', 'success')
     matchVisible.value = false
+    fetchData()
   }
 }
 const handleSubmitConfirm = async () => {
