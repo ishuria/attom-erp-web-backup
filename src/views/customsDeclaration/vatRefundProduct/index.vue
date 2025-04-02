@@ -109,10 +109,10 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="PO零件名" min-width="110" prop="poComponentName" />
+          <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
           <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')"/>
-          <el-table-column label="付款记录" min-width="230" prop="payRecordList">
+          <el-table-column label="付款记录" prop="payRecordList" :width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
             <template #default="{ row }">
               <span v-html="row.payRecordList"></span>
             </template>
@@ -215,7 +215,7 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="PO零件名" min-width="110" prop="poComponentName" />
+          <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
           <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
           <el-table-column label="付款记录" min-width="200" prop="payRecordList">
@@ -624,10 +624,12 @@ const fetchData = async () => {
   total.value = data?.total!
   list.value = data?.list!
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
+    item.payRecord = []
     if (Array.isArray(item.payRecordList)) {
       item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
         const percentage = record.percentage
         const createTime = record.createTime!.split(' ')[0]
+        item.payRecord.push(`${createTime}: ${percentage}(${record.payPrice})`)
         if (percentage < 0) {
           return `
             <span class="create-time">${createTime}</span>: 
@@ -639,10 +641,9 @@ const fetchData = async () => {
             <span class="percentage">${percentage}</span>
             <span class="pay-price">(${record.payPrice})</span>`
         }
-      })
-      .join('<br>')
+      }).join('<br>')
     }
-   
+    console.log(item.payRecord)
   })
   listLoading.value = false
 }

@@ -154,7 +154,12 @@ export const flexColumnWidth = (list: any, label: string, prop: string, padding 
     // 获取每一行的 operationTypeList 并计算出每个选项的最大宽度
     const maxSelectWidth = Math.max(...list.map((x: any) => getSelectMaxWidth(x.operationTypeList)));
     maxLength = maxSelectWidth;
-  } else {
+  } else if (prop === 'payRecord') {
+    const arr = list.flatMap((x: any) => x.payRecord || []);
+    arr.push(label); // 加入表头
+    maxLength = getMaxLength(arr);
+  }
+  else {
     const arr = list.map((x: any) => x[prop]);
     arr.push(label); // 加入表头
     maxLength = getMaxLength(arr);
