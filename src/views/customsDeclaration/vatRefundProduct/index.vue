@@ -626,17 +626,17 @@ const fetchData = async () => {
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
     if (Array.isArray(item.payRecordList)) {
       item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
-        const percentage = Number(record.percentage)
+        const percentage = record.percentage
         const createTime = record.createTime!.split(' ')[0]
         if (percentage < 0) {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage-red">${percentage}%</span>
+            <span class="percentage-red">${percentage}</span>
             <span class="pay-price">(${record.payPrice})</span>`
         } else {
           return `
             <span class="create-time">${createTime}</span>: 
-            <span class="percentage">${percentage}%</span>
+            <span class="percentage">${percentage}</span>
             <span class="pay-price">(${record.payPrice})</span>`
         }
       })

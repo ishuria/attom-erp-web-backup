@@ -32,34 +32,20 @@
             零件<br />图片
           </template>
           <template #default="{ row }">
-            <el-upload 
-              class="component-upload" 
-              :class="{ hide: row.hide }" 
-              :file-list="row.componentImgUrl" 
-              :http-request="(File) => uploadImage(File, row)"
-              list-type="picture-card"
-            >
-              <el-icon ><plus /></el-icon>
-              <template #file="{ file }">
-                <div>
-                  <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file, row)"
-                    >
-                      <el-icon><zoom-in /></el-icon>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file, row)"
-                    >
-                      <el-icon><delete /></el-icon>
-                    </span>
-                  </span>
+            <div class="image-cell">
+              <!-- 有图片时显示 -->
+              <div v-if="row.componentImgUrl" class="image-preview">
+                <img alt="" :src="row.componentImgUrl" />
+                <div class="image-actions">
+                  <el-icon @click="handlePictureCardPreview(row.componentImgUrl)"><zoom-in /></el-icon>
+                  <el-icon @click="handleRemove(row)"><delete /></el-icon>
                 </div>
-              </template>
-            </el-upload>
+              </div>
+              <!-- 无图片时显示 -->
+              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" label="零件ID" prop="existingPartsListId" width="90"/>   
@@ -472,12 +458,13 @@
       <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
   
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus'
 import { isEqual } from 'lodash'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
@@ -531,6 +518,17 @@ const emit = defineEmits<{
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 
+const imageUploadVisible = ref<boolean>(false) // 图片上传弹窗显示与否
+let copyImgRow: any = null // 复制的行
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyImgRow = row
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
 const isValueAllInput = (row: IreviewStepNo3VariantList) => {
   if (row.site == null) { 
     $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
@@ -799,51 +797,42 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
 /**
  * 上传图片
  */
-async function uploadImage(params: any, row: any) {
-  row.hide = true
+async function uploadImage(file: File) {
   try {
-      const imageForm = new FormData();
-      imageForm.append('file', params.file);
-      imageForm.append('reviewComponentId', row.reviewComponentId as any);
+    let imageForm = new FormData()
+    imageForm.append('file', file);
+    imageForm.append('reviewComponentId', copyImgRow.reviewComponentId as any);
 
-      const { data } = await reviewStepNo3ComponentUpload(imageForm)
-      
-      row.componentImgUrl = [{ url: data }]
-      // 提示成功信息
-      $baseMessage('图片上传成功!', 'success', 'hey');
+    const { data } = await reviewStepNo3ComponentUpload(imageForm)
+    if (data) {
+      copyImgRow.componentImgUrl = data
+      $baseMessage('图片上传成功!','success', 'hey');
+      closeImageUpload()
+    } else {
+      $baseMessage('图片上传失败!','error', 'hey');
+    }
   } catch (error) {
-      console.error(error)
+    console.error(error)
   }
 } 
 
 /**
  * 图片预览事件
  */
-const handlePictureCardPreview = (file: UploadFile, row: any) => {
-  // console.log(row);
-  emit("update:previewListValue", row.componentImgUrl[0].url)
+const handlePictureCardPreview = (url: string) => {
+  emit("update:previewListValue", url)
   emit("update:imagePreviewVisible", true)
 }
 /**
  * 图片删除功能
  */
-const handleRemove = async (file: UploadFile, row: any) => {
+const handleRemove = async (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await reviewStepNo3ComponentImtDel({ reviewComponentId: row.reviewComponentId})
       if (data === true) {
+        row.componentImgUrl = ''
         $baseMessage("此零件图片信息删除成功!", "success", "hey");
-
-        // 从 row.componentImgUrl 中删除对应的文件
-        const fileIndex = row.componentImgUrl.findIndex((img: any) => img.url === file.url);
-        if (fileIndex !== -1) {
-          row.componentImgUrl.splice(fileIndex, 1);
-        }
-
-        // 如果 componentImgUrl 为空，则设置 hide 为 false
-        if (row.componentImgUrl.length === 0) {
-          row.hide = false;
-        }
       }
     })
   } catch (error) {
@@ -1194,31 +1183,11 @@ const fetchDataComponent = async () =>{
       componentList.value.forEach((item: any) => {
         item.currency = convertString(item.currency)
         item.invoicing = convertString(item.invoicing)
-        if (item.componentImgUrl && item.componentImgUrl.trim() !== "") {
-          item.hide = true;
-          item.componentImgUrl = [{ url: item.componentImgUrl }];
-        } else {
-          item.hide = false;
-          item.componentImgUrl = []; // 如果没有图片,确保这是空的
-        }
-          // item.cropData = ''
-          // console.log(item.componentImgUrl);
       })
       // 获取下拉变体列表
       const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
       variantsSelectList.value = variantSelectList
       variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
-
-      // 排序
-      // componentList.value.sort((a: any, b: any) => {
-      // if (a.orderEntryId === 0 && b.orderEntryId !== 0) {
-      //     return -1; // a 在前
-      // }
-      // if (a.orderEntryId !== 0 && b.orderEntryId === 0) {
-      //     return 1; // b 在前
-      // }
-      //     return 0; // 不排序
-      // });
     }catch(error){
       console.error(error as Error)
     }
@@ -1295,26 +1264,74 @@ onMounted(()=>{
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// 图片上传的样式
-.component-upload {
-  width: 75px;
+// 图片样式
+.image-cell {
+  width: 100%;
   height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
       width: 100%;
       height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

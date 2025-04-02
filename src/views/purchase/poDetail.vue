@@ -13,64 +13,6 @@
         </template>
       </el-page-header>
       <el-card class="product-details-card" shadow="never" >
-        <!-- <el-skeleton animated :loading="listLoading">
-          <template #template>
-            <el-row style="display: flex; width: 100%">
-              <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }">
-                <el-form label-position="top">
-                  <el-skeleton-item style="width: 100%; height: 40px; margin-bottom: 20px" variant="text" />
-                  <el-skeleton-item style="width: 100%; height: 300px" variant="image" />
-                </el-form>
-              </el-col>
-              <el-col style="flex: 1.3; padding: 0 20px">
-                <el-row style="width: 100%">
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                </el-row>
-                <el-row style="width: 100%">
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                </el-row>
-                <el-row style="width: 100%">
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                  <el-col :span="12">
-                    <el-skeleton-item style="width: 90%; height: 40px; margin-bottom: 20px" variant="text" />
-                  </el-col>
-                </el-row>
-                <el-row style="width: 100%">
-                  <el-col :span="6">
-                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
-                  </el-col>
-                  <el-col :span="6">
-                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
-                  </el-col>
-                  <el-col :span="6">
-                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
-                  </el-col>
-                  <el-col :span="6">
-                    <el-skeleton-item style="width: 90%; height: 40px" variant="text" />
-                  </el-col>
-                </el-row>
-              </el-col>
-              <el-col style="flex: 1; padding: 0 20px">
-                <el-skeleton-item style="width: 100%; height: 300px" variant="text" />
-              </el-col>
-            </el-row>
-          </template>
-          <template #default>
-           
-          </template>
-        </el-skeleton> -->
         <el-row style="display: flex; width: 100%">
           <el-col class="custom-upload" :style="{ maxWidth: imageColumnHeight + 'px', padding: '0' }"> 
             <el-form label-position="top" >
@@ -78,35 +20,20 @@
                 <el-input v-model="poDetailData.purchaseSkuNumber" :disabled="orderCount"  @change="handleUpdateSkuCount" />
               </el-form-item>
               <el-form-item >
-                <el-upload 
-                  class="upload-align" 
-                  :class="{ hide: poDetailData.hide }" 
-                  :file-list="poDetailData.imageList"
-                  :http-request="uploadImage"
-                  list-type="picture-card"
-                  :style="{ height: imageColumnHeight + 'px' }"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                        <span
-                          class="el-upload-list__item-delete"
-                          @click="handleRemove"
-                        >
-                          <el-icon><delete /></el-icon>
-                        </span>
-                      </span>
+                <div class="image-cell" :style="{ height: imageColumnHeight + 'px', marginTop: 30 + 'px' }">
+                  <!-- 有图片时显示 -->
+                  <div v-if="poDetailData.skuImgUrl" class="image-preview">
+                    <img alt="" :src="poDetailData.skuImgUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(poDetailData.skuImgUrl)"><zoom-in /></el-icon>
+                      <el-icon @click="handleRemove"><delete /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder" @click="showSkuUploadDialog">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </el-form-item>
             </el-form>
           </el-col>
@@ -321,34 +248,20 @@
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-upload 
-                  class="component-upload" 
-                  :class="{ hide: row.hide }" 
-                  :file-list="row.imageList"
-                  :http-request="(file) => uploadSkuComponentImage(file, row)"
-                  list-type="picture-card"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                          <span
-                            class="el-upload-list__item-delete"
-                            @click="handleComponentRemove(file, row)"
-                          >
-                          <el-icon><delete /></el-icon>
-                        </span>
-                      </span>
+                <div class="image-cell">
+                  <!-- 有图片时显示 -->
+                  <div v-if="row.componentUrl" class="image-preview">
+                    <img alt="" :src="row.componentUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(row.componentUrl)"><zoom-in /></el-icon>
+                      <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </span>
               <span v-if="item.label === '零件名'">
                 <div class="none">
@@ -570,35 +483,19 @@
                 <el-input v-model="poDetailData.purchaseSkuNumber" :disabled="createDisabled" @change="handleUpdateCreateSkuCount"/>
               </el-form-item>
               <el-form-item >
-                <el-upload 
-                  class="upload-align" 
-                  :class="{ hide: poDetailData.hide }" 
-                  :disabled="true"
-                  :file-list="poDetailData.imageList"
-                  list-type="picture-card"
-                  :style="{ height: imageColumnHeight + 'px' }"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                        <!-- <span
-                          class="el-upload-list__item-delete"
-                          @click="handleRemove(file)"
-                        >
-                          <el-icon><Delete /></el-icon>
-                        </span> -->
-                      </span>
+                <div class="image-cell" :style="{ height: imageColumnHeight + 'px', marginTop: 30 + 'px' }">
+                  <!-- 有图片时显示 -->
+                  <div v-if="poDetailData.skuImgUrl" class="image-preview">
+                    <img alt="" :src="poDetailData.skuImgUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(poDetailData.skuImgUrl)"><zoom-in /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </el-form-item>
             </el-form>
           </el-col>
@@ -751,34 +648,19 @@
         >
           <el-table-column align="center" fixed="left" label="图片" width="81.2px">
               <template #default="{ row }">
-                <el-upload 
-                  class="component-upload" 
-                  :class="{ hide: row.hide }" 
-                  :disabled="true"
-                  :file-list="row.imageList"
-                  list-type="picture-card"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                          <!-- <span
-                            class="el-upload-list__item-delete"
-                            @click="handleComponentRemove(file, row)"
-                          >
-                          <el-icon><Delete /></el-icon>
-                        </span> -->
-                      </span>
+                <div class="image-cell">
+                  <!-- 有图片时显示 -->
+                  <div v-if="row.componentUrl" class="image-preview">
+                    <img alt="" :src="row.componentUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(row.componentUrl)"><zoom-in /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </template>
           </el-table-column>
           <el-table-column fixed="left" label="零件ID" prop="existingPartsListId" width="80"/>   
@@ -1083,29 +965,19 @@ v-for="dict in invoicingNumList" :key="dict.value"
                 <el-input v-model="poDetailData.purchaseSkuNumber" disabled/>
               </el-form-item>
               <el-form-item >
-                <el-upload 
-                  class="upload-align" 
-                  :class="{ hide: poDetailData.hide }" 
-                  :file-list="poDetailData.imageList"
-                  :http-request="uploadImage"
-                  list-type="picture-card"
-                  :style="{ height: imageColumnHeight + 'px' }"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                      </span>
+                <div class="image-cell" :style="{ height: imageColumnHeight + 'px', marginTop: 30 + 'px' }">
+                  <!-- 有图片时显示 -->
+                  <div v-if="poDetailData.skuImgUrl" class="image-preview">
+                    <img alt="" :src="poDetailData.skuImgUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(poDetailData.skuImgUrl)"><zoom-in /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </el-form-item>
             </el-form>
           </el-col>
@@ -1234,28 +1106,19 @@ v-for="dict in invoicingNumList" :key="dict.value"
         >
           <el-table-column align="center" fixed="left" label="图片" width="81.2px">
               <template #default="{ row }">
-                <el-upload 
-                  class="component-upload" 
-                  :class="{ hide: row.hide }" 
-                  :file-list="row.imageList"
-                  :http-request="(file) => uploadSkuComponentImage(file, row)"
-                  list-type="picture-card"
-                >
-                  <el-icon ><plus /></el-icon>
-                  <template #file="{ file }">
-                    <div>
-                      <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                      <span class="el-upload-list__item-actions">
-                        <span
-                          class="el-upload-list__item-preview"
-                          @click="handlePreview(file)"
-                        >
-                          <el-icon><zoom-in /></el-icon>
-                        </span>
-                      </span>
+                <div class="image-cell">
+                  <!-- 有图片时显示 -->
+                  <div v-if="row.componentUrl" class="image-preview">
+                    <img alt="" :src="row.componentUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePreview(row.componentUrl)"><zoom-in /></el-icon>
                     </div>
-                  </template>
-                </el-upload>
+                  </div>
+                  <!-- 无图片时显示 -->
+                  <div v-else class="upload-placeholder">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
               </template>
           </el-table-column>
           <el-table-column align="center" fixed="left" label="零件ID" prop="existingPartsListId" width="80"/>   
@@ -1514,12 +1377,16 @@ v-for="dict in invoicingNumList" :key="dict.value"
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <!-- SKU上传图片 -->
+    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeSkuImageUpload" />
+    <!-- 零件上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { FormInstance, UploadFile } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -1591,7 +1458,7 @@ const columns = ref<any>([
     prop: 'componentImage',
     disableCheck: true,
     checked: true,
-    width: 79,
+    width: 75,
     isFixed: 'left'
   },
   {
@@ -1893,24 +1760,10 @@ const afterGetSku = async (_sku: string) => {
     Object.assign(poDetailData.value, data.poSkuDetail)
     poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
 
-    if (poDetailData.value.skuImgUrl) {
-      poDetailData.value.hide = true
-      poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
-    } else {
-      poDetailData.value.hide = false
-      poDetailData.value.imageList = []
-    }
     // Object.assign(skuComponentList.value, data.componentList)
     skuComponentList.value = data.componentList
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
-      if(!item.componentUrl) {
-          item.hide = false
-          item.imageList = []
-      } else if (item.componentUrl){
-          item.hide = true
-          item.imageList = [{ url: item.componentUrl }]
-      }
     })
     // 存入新的数据
     tempCurId.value = generateUUID()
@@ -2160,13 +2013,6 @@ const handleUpdateCreateSkuCount = async () => {
       
       skuComponentList.value.forEach((item: any) => {
         item.unitPrice = formattedPrice(item.unitPrice)
-        if(!item.componentUrl) {
-            item.hide = false
-            item.imageList = []
-        } else if (item.componentUrl){
-            item.hide = true
-            item.imageList = [{ url: item.componentUrl }]
-        }
       })
     }
   } catch (error) {
@@ -2465,13 +2311,6 @@ const clickCreateCancel = async (event: any, value: any, index: number) => {
     poDetailData.value.orderTotalPrice = data.skuTotalPrice
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
-      if (!item.componentUrl) {
-        item.hide = false
-        item.imageList = []
-      } else if (item.componentUrl){
-        item.hide = true
-        item.imageList = [{ url: item.componentUrl }]
-      }
     })
     updateCreate()
   }
@@ -2878,51 +2717,66 @@ const imagePreviewClose = () =>{
  imagePreviewVisible.value = false;
 }
 // 图片预览事件
-const handlePreview = (file: UploadFile) => {
-   imagePreviewVisible.value = true
-   imagePreviewList.value = []
-   imagePreviewList.value.push(file.url!)
+const handlePreview = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+const imageUploadVisible = ref<boolean>(false)
+const skuImageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
+}
+const showSkuUploadDialog = () => {
+  skuImageUploadVisible.value = true
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+// 关闭sku上传弹窗
+const closeSkuImageUpload = () => {
+  skuImageUploadVisible.value = false
 }
 /**
 * 上传图片
 */
-async function uploadImage(params: any) {
-  poDetailData.value.hide = true
-
+async function uploadImage(file: File) {
   try {
     let uploadImgForm = new FormData(); // 每次上传前重置 FormData
-    uploadImgForm.append('file', params.file);
+    uploadImgForm.append('file', file);
     uploadImgForm.append('poSkuId', poDetailData.value.poSkuId);
     const { data } = await updateSkuImg(uploadImgForm)
-    // poDetailData.value.imageList = [{ url: data }]
-    Object.assign(poDetailData.value.imageList, [{ url: data }])
+    if (data) {
+      $baseMessage('图片上传成功','success', 'hey')
+      closeSkuImageUpload()
+      poDetailData.value.skuImgUrl = data
+    } else {
+      $baseMessage('图片上传失败','error', 'hey')
+    }
   } catch (error) {
     console.error(error)
     poDetailData.value.hide = false
   }
 }
-// async function uploadCreateImage(params: any) {
-//   poDetailData.value.hide = true
-//   console.log(params);
-
-//   Object.assign(poDetailData.value.imageList, [{ url: params.file }])
-
-// }
-async function uploadSkuComponentImage(params: any, row: any) {
-  
+async function uploadSkuComponentImage(file: File) {
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', params.file);
-    uploadImgForm.append('id', row.id);
+    uploadImgForm.append('file', file);
+    uploadImgForm.append('id', copyRow.id);
 
     const { data } = await uploadComponentImg(uploadImgForm)
-    row.hide = true
-
-    Object.assign(row.imageList, [{ url: data }])
-    
+    if (data) {
+      $baseMessage('图片上传成功','success', 'hey')
+      closeImageUpload()
+      copyRow.componentUrl = data
+    } else {
+      $baseMessage('图片上传失败','error', 'hey')
+    }
   } catch (error) {
     console.error(error)
-    row.hide = false
   }
 }
 /**
@@ -2935,8 +2789,7 @@ const handleRemove = async () => {
         poSkuId: poDetailData.value.poSkuId
       })
       if (data === true) {
-        poDetailData.value.imageList = []
-        poDetailData.value.hide = false
+        poDetailData.value.skuImgUrl = ''
         $baseMessage("SKU详情图片删除成功!","success","hey")
       }
     })
@@ -2944,16 +2797,15 @@ const handleRemove = async () => {
     console.error(error)
   }
 }
-const handleComponentRemove = async (file: UploadFile, row: any) => {
+const handleComponentRemove = async (row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await deleteComponentImg({
-          id: row.id
+        id: row.id
       })
       if (data == true) {
-          row.imageList = []
-          row.hide = false
-          $baseMessage("SKU零配件图片删除成功!","success","hey")
+        row.componentUrl = ''
+        $baseMessage("SKU零配件图片删除成功!","success","hey")
       }
     })
   } catch (error) {
@@ -2971,24 +2823,9 @@ const handleFetchCreatePrevious = () => {
   // 将数据显示在页面上
   Object.assign(poDetailData.value, skuData[index-1].poDetailData)
     poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
-
-    if (poDetailData.value.skuImgUrl) {
-      poDetailData.value.hide = true
-      poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
-    } else {
-      poDetailData.value.hide = false
-      poDetailData.value.imageList = []
-    }
     Object.assign(skuComponentList.value, skuData[index-1].skuComponentList)
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
-      if(!item.componentUrl) {
-          item.hide = false
-          item.imageList = []
-      } else if (item.componentUrl){
-          item.hide = true
-          item.imageList = [{ url: item.componentUrl }]
-      }
     })
     handleShowCreatePreviousOrNext()
 }
@@ -3001,23 +2838,9 @@ const handleFetchCreateNext = () => {
   Object.assign(poDetailData.value, skuData[index+1].poDetailData)
     poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
 
-    if (poDetailData.value.skuImgUrl) {
-      poDetailData.value.hide = true
-      poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
-    } else {
-      poDetailData.value.hide = false
-      poDetailData.value.imageList = []
-    }
     Object.assign(skuComponentList.value, skuData[index+1].skuComponentList)
     skuComponentList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
-      if(!item.componentUrl) {
-          item.hide = false
-          item.imageList = []
-      } else if (item.componentUrl){
-          item.hide = true
-          item.imageList = [{ url: item.componentUrl }]
-      }
     })
     handleShowCreatePreviousOrNext()
 }
@@ -3092,13 +2915,6 @@ const fetchSkuComponent = async () => {
       skuComponentList.value = data
       skuComponentList.value.forEach((item: any) => {
         item.unitPrice = formattedPrice(item.unitPrice)
-        if(!item.componentUrl) {
-            item.hide = false
-            item.imageList = []
-        } else if (item.componentUrl){
-            item.hide = true
-            item.imageList = [{ url: item.componentUrl }]
-        }
       })
     }
   } catch (error) {
@@ -3118,13 +2934,6 @@ const fetchData = async () =>{
     }
   } catch (error) {
     console.error(error)
-  }
-  if (poDetailData.value.skuImgUrl) {
-    poDetailData.value.hide = true
-    poDetailData.value.imageList = [{ url: poDetailData.value.skuImgUrl }]
-  } else {
-    poDetailData.value.hide = false
-    poDetailData.value.imageList = []
   }
   sku.value = poDetailData.value.sku
 }
@@ -3393,29 +3202,29 @@ onMounted(() => {
    align-items: center; /* 垂直居中，如果需要 */
    justify-content: center; /* 水平居中 */
 }
-/* 上面的图片上传框对齐 */
-.upload-align {
-  width: 100%;
-  height: 100%;
-  margin-top: 30px;
-}
-:deep(.upload-align .el-upload-list--picture-card) {
-  width: 100%;
-  height: 100%;
-}
-// 让上面的图片过渡消失
-:deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {  
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  transition: none;
-}
-// 设置没有图片时上传图标的样式
-:deep(.upload-align .el-upload--picture-card) {
-  width: 100%;
-  height: 100%;
-}
+// /* 上面的图片上传框对齐 */
+// .upload-align {
+//   width: 100%;
+//   height: 100%;
+//   margin-top: 30px;
+// }
+// :deep(.upload-align .el-upload-list--picture-card) {
+//   width: 100%;
+//   height: 100%;
+// }
+// // 让上面的图片过渡消失
+// :deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {  
+//   width: 100%;
+//   height: 100%;
+//   padding: 0;
+//   margin: 0;
+//   transition: none;
+// }
+// // 设置没有图片时上传图标的样式
+// :deep(.upload-align .el-upload--picture-card) {
+//   width: 100%;
+//   height: 100%;
+// }
 
 .hide :deep(.el-upload--picture-card) {
  display: none
@@ -3494,5 +3303,76 @@ onMounted(() => {
 
 .disabled-handle {
   cursor: not-allowed;
+}
+// 图片样式
+.image-cell {
+  width: 100%;
+  height: 75px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
 }
 </style>

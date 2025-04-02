@@ -38,80 +38,62 @@
       >
         <template #default="{ row }">
           <template v-if="row['column0'] === 'productImgUrl'">
-            <el-upload 
-              :class="{ hide: row[prop].hide }" 
-              :file-list="row[prop].imgUrl" 
-              :http-request="(file) => uploadImage(file, row, prop)"
-              list-type="picture-card"
-            >
-              <div 
-                  style="display: flex; align-items: center; justify-content: center; width: 75px; height: 75px; "
-                  @click="handleIconClick(prop)"
-              >
-                  <el-icon ><plus /></el-icon>
-              </div>
-              <template #file="{ file }">
-                <div>
-                  <el-image alt="" class="el-upload-list__item-thumbnail" :src="file.url" style="display: block; width: 75px; height: 75px;" >
-                    <template #error><el-icon /></template>
-                  </el-image>
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <el-icon><zoom-in /></el-icon>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file, prop)"
-                    >
-                      <el-icon><delete /></el-icon>
-                    </span>
-                  </span>
+            <div style="display: flex; justify-content: center">
+              <div class="image-cell">
+                <!-- 有图片时显示 -->
+                <div v-if="row[prop]" class="image-preview">
+                  <img alt="" :src="row[prop]" />
+                  <div class="image-actions">
+                    <el-icon @click="handlePictureCardPreview(row[prop])"><zoom-in /></el-icon>
+                    <el-icon @click="handleRemove(prop)"><delete /></el-icon>
+                  </div>
                 </div>
-              </template>
-            </el-upload>
+                <!-- 无图片时显示 -->
+                <div v-else class="upload-placeholder" @click="showUploadDialog(row, prop)">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
+            </div>
           </template>
           <template v-if="row['column0'] === 'productLength'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'productWidth'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'productHeight'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'material'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
           <template v-if="row['column0'] === 'battery'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
           <template v-if="row['column0'] === 'benchmarkAsin'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
           <template v-if="row['column0'] === 'patent'">
             <div class="none">
-              <el-input v-model="row[prop]" type="text" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
             </div>
             <span>{{ row[prop] }}</span> 
           </template>
@@ -185,12 +167,14 @@
       <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
   
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { TableInstance, UploadFile } from 'element-plus'
+import type { TableInstance } from 'element-plus'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
@@ -270,56 +254,54 @@ const photoSampleOptions = [
 /**
  * 图片预览事件
  */
- const handlePictureCardPreview = (file: UploadFile) => {
-  emit("update:previewListValue", file.url!)
+ const handlePictureCardPreview = (url: string) => {
+  emit("update:previewListValue", url)
   emit("update:imagePreviewVisible", true)
 }
-// 点击图标的行的下标
-const clickIconProp = ref<string>('')
-/**
- * 点击添加图标事件
- */
-const handleIconClick = (prop: string) => {
-  // 获得点击列的变体名
-  clickIconProp.value = prop
+let _prop = ''
+let copyRow: any = null
+const imageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any, prop: string) => {
+  imageUploadVisible.value = true
+  copyRow = row
+  _prop = prop
 }
-const imageForm = ref(new FormData()) as any;
-async function uploadImage(params: any, row: any, _prop: any) {
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+async function uploadImage(file: File) {
   try {
-    row[_prop].hide = true
-   
-    imageForm.value = new FormData();
-    imageForm.value.append('file', params.file);
-    imageForm.value.append('orderEntryId', exchangeList.value[15][_prop]);
+    let imageForm = new FormData()
+    imageForm.append('file', file);
+    imageForm.append('orderEntryId', exchangeList.value[15][_prop]);
 
     // 上传图片
-    const { data } = await reviewStepNo5VariantImgUpload(imageForm.value);
-    // 确保 data 是有效的图片 URL
-    if (!data) {
-      throw new Error('上传图片失败');
+    const { data } = await reviewStepNo5VariantImgUpload(imageForm);
+    if (data) {
+      copyRow[_prop] = data
+      // 提示成功信息
+      $baseMessage('图片上传成功!', 'success', 'hey');
+      closeImageUpload()
+    } else {
+      $baseMessage('图片上传失败!', 'error', 'hey');
     }
-    row[_prop].imgUrl = [{ url: data}] 
-    
-    // 提示成功信息
-    $baseMessage('图片上传成功!', 'success', 'hey');
-    
   } catch (error) {
     console.error(error);
     $baseMessage('图片上传失败!', 'error', 'hey');
   }
 }
-
 /**
  * 图片删除功能
  */
- const handleRemove = async (file: UploadFile, prop: any) => {
+ const handleRemove = async (prop: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
       const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[15][prop]})
       if (data === true) {
         $baseMessage("此产品图片信息删除成功!", "success", "hey");
-        exchangeList.value[0][prop].imgUrl = [] 
-        exchangeList.value[0][prop].hide = false
+        exchangeList.value[0][prop] = ''
       }
     })
   } catch (error) {
@@ -882,50 +864,26 @@ const fetchVariantList = async () => {
         item.productManager = defaultProductManager
         item.productManagerId = defaultProductManagerId
       } else {
-        if (item.variantImg === "") {
-          return {
-            column0: '',
-            productImgUrl: { hide: false, imgUrl: []},
-            productLength: item.productLength,
-            productWidth: item.productWidth,
-            productHeight: item.productHeight,
-            material: item.material,
-            battery: item.battery,
-            benchmarkAsin: item.benchmarkAsin,
-            patent: item.patent,
-            productManager: item.productManager,
-            productDesign: item.productDesign,
-            sampleRetentionStatus: item.sampleRetentionStatus,
-            packingGroup: item.checkStatus,
-            certificateUpload: item.certificateUpload,
-            skuMerge: item.variantSku,
-            operate: '操作',
-            orderEntryId: undefined,
-            productManagerId: item.productManagerId,
-            productDesignId: item.productDesignId
-          }
-        } else {
-          return {
-            column0: '',
-            productImgUrl: { hide: true, imgUrl: [{ url: item.variantImg}]},
-            productLength: item.productLength,
-            productWidth: item.productWidth,
-            productHeight: item.productHeight,
-            material: item.material,
-            battery: item.battery,
-            benchmarkAsin: item.benchmarkAsin,
-            patent: item.patent,
-            productManager: item.productManager,
-            productDesign: item.productDesign,
-            sampleRetentionStatus: item.sampleRetentionStatus,
-            packingGroup: item.checkStatus,
-            certificateUpload: item.certificateUpload,
-            skuMerge: item.variantSku,
-            operate: '操作',
-            orderEntryId: undefined,
-            productManagerId: item.productManagerId,
-            productDesignId: item.productDesignId
-          }
+        return {
+          column0: '',
+          productImgUrl: item.variantImg,
+          productLength: item.productLength,
+          productWidth: item.productWidth,
+          productHeight: item.productHeight,
+          material: item.material,
+          battery: item.battery,
+          benchmarkAsin: item.benchmarkAsin,
+          patent: item.patent,
+          productManager: item.productManager,
+          productDesign: item.productDesign,
+          sampleRetentionStatus: item.sampleRetentionStatus,
+          packingGroup: item.checkStatus,
+          certificateUpload: item.certificateUpload,
+          skuMerge: item.variantSku,
+          operate: '操作',
+          orderEntryId: undefined,
+          productManagerId: item.productManagerId,
+          productDesignId: item.productDesignId
         }
       }
     })
@@ -970,20 +928,6 @@ onMounted(() => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
 :deep(.el-table__body-wrapper tr:nth-last-child(-n+3)) {
   display: none;
 }
@@ -1006,6 +950,77 @@ onMounted(() => {
     top: 50%;
     right: 8px;
     transform: translateY(-50%);
+  }
+}
+// 图片样式
+.image-cell {
+  width: 75px;
+  height: 75px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
   }
 }
 </style>
