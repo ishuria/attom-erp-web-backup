@@ -677,20 +677,6 @@ onBeforeMount(() => {
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
-
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }

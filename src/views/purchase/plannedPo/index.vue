@@ -825,25 +825,11 @@ onUnmounted(() => {
   }
 }
 
-:deep(.el-upload-list--picture-card .el-upload-list__item) {
-  width: 75px;
-  height: 75px;
-  margin: 0 8px 0 0;
-  transition: none;
-}
-:deep(.el-upload--picture-card) {
-  width: 75px;
-  height: 75px;
-}
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
 
-// 控制添加图片图标显示与隐藏
-.hide :deep(.el-upload--picture-card) {
-  display: none
-}
 // 控制编辑框显示与隐藏
 .none {
   display: none;

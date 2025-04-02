@@ -761,20 +761,6 @@ onBeforeMount(()=>{
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-// // 控制添加图片图标显示与隐藏
-// .hide :deep(.el-upload--picture-card) {
-//   display: none
-// }
-// :deep(.el-upload-list--picture-card .el-upload-list__item) {
-//   width: 75px;
-//   height: 75px;
-//   margin: 0 8px 0 0;
-//   transition: none;
-// }
-// :deep(.el-upload--picture-card) {
-//   width: 75px;
-//   height: 75px;
-// }
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
@@ -811,29 +797,6 @@ onBeforeMount(()=>{
   padding-right: 0;
   padding-left: 0;
 }
-// 图片上传的样式
-// .component-upload {
-//   width: 75px;
-//   height: 75px;
-//   :deep() {
-//     .el-upload-list--picture-card {
-//       width: 100%;
-//       height: 100%;
-//       .el-upload-list__item {
-//         width: 100%;
-//         height: 100%;
-//         margin: 0;
-//         border: 0;
-//         border-radius: 0;
-//         transition: none;
-//       }
-//     }
-//     .el-upload--picture-card {
-//       width: 100%;
-//       height: 100%;
-//     }
-//   }
-// }
 // 图片样式
 .image-cell {
   width: 100%;

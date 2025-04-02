@@ -217,8 +217,8 @@
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
           <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
-          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
-          <el-table-column label="付款记录" min-width="200" prop="payRecordList">
+          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')"/>
+          <el-table-column label="付款记录" prop="payRecordList" :width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
             <template #default="{ row }">
               <span v-html="row.payRecordList"></span>
             </template>
@@ -585,35 +585,30 @@ const headerCellStyle = (): CSSProperties => {
   }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3 || data.columnIndex === 25 || data.columnIndex === 28 || data.columnIndex === 29) {
+  const label = data.column.label
+  if (label === '合同编号' || label === '供应商' || label === 'SKU' || label === 'PO零件名' || label === 'shipmentID' || label === '付款记录') {
     return {
       cursor: 'not-allowed',
       textAlign: 'left'
     }
-  }
-  if (data.columnIndex === 17) {
-    return {
-      cursor: 'not-allowed',
-      textAlign: 'left'
-    }
-  }
-  if (data.columnIndex !== 4 && data.columnIndex !== 5 && data.columnIndex !== 6) {
+  } else if (label !== '报关品名' && label !== '报关数量' && label !== '报关单位') {
     return {
       cursor: 'not-allowed',
       textAlign: 'center'
     }
-  }
-  
+  } 
   return {
-    textAlign: 'center'
+    textAlign: 'center',
+    cursor: 'pointer'
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 3 || data.columnIndex === 17 || data.columnIndex === 25 || data.columnIndex === 27 || data.columnIndex === 28) {
+  const label = data.column.label
+  if (label === '合同编号' || label === '供应商' || label === 'SKU' || label === 'PO零件名' || label === 'shipmentID' || label === '付款记录') {
     return {
       textAlign: 'left'
     }
-  }
+  } 
   return {
     textAlign: 'center'
   }

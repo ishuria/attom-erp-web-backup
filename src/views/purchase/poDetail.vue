@@ -3167,27 +3167,7 @@ onMounted(() => {
 .none {
    display: none;
 }
-// 设置下面表格的图片
-.component-upload {
-  width: 81px;
-  height: 81.2px;
-}
-.component-upload :deep( .el-upload-list--picture-card) {
- width: 100%;
- height: 100%;
-}
-.component-upload :deep( .el-upload-list--picture-card .el-upload-list__item) {
- width: 100%;
- height: 100%;
- margin: 0;
- border: 0;
- border-radius: 0;
- transition: none;
-}
-.component-upload :deep( .el-upload--picture-card) {
-  width: 100%;
-  height: 100%;
-}
+
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
@@ -3201,33 +3181,6 @@ onMounted(() => {
    display: flex;
    align-items: center; /* 垂直居中，如果需要 */
    justify-content: center; /* 水平居中 */
-}
-// /* 上面的图片上传框对齐 */
-// .upload-align {
-//   width: 100%;
-//   height: 100%;
-//   margin-top: 30px;
-// }
-// :deep(.upload-align .el-upload-list--picture-card) {
-//   width: 100%;
-//   height: 100%;
-// }
-// // 让上面的图片过渡消失
-// :deep(.upload-align .el-upload-list--picture-card .el-upload-list__item) {  
-//   width: 100%;
-//   height: 100%;
-//   padding: 0;
-//   margin: 0;
-//   transition: none;
-// }
-// // 设置没有图片时上传图标的样式
-// :deep(.upload-align .el-upload--picture-card) {
-//   width: 100%;
-//   height: 100%;
-// }
-
-.hide :deep(.el-upload--picture-card) {
- display: none
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
