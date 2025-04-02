@@ -62,7 +62,7 @@
             </el-upload>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="零件ID" width="90"/>   
+        <el-table-column align="center" label="零件ID" prop="existingPartsListId" width="90"/>   
           
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
           <template #default="{ row }">
@@ -506,13 +506,13 @@ submitReviewConsumable,
 updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
+import { addPurchaseRepository } from '/@/api/devlocal/purchase'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { _setStepNo } from '/@/utils/stepNoState'
-import { addPurchaseRepository } from '/@/api/devlocal/purchase'
 
 defineOptions({
   name: 'OrderStep3',

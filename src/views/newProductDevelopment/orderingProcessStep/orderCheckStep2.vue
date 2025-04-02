@@ -32,7 +32,7 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="零件ID" min-width="70" prop="" width="100"/>   
+        <el-table-column align="center" label="零件ID" min-width="70" prop="existingPartsListId" width="100"/>   
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')"/>
         <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
           <template #default="{ row }">
@@ -249,9 +249,9 @@ import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelCol
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { reviewStepNo3ComponentList, reviewStepNo3ComponentSuitDetail, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
+import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { _setStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
     name: 'OrderCheckStep2',
