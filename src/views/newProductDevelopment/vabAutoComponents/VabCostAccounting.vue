@@ -43,26 +43,20 @@
         <el-table-column label="汇率" prop="foreignExchange"/>
         <el-table-column label="图片" width="76">
           <template #default="{ row }">
-            <el-upload 
-              class="component-upload" 
-              :class="{ hide: row.hide }" 
-              :file-list="row.imageList"
-              :http-request="(file) => uploadImage(file, row)"
-              list-type="picture-card" 
-            >
-              <el-icon><plus /></el-icon> 
-              <template #file="{ file }">
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span class="el-upload-list__item-preview" @click="showImagePreview(file)">
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span class="el-upload-list__item-delete" @click="removeImage(row)">
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
-              </template>
-            </el-upload>
+            <div class="image-cell">
+              <!-- 有图片时显示 -->
+              <div v-if="row.imgUrl" class="image-preview">
+                <img alt="" :src="row.imgUrl" />
+                <div class="image-actions">
+                  <el-icon @click="showImagePreview(row.imgUrl)"><zoom-in /></el-icon>
+                  <el-icon @click="removeImage(row)"><delete /></el-icon>
+                </div>
+              </div>
+              <!-- 无图片时显示 -->
+              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
           </template>
         </el-table-column>
 
@@ -274,6 +268,8 @@
       @click-boolean="clickRemarkBool" 
       @click-child="clickRemark" 
     />
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
@@ -333,6 +329,17 @@ const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
 const classify = ref<string>('')
 const clickRow = ref<any>()
+let copyRow: any
+const imageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
@@ -470,11 +477,10 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-const showImagePreview = (file: any) => {
-  emit("update:previewListValue", file.url)
+const showImagePreview = (url: string) => {
+  emit("update:previewListValue", url)
   emit("update:imagePreviewVisible", true)
 }
-let copyRow: any
 // 成本核算单击表格修改
 const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   if (column.property === 'desc') {
@@ -542,31 +548,21 @@ const fetchDataCostAccounting = async ()=>{
     // 成本核算列表
     const {data} = await getCostAccountingList({ progressId: props.progressId })
     estimatedCostList.value = data
-    estimatedCostList.value.forEach((item) => {
-      if (!item.imgUrl) {
-        item.hide = false
-        item.imageList = []
-      } else if (item.imgUrl){
-        item.hide = true
-        item.imageList = [{ url: item.imgUrl }]
-      }
-    })
   } catch(error) {
     console.error(error)
   }
 }
-const uploadImage = async (file: any, row: any) => {
-  //
-  row.hide = true
+const uploadImage = async (file: File) => {
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file.file)
-    uploadImgForm.append('accountingId', row.id)
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('accountingId', copyRow.id)
 
     const { data } = await costAccountingUploadImage(uploadImgForm)
     if (data) {
-      Object.assign(row.imageList, [{ url: data }])
+      copyRow.imgUrl = data
       $baseMessage('零件图片上传成功！', 'success')
+      closeImageUpload()
     } else {
       $baseMessage('零件图片上传失败！', 'error')
     }
@@ -581,8 +577,7 @@ const removeImage = (row: any) => {
         id: row.id
       })
       if (data) {
-        row.imageList = []
-        row.hide = false
+        row.imgUrl = ''
         $baseMessage("图片删除成功!","success","hey")
       }
     })
@@ -754,26 +749,74 @@ onMounted(()=>{
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
 }
-// 图片上传的样式
-.component-upload {
-  width: 75px;
+// 图片样式
+.image-cell {
+  width: 100%;
   height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
       width: 100%;
       height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

@@ -49,26 +49,20 @@
 
       <el-table-column label="图片" prop="componentImg" width="76">
         <template #default="{ row }">
-          <el-upload 
-            class="component-upload" 
-            :class="{ hide: row.hide }" 
-            :file-list="row.imageList"
-            :http-request="(file) => uploadImage(file, row)"
-            list-type="picture-card" 
-          >
-            <el-icon><plus /></el-icon> 
-            <template #file="{ file }">
-              <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-              <span class="el-upload-list__item-actions">
-                <span class="el-upload-list__item-preview" @click="handlePreview(file)">
-                  <el-icon><zoom-in /></el-icon>
-                </span>
-                <span class="el-upload-list__item-delete" @click="removeImage(row)">
-                  <el-icon><delete /></el-icon>
-                </span>
-              </span>
-            </template>
-          </el-upload>
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="row.componentImg" class="image-preview">
+              <img alt="" :src="row.componentImg" />
+              <div class="image-actions">
+                <el-icon @click="handlePreview(row.componentImg)"><zoom-in /></el-icon>
+                <el-icon @click="removeImage(row)"><delete /></el-icon>
+              </div>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
         </template>
       </el-table-column>
 
@@ -367,6 +361,8 @@
       @update:remark="handleUpdateRemark"
       @update:remark-visible="handleCloseRemark"
     />
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
@@ -426,7 +422,17 @@ const sampleVisible = ref<boolean>(false)
 // 拿样flag
 const sampleFormVisible = ref<boolean>(false)
 let rowCopy: any
-
+let copyRow: any
+const imageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  copyRow = row
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
 const formattedPrice = (price: string) => {
   return parseFloat(price).toFixed(2)
 }
@@ -460,17 +466,17 @@ const handleUpdateRemark = async (value: string) => {
   rowCopy.remarks = value
   $baseMessage('修改备注成功！', 'success')
 }
-const uploadImage = async (file: any, row: any) => {
-  row.hide = true
+const uploadImage = async (file: File) => {
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file.file)
-    uploadImgForm.append('componentId', row.componentId)
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('componentId', copyRow.componentId)
 
     const { data } = await componentUploadImage(uploadImgForm)
     if (data) {
-      Object.assign(row.imageList, [{ url: data }])
+      copyRow.componentImg = data
       $baseMessage('零件图片上传成功！', 'success')
+      closeImageUpload()
     } else {
       $baseMessage('零件图片上传失败！', 'error')
     }
@@ -478,8 +484,8 @@ const uploadImage = async (file: any, row: any) => {
     console.error(error)
   }
 }
-const handlePreview = (file: any) => {
-  emit("update:previewListValue", file.url)
+const handlePreview = (url: string) => {
+  emit("update:previewListValue", url)
   emit("update:imagePreviewVisible", true)
 }
 const removeImage = (row: any) => {
@@ -489,8 +495,7 @@ const removeImage = (row: any) => {
         id: row.componentId
       })
       if (data) {
-        row.imageList = []
-        row.hide = false
+        row.componentImg = ''
         $baseMessage("图片删除成功!","success","hey")
       }
     })
@@ -870,14 +875,6 @@ const fetchDataComponent = async () => {
     progressProductList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
       item.totalPrice = formattedPrice(item.totalPrice)
-      // 处理图片
-      if (!item.componentImg) {
-        item.hide = false
-        item.imageList = []
-      } else if (item.componentImg){
-        item.hide = true
-        item.imageList = [{ url: item.componentImg }]
-      }
     })
     progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
     previous = null
@@ -1001,26 +998,74 @@ onMounted(() => {
   padding-right: 0;
   padding-left: 0;
 }
-// 图片上传的样式
-.component-upload {
-  width: 75px;
+// 图片样式
+.image-cell {
+  width: 100%;
   height: 75px;
-  :deep() {
-    .el-upload-list--picture-card {
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
       width: 100%;
       height: 100%;
-      .el-upload-list__item {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        border: 0;
-        border-radius: 0;
-        transition: none;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
       }
     }
-    .el-upload--picture-card {
-      width: 100%;
-      height: 100%;
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
     }
   }
 }

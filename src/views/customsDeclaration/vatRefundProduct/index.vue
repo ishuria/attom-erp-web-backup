@@ -638,7 +638,7 @@ const fetchData = async () => {
         }
       }).join('<br>')
     }
-    console.log(item.payRecord)
+    // console.log(item.payRecord)
   })
   listLoading.value = false
 }

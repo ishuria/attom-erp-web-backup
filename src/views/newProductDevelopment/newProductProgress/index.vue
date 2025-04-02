@@ -41,16 +41,27 @@ handleSubmit<template>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column class="image-wall" label="示例图片" min-width="450" prop="imageList">
+          <el-table-column label="示例图片" min-width="450" prop="imageList">
             <template #default = "{ row }">
+             <div style="display: flex; align-items: center;">
               <vue-draggable
                 v-model="row.imageList"
                 :animation="150"
+                class="image-list"
                 ghost-class="ghost"
-                target="ul"
                 @end="onEnd"
               >
-                <el-upload 
+                <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
+                  <div class="image-preview">
+                    <img :alt="image.imageId" :src="image.imageUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
+                      <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- <el-upload 
                   :class="{ hide: row.hide }" 
                   :file-list="row.imageList" 
                   :http-request="uploadImage" 
@@ -85,8 +96,15 @@ handleSubmit<template>
                       {{ file.name }}
                     </div>
                   </template>
-                </el-upload>
+                </el-upload> -->
               </vue-draggable>
+              <!-- 添加按钮 -->
+              <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0}">
+                <div class="upload-placeholder" @click="showUploadDialog(row)">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
+             </div>
             </template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="product">
@@ -121,7 +139,7 @@ handleSubmit<template>
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.progressLog) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -131,7 +149,7 @@ handleSubmit<template>
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -141,7 +159,7 @@ handleSubmit<template>
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.remark) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -226,7 +244,8 @@ handleSubmit<template>
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          border :data="progressList"
+          border :cell-style="cellStyle"
+          :data="progressList"
           :header-cell-style="{ 'text-align': 'center' }" 
           stripe
           @cell-click="changeInput"
@@ -286,7 +305,6 @@ handleSubmit<template>
                           <el-icon><delete /></el-icon>
                         </span>
                       </span>
-                      {{ file.name }}
                     </div>
                   </template>
                 </el-upload>
@@ -319,7 +337,7 @@ handleSubmit<template>
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.progressLog) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -327,9 +345,9 @@ handleSubmit<template>
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
-                  <div style="white-space: pre-wrap;" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span style="color: rgb(192, 192, 192, 1)" v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -339,7 +357,7 @@ handleSubmit<template>
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.remark) }}</span>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -350,7 +368,7 @@ handleSubmit<template>
           </el-table-column>
           <el-table-column align="center" label="新款评估编号" min-width="110" prop="evaluationId">
             <template #default = "{ row }">
-              <span style="color: rgb(192, 192, 192, 1)">{{ row.evaluationId }}</span>
+              <span>{{ row.evaluationId }}</span>
             </template>
           </el-table-column>
 
@@ -559,6 +577,8 @@ v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.l
       @update:trend-echarts-list  = "updateTrendEchatsData"
       @update:visible-value = "updateTrendVisibleValue"
     />
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
@@ -754,12 +774,10 @@ const handleArchived = async (progressId: number) => {
 const handleRemove = async (file: UploadFile, row: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-
       const imageListCopy = [...row.imageList];
 
       // 找到要删除的元素的下标
-      const i = imageListCopy.findIndex((item: any) => item.url === file.url);
-
+      const i = imageListCopy.findIndex((item: any) => item.imageUrl === file.imageUrl);
       if (i === -1) {
         $baseMessage("错误，请联系开发人员!","error","hey")
         return
@@ -769,19 +787,18 @@ const handleRemove = async (file: UploadFile, row: any) => {
       imageListCopy.splice(i, 1);
       // 将更新后的数组替换原来的 imageList
       row.imageList = imageListCopy;
-      if (row.imageList.length <= 5) {
-        row.hide = false
-      }
+      // if (row.imageList.length <= 5) {
+      //   row.hide = false
+      // }
       const delImgForm = new FormData()
       delImgForm.append('type', '2')
-      delImgForm.append('imageId', file.name)
+      delImgForm.append('imageId', file.imageId)
 
       const { data } = await deleteImage(delImgForm)
       if (data == true) {
         $baseMessage("此条产品图片信息删除成功!","success","hey")
       }
-})
-    
+    })
   } catch (error) {
     console.error(error)
   }
@@ -791,14 +808,15 @@ const handleRemove = async (file: UploadFile, row: any) => {
  * 图片预览事件
  */
 const handlePictureCardPreview = (file: UploadFile, row: any) => {
-  dialogImageUrl.value = file.url!
+  // console.log(file)
+  dialogImageUrl.value = file.imageUrl!
   dialogVisible.value = true
   imagePreviewList.value = []
+  imagePreviewList.value.push(file.imageUrl!)
   const i = row.imageList.find((item: any) => item.uid === file.uid)
-  imagePreviewList.value.push(file.url!)
   row.imageList.forEach((item: any) => {
     if (item.uid === i.uid) return
-    imagePreviewList.value.push(item.url)
+    imagePreviewList.value.push(item.imageUrl)
   })
 }
 // 修改图片预览列表
@@ -822,37 +840,52 @@ const handleIconClick = (row: any) => {
   // console.log('点击行的下标', tableClickRowIndex.value);
 }
 
+const imageUploadVisible = ref<boolean>(false)
+// 打开上传图片弹窗
+const showUploadDialog = (row: any) => {
+  imageUploadVisible.value = true
+  tableClickProgressId.value = row.progressId
+  tableClickRowIndex.value = progressList.value.findIndex(item => item.progressId == row.progressId) as any
+  // copyRow = row
+}
+// 关闭上传弹窗
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
 
 /**
  * 上传图片
  */
 const imageForm = ref(new FormData()) as any;
-async function uploadImage (params: any) {
+async function uploadImage (file: File) {
   try {
     let imgListlength = progressList.value[tableClickRowIndex.value].imageList!.length + 1
-    if (imgListlength === 5) {
-      // isUpdate.value = !isUpdate.value
-      progressList.value[tableClickRowIndex.value].hide = true
-    }
+    // if (imgListlength === 5) {
+    //   // isUpdate.value = !isUpdate.value
+    //   progressList.value[tableClickRowIndex.value].hide = true
+    // }
     let sort = progressList.value[tableClickRowIndex.value].imageList!.length - 1
-    imageForm.value = new FormData(); // 每次上传前重置 FormData
-    imageForm.value.append('file', params.file);
-    imageForm.value.append('progressId', tableClickProgressId.value);
-    imageForm.value.append('sort', sort);
+    let imageForm = new FormData()
+   
+    imageForm.append('file', file);
+    imageForm.append('progressId', tableClickProgressId.value);
+    imageForm.append('sort', sort);
 
-    const { data } = await uploadFile(imageForm.value)
+    const { data } = await uploadFile(imageForm)
     const { fileId, url } = data
     const imageListCopy = [...progressList.value[tableClickRowIndex.value].imageList!];
     imageListCopy.push({
-        url,
-        name: fileId,
+        imageUrl: url,
+        imageId: fileId,
     });
     let newArray = [...progressList.value]
     newArray[tableClickRowIndex.value].imageList  = imageListCopy;
     progressList.value = JSON.parse(JSON.stringify(newArray))
-    if (imgListlength === 5) {
-      progressList.value[tableClickRowIndex.value].hide = true
-    }
+    // if (imgListlength === 5) {
+    //   progressList.value[tableClickRowIndex.value].hide = true
+    // }
+    closeImageUpload()
+    // $baseMessage("图片上传成功!","success","hey")
     
   } catch (error) {
     console.error(error)
@@ -861,16 +894,16 @@ async function uploadImage (params: any) {
 const dlist = ref<any>([])
 // 移动之后触发修改排序接口
 const onEnd = debounce(async () => {
-    try {
-        dlist.value = progressList.value[tableClickRowIndex.value].imageList
-        // console.log(dlist.value)
-        const idList = dlist.value.map((item: any) =>{
-            return item.name
-        })
-        await updateProgressImgSort(idList)
-    }catch(error){
-        console.error(error as Error)
-    }
+  try {
+    dlist.value = progressList.value[tableClickRowIndex.value].imageList
+    // console.log(dlist.value)
+    const idList = dlist.value.map((item: any) =>{
+        return item.imageId
+    })
+    await updateProgressImgSort(idList)
+  } catch(error){
+    console.error(error as Error)
+  }
 }, 500)
 /**
  * 获取初始新品进度数据
@@ -883,22 +916,22 @@ const fetchData = async () => {
   total.value = data.total
   listLoading.value = false
 
-  progressList.value.forEach(item => {
-    const tempArr: string[] = []
-    item.imageList!.forEach(image => {
-      tempArr.push(image.imageUrl!)
-      image.url = image.imageUrl;
-      image.name = image.imageId;
-      delete image.imageUrl;
-      delete image.imageId;
-    })
+  // progressList.value.forEach(item => {
+  //   const tempArr: string[] = []
+  //   item.imageList!.forEach(image => {
+  //     tempArr.push(image.imageUrl!)
+  //     image.url = image.imageUrl;
+  //     image.name = image.imageId;
+  //     delete image.imageUrl;
+  //     delete image.imageId;
+  //   })
     
-    if(tempArr.length === 5){
-      item.hide = true
-    } else {
-      item.hide = false
-    }
-  })
+  //   if(tempArr.length === 5){
+  //     item.hide = true
+  //   } else {
+  //     item.hide = false
+  //   }
+  // })
 }
 let _row: any = null
 /**
@@ -1203,22 +1236,20 @@ const handleShareSelectConfirm = async () => {
   total.value = data.total
   listLoading.value = false
 
-  progressList.value.forEach(item => {
-    const tempArr: string[] = []
-    item.imageList!.forEach(image => {
-      tempArr.push(image.imageUrl!)
-      image.url = image.imageUrl;
-      image.name = image.imageId;
-      delete image.imageUrl;
-      delete image.imageId;
-    })
+  // progressList.value.forEach(item => {
+  //   const tempArr: string[] = []
+  //   item.imageList!.forEach(image => {
+  //     tempArr.push(image.imageUrl!)
+  //     image.url = image.imageUrl;
+  //     image.name = image.imageId;
+  //   })
     
-    if(tempArr.length === 5){
-      item.hide = true
-    } else {
-      item.hide = false
-    }
-  })
+  //   if(tempArr.length === 5){
+  //     item.hide = true
+  //   } else {
+  //     item.hide = false
+  //   }
+  // })
   // shareSelect.value = []
   }
 }
@@ -1298,14 +1329,14 @@ const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
   trendEcahts.value = newValue
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 4 || index === 7 || index === 10) {
+  const label = data.column.label
+  if (label === '立项日期' || label === '参与人员' || label === '新款评估编号') {
     return {
       textAlign: 'center',
       color: '#999',
       cursor: 'not-allowed'
     }
-  } else if (index === 1 || index === 2 || index === 6 || index === 8) {
+  } else if (label === '示例图片' || label === '产品' || label === '开发日志' || label === '备注') {
     return {
       textAlign: 'left'
     }
@@ -1407,19 +1438,7 @@ onBeforeMount(() => {
 :deep(.moldDialog .el-dialog__body) { 
   padding-top: 0;
 }
-// .overflow-text {
-//   max-height: 60px;
-//   display: block;
-//   overflow-y: auto;
-// }
-// .shareSelectDialog {
-//   .el-dialog__body {
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-//     justify-content: center;
-//   }
-// }
+
 :deep(.shareSelectDialog .el-dialog__body) {
   display: flex;
     flex-direction: column;
@@ -1436,4 +1455,159 @@ onBeforeMount(() => {
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
 }
+
+// .image-cell {
+//   display: inline-block;
+//   width: 75px;
+//   height: 75px;
+//   margin-right: 8px;
+//   margin-bottom: 8px;
+  
+//   // 有图片时的样式
+//   .image-preview {
+//     position: relative;
+//     width: 100%;
+//     height: 100%;
+    
+//     img {
+//       width: 100%;
+//       height: 100%;
+//       cursor: pointer;
+//       object-fit: cover;
+//     }
+    
+//     .image-actions {
+//       position: absolute;
+//       top: 0;
+//       right: 0;
+//       bottom: 0;
+//       left: 0;
+//       display: flex;
+//       gap: 8px;
+//       align-items: center;
+//       justify-content: center;
+//       background: rgba(0, 0, 0, 0);
+//       opacity: 0;
+//       transition: all 0.3s ease;
+      
+//       .el-icon {
+//         font-size: 20px;
+//         color: #fff;
+//         cursor: pointer;
+        
+//         &:hover {
+//           transform: scale(1.1);
+//         }
+//       }
+//     }
+    
+//     &:hover .image-actions {
+//       background: rgba(0, 0, 0, 0.45);
+//       opacity: 1;
+//     }
+//   }
+
+//   // 上传按钮的样式
+//   .upload-placeholder {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     width: 100%;
+//     height: 100%;
+//     cursor: pointer;
+//     border: 1px dashed var(--el-border-color);
+    
+//     &:hover {
+//       border-color: var(--el-color-primary);
+//       .el-icon {
+//         color: var(--el-color-primary);
+//       }
+//     }
+    
+//     .el-icon {
+//       font-size: 20px;
+//       color: #999;
+//     }
+//   }
+// }
+
+.image-list {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.image-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  height: 75px;
+  
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: move; // 添加拖拽指针
+      object-fit: cover;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 1;
+    }
+  }
+
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
+}
+
 </style>

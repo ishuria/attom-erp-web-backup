@@ -481,7 +481,8 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
   if (data) {
-    _row = row
+    // 使用响应式赋值
+    _row = Object.assign({}, row)
     matchTotal.value = data?.total!
     matchList.value = data?.list!
     matchVisible.value = true
