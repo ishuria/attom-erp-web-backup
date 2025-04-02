@@ -202,7 +202,6 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
   </div>
 </template>
 

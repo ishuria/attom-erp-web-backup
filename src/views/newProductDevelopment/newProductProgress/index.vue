@@ -204,7 +204,6 @@ handleSubmit<template>
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
-        <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
       <el-tab-pane label="已归档" :name="1">
         <vab-query-form>
@@ -373,7 +372,6 @@ handleSubmit<template>
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
-        <default-table-edit ref="editRef" @fetch-data="fetchData" />
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if ="dialogVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
@@ -610,8 +608,6 @@ const route = useRoute()
 const tabStateStore = useTabStateStore()
 const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
 const router = useRouter()
-
-const editRef = ref<any>(null)
 const fixed = ref<string>('right')
 const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()

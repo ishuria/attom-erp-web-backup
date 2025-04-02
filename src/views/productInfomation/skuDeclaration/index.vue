@@ -191,7 +191,6 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <!-- 价格系数设定 -->
     <vab-dialog
       v-model="priceCoefficientSettingVisible"

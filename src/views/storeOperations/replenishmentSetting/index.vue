@@ -81,7 +81,6 @@
         <el-button type="primary" @click="handleSubmit">完成</el-button>
       </template>
     </vab-dialog>
-    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>

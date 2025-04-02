@@ -170,7 +170,6 @@ v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.l
       @update:trend-echarts-list  = "updateTrendEchatsData"
       @update:visible-value = "updateTrendVisibleValue"
     />
-    <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
   </div>
 </template>

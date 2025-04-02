@@ -57,7 +57,6 @@
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
-      <!-- <default-table-edit ref="editRef" @fetch-data="fetchData" /> -->
       <!-- 我司信息 -->
       <vab-dialog 
         v-model="companyAddVisible" 
