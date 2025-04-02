@@ -337,14 +337,19 @@ export const orderColumns = [
     minWidth: 90,
   },
   {
-    label: '今补广',
-    prop: 'nowSupplementAdv',
-    minWidth: 90,
+    label: 'VOC满意度',
+    prop: 'vocSatisfaction',
+    minWidth: 130,
   },
   {
     label: '操作',
     prop: '',
     minWidth: 130,
+  },
+  {
+    label: '今补广',
+    prop: 'nowSupplementAdv',
+    minWidth: 90,
   },
   {
     label: '当前售价',
@@ -359,7 +364,7 @@ export const orderColumns = [
   {
     label: '站点',
     prop: 'siteName',
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '运营',
@@ -410,15 +415,5 @@ export const orderColumns = [
     label: '月退货%',
     prop: 'monthReturnGoods',
     minWidth: 100,
-  },
-  {
-    label: 'VOC满意度',
-    prop: 'vocSatisfaction',
-    minWidth: 130,
-  },
-  {
-    label: 'VOC缺陷%',
-    prop: 'vocDefect',
-    minWidth: 110,
   },
 ]

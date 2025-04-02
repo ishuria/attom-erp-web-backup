@@ -109,7 +109,7 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="PO零件名" min-width="110" />
+          <el-table-column label="PO零件名" min-width="110" prop="poComponentName" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
           <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')"/>
           <el-table-column label="付款记录" min-width="230" prop="payRecordList">
@@ -215,6 +215,7 @@
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="PO零件名" min-width="110" prop="poComponentName" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount"/>
           <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
           <el-table-column label="付款记录" min-width="200" prop="payRecordList">
@@ -625,7 +626,7 @@ const fetchData = async () => {
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
     if (Array.isArray(item.payRecordList)) {
       item.payRecordList = item.payRecordList.map((record: PayRecordList) => {
-        const percentage = Number(record.percentage) * 100
+        const percentage = Number(record.percentage)
         const createTime = record.createTime!.split(' ')[0]
         if (percentage < 0) {
           return `

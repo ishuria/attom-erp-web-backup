@@ -148,15 +148,16 @@
             <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
           </span>
           <span v-if="item.label === 'VOC满意度'">
-            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
+            {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
+            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
           </span>
-          <span v-if="item.label === 'VOC缺陷%'" >
+          <!-- <span v-if="item.label === 'VOC缺陷%'" >
             {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
-          </span>
+          </span> -->
         </template>
       </el-table-column>
       <template #empty>
@@ -408,7 +409,7 @@ updateOperationOrderSpringFestival
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
-import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, processField } from '/@/utils/tableColum'
 
 const smoothSettingVisible = ref<boolean>(false)
