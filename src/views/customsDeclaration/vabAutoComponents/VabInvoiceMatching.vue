@@ -230,9 +230,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
-          供应商：{{ _row.suppliser }}，开票品名：{{ _row.invoiceName }}，单位：{{ _row.invoiceUnit }}，数量：{{
-            _row.invoiceCount
-          }}，发票含税金额: {{ _row.includingTaxPrice }}
+          供应商：{{ _supplier }}，开票品名：{{ _invoiceName }}，单位：{{ _invoiceUnit }}，数量：{{ _invoiceCount }}，发票含税金额: {{ _includingTaxPrice }}
         </el-text>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -296,22 +294,22 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
-cleanTaxRefundInvoice,
-deleteTaxRefundInvoice,
-finishTaxRefundInvoice,
-getTaxRefundInvoiceList,
-getTaxRefundInvoiceMatch,
-submitConfirmTaxRefundInvoiceMatch,
-submitTaxRefundInvoiceMatch,
-updateTaxRefundInvoice,
-updateTaxRefundInvoiceDetail,
-uploadTaxRefund,
+  cleanTaxRefundInvoice,
+  deleteTaxRefundInvoice,
+  finishTaxRefundInvoice,
+  getTaxRefundInvoiceList,
+  getTaxRefundInvoiceMatch,
+  submitConfirmTaxRefundInvoiceMatch,
+  submitTaxRefundInvoiceMatch,
+  updateTaxRefundInvoice,
+  updateTaxRefundInvoiceDetail,
+  uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type {
-IGetTaxRefundInvoiceList,
-IGetTaxRefundInvoiceListQuery,
-IGetTaxRefundInvoiceMatchList,
-IGetTaxRefundInvoiceMatchQuery,
+  IGetTaxRefundInvoiceList,
+  IGetTaxRefundInvoiceListQuery,
+  IGetTaxRefundInvoiceMatchList,
+  IGetTaxRefundInvoiceMatchQuery,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -473,8 +471,12 @@ const handleSubmitConfirm = async () => {
     closeInvoiceMatching()
   }
 }
-let _row: IGetTaxRefundInvoiceList = {}
 
+const _supplier = ref<string>('')
+const _invoiceName = ref<string>('')
+const _invoiceUnit = ref<string>('')
+const _invoiceCount = ref<number>(0)
+const _includingTaxPrice = ref<number>(0)
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchQueryForm.detailId = row.detailId!
@@ -482,7 +484,12 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
   if (data) {
     // 使用响应式赋值
-    _row = Object.assign({}, row)
+    _supplier.value = row.suppliser!
+    _invoiceName.value = row.invoiceName!
+    _invoiceUnit.value = row.invoiceUnit!
+    _invoiceCount.value = row.invoiceCount!
+    _includingTaxPrice.value = row.includingTaxPrice!
+    
     matchTotal.value = data?.total!
     matchList.value = data?.list!
     matchVisible.value = true
