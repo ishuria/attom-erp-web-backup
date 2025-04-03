@@ -105,9 +105,6 @@ export interface IDelImgQueryReq {
   type: string
   imageId: number
 }
-export interface IProgressImgSort {
-  array: number[]
-}
 /**
  * 修改共享人查询参数
  */
@@ -414,7 +411,7 @@ export interface IGetByIdQueryEvaluation {
      */
     supplyScore?: string;
     // 关键词趋势
-    trendList?: Object;
+    trendList?: object;
     userId?: string;
 }
 // 获取样品进度返回类型

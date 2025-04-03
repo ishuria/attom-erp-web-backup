@@ -2,27 +2,27 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import type { 
-  IComponentId, 
-  IGetByIdQueryEvaluationResp, 
-  IIdNo, 
-  IProgress, 
-  IProgressFilterResp, 
-  IProgressId, 
-  IProgressImgSort, 
-  IProgressMoldAddQueryReq, 
-  IProgressMoldListResp, 
-  IProgressMoldUpdateQueryReq, 
-  IProgressMoldUpdateResp, 
-  IProgressQueryReq, 
-  IProgressSampleReceiptResp, 
-  IProgressSampleUpdate, 
-  ISampleId, 
+import type {
+  IComponentId,
+  IGetByIdQueryEvaluationResp,
+  IIdNo,
+  IProgress,
+  IProgressFilterResp,
+  IProgressId,
+  IProgressMoldAddQueryReq,
+  IProgressMoldListResp,
+  IProgressMoldUpdateQueryReq,
+  IProgressMoldUpdateResp,
+  IProgressQueryReq,
+  IProgressSampleReceiptResp,
+  IProgressSampleUpdate,
+  ISampleId,
   ISampleListQueryReq,
   ISampleListResp,
   IShareListResp,
   ISharePersonReq,
-  ISharelistQueryReq} from '/@/type/progress/progressType'
+  ISharelistQueryReq
+} from '/@/type/progress/progressType'
 
 /**
  * 新品进度-获取新品进度管理列表
@@ -145,7 +145,7 @@ export function deleteImage(data: FormData) {
 /**
  * 拖拽修改图片排序
  */
-export function updateProgressImgSort(data?: IProgressImgSort) {
+export function updateProgressImgSort(data: number[]) {
   return request({
     url: `${BASE_API}/progress/img/sort`,
     method: 'post',
