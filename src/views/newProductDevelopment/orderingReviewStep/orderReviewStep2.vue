@@ -45,12 +45,9 @@
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
               {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : ''}}
             </template>
-            <template v-if="row['column0'] === 'grossMarginRate'">
-              {{ row[prop] !== null ? Number(row[prop].slice(0, -1)) * 100 + '%' : ''}}
-            </template>
             <template 
               v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'
-          && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'grossMarginRate'">
+          && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
               {{ row[prop] }}
             </template>
             

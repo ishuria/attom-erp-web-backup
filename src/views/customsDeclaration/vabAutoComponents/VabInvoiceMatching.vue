@@ -477,6 +477,7 @@ const _invoiceName = ref<string>('')
 const _invoiceUnit = ref<string>('')
 const _invoiceCount = ref<number>(0)
 const _includingTaxPrice = ref<number>(0)
+let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchQueryForm.detailId = row.detailId!
@@ -489,7 +490,6 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _invoiceUnit.value = row.invoiceUnit!
     _invoiceCount.value = row.invoiceCount!
     _includingTaxPrice.value = row.includingTaxPrice!
-    
     matchTotal.value = data?.total!
     matchList.value = data?.list!
     matchVisible.value = true
@@ -499,7 +499,6 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   }
 }
 
-let copyRow: any
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]

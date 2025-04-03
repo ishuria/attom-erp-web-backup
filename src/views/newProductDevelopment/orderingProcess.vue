@@ -152,6 +152,7 @@ const goBack = async () => {
       path: '/newProductDevelopment/newProductApprovalAndRecords',
     })
   }
+  localStorage.removeItem('orderStep1ReviewId')
 }
 onMounted(() => {
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'，编辑和订大货显示

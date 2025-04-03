@@ -228,6 +228,7 @@ export interface IGetTaxRefundInvoiceList {
    * 供应商名称
    */
   suppliser?: string
+  taxRefundId?: number
 }
 
 export interface IFinishTaxRefundInvoiceRes {

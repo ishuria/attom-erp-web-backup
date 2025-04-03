@@ -67,8 +67,8 @@
     </el-space>
     <div class="pay-button-group">
       <el-button @click="handleGoback">退出</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSubmit">保存</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSubmitAndContinue">保存并继续</el-button>
+      <el-button v-throttle="handleSubmit" :loading="saveLoading" type="primary">保存</el-button>
+      <el-button v-throttle="handleSubmitAndContinue" :loading="submitAndContinueLoading" type="primary">保存并继续</el-button>
     </div>
   </div>
 </template>
@@ -174,20 +174,66 @@ const handleDelVariants = async (index: number) => {
   }
 }
 const _reviewId = ref<number>(parseInt(route.query.reviewId))
+// 保存按钮的loading
+const saveLoading = ref<boolean>(false)
+// 保存并继续按钮的loading
+const submitAndContinueLoading = ref<boolean>(false)
+// let firstSave = false // 第一次保存
+const router = useRouter()
 // 当点击保存的时候
 const handleSubmit = () => {
+  saveLoading.value = true
   formRef.value?.validate((valid: any) => {
     if (valid) {
-      const reviewId = parseInt(route.query.reviewId)
       const saveOn = async () => {
+        console.log(route.query)
         if (route.query.progressId) {
-          const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId })
-          if (data) {
-            _reviewId.value = data
-            localStorage.setItem('orderStep1Form', JSON.stringify(form))
-            $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
+          if (localStorage.getItem('orderStep1ReviewId')) {
+            // console.log('orderStep1ReviewId', localStorage.getItem('orderStep1ReviewId'))
+            _reviewId.value = parseInt(localStorage.getItem('orderStep1ReviewId')!)
+            const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
+            if (data) {
+              router.replace({
+                query: {
+                  // ...route.query, 
+                  reviewId: _reviewId.value.toString(),
+                  reviewStatus: '0'
+                }
+              })
+              localStorage.setItem('orderStep1Form', JSON.stringify(form))
+              $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
+            }
+          } else {
+            const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
+            if (data) {
+              _reviewId.value = data
+              // const { data: res } = await reviewStepNo1({ reviewId: _reviewId.value })
+              // Object.assign(form, res)
+            
+              router.replace({
+                query: {
+                  // ...route.query, 
+                  reviewId: _reviewId.value.toString(),
+                  reviewStatus: '0'
+                }
+              })
+              localStorage.setItem('orderStep1Form', JSON.stringify(form))
+              $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
+            }
           }
+          // if (firstSave) {
+          //   const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
+          //   if (data) {
+          //     _reviewId.value = data
+          //     localStorage.setItem('orderStep1Form', JSON.stringify(form))
+          //     $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
+          //   }
+          // } else { //是初次保存,保存后刷新
+            
+          // }
+          
         } else {
+          const reviewId = parseInt(route.query.reviewId)
           // 根据 reviewId 获得 progressId
           const { data: _progressId } = await reviewProgressId({ reviewId })
           // 保存第一步
@@ -205,32 +251,51 @@ const handleSubmit = () => {
       saveOn()
     }
   })
+  saveLoading.value = false
 }
 
 let res: number
 const handleSubmitAndContinue = async () => {
+  submitAndContinueLoading.value = true
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
-      const reviewId =  parseInt(route.query.reviewId)
       const saveOn = async () => {
         try {
+          if (localStorage.getItem('orderStep1ReviewId')) {
+            // console.log('orderStep1ReviewId', localStorage.getItem('orderStep1ReviewId'))
+            _reviewId.value = parseInt(localStorage.getItem('orderStep1ReviewId')!)
+          }
           if (route.query.progressId) {
             const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
     
             if (data !== undefined && data !== null) {
               res = data
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
+              // 只在没有 orderStep1ReviewId 的时候设置
+              if (!localStorage.getItem('orderStep1ReviewId')) {
+                localStorage.setItem('orderStep1ReviewId', data.toString())
+              }
+              emit('sendDataToStep2', res)
+              emit('change-step', 1)    
+              // router.replace({
+              //   query: {
+              //     // ...route.query, 
+              //     reviewId: data.toString(),
+              //     reviewStatus: '0',
+              //     stepNo: '1'
+              //   }
+              // })
               $baseMessage(
                 "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
                 "success",
                 "hey"
               )
-              emit('sendDataToStep2', res)
-              emit('change-step', 1)               
+                         
             } else {
               console.error('API 返回没有 data')
             }
           } else {
+            const reviewId =  parseInt(route.query.reviewId)
             const {data: _progressId } = await reviewProgressId({ reviewId: route.query.reviewId })
             await reviewStepNo1SaveOn({ ...form, progressId: _progressId, reviewId })
           
@@ -253,13 +318,15 @@ const handleSubmitAndContinue = async () => {
       console.log('表单验证失败')
     }
   })
+  submitAndContinueLoading.value = false
 }
 
 defineExpose({ form });
 // 当点击退出的时候
 const handleGoback = async () => {
-    await delVisitedRoute(handleActivePath(route, true))
-    history.back()
+  await delVisitedRoute(handleActivePath(route, true))
+  history.back()
+  localStorage.removeItem('orderStep1ReviewId')
 }
 const fetchData = async () => {
   const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) })
@@ -278,6 +345,14 @@ onMounted(() => {  //编辑进来的需要获取数据, 订大货的需要是空
     fetchData()
   }
 })
+// watch(
+//   () => route.query.stepNo,
+//   (newVal) => {
+//     if (newVal === '1') {
+//       emit('change-step', 1)
+//     }
+//   }
+// )
 </script>
   
 <style lang="scss" scoped>
