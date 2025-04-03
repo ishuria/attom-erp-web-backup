@@ -79,7 +79,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku')"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"/>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"/>
@@ -203,7 +210,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku')"/>   
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>   
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"/>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"/>
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"/>
@@ -268,22 +282,23 @@ import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
-deleteAllPlanPo,
-deletePlanPo,
-deletePurchasePlanPo,
-getPlanPoList,
-getPoPurchaseMatters,
-planPoNrMoq,
-planPorMoq,
-releaseBatchPlanPo,
-releasePlanPo,
-updatePlanPoStatus,
-updatePoPurchaseMatters
+  deleteAllPlanPo,
+  deletePlanPo,
+  deletePurchasePlanPo,
+  getPlanPoList,
+  getPoPurchaseMatters,
+  planPoNrMoq,
+  planPorMoq,
+  releaseBatchPlanPo,
+  releasePlanPo,
+  updatePlanPoStatus,
+  updatePoPurchaseMatters
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
+import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -875,6 +890,15 @@ onUnmounted(() => {
   max-width: 400px; 
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>
   

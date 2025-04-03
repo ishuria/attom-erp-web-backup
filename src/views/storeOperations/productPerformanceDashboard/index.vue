@@ -49,7 +49,7 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -131,6 +131,7 @@
               :header-cell-style="{ textAlign: 'center' }"
               stripe
               @cell-click="cellClick"
+              @sort-change="sortChange"
             >
               <el-table-column
                 v-for="(item) in checkList1"
@@ -536,7 +537,7 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -808,7 +809,10 @@
                     </el-image>
                   </span>
                   <span v-if="item.label === 'ASIN'">
-                    <el-link type="primary">{{ row.asin }}</el-link>
+                    <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
+                    <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)" >
+                      <vab-icon icon="file-copy-2-fill" />
+                    </span>
                     <div class="rate-wrapper">
                       <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                       <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
@@ -849,6 +853,9 @@
                   </span>
                   <span v-if="label4.includes(item.label)">
                     {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
+                  </span>
+                  <span v-if="item.label === '当前售价'">
+                    <el-link type="primary" @click="handleRouterPush(row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
                   </span>
                   <span v-if="item.label === '广告'">
                     <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
@@ -987,7 +994,7 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -1417,44 +1424,45 @@ import { useRoute } from 'vue-router'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
-filterAmazonSKUList,
-filterOperationAmazonAsinList,
-getCurrencyASINAmazonOperation,
-getCurrencyList,
-getCurrencyParentASINAmazonOperation,
-getCurrencySKUAmazonOperation,
-getDevelopUserList,
-getOperationAmazonAsinRankCateList,
-getOperationAmazonAsinRankList,
-getOperationAmazonParentAsinRankCateList,
-getOperationAmazonParentAsinRankList,
-getOperationAmazonSKUList,
-getOperationAmazonSkuRankCateList,
-getOperationAmazonSkuRankList,
-getOperationAmazonSkuVocList,
-getOperationAsinList,
-getOperationColumnList,
-getOperationParentAsinList,
-getUserAmazonOperation,
-hideOrShowOperationColumn,
-updateCurrencyASINAmazonOperation,
-updateCurrencyParentASINAmazonOperation,
-updateCurrencySKUAmazonOperation,
-updateOperationASINOperateTypeList,
-updateOperationSKUDisContinuedStatus,
-updateOperationSKUOperateTypeList,
-updateRemarkAmazonOperation,
-updateSortOperationColumn
+  filterAmazonSKUList,
+  filterOperationAmazonAsinList,
+  getCurrencyASINAmazonOperation,
+  getCurrencyList,
+  getCurrencyParentASINAmazonOperation,
+  getCurrencySKUAmazonOperation,
+  getDevelopUserList,
+  getOperationAmazonAsinRankCateList,
+  getOperationAmazonAsinRankList,
+  getOperationAmazonParentAsinRankCateList,
+  getOperationAmazonParentAsinRankList,
+  getOperationAmazonSKUList,
+  getOperationAmazonSkuRankCateList,
+  getOperationAmazonSkuRankList,
+  getOperationAmazonSkuVocList,
+  getOperationAsinList,
+  getOperationColumnList,
+  getOperationParentAsinList,
+  getOperationUpdateDate,
+  getUserAmazonOperation,
+  hideOrShowOperationColumn,
+  updateCurrencyASINAmazonOperation,
+  updateCurrencyParentASINAmazonOperation,
+  updateCurrencySKUAmazonOperation,
+  updateOperationASINOperateTypeList,
+  updateOperationSKUDisContinuedStatus,
+  updateOperationSKUOperateTypeList,
+  updateRemarkAmazonOperation,
+  updateSortOperationColumn
 } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
-IGetOperationAmazonSKUList,
-IGetOperationAsinList,
-IGetOperationColumnList,
-IGetOperationParentAsinList,
-IOperationAmazonSkuRankList,
-IOperationAmazonSkuVocList
+  IGetOperationAmazonSKUList,
+  IGetOperationAsinList,
+  IGetOperationColumnList,
+  IGetOperationParentAsinList,
+  IOperationAmazonSkuRankList,
+  IOperationAmazonSkuVocList
 } from '/@/type/storeOperation/productPerformanceType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
@@ -1779,6 +1787,10 @@ let _seasonalCoefficient = {
   actualList: [],
   referenceList: []
 } 
+const sortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  console.log(column, prop, order)
+}
 const confirmUpdateRemark = async () => {
   const { data } = await updateRemarkAmazonOperation({
     site: _row.value.site,
@@ -2107,7 +2119,7 @@ const handleWidth = (item: any) => {
         return calculateBrColumnWidth(asinList.value, (row: any) => row._sku, 100)
       }
       case 'ASIN': {
-        return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin')
+        return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin', 60)
       }
       case '父体ASIN': {
         return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
@@ -2762,7 +2774,13 @@ const operationAndDevelopSelect = () => {
   // No default
   }
 }
+const updateDate = ref<string | undefined>('')
+const fetchUpdateDate = async () => {
+  const { data } = await getOperationUpdateDate({ type: activeName.value })
+  updateDate.value = data
+}
 onBeforeMount(() => {
+  fetchUpdateDate()
   if (activeName.value === 0) {
     fetchData()
     fetchColumn()

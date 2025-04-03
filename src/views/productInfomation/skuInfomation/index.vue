@@ -162,7 +162,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
-import handleClipboard from '~/src/utils/clipboard'
+import handleClipboard from '/@/utils/clipboard'
 
 defineOptions({
   name: 'Consumable',

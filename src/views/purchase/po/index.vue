@@ -962,22 +962,22 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
-aggregationContract,
-applyPurchaseReductionCost,
-checkPurchasePo,
-delPayRecord,
-deletePo,
-generatePoContract,
-generateRemittance,
-getComponentPayRecord,
-getPoList,
-getPurchaseBonus,
-getPurchaseCostReduction,
-purchaseTotalAp,
-updateComponentAllPay,
-updateComponentPayPart,
-updateComponentRefund,
-updatePayRecord
+  aggregationContract,
+  applyPurchaseReductionCost,
+  checkPurchasePo,
+  delPayRecord,
+  deletePo,
+  generatePoContract,
+  generateRemittance,
+  getComponentPayRecord,
+  getPoList,
+  getPurchaseBonus,
+  getPurchaseCostReduction,
+  purchaseTotalAp,
+  updateComponentAllPay,
+  updateComponentPayPart,
+  updateComponentRefund,
+  updatePayRecord
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'

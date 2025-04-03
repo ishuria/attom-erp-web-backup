@@ -359,3 +359,16 @@ export function getOperationAmazonSkuVocList(data: IGetOperationAmazonSkuRankLis
     data
   })
 }
+
+/**
+ * 产品表现-获取最新更新日期
+ * @param params 类型 0 sku 1 asin 2 parent_asin 3 美工图片任务明细 4 美工长期明细 5 产品开发设计明细
+ * @returns 日期
+ */
+export function getOperationUpdateDate(params: { type: number }): Promise<{ data?: string }> {
+  return request({
+    url: `${BASE_API}/operation/update/date`,
+    method: 'get',
+    params
+  })
+}
