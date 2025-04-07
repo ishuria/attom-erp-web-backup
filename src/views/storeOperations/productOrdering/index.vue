@@ -384,7 +384,7 @@
       </el-form>
       <template #footer>
         <el-button @click="releaseOrderVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleReleaseOrder">发布</el-button>
+        <el-button :loading="orderListLoading" type="primary" @click="handleReleaseOrder">发布</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -397,14 +397,14 @@ import type { CSSProperties } from 'vue'
 import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
-getOperationOrderList,
-getOperationOrderShippingInspection,
-getOperationOrderSku,
-getOperationOrderSmoothness,
-getOperationOrderSpringFestival,
-releaseOperationPlanPo,
-updateOperationOrderSmoothness,
-updateOperationOrderSpringFestival
+  getOperationOrderList,
+  getOperationOrderShippingInspection,
+  getOperationOrderSku,
+  getOperationOrderSmoothness,
+  getOperationOrderSpringFestival,
+  releaseOperationPlanPo,
+  updateOperationOrderSmoothness,
+  updateOperationOrderSpringFestival
 } from '/@/api/devlocal/productOrdering'
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
@@ -519,15 +519,30 @@ const handleOpenSmooth = async () => {
 }
 // 确认发布订货
 const handleReleaseOrder = async () => {
-  const { data } = await releaseOperationPlanPo({
-    asinId: asinId.value,
-    sku: releaseOrderForm.sku,
-    number: releaseOrderForm.number
-  })
-  if (data) {
-    $baseMessage('发布订货成功！', 'success')
-    releaseOrderVisible.value = false
-    queryData()
+  // 添加表单验证
+  if (!releaseOrderForm.sku || releaseOrderForm.number === null || releaseOrderForm.number === undefined || releaseOrderForm.number === '') {
+    $baseMessage('请填写完整的SKU和订货数量', 'warning')
+    return
+  }
+
+  try {
+    orderListLoading.value = true
+    const { data } = await releaseOperationPlanPo({
+      asinId: asinId.value,
+      sku: releaseOrderForm.sku,
+      number: releaseOrderForm.number
+    })
+    
+    if (data) {
+      releaseOrderVisible.value = false
+      $baseMessage('发布订货成功！', 'success')
+      await queryData()
+    }
+  } catch (error) {
+    console.error('发布订货失败:', error)
+    $baseMessage('发布订货失败，请重试', 'error')
+  } finally {
+    orderListLoading.value = false
   }
 }
 let copyRow: IGetOperationOrderList
@@ -548,7 +563,10 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
   releaseOrderVisible.value = true
   if (row.sku) {
     orderListLoading.value = true
-    const skuArray = row.sku.split(',')
+    // const skuArray = row.sku.split(',')
+    // 确保skuArray 是一个没有空值的数组
+    const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
+    // console.log(skuArray)
     skuList.value = skuArray.map((item) => {
       return {
         label: item,
