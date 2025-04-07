@@ -528,15 +528,17 @@ const handleConfirmPrint = async () => {
       })
       if (data) {
 
-        const { data: res } = await printSignSuccess(
-          JSON.stringify(data)
-        )
-        if (res.errorId === "0") {
+        // const { data: res } = await printSignSuccess(
+        //   JSON.stringify(data)
+        // )
+        // if (res.errorId === "0") {
           $baseMessage('打印成功!', 'success')
           printCountVisible.value = false
-        } else {
-          $baseMessage('打印失败!', 'error')
-        }
+        // } else {
+        //   $baseMessage('打印失败!', 'error')
+        // }
+      } else {
+        $baseMessage('打印失败!', 'error')
       }
     }
   })

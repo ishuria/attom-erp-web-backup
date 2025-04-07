@@ -405,7 +405,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
-import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getEncasementUserPrinter, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, printEncasementSuccess, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, updateEncasementUserPrinter, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getEncasementUserPrinter, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, updateEncasementUserPrinter, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -525,13 +525,15 @@ const handleConfirmPrint = async () => {
         quantity: printForm.count!
       })
       if (data) {
-        const { data: res } = await printEncasementSuccess(JSON.stringify(data))
-        if (res) {
+        // const { data: res } = await printEncasementSuccess(JSON.stringify(data))
+        // if (res) {
           $baseMessage('打印成功!', 'success')
           printCountVisible.value = false
-        } else {
-          $baseMessage('打印失败!', 'error')
-        }
+        // } else {
+        //   $baseMessage('打印失败!', 'error')
+        // }
+      } else {
+        $baseMessage('打印失败!', 'error')
       }
     }
   })
