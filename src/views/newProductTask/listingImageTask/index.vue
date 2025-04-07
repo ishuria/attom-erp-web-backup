@@ -9,8 +9,8 @@
             <el-button type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
-            <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
-            <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
+            <!-- <el-button type="primary" @click="showMissionClaim">任务认领</el-button> -->
+            <el-button type="primary" @click="showAssignTask">任务分配</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -175,8 +175,8 @@
             <el-button type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
             <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
-            <el-button type="primary" @click="showMissionClaim">任务认领</el-button>
-            <!-- <el-button type="primary" @click="showAssignTask">任务分配修改</el-button> -->
+            <!-- <el-button type="primary" @click="showMissionClaim">任务认领</el-button> -->
+            <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -529,7 +529,7 @@
       </template>
     </vab-dialog>
     <!-- 任务认领 -->
-    <vab-dialog
+    <!-- <vab-dialog
       v-model="missionClaimVisible"
       title="任务认领"
       width="20%"
@@ -547,7 +547,7 @@
           <el-button type="success" @click="handleConfirmClaimMission">确定</el-button>
         </div>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
     <!-- 任务分配 -->
     <vab-dialog
       v-model="assignTaskVisible"
@@ -681,7 +681,7 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { useRoute } from 'vue-router'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
-import { addArtDesignSelectionReasons, addArtDesignTask, claimArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { useTabStateStore } from '/@/store/modules/tabsState'
@@ -748,10 +748,10 @@ const selectedRows = ref<IGetArtDesignTaskList[]>([])
 const setSelectedRows = (value: IGetArtDesignTaskList[]) => {
   selectedRows.value = value
 }
-const missionClaimVisible = ref<boolean>(false)
-const missionClaimForm = reactive<{ type: number }>({
-  type: 0
-})
+// const missionClaimVisible = ref<boolean>(false)
+// const missionClaimForm = reactive<{ type: number }>({
+//   type: 0
+// })
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string, label: string }[]>([]) //搜索选项
 const skuList = ref<{ value: string, label: string }[]>([]) //搜索列表
@@ -1157,25 +1157,25 @@ const showAssignTask = () => {
   }
   assignTaskVisible.value = true
 }
-const handleConfirmClaimMission = async () => {
-  const ids = selectedRows.value.map((item) => item.id).join(',')
-  const { data } = await claimArtDesignTask({
-    ids,
-    type: missionClaimForm.type
-  })
-  if (data) {
-    $baseMessage('任务认领成功！', 'success')
-    fetchData()
-    missionClaimVisible.value = false
-  }
-}
-const showMissionClaim = () => {
-  if (selectedRows.value.length === 0) {
-    $baseMessage('您未选择任何行！', 'warning')
-    return
-  }
-  missionClaimVisible.value = true
-}
+// const handleConfirmClaimMission = async () => {
+//   const ids = selectedRows.value.map((item) => item.id).join(',')
+//   const { data } = await claimArtDesignTask({
+//     ids,
+//     type: missionClaimForm.type
+//   })
+//   if (data) {
+//     $baseMessage('任务认领成功！', 'success')
+//     fetchData()
+//     missionClaimVisible.value = false
+//   }
+// }
+// const showMissionClaim = () => {
+//   if (selectedRows.value.length === 0) {
+//     $baseMessage('您未选择任何行！', 'warning')
+//     return
+//   }
+//   missionClaimVisible.value = true
+// }
 const handleDelArtDesignTask = async (row: IGetArtDesignTaskList) => {
   $baseConfirm('确定要删除美工任务吗？', null, async () => {
     const { data } = await delArtDesignTask({ id: row.id! })

@@ -4,8 +4,8 @@
       <el-tab-pane label="待付款" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
-            <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
+            <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
@@ -128,8 +128,8 @@
       <el-tab-pane label="部分付款" :name="3">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
-            <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
+            <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
@@ -252,8 +252,8 @@
       <el-tab-pane label="已付全款" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
-            <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
+            <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
@@ -376,8 +376,8 @@
       <el-tab-pane label="超额付款" :name="5">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
-            <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
+            <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
@@ -500,8 +500,8 @@
       <el-tab-pane label="已完结" :name="6">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
-            <el-button type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
-            <el-button type="warning" @click="handleShowInstallment">分批付款</el-button>
+            <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
+            <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
             <el-button type="danger" @click="handleShowRefund">退款</el-button>
             <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
             <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
@@ -791,7 +791,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseInstallmentDialog">关闭</el-button>
-        <el-button type="primary" @click="handleConfirmInstallment">确认</el-button>
+        <el-button :loading="installmentLoading" type="primary" @click="handleConfirmInstallment">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 退款 -->
@@ -1286,6 +1286,7 @@ const handleDelPayRecord = async (row: any, index: number) => {
     console.error(error)
   }
 }
+const fullPaymentLoading = ref<boolean>(false)
 // 处理已付尾款/全款
 const handlePaymentPaid = async () => {
   // 判断是否选中零件操作
@@ -1294,6 +1295,7 @@ const handlePaymentPaid = async () => {
     return
   }
   try {
+    fullPaymentLoading.value = true
     let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
     let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',');
     const { data } = await updateComponentAllPay({
@@ -1306,6 +1308,8 @@ const handlePaymentPaid = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    fullPaymentLoading.value = false
   }
 }
 // 展示分批付款弹窗
@@ -1354,11 +1358,13 @@ const clearTableSelect = () => {
   })
   selectedCompArray.value = []
 }
+const installmentLoading = ref<boolean>(false)
 // 确认分批付款
 const handleConfirmInstallment = async () => {
   installmentFormRef.value?.validate(async (valid: any) => {
     if (valid) {
       try {
+        installmentLoading.value = true
         let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
         let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',');
         const { data } = await updateComponentPayPart({
@@ -1377,6 +1383,8 @@ const handleConfirmInstallment = async () => {
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        installmentLoading.value = false
       }
     }
   })
