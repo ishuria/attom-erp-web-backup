@@ -46,7 +46,7 @@
                 {{ formatTime(row.endTime) }}
               </template>
             </el-table-column>
-            <el-table-column label="工作时长(分钟)" prop="workerHouse" width="130" />
+            <el-table-column label="工时(分钟)" prop="workerHouse" width="130" />
             <el-table-column label="任务编号" prop="packTaskId" width="90">
               <template #default="{ row }"> 
                 <span v-html="row.packTaskId"></span>
@@ -212,19 +212,19 @@
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table border :data="errorList" :header-cell-style="{ textAlign: 'center' }" stripe>
-        <el-table-column align="center" label="开始时间" prop="startTime" width="120" >
+        <el-table-column align="center" label="开始时间" min-width="160" prop="startTime" >
           <template #default="{ row }">
-            {{ row.startTime ? row.startTime.split(' ')[0] : '' }}
+            {{ formatTime(row.startTime)  }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="结束时间" prop="endTime" width="120" >
+        <el-table-column align="center" label="结束时间" min-width="160" prop="endTime" >
           <template #default="{ row }">
-            {{ row.endTime ? row.endTime.split(' ')[0] : '' }}
+            {{ formatTime(row.endTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="打包人姓名" prop="packPersonName" />
-        <el-table-column align="center" label="工作时长(分钟)" prop="workingHours" />
-        <el-table-column align="center" label="PO" prop="po" width="100" />
+        <el-table-column align="center" label="打包人姓名" prop="packPersonName" :width="flexColumnWidth(errorList, '打包人姓名', 'packPersonName')" />
+        <el-table-column align="center" label="工作时长(分钟)" prop="workingHours" :width="flexColumnWidth(errorList, '工作时长(分钟)', 'workingHours')" />
+        <el-table-column align="center" label="PO" min-width="100" prop="po" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(errorList, 'SKU', 'sku')" />
       </el-table>
       <vab-pagination 
