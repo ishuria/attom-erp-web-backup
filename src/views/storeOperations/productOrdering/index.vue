@@ -520,7 +520,7 @@ const handleOpenSmooth = async () => {
 // 确认发布订货
 const handleReleaseOrder = async () => {
   // 添加表单验证
-  if (!releaseOrderForm.sku || releaseOrderForm.number === null || releaseOrderForm.number === undefined || releaseOrderForm.number === '') {
+  if (!releaseOrderForm.sku || !releaseOrderForm.number) {
     $baseMessage('请填写完整的SKU和订货数量', 'warning')
     return
   }

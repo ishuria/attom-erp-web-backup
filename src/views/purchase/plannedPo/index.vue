@@ -4,10 +4,10 @@
       <el-tab-pane label="待发布" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
-            <el-button type="primary" @click="handlePlannedPoCreate">创建</el-button>
-            <el-button type="success" @click="handleAllPublishPo">批量发布</el-button>
-            <el-button type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
-            <el-button type="danger" @click="handleAllDelete">批量删除</el-button>
+            <el-button :loading="createLoading" type="primary" @click="handlePlannedPoCreate">创建</el-button>
+            <el-button :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
+            <el-button :loading="batchMoqLoading" type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
+            <el-button :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -137,8 +137,8 @@
       <el-tab-pane label="未达起订量" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="danger" @click="handleAllDelete">批量删除</el-button>
-            <el-button type="success" @click="handleAllPublishPo">批量发布</el-button>
+            <el-button :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
+            <el-button :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -446,42 +446,51 @@ const handleUpdateRStatus = async (row: any) => {
     console.error(error)
   }
 }
+const batchMoqLoading = ref<boolean>(false)
 const handleAllMOQ = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
+    return
+  }
+  try {
+    batchMoqLoading.value = true
     const ids = selectRows.value.map((item: any) => item.id).join(',') // 组合 ID
+    const { data } = await planPoNrMoq({
+      ids
+    })
+    if (data === true) {
+      $baseMessage('批量未达起订量成功', 'success', 'hey')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    batchMoqLoading.value = false
+  }
+  
+}
+const batchDelLoading = ref<boolean>(false)
+// 批量删除
+const handleAllDelete = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning', 'hey')
+    return
+  }
+  $baseConfirm('确定要批量删除所选PO吗', null, async () => {
     try {
-      const { data } = await planPoNrMoq({
-        ids
-      })
+      batchDelLoading.value = true
+      const ids = selectRows.value.map((item: any) => item.id).join(',')
+      const { data } = await deleteAllPlanPo({ids})
       if (data === true) {
-        $baseMessage('批量未达起订量成功', 'success', 'hey')
+        $baseMessage('批量删除PO成功', 'success', 'hey')
         fetchData()
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      batchDelLoading.value = false
     }
-  }
-}
-// 批量删除
-const handleAllDelete = async () => {
-  if (selectRows.value.length === 0) {
-    $baseMessage('您未选中任何行', 'warning', 'hey');
-  } else {
-    $baseConfirm('确定要批量删除所选PO吗', null, async () => {
-      const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-      try {
-        const { data } = await deleteAllPlanPo({ids})
-        if (data === true) {
-          $baseMessage('批量删除PO成功', 'success', 'hey');
-          fetchData()
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    });
-  }
+  })
 }
 // 删除SKU
 const handleDelSkuPlannedPo = (row: any) => {
@@ -515,23 +524,28 @@ const handleDelPlannedPo = (row: any) => {
     console.error(error)
   }
 }
+const batchReleaseLoading = ref<boolean>(false)
 // 批量发布PO成功
 const handleAllPublishPo = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'warning', 'hey')
-  } else {
-    const ids = selectRows.value.map((item: any) => item.id).join(','); // 组合 ID
-    try {
-      const { data } = await releaseBatchPlanPo({
-        poIds: ids
-      })
-      if (data === true) {
-        $baseMessage('批量发布到PO成功', 'success', 'hey')
-        fetchData()
-      }
-    } catch (error) {
-      console.error(error)
+    return
+  }
+  
+  try {
+    batchReleaseLoading.value = true
+    const ids = selectRows.value.map((item: any) => item.id).join(',')
+    const { data } = await releaseBatchPlanPo({
+      poIds: ids
+    })
+    if (data === true) {
+      $baseMessage('批量发布到PO成功', 'success', 'hey')
+      fetchData()
     }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    batchReleaseLoading.value = false
   }
 }
 // 发布po
@@ -597,7 +611,7 @@ const handlePlannedPoDetail = async (row: any) => {
     })
   }
 }
-
+const createLoading = ref<boolean>(false)
 const handlePlannedPoCreate = async () => {
   // router.push({
   //   path: '/purchase/poDetail',
@@ -607,6 +621,7 @@ const handlePlannedPoCreate = async () => {
   //     timestamp: Date.now(),
   //   },
   // })
+  createLoading.value = true
   const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
   const tab = handleTabs({
     ...matched.at(-1),
@@ -632,6 +647,7 @@ const handlePlannedPoCreate = async () => {
       },
     })
   }
+  createLoading.value = false
 }
 
 // 弹出框的标题
