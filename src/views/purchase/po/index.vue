@@ -6,14 +6,14 @@
           <vab-query-form-left-panel :span="18">
             <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button :loading="refundLoading" type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button :loading="priceSharingLoading" type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button :loading="generateContractLoading" type="primary" @click="handleGenerateContract">生成合同</el-button>
+            <el-button :loading="mergeContractLoading" type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button :loading="moneyTransferLoading" type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button type="danger" @click="handleDelPo">删除</el-button>
+            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
@@ -130,14 +130,14 @@
           <vab-query-form-left-panel :span="18">
             <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button :loading="refundLoading" type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button :loading="priceSharingLoading" type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button :loading="generateContractLoading" type="primary" @click="handleGenerateContract">生成合同</el-button>
+            <el-button :loading="mergeContractLoading" type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button :loading="moneyTransferLoading" type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button type="danger" @click="handleDelPo">删除</el-button>
+            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
@@ -254,14 +254,14 @@
           <vab-query-form-left-panel :span="18">
             <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button :loading="refundLoading" type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button :loading="priceSharingLoading" type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button :loading="generateContractLoading" type="primary" @click="handleGenerateContract">生成合同</el-button>
+            <el-button :loading="mergeContractLoading" type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button :loading="moneyTransferLoading" type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button type="danger" @click="handleDelPo">删除</el-button>
+            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
@@ -378,14 +378,14 @@
           <vab-query-form-left-panel :span="18">
             <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button :loading="refundLoading" type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button :loading="priceSharingLoading" type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button :loading="generateContractLoading" type="primary" @click="handleGenerateContract">生成合同</el-button>
+            <el-button :loading="mergeContractLoading" type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button :loading="moneyTransferLoading" type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button type="danger" @click="handleDelPo">删除</el-button>
+            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
           </vab-query-form-left-panel>
@@ -502,12 +502,12 @@
           <vab-query-form-left-panel :span="18">
             <el-button :loading="fullPaymentLoading" type="success" @click="handlePaymentPaid">已付全款/尾款</el-button>
             <el-button :loading="installmentLoading" type="warning" @click="handleShowInstallment">分批付款</el-button>
-            <el-button type="danger" @click="handleShowRefund">退款</el-button>
-            <el-button type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
-            <el-button type="primary" @click="handleGenerateContract">生成合同</el-button>
-            <el-button type="primary" @click="handleShowMergeContract">聚合合同</el-button>
-            <el-button type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
-            <el-button type="primary" @click="handleReduceCost">降本提成申请</el-button>
+            <el-button :loading="refundLoading" type="danger" @click="handleShowRefund">退款</el-button>
+            <el-button :loading="priceSharingLoading" type="primary" @click="handleShowTotalPriceSharing">总价分摊</el-button>
+            <el-button :loading="generateContractLoading" type="primary" @click="handleGenerateContract">生成合同</el-button>
+            <el-button :loading="mergeContractLoading" type="primary" @click="handleShowMergeContract">聚合合同</el-button>
+            <el-button :loading="moneyTransferLoading" type="primary" @click="handleShowGenerateMoneyTransfer">生成汇款模板</el-button>
+            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
             <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0;" type="danger">跨月调整金额：{{ procurementBonusCrossMonth }}</el-text>
@@ -843,7 +843,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseRefundDialog">关闭</el-button>
-        <el-button type="primary" @click="handleConfirmRefund">确认</el-button>
+        <el-button :loading="refundLoading" type="primary" @click="handleConfirmRefund">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 总价分摊 -->
@@ -865,7 +865,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseTotalPriceSharingDialog">关闭</el-button>
-        <el-button type="primary" @click="handleConfirmTotalPriceSharing">确认</el-button>
+        <el-button :loading="priceSharingLoading" type="primary" @click="handleConfirmTotalPriceSharing">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 聚合合同 -->
@@ -879,9 +879,7 @@
       <el-divider class="divider-margin"/>
       <el-form class="form-center">
         <el-form-item >
-          <el-upload
-v-model:file-list="contractList" action="#" 
-          :auto-upload="false" class="upload-width" drag multiple :show-file-list="true">
+          <el-upload v-model:file-list="contractList" action="#" :auto-upload="false" class="upload-width" drag multiple :show-file-list="true">
             <el-icon class="el-icon--upload">
               <upload-filled />
             </el-icon>
@@ -894,7 +892,7 @@ v-model:file-list="contractList" action="#"
       </el-form>
       <template #footer>
         <el-button @click="handleCloseMergeContractDialog">关闭</el-button>
-        <el-button type="primary" @click="handleConfirmMergeContract">确认</el-button>
+        <el-button :loading="mergeContractLoading" type="primary" @click="handleConfirmMergeContract">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 生成汇款模板 -->
@@ -923,7 +921,7 @@ v-model:file-list="contractList" action="#"
       </el-form>
       <template #footer>
         <el-button @click="handleCloseGenerateMoneyTransferDialog">关闭</el-button>
-        <el-button type="primary" @click="handleConfirmGenerateMoneyTransfer">确认</el-button>
+        <el-button :loading="moneyTransferLoading" type="primary" @click="handleConfirmGenerateMoneyTransfer">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 自动签收设定 -->
@@ -948,7 +946,7 @@ v-model:file-list="contractList" action="#"
       </el-form>
       <template #footer>
         <el-button @click="closeReductionCost">取消</el-button>
-        <el-button type="primary" @click="confirmReductionCost">确定</el-button>
+        <el-button :loading="reduceCostLoading" type="primary" @click="confirmReductionCost">确定</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -1005,17 +1003,25 @@ const closeReductionCost = () => {
   reductionCostFormRef.value?.resetFields()
   reductionCostVisible.value = false
 }
+const reduceCostLoading = ref<boolean>(false)
 const confirmReductionCost = async () => {
   reductionCostFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      const { data } = await applyPurchaseReductionCost({
-        poComponentId: _poComponentId.value,
-        beforePrice: Number(reductionCostForm.beforePrice),
-        afterPrice: Number(reductionCostForm.afterPrice)
-      })
-      if (data) {
-        $baseMessage('降本提成申请成功！', 'success')
-        closeReductionCost()
+      try {
+        reduceCostLoading.value = true
+        const { data } = await applyPurchaseReductionCost({
+          poComponentId: _poComponentId.value,
+          beforePrice: Number(reductionCostForm.beforePrice),
+          afterPrice: Number(reductionCostForm.afterPrice)
+        })
+        if (data) {
+          $baseMessage('降本提成申请成功！', 'success')
+          closeReductionCost()
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        reduceCostLoading.value = false
       }
     }
   })
@@ -1445,12 +1451,13 @@ const handleCloseRefundDialog = () => {
   refundRef.value?.resetFields()
   refundVisible.value = false
 }
-
+const refundLoading = ref<boolean>(false)
 // 确认退款
 const handleConfirmRefund = async () => {
   refundRef.value?.validate(async (valid: any) => {
     if (valid) {
       try {
+        refundLoading.value = true
         let formData = new FormData()
         formData.append('unitPrice', refundForm.price)
         formData.append('percentage', refundForm.percent)
@@ -1466,6 +1473,8 @@ const handleConfirmRefund = async () => {
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        refundLoading.value = false
       }
     }
   })
@@ -1484,12 +1493,14 @@ const handleCloseTotalPriceSharingDialog = () => {
   totalPriceSharingFormRef.value?.resetFields()
   totalPriceSharingVisible.value = false
 }
+const priceSharingLoading = ref<boolean>(false)
 // 提交总价分摊
 const handleConfirmTotalPriceSharing = async () => {
   totalPriceSharingFormRef.value?.validate(async (valid: any) => {
     if (valid) {
-      let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
       try {
+        priceSharingLoading.value = true
+        let componentIds: string = (selectedCompArray.value.map((item: any) => item.componentId)).join(',');
         const { data } = await purchaseTotalAp({
           componentIds,
           totalMoney: totalPriceSharingForm.tax,
@@ -1503,10 +1514,13 @@ const handleConfirmTotalPriceSharing = async () => {
         }
       } catch (error) {
         console.error(error)
+      } finally {
+        priceSharingLoading.value = false
       }
     }
   })
 }
+const generateContractLoading = ref<boolean>(false)
 // 处理生成合同
 const handleGenerateContract = async () => {
   // 如果没有选中行
@@ -1514,6 +1528,7 @@ const handleGenerateContract = async () => {
     $baseMessage('您未选中任何行', 'warning')
     return
   }
+  generateContractLoading.value = true
   // 获取选中的poIds
   const poIds = selectedPOArray.value.join(',')
   let poSkuComponentId: number[] = []
@@ -1555,6 +1570,8 @@ const handleGenerateContract = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    generateContractLoading.value = false
   }
 }
 // 展示聚合合同弹窗
@@ -1566,11 +1583,13 @@ const handleCloseMergeContractDialog = () => {
   contractList.value = []
   mergeContractVisible.value = false
 }
+const mergeContractLoading = ref<boolean>(false)
 // 确认聚合合同
 const handleConfirmMergeContract = async () => {
   // console.log(contractList.value);
   // console.log(formData);
   try {
+    mergeContractLoading.value = true
     let formData = new FormData()
     contractList.value.forEach((item: any) => {
       formData.append('files', item.raw)
@@ -1596,6 +1615,8 @@ const handleConfirmMergeContract = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    mergeContractLoading.value = false
   }
 }
 // 展示生成汇款模板弹窗
@@ -1607,12 +1628,14 @@ const handleShowGenerateMoneyTransfer = () => {
 const handleCloseGenerateMoneyTransferDialog = () => {
   generateMoneyTransferVisible.value = false
 }
+const moneyTransferLoading = ref<boolean>(false)
 // 确认汇款
 const handleConfirmGenerateMoneyTransfer = async () => { 
   if (!generateMoneyTransferTime.value) {
     $baseMessage('请先填写汇款日期', 'error')
     return
   }
+  moneyTransferLoading.value = true
   const startTime = generateMoneyTransferTime.value[0]
   const endTime = generateMoneyTransferTime.value[1]
   try {
@@ -1637,6 +1660,8 @@ const handleConfirmGenerateMoneyTransfer = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    moneyTransferLoading.value = false
   }
 }
 
@@ -1665,6 +1690,7 @@ const handleShowAutomaticSignature = () => {
 const handleCloseAutomaticSignature = (value: boolean) => {
   automaticSignatureVisible.value = value
 }
+const delLoading = ref<boolean>(false)
 // 删除
 const handleDelPo = async () => {
   if (selectedPORow.value.size === 0) {
@@ -1673,6 +1699,7 @@ const handleDelPo = async () => {
   }
   $baseConfirm('确定要删除该条PO吗? ', "系统提示", async () => {
     try {
+      delLoading.value = true
       const ids = selectedPOArray.value.join(',')
       // console.log(ids);
       
@@ -1684,6 +1711,8 @@ const handleDelPo = async () => {
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      delLoading.value = false
     }
   });
 }
