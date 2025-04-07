@@ -102,7 +102,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getEncasementSku, printBarcodeEncasement, printBarcodeEncasementSuccess, submitEncasementSku } from '/@/api/devlocal/encasement'
+import { getEncasementSku, printBarcodeEncasement, submitEncasementSku } from '/@/api/devlocal/encasement'
 import { usePackingStore } from '/@/store/modules/packing'
 import type { EncasementDetailList, IEncasementProduct } from '/@/type/packagingShipping/shippedType'
 import { getCurrentFormatDate } from '/@/utils/dateUtils'
@@ -260,15 +260,15 @@ const saveAndPrint = async () => {
         encasementDetailList: packingStore.packingData
       })
       if (data) {
-        $baseMessage('保存并打印条形码成功', 'success')
         const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
-        const { data, code } = await printBarcodeEncasement({ code: req })
+        const { code } = await printBarcodeEncasement({ code: req })
         if (code === 0) {
-          const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
-          if (res) {
-            handleCloseDialog()
-            emit('update:finish')
-          }
+          $baseMessage('保存并打印条形码成功', 'success')
+          // const { data: res } = await printBarcodeEncasementSuccess(JSON.stringify(data))
+          // if (res) {
+          handleCloseDialog()
+          emit('update:finish')
+          // }
         }
       }
     }

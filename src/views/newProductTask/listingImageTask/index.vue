@@ -877,7 +877,7 @@ const postTaskForm = reactive<any>({
   position: 0,
   finishDate: '',
   artDesignType: 0,
-  artDesign: '',
+  artDesign: [],
   remark: '',
   linkAddress: ''
 })
@@ -1191,8 +1191,10 @@ const handleSubmitPostTask = async () => {
     if (isValid) {
       const { data } = await addArtDesignTask({
         ...postTaskForm,
-        sites: postTaskForm.sites.join(','),
-        artDesign: postTaskForm.artDesign.join(',')
+        // sites: postTaskForm.sites.join(','),
+        // artDesign: postTaskForm.artDesign.join(',')
+        sites: Array.isArray(postTaskForm.sites) ? postTaskForm.sites.join(',') : '',
+        artDesign: Array.isArray(postTaskForm.artDesign) ? postTaskForm.artDesign.join(',') : ''
       })
       if (data) {
         $baseMessage('发布任务成功！', 'success')

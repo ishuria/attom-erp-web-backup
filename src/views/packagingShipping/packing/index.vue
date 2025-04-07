@@ -405,7 +405,31 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
-import { checkEncasementShipment, confirmEncasementShipments, delEncasement, doLockEncasement, generateTemplateFile1, generateTemplateFile3, generateWalmartShipment, getChannelList, getEncasementList, getEncasementUserPrinter, getIncrementBoxNo, getReinsertionBoxNo, insertPdf, plusEncasementCount, printEncasement, reduceEncasementCount, splitEncasement, splitEncasementCsv, unlockEncasement, updateEncasementShipmentDate, updateEncasementUserPrinter, uploadEncasementFile, uploadGenerateTemplateFile2 } from '/@/api/devlocal/encasement'
+import {
+  checkEncasementShipment,
+  confirmEncasementShipments,
+  delEncasement,
+  doLockEncasement,
+  generateTemplateFile1,
+  generateTemplateFile3,
+  generateWalmartShipment,
+  getChannelList,
+  getEncasementList,
+  getEncasementUserPrinter,
+  getIncrementBoxNo,
+  getReinsertionBoxNo,
+  insertPdf,
+  plusEncasementCount,
+  printEncasement,
+  reduceEncasementCount,
+  splitEncasement,
+  splitEncasementCsv,
+  unlockEncasement,
+  updateEncasementShipmentDate,
+  updateEncasementUserPrinter,
+  uploadEncasementFile,
+  uploadGenerateTemplateFile2
+} from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
