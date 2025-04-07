@@ -186,13 +186,13 @@ const handleSubmit = () => {
   formRef.value?.validate((valid: any) => {
     if (valid) {
       const saveOn = async () => {
-        console.log(route.query)
+    
         if (route.query.progressId) {
           if (localStorage.getItem('orderStep1ReviewId')) {
             // console.log('orderStep1ReviewId', localStorage.getItem('orderStep1ReviewId'))
             _reviewId.value = parseInt(localStorage.getItem('orderStep1ReviewId')!)
             const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
-            if (data) {
+            if (data !== undefined && data !== null) {
               router.replace({
                 query: {
                   // ...route.query, 
@@ -205,7 +205,7 @@ const handleSubmit = () => {
             }
           } else {
             const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
-            if (data) {
+            if (data !== undefined && data !== null) {
               _reviewId.value = data
               // const { data: res } = await reviewStepNo1({ reviewId: _reviewId.value })
               // Object.assign(form, res)
@@ -334,7 +334,7 @@ const fetchData = async () => {
   Object.assign(form, data);
 }
 
-onMounted(() => {  //编辑进来的需要获取数据, 订大货的需要是空
+onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要是空
   const getItem = localStorage.getItem('orderStep1Form')
   if (getItem) {
     Object.assign(form, JSON.parse(getItem));
@@ -344,15 +344,13 @@ onMounted(() => {  //编辑进来的需要获取数据, 订大货的需要是空
   if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
     fetchData()
   }
+  // 订大货的
+  if (localStorage.getItem('orderStep1ReviewId')) {
+    const { data }  = await reviewStepNo1({ reviewId: Number(localStorage.getItem('orderStep1ReviewId')) })
+   
+    Object.assign(form, data);
+  }
 })
-// watch(
-//   () => route.query.stepNo,
-//   (newVal) => {
-//     if (newVal === '1') {
-//       emit('change-step', 1)
-//     }
-//   }
-// )
 </script>
   
 <style lang="scss" scoped>
