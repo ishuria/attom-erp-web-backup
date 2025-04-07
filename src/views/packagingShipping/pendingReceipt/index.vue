@@ -5,6 +5,14 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleAllSigned">批量签收</el-button>
+            <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+              <el-option 
+                v-for="item in printerOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -111,7 +119,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.log) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.log) }}</el-text>
               </el-tooltip>
             </template>
 
@@ -132,6 +140,14 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
+            <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+              <el-option 
+                v-for="item in printerOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -260,7 +276,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.log) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.log) }}</el-text>
               </el-tooltip>
             </template>
 
@@ -457,28 +473,27 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
-import { ref } from 'vue'
-import type { siteValue } from '../constantOption'
-import { siteMap } from '../constantOption'
-import {
-deleteSign,
-deleteSignRecord,
-getSignList,
-getSignLog,
-getSignRecord,
-printSign,
-printSignSuccess,
-signBatch,
-signComponent,
-signMoreRecord,
-updateProductDate,
-updateRecordCount,
-updateRecordOrder,
-updateSignLog
-} from '/@/api/devlocal/packagingShipping'
-
 import { debounce, isEqual } from 'lodash'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import type { siteValue } from '../constantOption'
+import { printerOption, siteMap } from '../constantOption'
+import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
+import {
+  deleteSign,
+  deleteSignRecord,
+  getSignList,
+  getSignLog,
+  getSignRecord,
+  printSign,
+  signBatch,
+  signComponent,
+  signMoreRecord,
+  updateProductDate,
+  updateRecordCount,
+  updateRecordOrder,
+  updateSignLog
+} from '/@/api/devlocal/packagingShipping'
 import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
@@ -490,6 +505,7 @@ defineOptions({
   name: 'PendingReceiptTable',
 })
 
+const printer = ref<string>('')
 const route = useRoute()
 const tabStateStore = useTabStateStore()
 const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
@@ -519,6 +535,18 @@ const signBatchFormRef = ref<FormInstance>()
 const signBatchFormRules = reactive<FormRules<{ signOrder: string }>>({
   signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
 })
+// 获取默认打印机
+const fetchDefaultPrinter = async () => {
+  const { data } = await getEncasementUserPrinter()
+  printer.value = data
+}
+const handleChangePrinter = async () => {
+  try {
+    await updateEncasementUserPrinter({ printer: printer.value })
+  } catch (error) {
+    $baseMessage(error, 'error')
+  }
+}
 const handleConfirmPrint = async () => {
   printFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
@@ -943,6 +971,7 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  fetchDefaultPrinter()
   if (activeName.value === 0) {
     queryForm.status = 0
   } else {
