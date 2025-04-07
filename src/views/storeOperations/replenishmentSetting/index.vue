@@ -1,7 +1,7 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-left-panel :span="24">
+      <vab-query-form-left-panel>
         <el-space>
           <span>站点</span>
           <el-select v-model="site" placeholder="请选择站点" @change="handleChangeSite">
@@ -10,6 +10,16 @@
           <el-button type="primary" @click="handleUpdate">批量修改</el-button>
         </el-space>
       </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item >
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table 
@@ -48,6 +58,13 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
+    <vab-pagination 
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
     <!-- 批量修改 -->
     <vab-dialog 
       v-model="updateVisible" 
@@ -86,6 +103,7 @@
 </template>
   
 <script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
@@ -185,6 +203,19 @@ const fetchData = async () => {
   })
   total.value = data.total
   listLoading.value = false
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const handleCurrentChange = (val: number) => {
+  queryForm.pageNo = val
+  fetchData()
+}
+const handleSizeChange = (val: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = val
+  fetchData() 
 }
 const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
