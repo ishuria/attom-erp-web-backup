@@ -502,7 +502,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="要求完成日期" prop="finishDate">
-          <el-date-picker v-model="postTaskForm.finishDate" type="date"  value-format="YYYY-MM-DD"/>
+          <el-date-picker v-model="postTaskForm.finishDate" :disabled-date="(time: Date) => time.getTime() < Date.now() - 8.64e7" type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="设计类型" prop="artDesignType">
           <el-select v-model="postTaskForm.artDesignType" placeholder="请选择设计类型">

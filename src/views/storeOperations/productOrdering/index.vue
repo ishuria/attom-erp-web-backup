@@ -519,14 +519,19 @@ const handleOpenSmooth = async () => {
 }
 // 确认发布订货
 const handleReleaseOrder = async () => {
-  // 添加表单验证
-  if (!releaseOrderForm.sku || !releaseOrderForm.number) {
-    $baseMessage('请填写完整的SKU和订货数量', 'warning')
+  if (!releaseOrderForm.sku) {
+    $baseMessage('请选择SKU', 'warning')
     return
   }
-
+  if (!releaseOrderForm.number) {
+    $baseMessage('请填写订货数量', 'warning')
+    return
+  }
   try {
+    // 先关闭弹窗,提升体验
+    releaseOrderVisible.value = false
     orderListLoading.value = true
+    
     const { data } = await releaseOperationPlanPo({
       asinId: asinId.value,
       sku: releaseOrderForm.sku,
@@ -534,13 +539,14 @@ const handleReleaseOrder = async () => {
     })
     
     if (data) {
-      releaseOrderVisible.value = false
       $baseMessage('发布订货成功！', 'success')
-      await queryData()
+      queryData()
     }
   } catch (error) {
     console.error('发布订货失败:', error)
     $baseMessage('发布订货失败，请重试', 'error')
+    // 失败时重新打开弹窗
+    releaseOrderVisible.value = true
   } finally {
     orderListLoading.value = false
   }
