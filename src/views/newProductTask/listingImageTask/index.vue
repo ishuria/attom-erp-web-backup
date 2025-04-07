@@ -1187,6 +1187,7 @@ const handleDelArtDesignTask = async (row: IGetArtDesignTaskList) => {
 }
 const handleSubmitPostTask = async () => {
   postTaskFormRef.value?.validate(async (isValid: boolean) => {
+    console.log(postTaskForm.sites)
     if (isValid) {
       const { data } = await addArtDesignTask({
         ...postTaskForm,

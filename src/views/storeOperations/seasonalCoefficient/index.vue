@@ -21,8 +21,19 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
+      v-loading="listLoading"
       border  
       :cell-style="cellStyle" 
       class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe 
@@ -246,22 +257,26 @@
 </template>
 
 <script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
+import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { months } from '../constantOption'
 import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientList, getSeasonalCoefficientSiteList, updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'
 import type { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import type { FormInstance, FormRules } from 'element-plus'
 import { flexColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'SeasonalCoefficient'
 })
 
+const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<IGetSeasonalCoefficientListReq>({
   siteId: 0,
+  keyWord: '',
   pageNo: 1,
   pageSize: 20
 })
@@ -486,6 +501,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       color: '#999'
     }
   } return {
+    cursor: 'pointer',
     textAlign: 'center'
   }
 }
@@ -494,9 +510,15 @@ const fetchSiteList = async () => {
   siteList.value = data
 }
 const fetchData = async () => {
+  listLoading.value = true
   const { data } = await getSeasonalCoefficientList(queryForm)
   list.value = data.list
   total.value = data.total
+  listLoading.value = false
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
 }
 onBeforeMount(() => {
   fetchSiteList()

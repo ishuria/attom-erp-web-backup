@@ -2,6 +2,7 @@ export interface IGetSeasonalCoefficientListReq {
   siteId: number
   pageNo: number
   pageSize: number
+  keyWord: string
 }
 export interface IGetSeasonalCoefficientListRes {
   data: {
