@@ -1016,7 +1016,7 @@
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseGetOffWork">取消</el-button>
-        <el-button type="success" @click="handleConfirmGetOffWork">确定</el-button>
+        <el-button :loading="getOffWorkLoading" type="success" @click="handleConfirmGetOffWork">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 开始任务 - 人员选择 -->
@@ -1411,6 +1411,9 @@ const selectTestRows = ref<any>([])
 const setSelectTestRows = (value: any) => {
   selectTestRows.value = value
 }
+
+const getOffWorkLoading = ref<boolean>(false)
+
 const handleConfirmTest = async () => {
   if (selectTestRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'warning')
@@ -1831,19 +1834,23 @@ const handleConfirmGetOffWork = async () => {
   })
   if (data) {
     $baseConfirm('下班人员列表中，存在有未结束任务的人。确定是否要下班并结束任务?', '系统提示', async () => {
+      getOffWorkLoading.value = true
       const { data: goOff } = await confirmGoOffWork({
         userIds,
       })
       if (goOff === true) {
         $baseMessage('下班人员确定成功', 'success')
+        getOffWorkLoading.value = false
       }
     })
   } else {
+    getOffWorkLoading.value = true
     const { data: goOff } = await confirmGoOffWork({
       userIds,
     })
     if (goOff === true) {
       $baseMessage('下班人员确定成功', 'success')
+      getOffWorkLoading.value = false
     }
   }
   handleCloseGetOffWork()
