@@ -110,7 +110,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -236,12 +236,14 @@
               </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" min-width="250" prop="purchaseMatters">
-              <template #default="{ row }">
-                  <div class="none">
-                      <el-input v-model="row.purchaseMatters" type="text"  />
-                  </div>
-                  <span class="overflow-text">{{ removeHtmlTags(row.purchaseMatters) }}</span>
-              </template>
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column fixed="right" label="SKU操作" width="150" >
             <template #default="{ row }">

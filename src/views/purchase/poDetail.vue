@@ -352,7 +352,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                   </template>
-                  <el-text style="vertical-align: center" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '供应商'">
@@ -438,7 +438,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                   </template>
-                  <el-text style="vertical-align: center" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
                 </el-tooltip>
               </span>
             </template>
