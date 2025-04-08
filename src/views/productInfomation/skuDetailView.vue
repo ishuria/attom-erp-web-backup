@@ -633,32 +633,32 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
-addProductComponentOtherSku,
-createProductComponent,
-delComponentImage,
-delProductComponent,
-delSkuImage,
-getProductAllName,
-getProductAllSupplier,
-getProductComponentPurchase,
-getProductComponentStore,
-getProductConsumablesType,
-getProductDefaultListComponent,
-getProductQualityInspection,
-getProductSkuDetail,
-getProductSkuList,
-getProductSupplier,
-saveProductComponentSuitDetail,
-saveProductContractTerms,
-saveProductPurchaseMatters,
-submitProductComponent,
-submitProductConsumable,
-updateProductComponent,
-updateProductComponentName,
-updateProductSku,
-updateProductSkuRemark,
-uploadComponentImage,
-uploadSkuImage
+  addProductComponentOtherSku,
+  createProductComponent,
+  delComponentImage,
+  delProductComponent,
+  delSkuImage,
+  getProductAllName,
+  getProductAllSupplier,
+  getProductComponentPurchase,
+  getProductComponentStore,
+  getProductConsumablesType,
+  getProductDefaultListComponent,
+  getProductQualityInspection,
+  getProductSkuDetail,
+  getProductSkuList,
+  getProductSupplier,
+  saveProductComponentSuitDetail,
+  saveProductContractTerms,
+  saveProductPurchaseMatters,
+  submitProductComponent,
+  submitProductConsumable,
+  updateProductComponent,
+  updateProductComponentName,
+  updateProductSku,
+  updateProductSkuRemark,
+  uploadComponentImage,
+  uploadSkuImage
 } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
@@ -1040,7 +1040,7 @@ const _row = ref<any>({})
 const handleUpdateComponentName = (row: any) => {
   _row.value = row
   updateComponentNameVisible.value = true
-  componentNameFormRef.value?.resetFields()
+  componentNameForm.componentName = row.componentName
 }
 const handleSubmitComponentName = async () => {
   componentNameFormRef.value?.validate(async (valid: any) => { 
