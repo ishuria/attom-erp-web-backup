@@ -352,7 +352,7 @@ import { useRoute } from 'vue-router'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
-import { useTabStateStore } from '/@/store/modules/tabsState'
+// import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -408,8 +408,8 @@ const closeInvoiceMatchExport = () => {
   invoiceMatchExportVisible.value = false
 }
 const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+// const tabStateStore = useTabStateStore()
+const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -432,9 +432,19 @@ let copyRow: any
 
 const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
-    queryForm.taxRefundStatus = Number(pane.props.name)
-    activeName.value = Number(pane.props.name)
-    tabStateStore.setTabState(route.path, Number(pane.props.name))
+    const tabValue = Number(pane.props.name)
+    queryForm.taxRefundStatus = tabValue
+    activeName.value = tabValue
+    // tabStateStore.setTabState(route.path, tabValue)
+    // 更新路由参数,保留分页,添加tab状态
+    router.push({
+      query: {
+        ...route.query,
+        tab: tabValue.toString(),
+        pageNo: '1', // tab切换时重置到第一页
+        pageSize: queryForm.pageSize.toString()
+      }
+    })
     queryData()
   }
 }
@@ -463,7 +473,7 @@ const handleExportInvoiceMatch = async () => {
         fromDate: invoiceMatchExportForm.time[0],
         toDate: invoiceMatchExportForm.time[1],
       })
-      console.log(data)
+      // console.log(data)
 
       // if (data.code === 5001) {
       //   $baseMessage(data.msg, 'error')
@@ -583,13 +593,30 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+const router = useRouter()
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  // 更新路由query参数
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: value.toString(),
+      pageSize: queryForm.pageSize.toString()
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
+  // 更新路由query参数
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo.toString(),
+      pageSize: value.toString()
+    }
+  })
   fetchData()
 }
 const headerCellStyle = (): CSSProperties => {
@@ -679,7 +706,21 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
-  queryForm.taxRefundStatus = activeName.value
+  // 从路由参数获取分页信息
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    const tabValue = Number(tab)
+    queryForm.taxRefundStatus = tabValue
+    activeName.value = tabValue
+  } else {
+    queryForm.taxRefundStatus = activeName.value
+  }
   fetchData()
 })
 </script>
