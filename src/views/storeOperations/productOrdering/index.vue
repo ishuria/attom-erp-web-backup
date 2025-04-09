@@ -59,6 +59,7 @@
       :cell-style="cellStyle" 
       class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
+      @row-click="handleRowClick"
     >
       <el-table-column
         v-for="(item, index) in orderColumns"
@@ -475,6 +476,9 @@ const aclStore = useAclStore()
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
 
+const handleRowClick = (row: any, column: any, event: Event) => {
+  currentRowId.value = row.id
+}
 const tableRowClassName = ({
   row,
   rowIndex,
@@ -556,7 +560,7 @@ const handleReleaseOrder = async () => {
     
     if (data) {
       $baseMessage('发布订货成功！', 'success')
-      queryData()
+      fetchData()
     }
   } catch (error) {
     console.error('发布订货失败:', error)
@@ -843,6 +847,7 @@ onBeforeMount(() => {
         background-color: var(--el-color-warning-light-9) !important;
       }
     }
+
   }
 }
 .flex {

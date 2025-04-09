@@ -2,8 +2,8 @@ export interface IGetOperationOrderListReq {
   keyWord?: string
   operationUserId?: number // 运营人员用户id
   sites?: string // 站点列表多个，分割
-  pageNo?: number
-  pageSize?: number
+  pageNo: number
+  pageSize: number
   minDeliveryDate?: number
   maxDeliveryDate?: number
   minNewArrivalDay?: number
