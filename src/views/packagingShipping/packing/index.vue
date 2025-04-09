@@ -158,11 +158,57 @@
       title="发货（沃尔玛）"
       width="20%"
     >
-      <el-text >
+      <!-- <el-text >
         {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
       </el-text>
       <br />
-      <el-button style="margin-top: 20px" type="primary" @click="handleEncasementWalmart">生成模板文件</el-button>
+      <el-button style="margin-top: 20px" type="primary" @click="handleEncasementWalmart">生成模板文件</el-button> -->
+      <el-form ref="shipmentAmazonFormRef" label-position="top" :model="shipmentAmazonForm">
+        <el-form-item style="margin-bottom: 10px">
+          <el-text>
+            {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
+          </el-text>
+        </el-form-item>
+        <el-form-item style="margin-bottom: 10px">
+          <el-space >
+            <el-button @click="handleEncasementWalmart">生成模板文件</el-button>
+            <el-button :disabled="file3Disabled" @click="handleGenerateFile3">下载装箱表格</el-button>
+          </el-space>
+        </el-form-item>
+           
+        <el-form-item label="合同号" prop="contractNumber">
+          <el-input v-model="shipmentAmazonForm.contractNumber" clearable />
+        </el-form-item>
+        <el-form-item label="SHIPMENT ID" prop="shipmentId">
+          <el-input v-model="shipmentAmazonForm.shipmentId" clearable />
+        </el-form-item>
+        <el-form-item label="发往站点" prop="site">
+          <!-- <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
+            <el-option 
+              v-for="item in siteList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select> -->
+          <el-input v-model="shipmentAmazonForm.site" disabled />
+        </el-form-item>
+        <el-form-item label="货代渠道" prop="channel">
+          <el-select v-model="shipmentAmazonForm.channel" clearable placeholder="请选择货代渠道">
+            <el-option 
+              v-for="item in channelList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center;">
+          <el-button type="primary" @click="submitShipmentAmazon">完成</el-button>
+        </div>
+      </template>
     </vab-dialog>
     <!-- 发货（亚马逊）-->
     <vab-dialog
@@ -633,6 +679,7 @@ const handleEncasementWalmart = async () => {
   }).catch((error) => {
     console.log(error);
   })
+  file3Disabled.value = false
 }
 // 发货亚马逊 文件上传的fileName
 const fileName2 = ref<string>('')
