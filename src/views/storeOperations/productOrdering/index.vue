@@ -58,6 +58,7 @@
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
       class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="tableRowClassName"
     >
       <el-table-column
         v-for="(item, index) in orderColumns"
@@ -410,8 +411,10 @@ import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerfo
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
-import { calculateBrColumnWidth, processField } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
+const router = useRouter()
+const route = useRoute()
 const smoothSettingVisible = ref<boolean>(false)
 const quantityCheckVisible = ref<boolean>(false)
 const stockUpVisible = ref<boolean>(false)
@@ -469,7 +472,20 @@ const shipList = ref<any[]>([])
 const orderListLoading = ref<boolean>(false)
 const disabledOpe = ref<boolean>(false)
 const aclStore = useAclStore()
+// 添加选中行的 ID
+const currentRowId = ref<number | undefined>(undefined)
 
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.id === currentRowId.value) {
+    return 'warning-row'
+  }
+}
 const operationSelect = () => {
   const role = aclStore.getRole[0]
   switch (role) {
@@ -565,6 +581,7 @@ const handleSwitchSku = async () => {
 }
 // 打开发布订货
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
+  currentRowId.value = row.id
   copyRow = row
   releaseOrderVisible.value = true
   if (row.sku) {
@@ -616,6 +633,12 @@ const handleWidth = (item: any) => {
     case 'SKU': {
       return calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
     }
+    case '库存可售': {
+      return flexColumnWidth(list.value, '库存可售', 'esAvailableSaleDay', 30)
+    }
+    case '可售含在途': {
+      return flexColumnWidth(list.value, '可售含在途', 'esAvailableSaleDayTotal', 30)
+    }
     default: {
       return item.minWidth
     }
@@ -664,11 +687,27 @@ const queryData = () => {
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+   // 更新路由query参数
+   router.push({
+    query: {
+      ...route.query,
+      pageNo: value.toString(),
+      pageSize: queryForm.pageSize.toString()
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+   // 更新路由query参数
+   router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo.toString(),
+      pageSize: value.toString()
+    }
+  })
   fetchData()
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
@@ -715,6 +754,14 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  // 从路由参数获取分页信息
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchSiteList()
   fetchOperateUserList()
   fetchData()
@@ -773,6 +820,30 @@ onBeforeMount(() => {
 .noneHoverTable :deep(.el-checkbox) {
   transform: scale(1.2);
   transform-origin: center;
+}
+.noneHoverTable {
+  :deep() {
+    // 选中行样式优先级提高
+    .warning-row > td {
+      background-color: var(--el-color-warning-light-9) !important;
+    }
+    
+    // 普通行hover时保持白色
+    .el-table__body tr:not(.warning-row) {
+      &.hover-row > td,
+      &:hover > td {
+        background-color: #ffffff !important;
+      }
+    }
+    
+    // 选中行hover时保持黄色
+    .warning-row {
+      &.hover-row > td,
+      &:hover > td {
+        background-color: var(--el-color-warning-light-9) !important;
+      }
+    }
+  }
 }
 .flex {
   display: flex;

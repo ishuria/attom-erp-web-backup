@@ -102,6 +102,15 @@
           <el-table-column label="汇率" min-width="90" prop="rate" />
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
+          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal" >
+            <template #header>
+              匹配发票<br />总金额￥
+            </template>
+            <template #default="{ row }">
+              <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
+              <span v-else>{{ row.includingTaxPriceTotal }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
           <el-table-column label="利润￥" min-width="100" prop="profit" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
@@ -109,26 +118,38 @@
           <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
           <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="invoiceMatchDate">
+          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">
-              {{ row.invoiceMatchDate ? formatDate(new Date(row.invoiceMatchDate)) : '' }}
+              <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
-          <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" />
-          <el-table-column label="发票数量" min-width="100" prop="invoiceCount" />
-          <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath">
+          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode" >
             <template #default="{ row }">
-              <div>
-                <div>
-                  <el-button v-if="row.invoiceNumber" :icon="Document" @click="showPdf(row)" />
-                </div>
-                <div>
-                  <el-button v-if="row.invoiceFilePath" :icon="Download" @click="downloadInvoice(row)" />
+              <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="发票号码" min-width="330" prop="formattedInvoiceNumber" >
+            <template #default="{ row }">
+              <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
+                <span>{{ item.invoiceNumber }}</span>
+                <div class="button-group">
+                  <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+                  <el-button v-if="item.invoiceFilePath" class="button-download" :icon="Download" size="small" @click="downloadInvoice(item.invoiceFilePath)" />
+                  <el-tooltip
+                    content=""
+                    effect="dark"
+                    placement="top"
+                  >
+                    <template #content>
+                      <div class="custom-tooltip">删除匹配</div>
+                    </template>
+                    <el-button class="button-delete" :icon="Delete" plain size="small" type="danger" @click="handleDeleteMatch(item)" />
+                  </el-tooltip>
                 </div>
               </div>
             </template>
           </el-table-column>
+          <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
           <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
@@ -138,11 +159,18 @@
               <span v-html="row.payRecordList"></span>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="100">
+          <!-- <el-table-column fixed="right" label="操作" width="100">
             <template #default="{ row }">
-              <el-link type="danger" :underline="false" @click="handleDeleteMatch(row)">删除匹配</el-link>
+              <div v-if="row.formattedInvoiceNumber.length > 0">
+                <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index">
+                  <el-link type="danger" :underline="false" @click="handleDeleteMatch(item)">删除匹配</el-link>
+                </div>
+              </div>
+              <div v-else>
+                <el-link type="danger" :underline="false" @click="handleDeleteMatch(row)">删除匹配</el-link>
+              </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -221,6 +249,15 @@
           <el-table-column label="汇率" min-width="90" prop="rate" />
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
+          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal" >
+            <template #header>
+              匹配发票<br />总金额￥
+            </template>
+            <template #default="{ row }">
+              <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
+              <span v-else>{{ row.includingTaxPriceTotal }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
           <el-table-column label="利润￥" min-width="100" prop="profit" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
@@ -228,19 +265,27 @@
           <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
           <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="invoiceMatchDate">
+          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">
-              {{ row.invoiceMatchDate ? formatDate(new Date(row.invoiceMatchDate)) : '' }}
+              <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
-          <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" />
-          <el-table-column label="发票数量" min-width="100" prop="invoiceCount" />
-          <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath">
+          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode" >
             <template #default="{ row }">
-              <el-button style="min-width: 100%" @click="showPdf(row)">预览</el-button>
+              <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
+          <el-table-column label="发票号码" min-width="330" prop="formattedInvoiceNumber" >
+            <template #default="{ row }">
+              <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
+                <span>{{ item.invoiceNumber }}</span>
+                <div class="button-group">
+                  <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
           <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
@@ -344,7 +389,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Document, Download, Search } from '@element-plus/icons-vue'
+import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
@@ -364,9 +409,9 @@ defineOptions({
 // const dialogWidth = ref<number>(0)
 const source = ref<string>('')
 const pdfLoading = ref<boolean>(false)
-const showPdf = (row: IGetTaxRefundBatchDetailList) => {
+const showPdf = (path: string) => {
   pdfLoading.value = true
-  source.value = row.invoiceFilePath!
+  source.value = path
   pdfVisible.value = true
   pdfLoading.value = false
 }
@@ -375,9 +420,9 @@ const showPdf = (row: IGetTaxRefundBatchDetailList) => {
  * 下载发票信息
  * @param row
  */
-const downloadInvoice = (row: IGetTaxRefundBatchDetailList) => {
+const downloadInvoice = (path: string) => {
   const link = document.createElement('a')
-  link.href = row.invoiceFilePath!
+  link.href = path
   link.download = link.href.split('/').pop()!
   // 触发下载
   document.body.appendChild(link)
@@ -685,9 +730,10 @@ const fetchData = async () => {
       item.payRecordList = item.payRecordList
         .map((record: PayRecordList) => {
           const percentage = record.percentage
+          const numberPercentage = Number(record.percentage?.slice(0, -1))
           const createTime = record.createTime!.split(' ')[0]
           item.payRecord.push(`${createTime}: ${percentage}(${record.payPrice})`)
-          if (percentage < 0) {
+          if (numberPercentage < 0) {
             return `
             <span class="create-time">${createTime}</span>:
             <span class="percentage-red">${percentage}</span>
@@ -700,6 +746,17 @@ const fetchData = async () => {
           }
         })
         .join('<br>')
+    }
+    // 处理发票匹配记录
+    if (Array.isArray(item.matchInvoiceRecord)) {
+      item.formattedMatchDate = item.matchInvoiceRecord.map(record => formatDate(new Date(record.invoiceMatchDate)))
+      item.formattedInvoiceCode = item.matchInvoiceRecord.map(record => record.invoiceCode)
+      item.formattedInvoiceNumber = item.matchInvoiceRecord.map(record => ({
+        invoiceNumber: record.invoiceNumber,
+        invoiceFilePath: record.invoiceFilePath,
+        invoiceDetailId: record.invoiceDetailId,
+        id: item.id
+      }))
     }
     // console.log(item.payRecord)
   })
@@ -773,10 +830,29 @@ onBeforeMount(() => {
         .el-table {
           flex: 1;
 
-          .el-table__body .cell {
-            min-height: 32px;
-            line-height: 34px;
+          // .el-table__body .cell {
+          //   min-height: 32px;
+          //   line-height: 34px;
+          // }
+          .invoice-number-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 0;
+            
+            .button-group {
+              display: flex;
+              margin-left: 6px;
+
+              .button-download {
+                margin-left: 6px;
+              }
+              .button-delete {
+                margin-left: 6px;
+              }
+            }
           }
+
           .none {
             display: none;
           }
@@ -800,5 +876,10 @@ onBeforeMount(() => {
     transform: scale(1.3);
     transform-origin: center;
   }
+}
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: 14px;
+  white-space: pre-wrap; 
 }
 </style>

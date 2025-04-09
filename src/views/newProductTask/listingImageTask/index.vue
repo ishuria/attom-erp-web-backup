@@ -681,7 +681,7 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { useRoute } from 'vue-router'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
-import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { useTabStateStore } from '/@/store/modules/tabsState'
@@ -1062,6 +1062,7 @@ const handleConfirmAssignTask = async () => {
     aPlus: assignTaskForm.aPlus.join(','),
     videoPerson: assignTaskForm.videoPerson.join(','),
     instructionPerson: assignTaskForm.instructionPerson.join(','),
+    type: activeName.value
   })
   if (data) {
     $baseMessage('任务分配修改成功！', 'success')
@@ -1150,10 +1151,25 @@ const showMarginSetting = async () => {
   Object.assign(marginSettingForm, data)
   marginSettingVisible.value = true
 }
-const showAssignTask = () => {
+const showAssignTask = async () => {
   if (selectedRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'warning')
     return
+  }
+  if (selectedRows.value.length > 1 && activeName.value === 1) {
+    $baseMessage('您只能选择一行！', 'warning')
+    return
+  }
+  if (activeName.value === 1) {
+    // console.log(selectedRows.value)
+    const { data } = await queryArtDesignTaskDistribution({ taskId: selectedRows.value[0].id! })
+    if (data) {
+      assignTaskForm.baseImageUrlPerson = data.baseImageUrlPersons
+      assignTaskForm.moldingPerson = data.moldingPersons
+      assignTaskForm.aPlus = data.aPlus
+      assignTaskForm.videoPerson = data.videoPersons
+      assignTaskForm.instructionPerson = data.instructionPersons
+    }
   }
   assignTaskVisible.value = true
 }
@@ -1222,15 +1238,16 @@ const imagePreviewShow = (url: string) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '站点', '需求文件地址', '产品经理', '备注'].includes(label)) {
+  if (['SKU', 'ASIN', '站点', '需求文件地址', '备注'].includes(label)) {
     return {
       textAlign: 'left'
     }
-  } else if (['基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品设计',].includes(label)) {
-    return {
-      textAlign: 'left',
-    }
   }
+  // else if (['基础图片', '建模/渲染', 'A+', '视频', '说明书/包装', '产品设计',].includes(label)) {
+  //   return {
+  //     textAlign: 'left',
+  //   }
+  // }
   return {
     textAlign: 'center'
   }

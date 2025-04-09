@@ -136,6 +136,7 @@ export interface IUpdateArtDesignTaskDistributeReq {
    * 视频人多个用,分割
    */
   videoPerson?: string
+  type: number
 }
 export interface IGetSellingPointRes {
   data: IGetSellingPoint
@@ -382,4 +383,14 @@ export interface IGetArtDesignSelectionReasonsList {
 export interface IUpdateArtDesignDemandAddressReq {
   id: number
   demandAddress: string
+}
+
+export interface IQueryArtDesignTaskDistributionRes {
+  data: {
+    baseImageUrlPersons: number[]
+    instructionPersons: number[]
+    moldingPersons: number[]
+    videoPersons: number[]
+    aPlus: number[]
+  }
 }

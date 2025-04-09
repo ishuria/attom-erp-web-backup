@@ -114,6 +114,7 @@ export interface IGetTaxRefundBatchDetailList {
   // 退税额
   taxRebate?: number
   taxRefundsCost?: number
+  [property: string]: any
 }
 
 export interface PayRecordList {

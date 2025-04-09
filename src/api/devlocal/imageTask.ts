@@ -15,6 +15,7 @@ import type {
   IGetCopywritingRes,
   IGetSellingPoint,
   IGetSellingPointRes,
+  IQueryArtDesignTaskDistributionRes,
   ISaveArtDesignCopywritingReq,
   ISaveBatchSellingPointReq,
   IUpdateArtDesignDemandAddressReq,
@@ -268,5 +269,17 @@ export function updateArtDesignDemandAddress(data: IUpdateArtDesignDemandAddress
     url: `${BASE_API}/artdesign/demand/address/update`,
     method: 'post',
     data
+  })
+}
+/**
+ * listing-图片任务 已分配人员查询
+ * @param params 
+ * @returns 
+ */
+export function queryArtDesignTaskDistribution(params: { taskId: number }): Promise<IQueryArtDesignTaskDistributionRes> {
+  return request({
+    url: `${BASE_API}/artdesign/task/distribution/query`,
+    method: 'post',
+    params
   })
 }
