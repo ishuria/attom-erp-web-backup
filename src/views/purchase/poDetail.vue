@@ -1392,40 +1392,40 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
-addPoSKU,
-createPlanPo,
-deleteComponentImg,
-deletePoSku,
-deletePoSkuComponent,
-deletePurchasePlanPo,
-deletePurchasePlanPoSkuComponent,
-deleteSkuImg,
-getPoContractTerms,
-getPoDetail,
-getPoPurchaseMatters,
-getPoSkuComponentList,
-getPoSkuComponentSuitDetail,
-getPoSkuIdList,
-getPoSkuList,
-getPurchaseSKU,
-submitPurchaseComponent,
-submitPurchaseConsumable,
-updateAllComponentPrice,
-updateBuyerAndCustomsDeclaration,
-updateComponentPrice,
-updateCreateComponent,
-updateCreateSkuCount,
-updatePoContractTerms,
-updatePoPurchaseMatters,
-updatePoRemarks,
-updatePoSite,
-updatePoSkuComponent,
-updatePoSkuComponentSuitDetail,
-updatePoSkuComponentSuppliser,
-updateSkuCount,
-updateSkuDetail,
-updateSkuImg,
-uploadComponentImg
+  addPoSKU,
+  createPlanPo,
+  deleteComponentImg,
+  deletePoSku,
+  deletePoSkuComponent,
+  deletePurchasePlanPo,
+  deletePurchasePlanPoSkuComponent,
+  deleteSkuImg,
+  getPoContractTerms,
+  getPoDetail,
+  getPoPurchaseMatters,
+  getPoSkuComponentList,
+  getPoSkuComponentSuitDetail,
+  getPoSkuIdList,
+  getPoSkuList,
+  getPurchaseSKU,
+  submitPurchaseComponent,
+  submitPurchaseConsumable,
+  updateAllComponentPrice,
+  updateBuyerAndCustomsDeclaration,
+  updateComponentPrice,
+  updateCreateComponent,
+  updateCreateSkuCount,
+  updatePoContractTerms,
+  updatePoPurchaseMatters,
+  updatePoRemarks,
+  updatePoSite,
+  updatePoSkuComponent,
+  updatePoSkuComponentSuitDetail,
+  updatePoSkuComponentSuppliser,
+  updateSkuCount,
+  updateSkuDetail,
+  updateSkuImg,
+  uploadComponentImg
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
@@ -1779,8 +1779,6 @@ const afterGetSku = async (_sku: string) => {
     // fetchPurchaseAndRepository()
   }
 }
-
-
 // 确认添加sku
 const handleConfirmAddSKU = async () => {
   try {
@@ -2541,12 +2539,12 @@ const handleDelCreateSKU = () => {
     if (index === 0) {
       tempCurId.value = skuData[index + 1].tempId
       Object.assign(poDetailData.value, skuData[index + 1].poDetailData)
-      Object.assign(skuComponentList.value, skuData[index + 1].skuComponentList)
+      skuComponentList.value = skuData[index + 1].skuComponentList
       handleShowCreatePreviousOrNext()
     } else {
       tempCurId.value = skuData[index - 1].tempId
       Object.assign(poDetailData.value, skuData[index - 1].poDetailData)
-      Object.assign(skuComponentList.value, skuData[index - 1].skuComponentList)
+      skuComponentList.value = skuData[index - 1].skuComponentList
       handleShowCreatePreviousOrNext()
     }
   }
@@ -2822,12 +2820,12 @@ const handleFetchCreatePrevious = () => {
   tempCurId.value = skuData[index-1].tempId
   // 将数据显示在页面上
   Object.assign(poDetailData.value, skuData[index-1].poDetailData)
-    poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
-    Object.assign(skuComponentList.value, skuData[index-1].skuComponentList)
-    skuComponentList.value.forEach((item: any) => {
-      item.unitPrice = formattedPrice(item.unitPrice)
-    })
-    handleShowCreatePreviousOrNext()
+  poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : '' 
+  skuComponentList.value = skuData[index-1].skuComponentList
+  skuComponentList.value.forEach((item: any) => {
+    item.unitPrice = formattedPrice(item.unitPrice)
+  })
+  handleShowCreatePreviousOrNext()
 }
 // 当点击创建的下一个按钮
 const handleFetchCreateNext = () => {
@@ -2836,13 +2834,13 @@ const handleFetchCreateNext = () => {
   tempCurId.value = skuData[index+1].tempId
   // 将数据显示在页面上
   Object.assign(poDetailData.value, skuData[index+1].poDetailData)
-    poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
+  poDetailData.value.createTime =  poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
 
-    Object.assign(skuComponentList.value, skuData[index+1].skuComponentList)
-    skuComponentList.value.forEach((item: any) => {
-      item.unitPrice = formattedPrice(item.unitPrice)
-    })
-    handleShowCreatePreviousOrNext()
+  skuComponentList.value = skuData[index+1].skuComponentList
+  skuComponentList.value.forEach((item: any) => {
+    item.unitPrice = formattedPrice(item.unitPrice)
+  })
+  handleShowCreatePreviousOrNext()
 }
 // 当点击上一个按钮
 const handleFetchPreviousData = async () => {
@@ -3023,7 +3021,40 @@ const oldPurchaseNumber = ref<number>()
 // 创建planPo
 const handleCreatePlanPo = async () => {
   try {
-    afterGetSku(poDetailData.value.sku)
+    // 判断是否是第一次创建
+    if (skuStore.data.length === 0) {
+      // 第一次创建
+      afterGetSku(poDetailData.value.sku)
+    } else {
+      // 已存在数据，获取最新数据并更新
+      const { data } = await getPurchaseSKU({
+        sku: poDetailData.value.sku
+      })
+      const currentIndex = skuStore.data.findIndex(item => item.tempId === tempCurId.value)
+      if (currentIndex !== -1) {
+        // 保留用户修改过的字段
+        const updatedPoDetail = {
+          ...data.poSkuDetail,
+          site: poDetailData.value.site,
+          repositoryId: poDetailData.value.repositoryId,
+          purchaseSkuNumber: poDetailData.value.purchaseSkuNumber
+        }
+        
+        // 更新store和页面数据
+        skuStore.data[currentIndex].poDetailData = updatedPoDetail
+        skuStore.data[currentIndex].skuComponentList = data.componentList
+        
+        // 更新页面显示
+        Object.assign(poDetailData.value, updatedPoDetail)
+        poDetailData.value.createTime = poDetailData.value.createTime ? poDetailData.value.createTime.split(' ')[0] : ''
+        skuComponentList.value = data.componentList
+        skuComponentList.value.forEach((item: any) => {
+          item.unitPrice = formattedPrice(item.unitPrice)
+        })
+        
+        $baseMessage('SKU信息已更新', 'success')
+      }
+    }
   } catch (error) {
     console.error(error)
   }

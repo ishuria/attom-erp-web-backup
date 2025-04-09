@@ -252,7 +252,7 @@
     </vab-query-form>
     <el-table border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }">
       <el-table-column label="合同编号" min-width="100" prop="contractNumber" />
-      <el-table-column label="未匹配发票数" min-width="120" prop="" />
+      <el-table-column label="未匹配发票数" min-width="120" prop="notYetInvoice" />
       <el-table-column label="CIF售价" min-width="100" prop="cifPrice" />
       <el-table-column label="运费" min-width="90" prop="freightFee" />
       <el-table-column label="FOB售价" min-width="100" prop="fobPrice" />
@@ -407,7 +407,7 @@ const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
 }
 // 匹配可见
 const matchVisible = ref<boolean>(false)
-const matchStatus = ref<number>(0)
+const matchStatus = ref<number>(-1)
 const total = ref<number>(0)
 const list = ref<IGetTaxRefundInvoiceList[]>([])
 
@@ -442,6 +442,10 @@ const handleMatchSizeChange = (value: number) => {
 }
 
 const handleConfirm = async () => {
+  if (matchStatus.value === -1){
+    $baseMessage('请选择匹配项','warning')
+    return
+  }
   const { data } = await submitTaxRefundInvoiceMatch({
     id: matchStatus.value,
     detailId: matchQueryForm.detailId,
