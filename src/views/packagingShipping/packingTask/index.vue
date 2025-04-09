@@ -1344,6 +1344,7 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1380,13 +1381,12 @@ import {
   updatePackageTaskSite,
   updatePriorityPackaging,
 } from '/@/api/devlocal/packagingShipping'
-import { useUserStore } from '/@/store/modules/user'
 import { useTabStateStore } from '/@/store/modules/tabsState'
+import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
-import { useRoute } from 'vue-router'
 
 defineOptions({
   name: 'PackingTaskTable',
@@ -1581,9 +1581,21 @@ const dialogPartsListTableVisible = ref<boolean>(false)
 const partsList = ref<any>([])
 // 打包条形码文件夹
 const getPackageCodePath = async (row: any) => {
-  await getBarCodePath({
+  const { data } = await getBarCodePath({
     taskId: row.id,
   })
+  if (data) {
+    const { isSupported, copy } = useClipboard({ legacy: true })
+    if (!isSupported) usePermission('clipboard-write')
+    
+    copy(data)
+      .then(() => {
+        $baseMessage('已复制路径到剪贴板！', 'success')
+      })
+      .catch(() => {
+        $baseMessage('复制失败，请重试', 'error')
+      })
+  }
 }
 // 展示零件清单
 const handleShowPartsList = async (row: any) => {
