@@ -857,7 +857,7 @@ onBeforeMount(() => {
   :deep() {
     // 选中行样式优先级提高
     .warning-row > td {
-      background-color: var(--el-color-warning-light-9) !important;
+      background-color: #EDF1F7 !important;
     }
     
     // 普通行hover时保持白色
@@ -870,12 +870,12 @@ onBeforeMount(() => {
     
     // 选中行hover时保持黄色
     .warning-row {
+
       &.hover-row > td,
       &:hover > td {
-        background-color: var(--el-color-warning-light-9) !important;
+        background-color: #EDF1F7;
       }
     }
-
   }
 }
 .flex {
