@@ -60,9 +60,24 @@
             >
               生成汇款模板
             </el-button>
-            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -245,9 +260,24 @@
             >
               生成汇款模板
             </el-button>
-            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -436,9 +466,24 @@
             >
               生成汇款模板
             </el-button>
-            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -627,9 +672,24 @@
             >
               生成汇款模板
             </el-button>
-            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -818,9 +878,24 @@
             >
               生成汇款模板
             </el-button>
-            <el-button :loading="reduceCostLoading" type="primary" @click="handleReduceCost">降本提成申请</el-button>
-            <el-button type="primary" @click="handleShowAutomaticSignature">自动签收设定</el-button>
-            <el-button :loading="delLoading" type="danger" @click="handleDelPo">删除</el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -1065,6 +1140,7 @@
     <!-- 付款记录表 -->
     <vab-dialog
       v-model="paymentHistoryVisible"
+      v-permissions="{ permission: ['purchase:pay:record'] }"
       :before-close="handleClosePaymentHistoryDialog"
       class="moldDialog"
       title="付款记录"
