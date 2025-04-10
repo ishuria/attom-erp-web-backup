@@ -42,10 +42,9 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="200" prop="sku" >
+      <el-table-column label="SKU" min-width="200" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku)" >
         <template #default="{ row }">
-          {{ row._sku[0] }}<br />
-          {{ row._sku[1] }}
+          <span v-html="row._sku"></span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="产品分类" min-width="200" prop="type1" />
@@ -107,6 +106,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
     name: 'ReplenishmentSetting',
@@ -199,7 +199,7 @@ const fetchData = async () => {
   const { data } = await getProductReplenList(queryForm)
   list.value = data.list
   list.value.forEach((item: any) => {
-    item._sku = item.sku.split('\n')
+    item._sku = `${item.sku}<br />${item.desc}`
   })
   total.value = data.total
   listLoading.value = false

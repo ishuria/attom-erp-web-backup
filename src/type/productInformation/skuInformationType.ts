@@ -679,7 +679,8 @@ export interface IgetProductReplenList {
      /**
       * 产品分类1
       */
-     type1?: string;
+  type1?: string;
+  desc?: string
 }
 export interface IgetProductReplenListResp {
     code: number
