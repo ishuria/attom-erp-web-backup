@@ -571,10 +571,6 @@ const handlePlannedPoDetail = async (row: any) => {
   const plannedPoStatus = {
     scrollTop: wrapRef.scrollTop,
     scrollTop2: wrapRef2.scrollTop,
-    pageNo: queryForm.pageNo,
-    pageSize: queryForm.pageSize,
-    keyWord: queryForm.keyWord,
-    activeName: activeName.value
   }
 
   sessionStorage.setItem('plannedPoStatus', JSON.stringify(plannedPoStatus))
@@ -755,23 +751,23 @@ onActivated(() => {
 })
 onBeforeMount(() => {
 
-  const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
-  const pageNo = savedStatus.pageNo
-  const pageSize = savedStatus.pageSize
-  const keyWord = savedStatus.keyWord
+  // const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
+  // const pageNo = savedStatus.pageNo
+  // const pageSize = savedStatus.pageSize
+  // const keyWord = savedStatus.keyWord
   
-  if (pageNo && pageSize) {
-    Object.assign(queryForm, {
-      pageNo,
-      pageSize,
-      keyWord
-    });
-  }
-  const _activeName = savedStatus.activeName
-  if (_activeName) {
-    activeName.value = _activeName
-    queryForm.status = _activeName
-  }
+  // if (pageNo && pageSize) {
+  //   Object.assign(queryForm, {
+  //     pageNo,
+  //     pageSize,
+  //     keyWord
+  //   });
+  // }
+  // const _activeName = savedStatus.activeName
+  // if (_activeName) {
+  //   activeName.value = _activeName
+  //   queryForm.status = _activeName
+  // }
   queryForm.status = activeName.value
   fetchData()
 })

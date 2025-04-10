@@ -6,7 +6,7 @@
     :draggable="false"
     title="修改"
     top="7vh"
-    width="35%"
+    width="40%"
   >
     <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" style="margin-right: 3px; margin-left: 3px;">
       <el-form-item label="数量(箱)" prop="boxNumber" >
@@ -39,8 +39,8 @@
     <el-table border class="noneHoverTable" :data="skuDetailList" :header-cell-style="{ textAlign: 'center' }" max-height="35vh" stripe @cell-click="changeInput">
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
       <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
-      <el-table-column label="说明" min-width="160" prop="productName"/>
-      <el-table-column align="center" label="数量" min-width="50" prop="count">
+      <el-table-column label="说明" min-width="160" prop="productName" :width="flexColumnWidth(skuDetailList, '说明', 'productName')"/>
+      <el-table-column align="center" label="数量" min-width="70" prop="count">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.count" type="number" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -48,7 +48,7 @@
           <span>{{ row.count }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="140">
+      <el-table-column align="center" fixed="right" label="操作">
         <template #default="{ row, $index }">
           <el-link type="danger" :underline="false" @click="handleDelEncasementDetail(row, $index)">删除</el-link>
           <el-link type="primary" :underline="false" @click="showInspection(row)">清点质检</el-link>

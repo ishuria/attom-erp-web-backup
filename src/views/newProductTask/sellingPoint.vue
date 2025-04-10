@@ -8,8 +8,8 @@
           <span class="text-large font-600 mr-3" style="color: var(--el-color-primary)">(输入后系统自动保存)</span>
         </template>
       </el-page-header>
-      <div style="display: flex; flex-direction: column; flex: 1">
-        <el-row :gutter="30" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+      <div style="display: flex; flex: 1; flex-direction: column">
+        <el-row :gutter="30" style=" display: flex;flex-grow: 1; align-items: center; justify-content: center;">
           <!-- 左侧表单 -->
           <el-col :span="10" style="display: flex; flex-direction: column;">
             <el-form ref="formRef1" class="custom-form" label-position="right" label-width="15em" :model="form" :rules="formRules1" style="width: 100%; padding-right: 80px">
@@ -24,10 +24,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="与竞品相比差异化的地方" prop="competitiveProductDifferences">
-                <el-input v-model="form.competitiveProductDifferences" clearable @change="setLocalStorageData" />
+                <el-input v-model="form.competitiveProductDifferences" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="目标客群" prop="targetAudience">
-                <el-input v-model="form.targetAudience" clearable @change="setLocalStorageData" />
+                <el-input v-model="form.targetAudience" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="产品使用场景" prop="usageScenario">
                 <el-input v-model="form.usageScenario" clearable @change="setLocalStorageData" />
@@ -45,7 +45,7 @@
                 <el-input v-model="form.sameTrackAsin" clearable placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="链接关键词" prop="linkKeywords">
-                <el-input v-model="form.linkKeywords" clearable @change="setLocalStorageData" />
+                <el-input v-model="form.linkKeywords" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="图片配色，风格和道具选用要求拍摄注意事项" prop="precautions">
                 <el-input v-model="form.precautions" resize="none" :rows="8" type="textarea" @change="setLocalStorageData" />
@@ -54,7 +54,7 @@
           </el-col>
 
           <!-- 右侧表单 -->
-          <el-col :span="10" style="padding: 45px; display: flex; justify-content: flex-start;"> 
+          <el-col :span="10" style=" display: flex; justify-content: flex-start;padding: 45px;"> 
             <el-form :model="form" style="width: 100%" >
               <el-form-item 
                 label="功能/卖点/5点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;(重要性从高到低排列)"
@@ -64,7 +64,7 @@
                   { required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }
                 ]"
               >
-                <el-input v-model="form.sellingPointContent" resize="none" :rows="32"  style="flex-grow: 1;" type="textarea" @change="setLocalStorageData" />
+                <el-input v-model="form.sellingPointContent" resize="none" :rows="36"  style="flex-grow: 1;" type="textarea" @change="setLocalStorageData" />
               </el-form-item>
             </el-form>
           

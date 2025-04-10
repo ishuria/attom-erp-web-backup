@@ -1754,10 +1754,6 @@ const handlePoDetail = async (row: any) => {
     scrollTop4: wrapRef4.scrollTop,
     scrollTop5: wrapRef5.scrollTop,
     scrollTop6: wrapRef6.scrollTop,
-    pageNo: queryForm.pageNo,
-    pageSize: queryForm.pageSize,
-    keyWord: queryForm.keyWord,
-    activeName: activeName.value
   };
   sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
   
@@ -1827,10 +1823,6 @@ const handleDelPoDetail = (row: any) => {
     scrollTop4: wrapRef4.scrollTop,
     scrollTop5: wrapRef5.scrollTop,
     scrollTop6: wrapRef6.scrollTop,
-    pageNo: queryForm.pageNo,
-    pageSize: queryForm.pageSize,
-    keyWord: queryForm.keyWord,
-    activeName: activeName.value
   };
   sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 }
@@ -2084,22 +2076,22 @@ onBeforeMount(() => {
   fetchBonusData()
   selectedPORow.value = new Set()
   selectedCompArray.value = []
-  const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
-  const pageNo = savedStatus.pageNo
-  const pageSize = savedStatus.pageSize
-  const keyWord = savedStatus.keyWord
-  const _activeName = savedStatus.activeName
-  if (pageNo && pageSize) {
-    Object.assign(queryForm, {
-      pageNo,
-      pageSize,
-      keyWord
-    });
-  }
-  if (_activeName) {
-    activeName.value = _activeName
-    queryForm.status = _activeName
-  }
+  // const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
+  // const pageNo = savedStatus.pageNo
+  // const pageSize = savedStatus.pageSize
+  // const keyWord = savedStatus.keyWord
+  // const _activeName = savedStatus.activeName
+  // if (pageNo && pageSize) {
+  //   Object.assign(queryForm, {
+  //     pageNo,
+  //     pageSize,
+  //     keyWord
+  //   });
+  // }
+  // if (_activeName) {
+  //   activeName.value = _activeName
+  //   queryForm.status = _activeName
+  // }
   queryForm.status = activeName.value
   fetchData()
 })

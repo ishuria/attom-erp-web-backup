@@ -53,7 +53,8 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
-      v-loading="listLoading" 
+      ref="tableRef" 
+      v-loading="listLoading"
       border
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
@@ -394,7 +395,7 @@
 
 <script setup lang="ts">
 import { Minus, Plus, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
-import type { CheckboxValueType, FormInstance } from 'element-plus'
+import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
@@ -744,12 +745,60 @@ const fetchData = async () => {
   })
   listLoading.value = false
 }
+
+const tableRef = ref<TableInstance>()
+// // 添加保存滚动位置的方法
+// const saveScrollPosition = () => {
+//   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+//   if (scrollBarRef?.wrapRef) {
+//     const scrollStatus = {
+//       scrollTop: scrollBarRef.wrapRef.scrollTop
+//     }
+//     localStorage.setItem('productOrderingScrollPosition', JSON.stringify(scrollStatus))
+//   }
+// }
+
+// // 监听表格滚动事件
+// const handleTableScroll = () => {
+//   saveScrollPosition()
+// }
+onActivated(() => {
+  tableRef.value?.doLayout()
+})
+
 onBeforeMount(() => {
   fetchSiteList()
   fetchOperateUserList()
   fetchData()
   operationSelect()
 })
+
+// onMounted(() => {
+//   nextTick(() => {
+//     // 添加滚动事件监听
+//     const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+//     if (scrollBarRef?.wrapRef) {
+//       scrollBarRef.wrapRef.addEventListener('scroll', handleTableScroll)
+      
+//       // 恢复滚动位置
+//       const savedStatus = JSON.parse(localStorage.getItem('productOrderingScrollPosition') || '{}')
+//       if (savedStatus.scrollTop) {
+//         setTimeout(() => {
+//           scrollBarRef.wrapRef.scrollTop = savedStatus.scrollTop
+//         }, 100)
+//       }
+//     }
+//   })
+// })
+
+// onBeforeUnmount(() => {
+//   // 移除滚动事件监听
+//   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+//   if (scrollBarRef?.wrapRef) {
+//     scrollBarRef.wrapRef.removeEventListener('scroll', handleTableScroll)
+//   }
+//   localStorage.removeItem('productOrderingScrollPosition')
+// })
 </script>
 
 <style lang="scss" scoped>
