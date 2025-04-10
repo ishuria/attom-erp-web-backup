@@ -96,8 +96,13 @@ html.dark > body[class*='vab-theme-'] {
 
   .vab-logo-column {
     .logo {
+      width: calc(var(--el-left-menu-width-min) + 1px);
       background: var(--el-color-white) !important;
       border-right: 1px solid var(--el-border-color) !important;
+    }
+
+    .title {
+      width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 2px);
     }
   }
 
