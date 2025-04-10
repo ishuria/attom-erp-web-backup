@@ -552,31 +552,31 @@
     <vab-dialog
       v-model="assignTaskVisible"
       title="任务分配"
-      width="20%"
+      width="26%"
     >
       <el-form label-position="right" label-width="auto" :model="assignTaskForm" style="margin: 0 10px">
         <el-form-item label="基础图片">
-          <el-select v-model="assignTaskForm.baseImageUrlPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="assignTaskForm.baseImageUrlPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="建模渲染">
-          <el-select v-model="assignTaskForm.moldingPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="assignTaskForm.moldingPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="A+">
-          <el-select v-model="assignTaskForm.aPlus" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="assignTaskForm.aPlus" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="视频">
-          <el-select v-model="assignTaskForm.videoPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="assignTaskForm.videoPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="说明书">
-          <el-select v-model="assignTaskForm.instructionPerson" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="assignTaskForm.instructionPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
