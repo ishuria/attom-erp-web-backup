@@ -678,32 +678,26 @@
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import {
-archiveAfterSales,
-badDebtAfterSales,
-checkAfterSalesArchive,
-deleteAfterSales,
-getAfterSalesList,
-getAfterSalesLog,
-getAfterSalesLogs,
-updateAfterSales,
-updateAfterSalesLog,
-updateSalesStatus,
-uploadAfterSales
+  archiveAfterSales,
+  badDebtAfterSales,
+  checkAfterSalesArchive,
+  deleteAfterSales,
+  getAfterSalesList,
+  getAfterSalesLog,
+  getAfterSalesLogs,
+  updateAfterSales,
+  updateAfterSalesLog,
+  updateSalesStatus,
+  uploadAfterSales
 } from '/@/api/devlocal/packagingShipping'
-
-import { useRoute } from 'vue-router'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
-  name: 'AfterSalesTable',
+  name: 'AfterSales',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
-
+const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
@@ -819,7 +813,6 @@ async function handleRemove(row: any) {
 const handleTabClick = (tab: TabsPaneContext) => {
   // Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
-    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryForm.status = Number(tab.props.name);  
   }
   queryData()

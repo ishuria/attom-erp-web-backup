@@ -188,7 +188,7 @@ import { _setStepNo } from "/@/utils/stepNoState"
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'DefaultTable',
+  name: 'NewProductApprovalAndRecords',
 })
 
 interface SpanMethodProps {

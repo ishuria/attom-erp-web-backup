@@ -105,6 +105,10 @@ import { downloadFileP } from '/@/api/devlocal/download'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'PackingHistory'
+})
+
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',

@@ -247,6 +247,10 @@ import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packag
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'ShippedBatch'
+})
+
 const listLoading = ref<boolean>(true)
 const queryForm = reactive<IGetShipmentFbaListReq>({
   keyWord: '',

@@ -229,6 +229,9 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months, opeClassOption } from '../constantOption'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'ProductPerformanceWalmart'
+})
 const seasonalVisible = ref<boolean>(false)
 const chartContainer1 = ref<HTMLElement | null>(null)
 let chartInstance1: echarts.ECharts | null = null

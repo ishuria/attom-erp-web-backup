@@ -133,6 +133,9 @@ import type { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/finan
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'Inbound'
+})
 const date = ref<[string, string]>(getDefaultStringTime())
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)

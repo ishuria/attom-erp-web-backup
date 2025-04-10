@@ -201,6 +201,9 @@ import type { IGetEmailAfterSalesList, IGetEmailAfterSalesListReq } from '/@/typ
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
+defineOptions({
+  name: 'CustomerEmail'
+})
 const addFormRef = ref<FormInstance>()
 const addForm = reactive<any>({})
 const addFormRules = reactive<FormRules>({

@@ -1344,7 +1344,6 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1381,7 +1380,6 @@ import {
   updatePackageTaskSite,
   updatePriorityPackaging,
 } from '/@/api/devlocal/packagingShipping'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
@@ -1389,12 +1387,10 @@ import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChild
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'PackingTaskTable',
+  name: 'PackingTask',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 1))
+const activeName = ref<number>(1)
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
@@ -2197,7 +2193,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
   // selectRows.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
-    tabStateStore.setTabState(route.path, Number(tab.props.name))
     queryForm.status = Number(tab.props.name)
   }
   if (queryForm.status !== 5) {

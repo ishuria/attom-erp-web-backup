@@ -340,7 +340,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'SharedComponents',
+  name: 'PartsDeclaration',
 })
 
 const remarkVisible = ref<boolean>(false)

@@ -131,19 +131,14 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { getOrderMoreComponent } from '/@/api/devlocal/purchasePo'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 
 defineOptions({
-  name: 'SurplusComponentsTable',
+  name: 'SurplusComponents',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const tableRef = ref<TableInstance>()
-
 // 表格加载loading状态
 const listLoading = ref<boolean>(false) //
 const list = ref<any>([])
@@ -167,8 +162,6 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
-
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
@@ -183,14 +176,12 @@ const showPreviewImage = (url: string) => {
   imagePreviewList.value.push(url)
 }
 
-
 const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   // list.value = []
-  // if (tab.props.name !== undefined) {
-  //   queryForm.status = Number(tab.props.name);
-  // }
-  // fetchData()
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
+  if (tab.props.name !== undefined) {
+    queryForm.status = Number(tab.props.name);
+  }
+  fetchData()
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {

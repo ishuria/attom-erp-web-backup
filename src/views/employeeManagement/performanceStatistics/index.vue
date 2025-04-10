@@ -266,9 +266,7 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { getAssessmentList, getProductManagerAssessmentList, getUserAttendanceList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetAssessmentList, IGetAssessmentListReq, IGetProductManagerAssessmentList, IGetUserAttendanceList } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -276,10 +274,7 @@ defineOptions({
   name: 'PerformanceStatistics'
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
-
+const activeName = ref<number>(0)
 /* ============================== 考勤明细变量 ============================== */
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -473,10 +468,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 // tab切换
 const handleTabChange = () => {
   if (activeName.value === 0) {
-    tabStateStore.setTabState(route.path, activeName.value);
     queryData()
   } else if (activeName.value === 2) {
-    tabStateStore.setTabState(route.path, activeName.value);
     queryAssessmentData()
   }
 }

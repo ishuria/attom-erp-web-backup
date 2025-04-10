@@ -414,6 +414,9 @@ import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'ProductOrdering'
+})
 const router = useRouter()
 const route = useRoute()
 const smoothSettingVisible = ref<boolean>(false)
@@ -691,27 +694,11 @@ const queryData = () => {
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-   // 更新路由query参数
-   router.push({
-    query: {
-      ...route.query,
-      pageNo: value.toString(),
-      pageSize: queryForm.pageSize.toString()
-    }
-  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-   // 更新路由query参数
-   router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo.toString(),
-      pageSize: value.toString()
-    }
-  })
   fetchData()
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
@@ -758,14 +745,6 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
-  // 从路由参数获取分页信息
-  const { pageNo, pageSize } = route.query
-  if (pageNo) {
-    queryForm.pageNo = Number(pageNo)
-  }
-  if (pageSize) {
-    queryForm.pageSize = Number(pageSize)
-  }
   fetchSiteList()
   fetchOperateUserList()
   fetchData()

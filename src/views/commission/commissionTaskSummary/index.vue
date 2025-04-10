@@ -431,47 +431,43 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import {
-continueCommissionTaskPicture,
-continueDevelopDesignTask,
-continueLongCommissionTask,
-continueReductionCostTask,
-getCommissionTaskPictureList,
-getDevelopDesignTaskList,
-getLongCommissionTaskList,
-getReductionCostList,
-notPassReductionCostTask,
-passReductionCostTask,
-pauseCommissionTaskPicture,
-pauseDevelopDesignTask,
-pauseLongCommissionTask,
-pauseReductionCostTask,
-updateCommissionTaskPicture,
-updateDevelopDesignTask,
-updateLongCommissionTask,
-updateReductionCostTask,
+  continueCommissionTaskPicture,
+  continueDevelopDesignTask,
+  continueLongCommissionTask,
+  continueReductionCostTask,
+  getCommissionTaskPictureList,
+  getDevelopDesignTaskList,
+  getLongCommissionTaskList,
+  getReductionCostList,
+  notPassReductionCostTask,
+  passReductionCostTask,
+  pauseCommissionTaskPicture,
+  pauseDevelopDesignTask,
+  pauseLongCommissionTask,
+  pauseReductionCostTask,
+  updateCommissionTaskPicture,
+  updateDevelopDesignTask,
+  updateLongCommissionTask,
+  updateReductionCostTask,
 } from '/@/api/devlocal/commission'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
-IGetCommissionTaskPictureList,
-IGetCommissionTaskPictureListReq,
-IGetDevelopDesignTaskList,
-IGetLongCommissionTaskList,
-IGetLongCommissionTaskListReq,
-IGetReductionCostList,
+  IGetCommissionTaskPictureList,
+  IGetCommissionTaskPictureListReq,
+  IGetDevelopDesignTaskList,
+  IGetLongCommissionTaskList,
+  IGetLongCommissionTaskListReq,
+  IGetReductionCostList,
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'CommissionTask',
+  name: 'CommissionTaskSummary',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const list = ref<IGetCommissionTaskPictureList[]>([])
 const longList = ref<IGetLongCommissionTaskList[]>([])
 const developList = ref<IGetDevelopDesignTaskList[]>([])
@@ -727,7 +723,6 @@ const showLongUpdate = (row: IGetLongCommissionTaskList) => {
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   const name = tab.props.name
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
   switch (name) {
     case 0: {
       queryData()

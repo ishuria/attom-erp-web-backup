@@ -70,117 +70,93 @@ export const asyncRoutes: VabRouteRecord[] = [
       title: '首页',
       icon: 'home-2-line',
     },
-    children: [
-      {
-        path: 'index',
-        name: 'Index',
-        component: () => import('/@/views/index/index.vue'),
-        meta: {
-          title: '首页',
-          icon: 'home-2-line',
-          noClosable: true,
-          noKeepAlive: true,
-        },
-      },
-      {
-        path: 'dashboard',
-        name: 'Dashboard',
-        component: () => import('/@/views/index/dashboard.vue'),
-        meta: {
-          title: '看板',
-          icon: 'dashboard-2-line',
-          guard: ['Admin'],
-        },
-      },
-      // {
-      //   path: 'creativeCenter',
-      //   name: 'CreativeCenter',
-      //   component: () => import('/@/views/index/creativeCenter.vue'),
-      //   meta: {
-      //     title: '创作中心',
-      //     icon: 'ancient-gate-line',
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // {
-      //   path: 'monitor',
-      //   name: 'Monitor',
-      //   component: () => import('/@/views/index/monitor.vue'),
-      //   meta: {
-      //     title: '实时监控',
-      //     icon: 'vidicon-2-line',
-      //     dot: 'success',
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // {
-      //   path: 'tile',
-      //   name: 'Tile',
-      //   component: () => import('/@/views/index/tile.vue'),
-      //   meta: {
-      //     title: '磁贴',
-      //     icon: 'collage-line',
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // {
-      //   path: 'separateLayout',
-      //   name: 'SeparateLayout',
-      //   component: () => import('/@/views/index/separateLayout.vue'),
-      //   meta: {
-      //     title: '独立布局',
-      //     icon: 'layout-masonry-line',
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // {
-      //   path: 'dataScreen',
-      //   name: 'DataScreen',
-      //   component: () => import('/@/views/index/dataScreen.vue'),
-      //   meta: {
-      //     title: '数据大屏',
-      //     icon: 'database-2-line',
-      //     target: '_blank',
-      //     badge: 'Hot',
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // // {
-      // //   path: 'workbench',
-      // //   name: 'Workbench',
-      // //   component: () => import('/@/views/index/workbench.vue'),
-      // //   meta: {
-      // //     title: '工作台',
-      // //     icon: 'artboard-line',
-      // //     target: '_blank',
-      // //   },
-      // // },
-      // {
-      //   path: 'application',
-      //   name: 'Application',
-      //   component: () => import('/@/views/index/application.vue'),
-      //   meta: {
-      //     title: '客户端',
-      //     icon: 'apps-2-line',
-      //     noKeepAlive: true,
-      //     dot: true,
-      //     guard: ['Admin'],
-      //   },
-      // },
-      // {
-      //   path: 'changeLog',
-      //   name: 'ChangeLog',
-      //   component: () => import('/@/views/index/changeLog.vue'),
-      //   meta: {
-      //     title: '更新日志',
-      //     icon: 'file-word-line',
-      //     noKeepAlive: true,
-      //     badge: '99+',
-      //     guard: ['Admin'],
-      //   },
-      // },
-    ],
   },
+  // {
+  //   path: '/newProductDevelopment',
+  //   name: 'NewProductDevelopment',
+  //   component: Layout,
+  //   meta: {
+  //     title: '新款开发',
+  //     icon: 'pulse-fill',
+  //   },
+  //   children: [
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/newProductEvaluation/index.vue"),
+  //       meta: {
+  //         icon:"sword-line",
+  //         title: "新款评估",
+  //         dynamicNewTab: true,
+  //       },
+  //       name: "NewProductEvaluation",
+  //       path: "newProductEvaluation"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/addOrUpdateEvalution.vue"),
+  //       meta: {
+  //         title: "查看和修改新款评估",
+  //         hidden: true, // 在菜单中隐藏
+  //         dynamicNewTab: true, // 允许同时打开多个标签页
+  //         activeMenu: "/newProductDevelopment/newProductEvaluation", // 指定激活菜单项
+  //       },
+  //       name: "AddOrUpdateEvalution",
+  //       path: "addOrUpdateEvalution"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/productProgressComponent.vue"),
+  //       meta: {
+  //         title: "零件清单",
+  //         hidden: true, 
+  //         dynamicNewTab: true,
+  //         activeMenu: "/newProductDevelopment/newProductProgress",
+  //       },
+  //       name: "ProductProgressComponent",
+  //       path: "productProgressComponent"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/orderingProcess.vue"),
+  //       meta: {
+  //         title: "新品订货流程",
+  //         hidden: true, 
+  //         dynamicNewTab: true,
+  //         activeMenu: "/newProductDevelopment/newProductApprovalAndRecords",
+  //         noKeepAlive: true, // 不缓存该组件
+  //       },
+  //       name: "OrderingProcess",
+  //       path: "orderingProcess"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/orderingReview.vue"),
+  //       meta: {
+  //         title: "新品订货审批",
+  //         hidden: true, 
+  //         dynamicNewTab: true,
+  //         activeMenu: "/newProductDevelopment/newProductApprovalAndRecords",
+  //       },
+  //       name: "OrderingReview",
+  //       path: "orderingReview"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/newProductProgress/index.vue"),
+  //       meta: {
+  //         title: "新品进度",
+  //         icon: "progress-2-line"
+  //       },
+  //       name: "NewProductProgress",
+  //       path: "newProductProgress"
+  //     },
+  //     {
+  //       component: () => import("/@/views/newProductDevelopment/newProductApprovalAndRecords/index.vue"),
+  //       meta: {
+  //         title: "新品审核",
+  //         icon: "bookmark-2-line"
+  //       },
+  //       name: "NewProductApprovalAndRecords",
+  //       path: "newProductApprovalAndRecords"
+  //     },
+  //   ],
+    
+    
+  // },
   // {
   //   path: '/vab',
   //   name: 'Vab',

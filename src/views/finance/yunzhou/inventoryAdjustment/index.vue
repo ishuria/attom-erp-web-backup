@@ -80,6 +80,9 @@
 import { Search } from '@element-plus/icons-vue'
 import { getDefaultStringTime } from '/@/utils/dateUtils'
 
+defineOptions({
+  name: 'InventoryAdjustment'
+})
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,

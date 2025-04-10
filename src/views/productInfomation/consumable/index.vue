@@ -538,7 +538,6 @@ const handleSupplier = (row: any) => {
       componentId: row.existingPartsListId,
       componentName: row.componentName,
       from: "consumable",
-      timestamp: Date.now(),
     },
   })
 }

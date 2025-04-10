@@ -521,7 +521,6 @@ import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
-import { useRoute } from 'vue-router'
 import { indexColumns } from './indexColumns'
 import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
@@ -544,7 +543,6 @@ import {
   updateProgressSharelist,
   uploadFile
 } from '/@/api/devlocal/progress'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -552,12 +550,10 @@ import { convertString } from '/@/utils/stringUtils'
 import { removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ProgressTable',
+  name: 'NewProductProgress',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const router = useRouter()
 const fixed = ref<string>('right')
 const tableRef = ref<TableInstance>()
@@ -680,7 +676,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value = []
   if (Number(tab.props.name) === 0)  queryForm.status = 0
   else queryForm.status = 1
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
   fetchData()
 }
 // 处理已归档

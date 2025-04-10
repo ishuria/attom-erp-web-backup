@@ -475,7 +475,6 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
@@ -494,7 +493,6 @@ import {
   updateRecordOrder,
   updateSignLog
 } from '/@/api/devlocal/packagingShipping'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -502,13 +500,11 @@ import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
-  name: 'PendingReceiptTable',
+  name: 'PendingReceipt',
 })
 
 const printer = ref<string>('')
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const printCountVisible = ref<boolean>(false)
 const printForm = reactive<{ count: number | undefined }>({
   count: undefined 
@@ -785,7 +781,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
   Object.assign(list.value, [])
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
-    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryForm.status = Number(tab.props.name);  
   }
   queryData()

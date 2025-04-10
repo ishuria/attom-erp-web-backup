@@ -331,9 +331,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
-import { useRoute } from 'vue-router'
 import { addHTSList, delHTSList, getHTSList, getHtsSkuList, updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetHTSList, IGetHTSListReq, IGetHtsSkuListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -352,9 +350,7 @@ const viewQueryForm = reactive<IGetHtsSkuListReq>({
   htsId: 0
 })
 const viewVisible = ref<boolean>(false)
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const queryForm = reactive<IGetHTSListReq>({
   keyWord: '',
   type: 0,
@@ -563,7 +559,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
     activeName.value = 1
     queryData()
   }
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
 }
 const queryData = () => {
   queryForm.pageNo = 1

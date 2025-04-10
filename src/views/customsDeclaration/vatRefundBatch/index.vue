@@ -191,20 +191,16 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
 
 defineOptions({
-  name: 'TaxRefundBatch'
+  name: 'VatRefundBatch'
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const queryForm = reactive<IGetTaxRefundBatchListQuery>({
   keyWord: '',
   status: 0,
@@ -241,7 +237,6 @@ const handleTabClick = (pane: TabsPaneContext) => {
     activeName.value = Number(pane.props.name)
     queryData()
     selectRows.value = []
-    tabStateStore.setTabState(route.path, Number(pane.props.name));
   }
 }
 const handleExportAiTuoMu = async () => {

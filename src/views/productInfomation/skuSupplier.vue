@@ -258,6 +258,9 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'SkuSupplier',
+})
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore

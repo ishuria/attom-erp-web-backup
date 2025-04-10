@@ -282,7 +282,6 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import {
   deleteAllPlanPo,
   deletePlanPo,
@@ -298,7 +297,6 @@ import {
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
@@ -309,12 +307,10 @@ import type { CurrencyCode } from '/@/views/purchase/constantOption'
 import { currencyMap } from '/@/views/purchase/constantOption'
 
 defineOptions({
-  name: 'PlannedPoTable',
+  name: 'PlannedPo',
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const router = useRouter()
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
@@ -673,7 +669,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name);  
-    tabStateStore.setTabState(route.path, Number(tab.props.name));
   }
   activeName.value = queryForm.status
   fetchData()

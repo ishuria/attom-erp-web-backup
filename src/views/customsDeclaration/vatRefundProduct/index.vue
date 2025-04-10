@@ -393,7 +393,6 @@ import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
@@ -403,7 +402,7 @@ import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
-  name: 'TaxRefundManagement',
+  name: 'VatRefundProduct',
 })
 
 // const dialogWidth = ref<number>(0)
@@ -452,7 +451,6 @@ const closeInvoiceMatchExport = () => {
   invoiceMatchExportFormRef.value?.resetFields()
   invoiceMatchExportVisible.value = false
 }
-const route = useRoute()
 // const tabStateStore = useTabStateStore()
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -480,16 +478,6 @@ const handleTabClick = (pane: TabsPaneContext) => {
     const tabValue = Number(pane.props.name)
     queryForm.taxRefundStatus = tabValue
     activeName.value = tabValue
-    // tabStateStore.setTabState(route.path, tabValue)
-    // 更新路由参数,保留分页,添加tab状态
-    router.push({
-      query: {
-        ...route.query,
-        tab: tabValue.toString(),
-        pageNo: '1', // tab切换时重置到第一页
-        pageSize: queryForm.pageSize.toString()
-      }
-    })
     queryData()
   }
 }
@@ -638,30 +626,13 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const router = useRouter()
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // 更新路由query参数
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: value.toString(),
-      pageSize: queryForm.pageSize.toString()
-    }
-  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
-  // 更新路由query参数
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo.toString(),
-      pageSize: value.toString()
-    }
-  })
   fetchData()
 }
 const headerCellStyle = (): CSSProperties => {
@@ -763,21 +734,6 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
-  // 从路由参数获取分页信息
-  const { pageNo, pageSize, tab } = route.query
-  if (pageNo) {
-    queryForm.pageNo = Number(pageNo)
-  }
-  if (pageSize) {
-    queryForm.pageSize = Number(pageSize)
-  }
-  if (tab) {
-    const tabValue = Number(tab)
-    queryForm.taxRefundStatus = tabValue
-    activeName.value = tabValue
-  } else {
-    queryForm.taxRefundStatus = activeName.value
-  }
   fetchData()
 })
 </script>

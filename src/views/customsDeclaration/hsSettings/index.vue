@@ -94,7 +94,7 @@ import type { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDe
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'HS'
+  name: 'HSettings'
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)

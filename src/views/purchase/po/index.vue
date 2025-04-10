@@ -957,7 +957,6 @@ import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { debounce } from 'lodash'
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   aggregationContract,
@@ -979,14 +978,13 @@ import {
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
 import { currencyMap } from '/@/views/purchase/constantOption'
 
 defineOptions({
-  name: 'PoTable',
+  name: 'Po',
 })
 
 const procurementBonus = ref<number>(0)
@@ -1040,9 +1038,7 @@ const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 2))
+const activeName = ref<number>(2)
 const defaultTime2: [Date, Date] = [
   new Date(2000, 1, 1, 0, 0, 0),
   new Date(2000, 2, 1, 23, 59, 59),
@@ -1849,7 +1845,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
   // tableRef.value?.clearSelection()
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name);  
-    tabStateStore.setTabState(route.path, Number(tab.props.name));
   }
   fetchData()
   activeName.value = queryForm.status

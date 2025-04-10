@@ -381,6 +381,9 @@ import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/mat
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'MatchPO'
+})
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
   keyWord: '',

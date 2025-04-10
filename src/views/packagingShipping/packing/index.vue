@@ -480,6 +480,9 @@ import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'Packing'
+})
 const printer = ref<string>('')
 const listLoading = ref<boolean>(false)
 const list = ref<IEncasementList[]>([])

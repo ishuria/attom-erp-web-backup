@@ -246,6 +246,9 @@ import { checkingPackagingTimeError, getMorkPackageList, getPackageTimeDay, getP
 import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '/@/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'PackagingTime'
+})
 const errorList = ref<ICheckingPackagingTimeError[]>([])
 const errorsTotal = ref<number>(0)
 const errorsQueryForm = reactive<ICheckingPackagingTimeErrorReq>({

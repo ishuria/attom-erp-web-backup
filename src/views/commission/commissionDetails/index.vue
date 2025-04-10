@@ -453,17 +453,15 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
-IGetCommissionDetailDevelopList,
-IGetCommissionDetailDevelopListReq,
-IGetCommissionDetailLongList,
-IGetCommissionDetailPictureList,
-IGetCommissionDetailPictureListReq,
+  IGetCommissionDetailDevelopList,
+  IGetCommissionDetailDevelopListReq,
+  IGetCommissionDetailLongList,
+  IGetCommissionDetailPictureList,
+  IGetCommissionDetailPictureListReq,
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -502,9 +500,7 @@ const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
 const siteList = ref<{ id: number; label: string }[]>([])
 const userList = ref<{ id: number; label: string }[]>([])
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const queryForm = reactive<IGetCommissionDetailPictureListReq>({
   keyWord: '',
   site: -1,
@@ -673,7 +669,6 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
 
 const handleTabClick = (tab: TabsPaneContext) => {
   const name = tab.props.name
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
   switch (name) {
     case 0: {
       queryData()

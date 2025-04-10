@@ -215,7 +215,7 @@ const inputFormRef = ref<FormInstance>()
 const outputFormRef = ref<FormInstance>()
 
 defineOptions({
-  name: 'AddEvalution',
+  name: 'AddOrUpdateEvalution',
 })
 
 // route

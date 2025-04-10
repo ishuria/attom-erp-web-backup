@@ -1439,7 +1439,7 @@ import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEd
 import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
 
 defineOptions({
-  name: 'PoDetailTable',
+  name: 'PoDetail',
 })
 
 const handleMove = (event: any) => {

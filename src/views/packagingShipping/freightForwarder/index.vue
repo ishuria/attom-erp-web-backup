@@ -460,6 +460,10 @@ import type { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwa
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'FreightForwarder',
+})
+
 const currencyNumList = [
   {
     value: 0,

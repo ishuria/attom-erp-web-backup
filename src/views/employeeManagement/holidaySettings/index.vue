@@ -68,14 +68,17 @@
 
 <script lang="ts" setup>
 import { Search } from "@element-plus/icons-vue"
+import { type FormInstance, dayjs } from 'element-plus'
 import { addHolidaySettings, deleteHolidaySettings, getHolidaySettingsList } from '/@/api/devlocal/holidaySettings'
 import type {
   IGetHolidaySettingsList,
   IGetHolidaySettingsReq
 } from '/@/type/employeeManagement/holidaySettings'
 import { getCurrentFormatDate } from "/@/utils/dateUtils"
-import { type FormInstance, dayjs } from 'element-plus'
 
+defineOptions({
+  name: 'HolidaySettings'
+})
 const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<any>({
   date: [{ required: true, message: "请选择假期时间", trigger: 'change' }],

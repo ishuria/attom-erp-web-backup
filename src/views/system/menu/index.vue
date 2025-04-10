@@ -65,11 +65,11 @@
 
 import { Plus } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { doDelete,  getMenuList, } from '/@/api/devlocal/router'
-import type { IMenuQueryResp} from '/@/type/menu/menuType'
+import { doDelete, getMenuList, } from '/@/api/devlocal/router'
+import type { IMenuQueryResp } from '/@/type/menu/menuType'
 
 defineOptions({
-  name: 'MenuEdit',
+  name: 'Menu',
 })
 
 const tableRef = ref<TableInstance>()

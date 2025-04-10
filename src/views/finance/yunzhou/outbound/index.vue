@@ -210,6 +210,9 @@ import type { IGetOutBoundList, IGetOutBoundListReq, IGetOutboundInventoryCheckL
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'Outbound'
+})
 const date = ref<[string, string]>(getDefaultStringTime())
 const queryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',

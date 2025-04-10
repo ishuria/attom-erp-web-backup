@@ -679,12 +679,10 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -692,7 +690,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ImageTask'
+  name: 'ListingImageTask'
 })
 
 interface ColumnConfig {
@@ -892,9 +890,7 @@ const postTaskRules = reactive<FormRules<IAddArtDesignTaskReq>>({
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const list = ref<IGetArtDesignTaskList[]>([])
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const queryForm = reactive<IGetArtDesignTaskListReq>({
   keyWord: '',
   pageNo: 1,
@@ -1108,7 +1104,6 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     queryForm.status = Number(tab.props.name)
-    tabStateStore.setTabState(route.path, Number(tab.props.name));
     queryData()
   }
 }

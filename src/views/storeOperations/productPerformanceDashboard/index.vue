@@ -1420,7 +1420,6 @@ import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { useRoute } from 'vue-router'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -1455,7 +1454,6 @@ import {
   updateSortOperationColumn
 } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type {
   IGetOperationAmazonSKUList,
   IGetOperationAsinList,
@@ -1470,7 +1468,7 @@ import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ProductPerformance',
+  name: 'ProductPerformanceDashboard',
 })
 
 // 防抖处理
@@ -1547,11 +1545,8 @@ const shortcuts = [
     },
   },
 ]
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const seasonalVisible = ref<boolean>(false)
-
 const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
 const chartContainer3 = ref<HTMLElement | null>(null)
@@ -2060,7 +2055,6 @@ const handleTabClick = (tab: TabsPaneContext) => {
     fetchPAsinCurrency()
     activeName.value = 2
   }
-  tabStateStore.setTabState(route.path, activeName.value);
 }
 // 运营分类设定可见
 const opeClassifyVisible = ref<boolean>(false)

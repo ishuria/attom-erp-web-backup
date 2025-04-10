@@ -160,12 +160,12 @@ import { getProductList, updateProductStatus } from '/@/api/devlocal/productInfo
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
+import handleClipboard from '/@/utils/clipboard'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
-import handleClipboard from '/@/utils/clipboard'
 
 defineOptions({
-  name: 'Consumable',
+  name: 'SkuInfomation',
 })
 
 const listLoading = ref<boolean>(true)

@@ -241,7 +241,7 @@ import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'Evaluation',
+  name: 'NewProductEvaluation',
 })
 
 const router = useRouter()

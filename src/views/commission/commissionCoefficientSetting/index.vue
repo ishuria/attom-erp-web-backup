@@ -237,9 +237,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { useRoute } from 'vue-router'
 import { getCommissionArtTypeList, getCommissionProductTypeList, getCommissionSetting, updateCommissionArtType, updateCommissionProductType, updateCommissionSetting1, updateCommissionSetting2 } from '/@/api/devlocal/commission'
-import { useTabStateStore } from '/@/store/modules/tabsState'
 import type { IGetCommissionArtTypeList, IGetCommissionProductTypeList, IGetCommissionSettingTableList, IUpdateCommissionSetting1Req } from '/@/type/commission/commissionType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -247,9 +245,7 @@ defineOptions({
   name: 'CommissionCoefficientSetting'
 })
 
-const route = useRoute()
-const tabStateStore = useTabStateStore()
-const activeName = ref<number>(tabStateStore.getTabState(route.path, 0))
+const activeName = ref<number>(0)
 const paramSetting = ref<boolean>(false)
 const keyWord = ref<string>('')
 const keyWord2 = ref<string>('')
@@ -442,7 +438,6 @@ const fetchData2 = async () => {
   listLoading.value = false
 }
 const handleTabClick = (tab: TabsPaneContext) => {
-  tabStateStore.setTabState(route.path, Number(tab.props.name));
   if (tab.props.name === 1) {
     fetchData2()
   } else if (tab.props.name === 0) {

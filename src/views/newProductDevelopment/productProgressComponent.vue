@@ -47,6 +47,9 @@ import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 
+defineOptions({
+  name: 'ProductProgressComponent',
+})
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 const costAccountingRef = ref<InstanceType<typeof VabCostAccounting> | null>(null)

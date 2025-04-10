@@ -99,7 +99,7 @@ import { isEqual } from 'lodash'
 import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList, updateProductAlreadyComponent } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 defineOptions({
-  name: 'Consumable',
+  name: 'SharedComponents',
 })
 
 const addOtherSkuVisible = ref<boolean>(false)
@@ -236,7 +236,6 @@ const handleSupplier = (row: any) => {
       componentId: row.id,
       componentName: row.componentName,
       from: "allReadyComponents",
-      timestamp: Date.now(),
     },
   })
 }

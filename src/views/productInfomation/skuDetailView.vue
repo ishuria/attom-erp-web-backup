@@ -666,6 +666,10 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+defineOptions({
+  name: 'SkuDetailView',
+})
+
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -1673,7 +1677,6 @@ const handleSupplier = (row: any) => {
             skuId: row.skuId,
             componentName: row.componentName,
             from: "sku",
-            timestamp: Date.now(),
         },
     })
 }

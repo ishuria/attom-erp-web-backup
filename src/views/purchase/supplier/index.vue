@@ -215,7 +215,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 // import * as XLSX from 'xlsx'
 defineOptions({
-  name: 'DefaultTable',
+  name: 'Supplier',
 })
 
 const tableRef = ref<TableInstance>()
