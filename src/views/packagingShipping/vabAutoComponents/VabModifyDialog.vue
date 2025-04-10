@@ -43,7 +43,14 @@
       <el-table-column align="center" label="数量" min-width="70" prop="count">
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.count" type="number" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            <el-input-number 
+              v-model="row.count"
+              :controls="false"
+              :min="0"
+              :precision="0"
+              @blur="clickCancel($event, row)"
+              @keyup.enter="clickCancel($event, row)"
+            />
           </div>
           <span>{{ row.count }}</span>
         </template>
