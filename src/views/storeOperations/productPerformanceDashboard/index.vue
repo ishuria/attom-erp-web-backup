@@ -2038,21 +2038,38 @@ const handleVocOpened = () => {
     }
   })
 }
+// 添加标记变量
+const tabLoadStatus = ref({
+  tab0: false,
+  tab1: false,
+  tab2: false
+})
+
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
-    fetchColumn()
-    queryData()
-    fetchCurrency()
+    // 只在首次加载时获取数据
+    if (!tabLoadStatus.value.tab0) {
+      fetchColumn()
+      queryData()
+      fetchCurrency()
+      tabLoadStatus.value.tab0 = true
+    }
     activeName.value = 0
   } else if (tab.props.name === 1) {
-    fetchAsinColumn()
-    queryAsinData()
-    fetchAsinCurrency()
+    if (!tabLoadStatus.value.tab1) {
+      fetchAsinColumn()
+      queryAsinData()
+      fetchAsinCurrency()
+      tabLoadStatus.value.tab1 = true
+    }
     activeName.value = 1
   } else {
-    fetchPAsinColumn()
-    queryPAsinData()
-    fetchPAsinCurrency()
+    if (!tabLoadStatus.value.tab2) {
+      fetchPAsinColumn()
+      queryPAsinData()
+      fetchPAsinCurrency()
+      tabLoadStatus.value.tab2 = true
+    }
     activeName.value = 2
   }
 }
@@ -2778,12 +2795,15 @@ onBeforeMount(() => {
   if (activeName.value === 0) {
     fetchData()
     fetchColumn()
+    tabLoadStatus.value.tab0 = true
   } else if(activeName.value === 1) {
     fetchAsinColumn()
     fetchAsinData()
+    tabLoadStatus.value.tab1 = true
   } else {
     fetchPAsinColumn()
     fetchPAsinData()
+    tabLoadStatus.value.tab2 = true
   }
   fetchSiteList()
   fetchCurrencyList()
