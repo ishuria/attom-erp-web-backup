@@ -2,7 +2,7 @@
   <div class="comprehensive-table-container auto-height-container">
     <el-row :gutter="10" style="height: 100%">
       <el-col :span="18" style="height: 100%">
-        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
+        <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
           <div style="height: 500px; margin-bottom: 10px;">
             <vab-card class="card5" style="height: 100%">
               <vab-query-form>
@@ -257,8 +257,8 @@
               <div ref="chartContainer1" style="width: 100%; height: 250px;"></div>
             </vab-card>
           </div>
-          <div style="flex: 1; display: flex; gap: 10px;">
-            <vab-card class="card2-title" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;" title="产品成本波动监控">
+          <div style=" display: flex;flex: 1; gap: 10px;">
+            <vab-card class="card2-title" style=" display: flex;flex: 1; flex-direction: column; margin-bottom: 0;" title="产品成本波动监控">
               <el-table border :data="fakeTableData3" size="small" style="flex: 1">
                 <el-table-column label="日期" min-width="115" prop="date"/>
                 <el-table-column label="SKU" min-width="160" prop="sku">
@@ -280,7 +280,7 @@
 
               />
             </vab-card>
-            <vab-card class="card3-title" style="flex: 1; margin-bottom: 0; display: flex; flex-direction: column;" title="即将断货产品预警">
+            <vab-card class="card3-title" style=" display: flex;flex: 1; flex-direction: column; margin-bottom: 0;" title="即将断货产品预警">
               <el-table border :data="fakeTableData3" size="small" style="flex: 1">
                 <el-table-column label="SKU" min-width="150" prop="sku">
                   <template #default="{ row }">
@@ -316,10 +316,10 @@
         </div>
       </el-col>
       <el-col :span="6" style="height: 100%">
-        <div style="display: flex; flex-direction: column; height: 100%; width: 100%">
+        <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
           <div style="height: 500px; margin-bottom: 10px;">
             <vab-card class="card4" style="height: 100%;" title="库龄">
-              <div style="text-align: right; margin-top: 25px;">
+              <div style=" margin-top: 25px;text-align: right;">
                 <el-radio-group v-model="ageRadio" @change="handleSwitchBar">
                   <el-radio-button label="数量" :value="0" />
                   <el-radio-button label="占比" :value="1" />
@@ -351,7 +351,7 @@
             </vab-card>
           </div>
           <div style="flex: 1;">
-            <vab-card class="card1-title" style="height: 100%; display: flex; flex-direction: column;" title="断货后即将上架产品">
+            <vab-card class="card1-title" style=" display: flex; flex-direction: column;height: 100%;" title="断货后即将上架产品">
               <el-table border :data="fakeData1" size="small" style="flex: 1">
                 <el-table-column label="SKU" min-width="170" prop="sku"/>
                 <el-table-column label="断货前月销量" min-width="130" prop="sales"/>
@@ -1450,15 +1450,15 @@ onMounted(() => {
     .el-card__header {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
-      font-weight: 600;
       font-size: calc(var(--el-font-size-base) + 2px);
-      background-color: rgba(153, 219, 112, 0.2);  
-      color: #6aa74d; 
+      font-weight: 600;  
+      color: #6aa74d;
+      background-color: rgba(153, 219, 112, 0.2); 
     }
     .el-card__body {
       display: flex;
-      flex-direction: column;
       flex-grow: 1;
+      flex-direction: column;
     }
   }
 }
@@ -1473,15 +1473,15 @@ onMounted(() => {
   padding-left: 13px; 
 
   &::before {
-    content: '';
     position: absolute;
     top: 50%;
     left: -5px;
-    transform: translateY(-50%);
     width: 10px;
     height: 10px;
-    border-radius: 16px;
+    content: '';
     background-color: var(--dot-color, gray); /* 默认颜色 */
+    border-radius: 16px;
+    transform: translateY(-50%);
   }
 }
 .card2-title {
@@ -1489,15 +1489,15 @@ onMounted(() => {
     .el-card__header {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
-      font-weight: 600;
       font-size: calc(var(--el-font-size-base) + 2px);
+      font-weight: 600;  
+      color: #4f6d7a;
       background-color: rgba(115, 153, 192, 0.2);  
-      color: #4f6d7a;  
     }
     .el-card__body {
       display: flex;
-      flex-direction: column;
       flex-grow: 1; /* 确保表格占满剩余空间 */
+      flex-direction: column;
     }
   }
 }
@@ -1506,24 +1506,24 @@ onMounted(() => {
     .el-card__header {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
-      font-weight: 600;
       font-size: calc(var(--el-font-size-base) + 2px); /* 增加字体大小 */
-      background-color: rgba(253, 149, 118, 0.15); 
-      color: #ff8c69;  
+      font-weight: 600; 
+      color: #ff8c69;
+      background-color: rgba(253, 149, 118, 0.15);  
     }
 
     .el-card__body {
       display: flex;
-      flex-direction: column;
       flex-grow: 1; /* 确保表格占满剩余空间 */
+      flex-direction: column;
     }
   }
 }
 .card4 {
   :deep() {
     .el-card__header {
-      border-bottom: 0;
       padding-bottom: 0;
+      border-bottom: 0;
     }
     .el-card__body {
       padding-top: 0;
@@ -1549,9 +1549,9 @@ onMounted(() => {
   :deep() {
     .el-card__body {
       padding-top: 0;
-      padding-left: 10px;
       padding-right: 10px;
       padding-bottom: 10px;
+      padding-left: 10px;
     }
   }
       
@@ -1564,8 +1564,8 @@ onMounted(() => {
     width: 100%;
     height: 6px;
     margin-bottom: 10px;
-    background: #e9f5fe;
     clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+    background: #e9f5fe;
     /* 梯形形状：
       - 左上角 (0, 0)
       - 右上角 (100%, 0)
