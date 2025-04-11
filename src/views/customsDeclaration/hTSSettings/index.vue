@@ -339,6 +339,8 @@ defineOptions({
   name: 'HTSSettings'
 })
 
+const router = useRouter()
+const route = useRoute()
 const viewListLoading = ref<boolean>(false)
 const viewList = ref<any>([])
 const viewTotal = ref<number>(0)
@@ -553,24 +555,61 @@ const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
     queryForm.type = 0
     activeName.value = 0
-    queryData()
+    router.push({
+      query: {
+        ...route.query,
+        pageNo: '1',
+        pageSize: queryForm.pageSize,
+        tab: queryForm.type
+      }
+    })
+    fetchData()
   } else {
     queryForm.type = 1
     activeName.value = 1
-    queryData()
+    router.push({
+      query: {
+        ...route.query,
+        pageNo: '1',
+        pageSize: queryForm.pageSize,
+        tab: queryForm.type
+      }
+    })
+    fetchData()
   }
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+    ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const fetchData = async () => {
@@ -598,6 +637,10 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize, tab } = route.query
+  queryForm.pageNo = Number(pageNo) || 1
+  queryForm.pageSize = Number(pageSize) || 20
+  activeName.value = Number(tab) || 0
   queryForm.type = activeName.value
   fetchData()
 })

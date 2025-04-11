@@ -189,6 +189,8 @@ defineOptions({
   name: 'ShippedProduct',
 })
 
+const router = useRouter()
+const route = useRoute()
 const tableRef = ref<TableInstance>()
 const list = ref<IGetShipmentArrivedList[]>([])
 const listLoading = ref<boolean>(true)
@@ -214,7 +216,13 @@ const imagePreviewShow = (row: any) => {
 const handleClick = (tab: TabsPaneContext) => {
   list.value = []
   queryForm.status = Number(tab.props.name)
-  queryData()
+  router.push({
+    query: {
+      ...route.query,
+      tab: queryForm.status,
+    }
+  })
+  fetchData()
 }
 // 修改丢货状态
 const handleUpdateLostGoodsStatus = async (row: IGetShipmentArrivedList) => {
@@ -252,16 +260,37 @@ const fetchData = async () => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 
@@ -357,6 +386,16 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    queryForm.status = Number(tab)
+  }
   fetchData()
   getSiteList()
 })

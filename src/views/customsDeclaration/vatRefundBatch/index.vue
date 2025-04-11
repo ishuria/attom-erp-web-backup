@@ -200,6 +200,8 @@ defineOptions({
   name: 'VatRefundBatch'
 })
 
+const router = useRouter()
+const route = useRoute()
 const activeName = ref<number>(0)
 const queryForm = reactive<IGetTaxRefundBatchListQuery>({
   keyWord: '',
@@ -235,8 +237,16 @@ const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
     queryForm.status = Number(pane.props.name)
     activeName.value = Number(pane.props.name)
-    queryData()
     selectRows.value = []
+    router.push({
+      query: {
+        ...route.query,
+        tab: pane.props.name,
+        pageNo: '1',
+        pageSize: queryForm.pageSize
+      }
+    })
+    fetchData()
   }
 }
 const handleExportAiTuoMu = async () => {
@@ -357,15 +367,36 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const fetchData = async () => {
@@ -377,6 +408,17 @@ const fetchData = async () => {
 }
 onBeforeMount(() => {
   queryForm.status = activeName.value
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.status = Number(tab)
+  }
   fetchData()
 })
 </script>

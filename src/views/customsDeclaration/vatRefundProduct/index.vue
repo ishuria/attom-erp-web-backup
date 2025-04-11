@@ -405,6 +405,8 @@ defineOptions({
   name: 'VatRefundProduct',
 })
 
+const router = useRouter()
+const route = useRoute()
 // const dialogWidth = ref<number>(0)
 const source = ref<string>('')
 const pdfLoading = ref<boolean>(false)
@@ -478,6 +480,14 @@ const handleTabClick = (pane: TabsPaneContext) => {
     const tabValue = Number(pane.props.name)
     queryForm.taxRefundStatus = tabValue
     activeName.value = tabValue
+    router.push({
+    query: {
+        ...route.query,
+      tab: tabValue,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    },
+  })
     queryData()
   }
 }
@@ -624,15 +634,36 @@ const clickCancel = (event: Event, value: any) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const headerCellStyle = (): CSSProperties => {
@@ -734,6 +765,13 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) queryForm.pageNo = Number(pageNo)
+  if (pageSize) queryForm.pageSize = Number(pageSize)
+  if (tab) {
+    queryForm.taxRefundStatus = Number(tab)
+    activeName.value = Number(tab)
+  }
   fetchData()
 })
 </script>

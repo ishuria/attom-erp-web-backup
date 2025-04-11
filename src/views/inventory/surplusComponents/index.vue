@@ -149,17 +149,40 @@ const queryForm = reactive<any>({
   pageSize: 20,
   keyWord: '',
 })
+const router = useRouter()
+const route = useRoute()
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 // 预览图片列表
@@ -181,6 +204,12 @@ const handleTabClick = (tab: TabsPaneContext, event: Event) => {
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name);
   }
+  router.push({
+    query: {
+      ...route.query,
+      tab: tab.props.name,
+    }
+  })
   fetchData()
 }
 
@@ -241,6 +270,16 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+  }
   fetchData()
 })
 </script>

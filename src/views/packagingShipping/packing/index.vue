@@ -478,6 +478,8 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'Packing'
 })
+const router = useRouter()
+const route = useRoute()
 const printer = ref<string>('')
 const listLoading = ref<boolean>(false)
 const list = ref<IEncasementList[]>([])
@@ -1018,15 +1020,36 @@ const handleDelEncasement = async (row: any, index: number) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
@@ -1120,6 +1143,13 @@ const fetchDefaultPrinter = async () => {
   printer.value = data
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchSiteData()
   fetchDefaultPrinter()
   fetchData()

@@ -156,6 +156,8 @@ defineOptions({
   name: 'TimeConsolidation'
 })
 
+const router = useRouter()
+const route = useRoute()
 const addList = ref<any[]>([])
 const addTotal = ref<number>(0)
 const addQueryForm = reactive<IGetPackagingTimeConsolidationListReq>({
@@ -310,18 +312,46 @@ const fetchData = async () => {
 }
 const queryData = async () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>

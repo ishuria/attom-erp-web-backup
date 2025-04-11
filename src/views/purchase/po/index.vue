@@ -2270,13 +2270,23 @@ const showPreviewImage = (url: string) => {
   imagePreviewList.value.push(url)
 }
 const handleTabClick = (tab: TabsPaneContext) => {
-  Object.assign(poList.value, [])
+  poList.value = []
   // tableRef.value?.clearSelection()
   if (tab.props.name !== undefined) {
     queryForm.status = Number(tab.props.name)
   }
-  fetchData()
   activeName.value = queryForm.status
+  queryForm.pageNo = 1
+  queryForm.pageSize = 50
+  fetchData()
+  router.push({
+    query: {
+      ...route.query,
+      tab: tab.props.name,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   taxIncludedTotalPrice.value = 0
 }
 //采购订单col合并方法
@@ -2366,6 +2376,7 @@ const lastTowTabSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 /**
  * 分页
  */
+const route = useRoute()
 // 总记录数
 const total = ref<number>(0)
 const queryForm = reactive<any>({
@@ -2377,14 +2388,35 @@ const queryForm = reactive<any>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+     ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+     ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const fetchData = async () => {
@@ -2524,7 +2556,17 @@ onBeforeMount(() => {
   //   activeName.value = _activeName
   //   queryForm.status = _activeName
   // }
-  queryForm.status = activeName.value
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.status = Number(tab)
+  }
   fetchData()
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {

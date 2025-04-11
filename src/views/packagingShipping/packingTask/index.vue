@@ -2130,7 +2130,8 @@ const confirmSplitTask = async () => {
     }
   })
 }
-
+const router = useRouter()
+const route = useRoute()
 // 总记录数
 const total = ref<number>(0)
 const queryForm = reactive<IGetPackageTaskListQuery>({
@@ -2143,14 +2144,35 @@ const queryForm = reactive<IGetPackageTaskListQuery>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleTaskingSizeChange = (value: number) => {
@@ -2195,10 +2217,18 @@ const handleTabClick = (tab: TabsPaneContext) => {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name)
   }
+  router.push({
+    query: {
+      ...route.query,
+      tab: queryForm.status,
+      pageNo: 1,
+      pageSize: 20
+    },
+  })
   if (queryForm.status !== 5) {
-    queryData()
+    fetchData()
   } else if (queryForm.status === 5) {
-    queryTaskingData()
+    fetchTaskingData()
   }
 }
 // 表头样式
@@ -2323,6 +2353,17 @@ const getSiteList = async () => {
   siteList.value = data
 }
 onBeforeMount(() => {
+  const { tab, pageNo, pageSize } = route.query
+  if (tab) {
+    queryForm.status = Number(tab)
+    activeName.value = Number(tab)
+  }
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
   getSiteList()
 })

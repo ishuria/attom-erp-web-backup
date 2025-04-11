@@ -109,6 +109,8 @@ defineOptions({
   name: 'PackingHistory'
 })
 
+const router = useRouter()
+const route = useRoute()
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',
@@ -119,6 +121,13 @@ const total = ref<number>(0)
 const list = ref<IGetShippedEncasementList[]>([])
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const selectRows = ref<any>([])
@@ -168,11 +177,25 @@ const handleDownloadFile4 = async (row: IGetShippedEncasementList) => {
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
@@ -193,6 +216,13 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>

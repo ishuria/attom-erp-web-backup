@@ -49,7 +49,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">销量更新时间：{{ updateDate }}</el-text>
+                <el-divider direction="vertical" />
+                <el-text style="font-weight: 600">补货数量和利润更新时间：{{  }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -537,7 +539,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">销量更新时间：{{ updateDate }}</el-text>
+                <el-divider direction="vertical" />
+                <el-text style="font-weight: 600">补货数量和利润更新时间：{{  }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -994,7 +998,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">销量更新时间：{{ updateDate }}</el-text>
+                <el-divider direction="vertical" />
+                <el-text style="font-weight: 600">补货数量和利润更新时间：{{  }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>

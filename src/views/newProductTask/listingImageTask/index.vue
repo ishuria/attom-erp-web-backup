@@ -693,6 +693,8 @@ defineOptions({
   name: 'ListingImageTask'
 })
 
+const router = useRouter()
+const route = useRoute()
 interface ColumnConfig {
   label: string
   prop: string
@@ -723,7 +725,6 @@ let chartObserver1: ResizeObserver
 let chartObserver2: ResizeObserver
 const option1 = ref<any>({})
 const option2 = ref<any>({})
-const router = useRouter()
 const remark = ref<string>('')
 const remarkVisible = ref<boolean>(false)
 const taskStatisticsVisible = ref<boolean>(false)
@@ -1104,7 +1105,15 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     queryForm.status = Number(tab.props.name)
-    queryData()
+    router.push({
+      query: {
+        ...route.query,
+        tab: tab.props.name,
+        pageNo: '1',
+        pageSize: queryForm.pageSize,
+      }
+    })
+    fetchData()
   }
 }
 const handleLongTerm = async (row: IGetArtDesignTaskList) => {
@@ -1255,15 +1264,36 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 
@@ -1296,7 +1326,17 @@ const fetchUserList = async () => {
 const useUser = useUserStore()
 const currentUser = useUser.getUsername
 onBeforeMount(() => { 
-  queryForm.status = activeName.value
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.status = activeName.value
+  }
   fetchSiteList()
   fetchUserList()
   fetchData()

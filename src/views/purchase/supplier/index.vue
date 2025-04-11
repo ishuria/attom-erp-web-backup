@@ -219,7 +219,8 @@ defineOptions({
 })
 
 const tableRef = ref<TableInstance>()
-
+const router = useRouter()
+const route = useRoute()
 const list = ref<any>([])
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
@@ -345,16 +346,37 @@ const fetchData = async () => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
   // if(!queryForm.keyWord) {
   //       fetchData()
@@ -394,6 +416,9 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  queryForm.pageNo = pageNo ? Number(pageNo) : 1
+  queryForm.pageSize = pageSize ? Number(pageSize) : 20
   fetchData()
 })
 </script>

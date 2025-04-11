@@ -384,6 +384,9 @@ import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/
 defineOptions({
   name: 'MatchPO'
 })
+
+const router = useRouter()
+const route = useRoute()
 const tableRef = ref<TableInstance>()
 const queryForm = reactive<any>({
   keyWord: '',
@@ -881,15 +884,36 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSiz
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSiz
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSiz
+    }
+  })
   fetchData()
 }
 
@@ -988,6 +1012,9 @@ const fetchChannelOption = async () => {
   forwarderOption.value = data
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  queryForm.pageNo = Number(pageNo) || 1
+  queryForm.pageSize = Number(pageSize) || 10
   fetchData()
   fetchChannelOption()
 })

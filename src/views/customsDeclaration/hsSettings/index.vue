@@ -96,6 +96,9 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 defineOptions({
   name: 'HSettings'
 })
+
+const router = useRouter()
+const route = useRoute()
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const list = ref<IGetHSList[]>([])
@@ -188,15 +191,36 @@ const handleDel = async (row: IGetHSList, index: number) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const fetchData = async () => {
@@ -210,6 +234,9 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) queryForm.pageNo = Number(pageNo)
+  if (pageSize) queryForm.pageSize = Number(pageSize)
   fetchData()
 })
 </script>

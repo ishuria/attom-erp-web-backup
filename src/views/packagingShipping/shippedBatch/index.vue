@@ -251,6 +251,8 @@ defineOptions({
   name: 'ShippedBatch'
 })
 
+const router = useRouter()
+const route = useRoute()
 const listLoading = ref<boolean>(true)
 const queryForm = reactive<IGetShipmentFbaListReq>({
   keyWord: '',
@@ -395,15 +397,36 @@ const confirmFilter = async () => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const detailQueryData = () => {
@@ -444,6 +467,13 @@ const fetchData = async () => {
   listLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>

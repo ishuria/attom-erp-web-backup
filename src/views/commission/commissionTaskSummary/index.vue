@@ -467,6 +467,8 @@ defineOptions({
   name: 'CommissionTaskSummary',
 })
 
+const router = useRouter()
+const route = useRoute()
 const activeName = ref<number>(0)
 const list = ref<IGetCommissionTaskPictureList[]>([])
 const longList = ref<IGetLongCommissionTaskList[]>([])

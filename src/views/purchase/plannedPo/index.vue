@@ -333,17 +333,39 @@ const queryForm = reactive<IGetPlanPoListQuery>({
   keyWord: '',
   status: 0, //po状态 0待发布 1未达起订量
 })
+const route = useRoute()
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+     ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -667,6 +689,12 @@ const handleTabClick = (tab: TabsPaneContext) => {
     queryForm.status = Number(tab.props.name);  
   }
   activeName.value = queryForm.status
+  router.push({
+    query: {
+      ...route.query,
+      tab: tab.props.name,
+    }
+  })
   fetchData()
 }
 
@@ -750,7 +778,17 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
-
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.status = Number(tab)
+  }
   // const savedStatus = JSON.parse(sessionStorage.getItem('plannedPoStatus') || '{}')
   // const pageNo = savedStatus.pageNo
   // const pageSize = savedStatus.pageSize
@@ -768,7 +806,6 @@ onBeforeMount(() => {
   //   activeName.value = _activeName
   //   queryForm.status = _activeName
   // }
-  queryForm.status = activeName.value
   fetchData()
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {

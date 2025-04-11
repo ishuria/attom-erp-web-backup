@@ -728,7 +728,8 @@ const handleIfShowRecord = async (row: any) => {
   }
 }
 
-
+const router = useRouter()
+const route = useRoute()
 // 总记录数
 const total = ref<number>(0)
 const queryForm = reactive<IGetPlanPoListQuery>({
@@ -740,14 +741,35 @@ const queryForm = reactive<IGetPlanPoListQuery>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const changeProductDate = async (row: any) => {
@@ -776,14 +798,24 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewClose = () =>{
   imagePreviewVisible.value = false;
 }
-  
-const handleTabClick = (tab: TabsPaneContext) => {
-  Object.assign(list.value, [])
+
+const handleTabClick = async (tab: TabsPaneContext) => {
+  list.value = []
   if (tab.props.name !== undefined) {
-    // activeName.value = tab.props.name;
-    queryForm.status = Number(tab.props.name);  
+    const tabName = Number(tab.props.name)
+    activeName.value = tabName
+    queryForm.status = tabName
   }
-  queryData()
+  
+  await router.push({
+    query: {
+      ...route.query,
+      tab: queryForm.status,
+      pageNo: 1,
+      pageSize: 20
+    }
+  })
+  await fetchData()
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
@@ -967,10 +999,16 @@ onActivated(() => {
 })
 onBeforeMount(() => {
   fetchDefaultPrinter()
-  if (activeName.value === 0) {
-    queryForm.status = 0
-  } else {
-    queryForm.status = 1
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.status = Number(tab)
   }
   fetchData()
 })
