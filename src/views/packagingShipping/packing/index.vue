@@ -158,12 +158,7 @@
       title="发货（沃尔玛）"
       width="20%"
     >
-      <!-- <el-text >
-        {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
-      </el-text>
-      <br />
-      <el-button style="margin-top: 20px" type="primary" @click="handleEncasementWalmart">生成模板文件</el-button> -->
-      <el-form ref="shipmentAmazonFormRef" label-position="top" :model="shipmentAmazonForm">
+      <el-form ref="shipmentWalmartFormRef" label-position="top" :model="shipmentWalmartForm">
         <el-form-item style="margin-bottom: 10px">
           <el-text>
             {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
@@ -177,10 +172,10 @@
         </el-form-item>
            
         <el-form-item label="合同号" prop="contractNumber">
-          <el-input v-model="shipmentAmazonForm.contractNumber" clearable />
+          <el-input v-model="shipmentWalmartForm.contractNumber" clearable />
         </el-form-item>
         <el-form-item label="SHIPMENT ID" prop="shipmentId">
-          <el-input v-model="shipmentAmazonForm.shipmentId" clearable />
+          <el-input v-model="shipmentWalmartForm.shipmentId" clearable />
         </el-form-item>
         <el-form-item label="发往站点" prop="site">
           <!-- <el-select v-model="shipmentAmazonForm.site" placeholder="请选择站点" >
@@ -191,10 +186,10 @@
               :value="item.id"
             />
           </el-select> -->
-          <el-input v-model="shipmentAmazonForm.site" disabled />
+          <el-input v-model="shipmentWalmartForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentAmazonForm.channel" clearable placeholder="请选择货代渠道">
+          <el-select v-model="shipmentWalmartForm.channel" clearable placeholder="请选择货代渠道">
             <el-option 
               v-for="item in channelList"
               :key="item.id"
@@ -206,7 +201,7 @@
       </el-form>
       <template #footer>
         <div style="text-align: center;">
-          <el-button type="primary" @click="submitShipmentAmazon">完成</el-button>
+          <el-button type="primary" @click="submitShipmentWalmart">完成</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -220,7 +215,6 @@
       title="发货（亚马逊）"
       top="6vh"
       width="25%"
-      @close="closeShipmentAmazon"
     >
       <el-form ref="shipmentAmazonFormRef" label-position="top" :model="shipmentAmazonForm">
         <el-form-item style="margin-bottom: 10px">
@@ -456,6 +450,7 @@ import {
   confirmEncasementShipments,
   delEncasement,
   doLockEncasement,
+  finishWalmartShipment,
   generateTemplateFile1,
   generateTemplateFile3,
   generateWalmartShipment,
@@ -566,6 +561,8 @@ const shippingAmazonVisible = ref<boolean>(false)
 const shipmentAmazonForm = reactive<any>({
   type: 1
 })
+const shipmentWalmartForm = reactive<any>({})
+const shipmentWalmartFormRef = ref<FormInstance>()
 const shipmentAmazonFormRef = ref<FormInstance>()
 // 发货亚马逊文件上传
 const fileList = ref<any>([])
@@ -669,12 +666,14 @@ const handleDownloadFile = async () => {
     console.log(error);
   })
 }
+const walmartFileName = ref<string>('')
 // 发货沃尔玛 生成模板文件
 const handleEncasementWalmart = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await generateWalmartShipment({
     encasementIds
   })
+  walmartFileName.value = data
   await downloadFile('/encasement/download', {
     fileName: data
   }).then((res) => {
@@ -760,6 +759,24 @@ const closeShipmentAmazon = () => {
   shipmentAmazonFormRef.value?.resetFields()
   shippingAmazonVisible.value = false
 }
+// 完成 发货（沃尔玛）
+const submitShipmentWalmart = async () => {
+  const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
+  const { data } = await finishWalmartShipment({
+    encasementIds,
+    contractNumber: shipmentWalmartForm.contractNumber,
+    shipmentId: shipmentWalmartForm.shipmentId,
+    site: shipmentWalmartForm.siteId,
+    channel: shipmentWalmartForm.channel,
+    templateFile1Name: walmartFileName.value,
+  })
+  if (data) {
+    $baseMessage('发货（沃尔玛）提交成功！','success')
+    shippingWalmartVisible.value = false
+    shipmentWalmartFormRef.value?.resetFields()
+    fetchData()
+  }
+}
 // 完成 发货（亚马逊）
 const submitShipmentAmazon = async () => {
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
@@ -780,7 +797,7 @@ const submitShipmentAmazon = async () => {
       channel: shipmentAmazonForm.channel
     })
     if (res) {
-      $baseMessage('发货（亚马逊）提交成功', 'success')
+      $baseMessage('发货（亚马逊）提交成功！', 'success')
       closeShipmentAmazon()
       fetchData()
     }
@@ -925,11 +942,12 @@ const showShippingAmazon = async () => {
     $baseMessage('您未选中任何行', 'error')
     return
   }
-  // // 判断箱数是否大于500
-  // if (totalBoxNumber.value > 500) {
-  //   $baseMessage('总箱数不能大于500，请重新勾选', 'error')
-  //   return
-  // }
+  // 检查是否所有选中行都是亚马逊站点
+  const hasNonWalmart = selectRows.value.some((item: any) => item.planSiteName.includes('沃尔玛'))
+  if (hasNonWalmart) {
+    $baseMessage('选中的装箱记录中包含非亚马逊站点，请仅选择发往亚马逊的记录', 'error')
+    return
+  }
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
@@ -943,13 +961,27 @@ const showShippingAmazon = async () => {
   }
 }
 // 展示发货沃尔玛
-const showShippingWalmart = () => {
+const showShippingWalmart = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('您未选中任何行', 'error')
     return
   }
-  // 判断箱数是否大于500
-  shippingWalmartVisible.value = true
+  // 检查是否所有选中行都是沃尔玛站点
+  const hasNonWalmart = selectRows.value.some((item: any) => !item.planSiteName.includes('沃尔玛'))
+  if (hasNonWalmart) {
+    $baseMessage('选中的装箱记录中包含非沃尔玛站点，请仅选择发往沃尔玛的记录', 'error')
+    return
+  }
+  const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
+  const { data } = await checkEncasementShipment({ encasementIds })
+  if (data) {
+    const { data: res } = await getChannelList()
+    channelList.value = res
+    file3Disabled.value = true
+    shippingWalmartVisible.value = true
+    shipmentWalmartForm.site = data.siteName
+    shipmentWalmartForm.siteId = data.siteId
+  }
 }
 // 展示修改发货计划
 const showModifyShippingPlan = () => {

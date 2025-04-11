@@ -1069,3 +1069,14 @@ export interface IPrintBarcodeEncasementRes {
     printerName: string
   }
 }
+/**
+ * 发货沃尔玛完成
+ */
+export interface IFinishWalmartShipmentReq {
+  encasementIds: string
+  templateFile1Name: string
+  contractNumber: string
+  shipmentId: string
+  site: number
+  channel: number
+}

@@ -172,6 +172,7 @@ const listLoading = ref<boolean>(true)
 // 零件列表
 const list = ref<any>([])
 const router = useRouter()
+const route = useRoute()
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
@@ -223,15 +224,36 @@ const total = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: value
+    }
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 
@@ -280,6 +302,9 @@ const fetchData = async () =>{
 
 // 在组件加载时执行
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  queryForm.pageNo = pageNo || 1
+  queryForm.pageSize = pageSize || 20
   fetchData();  // 执行数据获取
 })
 </script>

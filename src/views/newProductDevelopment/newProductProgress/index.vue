@@ -555,6 +555,7 @@ defineOptions({
 
 const activeName = ref<number>(0)
 const router = useRouter()
+const route = useRoute()
 const fixed = ref<string>('right')
 const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()
@@ -676,6 +677,12 @@ const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value = []
   if (Number(tab.props.name) === 0)  queryForm.status = 0
   else queryForm.status = 1
+  router.push({
+    query: {
+      ...route.query,
+      tab: tab.props.name
+    }
+  })
   fetchData()
 }
 // 处理已归档
@@ -913,6 +920,13 @@ const clickRemarkBool = ( val: any) => {
  */
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const formattedProgressLog = (str: string) => {
@@ -926,6 +940,13 @@ const formattedProgressLog = (str: string) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 /**
@@ -933,6 +954,13 @@ const handleSizeChange = (value: number) => {
  */
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 // 拿样与核算
@@ -1187,6 +1215,17 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  const { pageNo, pageSize, tab } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
+  if (tab) {
+    queryForm.status = Number(tab)
+    activeName.value = Number(tab)
+  }
   fetchData()
 })
 </script>

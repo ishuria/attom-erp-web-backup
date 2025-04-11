@@ -198,6 +198,7 @@ interface SpanMethodProps {
   columnIndex: number
 }
 const router = useRouter()
+const route = useRoute()
 const tableRef = ref<TableInstance>()
 const listLoading = ref<boolean>(true)
 const total = ref<number>(0)
@@ -327,16 +328,36 @@ const handleOrderProcess = (row: IReviewQueryItem) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+     pageNo: '1',
+     pageSize: value,
+    }
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+     pageNo: value,
+     pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+     pageNo: '1',
+    }
+  })
   fetchData()
 }
 
@@ -416,6 +437,13 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>

@@ -13,6 +13,7 @@ import type {
   IEncasementIds,
   IFileName,
   IFilterShipmentFbaList,
+  IFinishWalmartShipmentReq,
   IGenerateTemplateFile1Req,
   IGetChannelListRes,
   IGetEncasementInspectionReq,
@@ -261,13 +262,23 @@ export const confirmEncasementShipments = (data: IConfirmEncasementShipmentsReq)
   })
 }
 /**
- * @description 发货沃尔玛
+ * @description 发货沃尔玛 生成模板文件
  */
 export const generateWalmartShipment = (params: IEncasementIds): Promise<IStringRes> => {
   return request({
-    url: `${BASE_API}/encasement/shipments/walmart`,
+    url: `${BASE_API}/encasement/generate/walmart/templateFile1`,
     method: 'post',
     params
+  })
+}
+/**
+ * @description 发货沃尔玛 完成
+ */
+export const finishWalmartShipment = (data: IFinishWalmartShipmentReq): Promise<IStringRes> => {
+  return request({
+    url: `${BASE_API}/encasement/shipments/walmart`,
+    method: 'post',
+    data
   })
 }
 /**

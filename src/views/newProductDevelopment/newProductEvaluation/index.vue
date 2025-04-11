@@ -233,10 +233,10 @@ import type {
 } from '/@/type/evaluation/evaluationType'
 
 import type { CSSProperties } from 'vue'
-import { useRoutesStore } from '~/src/store/modules/routes'
-import { useTabsStore } from '~/src/store/modules/tabs'
-import { handleMatched, handleTabs } from '~/src/utils/routes'
 import { getChannelList } from '/@/api/devlocal/encasement'
+import { useRoutesStore } from '/@/store/modules/routes'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleMatched, handleTabs } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -244,6 +244,7 @@ defineOptions({
   name: 'NewProductEvaluation',
 })
 
+const route = useRoute()
 const router = useRouter()
 const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
@@ -363,6 +364,13 @@ const fetchData = async () => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.replace({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: value,
+    },
+  })
   fetchData()
 }
 
@@ -371,6 +379,13 @@ const handleSizeChange = (value: number) => {
  */
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.replace({
+    query: {
+      ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 
@@ -455,6 +470,13 @@ const keyWordTrend = async (str: string) => {
  */
 const queryData = () => {
   queryForm.pageNo = 1
+  router.replace({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const channelList = ref<{ id: number; label: string }[]>([])
@@ -606,6 +628,13 @@ onMounted(async () => {
 })
 
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>
