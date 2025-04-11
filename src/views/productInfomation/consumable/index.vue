@@ -312,6 +312,8 @@ defineOptions({
   name: 'Consumable',
 })
 
+const router = useRouter()
+const route = useRoute()
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
     addOtherSkuVisible.value = false
@@ -421,7 +423,6 @@ const handleSubmitOtherSku = async () => {
     });
 }
 
-const router = useRouter()
 const listLoading = ref<boolean>(true)
 const addConsumableVisible = ref<boolean>(false)
 const consumableTypeOption = ref<{ consumablesName: string, id: number }[]>([])
@@ -523,11 +524,25 @@ const total = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: value,
+    }
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+     ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const handleSupplier = (row: any) => {
@@ -726,6 +741,13 @@ const clickCancel = async (event:any,value:any) =>{
 const purchaseOption = ref<any>()
 const queryData = async () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 const formattedPrice = (price: string) => {
@@ -746,7 +768,10 @@ const fetchPurchase = async () => { //获取默认采购方
     const { data: purchase } = await getProductComponentPurchase()
     purchaseOption.value = purchase
 }
-onBeforeMount(()=>{
+onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) queryForm.pageNo = Number(pageNo)
+  if (pageSize) queryForm.pageSize = Number(pageSize)
   fetchPurchase()
   fetchData()
 })

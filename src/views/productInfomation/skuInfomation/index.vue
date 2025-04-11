@@ -303,8 +303,8 @@ const fetchData = async () =>{
 // 在组件加载时执行
 onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
-  queryForm.pageNo = pageNo || 1
-  queryForm.pageSize = pageSize || 20
+  queryForm.pageNo = Number(pageNo) || 1
+  queryForm.pageSize = Number(pageSize) || 20
   fetchData();  // 执行数据获取
 })
 </script>

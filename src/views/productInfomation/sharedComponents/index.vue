@@ -211,6 +211,7 @@ const handleSubmitOtherSku = async () => {
 }
 
 const router = useRouter()
+const route = useRoute()
 const listLoading = ref<boolean>(true)
 const list = ref<any>([])
 const queryForm = reactive<any>({
@@ -222,10 +223,24 @@ const total = ref<number>(0)
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageSize: value,
+      pageNo: '1',
+    },
+  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleSupplier = (row: any) => {
@@ -257,6 +272,13 @@ const handleImagePreview = (url: string) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+    }
+  })
   fetchData()
 }
 
@@ -271,7 +293,14 @@ const fetchData = async () => {
   })
 }
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>
@@ -280,10 +309,10 @@ onBeforeMount(()=>{
 
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
-  min-height: 75.6px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 75.6px;
 }
 
 .custom-checkbox {
@@ -295,8 +324,8 @@ onBeforeMount(()=>{
 }
 .transfer-container {
   display: flex;
-  justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中，如果需要 */
+  justify-content: center; /* 水平居中 */
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {

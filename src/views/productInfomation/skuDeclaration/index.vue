@@ -245,6 +245,8 @@ defineOptions({
   name: 'SkuDeclaration',
 })
 
+const router = useRouter()
+const route = useRoute()
 const europeList = ref<{ id: number, label: string }[]>([])
 const usaList = ref<{ id: number, label: string }[]>([])
 const tableRef = ref<TableInstance>()
@@ -315,16 +317,37 @@ const showImagePreview = (url: string) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleStatus1Change = async () => {
@@ -443,6 +466,9 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) queryForm.pageNo = Number(pageNo)
+  if (pageSize) queryForm.pageSize = Number(pageSize)
   fetchHtsEuropeList()
   fetchHtsUsaList()
   fetchData()

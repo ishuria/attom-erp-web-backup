@@ -329,12 +329,12 @@ import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
-getCustomsClearanceRatio,
-getHsSelectList,
-getProductCustomsList,
-updateCustomsClearanceRatio,
-updateProductCustomsClearance,
-updateProductCustomsClearanceSuppliserInfo,
+  getCustomsClearanceRatio,
+  getHsSelectList,
+  getProductCustomsList,
+  updateCustomsClearanceRatio,
+  updateProductCustomsClearance,
+  updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -343,6 +343,8 @@ defineOptions({
   name: 'PartsDeclaration',
 })
 
+const router = useRouter()
+const route = useRoute()
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
 const hsOption = ref<{ id: number, label: string }[]>([]) //搜索选项
@@ -410,16 +412,37 @@ const showImagePreview = (url: string) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    },
+  })
   fetchData()
 }
 const handleStatus1Change = async () => {
@@ -697,6 +720,9 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) queryForm.pageNo = Number(pageNo)
+  if (pageSize) queryForm.pageSize = Number(pageSize)
   fetchHsSelectList()
   fetchData()
 })

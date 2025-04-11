@@ -180,6 +180,8 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'Channel'
 })
+const router = useRouter()
+const route = useRoute()
 const setUpModifyVisible = ref<boolean>(false)
 const addVisible = ref<boolean>(false)
 const categorySetUpVisible = ref<boolean>(false)
@@ -364,6 +366,13 @@ const handleModifyAll = async () => {
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: value,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const handleSetUpCurrentChange = (value: number) => {
@@ -373,6 +382,13 @@ const handleSetUpCurrentChange = (value: number) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: value
+    }
+  })
   fetchData()
 }
 const handleSetUpSizeChange = (value: number) => {
@@ -382,6 +398,13 @@ const handleSetUpSizeChange = (value: number) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  router.push({
+    query: {
+     ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize
+    }
+  })
   fetchData()
 }
 const setUpQueryData = () => {
@@ -422,6 +445,13 @@ const fetchSetUpData = async () => {
   setUpListLoading.value = false
 }
 onBeforeMount(() => {
+  const { pageNo, pageSize } = route.query
+  if (pageNo) {
+    queryForm.pageNo = Number(pageNo)
+  }
+  if (pageSize) {
+    queryForm.pageSize = Number(pageSize)
+  }
   fetchData()
 })
 </script>
