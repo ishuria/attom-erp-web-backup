@@ -82,6 +82,7 @@
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
             </el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -282,6 +283,7 @@
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
             </el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -488,6 +490,7 @@
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
             </el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -694,6 +697,7 @@
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
             </el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -900,6 +904,7 @@
             <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
               跨月调整金额：{{ procurementBonusCrossMonth }}
             </el-text>
+            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -1545,6 +1550,8 @@ const automaticSignatureVisible = ref<boolean>(false)
 // 付款进度传的row
 const payHistoryRow = ref<any>()
 const tableColumnWidth = ref<number>(90)
+// 含税价格合计
+const taxIncludedTotalPrice = ref<number>(0)
 // 防抖处理
 const debouncedQueryData = debounce(() => {
   queryData()
@@ -1577,15 +1584,25 @@ const calculateColumnWidth = () => {
     tableColumnWidth.value = maxWidth + 26 // 添加一些额外空间
   }
 }
-// 将选择的po行加入到po数组里
 const handleSelectedPoRow = (event: any, row: any) => {
-  const rowId = row.id // 假设每行都有一个唯一的 id
+  const rowId = row.id
   if (event) {
-    selectedPORow.value.add(rowId) // 选中，添加到 Set 中
+    selectedPORow.value.add(rowId)
+    // 找出所有相同id的行，累加它们的含税总价
+    const sameIdRows = poList.value.filter((item: any) => item.id === rowId)
+    const totalPrice = sameIdRows.reduce((sum: number, item: any) => {
+      return sum + Number(item.taxIncludedPrice)
+    }, 0)
+    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + totalPrice).toFixed(2))
   } else {
-    selectedPORow.value.delete(rowId) // 取消选中，从 Set 中删除
+    selectedPORow.value.delete(rowId)
+    // 找出所有相同id的行，累减它们的含税总价
+    const sameIdRows = poList.value.filter((item: any) => item.id === rowId)
+    const totalPrice = sameIdRows.reduce((sum: number, item: any) => {
+      return sum + Number(item.taxIncludedPrice)
+    }, 0)
+    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - totalPrice).toFixed(2))
   }
-  // 将 Set 转换回数组
   selectedPOArray.value = Array.from(selectedPORow.value)
 }
 // 全选po操作列
@@ -1594,13 +1611,16 @@ const handleSelectAllPoRow = (event: any) => {
     poList.value.forEach((item: any) => {
       item.selectedPoRow = true
       selectedPORow.value.add(item.id)
+      taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
     })
+    taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
     // console.log(selectedPORow.value);
   } else {
     poList.value.forEach((item: any) => {
       item.selectedPoRow = false
     })
     selectedPORow.value.clear()
+    taxIncludedTotalPrice.value = 0
     // console.log(selectedPORow.value);
   }
   selectedPOArray.value = Array.from(selectedPORow.value)
@@ -2257,6 +2277,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
   }
   fetchData()
   activeName.value = queryForm.status
+  taxIncludedTotalPrice.value = 0
 }
 //采购订单col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
