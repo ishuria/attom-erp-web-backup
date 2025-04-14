@@ -217,7 +217,7 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }">
+    <el-table border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
       <el-table-column label="合同编号" min-width="100" prop="contractNumber" />
       <el-table-column label="未匹配发票数" min-width="120" prop="notYetInvoice" />
       <el-table-column label="CIF售价" min-width="100" prop="cifPrice" />
@@ -231,7 +231,7 @@
       <el-table-column label="PO" min-width="100" prop="po" />
       <el-table-column label="含税成本价￥" min-width="130" prop="taxInclusiveCost" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')" />
-      <el-table-column label="零件名" min-width="100" prop="componentName" />
+      <el-table-column label="零件名" min-width="100" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
       <el-table-column label="shipment ID" min-width="120" prop="shipmentId" />
       <el-table-column label="匹配" min-width="80" prop="status">
         <template #default="{ row }">
@@ -316,6 +316,9 @@ const uploadInvoiceVisible = ref<boolean>(false)
 
 const fileList = ref<any[]>([])
 
+const handleRowClick = (row: any, column: any, event: Event) => {
+  matchStatus.value = row.id
+}
 // 展示上传发票
 const showUploadInvoice = () => {
   fileList.value = []
