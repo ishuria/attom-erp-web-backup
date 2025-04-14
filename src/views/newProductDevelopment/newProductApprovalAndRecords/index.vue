@@ -53,7 +53,11 @@
       <el-table-column align="center" label="首单实际成本" prop="firstRealCost" width="130" />
       <el-table-column align="center" label="审批成本" min-width="100" prop="totalCost" />
       <el-table-column align="center" label="相差" min-width="70" prop="difference" />
-      <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70"/>
+      <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70">
+        <template #header>
+          有效<br />计数
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="OEM" min-width="70" prop="oem">
         <template #default="{ row }">
           <el-checkbox
@@ -62,11 +66,17 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
         </template>
       </el-table-column>
       <el-table-column align="center" label="产品经理" min-width="100" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
+        <template #header>
+          产品<br />经理
+        </template>
         <template #default="{ row }">
           <div v-html="row.productManager"></div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="产品设计" min-width="100" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
+        <template #header>
+          产品<br />设计
+        </template>
         <template #default="{ row }">
           {{ row.productDesign }}
         </template>
