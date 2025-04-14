@@ -61,6 +61,13 @@
               {{ siteMap[row.sendSite as siteValue] }}
             </template>
           </el-table-column>
+          <el-table-column label="已签收天数" min-width="110" prop="signDay">
+            <template #default="{ row }">
+              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">
+                {{ row.signDay }}天
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -2233,29 +2240,30 @@ const handleTabClick = (tab: TabsPaneContext) => {
 }
 // 表头样式
 const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 8) {
+  if (data.column.label === '任务数') {
     return { color: '#4E88F3', textAlign: 'center' as const }
   }
-  if (data.columnIndex === 9) {
+  if (data.column.label === '推荐数量') {
     return { color: '#13CE66', textAlign: 'center' as const }
   }
   return { textAlign: 'center' as const }
 }
 // 打包表格样式
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex === 8) {
+  const label = data.column.label
+  if (label === '任务数') {
     return {
       color: '#4E88F3',
       textAlign: 'center',
     }
   }
-  if (data.columnIndex === 9) {
+  if (label === '推荐数量') {
     return {
       color: '#13CE66',
       textAlign: 'center',
     }
   }
-  if (data.columnIndex !== 6 && data.columnIndex !== 13) {
+  if (label !== 'SKU' && label !== '打包注意事项') {
     return {
       textAlign: 'center',
     }
@@ -2271,7 +2279,7 @@ const detailsCellStyle = (data: { row: any; column: any; rowIndex: number; colum
 }
 // 图片取消padding
 const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 5) {
+  if (data.column.label === '产品图片') {
     return 'clear-padding'
   }
   return ''
