@@ -531,7 +531,7 @@ handleSubmit<template>
       title="更新产品名"
       width="25%"
     >
-      <el-form label-position="top" :model="updateForm">
+      <el-form ref="updateFormRef" label-position="top" :model="updateForm" :rules="updateFormRules" >
         <el-form-item label="中文品名" prop="product">
           <el-input v-model="updateForm.product" clearable />
         </el-form-item>
@@ -549,7 +549,7 @@ handleSubmit<template>
 
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
-import type { TableInstance, TabsPaneContext } from 'element-plus'
+import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
@@ -587,6 +587,15 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+const updateFormRef = ref<FormInstance>()
+const updateFormRules = reactive({
+  product: [
+    { required: true, message: '请输入中文品名', trigger: 'blur' },
+  ],
+  mainSearchTerms: [
+    { required: true, message: '请输入主要搜索词', trigger: 'blur' },
+  ],
+})
 // 更新产品名可见
 const updateProductNameVisible = ref<boolean>(false)
 const updateForm = reactive({
@@ -929,17 +938,21 @@ const handleCheckbox = async (value: any) => {
   await updateProgressManage(progressList.value[tableClickIdx.value])
 }
 const updateProductName = async () => {
-  try {
-    const { data } = await updateProgressManage({ ..._row, ...updateForm })
-    if (data === true) {
-      _row.product = updateForm.product
-      _row.mainSearchTerms = updateForm.mainSearchTerms
-      $baseMessage("产品名更新成功!", "success", "hey")
-      updateProductNameVisible.value = false
-    }
-  } catch {
-    $baseMessage("产品名更新失败!","error","hey")
+  updateFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      try {
+        const { data } = await updateProgressManage({ ..._row, ...updateForm })
+        if (data === true) {
+          _row.product = updateForm.product
+          _row.mainSearchTerms = updateForm.mainSearchTerms
+          $baseMessage("产品名更新成功!", "success", "hey")
+          updateProductNameVisible.value = false
+        }
+      } catch {
+        $baseMessage("产品名更新失败!","error","hey")
+      }
   }
+  })                
 }
 /**
  * 输入失焦事件
