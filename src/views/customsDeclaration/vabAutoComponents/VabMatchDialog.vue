@@ -674,6 +674,7 @@ const fetchPreviousMatchData = async () => {
   _id.value = idList.value[index - 1]
   const item = list.value.find((item: any) => item.id === _id.value)
   _sku.value = item!.sku
+  _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
   Object.keys(skuActualCountMap).forEach(key => delete skuActualCountMap[key]);
   Object.keys(customsDeclarationCountMap).forEach(key => delete customsDeclarationCountMap[key]);
@@ -699,6 +700,7 @@ const fetchNextMatchData = async () => {
   _id.value = idList.value[index + 1]
   const item = list.value.find((item: any) => item.id === _id.value)
   _sku.value = item!.sku
+  _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
   Object.keys(skuActualCountMap).forEach(key => delete skuActualCountMap[key]);
   Object.keys(customsDeclarationCountMap).forEach(key => delete customsDeclarationCountMap[key]);
