@@ -150,43 +150,10 @@
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="匹配合同号" min-width="110" prop="matchContractNumber">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.matchContractNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.matchContractNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="匹配PO" min-width="100" prop="matchPo">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.matchPo" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.matchPo }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input
-              v-model="row.customsDeclarationCount"
-              type="number"
-              @blur="clickCancel($event, row)"
-              @keyup.enter="clickCancel($event, row)"
-            />
-          </div>
-          <span>{{ row.customsDeclarationCount }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.customsDeclarationUnit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.customsDeclarationUnit }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="匹配合同号" min-width="110" prop="matchContractNumber" />
+      <el-table-column label="匹配PO" min-width="100" prop="matchPo" />
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
       <el-table-column fixed="right" label="操作" width="130">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
@@ -590,10 +557,39 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5) {
-    return {
-      textAlign: 'left',
+  const label = data.column.label
+  switch (label) {
+    case '购方名称': 
+    case '发票代码': 
+    case '发票号码': 
+    case '供应商': {
+      return {
+        textAlign: 'left',
+        cursor: 'pointer',
+      }
     }
+    case '开票品名': 
+    case '规格型号': 
+    case '发票数量': 
+    case '发票单位': 
+    case '发票含税金额': 
+    case '发票未税金额': {
+      return {
+        textAlign: 'center',
+        cursor: 'pointer',
+      }
+    }
+    case '匹配合同号': 
+    case '匹配PO': 
+    case '报关数量': 
+    case '报关单位': {
+      return {
+        textAlign: 'center',
+        cursor: 'not-allowed',
+        color: '#999'
+      }
+    }
+    // No default
   }
   return {
     textAlign: 'center',

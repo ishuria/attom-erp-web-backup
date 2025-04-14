@@ -41,7 +41,76 @@ handleSubmit<template>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="示例图片" min-width="450" prop="imageList">
+          <el-table-column label="立项日期" prop="createTime" width="120">
+            <template #default = "{ row }">
+              {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="参与人员" min-width="100" prop="sharerName">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                </template>
+                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品" min-width="160" prop="product">
+            <template #default = "{ row }">
+              <div class="none">
+                <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span v-html="formattedProgressLog(row.product)"></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" min-width="65" prop="oem">
+            <template #default = "{ row }">
+               <el-checkbox v-model="row.oem" class="custom-checkbox" :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="目标月销" min-width="100" prop="targetMonthlySales">
+            <template #default = "{ row }">
+              <div class="none">
+                  <el-input v-model="row.targetMonthlySales" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.targetMonthlySales }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="调研报告链接" prop="" width="130" >
+            <template #default="{ row }">
+              <el-text style="vertical-align: middle;" truncated>{{  }}</el-text>
+            </template>
+          </el-table-column>
+          <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus">
+            <template #default = "{ row }">
+              <div class="none">
+                <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)"  @keyup.enter="clickCancel($event, row)"/>
+              </div>
+              <span>{{ row.currentPhaseStatus }}</span>
+            </template>
+          </el-table-column>      
+          <el-table-column label="开发日志" min-width="300" prop="progressLog">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" min-width="150" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default = "{ row, $index }">
               <div style="display: flex; align-items: center;">
                 <vue-draggable
@@ -70,73 +139,8 @@ handleSubmit<template>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品" min-width="160" prop="product">
-            <template #default = "{ row }">
-              <div class="none">
-                <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
-              <span v-html="formattedProgressLog(row.product)"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="OEM" min-width="65" prop="oem">
-            <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" class="custom-checkbox" :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
-            </template>
-          </el-table-column>
-          <el-table-column label="立项日期" prop="createTime" width="120">
-            <template #default = "{ row }">
-              {{ row.createTime.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="当前阶段" min-width="90" prop="currentPhaseStatus">
-            <template #default = "{ row }">
-              <div class="none">
-                <el-input v-model="row.currentPhaseStatus" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)"  @keyup.enter="clickCancel($event, row)"/>
-              </div>
-              <span>{{ row.currentPhaseStatus }}</span>
-            </template>
-          </el-table-column>      
-          <el-table-column label="开发日志" min-width="500" prop="progressLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
-                </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="参与人员" min-width="100" prop="sharerName">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-                </template>
-                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="目标月销" min-width="90" prop="targetMonthlySales">
-            <template #default = "{ row }">
-              <div class="none">
-                  <el-input v-model="row.targetMonthlySales" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.targetMonthlySales }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="新款评估编号" prop="evaluationId" width="130" />
-
-          <el-table-column :fixed="fixed" label="操作" min-width="180px">
+  
+          <el-table-column :fixed="fixed" label="操作" width="180px">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleSampleCosting(row)">
@@ -207,7 +211,7 @@ handleSubmit<template>
         <el-table 
           ref="tableRef" 
           v-loading="listLoading" 
-          border :cell-style="cellStyle"
+          border :cell-style="cellStyle2"
           :data="progressList"
           :header-cell-style="{ 'text-align': 'center' }" 
           stripe
@@ -225,7 +229,59 @@ handleSubmit<template>
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column class="image-wall" label="示例图片" min-width="450" prop="imageList">
+          <el-table-column align="center" label="立项日期" prop="createTime" width="120">
+            <template #default = "{ row }">
+              {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
+                </template>
+                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品" min-width="160" prop="product">
+            <template #default = "{ row }">
+              <span v-html="formattedProgressLog(row.product)"></span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="OEM" min-width="65" prop="oem">
+            <template #default = "{ row }">
+               <el-checkbox v-model="row.oem" class="custom-checkbox" disabled :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="目标月销" min-width="100" prop="targetMonthlySales" />
+          <el-table-column align="center" label="调研报告链接" prop="" width="130" >
+            <template #default="{ row }">
+              <el-text style="vertical-align: middle;" truncated>{{  }}</el-text>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="当前阶段" min-width="100" prop="currentPhaseStatus" />
+          <el-table-column label="开发日志" min-width="300" prop="progressLog">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="备注" min-width="150" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default = "{ row, $index }">
               <div style="display: flex; align-items: center;">
                 <vue-draggable
@@ -254,56 +310,8 @@ handleSubmit<template>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="产品" min-width="160" prop="product">
-            <template #default = "{ row }">
-              <span v-html="formattedProgressLog(row.product)"></span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="OEM" min-width="60" prop="oem">
-            <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" class="custom-checkbox" disabled :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="立项日期" min-width="100" prop="createTime">
-            <template #default = "{ row }">
-              <span >{{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="当前阶段" min-width="100" prop="currentPhaseStatus" />
-
-          <el-table-column label="开发日志" min-width="500" prop="progressLog">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
-                </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-                </template>
-                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="目标月销" min-width="85" prop="targetMonthlySales" />
-          <el-table-column align="center" label="新款评估编号" min-width="110" prop="evaluationId" />
-          <el-table-column align="center" :fixed="fixed" label="操作" min-width="100px">
+        
+          <el-table-column align="center" :fixed="fixed" label="操作" width="100px">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleCopyAchivedProgress(row)">
                 复制
@@ -553,6 +561,7 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+const imageListWidth = ref<number>(0)
 const activeName = ref<number>(0)
 const router = useRouter()
 const route = useRoute()
@@ -658,6 +667,21 @@ const shareArchivedSelect = ref<ISelectShare[]>([])
 
 const userNameList = ref<string[]>([])
 const userNameArchivedList = ref<string[]>([])
+
+
+const getImageColumnWidth = (): number => {
+  const imageWidth = 75 // 每张图片宽度
+  progressList.value.forEach((row) => {
+    const imageCount = row?.imageList?.length || 0
+    let totalWidth = 0
+    if (imageCount === 5) totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
+    else totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    if (totalWidth > imageListWidth.value) {
+      imageListWidth.value = totalWidth
+    }
+  })
+  return imageListWidth.value
+}
 const handlerCloseDialog = () => {
   moldVisible.value = false
 }
@@ -811,6 +835,10 @@ const fetchData = async () => {
   const { data } = await getList(queryForm)
   progressList.value = data.list
   total.value = data.total
+  nextTick(() => {
+    imageListWidth.value = 0 // 重置为初始值
+    getImageColumnWidth()
+  })
   listLoading.value = false
 }
 let _row: any = null
@@ -930,9 +958,13 @@ const queryData = () => {
   fetchData()
 }
 const formattedProgressLog = (str: string) => {
-  return str
-    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
-    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+  const str1 = str
+  // eslint-disable-next-line no-control-regex
+  .replaceAll(/([^\u0000-\u00ff])([\dA-Za-z])/g, '$1<br>$2')
+  // eslint-disable-next-line no-control-regex
+  .replaceAll(/([\dA-Za-z])([^\u0000-\u00ff])/g, '$1<br>$2')
+  // console.log(str1)
+  return str1
 };
 /**
  * 分页大小的改变
@@ -1195,19 +1227,72 @@ const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === '立项日期' || label === '参与人员' || label === '新款评估编号') {
-    return {
-      textAlign: 'center',
-      color: '#999',
-      cursor: 'not-allowed'
+  switch (label) {
+    case '立项日期': 
+    case '参与人员': 
+    case '调研报告链接': {
+      return {
+        textAlign: 'center',
+        color: '#999',
+        cursor: 'not-allowed'
+      }
     }
-  } else if (label === '示例图片' || label === '产品' || label === '开发日志' || label === '备注') {
-    return {
-      textAlign: 'left'
+    case '示例图片': 
+    case '产品': 
+    case '开发日志': 
+    case '备注': {
+      return {
+        cursor: 'pointer',
+        textAlign: 'left'
+      }
     }
-  } else {
-    return {
-      textAlign: 'center'
+    case '当前阶段': 
+    case '目标月销': {
+      return {
+        textAlign: 'center',
+        cursor: 'pointer'
+      }
+    }
+    default: {
+      return {
+        textAlign: 'center'
+      }
+    }
+  }
+}
+const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  switch (label) {
+    case '立项日期': 
+    case '参与人员': 
+    case '调研报告链接':
+    case '目标月销':
+    case '当前阶段':{
+      return {
+        textAlign: 'center',
+        color: '#999',
+        cursor: 'not-allowed'
+      }
+    }
+    case '产品': {
+      return {
+        textAlign: 'left',
+        color: '#999',
+        cursor: 'not-allowed'
+      }
+    }
+    case '示例图片': 
+    case '开发日志': 
+    case '备注': {
+      return {
+        cursor: 'pointer',
+        textAlign: 'left'
+      }
+    }
+    default: {
+      return {
+        textAlign: 'center'
+      }
     }
   }
 }
