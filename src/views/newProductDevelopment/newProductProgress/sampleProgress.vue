@@ -4,7 +4,8 @@
     :before-close="handlerCloseDialog" 
     class="moldDialog"
     title="样品进度"
-    width="70%"
+    top="10vh"
+    width="80%"
   >
     <el-divider style="margin-top: 0; margin-bottom: 20px"/>
     <div id="table-height-container">
@@ -30,84 +31,62 @@
         @cell-click="sampleTableInputChange"
       >
         <el-table-column align="center" label="图片" min-width="100">
-            <template #default="{ row }">
-                <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
-            </template>
+          <template #default="{ row }">
+            <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
+          </template>
         </el-table-column>
         <el-table-column label="产品" min-width="160" prop="productName" >
-            <template #default="{ row }">
-                <span v-html="formattedProgressLog(row.productName)"></span>
-            </template>
+          <template #default="{ row }">
+            {{ row.productName  }} <br />
+            {{ row.mainSearchTerms }}
+          </template>
         </el-table-column>
-        <el-table-column label="零件名"  min-width="160" prop="componentName" >
-            <template #default="{ row }">
-                {{ row.componentName  }}
-            </template>
-        </el-table-column>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sampleList, '零件名', 'componentName')" />
         <el-table-column align="center" label="下单日期" width="120">
-            <template #default="{ row }">
-                {{ row.createTime.split(' ')[0] }}
-            </template>
+          <template #default="{ row }">
+            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="签收日期" min-width="100">
-            <template #default="{ row }">
-                {{ row.receiptDate ? row.receiptDate.split(' ')[0] : '' }}
-            </template>
+        <el-table-column align="center" label="签收日期" min-width="120">
+          <template #default="{ row }">
+            {{ row.receiptDate ? row.receiptDate.split(' ')[0] : '' }}
+          </template>
         </el-table-column>
         <el-table-column align="center" label="物流追踪" min-width="100"/>
-        <el-table-column align="center" label="供应商">
-            <template #default="{ row }">
-                {{ row.supplier }}
-            </template>
-        </el-table-column>
-        <el-table-column align="center" label="1688订单号" min-width="160">
-            <template #default="{ row }">
-                {{ row.orderNo1688 }}
-            </template>
-        </el-table-column>
-        <el-table-column align="center" label="物流单号（非1688订单）" min-width="200" >
-            <template #default="{ row }">
-                {{ row.logisticsNo }}
-            </template>
-        </el-table-column>
-        <el-table-column align="center" label="金额￥" min-width="100" >
-            <template #default="{ row }">
-                {{ row.price }}
-            </template>
-        </el-table-column>
-        <el-table-column align="center" label="大货可退￥" min-width="100" >
-            <template #default="{ row }">
-                {{ row.bulkGoodsReturnable }}
-            </template>
-        </el-table-column>
+        <el-table-column label="供应商" prop="supplier" :width="flexColumnWidth(sampleList, '供应商', 'supplier')" />
+        <el-table-column label="1688订单号" prop="orderNo1688" :width="flexColumnWidth(sampleList, '1688订单号', 'orderNo1688')" />
+
+        <el-table-column align="center" label="物流单号（非1688订单）" min-width="200" prop="logisticsNo" />
+        <el-table-column align="center" label="金额￥" min-width="100" prop="price" />
+        <el-table-column align="center" label="大货可退￥" min-width="120" prop="bulkGoodsReturnable" />
         <el-table-column align="center" label="备注" min-width="130" prop="remark"/>
         <el-table-column align="center" fixed="right" label="操作" width="160">
-            <template #default="{ row }">
-                <el-dropdown >
-                    <el-button text type="primary" @click="handleSampleReceipt(row)">
-                    手动签收
-                    <el-icon class="el-icon--right">
-                        <arrow-down />
-                    </el-icon>
-                    </el-button>
-                    <template #dropdown>
-                        <el-dropdown-menu >
-                            <el-dropdown-item @click="handleSampleReceipt(row)">
-                                <el-link type="primary" :underline="false" >手动签收</el-link>
-                            </el-dropdown-item>
-                            <el-dropdown-item @click="orderNo1688Update(row)">
-                                <el-link type="primary" :underline="false">1688订单号修改</el-link>
-                            </el-dropdown-item>
-                            <el-dropdown-item @click="logisticsNoUpdate(row)">
-                                <el-link type="primary" :underline="false" >物流订单修改</el-link>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-            </template>
+          <template #default="{ row }">
+            <el-dropdown >
+              <el-button text type="primary" @click="handleSampleReceipt(row)">
+              手动签收
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu >
+                  <el-dropdown-item @click="handleSampleReceipt(row)">
+                    <el-link type="primary" :underline="false" >手动签收</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="orderNo1688Update(row)">
+                    <el-link type="primary" :underline="false">1688订单号修改</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="logisticsNoUpdate(row)">
+                    <el-link type="primary" :underline="false" >物流订单修改</el-link>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
         </el-table-column>
         <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
+          <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
       </el-table>
 
@@ -151,6 +130,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { ProgressSampleReceipt, ProgressSampleUpdate, getProgressSampleList } from '/@/api/devlocal/progress'
 import type { IProgressSampleUpdate, ISampleList } from '/@/type/progress/progressType'
 import { getSpecificChildren } from '/@/utils/nodeUtils'
@@ -341,8 +321,8 @@ onActivated(() => {
 #table-height-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(80vh - 120px);
     height: calc(80vh - 120px);
+    max-height: calc(80vh - 120px);
     padding-bottom: 20px;
     .el-table {
         flex: 1; // 使表格占据剩余空间

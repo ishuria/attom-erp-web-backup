@@ -3,7 +3,7 @@
     v-model="dflag" 
     :before-close="handlerCloseDialog" 
     class="moldDialog"
-    style="margin: 10vh auto; height: 80vh; display: flex; flex-direction: column;"
+    style=" display: flex; flex-direction: column; height: 80vh;margin: 10vh auto;"
     title="开模进度"
     width="80%"
   >
@@ -336,8 +336,8 @@ onActivated(() => {
 #table-height-container {
     display: flex;
     flex-direction: column;
-    max-height: calc(80vh - 100px);
     height: calc(80vh - 100px);
+    max-height: calc(80vh - 100px);
 
     .el-table {
         flex: 1; // 使表格占据剩余空间

@@ -83,6 +83,7 @@ export interface IProgress {
   evaluationId?: string
   // 控添加图片样式隐藏显示
   hide?: boolean
+  mainSearchTerms?: string
 }
 export interface IProgressFilterResp {
     data: {

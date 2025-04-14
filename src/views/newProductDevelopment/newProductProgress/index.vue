@@ -58,10 +58,8 @@ handleSubmit<template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
-              <div class="none">
-                <el-input v-model="row.product" autofocus :autosize="{ minRows: 1, maxRows: 2 }" type="textarea" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
-              <span v-html="formattedProgressLog(row.product)"></span>
+              {{ row.product }}<br />
+              {{ row.mainSearchTerms }}
             </template>
           </el-table-column>
           <el-table-column label="OEM" min-width="65" prop="oem">
@@ -79,7 +77,12 @@ handleSubmit<template>
           </el-table-column>
           <el-table-column label="调研报告链接" prop="" width="130" >
             <template #default="{ row }">
-              <el-text style="vertical-align: middle;" truncated>{{  }}</el-text>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row.researchReportLink }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ row.researchReportLink }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus">
@@ -246,7 +249,8 @@ handleSubmit<template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="product">
             <template #default = "{ row }">
-              <span v-html="formattedProgressLog(row.product)"></span>
+              {{ row.product }}<br />
+              {{ row.mainSearchTerms }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="OEM" min-width="65" prop="oem">
@@ -257,7 +261,12 @@ handleSubmit<template>
           <el-table-column align="center" label="目标月销" min-width="100" prop="targetMonthlySales" />
           <el-table-column align="center" label="调研报告链接" prop="" width="130" >
             <template #default="{ row }">
-              <el-text style="vertical-align: middle;" truncated>{{  }}</el-text>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip" >{{ row.researchReportLink }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ row.researchReportLink }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column align="center" label="当前阶段" min-width="100" prop="currentPhaseStatus" />
@@ -350,7 +359,7 @@ handleSubmit<template>
     />
     <!-- 共享 -->
     <vab-shared  
-      :id = "shareId"
+      :id="shareId"
       :fetch-data="fetchData"
       :handler-switch-change="handlerSwitchChange"
       :list="shareUserList"
@@ -444,11 +453,9 @@ handleSubmit<template>
           stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column
-v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
-              :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
+          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label" :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
             <template #default="{ row }">
-              <div  v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+              <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
                 <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
               </div>
             </template>
@@ -518,6 +525,25 @@ v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.l
     />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+    <!-- 更新产品名 -->
+    <vab-dialog 
+      v-model="updateProductNameVisible"
+      title="更新产品名"
+      width="25%"
+    >
+      <el-form label-position="top" :model="updateForm">
+        <el-form-item label="中文品名" prop="product">
+          <el-input v-model="updateForm.product" clearable />
+        </el-form-item>
+        <el-form-item label="主要搜索词" prop="mainSearchTerms">
+          <el-input v-model="updateForm.mainSearchTerms" clearable />
+        </el-form-item>         
+      </el-form>
+      <template #footer>
+        <el-button @click="updateProductNameVisible = false">取消</el-button>
+        <el-button type="primary" @click="updateProductName">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -561,6 +587,12 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+// 更新产品名可见
+const updateProductNameVisible = ref<boolean>(false)
+const updateForm = reactive({
+  product: '',
+  mainSearchTerms: '',
+})
 const imageListWidth = ref<number>(0)
 const activeName = ref<number>(0)
 const router = useRouter()
@@ -733,11 +765,14 @@ const handleRemove = async (image: any, row: any) => {
       const { data } = await deleteImage(delImgForm)
       if (data === true) {
         // 删除成功后再更新UI
-        const index = row.imageList.findIndex((item: any) => item.imageId === image.imageId)
-        if (index !== -1) {
-          row.imageList = [...row.imageList.slice(0, index), ...row.imageList.slice(index + 1)]
-          $baseMessage("此条产品图片信息删除成功!", "success", "hey")
+        const imageIndex = row.imageList.findIndex((item: any) => item.imageId === image.imageId)
+        if (imageIndex !== -1) {
+          row.imageList = [...row.imageList.slice(0, imageIndex), ...row.imageList.slice(imageIndex + 1)]
         }
+        $baseMessage("此条产品图片信息删除成功!", "success", "hey")
+        // 重新计算列宽
+        imageListWidth.value = 0
+        getImageColumnWidth()
       } else {
         $baseMessage("删除失败，请重试!", "error", "hey")
       }
@@ -846,7 +881,13 @@ let _row: any = null
  * 当点击时切换输入框，修改输入
  */
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  
+  if (column.label === '产品') {
+    updateProductNameVisible.value = true
+    updateForm.product = row.product
+    updateForm.mainSearchTerms = row.mainSearchTerms
+    _row = row
+    return
+  }
   // 获取行的下标
   tableClickIdx.value = progressList.value.indexOf(row)
   if (column.property == 'progressLog') {
@@ -886,6 +927,19 @@ const handleCheckbox = async (value: any) => {
   // console.log(tableClickIdx.value)
   progressList.value[tableClickIdx.value].oem = value
   await updateProgressManage(progressList.value[tableClickIdx.value])
+}
+const updateProductName = async () => {
+  try {
+    const { data } = await updateProgressManage({ ..._row, ...updateForm })
+    if (data === true) {
+      _row.product = updateForm.product
+      _row.mainSearchTerms = updateForm.mainSearchTerms
+      $baseMessage("产品名更新成功!", "success", "hey")
+      updateProductNameVisible.value = false
+    }
+  } catch {
+    $baseMessage("产品名更新失败!","error","hey")
+  }
 }
 /**
  * 输入失焦事件
@@ -957,15 +1011,6 @@ const queryData = () => {
   })
   fetchData()
 }
-const formattedProgressLog = (str: string) => {
-  const str1 = str
-  // eslint-disable-next-line no-control-regex
-  .replaceAll(/([^\u0000-\u00ff])([\dA-Za-z])/g, '$1<br>$2')
-  // eslint-disable-next-line no-control-regex
-  .replaceAll(/([\dA-Za-z])([^\u0000-\u00ff])/g, '$1<br>$2')
-  // console.log(str1)
-  return str1
-};
 /**
  * 分页大小的改变
  */
@@ -1002,7 +1047,7 @@ const handleSampleCosting = (row: IProgress) =>{
     query: {
       title: "零件清单",
       progressId: row.progressId,
-      product: row.product,
+      product: `${row.product!} ${row.mainSearchTerms!}`,
     },
   })
 }
