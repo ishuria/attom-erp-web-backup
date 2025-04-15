@@ -123,17 +123,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -264,17 +291,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -403,17 +457,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -542,17 +623,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -681,17 +789,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -819,17 +954,44 @@
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="530">
+          <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-space>
-                <el-link type="primary" :underline="false" @click="getPackageCodePath(row)">条码文件夹</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowPartsList(row)">零件清单</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowQualityInspectionReport(row)">质检</el-link>
-                <el-link type="primary" :underline="false" @click="showBarcode(row)">生成条形码</el-link>
-                <el-link type="primary" :underline="false" @click="showSplitTask(row)">拆分</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModify(row)">站点修改</el-link>
-                <el-link type="primary" :underline="false" @click="handleShowModifyTask(row)">任务数修改</el-link>
-              </el-space>
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="getPackageCodePath(row)">
+                      <el-link type="primary" :underline="false" >条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowPartsList(row)">
+                      <el-link type="primary" :underline="false" >零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item >
+                      <el-link type="primary" :underline="false" >新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showBarcode(row)">
+                      <el-link type="primary" :underline="false" >生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showSplitTask(row)">
+                      <el-link type="primary" :underline="false" >拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModify(row)">
+                      <el-link type="primary" :underline="false" >站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                      <el-link type="primary" :underline="false">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -1349,7 +1511,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CirclePlus, Search } from '@element-plus/icons-vue'
+import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
