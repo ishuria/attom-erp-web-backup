@@ -881,82 +881,34 @@
       </el-table>
     </vab-dialog>
     <!-- 质检报告 -->
-    <vab-dialog v-model="qualityInspectionReportVisible" class="custom-dialog" title="质检报告" top="5vh" width="50%" @close="closeQualityInspection">
-      <el-divider style="margin-top: 0">基础信息</el-divider>
+    <vab-dialog v-model="qualityInspectionReportVisible" title="质检报告" top="10vh" width="40%" @close="closeQualityInspection">
       <el-form
         ref="qualityInspectionFormRef"
-        :inline="true"
+        label-position="left"
+        label-width="auto"
         :model="qualityInspectionForm"
-        :rules="qualityInspectionFormRules"
-        style="margin-right: 0px; margin-left: 0px"
+        style="margin-right: 30px; margin-left: 30px"
       >
-        <el-row style="width: 100%">
-          <el-col :span="8">
-            <el-form-item label="日期">
-              <el-input disabled />
-            </el-form-item>
-            
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="产品经理">
-              <el-input disabled />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="PO">
-              <el-input disabled />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row style="width: 100%">
-          <el-col :span="8">
-           <el-form-item label="SKU" prop="sku">
-              <el-input v-model="qualityInspectionForm.sku" disabled />
-            </el-form-item>
-          </el-col>
-          <el-col :span="16">
-            <el-form-item label="产品名称" prop="productName" style="min-width: 100%">
-              <el-input v-model="qualityInspectionForm.productName" disabled  />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-divider style="margin-top: 0">信息完善</el-divider>
-        <el-row style="width: 100%">
-          <el-col :span="16">
-            <el-form-item inline label="包装尺寸" prop="packingSize">
-              <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
-                <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长(cm)" style="flex: 1; margin-right: 0" />
-                <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-                <el-input v-model.trim="qualityInspectionForm.packageWidth" clearable placeholder="宽(cm)" style="flex: 1; margin-right: 0" />
-                <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-                <el-input v-model.trim="qualityInspectionForm.packageHeight" clearable placeholder="高(cm)" style="flex: 1; margin-right: 0" />
-              </el-row>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="包装重量" prop="packageWeight">
-              <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable placeholder="克(g)" style="margin-right: 12px" />
-              <!-- <el-button type="success">更新SKU尺寸重量</el-button> -->
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item label="材质构成（用于报关，需要精确填写）" prop="materialComposition" />
-      </el-form>
-        <el-table border :header-cell-style="{ textAlign: 'center' }" stripe >
-          <el-table-column label="零件名" />
-          <el-table-column label="材质1名称" />
-          <el-table-column label="材质1重量(g)" />
-          <el-table-column label="材质2名称" />
-          <el-table-column label="材质2重量(g)" />
-          <el-table-column label="材质3名称" />
-          <el-table-column label="材质3重量(g)" />
-          <el-table-column label="材质4名称" />
-          <el-table-column label="材质4重量(g)" />
-          <el-table-column label="上传零件图片" />
-        </el-table>
-        
-        
-        <el-divider >质检结果</el-divider>
+        <el-form-item label="SKU" prop="sku">
+          <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
+        </el-form-item>
+        <el-form-item label="产品名称" prop="productName">
+          <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
+        </el-form-item>
+        <el-form-item inline label="包装尺寸(cm)" prop="packingSize">
+          <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
+            <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长" style="flex: 1; margin-right: 0" />
+            <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+            <el-input v-model.trim="qualityInspectionForm.packageWidth" clearable placeholder="宽" style="flex: 1; margin-right: 0" />
+            <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+            <el-input v-model.trim="qualityInspectionForm.packageHeight" clearable placeholder="高" style="flex: 1; margin-right: 0" />
+          </el-row>
+        </el-form-item>
+        <el-form-item label="包装重量(g)" prop="packageWeight">
+          <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable style="margin-right: 12px" />
+          <el-button type="success">更新SKU尺寸重量</el-button>
+        </el-form-item>
+
         <el-table
           border
           :cell-style="qualityInspectionCellStyle"
@@ -986,33 +938,15 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-form label-position="left" label-width="auto" style="margin-right: 0px; margin-left: 0px">
-          <el-form-item label="基础图片" />
-          <el-form-item label="零件细节" />
-          <el-form-item label="成品组装图" />
-          <el-form-item label="备注" prop="remark">
-            <el-input v-model="qualityInspectionForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" />
-          </el-form-item>
-          <el-form-item label="打包数" prop="packageCount" >
-            <el-input v-model.trim="qualityInspectionForm.packageCount" clearable placeholder="产品经理打包套数" style="min-width: 100%" />
-          </el-form-item>
-          <el-form-item label="结论" prop="" >
-            <el-radio-group >
-              <el-radio value="1" >通过</el-radio>
-              <el-radio value="2" >不通过</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="原因" prop=""  >
-            <el-input  clearable placeholder="质检不通过的原因" style="min-width: 100%" />
-          </el-form-item>
-          <el-form-item label="处理方式" prop="" >
-            <el-input  clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%" />
-          </el-form-item>
-        </el-form>
-    
-      
+        <el-form-item label="产品经理打包数量" prop="packageCount" style="margin-top: 20px">
+          <el-input v-model.trim="qualityInspectionForm.packageCount" clearable style="margin-right: 0" />
+        </el-form-item>
+        <el-form-item label="其他反馈" prop="remark">
+          <el-input v-model="qualityInspectionForm.remark" placeholder="请输入其他反馈" resize="none" :rows="2" type="textarea" />
+        </el-form-item>
+      </el-form>
       <template #footer>
-        <!-- <div class="left-buttons">
+        <div class="left-buttons">
           <div style="flex: 3">
             <el-button type="success" @click="downloadInspection">下载</el-button>
             <el-button type="warning" @click="saveInspection">保存</el-button>
@@ -1021,10 +955,7 @@
             <el-button type="danger" @click="closeQualityInspection">取消</el-button>
             <el-button type="success" @click="handleSubmitInspection">提交</el-button>
           </div>
-        </div> -->
-        <el-button type="warning" @click="closeQualityInspection">退出</el-button>
-        <el-button type="success" @click="downloadInspection">下载</el-button>
-        <el-button type="success" @click="handleSubmitInspection">提交</el-button>
+        </div>
       </template>
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
@@ -1412,6 +1343,8 @@
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <!-- 质检报告 -->
+    <!-- <vab-quality-inspection-report v-model="qualityInspectionReportVisible" /> -->
   </div>
 </template>
 
@@ -1420,9 +1353,9 @@ import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
+import { downloadFile } from '~/src/api/devlocal/download'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
-import { downloadFile } from '/@/api/devlocal/download'
 import {
   addQualityCheck,
   checkGoOffWork,
@@ -1454,7 +1387,7 @@ import {
   updatePackageInspectionDetail,
   updatePackageTask,
   updatePackageTaskSite,
-  updatePriorityPackaging,
+  updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
@@ -1466,11 +1399,8 @@ defineOptions({
   name: 'PackingTask',
 })
 
-const qualityInspectionFormRules = reactive({
-  packingSize: [{ required: true, message: '请输入包装尺寸', trigger: 'blur' }],
-  packageWeight: [{ required: true, message: '请输入包装重量', trigger: 'blur' }],
-  materialComposition: [{ required: true, message: '', trigger: 'blur' }],
-})
+
+
 const activeName = ref<number>(1)
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
@@ -1479,6 +1409,109 @@ const showPreviewImage = (url: string) => {
 }
 const testVisible = ref<boolean>(false)
 const testList = ref<any[]>([])
+
+const imageUploadVisible = ref<boolean>(false)
+
+// 质检报告提交
+const handleSubmitInspection = async () => {
+  const { data } = await submitPackageInspection({
+    id: qualityInspectionForm.id,
+    packageLength: qualityInspectionForm.packageLength,
+    packageWidth: qualityInspectionForm.packageWidth,
+    packageHeight: qualityInspectionForm.packageHeight,
+    packageCount: qualityInspectionForm.packageCount,
+    packageWeight: qualityInspectionForm.packageWeight,
+    remark: qualityInspectionForm.remark,
+  })
+  if (data) {
+    $baseMessage('质检报告提交成功', 'success')
+    closeQualityInspection()
+  }
+}
+// 质检报告保存
+const saveInspection = async () => {
+  const { data } = await updatePackageInspection({
+    id: qualityInspectionForm.id,
+    packageLength: qualityInspectionForm.packageLength,
+    packageWidth: qualityInspectionForm.packageWidth,
+    packageHeight: qualityInspectionForm.packageHeight,
+    packageCount: qualityInspectionForm.packageCount,
+    packageWeight: qualityInspectionForm.packageWeight,
+    remark: qualityInspectionForm.remark,
+  })
+  if (data) {
+    $baseMessage('质检报告保存成功', 'success')
+  }
+}
+// 质检报告下载
+const downloadInspection = async () => {
+  await downloadFile('/package/inspection/download', {
+    poId: copyRow.value.poId,
+  })
+}
+// 质检报告修改输入失焦事件
+const clickQualityInspectionCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1 && t1.classList[0] !== 'el-select') {
+      t1.classList.add('none')
+    }
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(_row, value)) {
+    return
+  }
+
+  if (event.type === 'blur') {
+    try {
+      await updatePackageInspectionDetail({
+        id: value.id,
+        pass: value.pass,
+        remark: value.remark,
+      })
+    } catch {
+      Object.assign(value, _row)
+    }
+  }
+}
+// 质检报告详情修改
+const handleUpdatePackageInspectionDetail = async (row: any) => {
+  await updatePackageInspectionDetail({
+    id: row.id,
+    pass: row.pass,
+    remark: row.remark,
+  })
+}
+// 质检报告cellStyle
+const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+  if (data.columnIndex === 2) {
+    return {
+      textAlign: 'center' as const,
+    }
+  }
+}
+// 质检报告修改
+const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  _row = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+}
 const handleOpenTest = async () => {
   testVisible.value = true
   const { data } = await getMorkPackageList()
@@ -1719,106 +1752,7 @@ const closeQualityInspection = () => {
   qualityInspectionFormRef.value?.resetFields()
   qualityInspectionReportVisible.value = false
 }
-// 质检报告提交
-const handleSubmitInspection = async () => {
-  const { data } = await submitPackageInspection({
-    id: qualityInspectionForm.id,
-    packageLength: qualityInspectionForm.packageLength,
-    packageWidth: qualityInspectionForm.packageWidth,
-    packageHeight: qualityInspectionForm.packageHeight,
-    packageCount: qualityInspectionForm.packageCount,
-    packageWeight: qualityInspectionForm.packageWeight,
-    remark: qualityInspectionForm.remark,
-  })
-  if (data) {
-    $baseMessage('质检报告提交成功', 'success')
-    closeQualityInspection()
-  }
-}
-// 质检报告保存
-const saveInspection = async () => {
-  const { data } = await updatePackageInspection({
-    id: qualityInspectionForm.id,
-    packageLength: qualityInspectionForm.packageLength,
-    packageWidth: qualityInspectionForm.packageWidth,
-    packageHeight: qualityInspectionForm.packageHeight,
-    packageCount: qualityInspectionForm.packageCount,
-    packageWeight: qualityInspectionForm.packageWeight,
-    remark: qualityInspectionForm.remark,
-  })
-  if (data) {
-    $baseMessage('质检报告保存成功', 'success')
-  }
-}
-// 质检报告下载
-const downloadInspection = async () => {
-  await downloadFile('/package/inspection/download', {
-    poId: copyRow.value.poId,
-  })
-}
-// 质检报告详情修改
-const handleUpdatePackageInspectionDetail = async (row: any) => {
-  await updatePackageInspectionDetail({
-    id: row.id,
-    pass: row.pass,
-    remark: row.remark,
-  })
-}
-// 质检报告cellStyle
-const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 2) {
-    return {
-      textAlign: 'center' as const,
-    }
-  }
-}
-// 质检报告修改
-const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  const firstChild = cell?.children[0]?.children[0]
-  const secondChild = cell?.children[0]?.children[1]
 
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return
-  }
-
-  _row = JSON.parse(JSON.stringify(row))
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none')
-    secondChild.classList.add('none')
-
-    focusAndSelectInput(cell)
-  }
-}
-// 质检报告修改输入失焦事件
-const clickQualityInspectionCancel = async (event: any, value: any) => {
-  const rootElement = getRootElement(event.srcElement, '.cell')
-
-  if (rootElement) {
-    const t1 = rootElement.children[0]
-    const t2 = rootElement.children[1]
-
-    if (t1 && t1.classList[0] !== 'el-select') {
-      t1.classList.add('none')
-    }
-    if (t2) t2.classList.remove('none')
-  }
-  if (isEqual(_row, value)) {
-    return
-  }
-
-  if (event.type === 'blur') {
-    try {
-      await updatePackageInspectionDetail({
-        id: value.id,
-        pass: value.pass,
-        remark: value.remark,
-      })
-    } catch {
-      Object.assign(value, _row)
-    }
-  }
-}
 // 开始任务人员选择展示与否
 const personSelectVisible = ref<boolean>(false)
 const startTaskTableRef = ref<TableInstance>()

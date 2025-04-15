@@ -1,85 +1,90 @@
 <template>
-    <vab-dialog 
-        v-model="dflag" 
-        :before-close="handlerCloseDialog" 
-        class="moldDialog"
-        title="打包注意事项"
-        width="70%"
-    >
-        <el-divider style="margin-top: 0; margin-bottom: 20px"/>
-        <div id="table-height-container">
-            <vab-query-form>
-                <vab-query-form-left-panel>
-                    <el-button type="primary" @click="handleAdd">新增</el-button>
-                </vab-query-form-left-panel>
-            </vab-query-form>
+  <vab-dialog 
+    v-model="dflag" 
+    :before-close="handlerCloseDialog" 
+    class="moldDialog"
+    title="打包注意事项"
+    width="70%"
+  >
+    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+    <div id="table-height-container">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="handleAdd">新增</el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
 
-        <el-table 
-            ref="tableRef" 
-            v-loading="listLoading" border 
-            :cell-style="cellStyle"
-            :data="list"
-            :header-cell-style="{ 'text-align': 'center' }"
-            stripe
-            @cell-click="changeInput"
-        >
-            <el-table-column align="center" label="修改日期" prop="createTime" width="140">
-                <template #default="{ row }">
-                    <span>{{ row.createTime.split(' ')[0] }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="需质检" prop="status" width="90">
-                <template #default="{ row }">
-                    <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="检查类型" min-width="40">
-                <template #default="{ row }">
-                        <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
-                            <el-option
-                                v-for="item in checkTypeList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            />
-                        </el-select>
-                </template>
-            </el-table-column>
-            <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
-                <template #default="{ row }">
-                    <div class="none">
-                        <el-input v-model="row.packagePrecautions" type="text" @blur="clickQualityInspectionCancle($event, row)" @keyup.enter="clickQualityInspectionCancle($event, row)" />
-                    </div>
-                    <span>{{ row.packagePrecautions }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" fixed="right" label="操作" width="120">
-                <template #default="{ row, $index }">
-                    <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
-                </template>
-            </el-table-column>
-            <template #empty>
-                <el-empty class="vab-data-empty" description="暂无数据" />
-            </template>
-        </el-table>
-  
-            <!-- <vab-pagination
-                :current-page="queryForm.pageNo"
-                :page-size="queryForm.pageSize"
-                :total="total"
-                @current-change="handleCurrentChange"
-                @size-change="handleSizeChange"
-            /> -->
-        </div>
-    </vab-dialog>
+    <el-table 
+      ref="tableRef" 
+      v-loading="listLoading" border 
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ 'text-align': 'center' }"
+      stripe
+      @cell-click="changeInput"
+    >
+      <el-table-column align="center" label="修改日期" prop="createTime" width="140">
+        <template #default="{ row }">
+          {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="需质检" prop="status" width="90">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="需拍照" prop="isUploadImages" width="90">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="检查类型" min-width="40">
+        <template #default="{ row }">
+          <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
+            <el-option
+              v-for="item in checkTypeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.packagePrecautions" @blur="clickQualityInspectionCancel($event, row)" @keyup.enter="clickQualityInspectionCancel($event, row)" />
+          </div>
+          <span>{{ row.packagePrecautions }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" fixed="right" label="操作" width="120">
+        <template #default="{ row, $index }">
+          <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+
+    <!-- <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    /> -->
+    </div>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils';
-import { checkTypeList } from '../../newProductDevelopment/indexCommon'
-import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation';
 import { isEqual } from 'lodash'
+import { checkTypeList } from '../../newProductDevelopment/indexCommon'
+import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 defineOptions({
     name: 'VabPackingPrecautions'
 })
@@ -117,14 +122,12 @@ const handleStatusChange = async (row: any) => {
     fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-   
    if  (data.columnIndex === 0){        
-   
-       return {
-            color: '#bbb',
-            cursor: 'not-allowed',
-            textAlign:'center'
-        } 
+      return {
+        color: '#bbb',
+        cursor: 'not-allowed',
+        textAlign:'center'
+      } 
    }
 }
 const handleAdd = async () => {
@@ -168,7 +171,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   }
 }
 // 质检table blur事件
-const clickQualityInspectionCancle = async (event:any,value:any) =>{
+const clickQualityInspectionCancel = async (event:any,value:any) =>{
   const rootElement = getRootElement(event.srcElement, ".cell");
 
   if (rootElement) {
@@ -212,7 +215,7 @@ const handleDelQualityInspection = async (row: any, index: number) => {
             }
         });
     } catch(error){
-        console.log(error as Error)
+      console.log(error as Error)
    }
 }
 
@@ -238,15 +241,15 @@ onActivated(() => {
 
 <style lang="scss" scoped>
 #table-height-container {
-    display: flex;
-    flex-direction: column;
-    max-height: calc(80vh - 120px);
-    height: calc(80vh - 120px);
-    padding-bottom: 20px;
-    .el-table {
-        flex: 1; // 使表格占据剩余空间
-        overflow: auto; // 确保表格内容可以滚动
-    }
+  display: flex;
+  flex-direction: column;
+  height: calc(80vh - 120px);
+  max-height: calc(80vh - 120px);
+  padding-bottom: 20px;
+  .el-table {
+    flex: 1; // 使表格占据剩余空间
+    overflow: auto; // 确保表格内容可以滚动
+  }
 }
 // // 设置行高
 // :deep(.el-table .el-table__body .cell) {

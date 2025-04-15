@@ -60,11 +60,11 @@
           <el-switch v-model="row.priorityPacking" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="打包拍照" min-width="90" prop="packagePhotograph">
+      <!-- <el-table-column label="打包拍照" min-width="90" prop="packagePhotograph">
         <template #default="{ row }">
           <el-switch v-model="row.packagePhotograph" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="总实际成本" min-width="80" prop="procurementCost" >
         <template #header>
           总实际<br>成本
