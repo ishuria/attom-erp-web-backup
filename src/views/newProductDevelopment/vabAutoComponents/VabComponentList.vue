@@ -355,11 +355,10 @@
     />
     <!-- 修改备注 -->
     <vab-remark-dialog 
+      v-model="remarkVisible"
       :remark="remark"
-      :remark-visible="remarkVisible"
       :title="title"
       @update:remark="handleUpdateRemark"
-      @update:remark-visible="handleCloseRemark"
     />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
@@ -453,9 +452,6 @@ interface SpanMethodProps {
   columnIndex: number
 }
 
-const handleCloseRemark = (value: boolean) => {
-  remarkVisible.value = value
-}
 const handleUpdateRemark = async (value: string) => {
   await updateComponenet({
     ...rowCopy,

@@ -136,11 +136,10 @@
     />
     <!-- 修改issue和解决方案 -->
     <vab-remark-dialog 
+      v-model="remarkVisible"
       :remark="remark"
-      :remark-visible="remarkVisible"
       :title="title"
       @update:remark="handleUpdateRemark"
-      @update:remark-visible="handleCloseRemark"
     />
     <!-- 新增 -->
     <vab-dialog
@@ -279,9 +278,6 @@ const handleAdd = async () => {
 const handleOpenAdd = () => {
   addVisible.value = true
   addFormRef.value?.resetFields()
-}
-const handleCloseRemark = (value: boolean) => {
-  remarkVisible.value = value
 }
 const handleUpdateRemark = async (value: string) => {
   if (title.value === "修改Issue") {

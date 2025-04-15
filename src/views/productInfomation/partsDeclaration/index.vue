@@ -314,11 +314,10 @@
       </template>
     </vab-dialog>
     <vab-remark-dialog 
+      v-model="remarkVisible"
       :remark="remark"
-      :remark-visible="remarkVisible"
       title="修改申报要素"
       @update:remark="handleUpdateRemark"
-      @update:remark-visible="handleCloseRemark"
     />
   </div>
 </template>
@@ -546,9 +545,6 @@ const clickCancel2 = async (event: Event, value: any) => {
     }
   }
 }
-const handleCloseRemark = (value: boolean) => {
-  remarkVisible.value = value
-}
 const handleUpdateRemark = async (value: string) => {
   _row.declarationElementsAbbreviation = processDeclarationElements(value)
   // 执行失去焦点处理逻辑
@@ -558,7 +554,7 @@ const handleUpdateRemark = async (value: string) => {
     declarationElementsAbbreviation: _row.declarationElementsAbbreviation,
   })
   fetchData()
-  handleCloseRemark(false)
+  remarkVisible.value = false
 }
 // 处理申报要素缩写
 const processDeclarationElements = (declarationElements: string): string => {

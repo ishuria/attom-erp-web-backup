@@ -1,6 +1,6 @@
 <template>
   <vab-dialog
-    v-model="dflag"
+    v-model="visible"
     :title="props.title"
     width="25%"
     @close="handleCloseDialog"
@@ -19,20 +19,28 @@ defineOptions({
 })
 
 const props = defineProps<{
-  remarkVisible: boolean
+  modelValue: boolean
   title: string
   remark: string
 }>()
-
-const dflag = ref<boolean>(false)
-const dRemark = ref<string>('')
-watchEffect(() => {
-  dflag.value = props.remarkVisible
-  dRemark.value = props.remark
+const visible = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  }
 })
-const emit = defineEmits(['update:remarkVisible', 'update:remark'])
+const dRemark = ref<string>('')
+
+watch(() => props.modelValue, (val) => {
+  if (val) {
+    dRemark.value = props.remark
+  }
+})
+const emit = defineEmits(['update:modelValue', 'update:remark'])
 const handleCloseDialog = () => {
-  emit('update:remarkVisible', false)
+  visible.value = false
 }
 const handleConfirmUpdate = () => {
   emit('update:remark', dRemark.value)

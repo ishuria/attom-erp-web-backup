@@ -67,12 +67,12 @@
         <el-table-column label="零件名" />
         <el-table-column label="材质1名称" >
           <template #header>
-            材质1名称<span style="color: var(--el-color-danger)">*</span>
+            材质1名称<span style=" margin-left: 4px;color: var(--el-color-danger)">*</span>
           </template>
         </el-table-column>
         <el-table-column label="材质1重量(g)" >
           <template #header>
-            材质1重量(g)<span style="color: var(--el-color-danger)">*</span>
+            材质1重量(g)<span style=" margin-left: 4px;color: var(--el-color-danger)">*</span>
           </template>
         </el-table-column>
         <el-table-column label="材质2名称" />

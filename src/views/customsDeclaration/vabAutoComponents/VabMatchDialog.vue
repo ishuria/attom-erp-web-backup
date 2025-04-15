@@ -366,11 +366,10 @@
     </template>
   </vab-dialog>
   <vab-remark-dialog 
+    v-model="remarkVisible"
     :remark="remark"
-    :remark-visible="remarkVisible"
     title="修改备注"
     @update:remark="handleUpdateRemark"
-    @update:remark-visible="handleCloseRemark"
   />
 </template>
 
@@ -485,9 +484,7 @@ const handleUpdateRemark = async (value: string) => {
     copyRow.remark = value
   }
 }
-const handleCloseRemark = (value: boolean) => {
-  remarkVisible.value = value
-}
+
 const changeInput = (row: any, column: any) => {
   if (column.label === "备注") {
     copyRow = row

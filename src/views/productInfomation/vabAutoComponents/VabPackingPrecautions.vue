@@ -1,173 +1,192 @@
 <template>
   <vab-dialog 
-    v-model="dflag" 
+    v-model="visible" 
     :before-close="handlerCloseDialog" 
-    class="moldDialog"
     title="打包注意事项"
     width="70%"
   >
-    <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+    <!-- <el-divider style="margin-top: 0; margin-bottom: 20px"/> -->
     <div id="table-height-container">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="handleAdd">新增</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-
-    <el-table 
-      ref="tableRef" 
-      v-loading="listLoading" border 
-      :cell-style="cellStyle"
-      :data="list"
-      :header-cell-style="{ 'text-align': 'center' }"
-      stripe
-      @cell-click="changeInput"
-    >
-      <el-table-column align="center" label="修改日期" prop="createTime" width="140">
-        <template #default="{ row }">
-          {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+      <el-table 
+        ref="tableRef" 
+        v-loading="listLoading" border 
+        :cell-style="cellStyle"
+        :data="list"
+        :header-cell-style="{ 'text-align': 'center' }"
+        stripe
+        @cell-click="changeInput"
+      >
+        <el-table-column align="center" label="修改日期" prop="createTime" width="140">
+          <template #default="{ row }">
+            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="需质检" prop="status" width="90">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="需拍照" prop="isUploadImages" width="90">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="站点" prop="site" width="200">
+          <template #default="{ row }">
+            <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
+              <el-option 
+                v-for="item in siteList"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="检查类型" min-width="40">
+          <template #default="{ row }">
+            <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
+              <el-option
+                v-for="item in checkTypeList"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
+          <template #default="{ row }">
+            {{ row.packagePrecautions }}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="120">
+          <template #default="{ row, $index }">
+            <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
-      </el-table-column>
-      <el-table-column align="center" label="需质检" prop="status" width="90">
-        <template #default="{ row }">
-          <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="需拍照" prop="isUploadImages" width="90">
-        <template #default="{ row }">
-          <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="站点" prop="site" width="200">
-        <template #default="{ row }">
-          <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
-            <el-option 
-              v-for="item in siteList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="检查类型" min-width="40">
-        <template #default="{ row }">
-          <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
-            <el-option
-              v-for="item in checkTypeList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.packagePrecautions" @blur="clickQualityInspectionCancel($event, row)" @keyup.enter="clickQualityInspectionCancel($event, row)" />
-          </div>
-          <span>{{ row.packagePrecautions }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="120">
-        <template #default="{ row, $index }">
-          <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </template>
-    </el-table>
-
-    <!-- <vab-pagination
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    /> -->
+      </el-table>
     </div>
   </vab-dialog>
+  <vab-remark-dialog 
+    v-model="remarkVisible"
+    :remark="remark"
+    title="修改打包注意事项"
+    @update:remark="handleUpdatePackagePrecautions"
+  />
 </template>
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
-import { getPackageSiteList } from '~/src/api/devlocal/packagingShipping'
-import { checkTypeList } from '../../newProductDevelopment/indexCommon'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
+
 defineOptions({
-    name: 'VabPackingPrecautions'
+  name: 'VabPackingPrecautions'
 })
-let props = defineProps<{
-    packingPrecautionsVisible: boolean
-}>();
-const dflag = ref<boolean>(false)
-watchEffect(()=>{
-  dflag.value = props.packingPrecautionsVisible
-  if (dflag.value === true) {
-    fetchSiteData()
+
+const props = defineProps<{
+  modelValue: boolean
+}>()
+const emit = defineEmits(['update:modelValue', 'update:tableValue'])
+const visible = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  },
+})
+watch(() => props.modelValue, (val) => {
+  if (val) {
     fetchData()
+    fetchSiteData()
   }
 })
+const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
 const siteList = ref<{ id: number, label: string }[]>([])
 const list = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 const tableRef = ref<TableInstance>()
-
 const route: any = useRoute()
-const emit = defineEmits(['update:packingPrecautionsVisible', 'update:tableValue'])
 
+const handleUpdatePackagePrecautions = async (val: string) => {
+  const { data } = await updateProductQualityInspection({ ...copyRow, packagePrecautions: val })
+  if (data) {
+    remarkVisible.value = false
+    $baseMessage('修改打包注意事项成功','success', 'hey')
+    await fetchData()
+  }
+  copyRow.status = 1
+}
 const handlerCloseDialog = () => {
-    dflag.value = false
-    emit('update:packingPrecautionsVisible', dflag.value);
-    emit('update:tableValue', list.value)
+  visible.value = false
+  emit('update:tableValue', list.value)
 }
 const handleCheckType = async (row: any) => {
-    await updateProductQualityInspection(row)
-    fetchData()
-    row.status = 1
+  await updateProductQualityInspection(row)
+  fetchData()
+  row.status = 1
 }
 const handleStatusChange = async (row: any) => {
-    await updateProductQualityInspection(row)
-    fetchData()
+  await updateProductQualityInspection(row)
+  fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-   if  (data.columnIndex === 0){        
-      return {
-        color: '#bbb',
-        cursor: 'not-allowed',
-        textAlign:'center'
-      } 
-   }
+  if  (data.columnIndex === 0){        
+    return {
+      color: '#999',
+      cursor: 'not-allowed',
+      textAlign:'center'
+    } 
+  } else if (data.columnIndex === 5) {
+    return {
+      cursor: 'pointer'
+    } 
+  }
 }
 const handleAdd = async () => {
-    try {
-        const newQualityInspection = {
-            skuId: parseInt(route.query.skuId),
-            status: 1,
-            checkType: 0,
-            packagePrecautions: '',
-        }
-        const { data } = await addProductQualityInspection(newQualityInspection)
-        if (data) {
-            const { data: tableData } = await getProductQualityInspection({
-                skuId: parseInt(route.query.skuId)
-            })
-            list.value = tableData
-            list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
-            $baseMessage('新增质检清单成功', 'success', 'hey')
-        }
-    } catch (error) {
-        console.error(error)
+  try {
+    const newQualityInspection = {
+      skuId: parseInt(route.query.skuId),
+      status: 1,
+      checkType: 0,
+      packagePrecautions: '',
     }
+    const { data } = await addProductQualityInspection(newQualityInspection)
+    if (data) {
+      const { data: tableData } = await getProductQualityInspection({
+          skuId: parseInt(route.query.skuId)
+      })
+      list.value = tableData
+      list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
+      $baseMessage('新增质检清单成功', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-    
+  if (column.label === '打包注意事项') {
+    remarkVisible.value = true
+    remark.value = row.packagePrecautions
+    copyRow = row
+    return
+  }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -212,25 +231,25 @@ const clickQualityInspectionCancel = async (event:any,value:any) =>{
 }
 // 删除
 const handleDelQualityInspection = async (row: any, index: number) => {
-    try {
-        $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
-            try {
-                const { data } = await delProductQualityInspection({ id: row.id! })
-                if (data) {
-                    list.value.splice(index, 1);
-                    fetchData()
-                    $baseMessage("删除成功！","success","hey")
-                } else {
-                    $baseMessage("删除失败，请重试。", "error", "hey");
-                }
-            } catch (delError) {
-                console.error(delError);
-                $baseMessage("删除操作失败，请重试。", "error", "hey");
-            }
-        });
-    } catch(error){
-      console.log(error as Error)
-   }
+  try {
+    $baseConfirm('确定要删除本条信息吗? ', "系统提示", async () => {
+      try {
+        const { data } = await delProductQualityInspection({ id: row.id! })
+        if (data) {
+          list.value.splice(index, 1);
+          fetchData()
+          $baseMessage("删除成功！","success","hey")
+        } else {
+          $baseMessage("删除失败，请重试。", "error", "hey");
+        }
+      } catch (delError) {
+        console.error(delError);
+        $baseMessage("删除操作失败，请重试。", "error", "hey");
+      }
+    });
+  } catch(error){
+    console.log(error as Error)
+  }
 }
 
 // 获取站点信息
@@ -258,7 +277,6 @@ const fetchData = async () => {
 onActivated(() => {
   tableRef.value?.doLayout()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -273,15 +291,11 @@ onActivated(() => {
     overflow: auto; // 确保表格内容可以滚动
   }
 }
-// // 设置行高
-// :deep(.el-table .el-table__body .cell) {
-//   max-height: 69.8px !important;
-// }
 .custom-checkbox {
   transform: scale(1.2); 
   transform-origin: center;
 }
 .none {
-    display: none;
+  display: none;
 }
 </style>

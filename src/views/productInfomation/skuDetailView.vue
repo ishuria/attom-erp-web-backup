@@ -556,7 +556,7 @@
     </vab-dialog>
     <!-- 打包注意事项 -->
     <vab-packing-precautions 
-      :packing-precautions-visible="packingPrecautionsVisible"
+      v-model="packingPrecautionsVisible"
       @update:packing-precautions-visible="handleClosePackingPrecautions"
       @update:table-value="handleTableDataValue"
     />
