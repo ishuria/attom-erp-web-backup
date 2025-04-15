@@ -143,7 +143,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -311,7 +311,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -477,7 +477,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -643,7 +643,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -809,7 +809,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -974,7 +974,7 @@
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
                       <el-link type="primary" :underline="false" >老品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
@@ -1042,13 +1042,15 @@
         <el-table-column label="签收日期" min-width="120" prop="signDate" />
       </el-table>
     </vab-dialog>
-    <!-- 质检报告 -->
-    <vab-dialog v-model="qualityInspectionReportVisible" title="质检报告" top="10vh" width="40%" @close="closeQualityInspection">
+    <!-- 老品质检报告 -->
+    <vab-dialog v-model="qualityInspectionReportVisible" title="老品质检报告" top="10vh" width="40%" @close="closeQualityInspection">
       <el-form
         ref="qualityInspectionFormRef"
         label-position="left"
         label-width="auto"
         :model="qualityInspectionForm"
+        require-asterisk-position="right"
+        :rules="qualityInspectionFormRules"
         style="margin-right: 30px; margin-left: 30px"
       >
         <el-form-item label="SKU" prop="sku">
@@ -1057,7 +1059,7 @@
         <el-form-item label="产品名称" prop="productName">
           <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
         </el-form-item>
-        <el-form-item inline label="包装尺寸(cm)" prop="packingSize">
+        <!-- <el-form-item inline label="包装尺寸(cm)" prop="packingSize">
           <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
             <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长" style="flex: 1; margin-right: 0" />
             <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
@@ -1065,12 +1067,12 @@
             <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
             <el-input v-model.trim="qualityInspectionForm.packageHeight" clearable placeholder="高" style="flex: 1; margin-right: 0" />
           </el-row>
-        </el-form-item>
-        <el-form-item label="包装重量(g)" prop="packageWeight">
+        </el-form-item> -->
+        <!-- <el-form-item label="包装重量(g)" prop="packageWeight">
           <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable style="margin-right: 12px" />
           <el-button type="success">更新SKU尺寸重量</el-button>
-        </el-form-item>
-
+        </el-form-item> -->
+        <el-divider >质检结果</el-divider>
         <el-table
           border
           :cell-style="qualityInspectionCellStyle"
@@ -1082,9 +1084,40 @@
         >
           <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
           <el-table-column label="检查类型" min-width="100" prop="type" />
-          <el-table-column label="通过" min-width="50" prop="pass">
+          <el-table-column label="通过" min-width="70" prop="pass">
             <template #default="{ row }">
               <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionDetail(row)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="需质检" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.needInspection" :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.needPhoto" :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="上传图片" width="75">
+            <template #header>
+              上传<br />图片
+            </template>
+            <template #default="{ row }">
+              <div class="image-cell" style="margin-right: 15px">
+                <!-- 有图片时显示 -->
+                <div v-if="row.image" class="image-preview">
+                  <img alt="" :src="row.image" />
+                  <div class="image-actions">
+                    <el-icon @click="showPreviewImage(row.image)"><zoom-in /></el-icon>
+                    <el-icon @click=""><delete /></el-icon>
+                  </div>
+                </div>
+                <!-- 无图片时显示 -->
+                <div v-else class="upload-placeholder" @click="showUploadDialog">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="150" prop="remark">
@@ -1100,24 +1133,33 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-form-item label="产品经理打包数量" prop="packageCount" style="margin-top: 20px">
+        <!-- <el-form-item label="产品经理打包数量" prop="packageCount" style="margin-top: 20px">
           <el-input v-model.trim="qualityInspectionForm.packageCount" clearable style="margin-right: 0" />
         </el-form-item>
         <el-form-item label="其他反馈" prop="remark">
           <el-input v-model="qualityInspectionForm.remark" placeholder="请输入其他反馈" resize="none" :rows="2" type="textarea" />
+        </el-form-item> -->
+        <el-form-item label="结论" prop="conclusion" style="margin-top: 10px">
+          <el-radio-group v-model="qualityInspectionForm.conclusion">
+            <el-radio label="1">通过</el-radio>
+            <el-radio label="2">不通过</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
-        <div class="left-buttons">
-          <div style="flex: 3">
+        <div style="margin-right: 30px">
+          <!-- <div style="flex: 3">
             <el-button type="success" @click="downloadInspection">下载</el-button>
             <el-button type="warning" @click="saveInspection">保存</el-button>
           </div>
           <div style="flex: 2">
             <el-button type="danger" @click="closeQualityInspection">取消</el-button>
             <el-button type="success" @click="handleSubmitInspection">提交</el-button>
-          </div>
+          </div> -->
+          <el-button type="warning" @click="closeQualityInspection">退出</el-button>
+          <el-button type="success" @click="handleSubmitInspection">提交</el-button>
         </div>
+        
       </template>
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
@@ -1505,13 +1547,15 @@
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
-    <!-- 质检报告 -->
-    <!-- <vab-quality-inspection-report v-model="qualityInspectionReportVisible" /> -->
+    <!-- 新品质检报告 -->
+    <vab-quality-inspection-report v-model="newQualityInspectionReportVisible" />
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
+import { ArrowDown, CirclePlus, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { ref } from 'vue'
@@ -1534,7 +1578,6 @@ import {
   getGoOffWorkList,
   getMorkPackageList,
   getPackageComponentList,
-  getPackageInspection,
   getPackageSiteList,
   getPackageTaskIsSplit,
   getPackageTaskList,
@@ -1561,8 +1604,12 @@ defineOptions({
   name: 'PackingTask',
 })
 
-
-
+const qualityInspectionFormRules = reactive({
+  conclusion: [
+    { required: true, message: '请选择结论', trigger: 'change' },
+  ],
+})
+const newQualityInspectionReportVisible = ref<boolean>(false)
 const activeName = ref<number>(1)
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
@@ -1574,6 +1621,12 @@ const testList = ref<any[]>([])
 
 const imageUploadVisible = ref<boolean>(false)
 
+const closeImageUpload = () => {
+  imageUploadVisible.value = false
+}
+const showNewInspectionReport = (row: any) => {
+  newQualityInspectionReportVisible.value = true
+}
 // 质检报告提交
 const handleSubmitInspection = async () => {
   const { data } = await submitPackageInspection({
@@ -1901,12 +1954,12 @@ const qualityInspectionFormRef = ref<FormInstance>()
 // 展示质检报告
 const handleShowQualityInspectionReport = async (row: any) => {
   copyRow.value = row
-  const { data } = await getPackageInspection({
-    poId: row.poId,
-  })
-  if (data) {
-    Object.assign(qualityInspectionForm, data)
-  }
+  // const { data } = await getPackageInspection({
+  //   poId: row.poId,
+  // })
+  // if (data) {
+  //   Object.assign(qualityInspectionForm, data)
+  // }
   qualityInspectionReportVisible.value = true
 }
 // 关闭质检报告
@@ -2692,5 +2745,76 @@ onBeforeMount(() => {
 }
 :deep(.custom-dialog .el-dialog__body) {
   padding-top: 0;
+}
+// 图片样式
+.image-cell {
+  width: 110px;
+  height: 110px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
 }
 </style>

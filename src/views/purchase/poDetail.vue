@@ -71,9 +71,9 @@
                       <el-select v-model="poDetailData.site" placeholder="请选择站点" @change="handleUpdatePoSite">
                         <el-option
                           v-for="item in siteList"
-                          :key="item.value"
+                          :key="item.id"
                           :label="item.label"
-                          :value="item.value"
+                          :value="item.id"
                         />
                       </el-select>
                     </el-form-item>
@@ -554,9 +554,9 @@
                       <el-select v-model="poDetailData.site" :disabled="createDisabled" placeholder="请选择站点" @change="updateCreate">
                         <el-option
                           v-for="item in siteList"
-                          :key="item.value"
+                          :key="item.id"
                           :label="item.label"
-                          :value="item.value"
+                          :value="item.id"
                         />
                       </el-select>
                     </el-form-item>
@@ -1020,9 +1020,9 @@ v-for="dict in invoicingNumList" :key="dict.value"
                       <el-select v-model="poDetailData.site" disabled placeholder="请选择站点">
                         <el-option
                           v-for="item in siteList"
-                          :key="item.value"
+                          :key="item.id"
                           :label="item.label"
-                          :value="item.value"
+                          :value="item.id"
                         />
                       </el-select>
                     </el-form-item>
@@ -1395,6 +1395,7 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import {
   addPoSKU,
@@ -1441,7 +1442,7 @@ import { handleActivePath, handleMatched, handleTabs } from '/@/utils/routes'
 import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import { currencyNumList, invoicingNumList, siteList } from '/@/views/purchase/constantOption.ts'
+import { currencyNumList, invoicingNumList } from '/@/views/purchase/constantOption.ts'
 
 defineOptions({
   name: 'PoDetail',
@@ -3108,10 +3109,17 @@ const setImageColumnHeight3 = () => {
     imageColumnHeight.value = skuTotalPriceRect.bottom - createDateRect.top - 30;
   }
 };
+const siteList = ref<{ id: number, label: string }[]>([])
+// 获取站点信息
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+}
 const listLoading = ref<boolean>(false)
 // 订货套数是否可改
 const orderCount = ref<boolean>(false)
 onBeforeMount(async () => {
+  fetchSiteData()
   // 如果不是创建，订单详情div显示
   if (route.query.from !== 'plannedPoCreate') {
     listLoading.value = true

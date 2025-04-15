@@ -38,6 +38,18 @@
           <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="站点" prop="site" width="200">
+        <template #default="{ row }">
+          <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
+            <el-option 
+              v-for="item in siteList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="检查类型" min-width="40">
         <template #default="{ row }">
           <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
@@ -82,6 +94,7 @@
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
+import { getPackageSiteList } from '~/src/api/devlocal/packagingShipping'
 import { checkTypeList } from '../../newProductDevelopment/indexCommon'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -93,12 +106,13 @@ let props = defineProps<{
 }>();
 const dflag = ref<boolean>(false)
 watchEffect(()=>{
-    dflag.value = props.packingPrecautionsVisible
-    if(dflag.value === true) {
-        fetchData()
-    }
+  dflag.value = props.packingPrecautionsVisible
+  if (dflag.value === true) {
+    fetchSiteData()
+    fetchData()
   }
-)
+})
+const siteList = ref<{ id: number, label: string }[]>([])
 const list = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
@@ -219,7 +233,15 @@ const handleDelQualityInspection = async (row: any, index: number) => {
    }
 }
 
-
+// 获取站点信息
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+  siteList.value.unshift({
+    id: -1,
+    label: '全部站点'
+  })
+}
 /**
  * 获取样品进度数据
  */

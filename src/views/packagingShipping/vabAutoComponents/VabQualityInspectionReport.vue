@@ -1,49 +1,50 @@
 <template>
   <!-- 质检报告 -->
-  <vab-dialog v-model="visible" class="custom-dialog" title="质检报告" top="5vh" width="50%" @close="closeQualityInspection">
-    <el-divider style="margin-top: 0">基础信息</el-divider>
+  <vab-dialog v-model="visible" class="custom-dialog" title="新品质检报告" top="5vh" width="50%" @close="closeQualityInspection">
+    
     <el-form
       ref="qualityInspectionFormRef"
       :inline="true"
       :model="qualityInspectionForm"
       require-asterisk-position="right"
       :rules="qualityInspectionFormRules"
-      style="margin-right: 0px; margin-left: 0px"
+      style="margin-right: 20px; margin-left: 20px"
     >
-      <el-row style="width: 100%">
+      <el-divider style="margin-top: 0">基础信息</el-divider>
+      <el-row justify="space-between" style="width: 100%">
         <el-col :span="8">
-          <el-form-item label="日期" style="min-width: 100%">
+          <el-form-item label="日期" style="min-width: 95%">
             <el-input disabled />
           </el-form-item>
           
         </el-col>
         <el-col :span="8">
-          <el-form-item label="产品经理" style="min-width: 100%">
+          <el-form-item label="产品经理" style="min-width: 95%">
             <el-input disabled />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="PO" style="min-width: 100%">
-            <el-input disabled />
+          <el-form-item label="合并质检PO" style="min-width: 100%;">
+            <el-select placeholder="请选择合并质检PO" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row style="width: 100%">
+      <el-row justify="space-between" style="width: 100%">
         <el-col :span="8">
-          <el-form-item label="SKU" prop="sku" style="min-width: 100%">
+          <el-form-item label="SKU" prop="sku" style="min-width: 95%">
             <el-input v-model="qualityInspectionForm.sku" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="16">
-          <el-form-item label="产品名称" prop="productName" style="min-width: 100%">
-            <el-input v-model="qualityInspectionForm.productName" disabled  />
+          <el-form-item label="产品名称" prop="productName" style="min-width: 100%;">
+            <el-input v-model="qualityInspectionForm.productName" disabled />
           </el-form-item>
         </el-col>
       </el-row>
       <el-divider style="margin-top: 0">信息完善</el-divider>
-      <el-row style="width: 100%">
+      <el-row justify="space-between" style="width: 100%">
         <el-col :span="16">
-          <el-form-item inline label="包装尺寸" prop="packingSize">
+          <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
             <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
               <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长(cm)" style="flex: 1; margin-right: 0" />
               <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
@@ -54,29 +55,42 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="包装重量" prop="packageWeight">
-            <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable placeholder="克(g)" style="margin-right: 12px" />
+          <el-form-item label="包装重量" prop="packageWeight" style="min-width: 100%">
+            <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable placeholder="克(g)" />
             <!-- <el-button type="success">更新SKU尺寸重量</el-button> -->
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="材质构成（用于报关，需要精确填写）" prop="materialComposition" />
-    </el-form>
-    <el-table border :header-cell-style="{ textAlign: 'center' }" stripe >
-      <el-table-column label="零件名" />
-      <el-table-column label="材质1名称" />
-      <el-table-column label="材质1重量(g)" />
-      <el-table-column label="材质2名称" />
-      <el-table-column label="材质2重量(g)" />
-      <el-table-column label="材质3名称" />
-      <el-table-column label="材质3重量(g)" />
-      <el-table-column label="材质4名称" />
-      <el-table-column label="材质4重量(g)" />
-      <el-table-column label="上传零件图片" />
-    </el-table>
-        
-        
-    <el-divider >质检结果</el-divider>
+      <el-form-item label="材质构成（用于报关，需要精确填写）" prop="materialComposition" style="margin-bottom: 10px"/>
+      <el-table border :header-cell-style="{ textAlign: 'center' }" stripe >
+        <el-table-column label="零件图片" width="90"/>
+        <el-table-column label="零件名" />
+        <el-table-column label="材质1名称" >
+          <template #header>
+            材质1名称<span style="color: var(--el-color-danger)">*</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质1重量(g)" >
+          <template #header>
+            材质1重量(g)<span style="color: var(--el-color-danger)">*</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质2名称" />
+        <el-table-column label="材质2重量(g)" />
+        <el-table-column label="材质3名称" />
+        <el-table-column label="材质3重量(g)" />
+        <el-table-column label="材质4名称" />
+        <el-table-column label="材质4重量(g)" />
+      </el-table>
+      <el-divider >质检结果</el-divider>
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary">修改SKU质检项</el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <!-- <div style="margin-top: 10px; margin-bottom: 10px">
+        <el-button type="primary">修改SKU质检项</el-button>
+      </div> -->
       <el-table
         border
         :cell-style="qualityInspectionCellStyle"
@@ -88,6 +102,7 @@
       >
         <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
         <el-table-column label="检查类型" min-width="100" prop="type" />
+        <el-table-column label="质检站点" min-width="130" />
         <el-table-column label="通过" min-width="50" prop="pass">
           <template #default="{ row }">
             <el-checkbox v-model="row.pass" :false-value="0" :true-value="1"  />
@@ -106,193 +121,210 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form label-position="left" label-width="auto" :model="inspectionResultsForm" require-asterisk-position="right" :rules="inspectionResultsFormRules" style="margin: 20px 0 0 0">
-        <el-form-item label="基础图片" prop="baseImage" style="margin-bottom: 50px">
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div style="font-size: 14px;">产品零件图</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示所有零件及对应数量</div>
-            </div>
-          </div>
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div>产品包装图</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示包装完后的外包装</div>
+    </el-form>
+    
+    <el-form 
+      label-position="left" 
+      label-width="auto" 
+      :model="inspectionResultsForm" 
+      require-asterisk-position="right" 
+      :rules="inspectionResultsFormRules" 
+      style="margin: 20px 20px 0 20px"
+    >
+      <el-form-item label="基础图片" prop="baseImage" style="margin-bottom: 50px">
+        <div class="image-cell" style="margin-right: 20px">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div>包装测量图(长)</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示实际测量尺的刻度</div>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">产品零件图</div>
+            <div class="desc">展示所有零件及对应数量</div>
+          </div>
+        </div>
+        <div class="image-cell" style="margin-right: 20px">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div>包装测量图(宽)</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示实际测量尺的刻度</div>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">产品包装图</div>
+            <div class="desc">展示包装完后的外包装</div>
+          </div>
+        </div>
+        <div class="image-cell" style="margin-right: 20px">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div>包装测量图(高)</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示实际测量尺的刻度</div>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">包装测量图(长)</div>
+            <div class="desc">展示实际测量尺的刻度</div>
+          </div>
+        </div>
+        <div class="image-cell" style="margin-right: 20px">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-          <div class="image-cell" style="margin-right: 15px">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
-            </div>
-            <div style=" line-height: 1.2;text-align: center">
-              <div>包装测量图(重量)</div>
-              <div style=" margin-top: 2px;font-size: 12px; color: #999">展示出称的读数</div>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">包装测量图(宽)</div>
+            <div class="desc">展示实际测量尺的刻度</div>
+          </div>
+        </div>
+        <div class="image-cell" style="margin-right: 20px">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-        </el-form-item>
-        <el-form-item label="零件细节" prop="partDetails" >
-          <div class="image-cell">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.partDetails" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.partDetails" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.partDetails)"><zoom-in /></el-icon>
-                <el-icon @click="handlePartDetailsRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">包装测量图(高)</div>
+            <div class="desc">展示实际测量尺的刻度</div>
+          </div>
+        </div>
+        <div class="image-cell" >
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
             </div>
           </div>
-        </el-form-item>
-        <el-form-item label="成品组装图" prop="finishedImage" >
-          <div class="image-cell">
-            <!-- 有图片时显示 -->
-            <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-              <img alt="" :src="inspectionResultsForm.finishedImage" />
-              <div class="image-actions">
-                <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-                <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-              </div>
-            </div>
-            <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showUploadDialog">
-              <el-icon><plus /></el-icon>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+          <div class="image-text">
+            <div class="title">包装测量图(重量)</div>
+            <div class="desc">展示出称的读数</div>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item label="零件细节" prop="partDetails" >
+        <template #label>
+          <el-tooltip content="" effect="dark" placement="top">
+            <div class="questionIcon">零件细节<el-icon><question-filled /></el-icon> </div>
+            <template #content>
+              <div class="custom-tooltip">展示产品局部细节，重要技术参数细节(尺寸/厚度/重量/粘接处/焊接处/贴边处/表面处理等)</div>
+            </template>
+          </el-tooltip>
+        </template>
+        <div class="image-cell">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.partDetails" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.partDetails" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.partDetails)"><zoom-in /></el-icon>
+              <el-icon @click="handlePartDetailsRemove"><delete /></el-icon>
             </div>
           </div>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" />
-        </el-form-item>
-        <el-form-item label="打包数" prop="packingQuantity" >
-          <el-input v-model.trim="inspectionResultsForm.packingQuantity" clearable placeholder="产品经理打包套数" style="min-width: 100%" />
-        </el-form-item>
-        <el-form-item label="结论" prop="conclusion" >
-          <el-radio-group v-model="inspectionResultsForm.conclusion" >
-            <el-radio value="1" >通过</el-radio>
-            <el-radio value="2" >不通过</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="原因" prop="reason"  >
-          <el-input v-model="inspectionResultsForm.reason"  clearable placeholder="质检不通过的原因" style="min-width: 100%" />
-        </el-form-item>
-        <el-form-item label="处理方式" prop="method" >
-          <el-input v-model="inspectionResultsForm.method" clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%" />
-        </el-form-item>
-      </el-form>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item label="成品组装图" prop="finishedImage" >
+        <template #label>
+          <el-tooltip content="" effect="dark" placement="top">
+            <div class="questionIcon">成品组装图<el-icon><question-filled /></el-icon> </div>
+            <template #content>
+              <div class="custom-tooltip">展示产品组装后的图片，多角度拍摄(包含整体正面、侧面、背面、顶部等)</div>
+            </template>
+          </el-tooltip>
+        </template>
+        <div class="image-cell">
+          <!-- 有图片时显示 -->
+          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
+            <img alt="" :src="inspectionResultsForm.finishedImage" />
+            <div class="image-actions">
+              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
+              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
+            </div>
+          </div>
+          <!-- 无图片时显示 -->
+          <div v-else class="upload-placeholder" @click="showUploadDialog">
+            <el-icon><plus /></el-icon>
+          </div>
+        </div>
+      </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" />
+      </el-form-item>
+      <el-form-item label="打包数" prop="packingQuantity" >
+        <el-input v-model.trim="inspectionResultsForm.packingQuantity" clearable placeholder="产品经理打包套数" style="min-width: 100%" />
+      </el-form-item>
+      <el-form-item label="结论" prop="conclusion" >
+        <el-radio-group v-model="inspectionResultsForm.conclusion" >
+          <el-radio value="1" >通过</el-radio>
+          <el-radio value="0" >不通过</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="原因" prop="reason"  >
+        <el-input v-model="inspectionResultsForm.reason"  clearable placeholder="质检不通过的原因" style="min-width: 100%" />
+      </el-form-item>
+      <el-form-item label="处理方式" prop="method" >
+        <el-input v-model="inspectionResultsForm.method" clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%" />
+      </el-form-item>
+    </el-form>
     
       
-      <template #footer>
-        <!-- <div class="left-buttons">
-          <div style="flex: 3">
-            <el-button type="success" @click="downloadInspection">下载</el-button>
-            <el-button type="warning" @click="saveInspection">保存</el-button>
-          </div>
-          <div style="flex: 2">
-            <el-button type="danger" @click="closeQualityInspection">取消</el-button>
-            <el-button type="success" @click="handleSubmitInspection">提交</el-button>
-          </div>
-        </div> -->
+    <template #footer>
+      <div style="margin-right: 20px">
         <el-button type="warning" >退出</el-button>
         <el-button type="success" >下载</el-button>
         <el-button type="success">提交</el-button>
-      </template>
-    </vab-dialog>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
-    <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
+      </div>
+    </template>
+  </vab-dialog>
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+  <!-- 上传图片 -->
+  <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { Delete, Plus, QuestionFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import { updatePackageInspectionDetail } from '~/src/api/devlocal/packagingShipping'
@@ -530,6 +562,33 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
       font-size: 20px;
       color: #999;
     }
+  }
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
+}
+.custom-tooltip {
+  max-width: 430px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
+}
+.image-text {
+  margin-top: 2px;
+  line-height: 1.2;
+  text-align: center;
+  .title {
+    font-size: 14px;
+  }
+  .desc {
+    margin-top: 1px;
+    font-size: 12px; 
+    color: #999;
   }
 }
 </style>
