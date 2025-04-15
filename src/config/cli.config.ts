@@ -32,7 +32,7 @@ export const cliConfig: { [key: string]: string | number | boolean | Array<strin
   // 生产环境是否启用mock
   prodEnabled: false,
   // 开启代码压缩 boolean | 'gzip' | 'brotli'
-  compress: false,
+  compress: true,
   // 需要缓存到node_modules/.vite的模块
   include: [],
   // 不需要缓存到node_modules/.vite的模块
