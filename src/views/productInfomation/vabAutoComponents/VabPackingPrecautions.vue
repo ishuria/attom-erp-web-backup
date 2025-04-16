@@ -3,9 +3,9 @@
     v-model="visible" 
     :before-close="handlerCloseDialog" 
     title="打包注意事项"
+    top="15vh"
     width="70%"
   >
-    <!-- <el-divider style="margin-top: 0; margin-bottom: 20px"/> -->
     <div id="table-height-container">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -21,22 +21,22 @@
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column align="center" label="修改日期" prop="createTime" width="140">
+        <el-table-column label="修改日期" prop="createTime" width="140">
           <template #default="{ row }">
             {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="需质检" prop="status" width="90">
+        <el-table-column label="需质检" prop="status" width="90">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="需拍照" prop="isUploadImages" width="90">
+        <el-table-column label="需拍照" prop="isUploadImages" width="90">
           <template #default="{ row }">
             <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="站点" prop="site" width="200">
+        <el-table-column label="站点" prop="site" width="200">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
               <el-option 
@@ -48,7 +48,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="检查类型" min-width="40">
+        <el-table-column label="检查类型" min-width="40">
           <template #default="{ row }">
             <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
               <el-option
@@ -62,10 +62,16 @@
         </el-table-column>
         <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
           <template #default="{ row }">
-            {{ row.packagePrecautions }}
+            <!-- <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.packagePrecautions) }}</div>
+              </template>
+              <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
+            </el-tooltip> -->
+            <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
           </template>
         </el-table-column>
-        <el-table-column align="center" fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="120">
           <template #default="{ row, $index }">
             <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
           </template>
@@ -86,10 +92,8 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
 
 defineOptions({
@@ -98,6 +102,7 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: boolean
+  skuId: number
 }>()
 const emit = defineEmits(['update:modelValue', 'update:tableValue'])
 const visible = computed({
@@ -142,20 +147,30 @@ const handleCheckType = async (row: any) => {
   row.status = 1
 }
 const handleStatusChange = async (row: any) => {
+  // 勾选了需拍照的，需质检列必须也勾选
+  if (row.isUploadImages === 1) {
+    row.status = 1
+  }
   await updateProductQualityInspection(row)
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if  (data.columnIndex === 0){        
+  const label = data.column.label
+  if  (label === '修改日期'){        
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
-  } else if (data.columnIndex === 5) {
+  } else if (label === '打包注意事项') {
     return {
-      cursor: 'pointer'
+      cursor: 'pointer',
+      textAlign: 'left'
     } 
+  } else {
+    return {
+      textAlign:'center'
+    }
   }
 }
 const handleAdd = async () => {
@@ -169,7 +184,7 @@ const handleAdd = async () => {
     const { data } = await addProductQualityInspection(newQualityInspection)
     if (data) {
       const { data: tableData } = await getProductQualityInspection({
-          skuId: parseInt(route.query.skuId)
+        skuId: parseInt(route.query.skuId)
       })
       list.value = tableData
       list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
@@ -186,47 +201,6 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     remark.value = row.packagePrecautions
     copyRow = row
     return
-  }
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
-
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
-  }
-
-  copyRow = JSON.parse(JSON.stringify(row));
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-
-    focusAndSelectInput(cell);
-  }
-}
-// 质检table blur事件
-const clickQualityInspectionCancel = async (event:any,value:any) =>{
-  const rootElement = getRootElement(event.srcElement, ".cell");
-
-  if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
-
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
-  }
-  if (isEqual(copyRow, value)) {
-    return
-  }
-    
-  if (event.type === 'blur') {
-    // 执行失去焦点处理逻辑
-    try {
-      await updateProductQualityInspection(value)
-      await fetchData()
-      value.status = 1
-    } catch {
-      Object.assign(value, copyRow);
-    }
   }
 }
 // 删除
@@ -251,7 +225,6 @@ const handleDelQualityInspection = async (row: any, index: number) => {
     console.log(error as Error)
   }
 }
-
 // 获取站点信息
 const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
@@ -267,13 +240,12 @@ const fetchSiteData = async () => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getProductQualityInspection({
-    skuId: parseInt(route.query.skuId)
+    skuId: props.skuId
   })
   list.value = data
   listLoading.value = false
   list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
 }
-
 onActivated(() => {
   tableRef.value?.doLayout()
 })
@@ -297,5 +269,10 @@ onActivated(() => {
 }
 .none {
   display: none;
+}
+.custom-tooltip {
+  max-width: 400px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap; 
 }
 </style>

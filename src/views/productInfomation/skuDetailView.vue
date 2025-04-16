@@ -557,6 +557,7 @@
     <!-- 打包注意事项 -->
     <vab-packing-precautions 
       v-model="packingPrecautionsVisible"
+      :sku-id="parseInt(route.query.skuId)"
       @update:packing-precautions-visible="handleClosePackingPrecautions"
       @update:table-value="handleTableDataValue"
     />

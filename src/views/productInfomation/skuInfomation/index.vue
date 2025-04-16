@@ -3,6 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
+        <el-button type="primary">批量修改打包注意事项</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -25,6 +26,7 @@
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
     >
+      <el-table-column fixed="left" type="selection" width="53"/>
       <el-table-column class="image-wall" label="图片" width="75">
         <template #default="{ row }">
           <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row.skuImgUrl)">
@@ -271,7 +273,7 @@ const setPreviewImage = (url: string) => {
   imagePreviewList.value.push(url)
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 1) {
+  if (data.column.label !== 'SKU') {
     return {
       textAlign: 'center'
     }
@@ -281,7 +283,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   }
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (data.columnIndex === 0) {
+  if (data.column.label === '图片') {
     return 'clear-padding'
   }
   return ''
@@ -317,9 +319,10 @@ onBeforeMount(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-.custom-checkbox {
-  transform: scale(1.2); // 放大 20%
-  transform-origin: center; // 确保放大从中心开始
+.noneHoveTable {
+  :deep(.el-checkbox) {
+    transform: scale(1.3);
+  }
 }
 .noneHoveTable :deep(.clear-padding) {
   padding-top: 0;
