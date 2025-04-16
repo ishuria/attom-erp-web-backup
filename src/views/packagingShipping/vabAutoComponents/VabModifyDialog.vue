@@ -234,7 +234,7 @@ import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash'
 import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementSku, getEncasementUpdate, updateEncasement, updateEncasementDetailCount } from '/@/api/devlocal/encasement'
-import { addQualityCheck, getQualityCheck } from '/@/api/devlocal/packagingShipping'
+import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -439,8 +439,16 @@ const copyRow = ref<any>()
 const handleShowPackingCount = async (row: any) => {
   // 点击了清单质检
   if (row.qualityCheckStatus === 1) {
-    packingCountVisible.value = true
+    
     copyRow.value = row
+    const { data: res } = await verificationCheckQuality({
+      taskId: row.taskId
+    })
+    if (res) {
+      packingCountVisible.value = true
+    } else {
+      return
+    }
     const { data } = await getQualityCheck({
       id: row.taskId
     })

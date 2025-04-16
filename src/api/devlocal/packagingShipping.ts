@@ -273,6 +273,14 @@ export function getQualityCheck(params: IId): Promise<IGetQualityCheckResp> {
     params
   })
 }
+// 添加质检信息前置校验
+export function verificationCheckQuality(params: { taskId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/quality/check/verification`,
+    method: 'post',
+    params
+  })
+}
 // 添加质检信息
 export function addQualityCheck(data: IAddQualityCheckReq): Promise<IBooleanResp> {
   return request({
