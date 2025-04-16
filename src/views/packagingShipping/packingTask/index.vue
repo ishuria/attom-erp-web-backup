@@ -105,7 +105,7 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="" width="100" />
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -115,7 +115,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -273,7 +273,7 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="" width="100" />
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -283,7 +283,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -439,7 +439,7 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="" width="100" />
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -449,7 +449,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -605,7 +605,7 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="" width="100" />
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -615,7 +615,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -771,7 +771,7 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="" width="100" />
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -781,7 +781,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
