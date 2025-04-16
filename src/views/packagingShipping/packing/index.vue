@@ -66,7 +66,14 @@
       <el-table-column label="总体积(m3)" prop="totalVolume" :width="flexColumnWidth(list, '总体积(m3)', 'totalVolume')"/>
       <el-table-column label="箱规号" prop="encasementNo" :width="flexColumnWidth(list, '箱规号', 'encasementNo')"/>
       <el-table-column label="发往站点" prop="planSiteName" :width="flexColumnWidth(list, '发往站点', 'planSiteName')"/>
-      <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+      <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
+        <template #default="{ row }">
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+            {{ row.sku }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
       <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
         <template #default="{ row }">
@@ -443,6 +450,7 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
@@ -1176,5 +1184,14 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>

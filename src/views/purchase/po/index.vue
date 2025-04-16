@@ -149,7 +149,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -356,7 +363,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -563,7 +577,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -770,7 +791,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -969,7 +997,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -1087,7 +1122,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
           <el-table-column label="零件操作" prop="selectedCompRow" width="50">
             <template #header>
@@ -1387,6 +1429,7 @@ import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { debounce } from 'lodash'
 import { ref } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   aggregationContract,
@@ -2781,5 +2824,14 @@ onUnmounted(() => {
 
 .hover-opacity:hover {
   opacity: 0.5; /* Hover 时透明度 */
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>

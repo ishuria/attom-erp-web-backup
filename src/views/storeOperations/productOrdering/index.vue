@@ -96,7 +96,10 @@
             </el-image>
           </span>
           <span v-if="item.label === 'ASIN'">
-            <el-link type="primary">{{ row.asin }}</el-link>
+            <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)" >
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
               <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
@@ -397,6 +400,7 @@
 import { Minus, Plus, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -920,6 +924,15 @@ onBeforeMount(() => {
   }
   &-excellent {
     background-color: #49850f;
+  }
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
   }
 }
 </style>
