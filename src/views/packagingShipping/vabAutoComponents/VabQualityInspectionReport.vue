@@ -14,18 +14,33 @@
       <el-row justify="space-between" style="width: 100%">
         <el-col :span="8">
           <el-form-item label="日期" style="min-width: 95%">
-            <el-input disabled />
+            <el-input v-model="qualityInspectionForm.date" disabled />
           </el-form-item>
           
         </el-col>
         <el-col :span="8">
           <el-form-item label="产品经理" style="min-width: 95%">
-            <el-input disabled />
+            <el-input v-model="qualityInspectionForm.productManager" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="合并质检PO" style="min-width: 100%;">
-            <el-select placeholder="请选择合并质检PO" />
+            <el-select 
+              v-model="qualityInspectionForm.poList"   
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="3"
+              multiple
+              placeholder="请选择合并质检PO"
+              @change="handleUpdateInspection"
+            >
+              <el-option
+                v-for="item in poOption"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -46,66 +61,149 @@
         <el-col :span="16">
           <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
             <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
-              <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长(cm)" style="flex: 1; margin-right: 0" />
+              <el-input v-model.trim="qualityInspectionForm.packageLength" placeholder="长" style="flex: 1; margin-right: 0" @change="handleUpdateInspection">
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
               <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-              <el-input v-model.trim="qualityInspectionForm.packageWidth" clearable placeholder="宽(cm)" style="flex: 1; margin-right: 0" />
+              <el-input v-model.trim="qualityInspectionForm.packageWidth" placeholder="宽" style="flex: 1; margin-right: 0" @change="handleUpdateInspection">
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
               <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-              <el-input v-model.trim="qualityInspectionForm.packageHeight" clearable placeholder="高(cm)" style="flex: 1; margin-right: 0" />
+              <el-input v-model.trim="qualityInspectionForm.packageHeight" placeholder="高" style="flex: 1; margin-right: 0" @change="handleUpdateInspection">
+                <template #suffix >
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
             </el-row>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="包装重量" prop="packageWeight" style="min-width: 100%">
-            <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable placeholder="克(g)" />
+            <el-input v-model.trim="qualityInspectionForm.packageWeight" placeholder="克" @change="handleUpdateInspection">
+              <template #suffix >
+                <el-icon class="el-input__icon" style="font-style: normal">g</el-icon>
+              </template>
+            </el-input>
             <!-- <el-button type="success">更新SKU尺寸重量</el-button> -->
           </el-form-item>
         </el-col>
       </el-row>
       <el-form-item label="材质构成（用于报关，需要精确填写）" prop="materialComposition" style="margin-bottom: 10px"/>
-      <el-table border :header-cell-style="{ textAlign: 'center' }" stripe >
-        <el-table-column label="零件图片" width="90"/>
-        <el-table-column label="零件名" />
-        <el-table-column label="材质1名称" >
+      <el-table 
+        border 
+        :cell-class-name="clearPadding"
+        :cell-style="componentListCellStyle" 
+        :data="componentList"
+        :header-cell-style="{ textAlign: 'center' }"
+        stripe
+        @cell-click="changeComponentListInput"
+      >
+        <el-table-column label="零件图片" prop="componentImgUrl" width="75" >
+          <template #header>
+            零件<br />图片
+          </template>
+          <template #default="{ row }">
+            <el-image :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentImgUrl)">
+              <template #error><el-icon /></template>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')" />
+        <el-table-column label="材质1名称" prop="material1" :width="flexColumnWidth(componentList, '材质1名称 *', 'material1')">
           <template #header>
             材质1名称<span style=" margin-left: 4px;color: var(--el-color-danger)">*</span>
           </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.material1" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.material1 }}</span>
+          </template>
         </el-table-column>
-        <el-table-column label="材质1重量(g)" >
+        <el-table-column label="材质1重量(g)" prop="weight1" >
           <template #header>
             材质1重量(g)<span style=" margin-left: 4px;color: var(--el-color-danger)">*</span>
           </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weight1" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.weight1 }}</span>
+          </template>
         </el-table-column>
-        <el-table-column label="材质2名称" />
-        <el-table-column label="材质2重量(g)" />
-        <el-table-column label="材质3名称" />
-        <el-table-column label="材质3重量(g)" />
-        <el-table-column label="材质4名称" />
-        <el-table-column label="材质4重量(g)" />
+        <el-table-column label="材质2名称" prop="material2" :width="flexColumnWidth(componentList, '材质2名称', 'material2')">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.material2" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.material2 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质2重量(g)" prop="weight2" >
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weight2" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.weight2 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质3名称" prop="material3" :width="flexColumnWidth(componentList, '材质3名称', 'material3')">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.material3" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.material3 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质3重量(g)" prop="weight3" >
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weight3" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.weight3 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质4名称" prop="material4" :width="flexColumnWidth(componentList, '材质4名称', 'material4')">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.material4" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.material4 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="材质4重量(g)" prop="weight4" >
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model="row.weight4" @blur="clickComponentListCancel($event, row)" @keyup.enter="clickComponentListCancel($event, row)" />
+            </div>
+            <span>{{ row.weight4 }}</span>
+          </template>
+        </el-table-column>
       </el-table>
       <el-divider >质检结果</el-divider>
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary">修改SKU质检项</el-button>
+          <el-button type="primary" @click="showPrecautions">修改SKU质检项</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <!-- <div style="margin-top: 10px; margin-bottom: 10px">
-        <el-button type="primary">修改SKU质检项</el-button>
-      </div> -->
       <el-table
         border
         :cell-style="qualityInspectionCellStyle"
-        class="quality-inspection"
-        :data="qualityInspectionForm.inspectionList"
+        :data="reportDetailList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
         @cell-click="changeQualityInspectionInput"
       >
         <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
         <el-table-column label="检查类型" min-width="100" prop="type" />
-        <el-table-column label="质检站点" min-width="130" />
+        <el-table-column label="质检站点" min-width="130" prop="site" />
         <el-table-column label="通过" min-width="50" prop="pass">
           <template #default="{ row }">
-            <el-checkbox v-model="row.pass" :false-value="0" :true-value="1"  />
+            <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionPass(row)" />
           </template>
         </el-table-column>
         <el-table-column label="备注" min-width="150" prop="remark">
@@ -132,112 +230,22 @@
       style="margin: 20px 20px 0 20px"
     >
       <el-form-item label="基础图片" prop="baseImage" style="margin-bottom: 50px">
-        <div class="image-cell" style="margin-right: 20px">
+        <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell" style="margin-right: 20px">
           <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
+          <div v-if="item.imgUrl" class="image-preview">
+            <img alt="" :src="item.imgUrl" />
             <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
+              <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+              <el-icon @click="handleImageRemove(item.id, index, 0)"><delete /></el-icon>
             </div>
           </div>
           <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
+          <div v-else class="upload-placeholder" @click="showUploadDialog(0, index)">
             <el-icon><plus /></el-icon>
           </div>
           <div class="image-text">
-            <div class="title">产品零件图</div>
-            <div class="desc">展示所有零件及对应数量</div>
-          </div>
-        </div>
-        <div class="image-cell" style="margin-right: 20px">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-            </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">产品包装图</div>
-            <div class="desc">展示包装完后的外包装</div>
-          </div>
-        </div>
-        <div class="image-cell" style="margin-right: 20px">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-            </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">包装测量图(长)</div>
-            <div class="desc">展示实际测量尺的刻度</div>
-          </div>
-        </div>
-        <div class="image-cell" style="margin-right: 20px">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-            </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">包装测量图(宽)</div>
-            <div class="desc">展示实际测量尺的刻度</div>
-          </div>
-        </div>
-        <div class="image-cell" style="margin-right: 20px">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-            </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">包装测量图(高)</div>
-            <div class="desc">展示实际测量尺的刻度</div>
-          </div>
-        </div>
-        <div class="image-cell" >
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
-            </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">包装测量图(重量)</div>
-            <div class="desc">展示出称的读数</div>
+            <div class="title">{{ item.title }}</div>
+            <div class="desc">{{ item.desc }}</div>
           </div>
         </div>
       </el-form-item>
@@ -250,18 +258,22 @@
             </template>
           </el-tooltip>
         </template>
-        <div class="image-cell">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.partDetails" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.partDetails" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.partDetails)"><zoom-in /></el-icon>
-              <el-icon @click="handlePartDetailsRemove"><delete /></el-icon>
+        <div style="display: flex; flex-wrap: wrap;">
+          <!-- 图片预览部分 -->
+          <div v-for="(item, index) in componentDetailImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-if="item.imgUrl" class="image-preview">
+              <img alt="" :src="item.imgUrl" />
+              <div class="image-actions">
+                <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+                <el-icon @click="handleImageRemove(item.id, index, 1)"><delete /></el-icon>
+              </div>
             </div>
           </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
+          <!-- 上传按钮部分 - 始终显示 -->
+          <div class="image-cell" >
+            <div class="upload-placeholder" @click="showUploadDialog(1, 0)">
+              <el-icon><plus /></el-icon>
+            </div>
           </div>
         </div>
       </el-form-item>
@@ -274,61 +286,71 @@
             </template>
           </el-tooltip>
         </template>
-        <div class="image-cell">
-          <!-- 有图片时显示 -->
-          <div v-if="inspectionResultsForm.finishedImage" class="image-preview">
-            <img alt="" :src="inspectionResultsForm.finishedImage" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(inspectionResultsForm.finishedImage)"><zoom-in /></el-icon>
-              <el-icon @click="handleFinishedImageRemove"><delete /></el-icon>
+        <div style="display: flex; flex-wrap: wrap;">
+          <!-- 图片预览部分 -->
+          <div v-for="(item, index) in finishedImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-if="item.imgUrl" class="image-preview">
+              <img alt="" :src="item.imgUrl" />
+              <div class="image-actions">
+                <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+                <el-icon @click="handleImageRemove(item.id, index, 2)"><delete /></el-icon>
+              </div>
             </div>
           </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog">
-            <el-icon><plus /></el-icon>
+          <!-- 上传按钮部分 - 始终显示 -->
+          <div class="image-cell" >
+            <div class="upload-placeholder" @click="showUploadDialog(2, 0)">
+              <el-icon><plus /></el-icon>
+            </div>
           </div>
         </div>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" />
+        <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" @change="handleUpdateInspection"/>
       </el-form-item>
-      <el-form-item label="打包数" prop="packingQuantity" >
-        <el-input v-model.trim="inspectionResultsForm.packingQuantity" clearable placeholder="产品经理打包套数" style="min-width: 100%" />
+      <el-form-item label="打包数" prop="packageCount" >
+        <el-input v-model.trim="inspectionResultsForm.packageCount" clearable placeholder="产品经理打包套数" style="min-width: 100%" @change="handleUpdateInspection"/>
       </el-form-item>
-      <el-form-item label="结论" prop="conclusion" >
-        <el-radio-group v-model="inspectionResultsForm.conclusion" >
-          <el-radio value="1" >通过</el-radio>
-          <el-radio value="0" >不通过</el-radio>
+      <el-form-item label="结论" prop="status" >
+        <el-radio-group v-model="inspectionResultsForm.status" @change="handleUpdateInspection">
+          <el-radio :value="0" >通过</el-radio>
+          <el-radio :value="1" >不通过</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="原因" prop="reason"  >
-        <el-input v-model="inspectionResultsForm.reason"  clearable placeholder="质检不通过的原因" style="min-width: 100%" />
+      <el-form-item v-if="inspectionResultsForm.status" label="原因" prop="reason"  >
+        <el-input v-model="inspectionResultsForm.reason"  clearable placeholder="质检不通过的原因" style="min-width: 100%"  @change="handleUpdateInspection"/>
       </el-form-item>
-      <el-form-item label="处理方式" prop="method" >
-        <el-input v-model="inspectionResultsForm.method" clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%" />
+      <el-form-item v-if="inspectionResultsForm.status" label="处理方式" prop="processingMethod" >
+        <el-input v-model="inspectionResultsForm.processingMethod" clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%"  @change="handleUpdateInspection"/>
       </el-form-item>
     </el-form>
     
       
     <template #footer>
       <div style="margin-right: 20px">
-        <el-button type="warning" >退出</el-button>
-        <el-button type="success" >下载</el-button>
-        <el-button type="success">提交</el-button>
+        <el-button type="warning" @click="visible = false">退出</el-button>
+        <el-button type="success" @click="downloadInspection">下载</el-button>
+        <el-button type="success" @click="handleSubmitInspection">提交</el-button>
       </div>
     </template>
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   <!-- 上传图片 -->
-  <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
+  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+  <!-- 打包注意事项 -->
+  <vab-packing-precautions v-model="precautionsVisible" :sku-id="props.skuId" />
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, QuestionFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
-import { updatePackageInspectionDetail } from '~/src/api/devlocal/packagingShipping'
+import type { CSSProperties } from 'vue'
+import { downloadFile } from '/@/api/devlocal/download'
+import { deletePackageInspectionImage, getNewPackageInspection, submitPackageInspection, updateNewPackageInspection, updatePackageInspectionComponent, updatePackageInspectionDetail, uploadPackageInspectionImage } from '/@/api/devlocal/packagingShipping'
+import type { IComponentList, PictureImgList, ReportDetailList } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabQualityInspectionReport',
@@ -336,6 +358,8 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: boolean,
+  sku: string
+  skuId: number
 }>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
@@ -348,12 +372,40 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
+watch(() => props.modelValue, (val) => {
+  if (val) {
+    fetchData()
+  }
+})
+const precautionsVisible = ref<boolean>(false)
+const componentList = ref<IComponentList[]>([])
+const reportDetailList = ref<ReportDetailList[]>([])
+const poOption = ref<string[]>([])
+const basePictureImgList = ref<any[]>([
+  { title: '产品零件图', desc: '展示所有零件及对应数量' },
+  { title: '产品包装图', desc: '展示包装完后的外包装' },
+  { title: '包装测量图(长)', desc: '展示实际测量尺的刻度' },
+  { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度' },
+  { title: '包装测量图(高)', desc: '展示实际测量尺的刻度' },
+  { title: '包装测量图(重量)', desc: '展示出称的读数' }
+])
+const componentDetailImgList = ref<PictureImgList[]>([])
+const finishedImgList = ref<PictureImgList[]>([])
+// 图片上传type 0基础图片 1零件细节 2 成品组装图片
+const imageUploadType = ref<number>(0)
+// 图片上传存储 reportId
+const reportId = ref<number>(0)
+// 基础图片点击上传的第几个
+const imageUploadIndex = ref<number>(0)
 const imagePreviewVisible = ref(false)
 const imagePreviewList = ref<string[]>([])
 const imageUploadVisible = ref(false)
 const qualityInspectionForm = reactive<any>({})
 const qualityInspectionFormRef = ref<FormInstance>()
 
+const showPrecautions = () => {
+  precautionsVisible.value = true
+}
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = [url]
@@ -366,19 +418,19 @@ const closeQualityInspection = () => {
 }
 const inspectionResultsForm = reactive({
   remark: '',
-  packingQuantity: '',
-  conclusion: '',
+  packageCount: '',
+  status: 0,
   reason: '',
-  method: '',
+  processingMethod: '',
   finishedImage: '',
   partDetails: '',
   baseImage: ''
 })
 const inspectionResultsFormRules = reactive({
-  packingQuantity: [{ required: true, message: '请输入产品经理打包套数', trigger: 'blur' }],
-  conclusion: [{ required: true, message: '请选择结论', trigger: 'change' }],
+  packageCount: [{ required: true, message: '请输入产品经理打包套数', trigger: 'blur' }],
+  status: [{ required: true, message: '请选择结论', trigger: 'change' }],
   reason: [{ required: true, message: '请输入原因', trigger: 'blur' }],
-  method: [{ required: true, message: '请输入处理方式', trigger: 'blur' }],
+  processingMethod: [{ required: true, message: '请输入处理方式', trigger: 'blur' }],
   finishedImage: [{ required: true, message: '请上传成品组装图', trigger: 'change' }],
   partDetails: [{ required: true, message: '请上传零件细节图', trigger: 'change' }],
   baseImage: [{ required: true, message: '请上传基础图片', trigger: 'change' }],
@@ -388,59 +440,136 @@ const qualityInspectionFormRules = reactive({
   packageWeight: [{ required: true, message: '请输入包装重量', trigger: 'blur' }],
   materialComposition: [{ required: true, message: '', trigger: 'blur' }],
 })
-const handleFinishedImageRemove = () => {
-  inspectionResultsForm.finishedImage = ''
+// 新品质检修改
+const handleUpdateInspection = async () => {
+  try {
+    await updateNewPackageInspection({
+      reportId: reportId.value,
+      packageLength: qualityInspectionForm.packageLength,
+      packageWidth: qualityInspectionForm.packageWidth,
+      packageHeight: qualityInspectionForm.packageHeight,
+      packageWeight: qualityInspectionForm.packageWeight,
+      packageCount: Number(inspectionResultsForm.packageCount),
+      reason: inspectionResultsForm.reason,
+      processingMethod: inspectionResultsForm.processingMethod,
+      remark: inspectionResultsForm.remark,
+      poList: qualityInspectionForm.poList,
+      status: inspectionResultsForm.status,
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
-const handlePartDetailsRemove = () => {
-  inspectionResultsForm.partDetails = ''
+const uploadImage = async (file: File) => {
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('reportId', String(reportId.value))
+    uploadImgForm.append('type', String(imageUploadType.value))
+
+    const { data } = await uploadPackageInspectionImage(uploadImgForm)
+    if (data) {   
+      switch (imageUploadType.value) {
+        case 0: {
+          basePictureImgList.value[imageUploadIndex.value].imgUrl = data.imgUrl
+          basePictureImgList.value[imageUploadIndex.value].id = data.id
+        
+          break;
+        }
+        case 1: {
+          componentDetailImgList.value.push(data)
+        
+          break;
+        }
+        case 2: {
+          finishedImgList.value.push(data)
+        
+          break;
+        }
+      // No default
+      }
+      $baseMessage('图片上传成功！', 'success')
+      closeImageUpload()
+    } else {
+      $baseMessage('图片上传失败！', 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleImageRemove = async (id: number, index: number, type: number) => {
+  try {
+    $baseConfirm('确定删除图片吗？', null,  async () => {
+      const { data } = await deletePackageInspectionImage({ id })
+      if (data) {
+        switch (type) {
+          case 0: {
+            basePictureImgList.value[index].imgUrl = ''
+            $baseMessage('图片删除成功！','success')
+            break;
+          }
+          case 1: {
+            componentDetailImgList.value.splice(index, 1)
+            $baseMessage('图片删除成功！','success')
+            break;
+          }
+          case 2: {
+            finishedImgList.value.splice(index, 1)
+            $baseMessage('图片删除成功！','success')
+            break;
+          }
+        }
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 打开上传图片弹窗
-const showUploadDialog = (row: any) => {
+const showUploadDialog = (type: number, index: number) => {
   imageUploadVisible.value = true
-  
+  imageUploadType.value = type
+  imageUploadIndex.value = index
 }
 // 关闭上传弹窗
 const closeImageUpload = () => {
   imageUploadVisible.value = false
 }
 // 质检报告提交
-// const handleSubmitInspection = async () => {
-//   const { data } = await submitPackageInspection({
-//     id: qualityInspectionForm.id,
-//     packageLength: qualityInspectionForm.packageLength,
-//     packageWidth: qualityInspectionForm.packageWidth,
-//     packageHeight: qualityInspectionForm.packageHeight,
-//     packageCount: qualityInspectionForm.packageCount,
-//     packageWeight: qualityInspectionForm.packageWeight,
-//     remark: qualityInspectionForm.remark,
-//   })
-//   if (data) {
-//     $baseMessage('质检报告提交成功', 'success')
-//     closeQualityInspection()
-//   }
-// }
+const handleSubmitInspection = async () => {
+  const { data } = await submitPackageInspection({
+    reportId: reportId.value,
+    type: 0
+  })
+  if (data) {
+    $baseMessage('质检报告提交成功', 'success')
+    visible.value = false
+  }
+}
 
 // 质检报告下载
-// const downloadInspection = async () => {
-//   await downloadFile('/package/inspection/download', {
-//     poId: copyRow.value.poId,
-//   })
-// }
-// 质检报告详情修改
-// const handleUpdatePackageInspectionDetail = async (row: any) => {
-//   await updatePackageInspectionDetail({
-//     id: row.id,
-//     pass: row.pass,
-//     remark: row.remark,
-//   })
-// }
-let _row: any
-// 质检报告cellStyle
-const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 2) {
-    return {
-      textAlign: 'center' as const,
-    }
+const downloadInspection = async () => {
+  await downloadFile('/package/inspection/download', {
+    reportId: reportId.value,
+  })
+}
+let _row1: any
+let _row2: any
+const changeComponentListInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  _row1 = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
   }
 }
 // 质检报告修改
@@ -452,13 +581,37 @@ const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTab
     return
   }
 
-  _row = JSON.parse(JSON.stringify(row))
+  _row2 = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
     firstChild.classList.remove('none')
     secondChild.classList.add('none')
 
     focusAndSelectInput(cell)
+  }
+}
+const clickComponentListCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1 && t1.classList[0] !== 'el-select') {
+      t1.classList.add('none')
+    }
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(_row1, value)) {
+    return
+  }
+
+  if (event.type === 'blur') {
+    try {
+      await updatePackageInspectionComponent(value)
+    } catch {
+      Object.assign(value, _row1)
+    }
   }
 }
 // 质检报告修改输入失焦事件
@@ -474,7 +627,7 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
     }
     if (t2) t2.classList.remove('none')
   }
-  if (isEqual(_row, value)) {
+  if (isEqual(_row2, value)) {
     return
   }
 
@@ -486,8 +639,73 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
         remark: value.remark,
       })
     } catch {
-      Object.assign(value, _row)
+      Object.assign(value, _row2)
     }
+  }
+}
+// 质检报告pass修改
+const handleUpdatePackageInspectionPass = async (row: any) => {
+  await updatePackageInspectionDetail({
+    id: row.id,
+    pass: row.pass,
+    remark: row.remark,
+  })
+}
+const componentListCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  if (data.columnIndex !== 1) {
+    return {
+      textAlign: 'center',
+      cursor: 'pointer'
+    }
+  }
+  return {
+    textAlign: 'left',
+  }
+}
+// 质检报告cellStyle
+const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const index = data.columnIndex
+  if (index === 1 || index === 2 || index === 3) {
+    return {
+      textAlign: 'center',
+    }
+  } else if (index === 4) {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
+    }
+  } else {
+    return {
+      textAlign: 'left',
+    }
+  }
+}
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+  if (data.columnIndex === 0) {
+    return 'clear-padding'
+  }
+  return ''
+}
+const fetchData = async () => {
+  const { data } = await getNewPackageInspection({
+    sku: props.sku
+  })
+  if (data) {
+    reportId.value = data.reportId
+    data.date = data.date ? data.date.split(' ')[0] : ''
+    componentList.value = data.componentList
+    reportDetailList.value = data.reportDetailList
+    poOption.value = data.poList
+    data.basePictureImgList.forEach((item, index) => {
+      if (item.imgUrl) {
+        basePictureImgList.value[index].imgUrl = item.imgUrl
+        basePictureImgList.value[index].id = item.id
+      }
+    })
+    componentDetailImgList.value = data.componentPictureImgList
+    finishedImgList.value = data.assemblyDrawingPictureImgList
+    Object.assign(qualityInspectionForm, data)
+    Object.assign(inspectionResultsForm, data)
   }
 }
 </script>
@@ -590,5 +808,19 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
     font-size: 12px; 
     color: #999;
   }
+}
+.el-checkbox {
+  transform: scale(1.3);
+}
+.none {
+  display: none;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 </style>

@@ -231,7 +231,7 @@ const fetchSiteData = async () => {
   siteList.value = data
   siteList.value.unshift({
     id: -1,
-    label: '全部站点'
+    label: '全部发货站点'
   })
 }
 /**

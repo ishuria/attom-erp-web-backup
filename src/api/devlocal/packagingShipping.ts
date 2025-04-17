@@ -15,6 +15,7 @@ import type {
   IGetAfterSalesListResp,
   IGetAfterSalesLogResp,
   IGetEndTaskListResp,
+  IGetNewPackageInspectionRes,
   IGetPackageComponentListResp,
   IGetPackageInspectionResp,
   IGetPackageTaskListQuery,
@@ -44,7 +45,9 @@ import type {
   ITaskId,
   IUpdateAfterSales,
   IUpdateAfterSalesLog,
+  IUpdateNewPackageInspectionReq,
   IUpdatePackageInspection,
+  IUpdatePackageInspectionComponentReq,
   IUpdatePackageInspectionDetail,
   IUpdatePackageTask,
   IUpdatePackageTaskSite,
@@ -322,21 +325,14 @@ export function updatePackageInspectionDetail(data: IUpdatePackageInspectionDeta
   })
 }
 // 质检报告查询
-export function getPackageInspection(params: IPoId): Promise<IGetPackageInspectionResp> {
+export function getPackageInspection(data: { taskId: number, sku: string }): Promise<IGetPackageInspectionResp> {
   return request({
     url: `${BASE_API}/package/inspection`,
-    method: 'get',
-    params
-  })
-}
-// 质检报告-提交
-export function submitPackageInspection(data: IUpdatePackageInspection): Promise<IBooleanResp> {
-  return request({
-    url: `${BASE_API}/package/inspection/submit`,
     method: 'post',
     data
   })
 }
+
 // 售后-查询列表
 export function getAfterSalesList(params: IGetAfterSalesListReq): Promise<IGetAfterSalesListResp> {
   return request({
@@ -664,6 +660,81 @@ export function updatePackagingCost(params: { cost: number }): Promise<{ data: b
 export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq): Promise<ICheckingPackagingTimeErrorRes> {
   return request({
     url: `${BASE_API}/packaging/time/error/checking`,
+    method: 'post',
+    data
+  })
+}
+
+// ------------------------------------------- 新品质检报告 --------------------------------------------
+/**
+ * 新品质检报告查询
+ * @param params 
+ * @returns 
+ */
+export function getNewPackageInspection(params: { sku: string }): Promise<IGetNewPackageInspectionRes> {
+  return request({
+    url: `${BASE_API}/package/inspection/productManager`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 新品质检报告内容修改
+ * @param data 
+ * @returns 
+ */
+export function updateNewPackageInspection(data: IUpdateNewPackageInspectionReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/inspection/productManager/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 新品质检报告零件材质内容修改
+ * @param data 
+ * @returns 
+ */
+export function updatePackageInspectionComponent(data: IUpdatePackageInspectionComponentReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/inspection/component/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 新品质检报告-图片上传
+ * @param data 
+ * @returns 
+ */
+export function uploadPackageInspectionImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
+  return request({
+    url: `${BASE_API}/package/inspection/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data
+  })
+}
+/**
+ * 新品质检报告-删除图片
+ * @param params 
+ * @returns 
+ */
+export function deletePackageInspectionImage(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/inspection/img/delete`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 质检报告-提交
+ * @param params 
+ * @returns 
+ */
+export function submitPackageInspection(data: { reportId: number, type: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/inspection/submit`,
     method: 'post',
     data
   })

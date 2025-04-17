@@ -421,36 +421,18 @@ export interface IPoId {
 export interface IGetPackageInspectionResp {
   data?: IGetPackageInspection;
 }
-
 /**
-* 数据
-*/
+ * 数据
+ */
 export interface IGetPackageInspection {
-  /**
-   * 主键id
-   */
-  id?: number;
   /**
    * 质检项目列表
    */
-  inspectionList?: InspectionList[];
+  inspectionList: IInspectionList[];
   /**
-   * 产品经理打包数量
+   * 打包任务id
    */
-  packageCount?: number;
-  /**
-   * 包装高
-   */
-  packageHeight?: number;
-  /**
-   * 包装长
-   */
-  packageLength?: number;
-  /**
-   * 包装宽
-   */
-  packageWidth?: number;
-  packageWeight?: number;
+  packageTaskId?: number;
   /**
    * po
    */
@@ -460,14 +442,48 @@ export interface IGetPackageInspection {
    */
   productName?: string;
   /**
-   * 其他反馈
+   * 质检id
    */
-  remark?: string;
+  reportId?: number;
   /**
    * sku
    */
   sku?: string;
-  [property: string]: any;
+  /**
+   * 结论 0不通过 1通过
+   */
+  status?: number;
+}
+
+export interface IInspectionList {
+  /**
+   * 主键ID (Primary Key ID)
+   */
+  id?: number;
+  /**
+   * 质检项零件图片列表
+   */
+  images: PictureImgList[];
+  /**
+   * 是否上传图片 (Whether Images are Uploaded) 0: 否 (No), 1: 是 (Yes)
+   */
+  isUploadImages?: number;
+  /**
+   * 是否通过 (Whether the Inspection Passed) 0: 未通过 (Failed), 1: 通过 (Passed)
+   */
+  pass?: number;
+  /**
+   * 质检项目名称 (Name of the Quality Inspection Item)
+   */
+  qualityInspection?: string;
+  /**
+   * 备注信息 (Remarks)
+   */
+  remark?: string;
+  /**
+   * 检查类型 (Type of Inspection)
+   */
+  type?: string;
 }
 
 export interface InspectionList {
@@ -851,4 +867,263 @@ export interface ICheckingPackagingTimeError {
   workingHours: number
   po: string
   sku: string
+}
+
+export interface IGetNewPackageInspectionRes {
+  data?: IGetNewPackageInspection
+}
+
+export interface IGetNewPackageInspection {
+  /**
+   * 成品组装图
+   */
+  assemblyDrawingPictureImgList: PictureImgList[];
+  /**
+   * 基础图片列表
+   */
+  basePictureImgList: PictureImgList[];
+  /**
+   * 质检报告零件列表
+   */
+  componentList: IComponentList[];
+  /**
+   * 零件细节图片列表
+   */
+  componentPictureImgList: PictureImgList[];
+  /**
+   * 产品经理打包数量
+   */
+  packageCount?: number;
+  /**
+   * 包装高
+   */
+  packageHeight?: number;
+  /**
+   * 包装长
+   */
+  packageLength?: number;
+  /**
+   * 总量
+   */
+  packageWeight?: number;
+  /**
+   * 包装宽
+   */
+  packageWidth?: number;
+  /**
+   * 合并质检Po列表
+   */
+  poList: string[];
+  /**
+   * 处理方式
+   */
+  processingMethod?: string;
+  /**
+   * 产品经理名称
+   */
+  productManager?: string;
+  /**
+   * 产品名称
+   */
+  productName?: string;
+  /**
+   * 原因
+   */
+  reason?: string;
+  /**
+   * 其他反馈
+   */
+  remark?: string;
+  /**
+   * 质检报告项目列表
+   */
+  reportDetailList: ReportDetailList[];
+  /**
+   * 质检报告id
+   */
+  reportId: number;
+  /**
+   * sku
+   */
+  sku?: string;
+  date?: string
+}
+
+export interface PictureImgList {
+  /**
+   * 主键
+   */
+  id: number;
+  /**
+   * 图片地址
+   */
+  imgUrl: string;
+}
+
+export interface IComponentList {
+  /**
+   * 零件图片地址
+   */
+  componentImgUrl?: string;
+  /**
+   * 零件名
+   */
+  componentName?: string;
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 材质1名称
+   */
+  material1?: string;
+  /**
+   * 材质2名称
+   */
+  material2?: string;
+  /**
+   * 材质3名称
+   */
+  material3?: string;
+  /**
+   * 材质名4名称
+   */
+  material4?: string;
+  /**
+   * 材质1重量g
+   */
+  weight1?: number;
+  /**
+   * 材质2重量g
+   */
+  weight2?: number;
+  /**
+   * 材质3重量g
+   */
+  weight3?: number;
+  /**
+   * 材质4重量g
+   */
+  weight4?: number;
+}
+
+export interface ReportDetailList {
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 是否通过
+   */
+  pass?: number;
+  /**
+   * 质检项目
+   */
+  qualityInspection?: string;
+  /**
+   * 备注
+   */
+  remark?: string;
+  /**
+   * 发往站点
+   */
+  site?: string;
+  /**
+   * sku的质检id
+   */
+  skuInspectionId?: number;
+  /**
+   * 检查类型
+   */
+  type?: string;
+}
+
+export interface IUpdateNewPackageInspectionReq {
+  /**
+   * 产品经理打包数量
+   */
+  packageCount?: number;
+  /**
+   * 包装高
+   */
+  packageHeight?: number;
+  /**
+   * 包装长
+   */
+  packageLength?: number;
+  /**
+   * 重量
+   */
+  packageWeight?: number;
+  /**
+   * 包装宽
+   */
+  packageWidth?: number;
+  /**
+   * 合并质检Po列表
+   */
+  poList?: string[];
+  /**
+   * 处理方式
+   */
+  processingMethod?: string;
+  /**
+   * 产品经理名称
+   */
+  productManager?: string;
+  /**
+   * 原因
+   */
+  reason?: string;
+  /**
+   * 其他反馈
+   */
+  remark?: string;
+  /**
+   * 质检报告id
+   */
+  reportId?: number;
+  /**
+   * 0通过 1不通过
+   */
+  status?: number;
+}
+
+export interface IUpdatePackageInspectionComponentReq {
+  /**
+   * 主键id
+   */
+  id?: number;
+  /**
+   * 材质1名称
+   */
+  material1?: string;
+  /**
+   * 材质2名称
+   */
+  material2?: string;
+  /**
+   * 材质3名称
+   */
+  material3?: string;
+  /**
+   * 材质名4名称
+   */
+  material4?: string;
+  /**
+   * 材质1重量g
+   */
+  weight1?: number;
+  /**
+   * 材质2重量g
+   */
+  weight2?: number;
+  /**
+   * 材质3重量g
+   */
+  weight3?: number;
+  /**
+   * 材质4重量g
+   */
+  weight4?: number;
 }

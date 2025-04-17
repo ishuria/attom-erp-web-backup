@@ -87,14 +87,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -141,7 +141,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -255,14 +255,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(taskingList, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -309,7 +309,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -421,14 +421,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -475,7 +475,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -587,14 +587,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -641,7 +641,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -753,14 +753,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -807,7 +807,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -918,14 +918,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row._sku[0])">
-                {{ row._sku[0] }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
               <br />
-              {{ row._sku[1] }}
+              {{ row.desc }}
             </template>
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
@@ -972,7 +972,7 @@
                       <el-link type="primary" :underline="false" >零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" :underline="false" >老品质检</el-link>
+                      <el-link type="primary" :underline="false" >打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
                       <el-link type="primary" :underline="false" >新品质检</el-link>
@@ -1041,126 +1041,6 @@
         <el-table-column label="收货仓库" min-width="130" prop="repositoryName" />
         <el-table-column label="签收日期" min-width="120" prop="signDate" />
       </el-table>
-    </vab-dialog>
-    <!-- 老品质检报告 -->
-    <vab-dialog v-model="qualityInspectionReportVisible" title="老品质检报告" top="10vh" width="40%" @close="closeQualityInspection">
-      <el-form
-        ref="qualityInspectionFormRef"
-        label-position="left"
-        label-width="auto"
-        :model="qualityInspectionForm"
-        require-asterisk-position="right"
-        :rules="qualityInspectionFormRules"
-        style="margin-right: 30px; margin-left: 30px"
-      >
-        <el-form-item label="SKU" prop="sku">
-          <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
-        </el-form-item>
-        <el-form-item label="产品名称" prop="productName">
-          <el-input v-model="qualityInspectionForm.productName" disabled style="margin-right: 0" />
-        </el-form-item>
-        <!-- <el-form-item inline label="包装尺寸(cm)" prop="packingSize">
-          <el-row style="display: flex; gap: 1%; align-items: center; width: 100%">
-            <el-input v-model.trim="qualityInspectionForm.packageLength" clearable placeholder="长" style="flex: 1; margin-right: 0" />
-            <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-            <el-input v-model.trim="qualityInspectionForm.packageWidth" clearable placeholder="宽" style="flex: 1; margin-right: 0" />
-            <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
-            <el-input v-model.trim="qualityInspectionForm.packageHeight" clearable placeholder="高" style="flex: 1; margin-right: 0" />
-          </el-row>
-        </el-form-item> -->
-        <!-- <el-form-item label="包装重量(g)" prop="packageWeight">
-          <el-input v-model.trim="qualityInspectionForm.packageWeight" clearable style="margin-right: 12px" />
-          <el-button type="success">更新SKU尺寸重量</el-button>
-        </el-form-item> -->
-        <el-divider >质检结果</el-divider>
-        <el-table
-          border
-          :cell-style="qualityInspectionCellStyle"
-          class="quality-inspection"
-          :data="qualityInspectionForm.inspectionList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="changeQualityInspectionInput"
-        >
-          <el-table-column label="质检项目" min-width="330" prop="qualityInspection" />
-          <el-table-column label="检查类型" min-width="100" prop="type" />
-          <el-table-column label="通过" min-width="70" prop="pass">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.pass" :false-value="0" :true-value="1" @change="handleUpdatePackageInspectionDetail(row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="需质检" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.needInspection" :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.needPhoto" :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="上传图片" width="75">
-            <template #header>
-              上传<br />图片
-            </template>
-            <template #default="{ row }">
-              <div class="image-cell" style="margin-right: 15px">
-                <!-- 有图片时显示 -->
-                <div v-if="row.image" class="image-preview">
-                  <img alt="" :src="row.image" />
-                  <div class="image-actions">
-                    <el-icon @click="showPreviewImage(row.image)"><zoom-in /></el-icon>
-                    <el-icon @click=""><delete /></el-icon>
-                  </div>
-                </div>
-                <!-- 无图片时显示 -->
-                <div v-else class="upload-placeholder" @click="showUploadDialog">
-                  <el-icon><plus /></el-icon>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" min-width="150" prop="remark">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.remark"
-                  @blur="clickQualityInspectionCancel($event, row)"
-                  @keyup.enter="clickQualityInspectionCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.remark }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-        <!-- <el-form-item label="产品经理打包数量" prop="packageCount" style="margin-top: 20px">
-          <el-input v-model.trim="qualityInspectionForm.packageCount" clearable style="margin-right: 0" />
-        </el-form-item>
-        <el-form-item label="其他反馈" prop="remark">
-          <el-input v-model="qualityInspectionForm.remark" placeholder="请输入其他反馈" resize="none" :rows="2" type="textarea" />
-        </el-form-item> -->
-        <el-form-item label="结论" prop="conclusion" style="margin-top: 10px">
-          <el-radio-group v-model="qualityInspectionForm.conclusion">
-            <el-radio label="1">通过</el-radio>
-            <el-radio label="2">不通过</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <div style="margin-right: 30px">
-          <!-- <div style="flex: 3">
-            <el-button type="success" @click="downloadInspection">下载</el-button>
-            <el-button type="warning" @click="saveInspection">保存</el-button>
-          </div>
-          <div style="flex: 2">
-            <el-button type="danger" @click="closeQualityInspection">取消</el-button>
-            <el-button type="success" @click="handleSubmitInspection">提交</el-button>
-          </div> -->
-          <el-button type="warning" @click="closeQualityInspection">退出</el-button>
-          <el-button type="success" @click="handleSubmitInspection">提交</el-button>
-        </div>
-        
-      </template>
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
     <vab-dialog v-model="currentTaskVisible" title="当前任务加人-人员选择" width="20%" @close="handleCloseCurrentTask">
@@ -1548,18 +1428,18 @@
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 新品质检报告 -->
-    <vab-quality-inspection-report v-model="newQualityInspectionReportVisible" />
+    <vab-quality-inspection-report v-model="newQualityInspectionReportVisible" :sku="sku" :sku-id="skuId" />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
+    <!-- 打包质检报告 -->
+    <vab-packing-inspection-report v-model="qualityInspectionReportVisible" :sku="sku" :task-id="taskId" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CirclePlus, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
-import { isEqual } from 'lodash'
 import { ref } from 'vue'
-import { downloadFile } from '~/src/api/devlocal/download'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import {
@@ -1587,9 +1467,6 @@ import {
   getSkuQualityList,
   getStartTaskList,
   splitPackageTask,
-  submitPackageInspection,
-  updatePackageInspection,
-  updatePackageInspectionDetail,
   updatePackageTask,
   updatePackageTaskSite,
   updatePriorityPackaging
@@ -1597,18 +1474,19 @@ import {
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
-import { focusAndSelectInput, getDataAttribute, getRootElement, getSpecificChildren } from '/@/utils/nodeUtils'
+import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTask',
 })
 
-const qualityInspectionFormRules = reactive({
-  conclusion: [
-    { required: true, message: '请选择结论', trigger: 'change' },
-  ],
-})
+// 传递给新品质检报告的sku
+const sku = ref<string>('')
+// 传递给新品质检报告的skuId
+const skuId = ref<number>(0)
+// 传递给打包质检报告的taskId
+const taskId = ref<number>(0)
 const newQualityInspectionReportVisible = ref<boolean>(false)
 const activeName = ref<number>(1)
 const showPreviewImage = (url: string) => {
@@ -1625,107 +1503,9 @@ const closeImageUpload = () => {
   imageUploadVisible.value = false
 }
 const showNewInspectionReport = (row: any) => {
+  sku.value = row.sku
+  skuId.value = row.skuId
   newQualityInspectionReportVisible.value = true
-}
-// 质检报告提交
-const handleSubmitInspection = async () => {
-  const { data } = await submitPackageInspection({
-    id: qualityInspectionForm.id,
-    packageLength: qualityInspectionForm.packageLength,
-    packageWidth: qualityInspectionForm.packageWidth,
-    packageHeight: qualityInspectionForm.packageHeight,
-    packageCount: qualityInspectionForm.packageCount,
-    packageWeight: qualityInspectionForm.packageWeight,
-    remark: qualityInspectionForm.remark,
-  })
-  if (data) {
-    $baseMessage('质检报告提交成功', 'success')
-    closeQualityInspection()
-  }
-}
-// 质检报告保存
-const saveInspection = async () => {
-  const { data } = await updatePackageInspection({
-    id: qualityInspectionForm.id,
-    packageLength: qualityInspectionForm.packageLength,
-    packageWidth: qualityInspectionForm.packageWidth,
-    packageHeight: qualityInspectionForm.packageHeight,
-    packageCount: qualityInspectionForm.packageCount,
-    packageWeight: qualityInspectionForm.packageWeight,
-    remark: qualityInspectionForm.remark,
-  })
-  if (data) {
-    $baseMessage('质检报告保存成功', 'success')
-  }
-}
-// 质检报告下载
-const downloadInspection = async () => {
-  await downloadFile('/package/inspection/download', {
-    poId: copyRow.value.poId,
-  })
-}
-// 质检报告修改输入失焦事件
-const clickQualityInspectionCancel = async (event: any, value: any) => {
-  const rootElement = getRootElement(event.srcElement, '.cell')
-
-  if (rootElement) {
-    const t1 = rootElement.children[0]
-    const t2 = rootElement.children[1]
-
-    if (t1 && t1.classList[0] !== 'el-select') {
-      t1.classList.add('none')
-    }
-    if (t2) t2.classList.remove('none')
-  }
-  if (isEqual(_row, value)) {
-    return
-  }
-
-  if (event.type === 'blur') {
-    try {
-      await updatePackageInspectionDetail({
-        id: value.id,
-        pass: value.pass,
-        remark: value.remark,
-      })
-    } catch {
-      Object.assign(value, _row)
-    }
-  }
-}
-// 质检报告详情修改
-const handleUpdatePackageInspectionDetail = async (row: any) => {
-  await updatePackageInspectionDetail({
-    id: row.id,
-    pass: row.pass,
-    remark: row.remark,
-  })
-}
-// 质检报告cellStyle
-const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 2) {
-    return {
-      textAlign: 'center' as const,
-    }
-  }
-}
-// 质检报告修改
-const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  const firstChild = cell?.children[0]?.children[0]
-  const secondChild = cell?.children[0]?.children[1]
-
-  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return
-  }
-
-  _row = JSON.parse(JSON.stringify(row))
-
-  if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none')
-    secondChild.classList.add('none')
-
-    focusAndSelectInput(cell)
-  }
 }
 const handleOpenTest = async () => {
   testVisible.value = true
@@ -1948,26 +1728,12 @@ const partsListCellClassName = (data: { row: any; column: any; rowIndex: number;
 
 // 质检报告是否可见
 const qualityInspectionReportVisible = ref<boolean>(false)
-// 质检报告表单
-const qualityInspectionForm = reactive<any>({})
-const qualityInspectionFormRef = ref<FormInstance>()
 // 展示质检报告
 const handleShowQualityInspectionReport = async (row: any) => {
-  copyRow.value = row
-  // const { data } = await getPackageInspection({
-  //   poId: row.poId,
-  // })
-  // if (data) {
-  //   Object.assign(qualityInspectionForm, data)
-  // }
+  taskId.value = row.id
+  sku.value = row.sku
   qualityInspectionReportVisible.value = true
 }
-// 关闭质检报告
-const closeQualityInspection = () => {
-  qualityInspectionFormRef.value?.resetFields()
-  qualityInspectionReportVisible.value = false
-}
-
 // 开始任务人员选择展示与否
 const personSelectVisible = ref<boolean>(false)
 const startTaskTableRef = ref<TableInstance>()
@@ -2568,7 +2334,7 @@ const fetchData = async () => {
       list.value = data.list
       list.value.forEach((item: any) => {
         item.packageRemarkList = item.packageRemarkList.join('<br>')
-        item._sku = item.sku.split('<br/>')
+        item._sku = `${item.sku}<br/>${item.desc}`
       })
     }
   } catch (error) {
@@ -2745,76 +2511,5 @@ onBeforeMount(() => {
 }
 :deep(.custom-dialog .el-dialog__body) {
   padding-top: 0;
-}
-// 图片样式
-.image-cell {
-  width: 110px;
-  height: 110px;
-  
-  // 有图片时的样式
-  .image-preview {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    
-    img {
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      object-fit: fill;
-    }
-    
-    .image-actions {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0, 0, 0, 0);
-      opacity: 0;
-      transition: all 0.3s ease;
-      
-      .el-icon {
-        font-size: 20px;
-        color: #fff;
-        cursor: pointer;
-        
-        &:hover {
-          transform: scale(1.1);
-        }
-      }
-    }
-    
-    &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
-    }
-  }
-  // 没图片时的样式
-  .upload-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: 1px dashed var(--el-border-color);
-    
-    &:hover {
-      border-color: var(--el-color-primary);
-      .el-icon {
-        color: var(--el-color-primary);
-      }
-    }
-    
-    .el-icon {
-      font-size: 20px;
-      color: #999;
-    }
-  }
 }
 </style>
