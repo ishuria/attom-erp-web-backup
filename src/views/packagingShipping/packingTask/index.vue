@@ -99,7 +99,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -267,7 +267,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -433,7 +433,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -599,7 +599,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -765,7 +765,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -930,7 +930,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" :false-value="0" :true-value="1" @change="handleUpdatePriority(row)" />
+              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -1211,6 +1211,11 @@
         <el-table-column align="center" label="需质检" min-width="80" prop="status">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" :false-value="0" :true-value="1" />
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="需拍照" min-width="80" prop="status">
+          <template #default="{ row }">
+            <el-checkbox disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="修改日期" min-width="110" prop="updateTime">
@@ -2275,7 +2280,7 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
 }
 // 质检项目去掉padding
 const projectCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 1) {
+  if (data.column.label === '图片') {
     return 'clear-padding'
   }
   return ''
