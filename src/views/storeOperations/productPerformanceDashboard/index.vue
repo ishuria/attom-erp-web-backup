@@ -615,6 +615,7 @@
               :header-cell-class-name="headerCell"
               :header-cell-style="{ textAlign: 'center' }"
               @cell-click="cellClick"
+              @sort-change="asinSortChange"
             >
               <el-table-column
                 v-for="(item) in checkList2"
@@ -1072,6 +1073,7 @@
               :header-cell-class-name="headerCell"
               :header-cell-style="{ textAlign: 'center' }"
               @cell-click="cellClick"
+              @sort-change="pAsinSortChange"
             >
               <el-table-column
                 v-for="(item) in checkList3"
@@ -1592,6 +1594,8 @@ const queryForm = reactive<any>({
   site: [],
   operationUserId: '',
   developUserId: '',
+  orderByField: 'currentSalesNumber',
+  orderDirection: 'desc',
 })
 const asinQueryForm = reactive<any>({
   keyWord: '',
@@ -1600,6 +1604,8 @@ const asinQueryForm = reactive<any>({
   site: [],
   operationUserId: '',
   developUserId: '',
+  orderByField: 'currentSalesNumber',
+  orderDirection: 'desc',
 })
 const pAsinQueryForm = reactive<any>({
   keyWord: '',
@@ -1608,6 +1614,8 @@ const pAsinQueryForm = reactive<any>({
   site: [],
   operationUserId: '',
   developUserId: '',
+  orderByField: 'currentSalesNumber',
+  orderDirection: 'desc',
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -1790,7 +1798,24 @@ let _seasonalCoefficient = {
 } 
 const sortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
-  console.log(column, prop, order)
+  queryForm.orderByField = prop
+  queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  // console.log(order)
+  queryData()
+}
+const asinSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  asinQueryForm.orderByField = prop
+  asinQueryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  // console.log(order)
+  queryAsinData()
+}
+const pAsinSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  pAsinQueryForm.orderByField = prop
+  pAsinQueryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  // console.log(order)
+  queryPAsinData()
 }
 const confirmUpdateRemark = async () => {
   const { data } = await updateRemarkAmazonOperation({

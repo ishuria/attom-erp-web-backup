@@ -5,6 +5,8 @@ export interface IGetOperationAmazonSKUListReq {
   developUserId: number
   pageNo: number
   pageSize: number
+  orderByField?: string
+  orderDirection?: string
 }
 export interface IGetOperationAmazonSKUListRes {
   data: {
