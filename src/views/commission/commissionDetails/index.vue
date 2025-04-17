@@ -370,7 +370,7 @@
             </template>
           </el-table-column>
           <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
-          <el-table-column label="当月总提成" min-width="100" prop="currentMonthBonus">
+          <el-table-column label="当月总提成" min-width="110" prop="currentMonthBonus">
             <template #default="{ row }">
               <el-text v-if="row.currentMonthBonus >= 0" type="success">
                 {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
@@ -380,7 +380,7 @@
               </el-text>
             </template>
           </el-table-column>
-          <el-table-column label="SKU累计提成￥" min-width="120" prop="cumulativeCommission">
+          <el-table-column label="SKU累计提成￥" min-width="140" prop="cumulativeCommission">
             <template #default="{ row }">
               {{ row.cumulativeCommission ? '￥' + row.cumulativeCommission : '' }}
             </template>

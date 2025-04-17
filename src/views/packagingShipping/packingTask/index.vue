@@ -1210,12 +1210,12 @@
         <el-table-column label="打包注意事项" min-width="300" prop="packagePrecautions" />
         <el-table-column align="center" label="需质检" min-width="80" prop="status">
           <template #default="{ row }">
-            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleInspectionChange(row)"/>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="需拍照" min-width="80" prop="status">
+        <el-table-column align="center" label="需拍照" min-width="80" prop="isUploadImages">
           <template #default="{ row }">
-            <el-checkbox disabled :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="修改日期" min-width="110" prop="updateTime">
@@ -1511,6 +1511,12 @@ const showNewInspectionReport = (row: any) => {
   sku.value = row.sku
   skuId.value = row.skuId
   newQualityInspectionReportVisible.value = true
+}
+const handleInspectionChange = (row: any) => {
+  // 勾选了‘需拍照’的，无法 取消‘需质检’勾选
+  if (row.isUploadImages) {
+    row.status = 1
+  }
 }
 const handleOpenTest = async () => {
   testVisible.value = true
