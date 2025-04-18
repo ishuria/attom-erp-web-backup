@@ -1441,7 +1441,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
+import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
@@ -1460,20 +1460,17 @@ import {
   getEndTaskList,
   getFreeList,
   getGoOffWorkList,
-  getMorkPackageList,
   getPackageComponentList,
   getPackageSiteList,
   getPackageTaskIsSplit,
   getPackageTaskList,
   getPackageTaskSplitList,
   getPackageTaskingList,
-  getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
   splitPackageTask,
   updatePackageTask,
-  updatePackageTaskSite,
-  updatePriorityPackaging
+  updatePackageTaskSite
 } from '/@/api/devlocal/packagingShipping'
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { useUserStore } from '/@/store/modules/user'
@@ -1514,11 +1511,11 @@ const handleInspectionChange = async (row: any) => {
   // 修改后不更新表格
   await updateProductQualityInspection(row)
 }
-const handleOpenTest = async () => {
-  testVisible.value = true
-  const { data } = await getMorkPackageList()
-  testList.value = data
-}
+// const handleOpenTest = async () => {
+//   testVisible.value = true
+//   const { data } = await getMorkPackageList()
+//   testList.value = data
+// }
 const selectTestRows = ref<any>([])
 const setSelectTestRows = (value: any) => {
   selectTestRows.value = value
@@ -1896,6 +1893,31 @@ const handleCloseStartTask = () => {
 }
 // 开始任务确定后的质检列表
 const skuQualityList = ref<any>([])
+const showSkuQualityList = async (taskIds: string, startTaskUserIds: string) => {
+  if (selectRows.value.length > 1) {
+    await confirmStartMoreTask({
+      taskIds,
+      startTaskUserIds,
+    })
+    personSelectVisible.value = false
+  } else {
+    await confirmStartTask({
+      taskId: Number(taskIds),
+      startTaskUserIds,
+    })
+    personSelectVisible.value = false
+  }
+  fetchData()
+  const { data } = await getSkuQualityList({
+    ids: taskIds,
+  })
+  if (data) {
+    // 只展示需质检的项目
+    skuQualityList.value = data.filter((item: any) => item.status === 1)
+    qualityProjectVisible.value = true
+    // selectRows.value = []
+  }
+}
 // 点击开始任务-人员选择后的质检项目
 const handleShowQualityProject = async () => {
   if (selectPersonRows.value.length === 0) {
@@ -1910,40 +1932,30 @@ const handleShowQualityProject = async () => {
     startTaskUserIds,
   })
   if (res) {
-    if (selectRows.value.length > 1) {
-      await confirmStartMoreTask({
-        taskIds,
-        startTaskUserIds,
-      })
-      personSelectVisible.value = false
-    } else {
-      await confirmStartTask({
-        taskId: Number(taskIds),
-        startTaskUserIds,
-      })
-      personSelectVisible.value = false
-    }
-    fetchData()
-    const { data } = await getSkuQualityList({
-      ids: taskIds,
-    })
-    if (data) {
-      // 只展示需质检的项目
-      skuQualityList.value = data.filter((item: any) => item.status === 1)
-      qualityProjectVisible.value = true
-      // selectRows.value = []
-    }
+    showSkuQualityList(taskIds, startTaskUserIds)
   } else {
-    $baseMessage(msg, 'error')
+    ElMessageBox.confirm(
+      msg,
+      '系统提示',
+      {
+        confirmButtonText: '确定',
+        showCancelButton: false,
+        showClose: false,
+        type: 'warning',
+      }
+    )
+    .then(() => {
+      showSkuQualityList(taskIds, startTaskUserIds)
+    })
   }
 }
-// 修改优先打包
-const handleUpdatePriority = async (row: any) => {
-  await updatePriorityPackaging({
-    id: row.id,
-    priorityPackaging: row.priorityPackaging,
-  })
-}
+// // 修改优先打包
+// const handleUpdatePriority = async (row: any) => {
+//   await updatePriorityPackaging({
+//     id: row.id,
+//     priorityPackaging: row.priorityPackaging,
+//   })
+// }
 // 修改显示与否
 const modifyVisible = ref<boolean>(false)
 // 展示修改
@@ -2027,30 +2039,30 @@ const packingCountForm = reactive<IGetQualityCheck>({})
 const packingCountFormRef = ref<FormInstance>()
 let copyRow = ref<any>()
 // 展示打包总数
-const handleShowPackingCount = async (row: any) => {
-  // 点击了清单质检
-  if (row.qualityCheckStatus === 1) {
-    packingCountVisible.value = true
-    copyRow.value = row
-    const { data } = await getQualityCheck({
-      id: row.id,
-    })
-    Object.assign(packingCountForm, data)
-    if (!data!.id) {
-      packingCountForm.packageTaskCount = row.packageTaskCount
-    }
-    // if (!data?.packageTaskCount) {
-    //   packingCountForm.packageTaskCount = 0
-    // }
-    lackCount.value = data?.lackCount!
-    manyCount.value = data?.manyCount
-  } else {
-    await addQualityCheck({
-      taskId: row.id,
-      status: row.qualityCheckStatus,
-    })
-  }
-}
+// const handleShowPackingCount = async (row: any) => {
+//   // 点击了清单质检
+//   if (row.qualityCheckStatus === 1) {
+//     packingCountVisible.value = true
+//     copyRow.value = row
+//     const { data } = await getQualityCheck({
+//       id: row.id,
+//     })
+//     Object.assign(packingCountForm, data)
+//     if (!data!.id) {
+//       packingCountForm.packageTaskCount = row.packageTaskCount
+//     }
+//     // if (!data?.packageTaskCount) {
+//     //   packingCountForm.packageTaskCount = 0
+//     // }
+//     lackCount.value = data?.lackCount!
+//     manyCount.value = data?.manyCount
+//   } else {
+//     await addQualityCheck({
+//       taskId: row.id,
+//       status: row.qualityCheckStatus,
+//     })
+//   }
+// }
 // 清点质检的取消
 const closePackingCount = () => {
   packingCountVisible.value = false
@@ -2308,8 +2320,6 @@ const changeProjectInput = (row: any, column: any, cell: HTMLTableCellElement) =
 /**
  * 当点击时切换输入框，修改输入
  */
-
-let _row: any
 const changeInput = async (row: any, column: any) => {
   if (column.label === '打包注意事项') {
     handleShowQualityInspectionReport(row)

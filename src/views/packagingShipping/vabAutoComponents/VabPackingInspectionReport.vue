@@ -57,10 +57,10 @@
           <template #default="{ row }">
             <div v-if="row.isUploadImages === 1" class="image-cell">
               <!-- 有图片时显示 -->
-              <div v-if="row.images[0].imgUrl" class="image-preview">
-                <img alt="" :src="row.image" />
+              <div v-if="row.imgUrl" class="image-preview">
+                <img alt="" :src="row.imgUrl" />
                 <div class="image-actions">
-                  <el-icon @click="showPreviewImage(row.images[0].imgUrl)"><zoom-in /></el-icon>
+                  <el-icon @click="showPreviewImage(row.imgUrl)"><zoom-in /></el-icon>
                   <el-icon @click="handleImageRemove(row)"><delete /></el-icon>
                 </div>
               </div>
@@ -86,8 +86,8 @@
       </el-table>
       <el-form-item label="结论" prop="conclusion" style="margin-top: 10px">
         <el-radio-group v-model="qualityInspectionForm.status" @change="handleUpdateInspection">
-          <el-radio label="0">通过</el-radio>
-          <el-radio label="1">不通过</el-radio>
+          <el-radio :value="0">通过</el-radio>
+          <el-radio :value="1">不通过</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -182,8 +182,8 @@ const uploadImage = async (file: File) => {
 
     const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
     if (data) {   
-      _row.images[0].imgUrl = data.imgUrl
-      _row.images[0].id = data.id
+      _row.imgUrl = data.imgUrl
+      _row.imgId = data.id
       $baseMessage('图片上传成功！', 'success')
       imageUploadVisible.value = false
     } else {
@@ -196,9 +196,9 @@ const uploadImage = async (file: File) => {
 const handleImageRemove = async (row: any) => {
   try {
     $baseConfirm('确定删除图片吗？', null,  async () => {
-      const { data } = await deletePackageInspectionItemImage({ id: row.images[0].id  })
+      const { data } = await deletePackageInspectionItemImage({ id: row.imgId  })
       if (data) {
-        row.images[0].imgUrl = ''
+        row.imgUrl = ''
         $baseMessage('图片删除成功！','success')
       }
     })
@@ -313,7 +313,16 @@ const fetchData = async () => {
     sku: props.sku,
   })
   if (data) {
+    data.inspectionList.forEach((row: any) => {
+      if (row.images.length === 0) {
+        row.imgUrl = ''
+      } else {
+        row.imgUrl = row.images[0].imgUrl
+        row.imgId = row.images[0].id
+      }
+    })
     inspectionList.value = data.inspectionList
+    // console.log(inspectionList.value)
     reportId.value = data.reportId
     Object.assign(qualityInspectionForm, data)
   }

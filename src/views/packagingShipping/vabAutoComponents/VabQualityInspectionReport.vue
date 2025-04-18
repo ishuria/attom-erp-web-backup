@@ -24,7 +24,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="合并质检PO" style="min-width: 100%;">
+          <el-form-item label="PO" style="min-width: 100%;">
             <el-select 
               v-model="qualityInspectionForm.poList"   
               collapse-tags
@@ -310,7 +310,7 @@
         </template>
         <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" @change="handleUpdateInspection"/>
       </el-form-item>
-      <el-form-item label="打包数" prop="packageCount" >
+      <el-form-item label="质检打包数" prop="packageCount" >
         <el-input v-model.trim="inspectionResultsForm.packageCount" clearable placeholder="产品经理打包套数" style="min-width: 100%" @change="handleUpdateInspection"/>
       </el-form-item>
       <el-form-item label="结论" prop="status" >

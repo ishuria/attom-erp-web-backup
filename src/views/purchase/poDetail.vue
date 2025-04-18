@@ -80,7 +80,7 @@
                   </el-col>
                   <el-col :span="4">
                     <el-form-item label="需新品质检">
-                      <el-checkbox v-model="poDetailData.needQualityCheck" class="custom-checkbox" :disabled="route.query.from !== 'plannedPoDetail'"/>
+                      <el-checkbox v-model="poDetailData.qualityMark" class="custom-checkbox" :disabled="route.query.from !== 'plannedPoDetail'" :false-value="0" :true-value="1" @change="handleUpdateQualityMark"/>
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
@@ -1428,6 +1428,7 @@ import {
   updatePoSkuComponent,
   updatePoSkuComponentSuitDetail,
   updatePoSkuComponentSuppliser,
+  updatePurchasePlanPoQualityMark,
   updateSkuCount,
   updateSkuDetail,
   updateSkuImg,
@@ -1741,7 +1742,13 @@ const handleCloseAddSku = () => {
   addSkuFormRef.value?.resetFields()
   addSKUVisible.value = false
 }
-
+// planPo更新需新品质检
+const handleUpdateQualityMark = async () => {
+  await updatePurchasePlanPoQualityMark({
+    poSkuId: poDetailData.value.poSkuId,
+    status: poDetailData.value.qualityMark
+  })
+}
 function generateUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;

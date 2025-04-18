@@ -625,3 +625,15 @@ export function getPurchaseBonus(): Promise<{ data: { procurementBonus: number, 
     method: 'get',
   })
 }
+/**
+ * 采购PO的需新品质检更新
+ * @param params 
+ * @returns 
+ */
+export function updatePurchasePlanPoQualityMark(params: { poSkuId: number, status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/purchase/planPo/qualityMark`,
+    method: 'post',
+    params,
+  })
+}
