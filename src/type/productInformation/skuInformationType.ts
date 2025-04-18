@@ -1007,6 +1007,7 @@ export interface IaddProductQualityInspection {
   checkType?: number
   packagePrecautions?: string
   isUploadImages?: number
+  id?: number
 }
 
 export interface ISuppliserName {

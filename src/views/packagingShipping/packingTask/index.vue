@@ -1475,6 +1475,7 @@ import {
   updatePackageTaskSite,
   updatePriorityPackaging
 } from '/@/api/devlocal/packagingShipping'
+import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
@@ -1505,11 +1506,13 @@ const showNewInspectionReport = (row: any) => {
   skuId.value = row.skuId
   newQualityInspectionReportVisible.value = true
 }
-const handleInspectionChange = (row: any) => {
+const handleInspectionChange = async (row: any) => {
   // 勾选了‘需拍照’的，无法 取消‘需质检’勾选
   if (row.isUploadImages) {
     row.status = 1
   }
+  // 修改后不更新表格
+  await updateProductQualityInspection(row)
 }
 const handleOpenTest = async () => {
   testVisible.value = true
@@ -1925,7 +1928,8 @@ const handleShowQualityProject = async () => {
       ids: taskIds,
     })
     if (data) {
-      skuQualityList.value = data
+      // 只展示需质检的项目
+      skuQualityList.value = data.filter((item: any) => item.status === 1)
       qualityProjectVisible.value = true
       // selectRows.value = []
     }
