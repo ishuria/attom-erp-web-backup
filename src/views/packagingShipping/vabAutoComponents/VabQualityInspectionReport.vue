@@ -304,7 +304,10 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
+      <el-form-item label="备注" prop="remark" >
+        <template #label>
+          备注 
+        </template>
         <el-input v-model="inspectionResultsForm.remark" placeholder="请输入备注" resize="none" :rows="2" type="textarea" @change="handleUpdateInspection"/>
       </el-form-item>
       <el-form-item label="打包数" prop="packageCount" >
