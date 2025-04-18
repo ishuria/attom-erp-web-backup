@@ -764,3 +764,13 @@ export function deletePackageInspectionItemImage(params: { id: number }): Promis
     params
   })
 }
+/**
+ * 开始任务前置check接口
+ */
+export function checkStartTaskPackage(data: { taskIds: string, startTaskUserIds: string }): Promise<{ data: boolean, msg: string }> {
+  return request({
+    url: `${BASE_API}/package/startTask/check`,
+    method: 'post',
+    data
+  })
+}

@@ -1449,6 +1449,7 @@ import {
   addQualityCheck,
   checkGoOffWork,
   checkInMork,
+  checkStartTaskPackage,
   confirmCurrentTaskAddPerson,
   confirmEndTask,
   confirmGoOffWork,
@@ -1901,27 +1902,35 @@ const handleShowQualityProject = async () => {
 
   const taskIds = selectRows.value.map((item: any) => item.id).join(',')
   const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
-  if (selectRows.value.length > 1) {
-    await confirmStartMoreTask({
-      taskIds,
-      startTaskUserIds,
-    })
-    personSelectVisible.value = false
-  } else {
-    await confirmStartTask({
-      taskId: Number(taskIds),
-      startTaskUserIds,
-    })
-    personSelectVisible.value = false
-  }
-  fetchData()
-  const { data } = await getSkuQualityList({
-    ids: taskIds,
+  const { data: res, msg } = await checkStartTaskPackage({
+    taskIds,
+    startTaskUserIds,
   })
-  if (data) {
-    skuQualityList.value = data
-    qualityProjectVisible.value = true
-    // selectRows.value = []
+  if (res) {
+    if (selectRows.value.length > 1) {
+      await confirmStartMoreTask({
+        taskIds,
+        startTaskUserIds,
+      })
+      personSelectVisible.value = false
+    } else {
+      await confirmStartTask({
+        taskId: Number(taskIds),
+        startTaskUserIds,
+      })
+      personSelectVisible.value = false
+    }
+    fetchData()
+    const { data } = await getSkuQualityList({
+      ids: taskIds,
+    })
+    if (data) {
+      skuQualityList.value = data
+      qualityProjectVisible.value = true
+      // selectRows.value = []
+    }
+  } else {
+    $baseMessage(msg, 'error')
   }
 }
 // 修改优先打包
@@ -2204,7 +2213,7 @@ const fetchTaskingData = async () => {
     taskingList.value = data.list
     taskingList.value.forEach((item: any) => {
       item.packageRemarkList = item.packageRemarkList.join('<br>')
-      item._sku = item.sku.split('<br/>')
+      item._sku = `${item.sku}<br/>${item.desc}`
     })
     listLoading.value = false
   }

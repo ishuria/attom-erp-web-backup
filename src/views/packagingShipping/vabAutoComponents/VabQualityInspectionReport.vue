@@ -10,7 +10,7 @@
       :rules="qualityInspectionFormRules"
       style="margin-right: 20px; margin-left: 20px"
     >
-      <el-divider style="margin-top: 0">基础信息</el-divider>
+      <el-divider style="margin-top: 0"><span style="font-size: var(--el-font-size-base);">基础信息</span></el-divider>
       <el-row justify="space-between" style="width: 100%">
         <el-col :span="8">
           <el-form-item label="日期" style="min-width: 95%">
@@ -56,7 +56,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-divider style="margin-top: 0">信息完善</el-divider>
+      <el-divider style="margin-top: 10px"><span style="font-size: var(--el-font-size-base);">信息完善</span></el-divider>
       <el-row justify="space-between" style="width: 100%">
         <el-col :span="16">
           <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
@@ -102,10 +102,7 @@
         stripe
         @cell-click="changeComponentListInput"
       >
-        <el-table-column label="零件图片" prop="componentImgUrl" width="75" >
-          <template #header>
-            零件<br />图片
-          </template>
+        <el-table-column label="图片" prop="componentImgUrl" width="75" >        
           <template #default="{ row }">
             <el-image :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentImgUrl)">
               <template #error><el-icon /></template>
@@ -184,7 +181,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-divider >质检结果</el-divider>
+      <el-divider style="margin-top: 30px"><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showPrecautions">修改SKU质检项</el-button>
@@ -230,22 +227,24 @@
       style="margin: 20px 20px 0 20px"
     >
       <el-form-item label="基础图片" prop="baseImage" style="margin-bottom: 50px">
-        <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell" style="margin-right: 20px">
-          <!-- 有图片时显示 -->
-          <div v-if="item.imgUrl" class="image-preview">
-            <img alt="" :src="item.imgUrl" />
-            <div class="image-actions">
-              <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
-              <el-icon @click="handleImageRemove(item.id, index, 0)"><delete /></el-icon>
+        <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
+          <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell" >
+            <!-- 有图片时显示 -->
+            <div v-if="item.imgUrl" class="image-preview">
+              <img alt="" :src="item.imgUrl" />
+              <div class="image-actions">
+                <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+                <el-icon @click="handleImageRemove(item.id, index, 0)"><delete /></el-icon>
+              </div>
             </div>
-          </div>
-          <!-- 无图片时显示 -->
-          <div v-else class="upload-placeholder" @click="showUploadDialog(0, index)">
-            <el-icon><plus /></el-icon>
-          </div>
-          <div class="image-text">
-            <div class="title">{{ item.title }}</div>
-            <div class="desc">{{ item.desc }}</div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showUploadDialog(0, index)">
+              <el-icon><plus /></el-icon>
+            </div>
+            <div class="image-text">
+              <div class="title">{{ item.title }}</div>
+              <div class="desc">{{ item.desc }}</div>
+            </div>
           </div>
         </div>
       </el-form-item>
@@ -710,8 +709,8 @@ const fetchData = async () => {
 <style lang="scss" scoped>
 // 图片样式
 .image-cell {
-  width: 110px;
-  height: 110px;
+  width: 135px;
+  height: 135px;
   
   // 有图片时的样式
   .image-preview {
