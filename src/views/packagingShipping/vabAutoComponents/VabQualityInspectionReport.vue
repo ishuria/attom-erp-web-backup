@@ -340,7 +340,7 @@
   <!-- 上传图片 -->
   <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   <!-- 打包注意事项 -->
-  <vab-packing-precautions v-model="precautionsVisible" :sku-id="props.skuId" />
+  <vab-packing-precautions v-model="precautionsVisible" :sku-id="props.skuId" @update:model-value="handleUpdateData" />
 </template>
 
 <script lang="ts" setup>
@@ -379,6 +379,12 @@ watch(() => props.modelValue, (val) => {
     fetchData()
   }
 })
+const handleUpdateData = (val: boolean) => {
+  if (val === false) {
+    console.log(1)
+    fetchData()
+  }
+}
 const precautionsVisible = ref<boolean>(false)
 const componentList = ref<IComponentList[]>([])
 const reportDetailList = ref<ReportDetailList[]>([])

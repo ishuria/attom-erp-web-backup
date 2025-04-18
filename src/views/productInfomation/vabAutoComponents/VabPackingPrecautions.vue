@@ -126,7 +126,6 @@ const list = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 const tableRef = ref<TableInstance>()
-const route: any = useRoute()
 
 const handleUpdatePackagePrecautions = async (val: string) => {
   const { data } = await updateProductQualityInspection({ ...copyRow, packagePrecautions: val })
@@ -176,7 +175,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 const handleAdd = async () => {
   try {
     const newQualityInspection = {
-      skuId: parseInt(route.query.skuId),
+      skuId: props.skuId,
       status: 1,
       checkType: 0,
       packagePrecautions: '',
@@ -184,10 +183,10 @@ const handleAdd = async () => {
     const { data } = await addProductQualityInspection(newQualityInspection)
     if (data) {
       const { data: tableData } = await getProductQualityInspection({
-        skuId: parseInt(route.query.skuId)
+        skuId: props.skuId
       })
       list.value = tableData
-      list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
+      // list.value.sort((a: any, b: any) => new Date(b.createTime!).getTime() - new Date(a.createTime!).getTime());
       $baseMessage('新增质检清单成功', 'success', 'hey')
     }
   } catch (error) {
@@ -195,7 +194,7 @@ const handleAdd = async () => {
   }
 }
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any) => { 
   if (column.label === '打包注意事项') {
     remarkVisible.value = true
     remark.value = row.packagePrecautions
