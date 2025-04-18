@@ -42,30 +42,30 @@
         </el-table-column>
         <el-table-column label="需质检" width="90">
           <template #default="{ row }">
-            <el-checkbox v-model="row.needInspection" :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.status" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column label="需拍照" width="90">
           <template #default="{ row }">
-            <el-checkbox v-model="row.needPhoto" :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="上传图片" width="76">
+        <el-table-column label="上传图片" width="76" >
           <template #header>
             上传<br />图片
           </template>
           <template #default="{ row }">
-            <div class="image-cell">
+            <div v-if="row.isUploadImages === 1" class="image-cell">
               <!-- 有图片时显示 -->
-              <div v-if="row.image" class="image-preview">
+              <div v-if="row.images[0].imgUrl" class="image-preview">
                 <img alt="" :src="row.image" />
                 <div class="image-actions">
-                  <el-icon @click="showPreviewImage(row.image)"><zoom-in /></el-icon>
-                  <el-icon @click="handleRemoveImage"><delete /></el-icon>
+                  <el-icon @click="showPreviewImage(row.images[0].imgUrl)"><zoom-in /></el-icon>
+                  <el-icon @click="handleImageRemove(row)"><delete /></el-icon>
                 </div>
               </div>
               <!-- 无图片时显示 -->
-              <div v-else class="upload-placeholder" @click="showUploadDialog">
+              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
                 <el-icon><plus /></el-icon>
               </div>
             </div>
@@ -84,14 +84,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- <el-form-item label="产品经理打包数量" prop="packageCount" style="margin-top: 20px">
-        <el-input v-model.trim="qualityInspectionForm.packageCount" clearable style="margin-right: 0" />
-      </el-form-item>
-      <el-form-item label="其他反馈" prop="remark">
-        <el-input v-model="qualityInspectionForm.remark" placeholder="请输入其他反馈" resize="none" :rows="2" type="textarea" />
-      </el-form-item> -->
       <el-form-item label="结论" prop="conclusion" style="margin-top: 10px">
-        <el-radio-group v-model="qualityInspectionForm.status">
+        <el-radio-group v-model="qualityInspectionForm.status" @change="handleUpdateInspection">
           <el-radio label="0">通过</el-radio>
           <el-radio label="1">不通过</el-radio>
         </el-radio-group>
@@ -106,18 +100,17 @@
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   <!-- 上传图片 -->
-  <vab-image-upload v-model="imageUploadVisible" @image-upload="" />
+  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
-import { downloadFile } from '/@/api/devlocal/download'
-import { getPackageInspection } from '/@/api/devlocal/packagingShipping'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import type { CSSProperties } from 'vue'
+import { deletePackageInspectionItemImage, getPackageInspection, submitPackageInspection, updateNewPackageInspection, updatePackageInspectionDetail, uploadPackageInspectionItemImage } from '/@/api/devlocal/packagingShipping'
 import type { IInspectionList } from '/@/type/packagingShipping/packagingType'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: "VabPackingInspectionReport",
@@ -151,10 +144,15 @@ const qualityInspectionFormRules = reactive({
   ],
 })
 const inspectionList = ref<IInspectionList[]>([])
+const reportId = ref<number | undefined>(undefined)
 const imagePreviewVisible = ref(false)
 const imagePreviewList = ref<string[]>([])
 const imageUploadVisible = ref(false)
-const showUploadDialog = () => {
+const id = ref<number>(0)
+let _row: any
+const showUploadDialog = (row: any) => {
+  id.value = row.id
+  _row = row
   imageUploadVisible.value = true
 }
 const showPreviewImage = (url: string) => {
@@ -176,31 +174,58 @@ const qualityInspectionForm = reactive({
   packageTaskId: ''
 })
 
-const handleRemoveImage = () => {
-  // _row.image = ''
+const uploadImage = async (file: File) => {
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('reportDetailId', String(id.value))
+
+    const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
+    if (data) {   
+      _row.images[0].imgUrl = data.imgUrl
+      _row.images[0].id = data.id
+      $baseMessage('图片上传成功！', 'success')
+      imageUploadVisible.value = false
+    } else {
+      $baseMessage('图片上传失败！', 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleImageRemove = async (row: any) => {
+  try {
+    $baseConfirm('确定删除图片吗？', null,  async () => {
+      const { data } = await deletePackageInspectionItemImage({ id: row.images[0].id  })
+      if (data) {
+        row.images[0].imgUrl = ''
+        $baseMessage('图片删除成功！','success')
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleUpdateInspection = async () => {
+  try {
+    await updateNewPackageInspection({
+      reportId: reportId.value,
+      status: qualityInspectionForm.status,
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 // 质检报告提交
 const handleSubmitInspection = async () => {
-  // const { data } = await submitPackageInspection({
-  //   id: qualityInspectionForm.id,
-  //   packageLength: qualityInspectionForm.packageLength,
-  //   packageWidth: qualityInspectionForm.packageWidth,
-  //   packageHeight: qualityInspectionForm.packageHeight,
-  //   packageCount: qualityInspectionForm.packageCount,
-  //   packageWeight: qualityInspectionForm.packageWeight,
-  //   remark: qualityInspectionForm.remark,
-  // })
-  // if (data) {
-  //   $baseMessage('质检报告提交成功', 'success')
-  //   closeQualityInspection()
-  // }
-}
-let _row: any
-// 质检报告下载
-const downloadInspection = async () => {
-  await downloadFile('/package/inspection/download', {
-    // poId: copyRow.value.poId,
+  const { data } = await submitPackageInspection({
+    reportId: reportId.value!,
+    type: 1
   })
+  if (data) {
+    $baseMessage('打包质检报告提交成功', 'success')
+    visible.value = false
+  }
 }
 // 质检报告修改输入失焦事件
 const clickQualityInspectionCancel = async (event: any, value: any) => {
@@ -220,24 +245,24 @@ const clickQualityInspectionCancel = async (event: any, value: any) => {
   }
 
   if (event.type === 'blur') {
-    // try {
-    //   await updatePackageInspectionDetail({
-    //     id: value.id,
-    //     pass: value.pass,
-    //     remark: value.remark,
-    //   })
-    // } catch {
-    //   Object.assign(value, _row)
-    // }
+    try {
+      await updatePackageInspectionDetail({
+        id: value.id,
+        pass: value.pass,
+        remark: value.remark,
+      })
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 // 质检报告详情修改
 const handleUpdatePackageInspectionDetail = async (row: any) => {
-  // await updatePackageInspectionDetail({
-  //   id: row.id,
-  //   pass: row.pass,
-  //   remark: row.remark,
-  // })
+  await updatePackageInspectionDetail({
+    id: row.id,
+    pass: row.pass,
+    remark: row.remark,
+  })
 }
 // 质检报告cellStyle
 const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -289,6 +314,7 @@ const fetchData = async () => {
   })
   if (data) {
     inspectionList.value = data.inspectionList
+    reportId.value = data.reportId
     Object.assign(qualityInspectionForm, data)
   }
 }

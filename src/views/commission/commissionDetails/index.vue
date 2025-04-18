@@ -295,7 +295,7 @@
             <el-form inline>
               <el-form-item label="人员">
                 <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
-                  <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item label="站点">
@@ -453,7 +453,7 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList } from '/@/api/devlocal/commission'
+import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import type {
@@ -681,6 +681,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
       break
     }
     case 2: {
+      fetchDevelopUserList()
       developQueryData()
 
       break
@@ -769,6 +770,12 @@ const fetchSiteList = async () => {
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部' })
 }
+const developUserList = ref<{ id: number; label: string }[]>([])
+const fetchDevelopUserList = async () => {
+  const { data } = await getDevelopDesignDetailUserList()
+  developUserList.value = data
+  developUserList.value.unshift({ id: -1, label: '全部' })
+}
 const fetchUserList = async () => {
   const { data } = await getArtDesignTaskUserList()
   userList.value = data
@@ -837,18 +844,20 @@ const fetchDevelopData = async () => {
 }
 
 onBeforeMount(() => {
-  fetchUserList()
   fetchSiteList()
   switch(activeName.value) {
     case 0: {
+      fetchUserList()
       queryData()
       break
     }
     case 1: {
+      fetchUserList()
       longQueryData()
       break
     }
     case 2: {
+      fetchDevelopUserList()
       developQueryData()
       break
     }

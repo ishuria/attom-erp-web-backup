@@ -739,3 +739,28 @@ export function submitPackageInspection(data: { reportId: number, type: number }
     data
   })
 }
+/**
+ * 打包质检项-图片上传
+ * @param data 
+ * @returns 
+ */
+export function uploadPackageInspectionItemImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
+  return request({
+    url: `${BASE_API}/package/inspection/item/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data
+  })
+}
+/**
+ * 打包质检项-删除图片
+ * @param params 
+ * @returns 
+ */
+export function deletePackageInspectionItemImage(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/package/inspection/item/img/delete`,
+    method: 'post',
+    params
+  })
+}

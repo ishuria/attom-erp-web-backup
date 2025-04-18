@@ -317,3 +317,13 @@ export function getReductionCostDetailList(params: IGetReductionCostDetailListRe
     params
   })
 }
+
+/**
+ * 查询提成任务明细-产品开发设计-人员列表
+ */
+export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/develop/design/task/detail/user/list`,
+    method: 'get',
+  })
+}

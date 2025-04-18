@@ -1180,7 +1180,7 @@
       </template>
     </vab-dialog>
     <!-- 开始任务 - 质检项目 -->
-    <vab-dialog v-model="qualityProjectVisible" title="质检项目" width="40%">
+    <vab-dialog v-model="qualityProjectVisible" title="质检项目" width="50%">
       <el-table
         border
         :cell-class-name="projectCellClassName"
@@ -1434,8 +1434,6 @@
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 新品质检报告 -->
     <vab-quality-inspection-report v-model="newQualityInspectionReportVisible" :sku="sku" :sku-id="skuId" />
-    <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @update:image-upload-visible="closeImageUpload" />
     <!-- 打包质检报告 -->
     <vab-packing-inspection-report v-model="qualityInspectionReportVisible" :sku="sku" :task-id="taskId" />
   </div>
@@ -1501,12 +1499,6 @@ const showPreviewImage = (url: string) => {
 }
 const testVisible = ref<boolean>(false)
 const testList = ref<any[]>([])
-
-const imageUploadVisible = ref<boolean>(false)
-
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
 const showNewInspectionReport = (row: any) => {
   sku.value = row.sku
   skuId.value = row.skuId

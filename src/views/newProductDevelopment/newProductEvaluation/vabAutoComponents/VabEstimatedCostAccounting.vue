@@ -304,7 +304,7 @@
     </template>
   </vab-dialog>
   <!-- 上传图片 -->
-  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
 </template>
 
 <script lang="ts" setup>
@@ -316,17 +316,17 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
-addEstimatedCostAccounting,
-addEstimatedCostAccountingProductRelease,
-copyEstimatedCostAccounting,
-deleteEstimatedCostAccounting,
-evaluationCostDeleteImg,
-getExchangeRate,
-reverseCalculateEstimatedCostAccounting,
-updateEstimatedCostAccounting,
-updateEstimatedCostAccountingFirstMileChannel,
-updateEstimatedCostAccountingSort,
-uploadFileBoBakend,
+  addEstimatedCostAccounting,
+  addEstimatedCostAccountingProductRelease,
+  copyEstimatedCostAccounting,
+  deleteEstimatedCostAccounting,
+  evaluationCostDeleteImg,
+  getExchangeRate,
+  reverseCalculateEstimatedCostAccounting,
+  updateEstimatedCostAccounting,
+  updateEstimatedCostAccountingFirstMileChannel,
+  updateEstimatedCostAccountingSort,
+  uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
 import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -378,10 +378,6 @@ const showUploadDialog = (row: any) => {
   imageUploadVisible.value = true
   copyRow = row
 }
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
 // 上传图片
 const uploadImage = async (file: File) => {
   try {
@@ -393,7 +389,7 @@ const uploadImage = async (file: File) => {
     if (data) {
       copyRow.imgUrl = data
       $baseMessage('图片上传成功！', 'success')
-      closeImageUpload()
+      imageUploadVisible.value = false
     } else {
       $baseMessage('图片上传失败！', 'error')
     }

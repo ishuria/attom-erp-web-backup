@@ -524,7 +524,7 @@ handleSubmit<template>
       @update:visible-value = "updateTrendVisibleValue"
     />
     <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
     <!-- 更新产品名 -->
     <vab-dialog 
       v-model="updateProductNameVisible"
@@ -828,10 +828,7 @@ const showUploadDialog = (row: any, index: number) => {
   tableClickProgressId.value = row.progressId
   tableClickRowIndex.value = index
 }
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
+
 /**
  * 上传图片
  */
@@ -852,7 +849,7 @@ async function uploadImage (file: File) {
         imageId: fileId,
       })
       $baseMessage("图片上传成功!","success","hey")
-      closeImageUpload()
+      imageUploadVisible.value = false
     } else {
       $baseMessage("图片上传失败!","error","hey")
     }

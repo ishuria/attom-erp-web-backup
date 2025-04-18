@@ -1,6 +1,6 @@
 <template>
   <!-- 质检报告 -->
-  <vab-dialog v-model="visible" class="custom-dialog" title="新品质检报告" top="5vh" width="50%" @close="closeQualityInspection">
+  <vab-dialog v-model="visible" class="custom-dialog" :draggable="false" title="新品质检报告" top="3vh" width="50%" @close="closeQualityInspection">
     
     <el-form
       ref="qualityInspectionFormRef"
@@ -336,7 +336,7 @@
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   <!-- 上传图片 -->
-  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   <!-- 打包注意事项 -->
   <vab-packing-precautions v-model="precautionsVisible" :sku-id="props.skuId" />
 </template>
@@ -489,7 +489,7 @@ const uploadImage = async (file: File) => {
       // No default
       }
       $baseMessage('图片上传成功！', 'success')
-      closeImageUpload()
+      imageUploadVisible.value = false
     } else {
       $baseMessage('图片上传失败！', 'error')
     }
@@ -530,10 +530,6 @@ const showUploadDialog = (type: number, index: number) => {
   imageUploadVisible.value = true
   imageUploadType.value = type
   imageUploadIndex.value = index
-}
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
 }
 // 质检报告提交
 const handleSubmitInspection = async () => {
@@ -695,7 +691,8 @@ const fetchData = async () => {
     data.date = data.date ? data.date.split(' ')[0] : ''
     componentList.value = data.componentList
     reportDetailList.value = data.reportDetailList
-    poOption.value = data.poList
+    poOption.value = data.poList[0].split(',')
+    data.poList = poOption.value
     data.basePictureImgList.forEach((item, index) => {
       if (item.imgUrl) {
         basePictureImgList.value[index].imgUrl = item.imgUrl

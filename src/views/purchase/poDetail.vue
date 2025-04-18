@@ -1383,9 +1383,9 @@ v-for="dict in invoicingNumList" :key="dict.value"
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
     <!-- SKU上传图片 -->
-    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeSkuImageUpload" />
+    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
     <!-- 零件上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" @update:image-upload-visible="closeImageUpload" />
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
   </div>
 </template>
 
@@ -2736,14 +2736,6 @@ const showUploadDialog = (row: any) => {
 const showSkuUploadDialog = () => {
   skuImageUploadVisible.value = true
 }
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
-// 关闭sku上传弹窗
-const closeSkuImageUpload = () => {
-  skuImageUploadVisible.value = false
-}
 /**
 * 上传图片
 */
@@ -2755,7 +2747,7 @@ async function uploadImage(file: File) {
     const { data } = await updateSkuImg(uploadImgForm)
     if (data) {
       $baseMessage('图片上传成功','success', 'hey')
-      closeSkuImageUpload()
+      skuImageUploadVisible.value = false
       poDetailData.value.skuImgUrl = data
     } else {
       $baseMessage('图片上传失败','error', 'hey')
@@ -2774,7 +2766,7 @@ async function uploadSkuComponentImage(file: File) {
     const { data } = await uploadComponentImg(uploadImgForm)
     if (data) {
       $baseMessage('图片上传成功','success', 'hey')
-      closeImageUpload()
+      imageUploadVisible.value = false
       copyRow.componentUrl = data
     } else {
       $baseMessage('图片上传失败','error', 'hey')

@@ -296,7 +296,7 @@
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
     <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
 
@@ -604,9 +604,6 @@ const handleConsumablesUpdate = async (row: any) => {
   fetchData()
 }
 const imageUploadVisible = ref<boolean>(false)
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
 // 打开上传图片弹窗
 const showUploadDialog = (row: any) => {
   imageUploadVisible.value = true
@@ -624,7 +621,7 @@ async function uploadImage(file: File) {
     const { data } = await uploadComponentImage(uploadForm)
     if (data) {
       copyRow.componentImage = data
-      closeImageUpload()
+      imageUploadVisible.value = false
       $baseMessage('图片上传成功', 'success', 'hey')
     } else {
       $baseMessage('图片上传失败', 'error', 'hey')

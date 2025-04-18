@@ -168,7 +168,7 @@
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
     <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeImageUpload" />
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
   
@@ -267,10 +267,6 @@ const showUploadDialog = (row: any, prop: string) => {
   copyRow = row
   _prop = prop
 }
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
 async function uploadImage(file: File) {
   try {
     let imageForm = new FormData()
@@ -283,7 +279,7 @@ async function uploadImage(file: File) {
       copyRow[_prop] = data
       // 提示成功信息
       $baseMessage('图片上传成功!', 'success', 'hey');
-      closeImageUpload()
+      imageUploadVisible.value = false
     } else {
       $baseMessage('图片上传失败!', 'error', 'hey');
     }

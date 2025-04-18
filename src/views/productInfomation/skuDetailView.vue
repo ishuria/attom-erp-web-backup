@@ -620,9 +620,9 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
     <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" @update:image-upload-visible="closeImageUpload" />
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- SKU上传图片 -->
-    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" @update:image-upload-visible="closeSkuImageUpload" />
+    <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
 
@@ -1630,7 +1630,7 @@ async function uploadImage(file: File) {
     if (data) {   
       sku.value.skuImgUrl = data
       $baseMessage('图片上传成功！', 'success')
-      closeSkuImageUpload()
+      skuImageUploadVisible.value = false
     } else {
       $baseMessage('图片上传失败！', 'error')
     }
@@ -1648,21 +1648,13 @@ const uploadSkuComponentImage = async (file: File) => {
     if (data) {
       copyRow.componentImage = data
       $baseMessage('图片上传成功！', 'success')
-      closeImageUpload()
+      imageUploadVisible.value = false
     } else {
       $baseMessage('图片上传失败！', 'error')
     }
   } catch (error) {
     console.error(error)
   }
-}
-// 关闭上传弹窗
-const closeImageUpload = () => {
-  imageUploadVisible.value = false
-}
-// 关闭sku上传弹窗
-const closeSkuImageUpload = () => {
-  skuImageUploadVisible.value = false
 }
 // back
 const goBack = async () => {
