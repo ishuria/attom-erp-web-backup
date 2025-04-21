@@ -947,7 +947,7 @@ v-for="dict in invoicingNumList" :key="dict.value"
           <el-button v-if="createNextVisible" type="primary" @click="handleFetchCreateNext">下一个</el-button>
           <el-button type="warning" @click="handleCreateAddSKU">添加SKU</el-button>
           <el-button :disabled="createDisabled" type="danger" @click="handleDelCreateSKU">删除SKU</el-button>
-          <el-button :disabled="createDisabled" type="success" @click="createSku">创建PO</el-button>
+          <el-button :disabled="createDisabled" :loading="createPoLoading" type="success" @click="createSku">创建PO</el-button>
         </el-footer>
       </div>
     </div>
@@ -1449,6 +1449,7 @@ defineOptions({
   name: 'PoDetail',
 })
 
+const createPoLoading = ref<boolean>(false)
 const handleMove = (event: any) => {
   const { related  } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
@@ -2565,6 +2566,7 @@ const handleDelCreateSKU = () => {
 // 创建SKU
 const createSku = async () => {
   let flag = false
+  createPoLoading.value = true
   // 遍历data的所有
   skuStore.data.forEach((item: any) => {
     if (item.poDetailData.site == null) {
@@ -2593,6 +2595,7 @@ const createSku = async () => {
       goBack()
     }
   }
+  createPoLoading.value = false
 }
 // 采购订单PO详情删除SKU
 const handleDelSKU = async () => {

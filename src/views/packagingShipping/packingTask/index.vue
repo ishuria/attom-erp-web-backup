@@ -1180,7 +1180,7 @@
       </template>
     </vab-dialog>
     <!-- 开始任务 - 质检项目 -->
-    <vab-dialog v-model="qualityProjectVisible" title="质检项目" width="50%">
+    <vab-dialog v-model="qualityProjectVisible" :draggable="false" title="质检项目" width="50%">
       <el-table
         border
         :cell-class-name="projectCellClassName"
