@@ -84,7 +84,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form-item label="结论" prop="conclusion" style="margin-top: 10px">
+      <el-form-item label="结论" prop="status" style="margin-top: 10px">
         <el-radio-group v-model="qualityInspectionForm.status" @change="handleUpdateInspection">
           <el-radio :value="0">通过</el-radio>
           <el-radio :value="1">不通过</el-radio>
@@ -139,7 +139,7 @@ watch(() => props.modelValue, (value) => {
 })
 const qualityInspectionFormRef = ref<FormInstance>()
 const qualityInspectionFormRules = reactive({
-  conclusion: [
+  status: [
     { required: true, message: '请选择结论', trigger: 'change' },
   ],
 })
@@ -235,14 +235,18 @@ const handleUpdateInspection = async () => {
 }
 // 质检报告提交
 const handleSubmitInspection = async () => {
-  const { data } = await submitPackageInspection({
-    reportId: reportId.value!,
-    type: 1
+  qualityInspectionFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      const { data } = await submitPackageInspection({
+        reportId: reportId.value!,
+        type: 1
+      })
+      if (data) {
+        $baseMessage('打包质检报告提交成功', 'success')
+        visible.value = false
+      }
+    }
   })
-  if (data) {
-    $baseMessage('打包质检报告提交成功', 'success')
-    visible.value = false
-  }
 }
 // 质检报告修改输入失焦事件
 const clickQualityInspectionCancel = async (event: any, value: any) => {

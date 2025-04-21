@@ -92,7 +92,11 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="材质构成（用于报关，需要精确填写）" prop="materialComposition" style="margin-bottom: 10px"/>
+      <el-form-item label="" prop="materialComposition" style="margin-bottom: 10px">
+        <template #label>
+          材质构成（用于报关，需要精确填写）<span style="color: var(--el-color-danger)">*</span>
+        </template>
+      </el-form-item>
       <el-table 
         border 
         :cell-class-name="clearPadding"
@@ -219,14 +223,18 @@
     </el-form>
     
     <el-form 
+      ref="inspectionResultsFormRef" 
       label-position="left" 
       label-width="auto" 
       :model="inspectionResultsForm" 
       require-asterisk-position="right" 
-      :rules="inspectionResultsFormRules" 
+      :rules="inspectionResultsFormRules"
       style="margin: 20px 20px 0 20px"
     >
-      <el-form-item label="基础图片" prop="baseImage" style="margin-bottom: 50px">
+      <el-form-item label="基础图片" style="margin-bottom: 50px" validate-position="right">
+        <template #label>
+          基础图片<span style=" margin-left: 4px;color: var(--el-color-danger)">*</span>
+        </template>
         <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
           <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell" >
             <!-- 有图片时显示 -->
@@ -248,10 +256,10 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="零件细节" prop="partDetails" >
+      <el-form-item label="零件细节">
         <template #label>
           <el-tooltip content="" effect="dark" placement="top">
-            <div class="questionIcon">零件细节<el-icon><question-filled /></el-icon> </div>
+            <div class="questionIcon">零件细节<el-icon><question-filled /></el-icon><span style=" margin-left: 4px;color: var(--el-color-danger)">*</span></div>
             <template #content>
               <div class="custom-tooltip">展示产品局部细节，重要技术参数细节(尺寸/厚度/重量/粘接处/焊接处/贴边处/表面处理等)</div>
             </template>
@@ -276,10 +284,10 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="成品组装图" prop="finishedImage" >
+      <el-form-item label="成品组装图">
         <template #label>
           <el-tooltip content="" effect="dark" placement="top">
-            <div class="questionIcon">成品组装图<el-icon><question-filled /></el-icon> </div>
+            <div class="questionIcon">成品组装图<el-icon><question-filled /></el-icon><span style=" margin-left: 4px;color: var(--el-color-danger)">*</span></div>
             <template #content>
               <div class="custom-tooltip">展示产品组装后的图片，多角度拍摄(包含整体正面、侧面、背面、顶部等)</div>
             </template>
@@ -424,29 +432,57 @@ const imagePreviewClose = () => {
 const closeQualityInspection = () => {
   visible.value = false
 }
+const inspectionResultsFormRef = ref<FormInstance>()
 const inspectionResultsForm = reactive({
   remark: '',
   packageCount: '',
   status: 0,
   reason: '',
   processingMethod: '',
-  finishedImage: '',
-  partDetails: '',
-  baseImage: ''
 })
 const inspectionResultsFormRules = reactive({
   packageCount: [{ required: true, message: '请输入产品经理打包套数', trigger: 'blur' }],
   status: [{ required: true, message: '请选择结论', trigger: 'change' }],
-  reason: [{ required: true, message: '请输入原因', trigger: 'blur' }],
-  processingMethod: [{ required: true, message: '请输入处理方式', trigger: 'blur' }],
-  finishedImage: [{ required: true, message: '请上传成品组装图', trigger: 'change' }],
-  partDetails: [{ required: true, message: '请上传零件细节图', trigger: 'change' }],
-  baseImage: [{ required: true, message: '请上传基础图片', trigger: 'change' }],
+  reason: [{
+    required: true,
+    validator: (rule: any, value: any, callback: any) => {
+      if (inspectionResultsForm.status === 1 && !inspectionResultsForm.reason) {
+        callback(new Error('请输入原因'))
+      } else {
+        callback()
+      }
+    },
+    trigger: 'blur'
+  }],
+  processingMethod: [{
+    required: true,
+    validator: (rule: any, value: any, callback: any) => {
+      if (inspectionResultsForm.status === 1 && !inspectionResultsForm.processingMethod) {
+        callback(new Error('请输入处理方式'))
+      } else {
+        callback()
+      }
+    },
+    trigger: 'blur'
+  }],
 })
 const qualityInspectionFormRules = reactive({
-  packingSize: [{ required: true, message: '请输入包装尺寸', trigger: 'blur' }],
+  packingSize: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (!qualityInspectionForm.packageLength || 
+            !qualityInspectionForm.packageWidth || 
+            !qualityInspectionForm.packageHeight) {
+          callback(new Error('请填写完整包装尺寸'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+      required: true,
+    }
+  ],
   packageWeight: [{ required: true, message: '请输入包装重量', trigger: 'blur' }],
-  materialComposition: [{ required: true, message: '', trigger: 'blur' }],
 })
 // 新品质检修改
 const handleUpdateInspection = async () => {
@@ -539,15 +575,61 @@ const showUploadDialog = (type: number, index: number) => {
   imageUploadType.value = type
   imageUploadIndex.value = index
 }
+const validate = async () => {
+  try {
+    // 校验上面的表单
+    const formValid = await qualityInspectionFormRef.value?.validate()
+    if (!formValid) return false
+
+    // 校验表格数据
+    const hasEmptyMaterial = componentList.value.some(item => !item.material1 || !item.weight1)
+    if (hasEmptyMaterial) {
+      $baseMessage('材质1名称和材质1重量(g)不能为空', 'error')
+      return false
+    }
+
+    // 校验基础图片是否全部上传
+    const hasAllBaseImages = basePictureImgList.value.every(item => item.imgUrl)
+    if (!hasAllBaseImages) {
+      $baseMessage('请上传完整的基础图片', 'error')
+      return false
+    }
+
+    // 校验零件细节图片
+    if (componentDetailImgList.value.length === 0) {
+      $baseMessage('请上传零件细节图片', 'error')
+      return false
+    }
+
+    // 校验成品组装图片
+    if (finishedImgList.value.length === 0) {
+      $baseMessage('请上传成品组装图片', 'error')
+      return false
+    }
+
+    // 校验下面的表单
+    const resultsFormValid = await inspectionResultsFormRef.value?.validate()
+    if (!resultsFormValid) return false
+
+    return true
+  } catch (error) {
+    console.error('校验失败:', error)
+    return false
+  }
+}
 // 质检报告提交
 const handleSubmitInspection = async () => {
-  const { data } = await submitPackageInspection({
-    reportId: reportId.value,
-    type: 0
-  })
-  if (data) {
-    $baseMessage('质检报告提交成功', 'success')
-    visible.value = false
+  // 校验
+  const isValid = await validate()
+  if (isValid) {
+    const { data } = await submitPackageInspection({
+      reportId: reportId.value,
+      type: 0
+    })
+    if (data) {
+      $baseMessage('质检报告提交成功', 'success')
+      visible.value = false
+    }
   }
 }
 
