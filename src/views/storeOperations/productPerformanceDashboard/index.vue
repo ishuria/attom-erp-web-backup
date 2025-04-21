@@ -425,9 +425,9 @@
                       <vab-echarts-chart-pie :data="row.pieList" />
                     </div>
                   </span>
-                  <span v-if="item.label === '季节系数'">
+                  <span v-if="item.label === '季节趋势'">
                     <div style="width: 100%; height: 50px">
-                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row.seasonalCoefficient?.actualList || []" />
+                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
                     </div>
                   </span>
                   <span v-if="item.label === '当前售价'">
@@ -885,9 +885,9 @@
                       <vab-echarts-chart-pie :data="row?.pieList" />
                     </div>
                   </span>
-                  <span v-if="item.label === '季节系数'">
+                  <span v-if="item.label === '季节趋势'">
                     <div style="width: 100%; height: 50px">
-                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row.seasonalCoefficient?.actualList || []" />
+                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
                     </div>
                   </span>
                   <span v-if="item.label === '小类排名'">
@@ -1374,8 +1374,8 @@
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
-    <!-- 季节系数 -->
-    <vab-dialog v-model="seasonalVisible" title="季节系数" width="40%" @open="handleSeasonalOpened">
+    <!-- 季节趋势 -->
+    <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
@@ -1567,7 +1567,7 @@ let chartObserver3: ResizeObserver
 const option1 = ref<any>({})
 const option2 = ref<any>({})
 const option3 = ref<any>({})
-const seasonalXData = months.map((item) => item.label)
+
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const router = useRouter()
 // 运营备注
@@ -2337,7 +2337,7 @@ const cellClick = async (row: any, column: any) => {
       remark.value = row.operationRemark
       break
     }
-    case '季节系数': {
+    case '季节趋势': {
       seasonalVisible.value = true
       _seasonalCoefficient = row.seasonalCoefficient
       break
@@ -2606,7 +2606,20 @@ const fetchOperateUserList = async () => {
   operateUserList.value = data
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
-
+const getCurrentMonthIndex = () => {
+  return new Date().getMonth() // 获取当前月份索引(0-11)
+}
+const seasonalXData = computed(() => {
+  const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+  const currentMonthIndex = getCurrentMonthIndex()
+  // 从当前月份开始重新排列月份数组
+  return [...months.slice(currentMonthIndex), ...months.slice(0, currentMonthIndex)]
+})
+const reorderSeasonalData = (data: number[]) => {
+  if (data.length !== 12) return data
+  const currentMonthIndex = getCurrentMonthIndex()
+  return [...data.slice(currentMonthIndex), ...data.slice(0, currentMonthIndex)]
+}
 const fetchData = async () => {
   if (listLoading.value) return
   listLoading.value = true
@@ -2618,6 +2631,7 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
+    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
     processField(item, 'developName', 2)
     if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
@@ -2653,6 +2667,7 @@ const fetchAsinData = async () => {
   total.value = data.total
   asinList.value = data.list
   asinList.value.forEach((item) => {
+    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)

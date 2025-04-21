@@ -22,6 +22,17 @@ const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 
 const option = reactive<any>({
+  tooltip: {
+    trigger: 'axis',
+    show: true,
+    confine: true,
+    formatter: '{c}',
+    textStyle: {
+      fontSize: 14, // 设置字体大小
+    },
+    padding: [0, 5], // 设置内边距，调整提示框的宽高
+    borderColor: '#4e88f3'
+  },
   grid: {
     top:1,
     left: 1,
