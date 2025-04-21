@@ -332,6 +332,11 @@ export const orderColumns = [
     minWidth: 115,
   },
   {
+    label: '原始今补',
+    prop: 'originalNowSupplement',
+    minWidth: 100,
+  },
+  {
     label: '今补',
     prop: 'nowSupplement',
     minWidth: 90,
