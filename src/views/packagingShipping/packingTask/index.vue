@@ -1942,6 +1942,7 @@ const handleShowQualityProject = async () => {
         showCancelButton: false,
         showClose: false,
         type: 'warning',
+        customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
       }
     )
     .then(() => {

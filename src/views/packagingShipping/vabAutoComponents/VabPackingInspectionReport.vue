@@ -1,6 +1,6 @@
 <template>
  <!-- 打包质检报告 -->
- <vab-dialog v-model="visible" title="打包质检报告" top="10vh" width="40%" @close="closeQualityInspection">
+ <vab-dialog v-model="visible" title="打包质检报告" top="10vh" width="50%" @close="closeQualityInspection">
     <el-form
       ref="qualityInspectionFormRef"
       label-position="left"
@@ -25,7 +25,7 @@
       <el-divider >质检结果</el-divider>
       <el-table
         border
-        :cell-class-name="clearPadding"
+        
         :cell-style="qualityInspectionCellStyle"
         class="quality-inspection"
         :data="inspectionList"
@@ -50,25 +50,25 @@
             <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="上传图片" width="76" >
-          <template #header>
-            上传<br />图片
-          </template>
+        <el-table-column label="上传图片" :width="getImageColumnWidth()" >
           <template #default="{ row }">
-            <div v-if="row.isUploadImages === 1" class="image-cell">
-              <!-- 有图片时显示 -->
-              <div v-if="row.imgUrl" class="image-preview">
-                <img alt="" :src="row.imgUrl" />
-                <div class="image-actions">
-                  <el-icon @click="showPreviewImage(row.imgUrl)"><zoom-in /></el-icon>
-                  <el-icon @click="handleImageRemove(row)"><delete /></el-icon>
+            <div v-if="row.isUploadImages === 1" style="display: flex; gap: 8px; align-items: center">
+                <div v-for="(image, index) in row.images" :key="index" class="image-cell">
+                  <div class="image-preview">
+                    <img :alt="image.id" :src="image.imgUrl" />
+                    <div class="image-actions">
+                      <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
+                      <el-icon @click="handleImageRemove(image, row)"><delete /></el-icon>
+                    </div>
+                  </div>
+                </div>
+                <!-- 添加按钮 -->
+                <div class="image-cell">
+                  <div class="upload-placeholder" @click="showUploadDialog(row)">
+                    <el-icon><plus /></el-icon>
+                  </div>
                 </div>
               </div>
-              <!-- 无图片时显示 -->
-              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
-                <el-icon><plus /></el-icon>
-              </div>
-            </div>
           </template>
         </el-table-column>
         <el-table-column label="备注" min-width="150" prop="remark">
@@ -98,7 +98,7 @@
       </div>
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :initial-index="currentPreviewIndex"  :url-list="imagePreviewList" @close="imagePreviewClose" />
   <!-- 上传图片 -->
   <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
 </template>
@@ -150,14 +150,31 @@ const imagePreviewList = ref<string[]>([])
 const imageUploadVisible = ref(false)
 const id = ref<number>(0)
 let _row: any
+const currentPreviewIndex = ref<number>(0)
+const getImageColumnWidth = (): number => {
+  const imageWidth = 75 // 每张图片宽度
+  let maxWidth = 0
+  inspectionList.value.forEach((row) => {
+    const imageCount = row?.images?.length || 0
+    let totalWidth = 0
+    if (imageCount === 5) totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
+    else totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    if (totalWidth > maxWidth) {
+      maxWidth = totalWidth
+    }
+  })
+  return maxWidth
+}
 const showUploadDialog = (row: any) => {
   id.value = row.id
   _row = row
   imageUploadVisible.value = true
 }
-const showPreviewImage = (url: string) => {
+const showPreviewImage = (images: any[], currentIndex: number) => {
+  imagePreviewList.value = images.map(img => img.imgUrl)
   imagePreviewVisible.value = true
-  imagePreviewList.value = [url]
+  // 设置当前预览图片的索引
+  currentPreviewIndex.value = currentIndex
 }
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -182,8 +199,7 @@ const uploadImage = async (file: File) => {
 
     const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
     if (data) {   
-      _row.imgUrl = data.imgUrl
-      _row.imgId = data.id
+      _row.images.push(data)
       $baseMessage('图片上传成功！', 'success')
       imageUploadVisible.value = false
     } else {
@@ -193,12 +209,13 @@ const uploadImage = async (file: File) => {
     console.error(error)
   }
 }
-const handleImageRemove = async (row: any) => {
+const handleImageRemove = async (image: any, row: any) => {
   try {
     $baseConfirm('确定删除图片吗？', null,  async () => {
-      const { data } = await deletePackageInspectionItemImage({ id: row.imgId  })
+      const { data } = await deletePackageInspectionItemImage({ id: image.id  })
       if (data) {
-        row.imgUrl = ''
+        const index = row.images.findIndex((item: any) => item.id === image.id)
+        row.images.splice(index, 1)
         $baseMessage('图片删除成功！','success')
       }
     })
@@ -300,12 +317,12 @@ const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTab
     focusAndSelectInput(cell)
   }
 }
-const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.column.label === '上传图片') {
-    return 'clear-padding'
-  }
-  return ''
-}
+// const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
+//   if (data.column.label === '上传图片') {
+//     return 'clear-padding'
+//   }
+//   return ''
+// }
 
 const fetchData = async () => {
   const { data } = await getPackageInspection({
