@@ -516,21 +516,21 @@ const isValid = () => {
     return
   }
   // 判断选中的行的是否都是已归档到退税管理
-  // const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
-  // if (!valid) {
-  //   $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成报关资料！', 'error')
-  //   return
-  // }
-  // const valid2 = selectRows.value.every((item: any) => item.outboundStatus === 0)
-  // if (!valid2) {
-  //   $baseMessage('选中的行状态为‘已出库归档’时，无法生成报关资料！', 'error')
-  //   return
-  // }
-  const valid = selectRows.value.every((item: any) => item.packArchiveStatus === 1)
+  const valid = selectRows.value.every((item: any) => item.taxRefundStatus === 1)
   if (!valid) {
-    $baseMessage('选中的行状态为‘待打包归档’时，无法生成报关资料！', 'error')
+    $baseMessage('选中的行状态为‘待归档到退税管理’时，无法生成报关资料！', 'error')
     return
   }
+  const valid2 = selectRows.value.every((item: any) => item.outboundStatus === 0)
+  if (!valid2) {
+    $baseMessage('选中的行状态为‘已出库归档’时，无法生成报关资料！', 'error')
+    return
+  }
+  // const valid = selectRows.value.every((item: any) => item.packArchiveStatus === 1)
+  // if (!valid) {
+  //   $baseMessage('选中的行状态为‘待打包归档’时，无法生成报关资料！', 'error')
+  //   return
+  // }
   const allContractNumbers = selectRows.value.map((item: any) => item.contractNumber);
   const hasDifferentContractNumbers = new Set(allContractNumbers).size > 1;
 

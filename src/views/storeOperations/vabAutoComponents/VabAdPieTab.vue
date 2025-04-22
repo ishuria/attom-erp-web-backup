@@ -1,7 +1,7 @@
 <template>
   <div class="pie-container">
     <vab-card style="height: 400px;">
-      <div style="display: flex; height: 100%; width: 100%">
+      <div style="display: flex; width: 100%; height: 100%">
         <div style="width: 43%">
           <div style="text-align: left;">
             <el-form inline>
