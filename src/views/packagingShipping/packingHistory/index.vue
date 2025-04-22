@@ -1,7 +1,16 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-right-panel :span="24">
+      <vab-query-form-left-panel>
+        <el-space :size="16" style="align-items: center;">
+          <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
+          <el-divider direction="vertical" style="height: 34px;"/>
+          <el-statistic class="compact-statistic" title="总重量(kg)" :value="totalWeight" />
+          <el-divider direction="vertical" style="height: 34px;"/>
+          <el-statistic class="compact-statistic" title="总体积(m³)" :value="totalVolume" />
+        </el-space>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel >
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -40,7 +49,7 @@
       <el-table-column label="高(cm)" min-width="90" prop="height"/>
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
-      <el-table-column label="箱规号" min-width="110" prop="encasementNo"/>
+      <el-table-column label="箱规号" min-width="125" prop="encasementNo"/>
       <el-table-column label="站点" min-width="130" prop="planSiteName"/>
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
@@ -99,9 +108,9 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
-import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
-import { getShippedEncasementList } from '/@/api/devlocal/encasement'
 import { downloadFileP } from '/@/api/devlocal/download'
+import { getShippedEncasementList } from '/@/api/devlocal/encasement'
+import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -131,6 +140,23 @@ const queryData = () => {
   fetchData()
 }
 const selectRows = ref<any>([])
+// 总箱数
+const totalBoxes = computed(() => {
+  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
+    return total + Number(item.numberOfBoxes)
+  }, 0)
+})
+// 总重量
+const totalWeight = computed(() => {
+  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
+    return total + Number(item.totalWeight)
+  }, 0).toFixed(2)
+})
+const totalVolume = computed(() => {
+  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
+    return total + Number(item.totalVolume)
+  }, 0).toFixed(2)
+})
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
@@ -240,5 +266,18 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
+    }
+  }
+  
 }
 </style>
