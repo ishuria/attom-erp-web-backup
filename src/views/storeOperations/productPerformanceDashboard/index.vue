@@ -427,7 +427,7 @@
                   </span>
                   <span v-if="item.label === '季节趋势'">
                     <div style="width: 100%; height: 50px">
-                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
+                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._referenceList || []" />
                     </div>
                   </span>
                   <span v-if="item.label === '当前售价'">
@@ -887,7 +887,7 @@
                   </span>
                   <span v-if="item.label === '季节趋势'">
                     <div style="width: 100%; height: 50px">
-                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
+                      <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._referenceList || []" />
                     </div>
                   </span>
                   <span v-if="item.label === '小类排名'">
@@ -2631,7 +2631,7 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
-    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+    item._referenceList = reorderSeasonalData(item.seasonalCoefficient.referenceList)
     processField(item, 'developName', 2)
     if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
@@ -2667,7 +2667,7 @@ const fetchAsinData = async () => {
   total.value = data.total
   asinList.value = data.list
   asinList.value.forEach((item) => {
-    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+    item._referenceList = reorderSeasonalData(item.seasonalCoefficient.referenceList)
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)

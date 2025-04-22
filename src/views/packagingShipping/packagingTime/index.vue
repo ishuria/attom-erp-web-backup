@@ -416,6 +416,7 @@ const fetchData = async () => {
     item.sku = item.sku.replaceAll(',', '<br>');
     item.productName = item.productName.replaceAll(',', '<br>');
     item.packTaskId = item.packTaskId.replaceAll(',', '<br>');
+    item.workerHouse = item.workerHouse.toFixed(1)
   })
   listLoading.value = false
 }

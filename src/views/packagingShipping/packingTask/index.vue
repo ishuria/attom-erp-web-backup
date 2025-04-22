@@ -7,7 +7,7 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
                 <!-- <el-button class="button-margin" type="warning" @click="handleOpenTest">测试模拟打卡</el-button> -->
               </el-form-item>
@@ -183,7 +183,7 @@
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowCurrentTask">当前任务加人</el-button>
                 <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -349,7 +349,7 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -515,7 +515,7 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -681,7 +681,7 @@
             <el-form inline>
               <el-form-item>
                 <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -846,7 +846,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班人员</el-button>
+                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
