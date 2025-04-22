@@ -2,8 +2,8 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
-        <el-button type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
+        <el-button :loading="declarationLoading" type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
+        <el-button :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -347,6 +347,7 @@
       v-model="confirmTwiceVisible"
       :title="`确定要生成${confirmTwiceTitle}资料吗？`"
       width="20%"
+      @close="closeGenerate"
     >
       <el-table
         border
@@ -362,8 +363,8 @@
         
       </el-table>
       <template #footer>
-        <el-button @click="confirmTwiceVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleDownload">确定</el-button>
+        <el-button @click="closeGenerate">取消</el-button>
+        <el-button :loading="confirmTwiceTitle === '报关' ? declarationLoading : clearanceLoading" type="primary" @click="handleDownload">确定</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -403,6 +404,13 @@ const _row = ref<any>(null)
 const confirmTwiceVisible = ref<boolean>(false)
 const confirmTwiceTitle = ref<string>('')
 const confirmTwiceList = ref<any>([])
+const closeGenerate = () => {
+  if (confirmTwiceTitle.value === '报关')
+    declarationLoading.value = false
+  else
+    clearanceLoading.value = false
+  confirmTwiceVisible.value = false
+}
 const showModify = (row: any) => {
   modifyVisible.value = true
   _row.value = row
@@ -467,6 +475,7 @@ const handleCancelEncasement = async (row: any) => {
 }
 const handleDownload = async () => {
   if (confirmTwiceTitle.value === '报关') {
+    declarationLoading.value = true
     const ids = selectRows.value.map((item: any) => item.id).join(',')
     const { data } = await generateCustomsDeclaration({
       ids
@@ -487,7 +496,9 @@ const handleDownload = async () => {
         }
       })
     }
+    declarationLoading.value = false
   } else {
+    clearanceLoading.value = true
     const ids = selectRows.value.map((item: any) => item.id).join(',')
     const { data } = await generateTaxRefund({
       ids
@@ -508,6 +519,7 @@ const handleDownload = async () => {
         }
       })
     }
+    clearanceLoading.value = false
   }
 }
 const isValid = () => {
@@ -540,6 +552,8 @@ const isValid = () => {
   }
   confirmTwiceVisible.value = true
 }
+const declarationLoading = ref<boolean>(false)
+const clearanceLoading = ref<boolean>(false)
 // 报关资料生成
 const handleGenerateDeclaration = () => {
   confirmTwiceTitle.value = '报关'
