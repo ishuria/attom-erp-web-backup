@@ -2,6 +2,7 @@
   <vab-dialog
     v-model="dflag"
     class="dialog"
+    :draggable="false"
     title="匹配"
     top="10vh"
     width="80%"
