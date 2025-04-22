@@ -231,6 +231,15 @@ export interface IReleaseOperationPlanPoReq {
   asinId: number
   sku: string
   number: number
+  asin?: string
+  site?: number
+} 
+export interface IReleaseOperationPlanPoRes {
+  data: {
+    nowSupplementAdvCalcu?: number
+    nowSupplementCalcu?: number
+    planPoPurchaseSkuNumber?: number
+  }
 } 
 export interface IGetOperationOrderSkuReq {
   id: number

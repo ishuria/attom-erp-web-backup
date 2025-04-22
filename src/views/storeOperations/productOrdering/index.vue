@@ -563,12 +563,17 @@ const handleReleaseOrder = async () => {
     const { data } = await releaseOperationPlanPo({
       asinId: asinId.value,
       sku: releaseOrderForm.sku,
-      number: releaseOrderForm.number
+      number: releaseOrderForm.number,
+      asin: copyRow.asin,
+      site: copyRow.site
     })
     
     if (data) {
       $baseMessage('发布订货成功！', 'success')
-      fetchData()
+      // fetchData()
+      copyRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
+      copyRow.nowSupplementCalcu = data.nowSupplementCalcu
+      copyRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
     }
   } catch (error) {
     console.error('发布订货失败:', error)

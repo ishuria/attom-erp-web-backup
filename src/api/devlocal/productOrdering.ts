@@ -9,7 +9,8 @@ import type {
   IGetOperationOrderSkuRes,
   IGetOperationOrderSpringFestival,
   IGetOperationOrdersSmoothness,
-  IReleaseOperationPlanPoReq
+  IReleaseOperationPlanPoReq,
+  IReleaseOperationPlanPoRes
 } from '/@/type/storeOperation/productOrdering'
 
 // 产品订货-查询列表
@@ -58,7 +59,7 @@ export function getOperationOrderShippingInspection(): Promise<{ data: any }> {
   })
 }
 // 产品订货-发布订货提交
-export function releaseOperationPlanPo(data: IReleaseOperationPlanPoReq): Promise<{ data: boolean }> {
+export function releaseOperationPlanPo(data: IReleaseOperationPlanPoReq): Promise<IReleaseOperationPlanPoRes> {
   return request({
     url: `${BASE_API}/operation/release/planPo`,
     method: 'post',
