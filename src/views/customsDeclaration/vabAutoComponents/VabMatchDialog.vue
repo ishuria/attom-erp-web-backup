@@ -74,8 +74,8 @@
     />
     <template #footer>
       <div style="text-align: center;">
-        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="danger" @click="handleUnlockAndClear">清空解锁</el-button>
-        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" type="success" @click="handleConfirmCheckMatch">确认匹配结果</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" :loading="unlockLoading" type="danger" @click="handleUnlockAndClear">清空解锁</el-button>
+        <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" :loading="confirmMatchLoading" type="success" @click="handleConfirmCheckMatch">确认匹配结果</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -1033,8 +1033,11 @@ const handleDelCheckMatch = async (row: IGetCheckMatchList) => {
     console.error(error)
   }
 }
+// 清空解锁loading
+const unlockLoading = ref<boolean>(false)
 // 清空解锁并取消
 const handleUnlockAndClear = async () => {
+  unlockLoading.value = true
   const setIds = new Set()
   list.value.forEach((item: IGetCheckMatchList) => {
     setIds.add(item.id)
@@ -1051,10 +1054,15 @@ const handleUnlockAndClear = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    unlockLoading.value = false
   }
 }
+// 确实匹配loading
+const confirmMatchLoading = ref<boolean>(false)
 // 确认提交
 const handleConfirmCheckMatch = async () => {
+  confirmMatchLoading.value = true
   try {
     const { data } = await submitMatchShipment({
       id: props.shipId
@@ -1065,6 +1073,8 @@ const handleConfirmCheckMatch = async () => {
     }
   } catch (error) {
     console.error(error)
+  } finally {
+    confirmMatchLoading.value = false
   }
 }
 const idList = ref<any[]>([])
