@@ -46,9 +46,10 @@
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
+      @sort-change="handleSortChange"
     >
       <el-table-column fixed="left" type="selection" />
-      <el-table-column label="发货计划" prop="shipmentPlanDate" width="115">
+      <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
         <template #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
@@ -58,7 +59,7 @@
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight" :width="flexColumnWidth(list, '毛重(kg)', 'grossWeight')"/>
+      <el-table-column label="毛重(kg)" min-width="100" prop="grossWeight" sortable="custom" :width="flexColumnWidth(list, '毛重(kg)-----', 'grossWeight')"/>
       <el-table-column label="长(cm)" prop="length" :width="flexColumnWidth(list, '长(cm)-', 'length')"/>
       <el-table-column label="宽(cm)" prop="width" :width="flexColumnWidth(list, '宽(cm)-', 'width')"/>
       <el-table-column label="高(cm)" prop="height" :width="flexColumnWidth(list, '高(cm)-', 'height')"/>
@@ -74,7 +75,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
+      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description--', 'description')"/>
       <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
         <template #default="{ row }">
           <el-input-number 
@@ -450,7 +451,6 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
@@ -481,6 +481,7 @@ import {
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
+import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -497,6 +498,33 @@ const queryForm = reactive<IGetEncasementListReq>({
   pageNo: 1,
   pageSize: 20
 })
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data
+  // console.log(order)
+  if (prop === 'shipmentPlanDate') {
+    if (!order) {
+      if (queryForm.shipmentDataSort === 0) {
+        column.order = 'descending'
+      } else if (queryForm.shipmentDataSort === 1) {
+        column.order = 'ascending'
+      }
+    } 
+    queryForm.shipmentDataSort = column.order === "ascending" ? 0 : 1
+    queryForm.grossWeightSort = undefined
+  }
+  else if (prop === 'grossWeight') {
+    if (!order) {
+      if (queryForm.grossWeightSort === 0) {
+        column.order = 'descending'
+      } else if (queryForm.grossWeightSort === 1) {
+        column.order = 'ascending'
+      }
+    } 
+    queryForm.grossWeightSort = column.order === "ascending" ? 0 : 1
+    queryForm.shipmentDataSort = undefined
+  }
+  queryData()
+}
 const printCountVisible = ref<boolean>(false)
 const printForm = reactive<{ count: number | undefined }>({
   count: undefined

@@ -55,11 +55,11 @@ import type {
  * @description 装箱-列表查询
  * @returns IGetEncasementListRes
  */
-export const getEncasementList = (params: IGetEncasementListReq): Promise<IGetEncasementListRes> => {
+export const getEncasementList = (data: IGetEncasementListReq): Promise<IGetEncasementListRes> => {
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 

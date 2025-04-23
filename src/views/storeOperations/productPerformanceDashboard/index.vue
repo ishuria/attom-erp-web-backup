@@ -129,6 +129,7 @@
               :cell-style="cellStyle"
               class="noneHoverTable"
               :data="list"
+              :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
               :header-cell-class-name="headerCell"
               :header-cell-style="{ textAlign: 'center' }"
               stripe
@@ -142,7 +143,7 @@
                 :label="item.label"
                 :min-width="handleWidth(item)"
                 :prop="item.prop"
-                :sortable="item.sortable"
+                :sortable="item.sortable ? 'custom' : false"
                 :width="item.width"
               >
                 <template #header>
@@ -1798,22 +1799,47 @@ let _seasonalCoefficient = {
 } 
 const sortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
+  console.log(prop, order)
   queryForm.orderByField = prop
-  queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
-  // console.log(order)
+  if (!order) {
+    if (queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+   // 直接根据当前的 order 状态设置方向
+  console.log(queryForm.orderDirection)
   queryData()
 }
 const asinSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
+  // console.log(column, prop, order)
   asinQueryForm.orderByField = prop
-  asinQueryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (asinQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (asinQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  asinQueryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
   // console.log(order)
   queryAsinData()
 }
 const pAsinSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
+  // console.log(column, prop, order)
   pAsinQueryForm.orderByField = prop
-  pAsinQueryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (pAsinQueryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (pAsinQueryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  pAsinQueryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
   // console.log(order)
   queryPAsinData()
 }

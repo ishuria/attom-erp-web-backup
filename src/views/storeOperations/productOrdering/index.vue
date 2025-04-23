@@ -58,7 +58,8 @@
       border
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
-      class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
+      class="noneHoverTable" :data="list" :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }"
+      :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       @row-click="handleRowClick"
       @sort-change="handleSortChange"
@@ -70,7 +71,7 @@
         :label="item.label"
         :min-width="handleWidth(item)"
         :prop="item.prop"
-        :sortable="item.sortable"
+        :sortable="item.sortable ? 'custom' : false"
         :width="item.width"
       >
         <template #header>
@@ -417,7 +418,7 @@ import {
 } from '/@/api/devlocal/productOrdering'
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
-import type { IGetOperationOrderList, IGetOperationOrderListReq } from '/@/type/storeOperation/productOrdering'
+import type { IGetOperationOrderList } from '/@/type/storeOperation/productOrdering'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
@@ -491,7 +492,15 @@ const currentRowId = ref<number | undefined>(undefined)
 const handleSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
   queryForm.orderByField = prop
-  queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
   queryData()
 }
 const handleRowClick = (row: any, column: any, event: Event) => {

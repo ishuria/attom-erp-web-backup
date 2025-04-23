@@ -2,8 +2,8 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
-        <el-button type="primary" @click="handleStatus2Change">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>
+        <el-button :loading="status1Loading" type="primary" @click="handleStatus1Change">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
+        <el-button :loading="status2Loading" type="primary" @click="handleStatus2Change">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>
         <el-button type="primary" @click="showPriceCoefficientSetting">价格系数设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -444,13 +444,19 @@ const handleCurrentChange = (value: number) => {
   })
   fetchData()
 }
+const status1Loading = ref<boolean>(false)
+const status2Loading = ref<boolean>(false)
 const handleStatus1Change = async () => {
+  status1Loading.value = true
   queryForm.status1 === 0 ? (queryForm.status1 = 1) : (queryForm.status1 = 0)
-  fetchData()
+  await fetchData()
+  status1Loading.value = false
 }
 const handleStatus2Change = async () => {
+  status2Loading.value = true
   queryForm.status2 === 0 ? (queryForm.status2 = 1) : (queryForm.status2 = 0)
-  fetchData()
+  await fetchData()
+  status2Loading.value = false
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (
