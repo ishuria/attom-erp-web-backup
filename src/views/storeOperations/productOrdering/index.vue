@@ -61,6 +61,7 @@
       class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       @row-click="handleRowClick"
+      @sort-change="handleSortChange"
     >
       <el-table-column
         v-for="(item, index) in orderColumns"
@@ -69,6 +70,7 @@
         :label="item.label"
         :min-width="handleWidth(item)"
         :prop="item.prop"
+        :sortable="item.sortable"
         :width="item.width"
       >
         <template #header>
@@ -436,12 +438,14 @@ const imagePreviewList = ref<string[]>([])
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const listLoading = ref<boolean>(false)
-const queryForm = reactive<IGetOperationOrderListReq>({
+const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
   operationUserId: -1,
-  sites: ''
+  sites: '',
+  orderByField: 'originalNowSupplement',
+  orderDirection: 'desc'
 })
 const total = ref<number>(0)
 const site = ref<number[]>([])
@@ -484,6 +488,12 @@ const aclStore = useAclStore()
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
 
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  queryForm.orderByField = prop
+  queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  queryData()
+}
 const handleRowClick = (row: any, column: any, event: Event) => {
   currentRowId.value = row.id
 }

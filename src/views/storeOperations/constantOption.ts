@@ -319,12 +319,14 @@ export const orderColumns = [
   {
     label: '推荐#',
     prop: 'recommendCount',
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true,
   },
   {
     label: '装箱#',
     prop: 'encasementCount',
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true,
   },
   {
     label: '最晚补货',
@@ -334,7 +336,8 @@ export const orderColumns = [
   {
     label: '原始今补',
     prop: 'originalNowSupplement',
-    minWidth: 100,
+    minWidth: 120,
+    sortable: true,
   },
   {
     label: '今补',
@@ -374,7 +377,7 @@ export const orderColumns = [
   {
     label: '运营',
     prop: 'operationUserName',
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '运营分类',
