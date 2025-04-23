@@ -49,7 +49,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.productName }}
+            </template>
+          </el-table-column>
           <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
@@ -150,7 +154,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.productName }}
+            </template>
+          </el-table-column>
           <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
@@ -303,7 +311,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.productName }}
+            </template>
+          </el-table-column>
           <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
@@ -421,7 +433,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.productName }}
+            </template>
+          </el-table-column>
           <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
@@ -522,7 +538,11 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" min-width="200" prop="sku"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.productName }}
+            </template>
+          </el-table-column>
           <el-table-column label="停产" min-width="60" prop="productionHaltStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
