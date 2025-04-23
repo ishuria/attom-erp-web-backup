@@ -384,11 +384,9 @@
     <!-- 产品开发设计修改 -->
     <vab-dialog v-model="developUpdateVisible" title="产品开发设计修改" width="20%">
       <el-form
-        ref="developFormRef"
         label-position="right"
         label-width="auto"
         :model="developForm"
-        :rules="developFormRules"
         style="margin: 0"
       >
         <el-form-item label="基础比例" prop="baseProportion">
@@ -467,8 +465,6 @@ defineOptions({
   name: 'CommissionTaskSummary',
 })
 
-const router = useRouter()
-const route = useRoute()
 const activeName = ref<number>(0)
 const list = ref<IGetCommissionTaskPictureList[]>([])
 const longList = ref<IGetLongCommissionTaskList[]>([])
@@ -523,11 +519,11 @@ const longFormRules = reactive<FormRules>({
 })
 const developUpdateVisible = ref<boolean>(false)
 const developForm = reactive<any>({})
-const developFormRef = ref<FormInstance>()
-const developFormRules = reactive<FormRules>({
-  baseProportion: [{ required: true, message: '请填写基础比例', trigger: 'blur' }],
-  rewardProportion: [{ required: true, message: '请填写超额完成奖励', trigger: 'blur' }],
-})
+// const developFormRef = ref<FormInstance>()
+// const developFormRules = reactive<FormRules>({
+//   baseProportion: [{ required: true, message: '请填写基础比例', trigger: 'blur' }],
+//   rewardProportion: [{ required: true, message: '请填写超额完成奖励', trigger: 'blur' }],
+// })
 const costUpdateVisible = ref<boolean>(false)
 const costForm = reactive<any>({})
 const costFormRef = ref<FormInstance>()
@@ -623,20 +619,16 @@ const handlePassCost = async (row: IGetReductionCostList) => {
   })
 }
 const handleConfirmDevelopUpdate = async () => {
-  developFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await updateDevelopDesignTask({
-        id: _id.value,
-        baseProportion: Number(developForm.baseProportion) / 100,
-        rewardProportion: Number(developForm.rewardProportion) / 100,
-      })
-      if (data) {
-        $baseMessage('修改产品开发设计任务成功！', 'success')
-        developUpdateVisible.value = false
-        developQueryData()
-      }
-    }
+  const { data } = await updateDevelopDesignTask({
+    id: _id.value,
+    baseProportion: Number(developForm.baseProportion) / 100,
+    rewardProportion: Number(developForm.rewardProportion) / 100,
   })
+  if (data) {
+    $baseMessage('修改产品开发设计任务成功！', 'success')
+    developUpdateVisible.value = false
+    developQueryData()
+  }
 }
 const handlePauseDevelop = async (row: IGetDevelopDesignTaskList) => {
   $baseConfirm('确定暂停当前产品开发设计任务吗？', null, async () => {
