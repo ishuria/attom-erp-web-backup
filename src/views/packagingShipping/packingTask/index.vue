@@ -1176,7 +1176,7 @@
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseFinishTask">取消</el-button>
-        <el-button type="success" @click="handleConfirmFinishTask">确定</el-button>
+        <el-button :loading="finishConfirmLoading" type="success" @click="handleConfirmFinishTask">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 开始任务 - 质检项目 -->
@@ -1869,12 +1869,14 @@ const handleCloseFinishTask = () => {
   finishTaskTableRef.value?.clearSelection()
   finishTaskVisible.value = false
 }
+const finishConfirmLoading = ref<boolean>(false)
 // 结束任务的确定
 const handleConfirmFinishTask = async () => {
   if (selectFinishTaskRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
+  finishConfirmLoading.value = true
   const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
   const { data } = await confirmEndTask({
     userIds,
@@ -1884,6 +1886,7 @@ const handleConfirmFinishTask = async () => {
     queryTaskingData()
   }
   handleCloseFinishTask()
+  finishConfirmLoading.value = false
   // selectRows.value = []
 }
 // 开始任务的取消
