@@ -1,48 +1,57 @@
-handleSubmit<template>
+handleSubmit
+<template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="进行中" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel >
+          <vab-query-form-left-panel>
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
-            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>
+<!--            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>-->
             <el-button type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.productKeyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.productKeyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
 
-        <el-table 
-          ref="tableRef" 
-          v-loading="listLoading" 
-          border :cell-style="cellStyle"
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
+          border
+          :cell-style="cellStyle"
           :data="progressList"
-          :header-cell-style="{ 'text-align': 'center' }" 
+          :header-cell-style="{ 'text-align': 'center' }"
           stripe
           @cell-click="changeInput"
         >
           <el-table-column label="优先级" min-width="90" prop="priority">
-            <template #default = "{ row }">
-              <el-select v-model="row.priority" size="default" style="min-width: 100%" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
-                <el-option 
-                  v-for="item in priorityOptions" 
-                  :key="item.value" 
-                  :label="item.label" 
-                  :value="item.value"
-                />
+            <template #default="{ row }">
+              <el-select
+                v-model="row.priority"
+                size="default"
+                style="min-width: 100%"
+                @blur="clickCancel($event, row)"
+                @keyup.enter="clickCancel($event, row)"
+              >
+                <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column label="立项日期" prop="createTime" width="120">
-            <template #default = "{ row }">
+            <template #default="{ row }">
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
@@ -57,42 +66,55 @@ handleSubmit<template>
             </template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="product">
-            <template #default = "{ row }">
-              {{ row.product }}<br />
+            <template #default="{ row }">
+              {{ row.product }}
+              <br />
               {{ row.mainSearchTerms }}
             </template>
           </el-table-column>
           <el-table-column label="OEM" min-width="65" prop="oem">
-            <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" class="custom-checkbox" :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
+            <template #default="{ row }">
+              <el-checkbox
+                v-model="row.oem"
+                class="custom-checkbox"
+                :false-value="'0'"
+                size="large"
+                :true-value="'1'"
+                @change="handleCheckbox(row.oem)"
+              />
             </template>
           </el-table-column>
           <el-table-column label="目标月销" min-width="100" prop="targetMonthlySales">
-            <template #default = "{ row }">
+            <template #default="{ row }">
               <div class="none">
-                  <el-input v-model="row.targetMonthlySales" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.targetMonthlySales }}</span>
+                <el-input
+                  v-model="row.targetMonthlySales"
+                  type="text"
+                  @blur="clickCancel($event, row)"
+                  @keyup.enter="clickCancel($event, row)"
+                />
+              </div>
+              <span>{{ row.targetMonthlySales }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="调研报告链接" prop="" width="130" >
+          <el-table-column label="调研报告链接" prop="" width="130">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip" >{{ row.researchReportLink }}</div>
+                  <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.researchReportLink }}</el-text>
+                <el-text style="vertical-align: middle" truncated>{{ row.researchReportLink }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus">
-            <template #default = "{ row }">
+            <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)"  @keyup.enter="clickCancel($event, row)"/>
+                <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.currentPhaseStatus }}</span>
             </template>
-          </el-table-column>      
+          </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
@@ -114,15 +136,9 @@ handleSubmit<template>
             </template>
           </el-table-column>
           <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
-            <template #default = "{ row, $index }">
-              <div style="display: flex; align-items: center;">
-                <vue-draggable
-                  v-model="row.imageList"
-                  :animation="150"
-                  class="image-list"
-                  ghost-class="ghost"
-                  @end="onEnd"
-                >
+            <template #default="{ row, $index }">
+              <div style="display: flex; align-items: center">
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" :src="image.imageUrl" />
@@ -134,7 +150,7 @@ handleSubmit<template>
                   </div>
                 </vue-draggable>
                 <!-- 添加按钮 -->
-                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0}">
+                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
                   <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
                     <el-icon><plus /></el-icon>
                   </div>
@@ -142,7 +158,7 @@ handleSubmit<template>
               </div>
             </template>
           </el-table-column>
-  
+
           <el-table-column :fixed="fixed" label="操作" width="180px">
             <template #default="{ row }">
               <el-dropdown>
@@ -155,25 +171,27 @@ handleSubmit<template>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleSampleCosting(row)">
-                      <el-link type="primary" :underline="false" >拿样与核算</el-link>
+                      <el-link type="primary" :underline="false">拿样与核算</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="addProgressMold">
-                      <el-link type="primary" :underline="false" >开模申请</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item @click="handleOrderProcess(row)">
-                      <el-link type="primary" :underline="false" >订大货申请</el-link>
-                    </el-dropdown-item>
+<!--                    <el-dropdown-item @click="addProgressMold">-->
+<!--                      <el-link type="primary" :underline="false">开模申请</el-link>-->
+<!--                    </el-dropdown-item>-->
+                    <template v-if="row.bulkGoodsStatus === 0">
+                      <el-dropdown-item @click="handleOrderProcess(row)">
+                        <el-link type="primary" :underline="false">订大货申请</el-link>
+                      </el-dropdown-item>
+                    </template>
                     <el-dropdown-item @click="handleCopyProgress(row)">
-                      <el-link type="primary" :underline="false" >复制</el-link>
+                      <el-link type="primary" :underline="false">复制</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetShareList(row.progressId)">
-                      <el-link type="primary" :underline="false" >共享</el-link>
+                      <el-link type="primary" :underline="false">共享</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetEvaluationById(row.evaluationId)">
-                      <el-link type="primary" :underline="false" >查看新款评估</el-link>
+                      <el-link type="primary" :underline="false">查看新款评估</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleArchived(row.progressId)">
-                      <el-link type="primary" :underline="false" >归档</el-link>
+                      <el-link type="primary" :underline="false">归档</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -211,29 +229,32 @@ handleSubmit<template>
             </div>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          ref="tableRef" 
-          v-loading="listLoading" 
-          border :cell-style="cellStyle2"
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
+          border
+          :cell-style="cellStyle2"
           :data="progressList"
-          :header-cell-style="{ 'text-align': 'center' }" 
+          :header-cell-style="{ 'text-align': 'center' }"
           stripe
           @cell-click="changeInput"
         >
           <el-table-column align="center" label="优先级" min-width="90" prop="priority">
-            <template #default = "{ row }">
-              <el-select v-model="row.priority" disabled size="default" style="min-width: 100%;" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)">
-                <el-option 
-                  v-for="item in priorityOptions" 
-                  :key="item.value" 
-                  :label="item.label" 
-                  :value="item.value"
-                />
+            <template #default="{ row }">
+              <el-select
+                v-model="row.priority"
+                disabled
+                size="default"
+                style="min-width: 100%"
+                @blur="clickCancel($event, row)"
+                @keyup.enter="clickCancel($event, row)"
+              >
+                <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column align="center" label="立项日期" prop="createTime" width="120">
-            <template #default = "{ row }">
+            <template #default="{ row }">
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
@@ -248,24 +269,33 @@ handleSubmit<template>
             </template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="product">
-            <template #default = "{ row }">
-              {{ row.product }}<br />
+            <template #default="{ row }">
+              {{ row.product }}
+              <br />
               {{ row.mainSearchTerms }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="OEM" min-width="65" prop="oem">
-            <template #default = "{ row }">
-               <el-checkbox v-model="row.oem" class="custom-checkbox" disabled :false-value="'0'" size="large" :true-value="'1'" @change="handleCheckbox(row.oem)"/>
+            <template #default="{ row }">
+              <el-checkbox
+                v-model="row.oem"
+                class="custom-checkbox"
+                disabled
+                :false-value="'0'"
+                size="large"
+                :true-value="'1'"
+                @change="handleCheckbox(row.oem)"
+              />
             </template>
           </el-table-column>
           <el-table-column align="center" label="目标月销" min-width="100" prop="targetMonthlySales" />
-          <el-table-column align="center" label="调研报告链接" prop="" width="130" >
+          <el-table-column align="center" label="调研报告链接" prop="" width="130">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
-                  <div class="custom-tooltip" >{{ row.researchReportLink }}</div>
+                  <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.researchReportLink }}</el-text>
+                <el-text style="vertical-align: middle" truncated>{{ row.researchReportLink }}</el-text>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -291,15 +321,9 @@ handleSubmit<template>
             </template>
           </el-table-column>
           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
-            <template #default = "{ row, $index }">
-              <div style="display: flex; align-items: center;">
-                <vue-draggable
-                  v-model="row.imageList"
-                  :animation="150"
-                  class="image-list"
-                  ghost-class="ghost"
-                  @end="onEnd"
-                >
+            <template #default="{ row, $index }">
+              <div style="display: flex; align-items: center">
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" :src="image.imageUrl" />
@@ -311,7 +335,7 @@ handleSubmit<template>
                   </div>
                 </vue-draggable>
                 <!-- 添加按钮 -->
-                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0}">
+                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
                   <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
                     <el-icon><plus /></el-icon>
                   </div>
@@ -319,12 +343,10 @@ handleSubmit<template>
               </div>
             </template>
           </el-table-column>
-        
+
           <el-table-column align="center" :fixed="fixed" label="操作" width="100px">
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">
-                复制
-              </el-button>
+              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -340,7 +362,7 @@ handleSubmit<template>
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if ="dialogVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="dialogVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
@@ -358,43 +380,34 @@ handleSubmit<template>
       @click-child="clickRemark"
     />
     <!-- 共享 -->
-    <vab-shared  
+    <vab-shared
       :id="shareId"
       :fetch-data="fetchData"
       :handler-switch-change="handlerSwitchChange"
       :list="shareUserList"
       :visible="sharedVisible"
-      @update:shared-visible = "updateSharedVisibleValue"
+      @update:shared-visible="updateSharedVisibleValue"
     />
-    
+
     <!-- 开模申请 -->
-    <vab-dialog 
-      v-model="moldVisible" 
-      :before-close="handlerCloseDialog" 
-      class="moldDialog"
-      title="开模申请"
-      width="500"
-    >
-      <el-divider style="margin-top: 0;"/>
-      <el-form ref="formRef" class="demo-form" label-position="right" label-width="120px" :model="form" style="max-width: 340px; margin: 0 auto;">
+    <vab-dialog v-model="moldVisible" :before-close="handlerCloseDialog" class="moldDialog" title="开模申请" width="500">
+      <el-divider style="margin-top: 0" />
+      <el-form
+        ref="formRef"
+        class="demo-form"
+        label-position="right"
+        label-width="120px"
+        :model="form"
+        style="max-width: 340px; margin: 0 auto"
+      >
         <el-form-item label="零件名" prop="componentName">
           <el-select v-model="form.componentName" clearable placeholder="" @change="handleComponentChange">
-            <el-option 
-              v-for="item in componentOptions" 
-              :key="item.id" 
-              :label="item.label" 
-              :value="item.id"
-            />
+            <el-option v-for="item in componentOptions" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="供应商全名" prop="supplierName">
           <el-select v-model="form.supplierName" clearable :disabled="supplierDisabled" placeholder="" @change="handleSupplierChange">
-            <el-option 
-              v-for="item in supplierOptions" 
-              :key="item.id" 
-              :label="item.label" 
-              :value="item.id"
-            />
+            <el-option v-for="item in supplierOptions" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="模具费(不含税)" prop="excludingTax">
@@ -412,7 +425,7 @@ handleSubmit<template>
         <el-form-item label="审核人" prop="audit">
           <!-- <el-input v-model="form.name" clearable placeholder="王豪俊" disabled/> -->
           <el-select v-model="form.audit" clearable placeholder="王豪俊">
-            <el-option label="王豪俊" value="王豪俊"/>
+            <el-option label="王豪俊" value="王豪俊" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -424,38 +437,44 @@ handleSubmit<template>
       </template>
     </vab-dialog>
     <!-- 样品进度 -->
-    <sample-progress 
+    <sample-progress
       :sample-progress-visible="sampleProgressDialog"
       @update:priview-list-value="setPreviewList"
       @update:sample-progress-visible="sampleProgressDialog = $event"
     />
     <!-- 开模进度 -->
-    <mold-progress 
-      :mold-progress-visible="moldProgressDialog"
-      @update:mold-progress-visible="moldProgressDialog = $event"
-    />
+    <mold-progress :mold-progress-visible="moldProgressDialog" @update:mold-progress-visible="moldProgressDialog = $event" />
     <!-- 新款评估 -->
-    <vab-dialog 
-      v-model="newEvaluationVisible" 
-      :before-close="handlerEvaluationCloseDialog" 
+    <vab-dialog
+      v-model="newEvaluationVisible"
+      :before-close="handlerEvaluationCloseDialog"
       class="moldDialog"
       title="新款评估"
       width="90%"
       @opened="onDialogOpened"
     >
-      <el-divider style="margin-top: 0; margin-bottom: 20px"/>
+      <el-divider style="margin-top: 0; margin-bottom: 20px" />
       <div id="table-height-container">
-        <el-table 
-          ref="evaluationTableRef" 
-          v-loading="listLoading" 
-          border :data="newEvaluationData" 
-          :header-cell-style="{ 'text-align': 'center' }" 
+        <el-table
+          ref="evaluationTableRef"
+          v-loading="listLoading"
+          border
+          :data="newEvaluationData"
+          :header-cell-style="{ 'text-align': 'center' }"
           stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label" :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
+          <el-table-column
+            v-for="(item, index) in indexColumns"
+            :key="index"
+            align="center"
+            :label="item.label"
+            :min-width="item.minWidth || 100"
+            :prop="item.prop"
+            width="auto"
+          >
             <template #default="{ row }">
-              <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
+              <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px">
                 <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
               </div>
             </template>
@@ -465,22 +484,10 @@ handleSubmit<template>
       <template #footer></template>
     </vab-dialog>
     <!-- 参与人员筛选 -->
-    <vab-dialog 
-      v-model="shareSelectVisible" 
-      :before-close="handleShareSelectClose" 
-      title="参与人员筛选"
-      width="480"
-    >
+    <vab-dialog v-model="shareSelectVisible" :before-close="handleShareSelectClose" title="参与人员筛选" width="480">
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
-          <el-select 
-            v-model="shareSelect" 
-            clearable 
-            collapse-tags  
-            collapse-tags-tooltip
-            multiple
-            placeholder="请选择参与人员"
-          >
+          <el-select v-model="shareSelect" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择参与人员">
             <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
           </el-select>
         </el-form-item>
@@ -490,22 +497,10 @@ handleSubmit<template>
       </template>
     </vab-dialog>
     <!-- 参与人员筛选 -->
-    <vab-dialog 
-      v-model="shareArchivedSelectVisible" 
-      :before-close="handleArchivedShareSelectClose" 
-      title="参与人员筛选"
-      width="480"
-    >
+    <vab-dialog v-model="shareArchivedSelectVisible" :before-close="handleArchivedShareSelectClose" title="参与人员筛选" width="480">
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
-          <el-select 
-            v-model="shareArchivedSelect" 
-            clearable 
-            collapse-tags  
-            collapse-tags-tooltip
-            multiple
-            placeholder="请选择参与人员"
-          >
+          <el-select v-model="shareArchivedSelect" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择参与人员">
             <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
           </el-select>
         </el-form-item>
@@ -515,29 +510,25 @@ handleSubmit<template>
       </template>
     </vab-dialog>
     <!-- 关键词趋势图表 -->
-    <vab-trend 
-      :key-word = "inputKeyWord"
-      :trend-data = "trendEcahts"
+    <vab-trend
+      :key-word="inputKeyWord"
+      :trend-data="trendEcahts"
       :trend-echarts-visible="keyWordTrendEchatsVisible"
-      @update:clear-input-key-word = "cleanKeyWordTrendData"
-      @update:trend-echarts-list  = "updateTrendEchatsData"
-      @update:visible-value = "updateTrendVisibleValue"
+      @update:clear-input-key-word="cleanKeyWordTrendData"
+      @update:trend-echarts-list="updateTrendEchatsData"
+      @update:visible-value="updateTrendVisibleValue"
     />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
     <!-- 更新产品名 -->
-    <vab-dialog 
-      v-model="updateProductNameVisible"
-      title="更新产品名"
-      width="25%"
-    >
-      <el-form ref="updateFormRef" label-position="top" :model="updateForm" :rules="updateFormRules" >
+    <vab-dialog v-model="updateProductNameVisible" title="更新产品名" width="25%">
+      <el-form ref="updateFormRef" label-position="top" :model="updateForm" :rules="updateFormRules">
         <el-form-item label="中文品名" prop="product">
           <el-input v-model="updateForm.product" clearable />
         </el-form-item>
         <el-form-item label="主要搜索词" prop="mainSearchTerms">
           <el-input v-model="updateForm.mainSearchTerms" clearable />
-        </el-form-item>         
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="updateProductNameVisible = false">取消</el-button>
@@ -575,7 +566,8 @@ import {
   updateProgressManage,
   updateProgressMoldAdd,
   updateProgressSharelist,
-  uploadFile
+  uploadFile,
+  updateBulkGoodsStatusByProgressId,
 } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
@@ -589,12 +581,8 @@ defineOptions({
 
 const updateFormRef = ref<FormInstance>()
 const updateFormRules = reactive({
-  product: [
-    { required: true, message: '请输入中文品名', trigger: 'blur' },
-  ],
-  mainSearchTerms: [
-    { required: true, message: '请输入主要搜索词', trigger: 'blur' },
-  ],
+  product: [{ required: true, message: '请输入中文品名', trigger: 'blur' }],
+  mainSearchTerms: [{ required: true, message: '请输入主要搜索词', trigger: 'blur' }],
 })
 // 更新产品名可见
 const updateProductNameVisible = ref<boolean>(false)
@@ -626,16 +614,16 @@ const queryForm = reactive<IProgressQueryReq>({
 })
 
 const priorityOptions = [
-  { 
-    value: "0",
+  {
+    value: '0',
     label: '高',
   },
-  { 
-    value: "1",
+  {
+    value: '1',
     label: '中',
   },
-  { 
-    value: "2",
+  {
+    value: '2',
     label: '低',
   },
 ]
@@ -665,12 +653,12 @@ let form = ref<any>({
   componentName: '',
   supplierName: '',
   progressId: null,
-  productName: "",
+  productName: '',
   excludingTax: null,
   standardInvoice: null,
   specialInvoice: null,
   purchaseTotal: null,
-  audit: ""
+  audit: '',
 })
 // 零件列表
 const componentOptions = ref<any>([])
@@ -690,8 +678,8 @@ const newEvaluationData = ref<IGetByIdQueryEvaluation[]>([])
 const keyWordTrendEchatsVisible = ref<boolean>(false)
 // 图表
 const trendEcahts = ref<IKeyWordTrend>({
-  xAxis:[],
-  yAxis:[]
+  xAxis: [],
+  yAxis: [],
 })
 // 输入的关键词
 const inputKeyWord = ref<string>('')
@@ -709,14 +697,13 @@ const shareArchivedSelect = ref<ISelectShare[]>([])
 const userNameList = ref<string[]>([])
 const userNameArchivedList = ref<string[]>([])
 
-
 const getImageColumnWidth = (): number => {
   const imageWidth = 75 // 每张图片宽度
   progressList.value.forEach((row) => {
     const imageCount = row?.imageList?.length || 0
     let totalWidth = 0
-    if (imageCount === 5) totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
-    else totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    if (imageCount === 5) totalWidth = imageCount * imageWidth + 24 + (imageCount - 1) * 8
+    else totalWidth = (imageCount + 1) * imageWidth + 24 + imageCount * 8
     if (totalWidth > imageListWidth.value) {
       imageListWidth.value = totalWidth
     }
@@ -740,13 +727,13 @@ const handlerEvaluationCloseDialog = () => {
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value = []
-  if (Number(tab.props.name) === 0)  queryForm.status = 0
+  if (Number(tab.props.name) === 0) queryForm.status = 0
   else queryForm.status = 1
   router.push({
     query: {
       ...route.query,
-      tab: tab.props.name
-    }
+      tab: tab.props.name,
+    },
   })
   fetchData()
 }
@@ -756,9 +743,9 @@ const handleArchived = async (progressId: number) => {
   if (data === true) {
     const index = progressList.value.findIndex((item: any) => item.progressId === progressId)
     progressList.value.splice(index, 1)
-    $baseMessage("此条新品进度信息已归档成功!","success","hey")
+    $baseMessage('此条新品进度信息已归档成功!', 'success', 'hey')
   }
-  
+
   // activeName.value = "1"
 }
 /**
@@ -766,7 +753,7 @@ const handleArchived = async (progressId: number) => {
  */
 const handleRemove = async (image: any, row: any) => {
   try {
-    await $baseConfirm('确定要删除这张图片吗', "系统提示", async () => {
+    await $baseConfirm('确定要删除这张图片吗', '系统提示', async () => {
       const delImgForm = new FormData()
       delImgForm.append('type', '2')
       delImgForm.append('imageId', image.imageId)
@@ -778,17 +765,17 @@ const handleRemove = async (image: any, row: any) => {
         if (imageIndex !== -1) {
           row.imageList = [...row.imageList.slice(0, imageIndex), ...row.imageList.slice(imageIndex + 1)]
         }
-        $baseMessage("此条产品图片信息删除成功!", "success", "hey")
+        $baseMessage('此条产品图片信息删除成功!', 'success', 'hey')
         // 重新计算列宽
         imageListWidth.value = 0
         getImageColumnWidth()
       } else {
-        $baseMessage("删除失败，请重试!", "error", "hey")
+        $baseMessage('删除失败，请重试!', 'error', 'hey')
       }
     })
   } catch (error) {
     console.error('删除图片出错:', error)
-    $baseMessage("删除出错，请重试!", "error", "hey")
+    $baseMessage('删除出错，请重试!', 'error', 'hey')
   }
 }
 
@@ -796,12 +783,11 @@ const handleRemove = async (image: any, row: any) => {
  * 图片预览事件
  */
 const handlePictureCardPreview = (image: any, row: any) => {
-
   dialogVisible.value = true
   // 重置并添加当前图片
   imagePreviewList.value = []
   imagePreviewList.value.push(image.imageUrl)
-  
+
   // 添加其他图片
   row.imageList.forEach((item: any) => {
     if (item.imageId !== image.imageId) {
@@ -810,16 +796,16 @@ const handlePictureCardPreview = (image: any, row: any) => {
   })
 }
 // 修改图片预览列表
-const setPreviewList = (imageUrl:string) =>{
-    dialogVisible.value = true
-    imagePreviewList.value = []
-    imagePreviewList.value.push(imageUrl)
-    // console.log(imagePreviewList.value)
+const setPreviewList = (imageUrl: string) => {
+  dialogVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(imageUrl)
+  // console.log(imagePreviewList.value)
 }
 
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  dialogVisible.value = false;
+const imagePreviewClose = () => {
+  dialogVisible.value = false
 }
 const imageUploadVisible = ref<boolean>(false)
 // 打开上传图片弹窗
@@ -832,14 +818,14 @@ const showUploadDialog = (row: any, index: number) => {
 /**
  * 上传图片
  */
-async function uploadImage (file: File) {
+async function uploadImage(file: File) {
   try {
     const sort = progressList.value[tableClickRowIndex.value].imageList!.length - 1
     let imageForm = new FormData()
-   
-    imageForm.append('file', file);
-    imageForm.append('progressId', tableClickProgressId.value.toString());
-    imageForm.append('sort', sort.toString());
+
+    imageForm.append('file', file)
+    imageForm.append('progressId', tableClickProgressId.value.toString())
+    imageForm.append('sort', sort.toString())
 
     const { data } = await uploadFile(imageForm)
     if (data) {
@@ -848,10 +834,10 @@ async function uploadImage (file: File) {
         imageUrl: url,
         imageId: fileId,
       })
-      $baseMessage("图片上传成功!","success","hey")
+      $baseMessage('图片上传成功!', 'success', 'hey')
       imageUploadVisible.value = false
     } else {
-      $baseMessage("图片上传失败!","error","hey")
+      $baseMessage('图片上传失败!', 'error', 'hey')
     }
   } catch (error) {
     console.error(error)
@@ -860,11 +846,12 @@ async function uploadImage (file: File) {
 // 移动之后触发修改排序接口
 const onEnd = debounce(async () => {
   try {
-    const idList = progressList.value[tableClickRowIndex.value].imageList?.map((item: any) => {
-      return item.imageId
-    }) || []
+    const idList =
+      progressList.value[tableClickRowIndex.value].imageList?.map((item: any) => {
+        return item.imageId
+      }) || []
     await updateProgressImgSort(idList)
-  } catch(error){
+  } catch (error) {
     console.error(error as Error)
   }
 }, 500)
@@ -886,7 +873,7 @@ let _row: any = null
 /**
  * 当点击时切换输入框，修改输入
  */
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '产品') {
     updateProductNameVisible.value = true
     updateForm.product = row.product
@@ -903,30 +890,27 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     wangEditorTitle.value = '编辑开发日志'
     classify.value = 'progressLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } else if (column.property == 'remark'){
+  } else if (column.property == 'remark') {
     remarkCopy.value = progressList.value[tableClickIdx.value].remark
     wangEditorTitle.value = '编辑备注'
     classify.value = 'remark'
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
   }
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  _row = JSON.parse(JSON.stringify(row));
+  _row = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    
-    
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
-    
-    focusAndSelectInput(cell);
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
   }
-  
 }
 const handleCheckbox = async (value: any) => {
   // console.log(value);
@@ -942,28 +926,27 @@ const updateProductName = async () => {
         if (data === true) {
           _row.product = updateForm.product
           _row.mainSearchTerms = updateForm.mainSearchTerms
-          $baseMessage("产品名更新成功!", "success", "hey")
+          $baseMessage('产品名更新成功!', 'success', 'hey')
           updateProductNameVisible.value = false
         }
       } catch {
-        $baseMessage("产品名更新失败!","error","hey")
+        $baseMessage('产品名更新失败!', 'error', 'hey')
       }
-  }
-  })                
+    }
+  })
 }
 /**
  * 输入失焦事件
  */
-const clickCancel = async (event: any, value: any) =>{
-
-  const rootElement = getRootElement(event.srcElement, ".cell");
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(_row, value)) {
     return
@@ -971,9 +954,9 @@ const clickCancel = async (event: any, value: any) =>{
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
-      await updateProgressManage({...value})
+      await updateProgressManage({ ...value })
     } catch {
-      Object.assign(value, _row);
+      Object.assign(value, _row)
     }
   }
 }
@@ -983,7 +966,7 @@ const clickCancel = async (event: any, value: any) =>{
  */
 const clickLog = async (val: any) => {
   // console.log('新的val', val);
-  
+
   progressList.value[tableClickIdx.value].progressLog = val
   progressLogCopy.value = val
   // console.log('点击log执行了');
@@ -999,11 +982,11 @@ const clickRemark = async (val: any) => {
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickLogBool = ( val: any) => {
+const clickLogBool = (val: any) => {
   wangEditorLogVisible.value = val
   // console.log('点击logbool执行了');
 }
-const clickRemarkBool = ( val: any) => {
+const clickRemarkBool = (val: any) => {
   wangEditorRemarkVisible.value = val
   // console.log('点击remarkbool执行了');
 }
@@ -1051,18 +1034,24 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 // 拿样与核算
-const handleSampleCosting = (row: IProgress) =>{
+const handleSampleCosting = (row: IProgress) => {
   router.push({
     path: '/newProductDevelopment/productProgressComponent',
     query: {
-      title: "零件清单",
+      title: '零件清单',
       progressId: row.progressId,
       product: `${row.product!} ${row.mainSearchTerms!}`,
     },
   })
 }
 // 订大货
-const handleOrderProcess = (row: IProgress) =>{
+const handleOrderProcess = async (row: IProgress) => {
+
+  // 点击了订大货后，不能再次点击
+  await updateBulkGoodsStatusByProgressId({
+    progressId:row.progressId
+  })
+
   router.push({
     path: '/newProductDevelopment/orderingProcess',
     query: {
@@ -1110,7 +1099,7 @@ const handleSubmit = async () => {
       productName: progressList.value[tableClickIdx.value].product,
     })
     if (data === true) {
-      $baseMessage("开模申请信息提交成功!","success","hey")
+      $baseMessage('开模申请信息提交成功!', 'success', 'hey')
     }
   } catch (error) {
     console.log(error)
@@ -1120,35 +1109,45 @@ const handleSubmit = async () => {
     componentName: '',
     supplierName: '',
     progressId: null,
-    productName: "",
+    productName: '',
     excludingTax: null,
     standardInvoice: null,
     specialInvoice: null,
     purchaseTotal: null,
-    audit: ""
+    audit: '',
   }
 }
 const copyRow = ref<any>(null)
 // 订大货申请
 // 复制
 const handleCopyProgress = (row: any) => {
-  $baseConfirm('是否要复制本条新品进度信息？', '复制', async () => {
-    const { data } = await copyProgress({ progressId: row.progressId })
-    if (data === true) {
-      copyRow.value = JSON.parse(JSON.stringify(row))
-      const index = progressList.value.indexOf(row)
-      progressList.value.splice(index + 1, 0, copyRow.value)
-      $baseMessage(`复制成功！`, "success", "hey")
-    }
-  }, null)
+  $baseConfirm(
+    '是否要复制本条新品进度信息？',
+    '复制',
+    async () => {
+      const { data } = await copyProgress({ progressId: row.progressId })
+      if (data === true) {
+        copyRow.value = JSON.parse(JSON.stringify(row))
+        const index = progressList.value.indexOf(row)
+        progressList.value.splice(index + 1, 0, copyRow.value)
+        $baseMessage(`复制成功！`, 'success', 'hey')
+      }
+    },
+    null
+  )
 }
 const handleCopyAchivedProgress = (row: any) => {
-  $baseConfirm('是否要复制本条新品进度信息？', '复制', async () => {
-    const { data } = await copyProgress({ progressId: row.progressId })
-    if (data === true) {
-      $baseMessage(`复制成功！`, "success", "hey")
-    }
-  }, null)
+  $baseConfirm(
+    '是否要复制本条新品进度信息？',
+    '复制',
+    async () => {
+      const { data } = await copyProgress({ progressId: row.progressId })
+      if (data === true) {
+        $baseMessage(`复制成功！`, 'success', 'hey')
+      }
+    },
+    null
+  )
 }
 
 // 共享
@@ -1160,28 +1159,28 @@ const handleGetShareList = async (progressId: number) => {
   console.log('shareUserList.value', shareUserList.value)
 }
 /**
-   * 共享操作
-   */
-   const handlerSwitchChange = async (row: any) => {
-    let type = 1;
-  
-    if (row.share === true) {
-      type = 0
-    }
-    const { data } = await updateProgressSharelist({
-      progressId: parseInt(shareId.value),
-      userId: row.userID,
-      type: convertString(type)
-    })
-  
-    if (data === true && type === 0) {
-      $baseMessage(`已共享给${row.userName}成功！`, "success", "hey")
-    }
-  
-    if (data === true && type === 1) {
-      $baseMessage(`取消共享给${row.userName}成功！`, "success", "hey")
-    }
+ * 共享操作
+ */
+const handlerSwitchChange = async (row: any) => {
+  let type = 1
+
+  if (row.share === true) {
+    type = 0
   }
+  const { data } = await updateProgressSharelist({
+    progressId: parseInt(shareId.value),
+    userId: row.userID,
+    type: convertString(type),
+  })
+
+  if (data === true && type === 0) {
+    $baseMessage(`已共享给${row.userName}成功！`, 'success', 'hey')
+  }
+
+  if (data === true && type === 1) {
+    $baseMessage(`取消共享给${row.userName}成功！`, 'success', 'hey')
+  }
+}
 // 获取参与人员列表
 const handlePersonSelect = async () => {
   shareSelectVisible.value = true
@@ -1208,11 +1207,12 @@ const handleShareSelectConfirm = async () => {
   // console.log(userNameList.value);
   // console.log(shareSelect.value);
   listLoading.value = true
-  if (shareSelect.value.length === 0) { // 如果没有筛选任何人
+  if (shareSelect.value.length === 0) {
+    // 如果没有筛选任何人
     fetchData()
   } else {
     const { data } = await getProgressFilter({
-      userNameList: userNameList.value, 
+      userNameList: userNameList.value,
       status: queryForm.status,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
@@ -1230,48 +1230,49 @@ const handleArchivedShareSelectConfirm = async () => {
     const i = optionArchivedShare.value.find((option: any) => option.userID === item)
     userNameArchivedList.value.push(i.userName)
   })
-  
+
   listLoading.value = true
-  if (shareArchivedSelect.value.length === 0) { // 如果没有筛选任何人
+  if (shareArchivedSelect.value.length === 0) {
+    // 如果没有筛选任何人
     fetchData()
   } else {
     const { data } = await getProgressFilter({
-    userNameList: userNameArchivedList.value, 
-    status: queryForm.status,
-    pageNo: queryForm.pageNo,
-    pageSize: queryForm.pageSize,
-  })
-  progressList.value = data.list
-  total.value = data.total
-  listLoading.value = false
-  // shareSelect.value = []
+      userNameList: userNameArchivedList.value,
+      status: queryForm.status,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    })
+    progressList.value = data.list
+    total.value = data.total
+    listLoading.value = false
+    // shareSelect.value = []
   }
 }
-const updateSharedVisibleValue = (newValue:boolean) =>{
+const updateSharedVisibleValue = (newValue: boolean) => {
   sharedVisible.value = newValue
 }
 // 查看新款评估
 const handleGetEvaluationById = async (idNo: number) => {
   newEvaluationVisible.value = true
   const { data } = await getByIdQueryEvaluation({ idNo })
-  newEvaluationData.value = [data];
+  newEvaluationData.value = [data]
 }
 const onDialogOpened = () => {
-  evaluationTableRef.value?.doLayout();
-};
-const keyWordTrendCellClick = async(row: any, column: any) => {
-  if (column.label === "关键词趋势") {
+  evaluationTableRef.value?.doLayout()
+}
+const keyWordTrendCellClick = async (row: any, column: any) => {
+  if (column.label === '关键词趋势') {
     inputKeyWord.value = row.amazonFrontendKeywords
     trendEcahts.value.xAxis = row.trendList.xAxis
     trendEcahts.value.yAxis = row.trendList.yAxis
     keyWordTrendEchatsVisible.value = true
   }
 }
-const updateTrendVisibleValue = (newValue:boolean) =>{
+const updateTrendVisibleValue = (newValue: boolean) => {
   keyWordTrendEchatsVisible.value = newValue
 }
 // 清除关键词趋势相关数据
-const cleanKeyWordTrendData = (newValue:string) => {
+const cleanKeyWordTrendData = (newValue: string) => {
   inputKeyWord.value = newValue
   trendEcahts.value.xAxis = []
   trendEcahts.value.yAxis = []
@@ -1280,78 +1281,78 @@ const cleanKeyWordTrendData = (newValue:string) => {
 const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
   trendEcahts.value = newValue
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   switch (label) {
-    case '立项日期': 
-    case '参与人员': 
+    case '立项日期':
+    case '参与人员':
     case '调研报告链接': {
       return {
         textAlign: 'center',
         color: '#999',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
       }
     }
-    case '示例图片': 
-    case '产品': 
-    case '开发日志': 
+    case '示例图片':
+    case '产品':
+    case '开发日志':
     case '备注': {
       return {
         cursor: 'pointer',
-        textAlign: 'left'
+        textAlign: 'left',
       }
     }
-    case '当前阶段': 
+    case '当前阶段':
     case '目标月销': {
       return {
         textAlign: 'center',
-        cursor: 'pointer'
+        cursor: 'pointer',
       }
     }
     default: {
       return {
-        textAlign: 'center'
+        textAlign: 'center',
       }
     }
   }
 }
-const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   switch (label) {
-    case '立项日期': 
-    case '参与人员': 
+    case '立项日期':
+    case '参与人员':
     case '调研报告链接':
     case '目标月销':
-    case '当前阶段':{
+    case '当前阶段': {
       return {
         textAlign: 'center',
         color: '#999',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
       }
     }
     case '产品': {
       return {
         textAlign: 'left',
         color: '#999',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
       }
     }
-    case '示例图片': 
-    case '开发日志': 
+    case '示例图片':
+    case '开发日志':
     case '备注': {
       return {
         cursor: 'pointer',
-        textAlign: 'left'
+        textAlign: 'left',
       }
     }
     default: {
       return {
-        textAlign: 'center'
+        textAlign: 'center',
       }
     }
   }
 }
-onActivated(() => { 
+onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
@@ -1436,25 +1437,25 @@ onBeforeMount(() => {
   opacity: 0.5;
 }
 // 开模申请
-:deep(.moldDialog .el-dialog__body) { 
+:deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
 }
 
 :deep(.shareSelectDialog .el-dialog__body) {
   display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .overflow-text {
- display: block;
- max-height: 81.2px; /* 设置文本的最大高度 */
- overflow-y: auto; /* 溢出时显示垂直滚动条 */
+  display: block;
+  max-height: 81.2px; /* 设置文本的最大高度 */
+  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 
 .image-list {
@@ -1469,19 +1470,19 @@ onBeforeMount(() => {
   justify-content: center;
   width: 75px;
   height: 75px;
-  
+
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: move; // 添加拖拽指针
       object-fit: cover;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -1495,18 +1496,18 @@ onBeforeMount(() => {
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
       background: rgba(0, 0, 0, 0.45);
       opacity: 1;
@@ -1521,19 +1522,18 @@ onBeforeMount(() => {
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
     }
   }
 }
-
 </style>

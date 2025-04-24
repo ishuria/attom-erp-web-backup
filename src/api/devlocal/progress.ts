@@ -26,14 +26,14 @@ import type {
 
 /**
  * 新品进度-获取新品进度管理列表
- * @param params 
- * @returns 
+ * @param data
+ * @returns
  */
-export function getList(params?: IProgressQueryReq) {
+export function getList(data?: IProgressQueryReq) {
   return request({
     url: `${BASE_API}/progress/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 /**
@@ -243,6 +243,15 @@ export function getProgressFilter(data?: ISharePersonReq): Promise<IProgressFilt
   })
 }
 
-
+/**
+ * 新品进度-订单大货前置
+ */
+export function updateBulkGoodsStatusByProgressId(params?: IProgressId) {
+  return request({
+    url: `${BASE_API}/progress/bulk_goods_status/update`,
+    method: 'post',
+    params,
+  })
+}
 
 

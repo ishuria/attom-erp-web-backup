@@ -1,11 +1,11 @@
 <template>
   <div>
     <el-space direction="vertical" style="width: 100%;">
-      <el-form 
-        ref="formRef" 
-        label-position="right" 
-        label-width="170px" 
-        :model="form" 
+      <el-form
+        ref="formRef"
+        label-position="right"
+        label-width="170px"
+        :model="form"
         :rules="rules"
         style="display: flex; flex-direction: column; align-items: center; justify-content: center;"
         @submit.prevent
@@ -21,13 +21,13 @@
         <el-form-item label="产品短描述" prop="productDesc">
             <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
         </el-form-item>
-      
+
         <div class="list-container auto-height-container">
           <el-scrollbar>
             <el-form-item class="variant-list-error" :error="variantListError" prop="variantList">
               <ul class="vab-auto-box">
                 <!-- list第一行 新增变体 -->
-                <li class="list-item"> 
+                <li class="list-item">
                   <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
                     <div class="list-item-meta-content" style="text-align: center">
                       <el-space>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="list-item-meta-content" style="text-align: center">
                       <el-space>
-                        <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
+                        <span style="width: 240px;">{{ "订货数量" }}</span>
                       </el-space>
                     </div>
                     <div class="list-item-meta-content">
@@ -61,7 +61,7 @@
             </el-form-item>
           </el-scrollbar>
         </div>
-        
+
       </el-form>
       <div style="color: var(--el-color-primary)">注：产品最终名称系统自动合成=产品主品名+产品规格描述+变体名（若有）</div>
     </el-space>
@@ -72,7 +72,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
@@ -88,7 +88,7 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
-const emit = defineEmits<{ 
+const emit = defineEmits<{
     (e: 'change-step', value: number): void
     (e: 'sendDataToStep2', value: number): void
  }>()
@@ -99,7 +99,7 @@ let form = reactive<any>({
   productDesc: '',
   variantList: [
     {
-      variantName: '', 
+      variantName: '',
       amazonUSVariantQuantity: undefined,
       orderEntryId: undefined
     }
@@ -138,11 +138,11 @@ const handleVariantSkuMap = async () => {
 const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量
     form.variantList.push({
-      variantName: '', 
+      variantName: '',
       amazonUSVariantQuantity: undefined,
       orderEntryId: undefined,
     });
-}   
+}
 const handleDelVariants = async (index: number) => {
   if (form.variantList.length <= 1) { // 防止删除最后一个变体
     $baseMessage("至少需要保留一个变体", "warning");
@@ -186,7 +186,7 @@ const handleSubmit = () => {
   formRef.value?.validate((valid: any) => {
     if (valid) {
       const saveOn = async () => {
-    
+
         if (route.query.progressId) {
           if (localStorage.getItem('orderStep1ReviewId')) {
             // console.log('orderStep1ReviewId', localStorage.getItem('orderStep1ReviewId'))
@@ -195,7 +195,7 @@ const handleSubmit = () => {
             if (data !== undefined && data !== null) {
               router.replace({
                 query: {
-                  // ...route.query, 
+                  // ...route.query,
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
@@ -209,10 +209,10 @@ const handleSubmit = () => {
               _reviewId.value = data
               // const { data: res } = await reviewStepNo1({ reviewId: _reviewId.value })
               // Object.assign(form, res)
-            
+
               router.replace({
                 query: {
-                  // ...route.query, 
+                  // ...route.query,
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
@@ -229,9 +229,9 @@ const handleSubmit = () => {
           //     $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
           //   }
           // } else { //是初次保存,保存后刷新
-            
+
           // }
-          
+
         } else {
           const reviewId = parseInt(route.query.reviewId)
           // 根据 reviewId 获得 progressId
@@ -267,7 +267,7 @@ const handleSubmitAndContinue = async () => {
           }
           if (route.query.progressId) {
             const { data } = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
-    
+
             if (data !== undefined && data !== null) {
               res = data
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
@@ -276,10 +276,10 @@ const handleSubmitAndContinue = async () => {
                 localStorage.setItem('orderStep1ReviewId', data.toString())
               }
               emit('sendDataToStep2', res)
-              emit('change-step', 1)    
+              emit('change-step', 1)
               // router.replace({
               //   query: {
-              //     // ...route.query, 
+              //     // ...route.query,
               //     reviewId: data.toString(),
               //     reviewStatus: '0',
               //     stepNo: '1'
@@ -290,7 +290,7 @@ const handleSubmitAndContinue = async () => {
                 "success",
                 "hey"
               )
-                         
+
             } else {
               console.error('API 返回没有 data')
             }
@@ -298,13 +298,13 @@ const handleSubmitAndContinue = async () => {
             const reviewId =  parseInt(route.query.reviewId)
             const {data: _progressId } = await reviewProgressId({ reviewId: route.query.reviewId })
             await reviewStepNo1SaveOn({ ...form, progressId: _progressId, reviewId })
-          
+
               $baseMessage(
                 "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
                 "success",
                 "hey"
               )
-  
+
               emit('change-step', 1)
               _setStepNo(Number(reviewId), 0)
               // await delVisitedRoute(handleActivePath(route, true))
@@ -330,7 +330,7 @@ const handleGoback = async () => {
 }
 const fetchData = async () => {
   const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) })
-   
+
   Object.assign(form, data);
 }
 
@@ -347,12 +347,12 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
   // 订大货的
   if (localStorage.getItem('orderStep1ReviewId')) {
     const { data }  = await reviewStepNo1({ reviewId: Number(localStorage.getItem('orderStep1ReviewId')) })
-   
+
     Object.assign(form, data);
   }
 })
 </script>
-  
+
 <style lang="scss" scoped>
 
 .pay-button-group {
@@ -361,7 +361,7 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
     text-align: center;
 }
 .list-container {
-  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px); 
+  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px);
   ul {
     padding: 0;
     margin: 0;
@@ -440,4 +440,3 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
   }
 }
 </style>
-  

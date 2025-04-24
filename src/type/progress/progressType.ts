@@ -11,7 +11,7 @@ export interface IProgressQueryReq {
  * 新品进度-获取共享人列表, 新品进度-查询开发日志
  */
 export interface IProgressId {
-    progressId: number
+    progressId?: number
 }
 export interface IShareListResp {
     data: IProgressShared[]
@@ -228,8 +228,8 @@ export interface IProgressCostAccountingUploadResp {
  */
 export interface IProgressComponentList {
     progressId: number
-    keyWord?: string 
-    pageNo: number 
+    keyWord?: string
+    pageNo: number
     pageSize: number
 }
 export interface IProgressComponentUpdate {
