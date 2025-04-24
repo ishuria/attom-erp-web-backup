@@ -100,7 +100,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
     x: e.clientX,
     y: e.clientY,
   }
-  if ((mousePosition.value.x < 200 && !collapse.value) || (mousePosition.value.x < 65 && collapse.value)) {
+  if ((mousePosition.value.x < 199 && !collapse.value) || (mousePosition.value.x < 65 && collapse.value)) {
     const element: any = document.querySelector('.vab-fall-bar .tiny-fall-menu__box')
     const base = 60
     const intervalSize = 48
