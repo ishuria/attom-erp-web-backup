@@ -138,7 +138,7 @@
               {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="提成天数" min-width="100" prop="commissionDay" />
+          <el-table-column label="提成天数" min-width="100" prop="commissionDays" />
           <el-table-column label="合作提成比例" min-width="120" prop="cooperationProportion">
             <template #default="{ row }">
               {{ row.cooperationProportion ? row.cooperationProportion + '%' : '' }}
