@@ -1127,3 +1127,58 @@ export interface IUpdatePackageInspectionComponentReq {
    */
   weight4?: number;
 }
+
+export interface IGetQualityInspectionListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  type: number
+}
+export interface IGetQualityInspectionListRes {
+  data: {
+    list: IGetQualityInspectionList[]
+    total: number
+  }
+}
+export interface IGetQualityInspectionList {
+  /**
+   * 质检报告id
+   */
+  id: number
+  /**
+   * po
+   */
+  po?: string
+  /**
+   * 产品描述 (Product Description)
+   */
+  productDesc?: string
+  /**
+   * 主品名
+   */
+  productName?: string
+  /**
+   * sku
+   */
+  sku?: string
+  /**
+   * sku图片
+   */
+  skuImgUrl?: string
+  /**
+   * 质检报告结论 0不通过 1通过
+   */
+  status?: number
+  /**
+   * 质检报告提交日期
+   */
+  submitDate?: string
+  /**
+   * 质检报告类型 0新品 1打包
+   */
+  type?: number
+  /**
+   * 变体名
+   */
+  variantName?: string
+}

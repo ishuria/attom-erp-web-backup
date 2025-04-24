@@ -10,6 +10,9 @@
       :rules="qualityInspectionFormRules"
       style="margin-right: 30px; margin-left: 30px"
     >
+      <el-form-item label="日期">
+        <el-input disabled style="margin-right: 0" />
+      </el-form-item>
       <el-form-item label="SKU" prop="sku">
         <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
       </el-form-item>

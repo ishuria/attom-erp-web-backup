@@ -27,6 +27,8 @@ import type {
   IGetPackageTimeListReq,
   IGetPackageTimeListResp,
   IGetQualityCheckResp,
+  IGetQualityInspectionListReq,
+  IGetQualityInspectionListRes,
   IGetSignListQuery,
   IGetSignListResp,
   IGetSignRecordResp,
@@ -772,5 +774,36 @@ export function checkStartTaskPackage(data: { taskIds: string, startTaskUserIds:
     url: `${BASE_API}/package/startTask/check`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * 质检历史列表
+ */
+export function getQualityInspectionList(data: IGetQualityInspectionListReq): Promise<IGetQualityInspectionListRes> {
+  return request({
+    url: `${BASE_API}/qualityInspection/list`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 新品-质检详情
+ */
+export function getQualityInspectionNew(params: { reportId: number }): Promise<IGetNewPackageInspectionRes> {
+  return request({
+    url: `${BASE_API}/qualityInspection/new/query`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 打包质检-质检详情
+ */
+export function getQualityInspectionPackage(params: { reportId: number }): Promise<IGetPackageInspectionResp> {
+  return request({
+    url: `${BASE_API}/qualityInspection/package/query`,
+    method: 'get',
+    params
   })
 }
