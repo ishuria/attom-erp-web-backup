@@ -39,9 +39,10 @@
             <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
               <el-input
                 v-model="scope.row[prop]"
-                @blur="updateHandlerNumber($event, scope)"
+                class="center-input"
+                @blur="updateHandlerNumber($event, scope, i)"
                 @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHandlerNumber($event, scope)"
+                @keydown.enter="updateHandlerNumber($event, scope, i)"
               />
             </template>
             <template
@@ -50,10 +51,10 @@
                 scope.row['column0'] !== 'amazonUsOrderQuantity' &&
                 scope.row['column0'] !== 'amazonUkOrderQuantity' &&
                 scope.row['column0'] !== 'amazonDeOrderQuantity' &&
-                scope.row['column0']!== 'amazonCaOrderQuantity' &&
-                scope.row['column0']!== 'amazonJpOrderQuantity' &&
+                scope.row['column0'] !== 'amazonCaOrderQuantity' &&
+                scope.row['column0'] !== 'amazonJpOrderQuantity' &&
                 scope.row['column0'] !== 'walmartUsOrderQuantity' &&
-                scope.row['column0']!== 'tiktokUsOrderQuantity' &&
+                scope.row['column0'] !== 'tiktokUsOrderQuantity' &&
                 scope.row['column0'] !== 'variantImg'
               "
             >
@@ -124,7 +125,7 @@ const labelMap: Record<string, string> = {
   amazonCaOrderQuantity: '订货数量(亚马逊CA)',
   amazonJpOrderQuantity: '订货数量(亚马逊JP)',
   walmartUsOrderQuantity: '订货数量(沃尔玛US)',
-  tiktokUsOrderQuantity: '订货数量(TikTokUS)',
+  tiktokUsOrderQuantity: '订货数量(TiktokUS)',
 }
 
 const buildParams = (idx: number): IReviewStepUpdateReq => {
@@ -138,21 +139,37 @@ const buildParams = (idx: number): IReviewStepUpdateReq => {
     amazonUsOrderQuantity: n.amazonUsOrderQuantity,
     amazonUkOrderQuantity: n.amazonUkOrderQuantity,
     amazonDeOrderQuantity: n.amazonDeOrderQuantity,
+    amazonCaOrderQuantity: n.amazonCaOrderQuantity,
+    amazonJpOrderQuantity: n.amazonJpOrderQuantity,
     walmartUsOrderQuantity: n.walmartUsOrderQuantity,
+    tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
   }
   return params
 }
 
-const updateHandlerNumber = async (event: Event, row: any) => {
-  const updateParmas = buildParams(row.cellIndex)
-  console.log(updateParmas)
-
+const updateHandlerNumber = async (event: Event, scope: any, index: number) => {
+  const updateParams = buildParams(scope.cellIndex)
   const targetElement = event.target as HTMLInputElement
+  // 获取当前输入的值
+  const currentValue = Number(targetElement.value)
+  // 获取原始值
+  const originalValue = scope.row[index + 1]
+  // console.log(currentValue)
+  // console.log(scope.row[index + 1])
+  // 如果值没有变化，直接返回
+  if (currentValue === originalValue) {
+    targetElement.blur()
+    return
+  }
+  
   targetElement.blur()
-  const { data } = await updateStepNoQuantity(updateParmas)
-  if (data === true) {
-    $baseMessage('分货数量成功！', 'success', 'hey')
-    fetchData()
+
+  if (event.type === 'blur') {
+    const { data } = await updateStepNoQuantity(updateParams)
+    if (data === true) {
+      $baseMessage('分货数量成功！', 'success', 'hey')
+      fetchData()
+    }
   }
 }
 
@@ -246,5 +263,9 @@ onMounted(() => {
 .custom-checkbox {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
+}
+:deep(.center-input) {
+  text-align: center;
+  text-align-last: center;
 }
 </style>

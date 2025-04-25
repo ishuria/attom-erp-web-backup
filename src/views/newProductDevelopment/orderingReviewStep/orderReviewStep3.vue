@@ -2,7 +2,7 @@
   <div>
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
       <el-table
-        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" height="895"
+        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
         :show-header="false" stripe style="width: auto; table-layout: fixed;"
       >
         <!-- 第一列固定标签列 -->
@@ -23,45 +23,20 @@
             <template v-if="scope.row['column0'] === 'packagingSize'">
                 {{ scope.row[prop] }} cm
             </template>
-            <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
+            <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
               <el-input
                 v-model="scope.row[prop]" 
                 class="center-input"
-                @blur="updateHnadlerNumber($event, scope)" 
+                @blur="updateHandlerNumber($event, scope, i)" 
                 @click="inputHandleMouseOver($event)" 
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
-              <el-input 
-                v-model="scope.row[prop]" 
-                class="center-input"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
-              <el-input
-                v-model="scope.row[prop]"
-                class="center-input"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
-              <el-input
-                v-model="scope.row[prop]"
-                class="center-input"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
+                @keydown.enter="updateHandlerNumber($event, scope, i)"
               />
             </template>
             <template
               v-if="scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
-              && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
+              && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0']!== 'amazonCaOrderQuantity'
+              && scope.row['column0'] !== 'amazonJpOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
+              && scope.row['column0']!== 'tiktokUsOrderQuantity'
               && scope.row['column0'] !== 'variantImg' && scope.row['column0'] !== 'packagingSize'">
               {{ scope.row[prop] }}
             </template>
@@ -84,11 +59,11 @@
 
 <script lang="ts" setup>
 
-import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
-import { getDistributionList, reviewStepNo3Save,updateStepNoQuantity } from '/@/api/devlocal/orderingReview'
-import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+import { getDistributionList, reviewStepNo3Save, updateStepNoQuantity } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
+import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
+import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
 
 const router = useRouter()
 
@@ -116,7 +91,10 @@ const labelMap: Record<string, string> = {
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   amazonUkOrderQuantity: '订货数量(亚马逊UK)',
   amazonDeOrderQuantity: '订货数量(亚马逊DE)',
+  amazonCaOrderQuantity: '订货数量(亚马逊CA)',
+  amazonJpOrderQuantity: '订货数量(亚马逊JP)',
   walmartUsOrderQuantity: '订货数量(沃尔玛US)',
+  tiktokUsOrderQuantity: '订货数量(TiktokUS)',
   finalSellingPrice: '售价',
   grossMarginRate: '毛利率',
   packagingSize: '包装尺寸(cm)',
@@ -153,23 +131,38 @@ const buildParams = (idx: number): IReviewStepUpdateReq => {
     amazonUsOrderQuantity: n.amazonUsOrderQuantity,
     amazonUkOrderQuantity: n.amazonUkOrderQuantity,
     amazonDeOrderQuantity: n.amazonDeOrderQuantity,
-    walmartUsOrderQuantity: n.walmartUsOrderQuantity
+    amazonCaOrderQuantity: n.amazonCaOrderQuantity,
+    amazonJpOrderQuantity: n.amazonJpOrderQuantity,
+    walmartUsOrderQuantity: n.walmartUsOrderQuantity,
+    tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
   }
   return params
 }
 
-const updateHnadlerNumber = async (event: Event, row: any) => {
-  const updateParmas = buildParams(row.cellIndex)
-  console.log(updateParmas)
-
+const updateHandlerNumber = async (event: Event, scope: any, index: number) => {
+  const updateParams = buildParams(scope.cellIndex)
+  console.log(updateParams)
   const targetElement = event.target as HTMLInputElement
-  targetElement.blur()
-  const { data } = await updateStepNoQuantity(updateParmas)
-  if (data === true) {
-    $baseMessage("分货数量成功！", "success", "hey")
-    fetchData()
+  // 获取当前输入的值
+  const currentValue = Number(targetElement.value)
+  // 获取原始值
+  const originalValue = scope.row[index + 1]
+  // console.log(currentValue)
+  // console.log(scope.row[index + 1])
+  // 如果值没有变化，直接返回
+  if (currentValue === originalValue) {
+    targetElement.blur()
+    return
   }
-
+  
+  targetElement.blur()
+  if (event.type === 'blur') {
+    const { data } = await updateStepNoQuantity(updateParams)
+    if (data === true) {
+      $baseMessage("分货数量成功！", "success", "hey")
+      fetchData()
+    }
+  }
 }
 
 const { initData, columns } = useTableDataLineToColumn()
@@ -180,7 +173,7 @@ const fetchData = async () => {
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
-      column0: `${index + 1  }`,
+      column0: `${index + 1}`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,
@@ -188,7 +181,10 @@ const fetchData = async () => {
       amazonUsOrderQuantity: item.amazonUsOrderQuantity,
       amazonUkOrderQuantity: item.amazonUkOrderQuantity,
       amazonDeOrderQuantity: item.amazonDeOrderQuantity,
+      amazonCaOrderQuantity: item.amazonCaOrderQuantity,
+      amazonJpOrderQuantity: item.amazonJpOrderQuantity,
       walmartUsOrderQuantity: item.walmartUsOrderQuantity,
+      tiktokUsOrderQuantity: item.tiktokUsOrderQuantity,
       finalSellingPrice: item.finalSellingPrice,
       grossMarginRate: item.grossMarginRate,
       packagingSize: item.packagingSize,

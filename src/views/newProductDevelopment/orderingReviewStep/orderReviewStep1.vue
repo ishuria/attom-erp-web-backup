@@ -62,7 +62,7 @@
       </el-table>
     </div>
 
-    <div style="padding-top: 50px;">
+    <!-- <div style="padding-top: 50px;">
       <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
         <el-table-column align="center" label="提交日期">
           <template #default="{ row }">
@@ -96,7 +96,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
+    </div> -->
 
     <div style="padding-top:50px;">
       <el-table border :cell-style="{ textAlign: 'center' }" :data="variantDetialList" :header-cell-style="{ 'text-align': 'center' }" stripe>

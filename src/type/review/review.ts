@@ -406,10 +406,9 @@ export interface IReviewStepUpdateReq{
   /**
    * 沃尔玛US订货数量
    */
-  walmartUsOrderQuantity?:number
-
+  walmartUsOrderQuantity?: number
+  amazonCaOrderQuantity?: number
+  amazonJpOrderQuantity?: number
+  tiktokUsOrderQuantity?: number
 }
 
-export interface IReviewStep3Item{
-
-}
