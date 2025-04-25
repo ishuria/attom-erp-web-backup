@@ -21,6 +21,20 @@
         <el-form-item label="产品短描述" prop="productDesc">
             <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
         </el-form-item>
+        <el-form-item label="主订货站点" prop="site">
+          <el-select
+            v-model="form.site"
+            placeholder="选择订货站点"
+            style="width: 240px"
+          >
+            <el-option
+              v-for="item in siteOptions"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
 
         <div class="list-container auto-height-container">
           <el-scrollbar>
@@ -50,7 +64,7 @@
                       <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
                     </div>
                     <div class="list-item-meta-content">
-                      <el-input v-model="item.amazonUSVariantQuantity" clearable style="width: 240px"/>
+                      <el-input v-model="item.quantity" clearable style="width: 240px"/>
                     </div>
                     <div class="list-item-meta-content">
                       <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
@@ -75,6 +89,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -88,6 +103,12 @@ const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 
+const siteOptions = ref<{ id: number, label: string }[]>([])
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteOptions.value = data
+}
+
 const emit = defineEmits<{
     (e: 'change-step', value: number): void
     (e: 'sendDataToStep2', value: number): void
@@ -97,10 +118,11 @@ let form = reactive<any>({
   variantSku: '',
   productName: '',
   productDesc: '',
+  site: '',
   variantList: [
     {
       variantName: '',
-      amazonUSVariantQuantity: undefined,
+      quantity: undefined,
       orderEntryId: undefined
     }
   ],
@@ -111,10 +133,11 @@ const rules = reactive<any>({
   productDesc: [
     { required: true, message: '请输入产品短描述', trigger: 'blur' },
   ],
+  site:[{ required: true, message: '请选择主订货站点', trigger: 'blur' }],
   variantList: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        const hasVariant = value.some((variant: any) => variant.variantName !== '' && variant.amazonUSVariantQuantity !== undefined);
+        const hasVariant = value.some((variant: any) => variant.variantName !== '' && variant.quantity !== undefined);
         if (hasVariant) {
           variantListError.value = ''; // 清空错误信息
           callback();
@@ -139,7 +162,7 @@ const handleAddVariants = () => {
     // 新增一个空的变体名和订货数量
     form.variantList.push({
       variantName: '',
-      amazonUSVariantQuantity: undefined,
+      quantity: undefined,
       orderEntryId: undefined,
     });
 }
@@ -313,7 +336,7 @@ const handleSubmitAndContinue = async () => {
           console.error('保存过程出错:', error)
         }
       }
-      saveOn()
+      await saveOn()
     } else {
       console.log('表单验证失败')
     }
@@ -324,7 +347,7 @@ const handleSubmitAndContinue = async () => {
 defineExpose({ form });
 // 当点击退出的时候
 const handleGoback = async () => {
-  await delVisitedRoute(handleActivePath(route, true))
+  delVisitedRoute(handleActivePath(route, true))
   history.back()
   localStorage.removeItem('orderStep1ReviewId')
 }
@@ -335,6 +358,7 @@ const fetchData = async () => {
 }
 
 onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要是空
+  await fetchSiteData();
   const getItem = localStorage.getItem('orderStep1Form')
   if (getItem) {
     Object.assign(form, JSON.parse(getItem));
@@ -342,7 +366,7 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
   }
   // 编辑进来的
   if (route.query.reviewId && (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-    fetchData()
+    await fetchData()
   }
   // 订大货的
   if (localStorage.getItem('orderStep1ReviewId')) {
