@@ -1082,3 +1082,9 @@ export interface IFinishWalmartShipmentReq {
   site: number
   channel: number
 }
+
+export interface IGetChannelSiteList {
+  id: number
+  siteName: string
+  channelId: number
+}

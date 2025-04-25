@@ -89,6 +89,12 @@ export interface IReviewCommonItem {
    * 亚马逊DE订货数量
    */
   amazonDeOrderQuantity?: number
+  amazonCaOrderQuantity?: number
+  amazonJpOrderQuantity?: number
+  tiktokUsOrderQuantity?: number
+  /**
+   * 亚马逊DK订货数量
+   */
   /**
    * 沃尔玛US订货数量
    */

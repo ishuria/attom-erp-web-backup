@@ -6,7 +6,7 @@
         border
         :data="variantList"
         :header-cell-style="{ 'text-align': 'right' }"
-        height="630"
+        height="700"
         :show-header="false"
         stripe
         style="width: auto; table-layout: fixed"
@@ -36,36 +36,12 @@
                 :true-value="1"
               />
             </template>
-            <template v-if="scope.row['column0'] === 'amazonUsOrderQuantity'">
+            <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
               <el-input
                 v-model="scope.row[prop]"
-                @blur="updateHnadlerNumber($event, scope)"
+                @blur="updateHandlerNumber($event, scope)"
                 @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'amazonUkOrderQuantity'">
-              <el-input
-                v-model="scope.row[prop]"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'amazonDeOrderQuantity'">
-              <el-input
-                v-model="scope.row[prop]"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
-              />
-            </template>
-            <template v-if="scope.row['column0'] === 'walmartUsOrderQuantity'">
-              <el-input
-                v-model="scope.row[prop]"
-                @blur="updateHnadlerNumber($event, scope)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHnadlerNumber($event, scope)"
+                @keydown.enter="updateHandlerNumber($event, scope)"
               />
             </template>
             <template
@@ -74,7 +50,10 @@
                 scope.row['column0'] !== 'amazonUsOrderQuantity' &&
                 scope.row['column0'] !== 'amazonUkOrderQuantity' &&
                 scope.row['column0'] !== 'amazonDeOrderQuantity' &&
+                scope.row['column0']!== 'amazonCaOrderQuantity' &&
+                scope.row['column0']!== 'amazonJpOrderQuantity' &&
                 scope.row['column0'] !== 'walmartUsOrderQuantity' &&
+                scope.row['column0']!== 'tiktokUsOrderQuantity' &&
                 scope.row['column0'] !== 'variantImg'
               "
             >
@@ -142,7 +121,10 @@ const labelMap: Record<string, string> = {
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   amazonUkOrderQuantity: '订货数量(亚马逊UK)',
   amazonDeOrderQuantity: '订货数量(亚马逊DE)',
+  amazonCaOrderQuantity: '订货数量(亚马逊CA)',
+  amazonJpOrderQuantity: '订货数量(亚马逊JP)',
   walmartUsOrderQuantity: '订货数量(沃尔玛US)',
+  tiktokUsOrderQuantity: '订货数量(TikTokUS)',
 }
 
 const buildParams = (idx: number): IReviewStepUpdateReq => {
@@ -161,7 +143,7 @@ const buildParams = (idx: number): IReviewStepUpdateReq => {
   return params
 }
 
-const updateHnadlerNumber = async (event: Event, row: any) => {
+const updateHandlerNumber = async (event: Event, row: any) => {
   const updateParmas = buildParams(row.cellIndex)
   console.log(updateParmas)
 
@@ -222,7 +204,10 @@ const fetchData = async () => {
       amazonUsOrderQuantity: item.amazonUsOrderQuantity,
       amazonUkOrderQuantity: item.amazonUkOrderQuantity,
       amazonDeOrderQuantity: item.amazonDeOrderQuantity,
+      amazonCaOrderQuantity: item.amazonCaOrderQuantity,
+      amazonJpOrderQuantity: item.amazonJpOrderQuantity,
       walmartUsOrderQuantity: item.walmartUsOrderQuantity,
+      tiktokUsOrderQuantity: item.tiktokUsOrderQuantity,
     }
     arr.push(n)
   })

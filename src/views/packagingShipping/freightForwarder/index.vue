@@ -6,6 +6,7 @@
         <el-button type="primary" @click="addForwarderVisible = true">新增货代</el-button>
         <el-button type="primary" @click="showForwarderList">货代清单</el-button>
         <el-button type="primary" @click="showFeeNameSetting">货代费用名设定</el-button>
+        <el-button type="primary" @click="showChannelSite">站点渠道设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -447,6 +448,30 @@
         <el-button type="primary" @click="confirmModifyOrCopy">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 站点渠道设定 -->
+    <vab-dialog
+      v-model="channelSiteVisible"
+      title="站点渠道设定"
+      top=10vh
+      width="30%"
+    >
+      <el-table border :data="channelSiteList" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table-column align="center" label="id" prop="id" width="80" />\
+        <el-table-column align="center" label="站点" prop="siteName" />
+        <el-table-column align="center" label="头程渠道" prop="channelId" >
+          <template #default="{ row }">
+            <el-select v-model="row.channelId" placeholder="请选择头程渠道"  @change="handleChangeChannel(row)">
+              <el-option
+                v-for="item in channelList"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
+          </template>
+        </el-table-column>
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -455,8 +480,8 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
-import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
-import type { IAddForwarder, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
+import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getChannelList, getChannelSiteList, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateChannelSiteList, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
+import type { IAddForwarder, IGetChannelSiteList, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -524,6 +549,22 @@ const modifyOrCopyVisible = ref<boolean>(false)
 // 标记修改还是复制
 const modifyOrCopy = ref<string>('')
 const selectId = ref<number>(0)
+const channelSiteList = ref<IGetChannelSiteList[]>([])
+// 发货站点渠道设定可见
+const channelSiteVisible = ref<boolean>(false)
+const handleChangeChannel = async (row: IGetChannelSiteList) => {
+  await updateChannelSiteList({
+    id: row.id,
+    channelId: row.channelId
+  })
+}
+// 展示发货站点渠道设定
+const showChannelSite = async () => {
+  await fetchChannelData()
+  const { data } = await getChannelSiteList()
+  channelSiteList.value = data
+  channelSiteVisible.value = true
+}
 // 展示货代展示货代费用名
 const showFeeNameSetting = async () => {
   feeNameSettingVisible.value = true
@@ -825,6 +866,11 @@ const feeNameSettingCellStyle = (data: { row: any, column: any, rowIndex: number
   return {
     textAlign: 'center'
   }
+}
+const channelList = ref<{ id: number; label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
 }
 // 获取货代简称列表
 const fetchSelectList = async () => {

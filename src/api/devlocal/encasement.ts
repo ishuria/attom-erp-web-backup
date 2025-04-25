@@ -16,6 +16,7 @@ import type {
   IFinishWalmartShipmentReq,
   IGenerateTemplateFile1Req,
   IGetChannelListRes,
+  IGetChannelSiteList,
   IGetEncasementInspectionReq,
   IGetEncasementInspectionRes,
   IGetEncasementListReq,
@@ -619,5 +620,27 @@ export const updateEncasementUserPrinter = (params: { printer: string }): Promis
     url: `${BASE_API}/encasement/user/printer/update`,
     method: 'post',
     params
+  })
+}
+
+/**
+ * @description 站点货代渠道
+ */
+export const getChannelSiteList = (): Promise<{ data: IGetChannelSiteList[] }> => {
+  return request({
+    url: `${BASE_API}/channel/list/site`,
+    method: 'get',
+  })
+}
+/**
+ * 站点货代渠道修改
+ * @param data 
+ * @returns 
+ */
+export const updateChannelSiteList = (data: { id: number, channelId: number}): Promise<{ data: boolean}> => {
+  return request({
+    url: `${BASE_API}/channel/update/site`,
+    method: 'post',
+    data
   })
 }
