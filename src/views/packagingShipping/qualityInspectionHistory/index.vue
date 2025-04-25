@@ -33,10 +33,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" >
+          <el-table-column label="SKU" prop="sku">
             <template #default="{ row }">
-              {{ row.sku }}<br />
-              {{ row.productName }}-{{ row.variantName }}-{{ row.productDesc }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+              <br />
+              {{ row.productName }}-{{ row.productDesc }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="质检结论" prop="status" >
@@ -46,7 +50,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" prop="" >
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleViewReport(row)">查看报告</el-button>
+              <el-button text type="primary" @click="handleViewNewReport(row)">查看报告</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -93,10 +97,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" >
+          <el-table-column label="SKU" prop="sku">
             <template #default="{ row }">
-              {{ row.sku }}<br />
-              {{ row.productName }}-{{ row.variantName }}-{{ row.productDesc }}
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+              <br />
+              {{ row.productName }}-{{ row.productDesc }}
             </template>
           </el-table-column>
           <el-table-column align="center" label="质检结论" prop="status" >
@@ -106,7 +114,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" prop="" >
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleViewReport(row)">查看报告</el-button>
+              <el-button text type="primary" @click="handleViewPackingReport(row)">查看报告</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -123,14 +131,19 @@
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
+    <!-- 查看新品质检报告 -->
+    <vab-view-new-inspection-report v-model="newReportVisible" :report-data="newReportData" />
+    <!-- 查看老品质检报告 -->
+    <vab-view-packing-inspection-report v-model="packingReportVisible" :report-data="packingReportData" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { getQualityInspectionList } from '/@/api/devlocal/packagingShipping'
+import type { TabsPaneContext } from 'element-plus'
+import handleClipboard from '~/src/utils/clipboard'
+import { getQualityInspectionList, getQualityInspectionNew, getQualityInspectionPackage } from '/@/api/devlocal/packagingShipping'
 import type { IGetQualityInspectionList, IGetQualityInspectionListReq } from '/@/type/packagingShipping/packagingType'
-import type  { TabsPaneContext } from 'element-plus'
 
 defineOptions({
   name: 'QualityInspectionHistory'
@@ -152,7 +165,7 @@ const showImagePreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = [url]
 }
-const fakeData = [{ po: 'PO111111', status: 1 }, { po: 'PO111111', status: 0 }]
+
 const listLoading = ref<boolean>(false)
 const queryForm = reactive<IGetQualityInspectionListReq>({
   keyWord: '',
@@ -162,8 +175,19 @@ const queryForm = reactive<IGetQualityInspectionListReq>({
 })
 const total = ref<number>(0)
 const list = ref<IGetQualityInspectionList[]>([])
-const handleViewReport = (row: any) => {
-  //
+const newReportVisible = ref<boolean>(false)
+const newReportData = reactive<any>({})
+const packingReportVisible = ref<boolean>(false)
+const packingReportData = reactive<any>({})
+const handleViewNewReport = async (row: any) => {
+  const { data } = await getQualityInspectionNew({ reportId: row.id })
+  newReportVisible.value = true
+  Object.assign(newReportData, data)
+}
+const handleViewPackingReport = async (row: any) => {
+  const { data } = await getQualityInspectionPackage({ reportId: row.id })
+  packingReportVisible.value = true
+  Object.assign(packingReportData, data)
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.column.label === 'SKU图片') {
@@ -185,6 +209,9 @@ const fetchData = async () => {
   const { data } = await getQualityInspectionList(queryForm)
   total.value = data.total
   list.value = data.list
+  // list.value.forEach((item: any) => {
+  //   item._sku = `${item.sku}<br/>${item.productName}-${item.productDesc}`
+  // })
   listLoading.value = false
 }
 const queryData = () => {
@@ -253,6 +280,15 @@ onBeforeMount(() => {
               padding-right: 0;
               padding-left: 0;
             }
+          }
+        }
+        .copySku {
+          cursor: pointer;
+          -webkit-user-select: text;
+          user-select: text;
+          transition: all 0.3s;
+          &:hover {
+            color: #000;
           }
         }
       }

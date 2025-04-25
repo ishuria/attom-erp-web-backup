@@ -290,11 +290,11 @@ export function getCommissionDetailPictureList(params: IGetCommissionDetailPictu
 /**
  * @description 提成明细-美工长期任务列表查询
  */
-export function getCommissionDetailLongList(params: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailLongListRes> {
+export function getCommissionDetailLongList(data: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailLongListRes> {
   return request({
     url: `${BASE_API}/long/commission/task/detail/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**

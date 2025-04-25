@@ -8,6 +8,9 @@
       require-asterisk-position="right"
       style="margin-right: 30px; margin-left: 30px"
     >
+      <el-form-item label="日期">
+        <el-input disabled style="margin-right: 0" />
+      </el-form-item>
       <el-form-item label="SKU" prop="sku">
         <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
       </el-form-item>
@@ -21,7 +24,7 @@
 
         <el-input v-model="qualityInspectionForm.po" disabled style="margin-right: 0" />
       </el-form-item>
-      <el-divider >质检结果</el-divider>
+      <el-divider ><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
       <el-table
         border
         :cell-style="qualityInspectionCellStyle"
@@ -75,15 +78,16 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <div style="margin-right: 30px">
+      <!-- <div style="margin-right: 30px">
         <el-button type="warning" @click="closeQualityInspection">关闭</el-button>
-      </div>
+      </div> -->
     </template>
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :initial-index="currentPreviewIndex"  :url-list="imagePreviewList" @close="imagePreviewClose" />
 </template>
 
 <script lang="ts" setup>
+import { ZoomIn } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import type { IInspectionList } from '/@/type/packagingShipping/packagingType'
 
@@ -106,6 +110,15 @@ const visible = computed({
     emit('update:modelValue', value)
   }
 })
+watch(() => props.modelValue, (value) => {
+  if (value) {
+    initData()
+  }
+})
+const initData = () => {
+  Object.assign(qualityInspectionForm, props.reportData)
+  inspectionList.value = props.reportData.inspectionList
+}
 const qualityInspectionForm = reactive({
   sku: '',
   status: 0,
@@ -136,8 +149,7 @@ const getImageColumnWidth = (): number => {
   inspectionList.value.forEach((row) => {
     const imageCount = row?.images?.length || 0
     let totalWidth = 0
-    if (imageCount === 5) totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
-    else totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
     if (totalWidth > maxWidth) {
       maxWidth = totalWidth
     }
@@ -153,7 +165,6 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
     }
   } else if (label === '备注') {
     return {
-      cursor: 'pointer',
       textAlign: 'left'
     }
   } else {
@@ -163,3 +174,88 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
   }
 }
 </script>
+
+<style lang="scss" scoped>
+// 图片样式
+.image-cell {
+  width: 75px;
+  height: 75px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.el-checkbox {
+  transform: scale(1.2);
+}
+</style>

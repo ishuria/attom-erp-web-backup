@@ -25,7 +25,7 @@
       <el-form-item label="PO" prop="productName">
         <el-input v-model="qualityInspectionForm.po" disabled style="margin-right: 0" />
       </el-form-item>
-      <el-divider >质检结果</el-divider>
+      <el-divider ><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
       <el-table
         border
         
@@ -160,8 +160,7 @@ const getImageColumnWidth = (): number => {
   inspectionList.value.forEach((row) => {
     const imageCount = row?.images?.length || 0
     let totalWidth = 0
-    if (imageCount === 5) totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
-    else totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
     if (totalWidth > maxWidth) {
       maxWidth = totalWidth
     }
