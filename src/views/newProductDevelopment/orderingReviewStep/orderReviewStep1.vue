@@ -164,7 +164,6 @@
 import { getMoldInfoByReviewId, getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewMoldItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
-import { formatDate } from '/@/utils/dateUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { effectiveCountInputeHandle, inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
 
@@ -194,7 +193,9 @@ const labelMap: Record<string, string> = {
   orderEntryId: '变体编号',
   variantImg: 'SKU图片',
   productName: '产品名称',
-  effectiveCount: '有效计数',
+  // effectiveCount: '有效计数',
+  productPositioning: '产品定位',
+  graphicDesign: '平面设计',
   oem: 'OEM',
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   purchaseTotalPrice: '总采购含税价',
@@ -316,7 +317,9 @@ const fetchData = async () => {
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,
-      effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
+      productPositioning: item.productPositioning,
+      graphicDesign: item.graphicDesign,
+      // effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
       oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
       amazonUsOrderQuantity: item.amazonUsOrderQuantity,
       purchaseTotalPrice: item.purchaseTotalPrice,

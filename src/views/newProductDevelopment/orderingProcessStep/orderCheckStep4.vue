@@ -37,33 +37,6 @@
               </el-image>
             </div>
           </template>
-          <template v-if="row['column0'] === 'productLength'">
-            <span>{{ row[prop] }}</span>
-          </template>
-          <template v-if="row['column0'] === 'productWidth'">
-            <span>{{ row[prop] }}</span>
-          </template>
-          <template v-if="row['column0'] === 'productHeight'">
-            <span>{{ row[prop] }}</span>
-          </template>
-          <template v-if="row['column0'] === 'material'">
-            <span>{{ row[prop] }}</span>
-          </template>
-          <template v-if="row['column0'] === 'battery'">
-            <span>{{ row[prop] }}</span> 
-          </template>
-          <template v-if="row['column0'] === 'benchmarkAsin'">
-            <span>{{ row[prop] }}</span> 
-          </template>
-          <template v-if="row['column0'] === 'patent'">
-            <span>{{ row[prop] }}</span> 
-          </template>
-          <template v-if="row['column0'] === 'productManager'">
-            <span>{{ row[prop] }}</span> 
-          </template>
-          <template v-if="row['column0'] === 'productDesign'">
-            <span>{{ row[prop] }}</span> 
-          </template>
           <template v-if="row['column0'] === 'sampleRetentionStatus'">
             <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
               <el-option 
@@ -77,6 +50,15 @@
           <template v-if="row['column0'] === 'packingGroup'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
           </template>
+          <template v-if="row['column0'] === 'oem'">
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
+          </template>
+          <template
+            v-if="row['column0'] !== 'productImgUrl' && row['column0'] !== 'sampleRetentionStatus'
+            && row['column0'] !== 'packingGroup' && row['column0'] !== 'oem'"
+          >
+            {{ row[prop] }}
+          </template>
         </template>
       </el-table-column>
       <template #empty>
@@ -84,7 +66,7 @@
       </template>
     </el-table>
     <div class="pay-button-group">
-      <el-button @click="handleGoback">上一步</el-button>
+      <el-button @click="handleGoBack">上一步</el-button>
       <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>
     </div>
   </div>
@@ -112,13 +94,16 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 
 const tableRef = ref<TableInstance>()
 const photoSampleOptions = [
-    { label: '已有拍照样品,大货无需留样', value: 0 },
-    { label: '大货需要留样拍照', value: 1 }
-];
+  { label: '已有拍照样品,大货无需留样', value: 0 },
+  { label: '大货需要留样拍照', value: 1 }
+]
 
 const labelMap: Record<string, string> = {
   column0: '',
   productImgUrl: '上传成套产品图片<br>(产品要和实际一致)',
+  productPositioning: '产品定位',
+  oem: 'OEM',
+  graphicDesign: '平面设计',
   productLength: '产品长(cm)',
   productWidth: '产品宽(cm)',
   productHeight: '产品高(cm)',
@@ -148,7 +133,7 @@ const handleSave = async () => {
 }
 
 // 当点击上一步的时候
-const handleGoback = () => {
+const handleGoBack = () => {
   emit('changeCheck-step', 2)
 }
 
@@ -234,6 +219,9 @@ const fetchVariantList = async () => {
       {
         column0: '',
         productImgUrl: item.variantImg,
+        productPositioning: item.productPositioning,
+        oem: item.oem,
+        graphicDesign: item.graphicDesign,
         productLength: item.productLength,
         productWidth: item.productWidth,
         productHeight: item.productHeight,

@@ -451,6 +451,7 @@
       <vab-alert type="error">
         <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
         <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
+        <h3>--HTS请向头程管理专员咨询</h3>
       </vab-alert>
     </div>
     <div class="pay-button-group">
@@ -471,26 +472,26 @@ import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
-reverseCalculateReview,
-reviewStepNo3ComponentAdd,
-reviewStepNo3ComponentCopy,
-reviewStepNo3ComponentDel,
-reviewStepNo3ComponentImtDel,
-reviewStepNo3ComponentList,
-reviewStepNo3ComponentSuitDetail,
-reviewStepNo3ComponentUpdate,
-reviewStepNo3ComponentUpload,
-reviewStepNo3ContractTerms,
-reviewStepNo3GetSelectVariantList,
-reviewStepNo3PurchaseMatters,
-reviewStepNo3SaveTh,
-reviewStepNo3UpdateContractTerms,
-reviewStepNo3UpdatePurchaseMatters,
-reviewStepNo3VariantList,
-reviewStepNo3VariantUpdate,
-submitReviewComponent,
-submitReviewConsumable,
-updateReviewStepNo3ComponentSuitDetail
+  reverseCalculateReview,
+  reviewStepNo3ComponentAdd,
+  reviewStepNo3ComponentCopy,
+  reviewStepNo3ComponentDel,
+  reviewStepNo3ComponentImtDel,
+  reviewStepNo3ComponentList,
+  reviewStepNo3ComponentSuitDetail,
+  reviewStepNo3ComponentUpdate,
+  reviewStepNo3ComponentUpload,
+  reviewStepNo3ContractTerms,
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo3PurchaseMatters,
+  reviewStepNo3SaveTh,
+  reviewStepNo3UpdateContractTerms,
+  reviewStepNo3UpdatePurchaseMatters,
+  reviewStepNo3VariantList,
+  reviewStepNo3VariantUpdate,
+  submitReviewComponent,
+  submitReviewConsumable,
+  updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'
@@ -837,7 +838,7 @@ const handleRemove = async (row: any) => {
 }
 // 新增逻辑
 const handleCreateComponent = async () => {
-  const newComponent: IreviewStepNo3ComponentList = {
+  const newComponent: any = {
     actualTaxRate: '',
     componentImgUrl: '',
     componentName: '',

@@ -149,6 +149,7 @@ const handleStatusChange = async (row: any) => {
   // 勾选了需拍照的，需质检列必须也勾选
   if (row.isUploadImages === 1) {
     row.status = 1
+    $baseMessage('勾选了需拍照的，需质检列必须也勾选','warning', 'hey')
   }
   await updateProductQualityInspection(row)
   fetchData()

@@ -54,7 +54,14 @@
             <template v-if="row['column0'] === 'productSize'">
               {{ row[prop] }} inch
             </template>
-            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'packagingSize'&& row['column0'] !== 'productSize'">
+            <template v-if="row['column0'] === 'oem'">
+              <el-checkbox v-model="row[prop]" disabled :false-value="1" :true-value="0"/>
+            </template>
+            <template
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
+              && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'
+              && row['column0'] !== 'oem'"
+            >
               {{ row[prop] }}
             </template>
           </template>
@@ -65,7 +72,7 @@
       </el-table>
     </div>
 
-    <div>
+    <!-- <div>
       <el-table 
         border :cell-style="{ 'text-align': 'center' }" 
         :data="moldCheckList" 
@@ -100,7 +107,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
+    </div> -->
        
     <div class="pay-button-group">
       <el-button @click="handleGoback">上一步</el-button>
@@ -139,54 +146,57 @@ const setPreviewImage = (url: string) => {
 const formattedPrice = (price: string) => {
     return parseFloat(price).toFixed(2)
 }
-const generateStatus = (value: number) => {
-  switch (value) {
-    case 0: {
-      return { text: "审批中", color: "status-pending" };
-    }
-    case 1: {
-      return { text: "待提交付款申请", color: "status-in" };
-    }
-    case 2: {
-      return { text: "已付款", color: "status-paid" };
-    }
-    default: {
-      return { text: "未知", color: "status-pending" };
-    }
-  }
-}
-const generateInvoiceType = (value: number) => {
-    switch (value) {
-    case 0: {
-        return "专票"
-    }
-    case 1: {
-        return "普票"
-    }
-    case 2: {
-        return "不开票"
-    }
-    // No default
-    }
-}
-const generateDealMethod = (value: number) => {
-    switch (value) {
-    case 0: {
-        return "不含在PO"
-    }
-    case 1: {
-        return "含在PO"
-    }
-    case 2: {
-        return "含在其他PO"
-    }
-    // No default
-    }
-}
+// const generateStatus = (value: number) => {
+//   switch (value) {
+//     case 0: {
+//       return { text: "审批中", color: "status-pending" };
+//     }
+//     case 1: {
+//       return { text: "待提交付款申请", color: "status-in" };
+//     }
+//     case 2: {
+//       return { text: "已付款", color: "status-paid" };
+//     }
+//     default: {
+//       return { text: "未知", color: "status-pending" };
+//     }
+//   }
+// }
+// const generateInvoiceType = (value: number) => {
+//     switch (value) {
+//     case 0: {
+//         return "专票"
+//     }
+//     case 1: {
+//         return "普票"
+//     }
+//     case 2: {
+//         return "不开票"
+//     }
+//     // No default
+//     }
+// }
+// const generateDealMethod = (value: number) => {
+//     switch (value) {
+//     case 0: {
+//         return "不含在PO"
+//     }
+//     case 1: {
+//         return "含在PO"
+//     }
+//     case 2: {
+//         return "含在其他PO"
+//     }
+//     // No default
+//     }
+// }
 const labelMap: Record<string, string> = {
   column0: '',
   variantImg: 'SKU图片',
   productName: '产品名称',
+  productPositioning: '产品定位',
+  oem: 'OEM',
+  graphicDesign: '平面设计',
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
@@ -295,6 +305,9 @@ const fetchData = async () => {
     column0: convertString(index),
     variantImg: item.variantImg,
     productName: item.productName,
+    productPositioning: item.productPositioning,
+    oem: item.oem,
+    graphicDesign: item.graphicDesign,
     amazonUsOrderQuantity: item.amazonUsOrderQuantity,
     purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
     finalSellingPrice: item.finalSellingPrice,
@@ -354,6 +367,9 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.el-checkbox {
+  transform: scale(1.3);
 }
 </style>
   

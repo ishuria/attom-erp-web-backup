@@ -167,6 +167,14 @@ export interface IReviewCommonItem {
    * 包装重量
    */
   weight?: string
+  /**
+   * 产品定位
+   */
+  productPositioning?: string
+  /**
+   * 平面设计
+   */
+  graphicDesign?: string
 }
 
 /**
