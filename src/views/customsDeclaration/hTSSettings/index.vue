@@ -98,7 +98,7 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -106,7 +106,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="欧洲" :name="1">
+      <el-tab-pane label="英国" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showAdd2">新增</el-button>
@@ -203,7 +203,7 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -211,6 +211,9 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="德国" :name="2"></el-tab-pane>
+      <el-tab-pane label="加拿大" :name="3"></el-tab-pane>
+      <el-tab-pane label="日本" :name="4"></el-tab-pane>
     </el-tabs>
     <!-- 新增 -->
     <vab-dialog
@@ -403,7 +406,7 @@ const handleViewSizeChange = (val: number) => {
   viewFetchData()
 }
 const handleConfirmUpdate = async () => {
-  
+
   const { data } = await updateHTSList({
     [`${prop.value}`]: content.value,
     id: _id.value,
@@ -446,7 +449,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       title.value = '产品大类'
       prop.value = 'productCategory'
       content.value = row.productCategory
-    
+
       break;
     }
     case '1级大类': {
@@ -454,7 +457,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       title.value = '1级大类'
       prop.value = 'categoryOne'
       content.value = row.categoryOne
-    
+
       break;
     }
     case '2级大类': {
@@ -462,7 +465,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       title.value = '2级大类'
       prop.value = 'categoryTwo'
       content.value = row.categoryTwo
-    
+
       break;
     }
     case '3级大类': {
@@ -470,7 +473,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       title.value = '3级大类'
       prop.value = 'categoryThree'
       content.value = row.categoryThree
-    
+
       break;
     }
     default: {
@@ -552,31 +555,17 @@ const handleDel = async (row: IGetHTSList, index: number) => {
   })
 }
 const handleTabClick = (tab: TabsPaneContext) => {
-  if (tab.props.name === 0) {
-    queryForm.type = 0
-    activeName.value = 0
-    router.push({
-      query: {
-        ...route.query,
-        pageNo: '1',
-        pageSize: queryForm.pageSize,
-        tab: queryForm.type
-      }
-    })
-    fetchData()
-  } else {
-    queryForm.type = 1
-    activeName.value = 1
-    router.push({
-      query: {
-        ...route.query,
-        pageNo: '1',
-        pageSize: queryForm.pageSize,
-        tab: queryForm.type
-      }
-    })
-    fetchData()
-  }
+  queryForm.type = Number( tab.props.name)
+  activeName.value = Number(tab.props.name)
+  router.push({
+    query: {
+      ...route.query,
+      pageNo: '1',
+      pageSize: queryForm.pageSize,
+      tab: queryForm.type
+    }
+  })
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
@@ -691,8 +680,8 @@ onBeforeMount(() => {
   }
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 </style>

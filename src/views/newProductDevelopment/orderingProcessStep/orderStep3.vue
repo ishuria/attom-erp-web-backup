@@ -9,13 +9,13 @@
           <el-button type="primary" @click="repositoryAddVisible = true">新增收货仓库</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-        
-      <el-table 
+
+      <el-table
         ref="tableRef"
-        border 
-        :cell-class-name="clearPadding" class="noneHoverTable" 
+        border
+        :cell-class-name="clearPadding" class="noneHoverTable"
         :data="componentList"
-        :header-cell-style="{ 'text-align': 'center' }" 
+        :header-cell-style="{ 'text-align': 'center' }"
         stripe
         @cell-click="changeInput"
       >
@@ -26,7 +26,7 @@
             </el-select>
           </template>
         </el-table-column>
-        
+
         <el-table-column fixed="left" label="零件图片" width="76">
           <template #header>
             零件<br />图片
@@ -48,14 +48,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="零件ID" prop="existingPartsListId" width="90"/>   
-          
+        <el-table-column align="center" label="零件ID" prop="existingPartsListId" width="90"/>
+
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
           <template #default="{ row }">
             <div class="none">
               <el-input
                 v-model="row.componentName" autofocus :autosize="{ minRows: 2, maxRows: 7 }" type="textarea"
-                @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" 
+                @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)"
               />
             </div>
             <span>{{ row.componentName }}</span>
@@ -122,7 +122,7 @@
             </div>
             <span>{{ row.freight }}</span>
           </template>
-        </el-table-column>    
+        </el-table-column>
         <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
           <template #header>
             总未<br>税价
@@ -141,7 +141,7 @@
             </div>
             <span>{{ row.taxIncludedPrice }}</span>
           </template>
-        </el-table-column>    
+        </el-table-column>
         <el-table-column label="货币" prop="currency" width="110px">
           <template #default="{ row }">
             <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handleCurrencyChange(row)">
@@ -156,7 +156,7 @@
             </div>
             <span>{{ row.minimumOrderQuantity }}</span>
           </template>
-        </el-table-column> 
+        </el-table-column>
         <el-table-column align="center" label="整箱数" min-width="80" prop="numberFullCartons">
           <template #default="{ row }">
             <div class="none">
@@ -164,7 +164,7 @@
             </div>
             <span>{{ row.numberFullCartons }}</span>
           </template>
-        </el-table-column> 
+        </el-table-column>
         <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
           <template #default="{row}">
             <div class="none">
@@ -225,7 +225,7 @@
         <el-table-column  label="收货仓库" min-width="140" prop="defaultRepositoryId">
           <template #default="{ row }">
             <el-select v-model="row.defaultRepositoryId" filterable placeholder="输入和搜索默认收货仓库" style="min-width: 100%;" @change="handleCurrencyChange(row)">
-              <el-option 
+              <el-option
                 v-for="item in repositoryOption"
                 :key="item.id"
                 :label="item.label"
@@ -266,7 +266,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
         </template>
       </el-table>
-  
+
       <vab-alert type="error">
         <h3>--上述产品配件必须和开票一致。如果同一个供应商的零件被分成多行，则每行都需要单独开票。相同供应商的零件尽量合并，实在无法合并的再拆分开。</h3>
         <h3>--为了精准核算利润，运费需要准确填写。</h3>
@@ -281,13 +281,13 @@
       />
 
       <!-- 添加零件 -->
-      <vab-add-component 
+      <vab-add-component
         :create-component-visible="createComponentVisible"
         @update:create-component-visible="handleCloseCreateComponent"
         @update:table-value="handleSubmitComponent"
       />
       <!-- 添加耗材 -->
-      <vab-add-consumable 
+      <vab-add-consumable
         :create-consumable-visible="createConsumableVisible"
         @update:create-consumable-visible="handleCloseCreateConsumable"
         @update:table-value="handleSubmitConsumable"
@@ -296,10 +296,10 @@
       <vab-add-repository v-model="repositoryAddVisible" @submit="handleWarehouseSubmit" />
     </div>
     <div class="table-container">
-      <el-table 
-        ref="tableRef" 
-        border :cell-style="{ 'text-align': 'center' }" 
-        :data="variantsList" 
+      <el-table
+        ref="tableRef"
+        border :cell-style="{ 'text-align': 'center' }"
+        :data="variantsList"
         :header-cell-style="{ 'text-align': 'center' }" stripe
         @cell-click="changeInput"
       >
@@ -362,7 +362,7 @@
           <template #default="{ row }">
             {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
           </template>
-        </el-table-column>    
+        </el-table-column>
         <el-table-column label="打包￥" prop="packagingPrice" width="90" >
           <template #default="{ row }">
             <div class="none">
@@ -373,8 +373,8 @@
         </el-table-column>
         <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
           <template #default="{ row }">
-            <el-select 
-              v-model="row.firstMileChannel" 
+            <el-select
+              v-model="row.firstMileChannel"
               placeholder="请选择头程渠道"
               style="min-width: 100%"
               @change="handlerEstimatendChange(row)"
@@ -420,6 +420,19 @@
             <span>{{ row.volumeCoefficient }}</span>
           </template>
         </el-table-column>
+
+        <el-table-column label="HTS" min-width="100" prop="volumeCoefficient">
+          <template #default="{ row }">
+            <el-select
+              v-model="row.htsId"
+              placeholder="请选择头程渠道"
+              style="min-width: 100%"
+            >
+              <el-option v-for="dict in channelList" :key="dict.id" :label="dict.label" :value="dict.id"/>
+            </el-select>
+          </template>
+        </el-table-column>
+
         <el-table-column label="关税%" prop="tariff">
           <template #default="{ row }">
             <div class="none">
@@ -438,7 +451,7 @@
             {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
         </el-table-column>
-    
+
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template #default="{ row }">
             <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
@@ -463,7 +476,7 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
@@ -501,7 +514,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-
+import CountryFlag from 'vue-country-flag-next'
 defineOptions({
   name: 'OrderStep3',
 })
@@ -510,7 +523,7 @@ const repositoryAddVisible = ref<boolean>(false)
 const route: any = useRoute()
 const props = defineProps<{ step1Data: number }>()
 
-const emit = defineEmits<{ 
+const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
   (e: 'update:previewListValue', value: string): void
@@ -527,7 +540,7 @@ const showUploadDialog = (row: any) => {
   copyImgRow = row
 }
 const isValueAllInput = (row: IreviewStepNo3VariantList) => {
-  if (row.site == null) { 
+  if (row.site == null) {
     $baseMessage('站点不能为空，请选择后再进行逆算', 'warning')
     return false
   } else if (row.packagingLength == null) {
@@ -565,7 +578,7 @@ const handleWarehouseSubmit = async (formData: any) => {
   const { data } = await addPurchaseRepository(formData)
   if (data) {
     $baseMessage('新增成功', 'success', 'hey')
-    fetchRepository()
+    await fetchRepository()
   } else {
     $baseMessage('新增失败', 'error', 'hey')
   }
@@ -576,7 +589,7 @@ const handleCalculate = async (row: IreviewStepNo3VariantList) => {
     const { data } = await reverseCalculateReview({ id: row.orderEntryId })
     if (data) {
       $baseMessage('逆算成功!', 'success')
-      fetchVariantsData()
+      await fetchVariantsData()
     }
   }
 }
@@ -590,18 +603,18 @@ const handleCloseCreateConsumable = (value: boolean) => {
 }
 // 提交添加零件传递的值
 const handleSubmitComponent = async (value: any) => {
- 
+
   let list: ISubmitPurchaseComponent[] = []
   value.map((item: any): any => {
     if (item.count) {
       list.push({
-        componentId: Number(item.id), 
-        sku: item.sku,                   
-        suppliserId: Number(item.suppliserId),   
-        count: Number(item.count)                 
+        componentId: Number(item.id),
+        sku: item.sku,
+        suppliserId: Number(item.suppliserId),
+        count: Number(item.count)
       })
     }
-    
+
  })
  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
  try {
@@ -611,8 +624,8 @@ const handleSubmitComponent = async (value: any) => {
    })
    if (data === true) {
      $baseMessage('添加零件提交成功', 'success', 'hey')
-     fetchDataComponent()
-     fetchVariantsData()
+     await fetchDataComponent()
+     await fetchVariantsData()
    }
  } catch (error) {
    console.error(error)
@@ -624,9 +637,9 @@ const handleSubmitConsumable = async (value: any) => {
   value.map((item: any): any => {
     if (item.count) {
       list.push({
-        componentId: Number(item.id),         
-        suppliserId: Number(item.suppliserId),   
-        count: Number(item.count)                 
+        componentId: Number(item.id),
+        suppliserId: Number(item.suppliserId),
+        count: Number(item.count)
       })
    }
  })
@@ -638,8 +651,8 @@ const handleSubmitConsumable = async (value: any) => {
    })
    if (data === true) {
      $baseMessage('添加耗材提交成功', 'success', 'hey')
-     fetchDataComponent()
-     fetchVariantsData()
+     await fetchDataComponent()
+     await fetchVariantsData()
    }
  } catch (error) {
    console.error(error)
@@ -681,7 +694,7 @@ const clickEditorConfirm = async (val: any) => {
         editorContent.value = val
         clickRow.value.purchaseMatters = val
       }
-    
+
       break;
     }
     case 'contractTerms': {
@@ -690,7 +703,7 @@ const clickEditorConfirm = async (val: any) => {
         editorContent.value = val
         clickRow.value.contractTerms = val
       }
-    
+
       break;
     }
     case 'componentSuitDetail': {
@@ -699,7 +712,7 @@ const clickEditorConfirm = async (val: any) => {
         editorContent.value = val
         clickRow.value.componentSuitDetail = val
       }
-    
+
       break;
     }
   // No default
@@ -725,8 +738,8 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
     orderEntryId: row.orderEntryId,
     packagingHeight: row.packagingHeight!,
     packagingLength: row.packagingLength!,
-    packagingPrice: row.packagingPrice!,     
-    packagingWidth: row.packagingWidth!,     
+    packagingPrice: row.packagingPrice!,
+    packagingWidth: row.packagingWidth!,
     site: row.site,
     tariff: row.tariff! / 100,
     volumeCoefficient: row.volumeCoefficient!,
@@ -744,30 +757,30 @@ const handleVariantChange = async (row: any) => {
         }
     })
     // console.log(_variant);
-        
+
     await reviewStepNo3ComponentUpdate({
         ...row,
         variant: _variant.variant
     })
 
-    fetchDataComponent()
-    fetchVariantsData()
+    await fetchDataComponent()
+    await fetchVariantsData()
 }
 const handleCurrencyChange = async (row: any) => {
     await reviewStepNo3ComponentUpdate({
         ...row,
         currency: parseInt(row.currency),
     })
-    fetchDataComponent()
-    fetchVariantsData()
+    await fetchDataComponent()
+    await fetchVariantsData()
 }
 const handleInvoicingChange = async (row: any) => {
     await reviewStepNo3ComponentUpdate({
         ...row,
         invoicing: parseInt(row.invoicing),
     })
-    fetchDataComponent()
-    fetchVariantsData()
+    await fetchDataComponent()
+    await fetchVariantsData()
 }
 // 头程渠道修改
 const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
@@ -779,8 +792,8 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
     orderEntryId: row.orderEntryId,
     packagingHeight: row.packagingHeight!,
     packagingLength: row.packagingLength!,
-    packagingPrice: row.packagingPrice!,     
-    packagingWidth: row.packagingWidth!,     
+    packagingPrice: row.packagingPrice!,
+    packagingWidth: row.packagingWidth!,
     site: row.site,
     tariff: row.tariff! / 100,
     volumeCoefficient: row.volumeCoefficient!,
@@ -788,7 +801,7 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
     weightCoefficient: row.weightCoefficient!,
     actualTotalCost: row.actualTotalCost!,
   })
-  fetchVariantsData()
+  await fetchVariantsData()
 }
 
 /**
@@ -811,7 +824,7 @@ async function uploadImage(file: File) {
   } catch (error) {
     console.error(error)
   }
-} 
+}
 
 /**
  * 图片预览事件
@@ -915,7 +928,7 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
 const clickRow = ref<any>()
 
 let _row: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   const { property } = column;
   switch (property) {
@@ -928,7 +941,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       wangEditorTitle.value = '零件采购注意事项';
       classify.value = 'purchaseMatters';
       wangEditorVisible.value = true
-    
+
       break;
     }
     case 'contractTerms': {
@@ -939,7 +952,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       wangEditorTitle.value = '合同条款';
       classify.value = 'contractTerms';
       wangEditorVisible.value = true
-    
+
       break;
     }
     case 'componentSuitDetail': {
@@ -950,7 +963,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       wangEditorTitle.value = '零件明细';
       classify.value = 'componentSuitDetail';
       wangEditorVisible.value = true
-    
+
       break;
     }
   // No default
@@ -973,7 +986,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 }
 // 零件table blur事件
 const clickCancel = async (event:any,value:any) =>{
-    
+
   // 获取根元素，避免重复调用 getRootElement
   const rootElement = getRootElement(event.srcElement, ".cell");
 
@@ -1012,7 +1025,7 @@ const clickVariantsCancel = async (event:any, value:any) => {
   if (isEqual(_row, value)) {
     return
   }
-  
+
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
@@ -1117,14 +1130,14 @@ const validateVariants = (item: any) => {
 };
 const validateSame = () => {
   const grouped = componentList.value.reduce((acc: any, row: any) => {
-    const key = `${row.supplier}-${row.invoicing}`        
+    const key = `${row.supplier}-${row.invoicing}`
     acc[key] = (acc[key] || []).concat({
       actualTaxRate: row.actualTaxRate,
       invoicingTaxRate: row.invoicingTaxRate
     })
     return acc
   }, {})
-  
+
   for(const key in grouped) {
     if(grouped[key].length > 1) {
       const firstRow = grouped[key][0]
@@ -1133,7 +1146,7 @@ const validateSame = () => {
         return true
       }
       return false
-    } 
+    }
   }
   return true
 }
@@ -1236,7 +1249,7 @@ onMounted(()=>{
   fetchSalesSiteList()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
   display: block;
@@ -1265,20 +1278,20 @@ onMounted(()=>{
 .image-cell {
   width: 100%;
   height: 75px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -1292,18 +1305,18 @@ onMounted(()=>{
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
       background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
       opacity: 1;  // 悬停时完全显示
@@ -1318,14 +1331,14 @@ onMounted(()=>{
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
@@ -1341,9 +1354,8 @@ onMounted(()=>{
   padding-left: 0;
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 </style>
-  

@@ -163,100 +163,100 @@ export interface IreviewStepNo3ComponentList {
     /**
     * 实际税点
     */
-    actualTaxRate: string;
+    actualTaxRate?: string;
     /**
     * 零件图片地址
     */
-    componentImgUrl: string | any;
+    componentImgUrl?: string | any;
     /**
     * 零件名
     */
-    componentName: string;
+    componentName?: string;
     /**
     * 零件单位
     */
-    componentUnit: string;
+    componentUnit?: string;
     /**
     * 合同条款
     */
-    contractTerms: string;
+    contractTerms?: string;
     /**
     * 货币 0RMB 1USD 2EUR
     */
-    currency: number | null;
+    currency?: number | null;
     /**
     * 运费（含税）
     */
-    freight: string;
+    freight?: string;
     /**
     * 0专票 1普票 2无法开票
     */
-    invoicing: number | null;
+    invoicing?: number | null;
     /**
     * 开票税点
     */
-    invoicingTaxRate: string;
+    invoicingTaxRate?: string;
     /**
     * 起订量
     */
-    minimumOrderQuantity: number | null;
+    minimumOrderQuantity?: number | null;
     /**
     * 整箱数
     */
-    numberFullCartons: number | null;
+    numberFullCartons?: number | null;
     /**
     * 变体d
     */
-    orderEntryId: number | null;
+    orderEntryId?: number | null;
     /**
     * 总价未税价
     */
-    preTaxPrice: string;
+    preTaxPrice?: string;
     /**
     * 采购链接
     */
-    purchaseLink: string;
+    purchaseLink?: string;
     /**
     * 零件采购注意事项
     */
-    purchaseMatters: string;
+    purchaseMatters?: string;
     /**
     * 数量
     */
-    quantity: number | null;
+    quantity?: number | null;
     /**
     * 零件id
     */
-    reviewComponentId: number | null;
+    reviewComponentId?: number | null;
     /**
     * 审核id
     */
-    reviewId: number | null;
+    reviewId?: number | null;
     /**
     * 供应商
     */
-    supplier: string;
+    supplier?: string;
     /**
     * 总含税价
     */
-    taxIncludedPrice: string;
+    taxIncludedPrice?: string;
     /**
     * 出厂总价
     */
-    totalPrice: string;
+    totalPrice?: string;
     /**
     * 出厂单价
     */
-    unitPrice: string;
+    unitPrice?: string;
     /**
     * 零件所属变体
     */
-    variant: string;
-  cropData?: string
-  /**
-   * 零件明细
-   */
-  componentSuitDetail: string
+    variant?: string;
+    cropData?: string
+    /**
+    * 零件明细
+    */
+    componentSuitDetail?: string
 }
 // 新品订货流程-零件信息完善与售价核对-修改零件采购注意事项
 export interface IreviewStepNo3UpdatePurchaseMatters {

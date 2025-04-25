@@ -29,10 +29,10 @@ export interface IAddHSListReq {
   taxRate: number
 }
 export interface IGetHTSListReq {
-  keyWord: string
-  type: number
-  pageNo: number
-  pageSize: number
+  keyWord?: string
+  type?: number
+  pageNo?: number
+  pageSize?: number
 }
 export interface IGetHTSListRes {
   data: {
@@ -181,11 +181,11 @@ export interface IUpdateHTSListReq {
 }
 
 export interface IGetHtsSkuListReq {
-  htsId: number
-  type: number
-  keyWord: string
-  pageNo: number
-  pageSize: number
+  htsId?: number
+  type?: number
+  keyWord?: string
+  pageNo?: number
+  pageSize?: number
 }
 export interface IHtsSkuList {
   sku: string

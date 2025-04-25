@@ -740,11 +740,11 @@ export const addHSList = (data: IAddHSListReq): Promise<{ data: boolean }> => {
 /**
  * @description HTS列表
  */
-export const getHTSList = (params: IGetHTSListReq): Promise<IGetHTSListRes> => {
+export const getHTSList = (data: IGetHTSListReq): Promise<IGetHTSListRes> => {
   return request({
     url: `${BASE_API}/hts/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -779,7 +779,7 @@ export const updateHTSList = (data: IUpdateHTSListReq): Promise<{ data: boolean 
 }
 /**
  * Hts查看Sku列表
- * @returns 
+ * @returns
  */
 export const getHtsSkuList = (data: IGetHtsSkuListReq): Promise<IGetHtsSkuListRes> => {
   return request({
