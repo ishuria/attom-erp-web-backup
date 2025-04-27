@@ -68,7 +68,7 @@
       </el-table>
     </div>
     <div class="pay-button-group">
-      <el-button :loading="releasePoLoading" native-type="submit" type="primary" @click="handleSaveAndContinue">发布PO</el-button>
+      <el-button :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">归档新品进度管理并发布采购计划</el-button>
     </div>
   </div>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />

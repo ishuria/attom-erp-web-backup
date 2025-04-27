@@ -54,7 +54,10 @@
             <template v-if="row['column0'] === 'productSize'">
               {{ row[prop] }} inch
             </template> -->
-            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'">
+            <template v-if="row['column0'] === 'oem'">
+              <el-checkbox v-model="row[prop]" :false-value="0" :true-value="1" />
+            </template>
+            <template v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'oem'">
               {{ row[prop] }}
             </template>
           </template>
@@ -238,6 +241,9 @@ const labelMap: Record<string, string> = {
   column0: '',
   variantImg: 'SKU图片',
   productName: '产品名称',
+  productPositioning: '产品定位',
+  oem: 'OEM',
+  graphicDesign: '平面设计',
   amazonUsOrderQuantity: '订货数量(亚马逊US)',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
@@ -344,6 +350,9 @@ const fetchData = async () => {
     column0: convertString(index),
     variantImg: item.variantImg,
     productName: item.productName,
+    productPositioning: item.productPositioning,
+    oem: item.oem,
+    graphicDesign: item.graphicDesign,
     amazonUsOrderQuantity: item.amazonUsOrderQuantity,
     purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
     finalSellingPrice: item.finalSellingPrice,

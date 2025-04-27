@@ -1125,6 +1125,9 @@ const validateVariants = (item: any) => {
   } else if (!item.tariff) {
       $baseMessage('请先填写关税', 'warning', 'hey');
       return false;
+  } else if (item.htsId == null) {
+      $baseMessage('请先选择HTS', 'warning', 'hey');
+      return false;
   }
   return true; // 所有校验通过
 };
