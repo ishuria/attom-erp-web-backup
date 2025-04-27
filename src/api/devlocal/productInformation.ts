@@ -587,8 +587,8 @@ export function getProductAllReadyCOmponentList(params: IGetProductAllReadyCOmpo
 }
 /**
  * @description 已有零件库-更新系数
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateProductAlreadyComponent(params: IUpdateProductAlreadyComponent): Promise<IBooleanResp> {
   return request({
@@ -600,8 +600,8 @@ export function updateProductAlreadyComponent(params: IUpdateProductAlreadyCompo
 
 /**
  * @description SKU报关属性-获取SKU报关属性列表
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getCustomsClearanceSkuList(params: IGetCustomsClearanceSkuListReq): Promise<IGetCustomsClearanceSkuListRes> {
   return request({
@@ -612,8 +612,8 @@ export function getCustomsClearanceSkuList(params: IGetCustomsClearanceSkuListRe
 }
 /**
  * @description SKU报关属性-修改
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateCustomsClearanceSku(data: IUpdateCustomsClearanceSku): Promise<IBooleanResp> {
   return request({
@@ -624,8 +624,8 @@ export function updateCustomsClearanceSku(data: IUpdateCustomsClearanceSku): Pro
 }
 /**
  * @description 清关价格系数获取
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getCustomsClearanceRatio(): Promise<IGetCustomsClearanceRatioRes> {
   return request({
@@ -635,8 +635,8 @@ export function getCustomsClearanceRatio(): Promise<IGetCustomsClearanceRatioRes
 }
 /**
  * @description 清关修改价格系数
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateCustomsClearanceRatio(data: IUpdateCustomsClearanceRatioReq): Promise<IBooleanResp> {
   return request({
@@ -647,8 +647,8 @@ export function updateCustomsClearanceRatio(data: IUpdateCustomsClearanceRatioRe
 }
 /**
  * @description 零件报关信息 - 报关重量使用开票重量修改
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateProductCustomsClearanceStatus(params: IUpdateProductCustomsClearanceStatus): Promise<IBooleanResp> {
   return request({
@@ -791,19 +791,21 @@ export function getSkuInfo(params: { sku: string }): Promise<IGetSkuInfoRes> {
 /**
  * HTS 欧洲下拉列表
  */
-export function getHtsEuropeList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getHtsUkList(params:{country:string}): Promise<{ data: { id: number, label: string }[] }> {
   return request({
     url: `${BASE_API}/hts/europe/list`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 /**
  * HTS 美国下拉列表
  */
-export function getHtsUsaList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getHtsSelectList(params:{country:string}): Promise<{ data: { id: number, label: string }[] }> {
   return request({
-    url: `${BASE_API}/hts/usa/list`,
-    method: 'get'
+    url: `${BASE_API}/hts/select/list`,
+    method: 'get',
+    params
   })
 }
 /**

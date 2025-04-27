@@ -780,6 +780,7 @@ export interface IgetProductCustomsList {
       * 欧洲FNSKU
       */
      europeFnSku?: string;
+     jpFnSku?: string;
      /**
       * HS
       */

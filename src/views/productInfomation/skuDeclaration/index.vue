@@ -17,14 +17,14 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table 
-      ref="tableRef" 
-      v-loading="listLoading" 
-      border :cell-class-name="cellClassName" 
-      :cell-style="cellStyle" 
-      class="noneHoveTable" 
-      :data="list" 
-      :header-cell-style="headerCellStyle" 
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border :cell-class-name="cellClassName"
+      :cell-style="cellStyle"
+      class="noneHoveTable"
+      :data="list"
+      :header-cell-style="headerCellStyle"
       stripe
       @cell-click="changeInput"
     >
@@ -55,6 +55,11 @@
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
+      <el-table-column label="日本FNSKU" prop="jpFnSku" :width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" >
+        <template #default="{ row }">
+          <div v-html="row.jpFnSku"></div>
+        </template>
+      </el-table-column>
       <el-table-column label="品牌" prop="brank" :width="flexColumnWidth(list, '品牌', 'brank')">
         <template #default="{ row }">
           <div class="none">
@@ -80,16 +85,16 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="HTS欧洲" prop="htsEurope" width="160" >
+      <el-table-column label="HTS英国" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.htsEurope"
             filterable
-            placeholder="请选择HTS欧洲"
-            @change="handleChangeHtsEurope(row)"
+            placeholder="请选择HTS英国"
+            @change="handleChangeHtsUk(row)"
           >
             <el-option
-              v-for="item in europeList"
+              v-for="item in ukHtsList"
               :key="item.id"
               :label="item.label"
               :value="item.id"
@@ -97,11 +102,64 @@
           </el-select>
         </template>
       </el-table-column>
+      <el-table-column label="HTS德国" prop="htsEurope" width="160" >
+        <template #default="{ row }">
+          <el-select
+            v-model="row.htsEurope"
+            filterable
+            placeholder="请选择HTS德国"
+            @change="handleChangeHtsDe(row)"
+          >
+            <el-option
+              v-for="item in deHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="HTS加拿大" prop="htsEurope" width="160" >
+        <template #default="{ row }">
+          <el-select
+            v-model="row.htsEurope"
+            filterable
+            placeholder="请选择HTS加拿大"
+            @change="handleChangeHtsCa(row)"
+          >
+            <el-option
+              v-for="item in caHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="HTS日本" prop="htsEurope" width="160" >
+        <template #default="{ row }">
+          <el-select
+            v-model="row.htsEurope"
+            filterable
+            placeholder="请选择HTS日本"
+            @change="handleChangeHtsJp(row)"
+          >
+            <el-option
+              v-for="item in jpHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </template>
+      </el-table-column>
+
       <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
-            <el-input 
-              v-model="row.manufacturerEn" 
+            <el-input
+              v-model="row.manufacturerEn"
               @blur="clickCancel($event, row)"
               @keydown.enter="clickCancel($event,row)"
             />
@@ -117,8 +175,8 @@
       <el-table-column label="制造商英文地址" min-width="140" prop="manufacturerAddressEn" >
         <template #default="{ row }">
           <div class="none">
-            <el-input 
-              v-model="row.manufacturerAddressEn" 
+            <el-input
+              v-model="row.manufacturerAddressEn"
               @blur="clickCancel($event, row)"
               @keydown.enter="clickCancel($event,row)"
             />
@@ -231,13 +289,13 @@
     </vab-dialog>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsEuropeList, getHtsUsaList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
+import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsUkList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
@@ -247,7 +305,10 @@ defineOptions({
 
 const router = useRouter()
 const route = useRoute()
-const europeList = ref<{ id: number, label: string }[]>([])
+const ukHtsList = ref<{ id: number, label: string }[]>([])
+const deHtsList = ref<{ id: number, label: string }[]>([])
+const caHtsList = ref<{ id: number, label: string }[]>([])
+const jpHtsList = ref<{ id: number, label: string }[]>([])
 const usaList = ref<{ id: number, label: string }[]>([])
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
@@ -270,13 +331,27 @@ const handleChangeHtsUsa = async (row: any) => {
     type: 0
   })
 }
-const handleChangeHtsEurope = async (row: any) => {
+const handleChangeHtsUk = async (row: any) => {
   await updateCustomsClearanceSkuHts({
     id: row.id,
     htsId: row.htsEurope,
     type: 1
   })
 }
+
+const handleChangeHtsDe = async (row: any) => {
+
+}
+
+const handleChangeHtsCa = async (row: any) => {
+
+}
+
+const handleChangeHtsJp = async (row: any) => {
+
+}
+
+
 // 打开价格系数设定
 const showPriceCoefficientSetting = async () => {
   priceCoefficientSettingVisible.value = true
@@ -379,7 +454,7 @@ const headerCellStyle = (): CSSProperties => {
 }
 let copyRow: any
 // table单击修改
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -398,7 +473,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 }
 // 零件table blur事件
 const clickCancel = async (event: any, value: any) => {
-  
+
   const rootElement = getRootElement(event.srcElement, ".cell");
   if (rootElement) {
     const t1 = rootElement.children[0];
@@ -452,14 +527,26 @@ const cellClassName = (data: {row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 // 获取HTS欧洲列表
-const fetchHtsEuropeList = async () => {
-  const { data } = await getHtsEuropeList()
-  europeList.value = data
+const fetchHtsUkList = async () => {
+  const { data } = await getHtsSelectList({country:"英国"})
+  ukHtsList.value = data
 }
 // 获取HTS美国列表
 const fetchHtsUsaList = async () => {
-  const { data } = await getHtsUsaList()
+  const { data } = await getHtsSelectList({country:"美国"})
   usaList.value = data
+}
+const fetchHtsDeList = async () => {
+  const { data } = await getHtsSelectList({country:"德国"})
+  deHtsList.value = data
+}
+const fetchHtsCaList = async () => {
+  const { data } = await getHtsSelectList({country:"加拿大"})
+  caHtsList.value = data
+}
+const fetchHtsJpList = async () => {
+  const { data } = await getHtsSelectList({country:"日本"})
+  jpHtsList.value = data
 }
 onActivated(() => {
   tableRef.value?.doLayout()
@@ -469,12 +556,15 @@ onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
   if (pageNo) queryForm.pageNo = Number(pageNo)
   if (pageSize) queryForm.pageSize = Number(pageSize)
-  fetchHtsEuropeList()
+  fetchHtsUkList()
   fetchHtsUsaList()
+  fetchHtsDeList()
+  fetchHtsCaList()
+  fetchHtsJpList()
   fetchData()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .none {
   display: none;
@@ -506,9 +596,8 @@ onBeforeMount(() => {
   padding-left: 0;
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 </style>
-  
