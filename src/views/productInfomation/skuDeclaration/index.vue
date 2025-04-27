@@ -68,7 +68,7 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS美国" prop="htsUs" width="160" >
+      <el-table-column label="HTS美国" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.us"
@@ -85,7 +85,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="HTS英国" prop="htsEurope" width="160" >
+      <el-table-column label="HTS英国" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.uk"
@@ -102,7 +102,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="HTS德国" prop="htsEurope" width="160" >
+      <el-table-column label="HTS德国"  width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.de"
@@ -119,7 +119,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="HTS加拿大" prop="htsEurope" width="160" >
+      <el-table-column label="HTS加拿大"  width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.ca"
@@ -137,7 +137,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="HTS日本" prop="htsEurope" width="160" >
+      <el-table-column label="HTS日本" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.jp"
@@ -327,28 +327,40 @@ const priceCoefficientSettingForm = reactive<any>({})
 const handleChangeHtsUsa = async (row: any) => {
   await updateCustomsClearanceSkuHts({
     id: row.id,
-    htsId: row.htsUs,
+    htsId: row.hts.us,
     type: 0
   })
 }
 const handleChangeHtsUk = async (row: any) => {
   await updateCustomsClearanceSkuHts({
     id: row.id,
-    htsId: row.htsEurope,
+    htsId: row.hts.uk,
     type: 1
   })
 }
 
 const handleChangeHtsDe = async (row: any) => {
-
+  await updateCustomsClearanceSkuHts({
+    id: row.id,
+    htsId: row.hts.de,
+    type: 2
+  })
 }
 
 const handleChangeHtsCa = async (row: any) => {
-
+  await updateCustomsClearanceSkuHts({
+    id: row.id,
+    htsId: row.hts.ca,
+    type: 3
+  })
 }
 
 const handleChangeHtsJp = async (row: any) => {
-
+  await updateCustomsClearanceSkuHts({
+    id: row.id,
+    htsId: row.hts.jp,
+    type: 4
+  })
 }
 
 
