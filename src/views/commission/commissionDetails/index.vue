@@ -33,7 +33,7 @@
                 <el-text type="success">234.56元</el-text>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：2024年8月21日14:41)</el-text>
+                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -183,7 +183,7 @@
                 <el-text type="success">234.56元</el-text>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：2024年8月21日14:41)</el-text>
+                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -311,7 +311,7 @@
                 <el-text type="success">{{ amount3 }}元</el-text>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：2024年8月21日14:41)</el-text>
+                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -456,6 +456,7 @@ import type { CSSProperties } from 'vue'
 import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import type {
   IGetCommissionDetailDevelopList,
   IGetCommissionDetailDevelopListReq,
@@ -669,15 +670,14 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
 
 const handleTabClick = (tab: TabsPaneContext) => {
   const name = tab.props.name
+  activeName.value = Number(name)
   switch (name) {
     case 0: {
       queryData()
-
       break
     }
     case 1: {
       longQueryData()
-
       break
     }
     case 2: {
@@ -688,6 +688,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
     }
     // No default
   }
+  fetchUpdateDate()
   // else {
   //   costQueryData()
   // }
@@ -843,8 +844,15 @@ const fetchDevelopData = async () => {
   listLoading.value = false
 }
 
+const updateDate = ref<string | undefined>('')
+const fetchUpdateDate = async () => {
+  const { data } = await getOperationUpdateDate({ type: activeName.value + 3})
+  updateDate.value = data
+}
+
 onBeforeMount(() => {
   fetchSiteList()
+  fetchUpdateDate()
   switch(activeName.value) {
     case 0: {
       fetchUserList()

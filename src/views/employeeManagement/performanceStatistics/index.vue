@@ -4,10 +4,10 @@
       <el-tab-pane label="明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker 
-              v-model="date" 
-              style="max-width: 300px;" 
-              type="monthrange" 
+            <el-date-picker
+              v-model="date"
+              style="max-width: 300px;"
+              type="monthrange"
               value-format="YYYY-MM"
               @change="queryData"
             />
@@ -89,7 +89,7 @@
                   {{ row.procurementBonusCrossMonth ?? '' }}
                 </span>
               </template>
-            </el-table-column>  
+            </el-table-column>
             <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction"/>
             <el-table-column label="美工图片" min-width="100" prop="artDesignPicture"/>
             <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime"/>
@@ -104,7 +104,7 @@
             <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -118,10 +118,10 @@
           <vab-query-form-left-panel>
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-date-picker    
-                  v-model="assessmentDate" 
-                  style="max-width: 300px;" 
-                  type="monthrange" 
+                <el-date-picker
+                  v-model="assessmentDate"
+                  style="max-width: 300px;"
+                  type="monthrange"
                   value-format="YYYY-MM"
                   @change="queryAssessmentData"
                 />
@@ -142,12 +142,12 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          v-loading="listLoading" 
-          border  
+        <el-table
+          v-loading="listLoading"
+          border
           :cell-style="{ textAlign: 'center' }"
-          :data="assessmentList" 
-          :header-cell-style="{ textAlign: 'center' }" 
+          :data="assessmentList"
+          :header-cell-style="{ textAlign: 'center' }"
           stripe
         >
           <el-table-column label="月份" min-width="100" prop="month" />
@@ -156,12 +156,12 @@
           <el-table-column label="职级" min-width="100" prop="jobLevel" />
           <el-table-column label="总考核完成数" min-width="120" >
             <template #default="{ row }">
-              {{ row.assessmentNumber }} / {{ row.assessmentNumberFinish }}
+              {{ row.assessmentNumberFinish }} / {{ row.assessmentNumber }}
             </template>
           </el-table-column>
           <el-table-column label="OEM完成数" min-width="110"  >
             <template #default="{ row }">
-              {{ row.oem }} / {{ row.oemFinish }}
+              {{ row.oemFinish }} / {{ row.oem }}
             </template>
           </el-table-column>
           <el-table-column label="新款采购额" min-width="110" prop="purchaseAmount" />
@@ -185,7 +185,7 @@
             <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="assessmentQueryForm.pageNo"
           :page-size="assessmentQueryForm.pageSize"
           :total="assessmentTotal"
@@ -213,14 +213,14 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table 
-        v-loading="settingListLoading" 
+      <el-table
+        v-loading="settingListLoading"
         border
-        :cell-style="cellStyle" 
-        class="noneHoverTable" 
-        :data="settingList" 
-        :header-cell-style="{ textAlign: 'center' }" 
-        max-height="700" 
+        :cell-style="cellStyle"
+        class="noneHoverTable"
+        :data="settingList"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="700"
         stripe
         @cell-click="changeInput"
       >
