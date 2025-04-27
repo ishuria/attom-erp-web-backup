@@ -71,7 +71,7 @@
       <el-table-column label="HTS美国" prop="htsUs" width="160" >
         <template #default="{ row }">
           <el-select
-            v-model="row.htsUs"
+            v-model="row.hts.us"
             filterable
             placeholder="请选择HTS美国"
             @change="handleChangeHtsUsa(row)"
@@ -88,7 +88,7 @@
       <el-table-column label="HTS英国" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
-            v-model="row.htsEurope"
+            v-model="row.hts.uk"
             filterable
             placeholder="请选择HTS英国"
             @change="handleChangeHtsUk(row)"
@@ -105,7 +105,7 @@
       <el-table-column label="HTS德国" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
-            v-model="row.htsEurope"
+            v-model="row.hts.de"
             filterable
             placeholder="请选择HTS德国"
             @change="handleChangeHtsDe(row)"
@@ -122,7 +122,7 @@
       <el-table-column label="HTS加拿大" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
-            v-model="row.htsEurope"
+            v-model="row.hts.ca"
             filterable
             placeholder="请选择HTS加拿大"
             @change="handleChangeHtsCa(row)"
@@ -140,7 +140,7 @@
       <el-table-column label="HTS日本" prop="htsEurope" width="160" >
         <template #default="{ row }">
           <el-select
-            v-model="row.htsEurope"
+            v-model="row.hts.jp"
             filterable
             placeholder="请选择HTS日本"
             @change="handleChangeHtsJp(row)"

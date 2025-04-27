@@ -603,11 +603,11 @@ export function updateProductAlreadyComponent(params: IUpdateProductAlreadyCompo
  * @param params
  * @returns
  */
-export function getCustomsClearanceSkuList(params: IGetCustomsClearanceSkuListReq): Promise<IGetCustomsClearanceSkuListRes> {
+export function getCustomsClearanceSkuList(data: IGetCustomsClearanceSkuListReq): Promise<IGetCustomsClearanceSkuListRes> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 /**
