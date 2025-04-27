@@ -141,8 +141,11 @@
             <!-- 处理 天 -->
             {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
           </span>
-          <span v-if="item.label === '月净利润'">
-            {{ row.monthNetProfit ? row.currencyIcon + row.monthNetProfit : '' }}
+          <span v-if="item.label === '月净利润' || item.label === '月销售额'">
+            {{ row[item.prop] ? row.currencyIcon + row[item.prop] : '' }}
+          </span>
+          <span v-if="item.label === '月净利率'">
+            {{ row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''  }}
           </span>
           <span v-if="item.label === '半年有货率'">
             {{ row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : '' }}
@@ -154,7 +157,7 @@
             {{ row.availableInventory }} / {{ row.fbaCount }}
           </span>
           <span v-if="item.label === '操作'">
-            <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
+            <el-button type="primary" @click="handleShowReleaseOrder(row)" >发布订货</el-button>
           </span>
           <span v-if="item.label === 'VOC满意度'">
             {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
@@ -670,10 +673,16 @@ const handleWidth = (item: any) => {
       return calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
     }
     case '库存可售': {
-      return flexColumnWidth(list.value, '库存可售', 'esAvailableSaleDay', 30)
+      return flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 30)
     }
     case '可售含在途': {
-      return flexColumnWidth(list.value, '可售含在途', 'esAvailableSaleDayTotal', 30)
+      return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 30)
+    }
+    case '运营分类': {
+      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+    }
+    case '站点': {
+      return flexColumnWidth(list.value, '站点', 'siteName'); // 处理运营分类列
     }
     default: {
       return item.minWidth

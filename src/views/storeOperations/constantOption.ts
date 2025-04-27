@@ -241,15 +241,9 @@ export const orderColumns = [
     isFixed: 'left'
   },
   {
-    label: 'SKU',
-    prop: 'sku',
-    minWidth: 140,
-    isFixed: 'left'
-  },
-  {
     label: '今销量',
     prop: 'currentSalesNumber',
-    minWidth: 90,
+    minWidth: 75,
   },
   {
     label: '销量趋势',
@@ -259,7 +253,7 @@ export const orderColumns = [
   {
     label: '库存可售',
     prop: 'esAvailableSaleDay',
-    minWidth: 70,
+    minWidth: 75,
   },
   {
     label: '可售含在途',
@@ -269,63 +263,68 @@ export const orderColumns = [
   {
     label: '断货',
     prop: 'outOfStock',
-    minWidth: 70,
+    minWidth: 60,
   },
   {
     label: '广告',
     prop: 'advertisementStatus',
-    minWidth: 90,
+    minWidth: 60,
+  },
+  {
+    label: '运营分类',
+    prop: 'operationTypeId',
+    minWidth: 150,
   },
   {
     label: '库龄',
     prop: 'inventoryAge',
-    minWidth: 90,
+    minWidth: 60,
   },
   {
     label: '剩余库存',
     prop: '',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
     label: '接收中',
     prop: 'acceptingCount',
-    minWidth: 90,
+    minWidth: 75,
   },
   {
     label: '最近入库',
     prop: 'recentlyInboundStorage',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
     label: '总入库',
     prop: 'inboundStorageTotal',
-    minWidth: 90,
+    minWidth: 75,
   },
   {
     label: '订货#',
     prop: 'orderCount',
-    minWidth: 90,
+    minWidth: 70,
   },
   {
     label: '计划#',
     prop: 'planPoPurchaseSkuNumber',
-    minWidth: 90,
+    minWidth: 70,
   },
   {
     label: '签收',
     prop: 'quantityReceived',
-    minWidth: 90,
+    minWidth: 60,
   },
   {
     label: '推荐#',
     prop: 'recommendCount',
-    minWidth: 100,
+    minWidth: 90,
     sortable: true,
   },
   {
     label: '装箱#',
     prop: 'encasementCount',
-    minWidth: 100,
+    minWidth: 90,
     sortable: true,
   },
   {
@@ -342,67 +341,57 @@ export const orderColumns = [
   {
     label: '今补',
     prop: 'nowSupplement',
-    minWidth: 90,
+    minWidth: 60,
   },
   {
     label: 'VOC满意度',
     prop: 'vocSatisfaction',
-    minWidth: 130,
+    minWidth: 120,
+  },
+  {
+    label: '月退货%',
+    prop: 'monthReturnGoods',
+    minWidth: 90,
   },
   {
     label: '操作',
     prop: '',
-    minWidth: 130,
-  },
-  {
-    label: '今补广',
-    prop: 'nowSupplementAdv',
-    minWidth: 90,
+    minWidth: 120,
   },
   {
     label: '当前售价',
     prop: 'sellingPrice',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
     label: '毛利率',
     prop: 'grossProfit',
-    minWidth: 100,
-  },
-  {
-    label: '站点',
-    prop: 'siteName',
-    minWidth: 150,
-  },
-  {
-    label: '运营',
-    prop: 'operationUserName',
-    minWidth: 120,
-  },
-  {
-    label: '运营分类',
-    prop: 'operationTypeId',
-    minWidth: 150,
+    minWidth: 80,
   },
   {
     label: '月销量',
     prop: 'monthSalesVolume',
-    minWidth: 90,
+    minWidth: 75,
   },
   {
     label: '月销售额',
     prop: 'monthSalesPrice',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
     label: '月净利润',
     prop: 'monthNetProfit',
-    minWidth: 100,
+    minWidth: 95,
+  },
+  {
+    label: '月净利率',
+    prop: 'monthNetProfitMargin',
+    minWidth: 95,
   },
   {
     label: '半年有货率',
     prop: 'availableRate',
-    minWidth: 110,
+    minWidth: 105,
   },
   {
     label: '月广告%',
@@ -412,16 +401,31 @@ export const orderColumns = [
   {
     label: '月ACOS',
     prop: 'monthAcos',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
     label: '月TACOS',
     prop: 'monthTacos',
-    minWidth: 100,
+    minWidth: 95,
   },
   {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    minWidth: 100,
+    label: 'SKU',
+    prop: 'sku',
+    minWidth: 140,
+  },
+  {
+    label: '站点',
+    prop: 'siteName',
+    minWidth: 150,
+  },
+  {
+    label: '运营',
+    prop: 'operationUserName',
+    minWidth: 75,
+  },
+  {
+    label: '今补广',
+    prop: 'nowSupplementAdv',
+    minWidth: 75,
   },
 ]
