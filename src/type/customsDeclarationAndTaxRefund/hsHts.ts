@@ -86,6 +86,7 @@ export interface IGetHTSList {
    * 英国关税率
    */
   ukTariffRate?: number
+  [key: string]: any
 }
 export interface IAddHTSListReq {
   /**

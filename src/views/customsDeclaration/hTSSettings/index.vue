@@ -2,218 +2,146 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="美国" :name="0">
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-button type="primary" @click="showAdd1">新增</el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table
-          border :data="list"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="changeInput"
-        >
-          <el-table-column align="center" label="HTS" min-width="110" prop="hts" />
-          <el-table-column align="center" label="关税率" min-width="90" prop="tariffRate" >
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="301税率" min-width="100" prop="threeZeroOne">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.threeZeroOne" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.threeZeroOne != null ? row.threeZeroOne + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="杂费" min-width="90" prop="extras" >
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.extras != null ? row.extras + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品大类" min-width="250" prop="productCategory">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.productCategory }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.productCategory }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="1级大类" min-width="250" prop="categoryOne">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryOne }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryOne }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="2级大类" min-width="250" prop="categoryTwo">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryTwo }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryTwo }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="3级大类" min-width="250" prop="categoryThree">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryThree }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryThree }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="操作" width="160">
-            <template #default="{ row, $index }">
-              <el-button text type="primary" @click="handleShowView(row)">查看</el-button>
-              <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty"/>
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+        <vab-hts-table
+          :list="list" 
+          :query-form="queryForm"
           :total="total"
+          @add="showAdd"
           @current-change="handleCurrentChange"
+          @delete="handleDel"
+          @query-data="handleKeyWordChange"
           @size-change="handleSizeChange"
-        />
+          @update:remark="handleShowRemark"
+          @view="handleShowView"
+        >
+          <template #rate-columns>
+            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="301税率" min-width="100" prop="threeZeroOne">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.threeZeroOne" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.threeZeroOne != null ? row.threeZeroOne + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </vab-hts-table>
       </el-tab-pane>
       <el-tab-pane label="英国" :name="1">
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-button type="primary" @click="showAdd2">新增</el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table
-          border
-          :data="list" :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="changeInput"
-        >
-          <el-table-column align="center" label="HTS" min-width="110" prop="hts"/>
-          <el-table-column align="center" label="德国关税率" min-width="110" prop="deTariffRate">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.deTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.deTariffRate != null ? row.deTariffRate + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="英国关税率" min-width="110" prop="ukTariffRate">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.ukTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.ukTariffRate != null ? row.ukTariffRate + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="杂费" min-width="90" prop="extras">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.extras" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.extras != null ? row.extras + '%' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品大类" min-width="250" prop="productCategory">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.productCategory }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.productCategory }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="1级大类" min-width="250" prop="categoryOne">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryOne }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryOne }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="2级大类" min-width="250" prop="categoryTwo">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryTwo }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryTwo }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="3级大类" min-width="250" prop="categoryThree">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.categoryThree }}</div>
-                </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.categoryThree }}</el-text>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" label="操作" width="160">
-            <template #default="{ row, $index }">
-              <el-button text type="primary" @click="handleShowView(row)">查看</el-button>
-              <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty"/>
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+        <vab-hts-table
+          :list="list" 
+          :query-form="queryForm"
           :total="total"
+          @add="showAdd"
           @current-change="handleCurrentChange"
+          @delete="handleDel"
+          @query-data="handleKeyWordChange"
           @size-change="handleSizeChange"
-        />
+          @update:remark="handleShowRemark"
+          @view="handleShowView"
+        >
+          <template #rate-columns>
+            <el-table-column align="center" label="德国关税率" min-width="110" prop="deTariffRate">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.deTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.deTariffRate != null ? row.deTariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="英国关税率" min-width="110" prop="ukTariffRate">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.ukTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.ukTariffRate != null ? row.ukTariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </vab-hts-table>
       </el-tab-pane>
-      <el-tab-pane label="德国" :name="2"></el-tab-pane>
-      <el-tab-pane label="加拿大" :name="3"></el-tab-pane>
-      <el-tab-pane label="日本" :name="4"></el-tab-pane>
+      <el-tab-pane label="德国" :name="2">
+        <vab-hts-table
+          :list="list" 
+          :query-form="queryForm"
+          :total="total"
+          @add="showAdd"
+          @current-change="handleCurrentChange"
+          @delete="handleDel"
+          @query-data="handleKeyWordChange"
+          @size-change="handleSizeChange"
+          @update:remark="handleShowRemark"
+          @view="handleShowView"
+        >
+          <template #rate-columns>
+            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </vab-hts-table>
+      </el-tab-pane>
+      <el-tab-pane label="加拿大" :name="3">
+        <vab-hts-table
+          :list="list" 
+          :query-form="queryForm"
+          :total="total"
+          @add="showAdd"
+          @current-change="handleCurrentChange"
+          @delete="handleDel"
+          @query-data="handleKeyWordChange"
+          @size-change="handleSizeChange"
+          @update:remark="handleShowRemark"
+          @view="handleShowView"
+        >
+          <template #rate-columns>
+            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </vab-hts-table>
+      </el-tab-pane>
+      <el-tab-pane label="日本" :name="4">
+        <vab-hts-table
+          :list="list" 
+          :query-form="queryForm"
+          :total="total"
+          @add="showAdd"
+          @current-change="handleCurrentChange"
+          @delete="handleDel"
+          @query-data="handleKeyWordChange"
+          @size-change="handleSizeChange"
+          @update:remark="handleShowRemark"
+          @view="handleShowView"
+        >
+          <template #rate-columns>
+            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+                </div>
+                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
+              </template>
+            </el-table-column>
+          </template>
+        </vab-hts-table>
+      </el-tab-pane>
     </el-tabs>
     <!-- 新增 -->
     <vab-dialog
@@ -228,27 +156,37 @@
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="关税率" prop="tariffRate">
           <el-input v-model="addForm.tariffRate" type="number" >
-            <template #append>%</template>
+            <template #suffix>
+              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 0" label="301关税率" prop="threeZeroOne">
           <el-input v-model="addForm.threeZeroOne" type="number" >
-            <template #append>%</template>
+            <template #suffix>
+              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="德国关税率" prop="deTariffRate">
           <el-input v-model="addForm.deTariffRate" type="number" >
-            <template #append>%</template>
+            <template #suffix>
+              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item v-if="addForm.type === 1" label="英国关税率" prop="ukTariffRate">
           <el-input v-model="addForm.ukTariffRate" type="number" >
-            <template #append>%</template>
+            <template #suffix>
+              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item label="杂费" prop="extras">
           <el-input v-model="addForm.extras" type="number" >
-            <template #append>%</template>
+            <template #suffix>
+              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
+            </template>
           </el-input>
         </el-form-item>
         <el-form-item label="产品大类" prop="productCategory">
@@ -336,7 +274,7 @@ import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import { addHTSList, delHTSList, getHTSList, getHtsSkuList, updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IGetHTSList, IGetHTSListReq, IGetHtsSkuListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
   name: 'HTSSettings'
@@ -441,59 +379,20 @@ const handleClose = () => {
   addFormRef.value?.resetFields()
   addVisible.value = false
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  _id.value = row.id
-  switch (column.label) {
-    case '产品大类': {
-      updateVisible.value = true
-      title.value = '产品大类'
-      prop.value = 'productCategory'
-      content.value = row.productCategory
-
-      break;
-    }
-    case '1级大类': {
-      updateVisible.value = true
-      title.value = '1级大类'
-      prop.value = 'categoryOne'
-      content.value = row.categoryOne
-
-      break;
-    }
-    case '2级大类': {
-      updateVisible.value = true
-      title.value = '2级大类'
-      prop.value = 'categoryTwo'
-      content.value = row.categoryTwo
-
-      break;
-    }
-    case '3级大类': {
-      updateVisible.value = true
-      title.value = '3级大类'
-      prop.value = 'categoryThree'
-      content.value = row.categoryThree
-
-      break;
-    }
-    default: {
-      const firstChild = cell?.children[0]?.children[0]
-      const secondChild = cell?.children[0]?.children[1]
-
-      if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-        return
-      }
-
-      copyRow = JSON.parse(JSON.stringify(row))
-
-      if (firstChild.classList.contains('none')) {
-        firstChild.classList.remove('none')
-        secondChild.classList.add('none')
-        focusAndSelectInput(cell)
-      }
-    }
-  }
+const labelFieldMap = {
+  productCategory: '产品大类',
+  categoryOne: '1级大类',
+  categoryTwo: '2级大类',
+  categoryThree: '3级大类'
 }
+const handleShowRemark = (row: IGetHTSList, field: string) => {
+  _id.value = row.id!
+  updateVisible.value = true
+  title.value = labelFieldMap[field as keyof typeof labelFieldMap]
+  prop.value = field
+  content.value = row[field]
+}
+
 // table blur事件
 const clickCancel = async (event: any, value: IGetHTSList) => {
   const rootElement = getRootElement(event.srcElement, ".cell")
@@ -537,13 +436,9 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
     }
   }
 }
-const showAdd1 = () => {
+const showAdd = () => {
   addVisible.value = true
-  addForm.type = 0
-}
-const showAdd2 = () => {
-  addVisible.value = true
-  addForm.type = 1
+  addForm.type = activeName.value
 }
 const handleDel = async (row: IGetHTSList, index: number) => {
   $baseConfirm('确定要删除HTS吗？', null, async () => {
@@ -551,11 +446,12 @@ const handleDel = async (row: IGetHTSList, index: number) => {
     if (data) {
       $baseMessage('HTS删除成功！', 'success')
       list.value.splice(index, 1)
+      total.value--
     }
   })
 }
 const handleTabClick = (tab: TabsPaneContext) => {
-  queryForm.type = Number( tab.props.name)
+  queryForm.type = Number(tab.props.name)
   activeName.value = Number(tab.props.name)
   router.push({
     query: {
@@ -566,6 +462,17 @@ const handleTabClick = (tab: TabsPaneContext) => {
     }
   })
   fetchData()
+}
+const handleKeyWordChange = async (val?: string) => {
+  queryForm.keyWord = val
+  await router.push({
+    query: {
+      ...route.query,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    }
+  })
+  await fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
@@ -578,28 +485,28 @@ const queryData = () => {
   })
   fetchData()
 }
-const handleCurrentChange = (value: number) => {
+const handleCurrentChange = async (value: number) => {
   queryForm.pageNo = value
-  router.push({
+  await router.push({
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
     }
   })
-  fetchData()
+  await fetchData()
 }
-const handleSizeChange = (value: number) => {
+const handleSizeChange = async (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  router.push({
+  await router.push({
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
     }
   })
-  fetchData()
+  await fetchData()
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -668,9 +575,14 @@ onBeforeMount(() => {
             }
           }
         }
+        .hts-table {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
 
-        .el-table {
-          flex: 1;
+          .el-table {
+            flex: 1;
+          }
         }
       }
     }

@@ -66,13 +66,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <vab-pagination 
+    <!-- <vab-pagination 
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
-    />
+    /> -->
     <template #footer>
       <div style="text-align: center;">
         <el-button v-if="!disabled3 && (!disabled1 && !disabled2)" :loading="unlockLoading" type="danger" @click="handleUnlockAndClear">清空解锁</el-button>
@@ -426,8 +426,6 @@ const emit = defineEmits<{
 }>()
 const queryForm = reactive<any>({
   keyWord: '',
-  pageNo: 1,
-  pageSize: 20
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -1100,15 +1098,15 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const handleCurrentChange = (value: number) => {
-  queryForm.pageNo = value
-  fetchData()
-}
-const handleSizeChange = (value: number) => {
-  queryForm.pageNo = 1
-  queryForm.pageSize = value
-  fetchData()
-}
+// const handleCurrentChange = (value: number) => {
+//   queryForm.pageNo = value
+//   fetchData()
+// }
+// const handleSizeChange = (value: number) => {
+//   queryForm.pageNo = 1
+//   queryForm.pageSize = value
+//   fetchData()
+// }
 
 const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
