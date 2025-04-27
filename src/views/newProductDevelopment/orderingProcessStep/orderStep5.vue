@@ -14,7 +14,7 @@
         fixed 
         :label="labelMap['column0']" 
         :prop="'column0'"
-        width="240"
+        width="300"
       >
         <template #default="{ row }">
           <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
@@ -104,9 +104,9 @@
             </el-select>
           </template>
           <template v-if="row['column0'] === 'sampleRetentionStatus'">
-            <el-select v-model="row[prop]" class="center-select" placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
+            <el-select v-model="row[prop]" class="center-select" collapse-tags collapse-tags-tooltip multiple placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
               <el-option 
-                v-for="item in photoSampleOptions"
+                v-for="item in packKeepSamplesOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -118,6 +118,19 @@
           </template>
           <template v-if="row['column0'] === 'operate'">
             <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
+          </template>
+          <template v-if="row['column0'] === 'productPositioning'">
+            <el-select class="center-select" placeholder="请选择产品定位" />
+          </template>
+          <template v-if="row['column0'] === 'oem'">
+            <el-radio-group v-model="row[prop]" @change="handleUpdateOEM(row, prop)" >
+              <el-radio :value="1" />
+            </el-radio-group>
+          </template>
+          <template v-if="row['column0'] === 'graphicDesign'">
+            <el-radio-group v-model="row[prop]" @change="handleUpdateGraphicDesign(row, prop)">
+              <el-radio :value="1" />
+            </el-radio-group>
           </template>
         </template>
       </el-table-column>
@@ -139,6 +152,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
+import { packKeepSamplesOption } from '../indexCommon'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
@@ -181,6 +195,22 @@ const remotePeopleMethod = async (query: string) => {
   } else {
     peopleOptions.value = []
   }
+}
+const handleUpdateOEM = async (row: any, prop: string) => {
+  // console.log(row)
+  // console.log(prop)
+  // console.log(row[prop])
+  // console.log(exchangeList.value)
+  exchangeList.value[3][prop] = row[prop] === 1 ? 0 : 1
+
+}
+const handleUpdateGraphicDesign = async (row: any, prop: string) => {
+  // console.log(row)
+  // console.log(prop)
+  // console.log(row[prop])
+  // console.log(exchangeList.value)
+  exchangeList.value[2][prop] = row[prop] === 1 ? 0 : 1
+
 }
 const handleInsertSku = async (row: any, prop: string) => {
   try {
@@ -286,7 +316,7 @@ const labelMap: Record<string, string> = {
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   certificateUpload: '证书上传',
   skuMerge: '合并变体的SKU',
@@ -504,20 +534,20 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
 // 修改拍照留样情况
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
   if (row.variantsSame) {
-    // 获取当前输入框的值
-    const newValue = row[prop];  
-      // console.log(exchangeList.value);
-      // console.log(peopleList.value);
-      Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+    // // 获取当前输入框的值
+    // const newValue = row[prop];  
+    //   // console.log(exchangeList.value);
+    //   // console.log(peopleList.value);
+    //   Object.keys(row).forEach(async key => {
+    //     if (key !== 'column0' && key !== 'variantsSame') {
+    //       row[key] = newValue // 将其他单元格的值更新为当前输入框的值
   
-          update(key)
-        } 
-      })
+    //       update(key)
+    //     } 
+    //   })
   } else {
   
-    update(prop)
+    // update(prop)
   }
 }
 // 当点击保存的时候

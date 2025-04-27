@@ -50,12 +50,23 @@
           <template v-if="row['column0'] === 'packingGroup'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
           </template>
+          <template v-if="row['column0'] === 'productPositioning'">
+            <el-select class="center-select" disabled placeholder="请选择产品定位" />
+          </template>
           <template v-if="row['column0'] === 'oem'">
-            <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
+            <el-radio-group v-model="row[prop]" disabled >
+              <el-radio :value="1" />
+            </el-radio-group>
+          </template>
+          <template v-if="row['column0'] === 'graphicDesign'">
+            <el-radio-group v-model="row[prop]" disabled>
+              <el-radio :value="1" />
+            </el-radio-group>
           </template>
           <template
             v-if="row['column0'] !== 'productImgUrl' && row['column0'] !== 'sampleRetentionStatus'
-            && row['column0'] !== 'packingGroup' && row['column0'] !== 'oem'"
+            && row['column0'] !== 'packingGroup' && row['column0'] !== 'oem'
+            && row['column0'] !== 'productPositioning' && row['column0'] !== 'graphicDesign'"
           >
             {{ row[prop] }}
           </template>

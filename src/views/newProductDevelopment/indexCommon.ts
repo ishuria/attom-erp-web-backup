@@ -145,3 +145,24 @@ export const checkTypeList = [
     label: '注意事项',
   },
 ]
+
+export const packKeepSamplesOption = [
+  { 
+    label: '有拍照样品无需留样', value: 0
+  },
+  {
+    label: '无拍照样品留样1套', value: 1,
+  },
+  {
+    label: '无拍照样品留样2套', value: 2,
+  },
+  {
+    label: '做CE认证留样1套', value: 3,
+  },
+  {
+    label: '做CPC认证留样1套', value: 4,
+  },
+  {
+    label: '做毒理留样1套', value: 5,
+  }
+]

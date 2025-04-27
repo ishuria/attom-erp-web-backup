@@ -54,13 +54,23 @@
             <template v-if="row['column0'] === 'productSize'">
               {{ row[prop] }} inch
             </template>
+            <template v-if="row['column0'] === 'productPositioning'">
+              <el-select class="center-select" disabled placeholder="请选择产品定位" />
+            </template>
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" disabled :false-value="1" :true-value="0"/>
+              <el-radio-group v-model="row[prop]" disabled >
+                <el-radio :value="1" />
+              </el-radio-group>
+            </template>
+            <template v-if="row['column0'] === 'graphicDesign'">
+              <el-radio-group v-model="row[prop]" disabled>
+                <el-radio :value="1" />
+              </el-radio-group>
             </template>
             <template
               v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
               && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'
-              && row['column0'] !== 'oem'"
+              && row['column0'] !== 'oem' && row['column0']!=='graphicDesign' && row['column0'] !== 'productPositioning'"
             >
               {{ row[prop] }}
             </template>
