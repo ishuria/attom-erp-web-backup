@@ -85,21 +85,6 @@ export const indexColumns = [
   },
 ]
 
-export const scoreDetialColumns = [
-  {
-    label: '描述',
-    prop: 'desc',
-  },
-  {
-    label: '数量',
-    prop: 'quantity',
-  },
-  {
-    label: '分数',
-    prop: 'score',
-  },
-]
-
 export const estimatedCostAccountingColumns = [
   {
     label: '日期',

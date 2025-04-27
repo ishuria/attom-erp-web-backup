@@ -53,10 +53,20 @@ const handlerClose = () => {
 /**
  * 关键词下拉change
  */
- const idxUpdateKeyWordTrend = async (val: any) => {
-  emit('update:trendEchartsList',{xAxis:[],yAxis:[]})  
-  const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
-  emit('update:trendEchartsList',{xAxis:data.xAxis,yAxis:data.y})
+const idxUpdateKeyWordTrend = async (val: any) => {
+  try {
+    const { data } = await getEvaluationTrendList({ keyWord: props.keyWord, type: val })
+    if (data && data.xAxis && data.yAxis) {
+      emit('update:trendEchartsList', {
+        xAxis: data.xAxis,
+        yAxis: data.yAxis  // 修正这里，使用 yAxis 而不是 y
+      })
+    }
+  } catch (error) {
+    console.error('获取趋势数据失败:', error)
+    // 只有在出错时才清空数据
+    emit('update:trendEchartsList', {xAxis: [], yAxis: []})
+  }
 }
 </script>
 

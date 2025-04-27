@@ -75,6 +75,9 @@
           <div v-if="item.label === '关键词趋势'">
             <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
           </div>
+          <div v-if="['供求评分', '关键词首页评分', '总分'].includes(item.label)">
+            <div>{{ Math.round(row[item.prop!]) }}</div>
+          </div>
         </template>
       </el-table-column>
 
@@ -141,10 +144,10 @@
     <vab-trend
       :key-word="inputKeyWord"
       :loading="chartLoading"
-      :trend-data="trendEcahts"
-      :trend-echarts-visible="keyWordTrendEchatsVisible"
+      :trend-data="trendEcharts"
+      :trend-echarts-visible="keyWordTrendEchartsVisible"
       @update:clear-input-key-word="cleanKeyWordTrendData"
-      @update:trend-echarts-list="updateTrendEchatsData"
+      @update:trend-echarts-list="updateTrendEchartsData"
       @update:visible-value="updateTrendVisibleValue"
     />
 
@@ -170,7 +173,15 @@
     <!-- 跑分明细 -->
     <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="870">
       <el-table :cell-style="{ textAlign: 'center' }" :data="benchmarkScoreList" :header-cell-style="{ 'text-align': 'center' }">
-        <el-table-column v-for="(item, index) in scoreDetialColumns" :key="index" :label="item.label" :prop="item.prop" />
+        <el-table-column label="描述" prop="desc" />
+        <el-table-column label="数量" prop="quantity" />
+        <el-table-column label="分数" prop="score" >
+          <template #default="{ row }">
+            <div v-if="row.desc === '第一部分总分-市场供求评分' || row.desc === '第二部分总分-亚马逊关键词首页评分'">
+              {{ Math.round(row.score) }}
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
 
       <template #footer></template>
@@ -208,7 +219,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { type TableInstance } from 'element-plus'
-import { indexColumns, scoreDetialColumns } from './indexColumns'
+import { indexColumns } from './indexColumns'
 import {
   getEstimatedCostAccountingList,
   getEvaluationScoreDetail,
@@ -260,7 +271,7 @@ const costAccountingeParamVisible = ref<boolean>(false)
 // 关键词
 const keyWordTrendVisible = ref<boolean>(false)
 // 关键词趋势
-const keyWordTrendEchatsVisible = ref<boolean>(false)
+const keyWordTrendEchartsVisible = ref<boolean>(false)
 // 共享
 const sharedVisible = ref<boolean>(false)
 // 产品成本核算
@@ -291,7 +302,7 @@ const currentLoginUserId = ref<string>('')
 // 评估id
 const evaluationId = ref<string>('')
 // 图表
-const trendEcahts = ref<IKeyWordTrend>({
+const trendEcharts = ref<IKeyWordTrend>({
   xAxis: [],
   yAxis: [],
 })
@@ -459,10 +470,10 @@ const keyWordTrendCellClick = async (row: any, column: any) => {
 
 const keyWordTrend = async (str: string) => {
   const { data } = await getEvaluationTrendList({ keyWord: str, type: 0 })
-  trendEcahts.value.xAxis = data.xAxis
-  trendEcahts.value.yAxis = data.yAxis
+  trendEcharts.value.xAxis = data.xAxis
+  trendEcharts.value.yAxis = data.yAxis
   keyWordTrendVisible.value = false
-  keyWordTrendEchatsVisible.value = true
+  keyWordTrendEchartsVisible.value = true
 }
 
 /**
@@ -511,9 +522,9 @@ const fetchEstimatedCostAccounting = async (id: number) => {
 // 清除关键词趋势相关数据
 const cleanKeyWordTrendData = (newValue: string) => {
   inputKeyWord.value = newValue
-  trendEcahts.value.xAxis = []
-  trendEcahts.value.yAxis = []
-  keyWordTrendEchatsVisible.value = false
+  trendEcharts.value.xAxis = []
+  trendEcharts.value.yAxis = []
+  keyWordTrendEchartsVisible.value = false
   keyWordTrendVisible.value = false
 }
 
@@ -593,12 +604,12 @@ const getBenchmarkScoreDetail = async (id: any) => {
   benchmarkScoreVisible.value = true
 }
 
-const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
-  trendEcahts.value = newValue
+const updateTrendEchartsData = (newValue: IKeyWordTrend) => {
+  trendEcharts.value = newValue
 }
 
 const updateTrendVisibleValue = (newValue: boolean) => {
-  keyWordTrendEchatsVisible.value = newValue
+  keyWordTrendEchartsVisible.value = newValue
 }
 
 const updateSharedVisibleValue = (newValue: boolean) => {

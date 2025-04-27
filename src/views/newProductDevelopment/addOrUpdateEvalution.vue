@@ -426,9 +426,9 @@ onMounted(async () => {
     outputForm.salseDeviation = data.salseDeviation
     outputForm.grossProfitAndLoss = data.grossProfitAndLoss
     outputForm.avgDaysListed = data.avgDaysListed
-    outputForm.amazonKeyWordScore = data.keyWordScore
-    outputForm.supplyScore = data.supplyScore
-    outputForm.finalScore = data.finalScore
+    outputForm.amazonKeyWordScore = Math.round(data.keyWordScore)
+    outputForm.supplyScore = Math.round(data.supplyScore)
+    outputForm.finalScore = Math.round(data.finalScore)
     
     x.value = data.trendList.xAxis
     y.value = data.trendList.yAxis
