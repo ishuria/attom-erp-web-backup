@@ -1876,18 +1876,23 @@ const handleConfirmFinishTask = async () => {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
-  finishConfirmLoading.value = true
-  const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
-  const { data } = await confirmEndTask({
-    userIds,
-  })
-  if (data) {
-    $baseMessage('结束任务成功', 'success')
-    queryTaskingData()
+  
+  try {
+    finishConfirmLoading.value = true
+    const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
+    const { data } = await confirmEndTask({
+      userIds,
+    })
+    if (data) {
+      $baseMessage('结束任务成功', 'success')
+      queryTaskingData()
+      handleCloseFinishTask()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    finishConfirmLoading.value = false
   }
-  handleCloseFinishTask()
-  finishConfirmLoading.value = false
-  // selectRows.value = []
 }
 // 开始任务的取消
 const handleCloseStartTask = () => {
