@@ -67,21 +67,21 @@ import type {
 /**
  * @description 匹配PO、报关资料列表获取
  */
-export const getMatchPoList = (params: IGetMatchPoListReq): Promise<IGetMatchPoListRes> => {
+export const getMatchPoList = (data: IGetMatchPoListReq): Promise<IGetMatchPoListRes> => {
   return request({
     url: `${BASE_API}/shipment/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
  * @description 匹配PO、报关资料详情列查看
  */
-export const getCheckMatchList = (params: IGetMatchPoListReq): Promise<IGetCheckMatchListRes> => {
+export const getCheckMatchList = (data: IGetMatchPoListReq): Promise<IGetCheckMatchListRes> => {
   return request({
     url: `${BASE_API}/shipment/detail/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**

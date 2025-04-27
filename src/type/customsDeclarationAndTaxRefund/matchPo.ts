@@ -178,10 +178,7 @@ export interface IGetMatchPackageList {
 
 export interface IGetCheckMatchListRes {
   code: number
-  data: {
-    list: IGetCheckMatchList[]
-    total: number
-  }
+  data: IGetCheckMatchList[]
   msg: string
 }
 
