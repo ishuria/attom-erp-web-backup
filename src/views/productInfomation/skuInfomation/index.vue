@@ -126,6 +126,9 @@
                 <el-dropdown-item @click="handleSkuDetail(row)">
                   <el-link type="primary" :underline="false" >SKU详情</el-link>
                 </el-dropdown-item>
+                <el-dropdown-item @click="handleCopySku">
+                  <el-link type="primary" :underline="false">SKU复制</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" :underline="false">打包工时</el-link>
                 </el-dropdown-item>
@@ -152,6 +155,18 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <!-- 复制SKU -->
+    <vab-dialog v-model="copySkuVisible" title="复制SKU" top="35vh" width="20%" @close="copySkuClose">
+      <el-form ref="copySkuFormRef" label-position="top" :model="copySkuForm" :rules="copySkuFormRules" >
+        <el-form-item label="新SKU" prop="sku">
+          <el-input v-model="copySkuForm.sku" clearable placeholder="请输入新SKU" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="copySkuClose">取消</el-button>
+        <el-button type="primary" @click="handleCopySkuConfirm">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -179,6 +194,31 @@ const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta } = tabsStore
+const copySkuVisible = ref<boolean>(false)
+const copySkuForm = reactive({
+  sku: ''
+})
+const copySkuFormRef = ref()
+const copySkuClose = () => {
+  copySkuVisible.value = false
+}
+const copySkuFormRules = reactive({
+  sku: [
+    { required: true, message: '请输入新SKU', trigger: 'blur' },
+  ],
+})
+const handleCopySkuConfirm = async () => {
+  copySkuFormRef.value.validate((isValid: boolean) => {
+    if (isValid) {
+      //
+    }
+  })
+}
+const handleCopySku = () => {
+  $baseConfirm('只能复制相同产品，不支持复制后修改成其他产品', null, () => {
+    copySkuVisible.value = true
+  })
+}
 const handleSkuDetail = async (row: any) => {
   const query = { title: `${row.sku.split('<br/>')[0]}`, skuId: row.skuId }
   const matched = handleMatched(allRoutes.value, '/productInfomation/skuDetailView')
