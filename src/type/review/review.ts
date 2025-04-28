@@ -93,12 +93,11 @@ export interface IReviewCommonItem {
   amazonJpOrderQuantity?: number
   tiktokUsOrderQuantity?: number
   /**
-   * 亚马逊DK订货数量
-   */
-  /**
    * 沃尔玛US订货数量
    */
   walmartUsOrderQuantity?: number
+  vineSite?: string
+  vineQuantity?: number
   /**
    * 实际产品总成本
    */

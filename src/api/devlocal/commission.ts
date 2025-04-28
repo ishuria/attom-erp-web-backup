@@ -327,3 +327,14 @@ export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number, 
     method: 'get',
   })
 }
+
+/**
+ * 获取提成明细的发放月份
+ */
+export function getCommissionTypeMonth(params: { type: number }): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/commission/type/month`,
+    method: 'get',
+    params
+  })
+}

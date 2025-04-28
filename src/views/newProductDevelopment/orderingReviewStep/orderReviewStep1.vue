@@ -20,7 +20,7 @@
                 </template>
               </el-image>
             </template>
-            <template v-if="row['column0'] === 'oem'">
+            <!-- <template v-if="row['column0'] === 'oem'">
               <el-checkbox 
                 v-model="row[prop]" 
                 class="custom-checkbox" 
@@ -28,8 +28,28 @@
                 size="large" 
                 :true-value="1"
               />
+            </template> -->
+            <template v-if="row['column0'] === 'productPositioning'">
+              <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
+                <el-option
+                  v-for="item in productPositioningOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </template>
-            <template v-if="row['column0'] === 'effectiveCount'">
+            <template v-if="row['column0'] === 'oem'">
+              <el-radio-group v-model="row[prop]" @change="handleUpdateOEM(row, prop)" >
+                <el-radio :value="1" />
+              </el-radio-group>
+            </template>
+            <template v-if="row['column0'] === 'graphicDesign'">
+              <el-radio-group v-model="row[prop]" @change="handleUpdateGraphicDesign(row, prop)">
+                <el-radio :value="1" />
+              </el-radio-group>
+            </template>
+            <!-- <template v-if="row['column0'] === 'effectiveCount'">
               <el-input 
                 v-model="row[prop]" 
                 class="center-input"
@@ -37,7 +57,7 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
-            </template>
+            </template> -->
             <!-- <template v-if="row['column0'] === 'packagingSize'">
               {{ row[prop] }} cm
             </template>
@@ -51,7 +71,11 @@
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
               {{ Number(row[prop]).toFixed(2) }}
             </template>
-            <template v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem' && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
+            <template
+              v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem'
+              && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
+              && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'graphicDesign'"
+            >
               {{ row[prop] }}
             </template>
           </template>
@@ -161,11 +185,12 @@
 </template>
 
 <script lang="ts" setup>
+import { productPositioningOption } from '../indexCommon'
 import { getMoldInfoByReviewId, getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewMoldItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
-import { effectiveCountInputeHandle, inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
+import { useTableDataLineToColumn } from '/@/utils/tableColum'
 
 const props = defineProps<{
   reviewStatus: string
@@ -212,6 +237,14 @@ const labelMap: Record<string, string> = {
   sampleRetentionStatus: '拍照留样情况',
   productManager: '产品经理',
   productDesign: '产品设计',
+}
+const handleUpdateOEM = (row: any, prop: string) => {
+  // console.log(row, prop)
+  // console.log(variantList.value)
+  variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
+}
+const handleUpdateGraphicDesign = (row: any, prop: string) => {
+  variantList.value[5][prop] = row[prop] === 1 ? 0 : 1
 }
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)

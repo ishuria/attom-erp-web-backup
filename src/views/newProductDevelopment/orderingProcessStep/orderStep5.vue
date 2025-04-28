@@ -120,7 +120,14 @@
             <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
           </template>
           <template v-if="row['column0'] === 'productPositioning'">
-            <el-select class="center-select" placeholder="请选择产品定位" />
+            <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
+              <el-option
+                v-for="item in productPositioningOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </template>
           <template v-if="row['column0'] === 'oem'">
             <el-radio-group v-model="row[prop]" @change="handleUpdateOEM(row, prop)" >
@@ -152,7 +159,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { packKeepSamplesOption } from '../indexCommon'
+import { packKeepSamplesOption, productPositioningOption } from '../indexCommon'
 import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'

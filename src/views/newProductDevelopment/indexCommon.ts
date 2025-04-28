@@ -166,3 +166,18 @@ export const packKeepSamplesOption = [
     label: '做毒理留样1套', value: 5,
   }
 ]
+
+export const productPositioningOption = [
+  {
+    label: '精品', value: 0,
+  },
+  {
+    label: '精铺', value: 1,
+  },
+  {
+    label: '铺货', value: 2,
+  },
+  {
+    label: '多款式测款，同款拓展（包括但不限于尺寸、个数、颜色等）', value: 3,
+  },
+]

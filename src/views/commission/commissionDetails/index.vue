@@ -26,7 +26,14 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发放月份">
-                <el-select v-model="queryForm.month" placeholder="请选择发放月份" @change="queryData" />
+                <el-select v-model="queryForm.month" placeholder="请选择发放月份" @change="queryData" >
+                  <el-option 
+                    v-for="item in monthOption"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.label"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px">提成总金额：</el-text>
@@ -176,7 +183,14 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发放月份">
-                <el-select v-model="longQueryForm.month" placeholder="请选择发放月份" @change="longQueryData" />
+                <el-select v-model="longQueryForm.month" placeholder="请选择发放月份" @change="longQueryData" >
+                  <el-option 
+                    v-for="item in monthOption"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.label"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px">提成总金额：</el-text>
@@ -304,11 +318,18 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="发放月份">
-                <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData" />
+                <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData" >
+                  <el-option 
+                    v-for="item in monthOption"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.label"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px">提成金额：</el-text>
-                <el-text type="success">{{ amount3 }}元</el-text>
+                <el-text type="success">{{ amount3.toFixed(2) }}元</el-text>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
@@ -362,7 +383,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="站点" min-width="140" prop="siteName" />
+          <el-table-column label="站点" min-width="150" prop="siteName" />
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
@@ -453,10 +474,10 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
+import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getCommissionTypeMonth, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
-import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
+import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import type {
   IGetCommissionDetailDevelopList,
   IGetCommissionDetailDevelopListReq,
@@ -668,9 +689,10 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
   }
 }
 
-const handleTabClick = (tab: TabsPaneContext) => {
+const handleTabClick = async (tab: TabsPaneContext) => {
   const name = tab.props.name
   activeName.value = Number(name)
+  await fetchCommissionTypeMonth()
   switch (name) {
     case 0: {
       queryData()
@@ -849,10 +871,29 @@ const fetchUpdateDate = async () => {
   const { data } = await getOperationUpdateDate({ type: activeName.value + 3})
   updateDate.value = data
 }
-
-onBeforeMount(() => {
-  fetchSiteList()
-  fetchUpdateDate()
+const monthOption = ref<{ id: number, label: string }[]>([])
+const fetchCommissionTypeMonth = async () => {
+  const { data } = await getCommissionTypeMonth({ type: activeName.value })
+  monthOption.value = data
+  switch(activeName.value) {
+    case 0: {
+      queryForm.month = monthOption.value[0].label
+      break
+    }
+    case 1: {
+      longQueryForm.month = monthOption.value[0].label
+      break
+    }
+    case 2: {
+      developQueryForm.month = monthOption.value[0].label
+      break
+    }
+  }
+}
+onBeforeMount(async () => {
+  await fetchSiteList()
+  await fetchUpdateDate()
+  await fetchCommissionTypeMonth()
   switch(activeName.value) {
     case 0: {
       fetchUserList()

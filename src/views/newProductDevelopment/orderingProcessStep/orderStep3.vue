@@ -452,9 +452,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" fixed="right" label="操作" width="100">
+        <el-table-column align="center" fixed="right" label="操作" width="110">
           <template #default="{ row }">
             <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
+            <el-link type="primary" :underline="false" >复制</el-link>
           </template>
         </el-table-column>
         <template #empty>
