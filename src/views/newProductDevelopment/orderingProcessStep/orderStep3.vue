@@ -421,14 +421,27 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="HTS" min-width="100" prop="volumeCoefficient">
+        <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
           <template #default="{ row }">
             <el-select
-              v-model="row.htsId"
-              placeholder="请选择头程渠道"
+              v-model="row.hts"
+              clearable
+              default-first-option
+              filterable
+              :loading="htsLoading"
+              placeholder="点击输入和搜索HTS"
+              remote
+              :remote-method="(query: string) => remoteHTSMethod(query, row)"
               style="min-width: 100%"
+              @change="handleUpdateHts(row)"
+              @clear="handleClearHts(row)"
             >
-              <el-option v-for="dict in channelList" :key="dict.id" :label="dict.label" :value="dict.id"/>
+              <el-option
+                v-for="item in htsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item"
+              />
             </el-select>
           </template>
         </el-table-column>
@@ -452,10 +465,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" fixed="right" label="操作" width="110">
+        <el-table-column align="center" fixed="right" label="操作" width="100">
           <template #default="{ row }">
             <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
-            <el-link type="primary" :underline="false" >复制</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -486,6 +498,7 @@ import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
+  getReviewVariantHts,
   reverseCalculateReview,
   reviewStepNo3ComponentAdd,
   reviewStepNo3ComponentCopy,
@@ -515,7 +528,6 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import CountryFlag from 'vue-country-flag-next'
 defineOptions({
   name: 'OrderStep3',
 })
@@ -533,6 +545,32 @@ const emit = defineEmits<{
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 
+const htsLoading = ref(false) //搜索SKU-loading
+const htsOptions = ref<any[]>([]) //搜索选项
+const htsList = ref<any[]>([]) //搜索列表
+
+const remoteHTSMethod = async (query: string, row: any) => {
+  query = query.trim()
+  if (query) {
+    const { data } = await getReviewVariantHts({
+      hts: query,
+      siteCode: row.site
+    })
+
+    htsList.value = data.map((item: any) => {
+      return { value: item.id, label: `${item.label}` }
+    })
+    htsLoading.value = true
+    setTimeout(() => {
+      htsLoading.value = false
+      htsOptions.value = htsList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    htsOptions.value = []
+  }
+}
 const imageUploadVisible = ref<boolean>(false) // 图片上传弹窗显示与否
 let copyImgRow: any = null // 复制的行
 // 打开上传图片弹窗
@@ -723,14 +761,11 @@ const clickEditorConfirm = async (val: any) => {
 const clickEditorCancel = (val: any) => {
   wangEditorVisible.value = val
 }
-
-// 零件信息完善与售价核对修改站点
-const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
-  // 外币币种
-  // row.currencyType = siteReflectCurrencyAndExchangeRate.get(convertString(row.site))!
-  // const {data} = await getExchangeRate({currency:row.currencyType})
-  // row.foreignExchange = data
-  // row.site = row.site
+const handleUpdateHts = async (row: IreviewStepNo3VariantList) => {
+  // console.log(row)
+  let htsId = null
+  if (row.hts.value) htsId = row.hts.value
+  if (row.hts.id) htsId = row.hts.id
   await reviewStepNo3VariantUpdate({
     currencyType: row.currencyType,
     finalSellingPrice: row.finalSellingPrice!,
@@ -747,6 +782,55 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
     weight: row.weight!,
     weightCoefficient: row.weightCoefficient!,
     actualTotalCost: row.actualTotalCost!,
+    htsId,
+   
+  })
+}
+const handleClearHts = async (row: IreviewStepNo3VariantList) => {
+  // console.log(row)
+ 
+  await reviewStepNo3VariantUpdate({
+    currencyType: row.currencyType,
+    finalSellingPrice: row.finalSellingPrice!,
+    firstMileChannel: row.firstMileChannel,
+    foreignExchange: row.foreignExchange,
+    orderEntryId: row.orderEntryId,
+    packagingHeight: row.packagingHeight!,
+    packagingLength: row.packagingLength!,
+    packagingPrice: row.packagingPrice!,
+    packagingWidth: row.packagingWidth!,
+    site: row.site,
+    tariff: row.tariff! / 100,
+    volumeCoefficient: row.volumeCoefficient!,
+    weight: row.weight!,
+    weightCoefficient: row.weightCoefficient!,
+    actualTotalCost: row.actualTotalCost!,
+    htsId: null,
+  })
+}
+// 零件信息完善与售价核对修改站点
+const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
+  // 外币币种
+  let htsId = null
+  if (row.hts.value) htsId = row.hts.value
+  if (row.hts.id) htsId = row.hts.id
+  await reviewStepNo3VariantUpdate({
+    currencyType: row.currencyType,
+    finalSellingPrice: row.finalSellingPrice!,
+    firstMileChannel: row.firstMileChannel,
+    foreignExchange: row.foreignExchange,
+    orderEntryId: row.orderEntryId,
+    packagingHeight: row.packagingHeight!,
+    packagingLength: row.packagingLength!,
+    packagingPrice: row.packagingPrice!,
+    packagingWidth: row.packagingWidth!,
+    site: row.site,
+    tariff: row.tariff! / 100,
+    volumeCoefficient: row.volumeCoefficient!,
+    weight: row.weight!,
+    weightCoefficient: row.weightCoefficient!,
+    actualTotalCost: row.actualTotalCost!,
+    htsId,
   })
   fetchVariantsData()
 }
@@ -784,7 +868,10 @@ const handleInvoicingChange = async (row: any) => {
     await fetchVariantsData()
 }
 // 头程渠道修改
-const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
+const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) => {
+  let htsId = null
+  if (row.hts.value) htsId = row.hts.value
+  if (row.hts.id) htsId = row.hts.id
   await reviewStepNo3VariantUpdate({
     currencyType: row.currencyType,
     finalSellingPrice: row.finalSellingPrice!,
@@ -801,6 +888,7 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) =>{
     weight: row.weight!,
     weightCoefficient: row.weightCoefficient!,
     actualTotalCost: row.actualTotalCost!,
+    htsId,
   })
   await fetchVariantsData()
 }
@@ -1030,7 +1118,10 @@ const clickVariantsCancel = async (event:any, value:any) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
-      await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: value.roi / 100 })
+      let htsId = null
+      if (value.hts.value) htsId = value.hts.value
+      if (value.hts.id) htsId = value.hts.id
+      await reviewStepNo3VariantUpdate({ ...value, tariff: value.tariff / 100, grossMarginRate: value.grossMarginRate / 100, roi: value.roi / 100, htsId, })
       await fetchVariantsData()
     } catch {
       Object.assign(value, _row)
@@ -1126,7 +1217,7 @@ const validateVariants = (item: any) => {
   } else if (!item.tariff) {
       $baseMessage('请先填写关税', 'warning', 'hey');
       return false;
-  } else if (item.htsId == null) {
+  } else if (!item.hts.label) {
       $baseMessage('请先选择HTS', 'warning', 'hey');
       return false;
   }

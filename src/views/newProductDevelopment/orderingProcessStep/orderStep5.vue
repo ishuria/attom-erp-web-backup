@@ -106,10 +106,10 @@
           <template v-if="row['column0'] === 'sampleRetentionStatus'">
             <el-select v-model="row[prop]" class="center-select" collapse-tags collapse-tags-tooltip multiple placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
               <el-option 
-                v-for="item in packKeepSamplesOption"
-                :key="item.value"
+                v-for="item in packageSampleOption"
+                :key="item.id"
                 :label="item.label"
-                :value="item.value"
+                :value="item.id"
               />
             </el-select>
           </template>
@@ -122,10 +122,10 @@
           <template v-if="row['column0'] === 'productPositioning'">
             <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
               <el-option
-                v-for="item in productPositioningOption"
-                :key="item.value"
+                v-for="item in productPositionOption"
+                :key="item.id"
                 :label="item.label"
-                :value="item.value"
+                :value="item.id"
               />
             </el-select>
           </template>
@@ -159,8 +159,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { packKeepSamplesOption, productPositioningOption } from '../indexCommon'
-import { reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
+import { getProductPositionList, getReviewVariantPackageSampleList, reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -250,10 +249,7 @@ const handleInsertSku = async (row: any, prop: string) => {
 }
 
 const tableRef = ref<TableInstance>()
-const photoSampleOptions = [
-  { label: '已有拍照样品,大货无需留样', value: 0 },
-  { label: '大货需要留样拍照', value: 1 }
-];
+
 /**
  * 图片预览事件
  */
@@ -769,12 +765,24 @@ const fetchVariantList = async () => {
         syncVariantValues(item)
       }
     })
-    console.log(exchangeList.value);
+    // console.log(exchangeList.value);
   } catch (error) {
     console.error('Error fetching variant list:', error);
   }
-};
+}
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
 onMounted(() => {
+  fetchProductPositionOption()
+  fetchPackagePositionOption()
   fetchVariantList()  
 })
 </script>

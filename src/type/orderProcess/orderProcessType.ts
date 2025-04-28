@@ -371,7 +371,8 @@ export interface IreviewStepNo3VariantList {
     /**
      * 重量系数
      */
-    weightCoefficient: null;
+  weightCoefficient: null;
+  hts: { label: string, id: number, value?: number}
 }
 // 新品订货流程-零件信息完善与售价核对-更新变体信息
 export interface IreviewStepNo3VariantUpdate {
@@ -433,6 +434,7 @@ export interface IreviewStepNo3VariantUpdate {
    * 实际总成本
    */
   actualTotalCost?: number
+  [key: string]: any
 }
 // 完善新供应商信息与打包质检清单 - 查询质检清单列表
 export interface IreviewStepNo4ListQualityInspectionResp {

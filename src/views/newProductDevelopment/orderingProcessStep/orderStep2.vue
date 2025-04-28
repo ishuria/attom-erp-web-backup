@@ -127,6 +127,10 @@ const handleSkip = () => {
 }
 // 当点击继续的时候
 const handleContinue = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('请选择需要添加到采购单里的零件', 'warning')
+    return
+  }
   selectRows.value.forEach((item: any) => {
     suppliserIds.value.push(item.supplierId)
   })

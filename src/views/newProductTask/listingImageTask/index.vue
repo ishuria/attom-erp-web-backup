@@ -498,7 +498,7 @@
         </el-form-item>
         <el-form-item label="产品分类" prop="position">
           <el-select v-model="postTaskForm.position" placeholder="请选择产品分类">
-            <el-option v-for="item in productClassificationOption" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in productPositionOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="要求完成日期" prop="finishDate">
@@ -679,7 +679,8 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { designTypeOption, productClassificationOption, taskTypeOption } from '../constantOption'
+import { getProductPositionList } from '~/src/api/devlocal/orderProcess'
+import { designTypeOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
@@ -1230,7 +1231,7 @@ const handleClosePostTask = () => {
 }
 const showPostTask = async () => {
   postTaskVisible.value = true
-  
+  await fetchProductPositionOption()
 }
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -1325,6 +1326,11 @@ const fetchUserList = async () => {
 }
 const useUser = useUserStore()
 const currentUser = useUser.getUsername
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
 onBeforeMount(() => { 
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {

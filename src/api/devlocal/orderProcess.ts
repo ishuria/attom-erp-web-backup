@@ -465,3 +465,30 @@ export function reverseCalculateReview(params?: { id: number }): Promise<{ data:
     params,
   })
 }
+
+/**
+ * 查询站点对应的hts列表
+ */
+export function getReviewVariantHts(data: { siteCode: number, hts: string }) {
+  return request({
+    url: `${BASE_API}/review/variant/hts`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 打包留样下拉列表
+ */
+export function getReviewVariantPackageSampleList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/review/variant/package/sampleList`,
+    method: 'get',
+  })
+}
+export function getProductPositionList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/product/position`,
+    method: 'get',
+  })
+}
