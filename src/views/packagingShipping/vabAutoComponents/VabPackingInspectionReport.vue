@@ -11,7 +11,7 @@
       style="margin-right: 30px; margin-left: 30px"
     >
       <el-form-item label="日期">
-        <el-input disabled style="margin-right: 0" />
+        <el-input v-model="qualityInspectionForm.dete" disabled style="margin-right: 0" />
       </el-form-item>
       <el-form-item label="SKU" prop="sku">
         <el-input v-model="qualityInspectionForm.sku" disabled style="margin-right: 0" />
@@ -190,7 +190,8 @@ const qualityInspectionForm = reactive({
   productName: '',
   id: '',
   po: '',
-  packageTaskId: ''
+  packageTaskId: '',
+  dete: ''
 })
 
 const uploadImage = async (file: File) => {
@@ -336,6 +337,7 @@ const fetchData = async () => {
     sku: props.sku,
   })
   if (data) {
+    data.dete = data.dete ? data.dete.split(' ')[0] : ''
     data.inspectionList.forEach((row: any) => {
       if (row.images.length === 0) {
         row.imgUrl = ''

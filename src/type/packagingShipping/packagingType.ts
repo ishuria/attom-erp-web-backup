@@ -453,6 +453,7 @@ export interface IGetPackageInspection {
    * 结论 0不通过 1通过
    */
   status?: number;
+  dete?: string
 }
 
 export interface IInspectionList {

@@ -16,7 +16,7 @@
           fixed 
           :label="labelMap['column0']"
           :prop="'column0'"
-          width="260"
+          width="300"
         >
           <template #default="{ row }">
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
@@ -268,7 +268,7 @@ const labelMap: Record<string, string> = {
   battery: '是否含电池<br>(若有则填入电池类型)',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
   certification: '证书',
