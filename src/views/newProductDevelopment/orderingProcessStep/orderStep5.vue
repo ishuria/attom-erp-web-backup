@@ -1,18 +1,18 @@
 <template>
   <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
-    <el-table 
+    <el-table
       ref="tableRef"
-      border 
+      border
       :data="exchangeList" :header-cell-style="{ 'text-align': 'center' }"
       stripe
       style="width: auto; table-layout: fixed;"
       @cell-click="changeInput"
     >
       <!-- 第一列固定标签列 -->
-      <el-table-column 
-        align="right" 
-        fixed 
-        :label="labelMap['column0']" 
+      <el-table-column
+        align="right"
+        fixed
+        :label="labelMap['column0']"
         :prop="'column0'"
         width="300"
       >
@@ -28,10 +28,10 @@
         </template>
       </el-table-column>
       <!-- 动态列 -->
-      <el-table-column 
-        v-for="(prop, index) in columnsChange" 
-        :key="index" 
-        align="center" 
+      <el-table-column
+        v-for="(prop, index) in columnsChange"
+        :key="index"
+        align="center"
         :label="prop"
         min-width="260"
         :prop="prop"
@@ -103,9 +103,9 @@
               />
             </el-select>
           </template>
-          <template v-if="row['column0'] === 'sampleRetentionStatus'">
+          <template v-if="row['column0'] === 'sampleRetention'">
             <el-select v-model="row[prop]" class="center-select" collapse-tags collapse-tags-tooltip multiple placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
-              <el-option 
+              <el-option
                 v-for="item in packageSampleOption"
                 :key="item.id"
                 :label="item.label"
@@ -145,7 +145,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
       </template>
     </el-table>
-    
+
     <div class="pay-button-group">
       <el-button @click="handleGoback">上一步</el-button>
       <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
@@ -155,7 +155,7 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
@@ -171,7 +171,7 @@ defineOptions({
 
 const route: any = useRoute()
 const props = defineProps<{ step1Data: number }>()
-const emit = defineEmits<{ 
+const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
   (e: 'update:previewListValue', value: string): void
@@ -319,13 +319,13 @@ const labelMap: Record<string, string> = {
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
-  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   certificateUpload: '证书上传',
   skuMerge: '合并变体的SKU',
   operate: '操作',
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
 
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
@@ -352,7 +352,7 @@ const buildParams = (key: string) => {
     patent: exchangeList.value[10][key],
     productManagerId: exchangeList.value[19][key],
     productDesignId: exchangeList.value[20][key],
-    sampleRetentionStatus: exchangeList.value[13][key],
+    sampleRetention: exchangeList.value[13][key],
     checkStatus: exchangeList.value[14][key],
     orderEntryId: exchangeList.value[18][key],
   }
@@ -376,7 +376,7 @@ const handleVariantsSame = (row: any) => { //变体值相同的值改变的时�
         }
       });
     } else if (values.length > 1) {
-      
+
       let valuesResult = values.every( item => item === values[0] );
       if (!valuesResult) {
         row.variantsSame = false
@@ -397,7 +397,7 @@ const handleVariantsSame = (row: any) => { //变体值相同的值改变的时�
 const syncVariantValues = (row: any) => { //默认勾选,如果当前行1个单元格只填了1个值，则该行其他单元格都填入该值。
   const values = Object.values(row).filter(value => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0);
   // console.log(values[0]);
-  
+
   if (values.length === 1) {
     Object.keys(row).forEach(key => {
       if (key !== 'column0' && key !== 'variantsSame') {
@@ -426,7 +426,7 @@ const handleInputChange = async (row: any, prop: string) => {
           row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
           update(key)
         }
-      
+
       });
     }
   }
@@ -476,11 +476,11 @@ const handlePackingUpdate = async (row: any, prop: any) => {
 const handleChangeProductManager = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];  
+    const newValue = row[prop];
       Object.keys(row).forEach(async key => {
         if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue // 将其他单元格的值更新为当前输入框的值
-          
+
           // 点击了修改,manager对应的就是id,让managerId就等于id
           exchangeList.value[19][key] = exchangeList.value[11][key]
           if (exchangeList.value[19][key] === exchangeList.value[20][key]) {
@@ -490,7 +490,7 @@ const handleChangeProductManager = async (row: any, prop: any) => {
             exchangeList.value[19][key] = null
           }
           update(key)
-        } 
+        }
       })
   } else {
     exchangeList.value[19][prop] = exchangeList.value[11][prop]
@@ -506,13 +506,13 @@ const handleChangeProductManager = async (row: any, prop: any) => {
 const handleChangeProductDesign = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];  
+    const newValue = row[prop];
 
       Object.keys(row).forEach(async key => {
-        
+
         if (key !== 'column0' && key !== 'variantsSame') {
           row[key] = newValue // 将其他单元格的值更新为当前输入框的值
-          
+
           // 点击了修改,design对应的就是id,让designId就等于id
           exchangeList.value[20][key] = exchangeList.value[12][key]
           if (exchangeList.value[19][key] === exchangeList.value[20][key]) {
@@ -522,7 +522,7 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
             exchangeList.value[20][key] = null
           }
           update(key)
-        } 
+        }
       })
   } else {
     exchangeList.value[20][prop] = exchangeList.value[12][prop]
@@ -538,18 +538,18 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // // 获取当前输入框的值
-    // const newValue = row[prop];  
+    // const newValue = row[prop];
     //   // console.log(exchangeList.value);
     //   // console.log(peopleList.value);
     //   Object.keys(row).forEach(async key => {
     //     if (key !== 'column0' && key !== 'variantsSame') {
     //       row[key] = newValue // 将其他单元格的值更新为当前输入框的值
-  
+
     //       update(key)
-    //     } 
+    //     }
     //   })
   } else {
-  
+
     // update(prop)
   }
 }
@@ -561,7 +561,7 @@ const handleSave = async () => {
   } else {
       classReviewId = route.query.reviewId
   }
-  
+
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
@@ -582,7 +582,7 @@ const handleSaveAndContinue = async () => {
   } else {
       classReviewId = route.query.reviewId
   }
-  
+
   // 校验是否为空
   for (const item of exchangeList.value) {
     const column0 = item.column0
@@ -590,7 +590,7 @@ const handleSaveAndContinue = async () => {
       for (const key of Object.keys(item)) {
         if (key !== 'column0' && key !== 'variantSame' && !item[key]) {
           $baseMessage(`${key}变体的图片不能为空!`, 'warning')
-          return 
+          return
         }
       }
     }
@@ -603,7 +603,7 @@ const handleSaveAndContinue = async () => {
       }
     }
   }
-  
+
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
@@ -624,9 +624,9 @@ const handleGoback = () => {
 }
 
 // 表格原始数据
-const skuVariantsData = ref<any>([]) 
+const skuVariantsData = ref<any>([])
 // 转换后的表格数据
-const exchangeList = ref<any>([]) 
+const exchangeList = ref<any>([])
 // 表格行转换成列的函数
 const useTableDataLineToColumn = () => {
   // 一条数据的所有字段数组
@@ -714,9 +714,9 @@ const fetchVariantList = async () => {
     const defaultProductManagerId = item.userId
     // 获取table数据
     const { data } = await reviewGetSkuList({ reviewId: classReviewId! })
-  
+
     skuVariantsData.value = data.map((item: any) => {
-   
+
       if (item.productManagerId === -1) {
         // 如果新的table里面的产品经理存在,就是新的; 如果不存在,就是默认的
         item.productManager = defaultProductManager
@@ -737,7 +737,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
-          sampleRetentionStatus: item.sampleRetentionStatus,
+          sampleRetention: item.sampleRetention,
           packingGroup: item.checkStatus,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,
@@ -754,10 +754,10 @@ const fetchVariantList = async () => {
         item.column0 = key.label;
         item.orderEntryId = key.id;
       }
-    })  
+    })
     // console.log(skuVariantsData.value);
     const { initData, columns } = useTableDataLineToColumn();
-    columnsChange = columns 
+    columnsChange = columns
     exchangeList.value = initData(skuVariantsData.value);
     exchangeList.value.forEach((item: any) => {
       item.variantsSame = true
@@ -783,7 +783,7 @@ const fetchPackagePositionOption = async () => {
 onMounted(() => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
-  fetchVariantList()  
+  fetchVariantList()
 })
 </script>
 
@@ -829,20 +829,20 @@ onMounted(() => {
 .image-cell {
   width: 75px;
   height: 75px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -856,18 +856,18 @@ onMounted(() => {
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
       background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
       opacity: 1;  // 悬停时完全显示
@@ -882,14 +882,14 @@ onMounted(() => {
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;

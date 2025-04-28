@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
-      <el-table 
-        ref="tableRef" 
-        border class="table1" 
-        :data="exchangeList" 
+      <el-table
+        ref="tableRef"
+        border class="table1"
+        :data="exchangeList"
         :header-cell-style="{ 'text-align': 'right' }"
         :show-header="false"
         stripe
         style="width: auto; table-layout: fixed;"
       >
         <!-- 第一列固定标签列 -->
-        <el-table-column 
-          align="right" 
-          fixed 
+        <el-table-column
+          align="right"
+          fixed
           :label="labelMap['column0']"
           :prop="'column0'"
           width="300"
@@ -22,12 +22,12 @@
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
         </el-table-column>
-        <el-table-column 
-          v-for="(prop, i) in columnsChange" 
-          :key="i" 
-          align="center" 
-          :label="prop" 
-          min-width="260" 
+        <el-table-column
+          v-for="(prop, i) in columnsChange"
+          :key="i"
+          align="center"
+          :label="prop"
+          min-width="260"
           :prop="prop"
         >
           <template #default="{ row }">
@@ -40,7 +40,7 @@
             </template>
             <template v-if="row['column0'] === 'sampleRetentionStatus'">
               <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择拍照留样情况">
-                <el-option 
+                <el-option
                   v-for="item in photoSampleOptions"
                   :key="item.value"
                   :label="item.label"
@@ -69,7 +69,7 @@
             </template>
             <template
               v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
-              && row['column0'] !== 'oem' && row['column0'] !== 'productPositioning' && row['column0'] !== 'graphicDesign'" 
+              && row['column0'] !== 'oem' && row['column0'] !== 'productPositioning' && row['column0'] !== 'graphicDesign'"
             >
               {{ row[prop] }}
             </template>
@@ -80,54 +80,54 @@
         </template>
       </el-table>
     </div>
-  
-    <div>
-      <el-table 
-        border :cell-style="{ 'text-align': 'center' }" 
-        :data="moldCheckList" 
-        :header-cell-style="{ 'text-align': 'center' }"
-        height="100"
-        stripe
-        style="margin-top: 25px;"
-      >
-        <el-table-column label="提交日期" min-width="100" prop="createTime">
-            <template #default="{ row }">
-              <span>{{ row.createTime.split(' ')[0] }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="零件名" min-width="200" prop="component"/>
-        <el-table-column label="供应商" min-width="127" prop="suppliser"/>
-        <el-table-column align="center" label="状态" min-width="127" prop="status">
-          <template #default="{ row }">
-              <span :class="generateStatus(row.status).color">
-                  {{ generateStatus(row.status).text }}
-              </span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">
-          <template #default="{ row }">
-            {{ generateInvoiceType(row.invoiceType) }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>
-        <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">
-          <template #default="{ row }">
-            {{ generateDealMethod(row.dealMethod) }}
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <vab-dialog 
-      v-model="checkPersonListVisible" 
-      :before-close="handleCheckPersonClose" 
+
+<!--    <div>-->
+<!--      <el-table-->
+<!--        border :cell-style="{ 'text-align': 'center' }"-->
+<!--        :data="moldCheckList"-->
+<!--        :header-cell-style="{ 'text-align': 'center' }"-->
+<!--        height="100"-->
+<!--        stripe-->
+<!--        style="margin-top: 25px;"-->
+<!--      >-->
+<!--        <el-table-column label="提交日期" min-width="100" prop="createTime">-->
+<!--            <template #default="{ row }">-->
+<!--              <span>{{ row.createTime.split(' ')[0] }}</span>-->
+<!--            </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column label="零件名" min-width="200" prop="component"/>-->
+<!--        <el-table-column label="供应商" min-width="127" prop="suppliser"/>-->
+<!--        <el-table-column align="center" label="状态" min-width="127" prop="status">-->
+<!--          <template #default="{ row }">-->
+<!--              <span :class="generateStatus(row.status).color">-->
+<!--                  {{ generateStatus(row.status).text }}-->
+<!--              </span>-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column align="center" label="开票类型" min-width="127" prop="invoiceType">-->
+<!--          <template #default="{ row }">-->
+<!--            {{ generateInvoiceType(row.invoiceType) }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--        <el-table-column align="center" label="付款金额" min-width="127" prop="payPrice"/>-->
+<!--        <el-table-column align="center" label="开模处理方式" min-width="127" prop="dealMethod">-->
+<!--          <template #default="{ row }">-->
+<!--            {{ generateDealMethod(row.dealMethod) }}-->
+<!--          </template>-->
+<!--        </el-table-column>-->
+<!--      </el-table>-->
+<!--    </div>-->
+    <vab-dialog
+      v-model="checkPersonListVisible"
+      :before-close="handleCheckPersonClose"
       title="审批人选择"
       width="480"
     >
       <el-form style="margin: 0">
         <el-form-item label="审批人员列表">
-          <el-select 
-            v-model="reviewPersonId" 
-            clearable  
+          <el-select
+            v-model="reviewPersonId"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             placeholder="请选择审批人员"
@@ -146,7 +146,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -161,7 +161,7 @@ const photoSampleOptions = [
   { label: '已有拍照样品,大货无需留样', value: 0 },
   { label: '大货需要留样拍照', value: 1 }
 ];
-const emit = defineEmits<{ 
+const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
   (e: 'update:previewListValue', value: string): void
@@ -257,7 +257,7 @@ const labelMap: Record<string, string> = {
   productPositioning: '产品定位',
   oem: 'OEM',
   graphicDesign: '平面设计',
-  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  quantity: '订货数量',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
   actualTotalCost: '产品实际总成本',
@@ -301,7 +301,7 @@ const useTableDataLineToColumn = () => {
     const list: any = []
     // 解构分组数据
     // console.log('groupData.value', groupData.value);
-    
+
     const [column0, ...otherData] = groupData.value
     // 初始化每一行的数据, 除去表头，有几个key就算有几行
     props.value.slice(1).forEach((prop, i) => {
@@ -366,7 +366,7 @@ const fetchData = async () => {
     productPositioning: item.productPositioning,
     oem: item.oem,
     graphicDesign: item.graphicDesign,
-    amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+    quantity: item.quantity,
     purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
     finalSellingPrice: item.finalSellingPrice,
     actualTotalCost: item.actualTotalCost,
@@ -385,7 +385,7 @@ const fetchData = async () => {
     orderEntryId: item.orderEntryId,
   }))
   const { initData, columns } = useTableDataLineToColumn();
-  columnsChange = columns 
+  columnsChange = columns
   exchangeList.value = initData(checkTableData.value);
 }
 let classReviewId: number | undefined
@@ -406,7 +406,7 @@ onMounted(() => {
   fetchMoldData()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
   display: block;
@@ -437,4 +437,3 @@ onMounted(() => {
  text-align-last: center;
 }
 </style>
-  
