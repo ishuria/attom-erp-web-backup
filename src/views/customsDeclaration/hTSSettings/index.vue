@@ -15,14 +15,6 @@
           @view="handleShowView"
         >
           <template #rate-columns>
-            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
             <el-table-column label="301税率" min-width="100" prop="threeZeroOne">
               <template #default="{ row }">
                 <div class="none">
@@ -46,26 +38,7 @@
           @size-change="handleSizeChange"
           @update:remark="handleShowRemark"
           @view="handleShowView"
-        >
-          <template #rate-columns>
-            <el-table-column align="center" label="德国关税率" min-width="110" prop="deTariffRate">
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.deTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.deTariffRate != null ? row.deTariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="英国关税率" min-width="110" prop="ukTariffRate">
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.ukTariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.ukTariffRate != null ? row.ukTariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
-          </template>
-        </vab-hts-table>
+        />
       </el-tab-pane>
       <el-tab-pane label="德国" :name="2">
         <vab-hts-table
@@ -79,18 +52,7 @@
           @size-change="handleSizeChange"
           @update:remark="handleShowRemark"
           @view="handleShowView"
-        >
-          <template #rate-columns>
-            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
-          </template>
-        </vab-hts-table>
+        />
       </el-tab-pane>
       <el-tab-pane label="加拿大" :name="3">
         <vab-hts-table
@@ -104,18 +66,7 @@
           @size-change="handleSizeChange"
           @update:remark="handleShowRemark"
           @view="handleShowView"
-        >
-          <template #rate-columns>
-            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
-          </template>
-        </vab-hts-table>
+        />
       </el-tab-pane>
       <el-tab-pane label="日本" :name="4">
         <vab-hts-table
@@ -129,18 +80,7 @@
           @size-change="handleSizeChange"
           @update:remark="handleShowRemark"
           @view="handleShowView"
-        >
-          <template #rate-columns>
-            <el-table-column label="关税率" min-width="90" prop="tariffRate" >
-              <template #default="{ row }">
-                <div class="none">
-                  <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
-              </template>
-            </el-table-column>
-          </template>
-        </vab-hts-table>
+        />
       </el-tab-pane>
     </el-tabs>
     <!-- 新增 -->
@@ -154,29 +94,15 @@
         <el-form-item label="HTS" prop="hts">
           <el-input v-model="addForm.hts" clearable />
         </el-form-item>
-        <el-form-item v-if="addForm.type === 0" label="关税率" prop="tariffRate">
+        <el-form-item label="关税率" prop="tariffRate">
           <el-input v-model="addForm.tariffRate" type="number" >
             <template #suffix>
               <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item v-if="addForm.type === 0" label="301关税率" prop="threeZeroOne">
+        <el-form-item v-if="activeName === 0" label="301关税率" prop="threeZeroOne">
           <el-input v-model="addForm.threeZeroOne" type="number" >
-            <template #suffix>
-              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item v-if="addForm.type === 1" label="德国关税率" prop="deTariffRate">
-          <el-input v-model="addForm.deTariffRate" type="number" >
-            <template #suffix>
-              <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item v-if="addForm.type === 1" label="英国关税率" prop="ukTariffRate">
-          <el-input v-model="addForm.ukTariffRate" type="number" >
             <template #suffix>
               <el-icon class="el-input__icon" style="font-style: normal">%</el-icon>
             </template>
@@ -241,13 +167,14 @@
       <el-table
         v-loading="viewListLoading"
         border
+        :cell-class-name="clearPadding"
         :data="viewList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
       >
-        <el-table-column label="图片" prop="skuImageUrl" >
+        <el-table-column label="图片" prop="skuImageUrl" width="75" >
           <template #default="{ row }">
-            <el-image :src="row.skuImageUrl" style="width: 100px; height: 100px;" >
+            <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px;" @click="showImagePreview(row.skuImageUrl)">
               <template #error>
                 <el-icon />
               </template>
@@ -265,6 +192,8 @@
         @size-change="handleViewSizeChange"
       />
     </vab-dialog>
+
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
   </div>
 </template>
 
@@ -316,7 +245,15 @@ const title = ref<string>('')
 const content = ref<string>('')
 const _id = ref<number>(0)
 const prop = ref<string>('')
-
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const closeImagePreview = () => {
+  imagePreviewVisible.value = false
+}
+const showImagePreview = (url: string) => {
+  imagePreviewList.value = [url]
+  imagePreviewVisible.value = true
+}
 const handleShowView = (row: IGetHTSList) => {
   viewQueryForm.htsId = row.id
   viewQueryForm.type = activeName.value
@@ -363,8 +300,6 @@ const handleConfirmAdd = async () => {
         ...addForm,
         tariffRate: addForm.tariffRate / 100,
         threeZeroOne: addForm.threeZeroOne / 100,
-        deTariffRate: addForm.deTariffRate / 100,
-        ukTariffRate: addForm.ukTariffRate / 100,
         extras: addForm.extras / 100
       })
       if (data) {
@@ -409,30 +344,16 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    if (activeName.value === 0) {
-      try {
-        await updateHTSList({
-          id: value.id,
-          tariffRate: value.tariffRate! / 100,
-          threeZeroOne: value.threeZeroOne! / 100,
-          extras: value.extras! / 100,
-          type: 0
-        })
-      } catch {
-        Object.assign(value, copyRow)
-      }
-    } else if (activeName.value === 1) {
-      try {
-        await updateHTSList({
-          id: value.id,
-          deTariffRate: value.deTariffRate! / 100,
-          ukTariffRate: value.ukTariffRate! / 100,
-          extras: value.extras! / 100,
-          type: 1
-        })
-      } catch {
-        Object.assign(value, copyRow)
-      }
+    try {
+      await updateHTSList({
+        id: value.id,
+        tariffRate: value.tariffRate! / 100,
+        threeZeroOne: value.threeZeroOne! / 100,
+        extras: value.extras! / 100,
+        type: activeName.value
+      })
+    } catch {
+      Object.assign(value, copyRow)
     }
   }
 }
@@ -508,6 +429,12 @@ const handleSizeChange = async (value: number) => {
   })
   await fetchData()
 }
+const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getHTSList(queryForm)
@@ -519,12 +446,6 @@ const fetchData = async () => {
     }
     if (item.threeZeroOne) {
       item.threeZeroOne = parseFloat((item.threeZeroOne * 100).toFixed(2))
-    }
-    if (item.deTariffRate) {
-      item.deTariffRate = parseFloat((item.deTariffRate * 100).toFixed(2))
-    }
-    if (item.ukTariffRate) {
-      item.ukTariffRate = parseFloat((item.ukTariffRate * 100).toFixed(2))
     }
     if (item.extras) {
       item.extras = parseFloat((item.extras * 100).toFixed(4))
@@ -595,5 +516,13 @@ onBeforeMount(() => {
   max-width: 400px;
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>

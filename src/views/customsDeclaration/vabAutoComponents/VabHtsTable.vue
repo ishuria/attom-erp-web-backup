@@ -24,7 +24,14 @@
       @cell-click="changeInput"
     >
       <el-table-column label="HTS" min-width="110" prop="hts" :width="flexColumnWidth(list, 'HTS', 'hts')" />
-     
+      <el-table-column label="关税率" min-width="90" prop="tariffRate" >
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.tariffRate" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.tariffRate != null ? row.tariffRate + '%' : '' }}</span>
+        </template>
+      </el-table-column>
       <slot name="rate-columns"></slot>
       <el-table-column label="杂费" min-width="90" prop="extras" >
         <template #default="{ row }">
@@ -98,10 +105,10 @@
 import { Search } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { flexColumnWidth } from '/@/utils/tableColum'
 import { updateHTSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IGetHTSList, IGetHTSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabHtsTable',
@@ -201,31 +208,31 @@ const clickCancel = async (event: any, value: IGetHTSList) => {
   }
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
-    if (props.queryForm.type === 0) {
-      try {
-        await updateHTSList({
-          id: value.id,
-          tariffRate: value.tariffRate! / 100,
-          threeZeroOne: value.threeZeroOne! / 100,
-          extras: value.extras! / 100,
-          type: 0
-        })
-      } catch {
-        Object.assign(value, copyRow)
-      }
-    } else if (props.queryForm.type === 1) {
-      try {
-        await updateHTSList({
-          id: value.id,
-          deTariffRate: value.deTariffRate! / 100,
-          ukTariffRate: value.ukTariffRate! / 100,
-          extras: value.extras! / 100,
-          type: 1
-        })
-      } catch {
-        Object.assign(value, copyRow)
-      }
+    try {
+      await updateHTSList({
+        id: value.id,
+        tariffRate: value.tariffRate! / 100,
+        threeZeroOne: value.threeZeroOne! / 100,
+        extras: value.extras! / 100,
+        type: props.queryForm.type
+      })
+    } catch {
+      Object.assign(value, copyRow)
     }
+    
+    // else if (props.queryForm.type === 1) {
+    //   try {
+    //     await updateHTSList({
+    //       id: value.id,
+    //       deTariffRate: value.deTariffRate! / 100,
+    //       ukTariffRate: value.ukTariffRate! / 100,
+    //       extras: value.extras! / 100,
+    //       type: 1
+    //     })
+    //   } catch {
+    //     Object.assign(value, copyRow)
+    //   }
+    // }
   }
 }
 const handleCurrentChange = (value: number) => {
