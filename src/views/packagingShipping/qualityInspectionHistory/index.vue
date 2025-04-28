@@ -43,6 +43,7 @@
               {{ row.productName }}-{{ row.productDesc }}
             </template>
           </el-table-column>
+          <el-table-column align="center" label="产品经理" prop="productManager" />
           <el-table-column align="center" label="质检结论" prop="status" >
             <template #default="{ row }">
               <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '通过' : '不通过' }}</el-tag>
@@ -107,6 +108,7 @@
               {{ row.productName }}-{{ row.productDesc }}
             </template>
           </el-table-column>
+          <el-table-column align="center" label="产品经理" prop="productManager" />
           <el-table-column align="center" label="质检结论" prop="status" >
             <template #default="{ row }">
               <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '通过' : '不通过' }}</el-tag>
