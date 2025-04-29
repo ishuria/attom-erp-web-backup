@@ -17,6 +17,21 @@
         <el-form-item label="产品短描述" prop="productDesc">
           <el-input v-model="form.productDesc" disabled placeholder="eg:20管45×31.7CM" />
         </el-form-item>
+        <el-form-item label="主订货站点" prop="site">
+          <el-select
+            v-model="form.site"
+            disabled
+            placeholder="选择订货站点"
+            style="width: 240px"
+          >
+            <el-option
+              v-for="item in siteOptions"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div class="list-container auto-height-container">
         <el-scrollbar>
@@ -31,7 +46,7 @@
                 </div>
                 <div class="list-item-meta-content" style="text-align: center">
                   <el-space>
-                    <span style="width: 240px;">{{ "订货数量(亚马逊US)" }}</span>
+                    <span style="width: 240px;">{{ "订货数量" }}</span>
                   </el-space>
                 </div>
               </div>
@@ -61,12 +76,13 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { reviewStepNo1 } from '/@/api/devlocal/orderProcess'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import { _setStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
-    name: 'OrderCheckStep1',
+  name: 'OrderCheckStep1',
 })
 
 const route: any = useRoute()
@@ -74,7 +90,7 @@ const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const emit = defineEmits(['changeCheck-step'])
 const formRef = ref<FormInstance>()
-let form = reactive<any>({
+const form = reactive<any>({
   variantSku: '',
   productName: '',
   productDesc: '',
@@ -86,8 +102,13 @@ let form = reactive<any>({
     }
   ],
 })
+const siteOptions = ref<{ id: number, label: string }[]>([])
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteOptions.value = data
+}
 defineExpose({ form });
-const router = useRouter()
+
 // 当点击下一步的时候
 const handleSubmitAndContinue = async () => {
   emit('changeCheck-step', 1)
@@ -95,10 +116,11 @@ const handleSubmitAndContinue = async () => {
 }
 // 当点击退出的时候
 const handleGoback = async () => {
-    await delVisitedRoute(handleActivePath(route, true))
-    history.back()
+  await delVisitedRoute(handleActivePath(route, true))
+  history.back()
 }
 onMounted(async () => {
+  fetchSiteData()
   if (route.query.reviewId) {
     const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) }) 
     Object.assign(form, data);

@@ -221,6 +221,16 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
           <el-table-column label="ROI" prop="roi"/>
           <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
           <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
+          <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
+            <template #default="{ row }">
+              <el-select
+                v-model="row.hts.label"
+                disabled
+                placeholder="点击输入和搜索HTS"
+                style="min-width: 100%"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="关税%" prop="tariff">
               <template #default="{row}">
                   {{ row.tariff ? row.tariff+'%' : '' }}
@@ -235,6 +245,7 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
       <vab-alert type="error">
         <h3>--请输入精确的产品包装尺寸（精确到小数点后1位），重量（精确到整数）和最终售价。</h3>
         <h3>--如果开专票则实际产品成本=总含税价/(1+开票税点)；如果开普票则则实际产品成本=总含税价</h3>
+        <h3>--HTS请向头程管理专员咨询</h3>
       </vab-alert>
     </div>
     <div class="pay-button-group">
