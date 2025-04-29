@@ -66,6 +66,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
+      <vab-site-quantity-table />
     </div>
     <div class="pay-button-group">
       <el-button :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">归档新品进度管理并发布采购计划</el-button>

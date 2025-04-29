@@ -46,6 +46,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
+      <vab-site-quantity-table />
     </div>
     <vab-alert center="center" type="error">
       <h3>不分货则填0，不能留空</h3>

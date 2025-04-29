@@ -38,38 +38,35 @@
                 </el-image>
               </div>
             </template>
-            <template v-if="row['column0'] === 'sampleRetentionStatus'">
-              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择拍照留样情况">
+            <template v-if="row['column0'] === 'sampleRetention'">
+              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择打包留样情况">
                 <el-option
-                  v-for="item in photoSampleOptions"
-                  :key="item.value"
+                  v-for="item in packageSampleOption"
+                  :key="item.id"
                   :label="item.label"
-                  :value="item.value"
+                  :value="item.id"
                 />
               </el-select>
             </template>
-            <!-- <template v-if="row['column0'] === 'packagingSize'">
-              {{ row[prop] }} cm
-            </template>
-            <template v-if="row['column0'] === 'productSize'">
-              {{ row[prop] }} inch
-            </template> -->
-            <template v-if="row['column0'] === 'productPositioning'">
-              <el-select class="center-select" disabled placeholder="请选择产品定位" />
+            <template v-if="row['column0'] === 'productPosition'">
+              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
+                <el-option
+                  v-for="item in productPositionOption"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                />
+              </el-select>
             </template>
             <template v-if="row['column0'] === 'oem'">
-              <el-radio-group v-model="row[prop]" disabled >
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-radio-group v-model="row[prop]" disabled>
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
             <template
-              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
-              && row['column0'] !== 'oem' && row['column0'] !== 'productPositioning' && row['column0'] !== 'graphicDesign'"
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetention'
+              && row['column0'] !== 'oem' && row['column0'] !== 'productPosition' && row['column0'] !== 'graphicDesign'"
             >
               {{ row[prop] }}
             </template>
@@ -148,7 +145,8 @@
 </template>
 
 <script lang="ts" setup>
-import { reviewStepNo6CheckGet, reviewStepNo6CheckGetMold, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
+import type { IGetSelectVariantsList } from '~/src/type/orderProcess/orderProcessType'
+import { getProductPositionList, getReviewVariantPackageSampleList, reviewStepNo6CheckGet, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
@@ -157,10 +155,10 @@ defineOptions({
   name: 'OrderStep6',
 })
 
-const photoSampleOptions = [
-  { label: '已有拍照样品,大货无需留样', value: 0 },
-  { label: '大货需要留样拍照', value: 1 }
-];
+// const photoSampleOptions = [
+//   { label: '已有拍照样品,大货无需留样', value: 0 },
+//   { label: '大货需要留样拍照', value: 1 }
+// ];
 const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
@@ -172,7 +170,7 @@ const checkPersonListVisible = ref<boolean>(false)
 const personList = ref<{ userId: number; userName: string}[]>([])
 // 审批人id
 const reviewPersonId = ref<string>('')
-const moldCheckList = ref<any>([])
+// const moldCheckList = ref<any>([])
 const exchangeList = ref<any>([])
 const props = defineProps<{ step1Data: number }>()
 const router = useRouter()
@@ -206,55 +204,11 @@ const formattedPrice = (price: string) => {
   return parseFloat(price).toFixed(2)
 }
 
-const generateStatus = (value: number) => {
-  switch (value) {
-    case 0: {
-      return { text: "审批中", color: "status-pending" };
-    }
-    case 1: {
-      return { text: "待提交付款申请", color: "status-in" };
-    }
-    case 2: {
-      return { text: "已付款", color: "status-paid" };
-    }
-    default: {
-      return { text: "未知", color: "status-pending" };
-    }
-  }
-}
-const generateInvoiceType = (value: number) => {
-  switch (value) {
-    case 0: {
-        return "专票"
-    }
-    case 1: {
-        return "普票"
-    }
-    case 2: {
-        return "不开票"
-    }
-  // No default
-  }
-}
-const generateDealMethod = (value: number) => {
-  switch (value) {
-    case 0: {
-        return "不含在PO"
-    }
-    case 1: {
-        return "含在PO"
-    }
-    case 2: {
-        return "含在其他PO"
-    }
-  // No default
-  }
-}
 const labelMap: Record<string, string> = {
   column0: '',
   variantImg: 'SKU图片',
   productName: '产品名称',
-  productPositioning: '产品定位',
+  productPosition: '产品定位',
   oem: 'OEM',
   graphicDesign: '平面设计',
   quantity: '订货数量',
@@ -268,7 +222,7 @@ const labelMap: Record<string, string> = {
   battery: '是否含电池<br>(若有则填入电池类型)',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
   certification: '证书',
@@ -357,44 +311,73 @@ const handleGoback = () => {
 }
 const checkTableData = ref([])
 let columnsChange: any
+const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const fetchData = async () => {
+  // const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! })
+  // variantsSelectList.value = variantSelectList
   const { data } = await reviewStepNo6CheckGet({ reviewId: classReviewId! })
-  checkTableData.value = data.map((item: any, index: number) => ({
-    column0: convertString(index),
-    variantImg: item.variantImg,
-    productName: item.productName,
-    productPositioning: item.productPositioning,
-    oem: item.oem,
-    graphicDesign: item.graphicDesign,
-    quantity: item.quantity,
-    purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
-    finalSellingPrice: item.finalSellingPrice,
-    actualTotalCost: item.actualTotalCost,
-    grossMarginRate: item.grossMarginRate,
-    packagingSize: item.packagingSize,
-    productSize: item.productSize,
-    material: item.material,
-    battery: item.battery,
-    benchmarkAsin: item.benchmarkAsin,
-    patent: item.patent,
-    sampleRetentionStatus: item.sampleRetentionStatus,
-    productManager: item.productManager,
-    productDesign: item.productDesign,
-    certification: '',
-    variantSku: item.variantSku,
-    orderEntryId: item.orderEntryId,
-  }))
+  checkTableData.value = data.map((item: any, index: number) => {
+    return {
+      column0: convertString(index),
+      variantImg: item.variantImg,
+      productName: item.productName,
+      productPosition: item.productPositon,
+      oem: item.oem,
+      graphicDesign: item.graphicDesign,
+      quantity: item.quantity,
+      purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
+      finalSellingPrice: item.finalSellingPrice,
+      actualTotalCost: item.actualTotalCost,
+      grossMarginRate: item.grossMarginRate,
+      packagingSize: item.packagingSize,
+      productSize: item.productSize,
+      material: item.material,
+      battery: item.battery,
+      benchmarkAsin: item.benchmarkAsin,
+      patent: item.patent,
+      sampleRetention: item.sampleRetention,
+      productManager: item.productManager,
+      productDesign: item.productDesign,
+      certification: '',
+      variantSku: item.variantSku,
+      orderEntryId: item.orderEntryId,
+    }
+  })
+  // checkTableData.value.forEach((item: any, index: number) => {
+  //     if (index < variantSelectList.length) {
+  //       const key = variantSelectList[index];
+  //       item.column0 = key.label;
+  //       item.orderEntryId = key.id;
+  //     }
+  //   })
   const { initData, columns } = useTableDataLineToColumn();
+  console.log(checkTableData.value)
   columnsChange = columns
   exchangeList.value = initData(checkTableData.value);
+  console.log(exchangeList.value)
+  // Object.keys(exchangeList.value[16]).forEach((key, index) => {
+  //   if (key !== 'column0') {
+  //     exchangeList.value[16][key] = exchangeList.value[16][key].split(',').map(Number)
+  //   }
+  // })
 }
 let classReviewId: number | undefined
 
-const fetchMoldData = async () => {
-  const { data } = await reviewStepNo6CheckGetMold({ reviewId: classReviewId! })
-  if (data) {
-    moldCheckList.value = data
-  }
+// const fetchMoldData = async () => {
+//   const { data } = await reviewStepNo6CheckGetMold({ reviewId: classReviewId! })
+//   if (data) {
+//     moldCheckList.value = data
+//   }
+// }
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
 }
 onMounted(() => {
   if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
@@ -402,8 +385,10 @@ onMounted(() => {
   } else {
     classReviewId = route.query.reviewId
   }
+  fetchProductPositionOption()
+  fetchPackagePositionOption()
   fetchData()
-  fetchMoldData()
+  // fetchMoldData()
 })
 </script>
 
@@ -435,5 +420,9 @@ onMounted(() => {
 :deep(.center-select) {
  text-align: center;
  text-align-last: center;
+}
+.custom-checkbox {
+  transform: scale(1.3); // 放大 20%
+  transform-origin: center; // 确保放大从中心开始
 }
 </style>

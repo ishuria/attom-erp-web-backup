@@ -275,6 +275,7 @@ declare module 'vue' {
     VabSearch: typeof import('./../../components/VabSearch/index.vue')['default']
     VabShared: typeof import('./../../../src/plugins/VabShared/index.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
+    VabSiteQuantityTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteQuantityTable.vue')['default']
     VabStatistics: typeof import('./../../components/VabStatistics/index.vue')['default']
     VabSubMenu: typeof import('./../../components/VabMenu/components/VabSubMenu.vue')['default']
     VabTableChartLine: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabTableChartLine.vue')['default']

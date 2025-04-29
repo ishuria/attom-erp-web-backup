@@ -119,8 +119,8 @@
           <template v-if="row['column0'] === 'operate'">
             <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
           </template>
-          <template v-if="row['column0'] === 'productPositioning'">
-            <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
+          <template v-if="row['column0'] === 'productPosition'">
+            <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" @change="handleChangeProductPosition(row, prop)">
               <el-option
                 v-for="item in productPositionOption"
                 :key="item.id"
@@ -130,14 +130,10 @@
             </el-select>
           </template>
           <template v-if="row['column0'] === 'oem'">
-            <el-radio-group v-model="row[prop]" @change="handleUpdateOEM(row, prop)" >
-              <el-radio :value="1" />
-            </el-radio-group>
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)" />
           </template>
           <template v-if="row['column0'] === 'graphicDesign'">
-            <el-radio-group v-model="row[prop]" @change="handleUpdateGraphicDesign(row, prop)">
-              <el-radio :value="1" />
-            </el-radio-group>
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)" />
           </template>
         </template>
       </el-table-column>
@@ -203,20 +199,20 @@ const remotePeopleMethod = async (query: string) => {
   }
 }
 const handleUpdateOEM = async (row: any, prop: string) => {
-  // console.log(row)
-  // console.log(prop)
-  // console.log(row[prop])
-  // console.log(exchangeList.value)
-  exchangeList.value[3][prop] = row[prop] === 1 ? 0 : 1
-
+  if (exchangeList.value[3][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+      row[prop] = 0
+      $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+      return
+  }
+  handlePackingUpdate(row, prop)
 }
 const handleUpdateGraphicDesign = async (row: any, prop: string) => {
-  // console.log(row)
-  // console.log(prop)
-  // console.log(row[prop])
-  // console.log(exchangeList.value)
-  exchangeList.value[2][prop] = row[prop] === 1 ? 0 : 1
-
+  if (exchangeList.value[2][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+      row[prop] = 0
+      $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+      return
+  }
+  handlePackingUpdate(row, prop)
 }
 const handleInsertSku = async (row: any, prop: string) => {
   try {
@@ -307,7 +303,7 @@ async function uploadImage(file: File) {
 const labelMap: Record<string, string> = {
   column0: '',
   productImgUrl: '上传成套产品图片<br>(产品要和实际一致)',
-  productPositioning: '产品定位',
+  productPosition: '产品定位',
   oem: 'OEM',
   graphicDesign: '平面设计',
   productLength: '产品长(cm)',
@@ -343,6 +339,9 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 }
 const buildParams = (key: string) => {
   const params = {
+    productPosition: exchangeList.value[1][key],
+    oem: exchangeList.value[2][key],
+    graphicDesign: exchangeList.value[3][key],
     productLength: exchangeList.value[4][key],
     productWidth: exchangeList.value[5][key],
     productHeight: exchangeList.value[6][key],
@@ -352,7 +351,7 @@ const buildParams = (key: string) => {
     patent: exchangeList.value[10][key],
     productManagerId: exchangeList.value[19][key],
     productDesignId: exchangeList.value[20][key],
-    sampleRetention: exchangeList.value[13][key],
+    sampleRetention: exchangeList.value[13][key].join(','),
     checkStatus: exchangeList.value[14][key],
     orderEntryId: exchangeList.value[18][key],
   }
@@ -362,9 +361,18 @@ const update = async (prop: string) => {
   const params = buildParams(prop)
   await reviewStepNo5SkuInfoPerfect(params)
 }
+function arraysEqual(arr1: any[], arr2: any[]) {
+  if (arr1.length !== arr2.length) return false;
+  for (const [i, element] of arr1.entries()) {
+    if (element !== arr2[i]) return false;
+  }
+  return true;
+}
+
 // 处理变体值相同
 const handleVariantsSame = (row: any) => { //变体值相同的值改变的时候,也要检查是否更改
   const values = Object.values(row).filter(value => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0);
+  // console.log(values)
   if (row.variantsSame) {
     // console.log(values)
     // 如果有值，
@@ -376,8 +384,12 @@ const handleVariantsSame = (row: any) => { //变体值相同的值改变的时�
         }
       });
     } else if (values.length > 1) {
-
-      let valuesResult = values.every( item => item === values[0] );
+      let valuesResult
+      if (row['column0'] === 'sampleRetention') {
+        valuesResult = values.every( item => arraysEqual(item as any[], values[0] as any[])  );
+      } else {
+        valuesResult = values.every( item => item === values[0] );
+      }
       if (!valuesResult) {
         row.variantsSame = false
         $baseMessage('当前多个变体值不同，无法勾选。', 'error', 'hey')
@@ -405,12 +417,17 @@ const syncVariantValues = (row: any) => { //默认勾选,如果当前行1个单�
       }
     });
   } else if(values.length > 1) {
-    let valuesResult = values.every( item => item === values[0] );
-      if (!valuesResult) {
-        row.variantsSame = false
-      } else if(valuesResult){
-        row.variantsSame = true
-      }
+    let valuesResult
+    if (row['column0'] === 'sampleRetention') {
+      valuesResult = values.every( item => arraysEqual(item as any[], values[0] as any[])  );
+    } else {
+      valuesResult = values.every( item => item === values[0] );
+    }
+    if (!valuesResult) {
+      row.variantsSame = false
+    } else if(valuesResult){
+      row.variantsSame = true
+    }
   }
 };
 
@@ -534,23 +551,41 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
     update(prop)
   }
 }
-// 修改拍照留样情况
+// 修改产品定位
+const handleChangeProductPosition = async (row: any, prop: any) => {
+  if (row.variantsSame) {
+    // 获取当前输入框的值
+    const newValue = row[prop];
+      // console.log(exchangeList.value);
+      // console.log(peopleList.value);
+      Object.keys(row).forEach(async key => {
+        if (key !== 'column0' && key !== 'variantsSame') {
+          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+
+          update(key)
+        }
+      })
+  } else {
+    update(prop)
+  }
+}
+// 修改打包留样情况
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
   if (row.variantsSame) {
-    // // 获取当前输入框的值
-    // const newValue = row[prop];
-    //   // console.log(exchangeList.value);
-    //   // console.log(peopleList.value);
-    //   Object.keys(row).forEach(async key => {
-    //     if (key !== 'column0' && key !== 'variantsSame') {
-    //       row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+    // 获取当前输入框的值
+    const newValue = row[prop];
+      // console.log(exchangeList.value);
+      // console.log(peopleList.value);
+      Object.keys(row).forEach(async key => {
+        if (key !== 'column0' && key !== 'variantsSame') {
+          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
-    //       update(key)
-    //     }
-    //   })
+          update(key)
+        }
+      })
   } else {
 
-    // update(prop)
+    update(prop)
   }
 }
 // 当点击保存的时候
@@ -721,11 +756,12 @@ const fetchVariantList = async () => {
         // 如果新的table里面的产品经理存在,就是新的; 如果不存在,就是默认的
         item.productManager = defaultProductManager
         item.productManagerId = defaultProductManagerId
+        item.sampleRetention = item.sampleRetention.split(',').map(Number)
       } else {
         return {
           column0: '',
           productImgUrl: item.variantImg,
-          productPositioning: item.productPositioning,
+          productPosition: item.productPosition,
           oem: item.oem,
           graphicDesign: item.graphicDesign,
           productLength: item.productLength,
@@ -737,7 +773,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
-          sampleRetention: item.sampleRetention,
+          sampleRetention: item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,

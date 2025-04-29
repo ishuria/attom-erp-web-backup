@@ -13,7 +13,7 @@
         fixed 
         :label="labelMap['column0']" 
         :prop="'column0'"
-        width="260"
+        width="300"
       >
         <template #default="{ row }">
           <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
@@ -37,7 +37,7 @@
               </el-image>
             </div>
           </template>
-          <template v-if="row['column0'] === 'sampleRetentionStatus'">
+          <template v-if="row['column0'] === 'sampleRetention'">
             <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
               <el-option 
                 v-for="item in photoSampleOptions"
@@ -50,23 +50,26 @@
           <template v-if="row['column0'] === 'packingGroup'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
           </template>
-          <template v-if="row['column0'] === 'productPositioning'">
-            <el-select class="center-select" disabled placeholder="请选择产品定位" />
+          <template v-if="row['column0'] === 'productPosition'">
+            <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
+              <el-option
+                v-for="item in productPositionOption"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              />
+            </el-select>
           </template>
           <template v-if="row['column0'] === 'oem'">
-            <el-radio-group v-model="row[prop]" disabled >
-              <el-radio :value="1" />
-            </el-radio-group>
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
           </template>
           <template v-if="row['column0'] === 'graphicDesign'">
-            <el-radio-group v-model="row[prop]" disabled>
-              <el-radio :value="1" />
-            </el-radio-group>
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
           </template>
           <template
-            v-if="row['column0'] !== 'productImgUrl' && row['column0'] !== 'sampleRetentionStatus'
+            v-if="row['column0'] !== 'productImgUrl' && row['column0'] !== 'sampleRetention'
             && row['column0'] !== 'packingGroup' && row['column0'] !== 'oem'
-            && row['column0'] !== 'productPositioning' && row['column0'] !== 'graphicDesign'"
+            && row['column0'] !== 'productPosition' && row['column0'] !== 'graphicDesign'"
           >
             {{ row[prop] }}
           </template>
@@ -85,7 +88,7 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess'
+import { getProductPositionList, getReviewVariantPackageSampleList, reviewGetSkuList, reviewProductManager, reviewStepNo3GetSelectVariantList } from '/@/api/devlocal/orderProcess'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { _setStepNo } from '/@/utils/stepNoState'
 
@@ -112,7 +115,7 @@ const photoSampleOptions = [
 const labelMap: Record<string, string> = {
   column0: '',
   productImgUrl: '上传成套产品图片<br>(产品要和实际一致)',
-  productPositioning: '产品定位',
+  productPosition: '产品定位',
   oem: 'OEM',
   graphicDesign: '平面设计',
   productLength: '产品长(cm)',
@@ -124,7 +127,7 @@ const labelMap: Record<string, string> = {
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   certificateUpload: '证书上传',
   skuMerge: '合并变体的SKU',
@@ -230,7 +233,7 @@ const fetchVariantList = async () => {
       {
         column0: '',
         productImgUrl: item.variantImg,
-        productPositioning: item.productPositioning,
+        productPosition: item.productPosition,
         oem: item.oem,
         graphicDesign: item.graphicDesign,
         productLength: item.productLength,
@@ -242,7 +245,7 @@ const fetchVariantList = async () => {
         patent: item.patent,
         productManager: item.productManager === '' ? productManager : item.productManager,
         productDesign: item.productDesign,
-        sampleRetentionStatus: item.sampleRetentionStatus,
+        sampleRetention: item.sampleRetention,
         packingGroup: item.checkStatus,
         certificateUpload: item.certificateUpload,
         skuMerge: item.variantSku,
@@ -263,8 +266,19 @@ const fetchVariantList = async () => {
   } catch (error) {
     console.error('Error fetching variant list:', error);
   }
-};
+}
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
 onMounted(async () => {
+  fetchProductPositionOption()
   fetchVariantList()
 })
 </script>

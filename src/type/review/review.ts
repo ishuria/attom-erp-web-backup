@@ -174,6 +174,7 @@ export interface IReviewCommonItem {
    * 平面设计
    */
   graphicDesign?: string
+  quantity?: number
 }
 
 /**

@@ -16,7 +16,7 @@
           fixed 
           :label="labelMap['column0']"
           :prop="'column0'"
-          width="260"
+          width="300"
         >
           <template #default="{ row }">
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
@@ -38,8 +38,8 @@
                 </el-image>
               </div>
             </template>
-            <template v-if="row['column0'] === 'sampleRetentionStatus'">
-              <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
+            <template v-if="row['column0'] === 'sampleRetention'">
+              <el-select v-model="row[prop]" disabled placeholder="请选择打包留样情况">
                 <el-option 
                   v-for="item in photoSampleOptions"
                   :key="item.value"
@@ -48,27 +48,30 @@
                 />
               </el-select>
             </template>
-            <template v-if="row['column0'] === 'packagingSize'">
+            <!-- <template v-if="row['column0'] === 'packagingSize'">
               {{ row[prop] }} cm
             </template>
             <template v-if="row['column0'] === 'productSize'">
               {{ row[prop] }} inch
-            </template>
+            </template> -->
             <template v-if="row['column0'] === 'productPositioning'">
-              <el-select class="center-select" disabled placeholder="请选择产品定位" />
+              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
+                <el-option
+                  v-for="item in productPositionOption"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                />
+              </el-select>
             </template>
             <template v-if="row['column0'] === 'oem'">
-              <el-radio-group v-model="row[prop]" disabled >
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" disabled :false-value="0" :true-value="1" />
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-radio-group v-model="row[prop]" disabled>
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" disabled :false-value="0" :true-value="1" />
             </template>
             <template
-              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
+              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetention'
               && row['column0'] !== 'packagingSize' && row['column0'] !== 'productSize'
               && row['column0'] !== 'oem' && row['column0']!=='graphicDesign' && row['column0'] !== 'productPositioning'"
             >
@@ -128,7 +131,7 @@
 </template>
   
 <script lang="ts" setup>
-import { reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold } from '/@/api/devlocal/orderProcess'
+import { getProductPositionList, getReviewVariantPackageSampleList, reviewProductManager, reviewStepNo6CheckGet, reviewStepNo6CheckGetMold } from '/@/api/devlocal/orderProcess'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
@@ -207,7 +210,7 @@ const labelMap: Record<string, string> = {
   productPositioning: '产品定位',
   oem: 'OEM',
   graphicDesign: '平面设计',
-  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  quantity: '订货数量',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
   actualTotalCost: '产品实际总成本',
@@ -218,7 +221,7 @@ const labelMap: Record<string, string> = {
   battery: '是否含电池<br>(若有则填入电池类型)',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
   certification: '证书',
@@ -318,7 +321,7 @@ const fetchData = async () => {
     productPositioning: item.productPositioning,
     oem: item.oem,
     graphicDesign: item.graphicDesign,
-    amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+    quantity: item.quantity,
     purchaseTotalPrice: formattedPrice(item.purchaseTotalPrice),
     finalSellingPrice: item.finalSellingPrice,
     actualTotalCost: item.actualTotalCost,
@@ -329,7 +332,7 @@ const fetchData = async () => {
     battery: item.battery,
     benchmarkAsin: item.benchmarkAsin,
     patent: item.patent,
-    sampleRetentionStatus: item.sampleRetentionStatus,
+    sampleRetention: item.sampleRetention,
     productManager: item.productManager === '' ? productManager : item.productManager,
     productDesign: item.productDesign,
     certification: '',
@@ -347,7 +350,18 @@ const fetchMoldData = async () => {
     moldCheckList.value = data
   }
 }
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
 onMounted(() => {
+  fetchProductPositionOption()
   fetchData()
   fetchMoldData()
 })
