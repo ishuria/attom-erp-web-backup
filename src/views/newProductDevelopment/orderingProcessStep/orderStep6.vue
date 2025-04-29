@@ -39,14 +39,23 @@
               </div>
             </template>
             <template v-if="row['column0'] === 'sampleRetention'">
-              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择打包留样情况">
+              <!-- <el-select v-model="row[prop]" class="center-select" disabled multiple placeholder="请选择打包留样情况">
                 <el-option
                   v-for="item in packageSampleOption"
                   :key="item.id"
                   :label="item.label"
                   :value="item.id"
                 />
-              </el-select>
+              </el-select> -->
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+                <el-tag
+                  v-for="id in row[prop]"
+                  :key="id"
+                  size="small"
+                >
+                  {{ packageSampleOption.find(item => item.id === id)?.label }}
+                </el-tag>
+              </div>
             </template>
             <template v-if="row['column0'] === 'productPosition'">
               <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
@@ -145,9 +154,9 @@
 </template>
 
 <script lang="ts" setup>
-import type { IGetSelectVariantsList } from '~/src/type/orderProcess/orderProcessType'
 import { getProductPositionList, getReviewVariantPackageSampleList, reviewStepNo6CheckGet, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
+import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 
