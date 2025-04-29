@@ -6,7 +6,6 @@
         border
         :data="variantList"
         :header-cell-style="{ 'text-align': 'right' }"
-        height="700"
         :show-header="false"
         stripe
         style="width: auto; table-layout: fixed"
@@ -20,7 +19,7 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="scope.row[prop]" style="width: 105px; height: 105px" @click="showPreviewImage(scope.row[prop])">
+              <el-image fit="fill" :src="scope.row[prop]" style="width: 75px; height: 75px" @click="showPreviewImage(scope.row[prop])">
                 <template #error>
                   <el-icon />
                 </template>
@@ -30,13 +29,15 @@
               <el-checkbox
                 v-model="scope.row[prop]"
                 class="custom-checkbox"
-                :disabled="true"
+                disabled
                 :false-value="0"
-                size="large"
                 :true-value="1"
               />
             </template>
-            <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
+            <template v-if="scope.row['column0'] === 'vineSite'">
+              {{ siteList.find(item => item.id === scope.row[prop])?.label }}
+            </template>
+            <!-- <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
               <el-input
                 v-model="scope.row[prop]"
                 class="center-input"
@@ -44,17 +45,17 @@
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="updateHandlerNumber($event, scope, i)"
               />
-            </template>
+            </template> -->
             <template
               v-if="
                 scope.row['column0'] !== 'oem' &&
-                scope.row['column0'] !== 'amazonUsOrderQuantity' &&
-                scope.row['column0'] !== 'amazonUkOrderQuantity' &&
-                scope.row['column0'] !== 'amazonDeOrderQuantity' &&
-                scope.row['column0'] !== 'amazonCaOrderQuantity' &&
-                scope.row['column0'] !== 'amazonJpOrderQuantity' &&
-                scope.row['column0'] !== 'walmartUsOrderQuantity' &&
-                scope.row['column0'] !== 'tiktokUsOrderQuantity' &&
+                // scope.row['column0'] !== 'amazonUsOrderQuantity' &&
+                // scope.row['column0'] !== 'amazonUkOrderQuantity' &&
+                // scope.row['column0'] !== 'amazonDeOrderQuantity' &&
+                // scope.row['column0'] !== 'amazonCaOrderQuantity' &&
+                // scope.row['column0'] !== 'amazonJpOrderQuantity' &&
+                // scope.row['column0'] !== 'walmartUsOrderQuantity' &&
+                // scope.row['column0'] !== 'tiktokUsOrderQuantity' &&
                 scope.row['column0'] !== 'variantImg'
               "
             >
@@ -66,7 +67,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
-      <vab-site-quantity-table />
+      <vab-site-quantity-table :list="siteQuantityList" />
     </div>
     <div class="pay-button-group">
       <el-button :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">归档新品进度管理并发布采购计划</el-button>
@@ -77,10 +78,11 @@
 
 <script lang="ts" setup>
 import { releasePo, reviewProductList, updateStepNoQuantity } from '/@/api/devlocal/orderingReview'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
-import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
+import { useTableDataLineToColumn } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'OrderReviewStep4',
@@ -120,13 +122,15 @@ const labelMap: Record<string, string> = {
   sku: 'SKU',
   effectiveCount: '有效计数',
   oem: 'OEM',
-  amazonUsOrderQuantity: '订货数量(亚马逊US)',
-  amazonUkOrderQuantity: '订货数量(亚马逊UK)',
-  amazonDeOrderQuantity: '订货数量(亚马逊DE)',
-  amazonCaOrderQuantity: '订货数量(亚马逊CA)',
-  amazonJpOrderQuantity: '订货数量(亚马逊JP)',
-  walmartUsOrderQuantity: '订货数量(沃尔玛US)',
-  tiktokUsOrderQuantity: '订货数量(TiktokUS)',
+  vineSite: 'Vine站点',
+  vineCount: 'Vine数量'
+  // amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  // amazonUkOrderQuantity: '订货数量(亚马逊UK)',
+  // amazonDeOrderQuantity: '订货数量(亚马逊DE)',
+  // amazonCaOrderQuantity: '订货数量(亚马逊CA)',
+  // amazonJpOrderQuantity: '订货数量(亚马逊JP)',
+  // walmartUsOrderQuantity: '订货数量(沃尔玛US)',
+  // tiktokUsOrderQuantity: '订货数量(TiktokUS)',
 }
 
 const buildParams = (idx: number): IReviewStepUpdateReq => {
@@ -137,13 +141,13 @@ const buildParams = (idx: number): IReviewStepUpdateReq => {
 
   const params: IReviewStepUpdateReq = {
     orderEntryId: n.orderEntryId,
-    amazonUsOrderQuantity: n.amazonUsOrderQuantity,
-    amazonUkOrderQuantity: n.amazonUkOrderQuantity,
-    amazonDeOrderQuantity: n.amazonDeOrderQuantity,
-    amazonCaOrderQuantity: n.amazonCaOrderQuantity,
-    amazonJpOrderQuantity: n.amazonJpOrderQuantity,
-    walmartUsOrderQuantity: n.walmartUsOrderQuantity,
-    tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
+    // amazonUsOrderQuantity: n.amazonUsOrderQuantity,
+    // amazonUkOrderQuantity: n.amazonUkOrderQuantity,
+    // amazonDeOrderQuantity: n.amazonDeOrderQuantity,
+    // amazonCaOrderQuantity: n.amazonCaOrderQuantity,
+    // amazonJpOrderQuantity: n.amazonJpOrderQuantity,
+    // walmartUsOrderQuantity: n.walmartUsOrderQuantity,
+    // tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
   }
   return params
 }
@@ -204,7 +208,7 @@ const handleSaveAndContinue = async () => {
     releasePoLoading.value = false
   }
 }
-
+const siteQuantityList = ref<any[]>([])
 const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await reviewProductList({ reviewId: props.reviewId })
@@ -219,21 +223,28 @@ const fetchData = async () => {
       sku: item.sku,
       effectiveCount: item.effectiveCount == undefined || item.effectiveCount == null ? '' : item.effectiveCount,
       oem: item.oem == undefined || item.oem == null ? 0 : item.oem,
-      amazonUsOrderQuantity: item.amazonUsOrderQuantity,
-      amazonUkOrderQuantity: item.amazonUkOrderQuantity,
-      amazonDeOrderQuantity: item.amazonDeOrderQuantity,
-      amazonCaOrderQuantity: item.amazonCaOrderQuantity,
-      amazonJpOrderQuantity: item.amazonJpOrderQuantity,
-      walmartUsOrderQuantity: item.walmartUsOrderQuantity,
-      tiktokUsOrderQuantity: item.tiktokUsOrderQuantity,
+      vineSite: item.vineSite,
+      vineCount: item.vineCount,
+      // amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+      // amazonUkOrderQuantity: item.amazonUkOrderQuantity,
+      // amazonDeOrderQuantity: item.amazonDeOrderQuantity,
+      // amazonCaOrderQuantity: item.amazonCaOrderQuantity,
+      // amazonJpOrderQuantity: item.amazonJpOrderQuantity,
+      // walmartUsOrderQuantity: item.walmartUsOrderQuantity,
+      // tiktokUsOrderQuantity: item.tiktokUsOrderQuantity,
     }
     arr.push(n)
   })
-
+  siteQuantityList.value = data
   variantList.value = initData(arr)
 }
-
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchSiteList = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+}
 onMounted(() => {
+  fetchSiteList()
   fetchData()
 })
 </script>

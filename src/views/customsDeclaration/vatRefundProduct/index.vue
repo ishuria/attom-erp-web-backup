@@ -320,6 +320,7 @@
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
         <el-form-item label="发货日期">
           <el-date-picker
+            v-model="ticketReminderForm.shipmentDate"
             :clearable="false"
             :editable="false"
             end-placeholder="最晚发货日期"
@@ -341,8 +342,26 @@
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="供应商" prop="">
-          <el-input v-model="ticketReminderForm.suppliser" clearable />
+        <el-form-item label="供应商" >
+          <el-select
+            v-model="ticketReminderForm.suppliser"
+            allow-create
+            clearable
+            default-first-option
+            filterable
+            :loading="loading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remoteMethod"
+            
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <!-- <el-form-item label="仅已报关" prop="">
           <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
@@ -397,6 +416,7 @@ import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsD
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
+import { getProductAllSupplier } from '~/src/api/devlocal/productInformation'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -416,7 +436,30 @@ const showPdf = (path: string) => {
   pdfVisible.value = true
   pdfLoading.value = false
 }
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+        suppliserName: query
+    })
 
+    supplierList.value = data.map((item: any) => {
+        return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
 /**
  * 下载发票信息
  * @param row
@@ -548,6 +591,7 @@ type ITicketReminderForm = {
 const ticketReminderForm = reactive<ITicketReminderForm>({
   dateRange: ['', ''],
   suppliser: '',
+  shipmentDate: ['', ''],
 })
 const ticketReminderFormRules = reactive<FormRules<ITicketReminderForm>>({
   dateRange: [{ required: true, message: '请选择日期范围', trigger: 'change' }],

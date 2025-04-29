@@ -6,7 +6,7 @@
         stripe style="width: auto; table-layout: fixed;" 
       >
         <!-- 第一列固定标签列 -->
-        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
+        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="300">
           <template #default="{ row }">
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
@@ -14,7 +14,7 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="row[prop]" style="width: 105px;height: 105px;" @click="showPreviewImage(row[prop])">
+              <el-image fit="fill" :src="row[prop]" style="width: 75px;height: 75px;" @click="showPreviewImage(row[prop])">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -40,14 +40,10 @@
               </el-select>
             </template>
             <template v-if="row['column0'] === 'oem'">
-              <el-radio-group v-model="row[prop]" @change="handleUpdateOEM(row, prop)" >
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)" />
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-radio-group v-model="row[prop]" @change="handleUpdateGraphicDesign(row, prop)">
-                <el-radio :value="1" />
-              </el-radio-group>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)" />
             </template>
             <!-- <template v-if="row['column0'] === 'effectiveCount'">
               <el-input 
@@ -58,13 +54,7 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </template> -->
-            <!-- <template v-if="row['column0'] === 'packagingSize'">
-              {{ row[prop] }} cm
-            </template>
-            <template v-if="row['column0'] === 'productSize'">
-              {{ row[prop] }} inch
-            </template> -->
-            <template v-if="row['column0'] === 'sampleRetentionStatus'">
+            <template v-if="row['column0'] === 'sampleRetention'">
               <span v-show="row[prop] === 0">已有拍照样品,大货无需留样</span>
               <span v-show="row[prop] === 1">大货需要留样拍照</span>
             </template>
@@ -73,7 +63,7 @@
             </template>
             <template
               v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem'
-              && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetentionStatus'
+              && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetention'
               && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'graphicDesign'"
             >
               {{ row[prop] }}
@@ -160,6 +150,16 @@
         </el-table-column>
         <el-table-column label="重量系数" min-width="100" prop="weightCoefficient" />
         <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient" />
+        <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
+          <template #default="{ row }">
+            <el-select
+              v-model="row.hts.label"
+              disabled
+              placeholder="点击输入和搜索HTS"
+              style="min-width: 100%"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="关税%" prop="tariff">
           <template #default="{ row }">
             {{ row.tariff != null ? row.tariff + '%' : '' }}
@@ -222,7 +222,7 @@ const labelMap: Record<string, string> = {
   productPositioning: '产品定位',
   graphicDesign: '平面设计',
   oem: 'OEM',
-  amazonUsOrderQuantity: '订货数量(亚马逊US)',
+  quantity: '订货数量',
   purchaseTotalPrice: '总采购含税价',
   finalSellingPrice: '售价',
   actualTotalCost: '产品总实际成本',
@@ -234,7 +234,7 @@ const labelMap: Record<string, string> = {
   variantSku: '合并变体的SKU',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
 }
@@ -354,7 +354,7 @@ const fetchData = async () => {
       graphicDesign: item.graphicDesign,
       // effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
       oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
-      amazonUsOrderQuantity: item.amazonUsOrderQuantity,
+      quantity: item.quantity,
       purchaseTotalPrice: item.purchaseTotalPrice,
       finalSellingPrice: item.finalSellingPrice,
       actualTotalCost: item.actualTotalCost,
@@ -366,7 +366,7 @@ const fetchData = async () => {
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
-      sampleRetentionStatus: item.sampleRetentionStatus,
+      sampleRetention: item.sampleRetention,
       productManager: item.productManager,
       productDesign: item.productDesign,
     }
@@ -406,5 +406,9 @@ onMounted(() => {
 }
 :deep(.center-input .el-input__inner ){
   text-align: center;
+}
+:deep(.center-select) {
+  text-align: center;
+  text-align-last: center;
 }
 </style>

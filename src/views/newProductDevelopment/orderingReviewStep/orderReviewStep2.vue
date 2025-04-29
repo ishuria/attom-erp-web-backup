@@ -6,7 +6,7 @@
         :show-header="false" stripe style="width: auto; table-layout: fixed;"
       >
         <!-- 第一列固定标签列 -->
-        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
+        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="300">
           <template #default="{ row }">
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
@@ -22,7 +22,7 @@
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="row[prop]" style="width: 105px;height: 105px;" @click="showPreviewImage(row[prop])">
+              <el-image fit="fill" :src="row[prop]" style="width: 75px;height: 75px;" @click="showPreviewImage(row[prop])">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -161,7 +161,7 @@ const labelMap: Record<string, string> = {
   variantSku: '合并变体的SKU',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '拍照留样情况',
+  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
 }

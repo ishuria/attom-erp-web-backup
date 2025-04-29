@@ -1,7 +1,7 @@
 <template>
-  <div style="margin-top: 20px">
-    <el-table border :data="fakeData" :header-cell-style="{ textAlign: 'center' }">
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(fakeData, 'SKU', 'sku')" />
+  <div style="margin-top: 20px; margin-bottom: 20px;">
+    <el-table border :data="siteQuantityList" :header-cell-style="{ textAlign: 'center' }" stripe>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(siteQuantityList, 'SKU', 'sku')" />
       <el-table-column 
         v-for="(item, index) in option"
         :key="index"
@@ -10,7 +10,7 @@
         :prop="item.siteName"
       >
         <template #default="{ row }">
-          <el-input v-model="row[item.siteName]" type="number" @change="handleUpdateQuantity(row, item.siteName)" />
+          <el-input v-model="row[item.siteName].quantity" :min="0" type="number" @change="handleUpdateQuantity(row, item.siteName)" />
         </template>
       </el-table-column>
     </el-table>
@@ -18,40 +18,48 @@
 </template>
 
 <script lang="ts" setup>
+import { updateStepNoQuantity } from '/@/api/devlocal/orderingReview'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabSiteQuantityTable',
 })
 
-const option = ref<any[]>([{ siteName: '亚马逊US'}, { siteName: '亚马逊UK'}])
-const list = ref<any[]>([])
-const fakeData = ref<any[]>([
-  { sku: '123456', '亚马逊US': 100, '亚马逊UK': 50 },
-])
-const handleUpdateQuantity = (row: any, siteName: string) => {
-  console.log('row', row)
-  console.log('siteName', siteName)
+const props = defineProps<{
+  list: any[]
+}>()
+watch(() => props.list, () => {
+  initData()
+})
+const siteQuantityList = ref<any[]>([])
+const option = ref<any[]>([])
+// const list = ref<any[]>([])
+
+const handleUpdateQuantity = async (row: any, siteName: string) => {
+  // console.log('row', row)
+  // console.log('siteName', siteName)
+  // console.log('id', row[siteName].id)
+  await updateStepNoQuantity({
+    id: row[siteName].id,
+    quantity: Number(row[siteName].quantity),
+    orderEntryId: row.orderEntryId,
+  })
 }
-const handleModify = (row: any) => {
-  console.log('row', row)
-}
-const fetchSiteTableData = async () => {
-  // listLoading.value = true
-  // const { data } = await getSkuShippingChannelList(queryForm)
-  // total.value = data.total
-  // list.value = data.list
-  // list.value.forEach((row: any) => {
-  //   if (row.siteMerchandiseList.length > tem) {
-  //     tem = row.siteMerchandiseList.length
-  //     option.value = row.siteMerchandiseList
-  //   }
-  //   row.siteMerchandiseList.forEach((item: any) => {
-  //     const key = item.siteName
-  //     const value = item.channel
-  //     row[`${key}`] = value
-  //   })
-  // })
-  // listLoading.value = false
+
+let tem = 0
+const initData = () => {
+  siteQuantityList.value = props.list
+  // console.log('list', props.list)
+  siteQuantityList.value.forEach((row: any) => {
+    if (row.siteQuantityList.length > tem) {
+      tem = row.siteQuantityList.length
+      option.value = row.siteQuantityList
+    }
+    row.siteQuantityList.forEach((item: any) => {
+      const key = item.siteName
+      row[`${key}`] = { quantity: item.quantity, id: item.id}
+    })
+  })
+  // console.log('siteQuantityList', siteQuantityList.value)
 }
 </script>

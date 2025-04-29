@@ -12,6 +12,7 @@ import type {
   IReviewStepNo1Req,
   IReviewStepResp,
   IReviewStepUpdateReq,
+  IUpdateReviewStepNo3Vine,
   IVariantInfoResp,
 } from '/@/type/review/review'
 import type { IreviewId } from '/@/type/orderProcess/orderProcessType'
@@ -108,6 +109,14 @@ export function getDistributionList(params?: IReviewCommonReq): Promise<IReviewC
 export function updateStepNoQuantity(data?: IReviewStepUpdateReq): Promise<IReviewStepResp> {
   return request({
     url: `${BASE_API}/review/stepNo3/quantity/update`,
+    method: 'post',
+    data,
+  })
+}
+// 新品订货审批流程-运营修改Vine
+export function updateReviewStepNo3Vine(data?: IUpdateReviewStepNo3Vine): Promise<IReviewStepResp> {
+  return request({
+    url: `${BASE_API}/review/stepNo3/vine`,
     method: 'post',
     data,
   })

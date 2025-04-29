@@ -474,7 +474,7 @@ export function getBarCodePath(params: ITaskId): Promise<IStringResp> {
     params
   })
 }
-// 获取打包站点列表
+// 获取发货站点列表
 export function getPackageSiteList() {
   return request({
     url: `${BASE_API}/package/site/list`,

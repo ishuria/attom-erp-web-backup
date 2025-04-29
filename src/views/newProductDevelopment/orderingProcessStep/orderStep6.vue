@@ -39,33 +39,18 @@
               </div>
             </template>
             <template v-if="row['column0'] === 'sampleRetention'">
-              <!-- <el-select v-model="row[prop]" class="center-select" disabled multiple placeholder="请选择打包留样情况">
-                <el-option
-                  v-for="item in packageSampleOption"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                />
-              </el-select> -->
               <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
                 <el-tag
                   v-for="id in row[prop]"
                   :key="id"
-                  size="small"
+                  type="info"
                 >
                   {{ packageSampleOption.find(item => item.id === id)?.label }}
                 </el-tag>
               </div>
             </template>
             <template v-if="row['column0'] === 'productPosition'">
-              <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
-                <el-option
-                  v-for="item in productPositionOption"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                />
-              </el-select>
+              {{ productPositionOption.find(item => item.id === row[prop])?.label }}
             </template>
             <template v-if="row['column0'] === 'oem'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
@@ -156,7 +141,6 @@
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList, reviewStepNo6CheckGet, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString } from '/@/utils/stringUtils'
 
@@ -164,10 +148,6 @@ defineOptions({
   name: 'OrderStep6',
 })
 
-// const photoSampleOptions = [
-//   { label: '已有拍照样品,大货无需留样', value: 0 },
-//   { label: '大货需要留样拍照', value: 1 }
-// ];
 const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
@@ -320,10 +300,7 @@ const handleGoback = () => {
 }
 const checkTableData = ref([])
 let columnsChange: any
-const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 const fetchData = async () => {
-  // const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! })
-  // variantsSelectList.value = variantSelectList
   const { data } = await reviewStepNo6CheckGet({ reviewId: classReviewId! })
   checkTableData.value = data.map((item: any, index: number) => {
     return {
@@ -352,23 +329,16 @@ const fetchData = async () => {
       orderEntryId: item.orderEntryId,
     }
   })
-  // checkTableData.value.forEach((item: any, index: number) => {
-  //     if (index < variantSelectList.length) {
-  //       const key = variantSelectList[index];
-  //       item.column0 = key.label;
-  //       item.orderEntryId = key.id;
-  //     }
-  //   })
   const { initData, columns } = useTableDataLineToColumn();
   console.log(checkTableData.value)
   columnsChange = columns
   exchangeList.value = initData(checkTableData.value);
   console.log(exchangeList.value)
-  // Object.keys(exchangeList.value[16]).forEach((key, index) => {
-  //   if (key !== 'column0') {
-  //     exchangeList.value[16][key] = exchangeList.value[16][key].split(',').map(Number)
-  //   }
-  // })
+  Object.keys(exchangeList.value[16]).forEach((key, index) => {
+    if (key !== 'column0') {
+      exchangeList.value[16][key] = exchangeList.value[16][key].split(',').map(Number)
+    }
+  })
 }
 let classReviewId: number | undefined
 

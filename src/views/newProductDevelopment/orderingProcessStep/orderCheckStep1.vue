@@ -57,7 +57,7 @@
                   <el-input v-model="item.variantName" clearable disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
                 </div>
                 <div class="list-item-meta-content">
-                  <el-input v-model="item.amazonUSVariantQuantity" clearable disabled style="width: 240px"/>
+                  <el-input v-model="item.quantity" clearable disabled style="width: 240px"/>
                 </div>
               </div>
             </li>

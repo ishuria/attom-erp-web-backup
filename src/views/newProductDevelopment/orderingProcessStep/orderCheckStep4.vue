@@ -38,27 +38,29 @@
             </div>
           </template>
           <template v-if="row['column0'] === 'sampleRetention'">
-            <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
+            <!-- <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
               <el-option 
                 v-for="item in photoSampleOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               />
-            </el-select>
+            </el-select> -->
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+              <el-tag
+                v-for="id in row[prop]"
+                :key="id"
+                type="info"
+              >
+                {{ packageSampleOption.find(item => item.id === id)?.label }}
+              </el-tag>
+            </div>
           </template>
           <template v-if="row['column0'] === 'packingGroup'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="1" :true-value="0"/>
           </template>
           <template v-if="row['column0'] === 'productPosition'">
-            <el-select v-model="row[prop]" class="center-select" disabled placeholder="请选择产品定位" >
-              <el-option
-                v-for="item in productPositionOption"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
-            </el-select>
+            {{ productPositionOption.find(item => item.id === row[prop])?.label }}
           </template>
           <template v-if="row['column0'] === 'oem'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
@@ -107,10 +109,6 @@ const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 // const listLoading = ref<boolean>(true)
 
 const tableRef = ref<TableInstance>()
-const photoSampleOptions = [
-  { label: '已有拍照样品,大货无需留样', value: 0 },
-  { label: '大货需要留样拍照', value: 1 }
-]
 
 const labelMap: Record<string, string> = {
   column0: '',
@@ -245,7 +243,7 @@ const fetchVariantList = async () => {
         patent: item.patent,
         productManager: item.productManager === '' ? productManager : item.productManager,
         productDesign: item.productDesign,
-        sampleRetention: item.sampleRetention,
+        sampleRetention: item.sampleRetention.split(',').map(Number),
         packingGroup: item.checkStatus,
         certificateUpload: item.certificateUpload,
         skuMerge: item.variantSku,
@@ -263,6 +261,7 @@ const fetchVariantList = async () => {
     const { initData, columns } = useTableDataLineToColumn();
     columnsChange = columns 
     exchangeList.value = initData(skuVariantsData.value);
+    console.log(exchangeList.value);
   } catch (error) {
     console.error('Error fetching variant list:', error);
   }

@@ -97,7 +97,7 @@ export interface IReviewCommonItem {
    */
   walmartUsOrderQuantity?: number
   vineSite?: string
-  vineQuantity?: number
+  vineCount?: number
   /**
    * 实际产品总成本
    */
@@ -145,7 +145,7 @@ export interface IReviewCommonItem {
   /**
    * 拍照留样状态
    */
-  sampleRetentionStatus?: number
+  sampleRetention?: number
   /**
    * 总采购含税价
    */
@@ -395,28 +395,12 @@ export interface IReviewStep2Item {
 
 
 export interface IReviewStepUpdateReq{
-  /**
-   * 变体id
-   */
-  orderEntryId:number
-  /**
-   * 亚马逊US订货数量
-   */
-  amazonUsOrderQuantity?:number
-  /**
-   * 亚马逊UK订货数量
-   */
-  amazonUkOrderQuantity?:number
-  /**
-   * 亚马逊DK订货数量
-   */
-  amazonDeOrderQuantity?:number
-  /**
-   * 沃尔玛US订货数量
-   */
-  walmartUsOrderQuantity?: number
-  amazonCaOrderQuantity?: number
-  amazonJpOrderQuantity?: number
-  tiktokUsOrderQuantity?: number
+  id: number
+  quantity: number
+  orderEntryId: number
 }
-
+export interface IUpdateReviewStepNo3Vine {
+  orderEntryId: number
+  vineSite?: number
+  vineCount?: number
+}
