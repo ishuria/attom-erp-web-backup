@@ -20,24 +20,19 @@
                 </template>
               </el-image>
             </template>
-            <!-- <template v-if="row['column0'] === 'oem'">
-              <el-checkbox 
-                v-model="row[prop]" 
-                class="custom-checkbox" 
-                :false-value="0"
-                size="large" 
-                :true-value="1"
-              />
-            </template> -->
-            <template v-if="row['column0'] === 'productPositioning'">
-              <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
-                <el-option
-                  v-for="item in productPositioningOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+            <template v-if="row['column0'] === 'productPosition'">
+                <el-select
+                  v-model="row[prop]"
+                  class="center-select"
+                  placeholder="请选择产品定位"
+                >
+                  <el-option
+                    v-for="item in productPositionOption"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.id"
+                  />
+                </el-select>
             </template>
             <template v-if="row['column0'] === 'oem'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)" />
@@ -45,27 +40,25 @@
             <template v-if="row['column0'] === 'graphicDesign'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)" />
             </template>
-            <!-- <template v-if="row['column0'] === 'effectiveCount'">
-              <el-input 
-                v-model="row[prop]" 
-                class="center-input"
-                @blur="effectiveCountInputeHandle($event)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="effectiveCountInputeHandle($event)"
-              />
-            </template> -->
             <template v-if="row['column0'] === 'sampleRetention'">
-              <span v-show="row[prop] === 0">已有拍照样品,大货无需留样</span>
-              <span v-show="row[prop] === 1">大货需要留样拍照</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+                <el-tag
+                  v-for="id in row[prop]"
+                  :key="id"
+                  type="info"
+                >
+                  {{ packageSampleOption.find(item => item.id === id)?.label }}
+                </el-tag>
+              </div>
             </template>
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
               {{ Number(row[prop]).toFixed(2) }}
             </template>
             <template
-              v-if="row['column0'] !== 'effectiveCount' && row['column0'] !== 'oem'
+              v-if="row['column0'] !== 'oem'
               && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetention'
-              && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'graphicDesign'"
-            >
+              && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'graphicDesign'
+              && row['column0'] !== 'productPosition'">
               {{ row[prop] }}
             </template>
           </template>
@@ -185,10 +178,10 @@
 </template>
 
 <script lang="ts" setup>
-import { productPositioningOption } from '../indexCommon'
-import { getMoldInfoByReviewId, getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
+import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
+import { getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { IReviewCommonItem, IReviewMoldItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
+import type { IReviewCommonItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
 import { useTableDataLineToColumn } from '/@/utils/tableColum'
 
@@ -211,15 +204,14 @@ const variantDetialList = ref<IVariantInfoItem[]>([])
 const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
-const moldData = ref<IReviewMoldItem[]>()
+// const moldData = ref<IReviewMoldItem[]>()
 
 const labelMap: Record<string, string> = {
   column0: '',
   orderEntryId: '变体编号',
   variantImg: 'SKU图片',
   productName: '产品名称',
-  // effectiveCount: '有效计数',
-  productPositioning: '产品定位',
+  productPosition: '产品定位',
   graphicDesign: '平面设计',
   oem: 'OEM',
   quantity: '订货数量',
@@ -241,10 +233,19 @@ const labelMap: Record<string, string> = {
 const handleUpdateOEM = (row: any, prop: string) => {
   // console.log(row, prop)
   // console.log(variantList.value)
-  variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
+  // variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
+  if (variantList.value[4][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+    row[prop] = 0
+    $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+    return
+  }
 }
 const handleUpdateGraphicDesign = (row: any, prop: string) => {
-  variantList.value[5][prop] = row[prop] === 1 ? 0 : 1
+  if (variantList.value[5][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+    row[prop] = 0
+    $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+    return
+  }
 }
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
@@ -274,8 +275,9 @@ const buildParams = (): IReviewStepNo1Req => {
   vArr.forEach((item: any) => {
     const v: IReviewStepNo1Variant = {
       orderEntryId: item.orderEntryId,
-      effectiveCount: item.effectiveCount,
-      oem: item.oem
+      oem: item.oem,
+      productPosition: item.productPosition,
+      graphicDesign: item.graphicDesign,
     }
 
     paramVArr.push(v)
@@ -350,9 +352,8 @@ const fetchData = async () => {
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,
-      productPositioning: item.productPositioning,
+      productPosition: item.productPositon,
       graphicDesign: item.graphicDesign,
-      // effectiveCount: (item.effectiveCount == undefined || item.effectiveCount == null) ? "" : item.effectiveCount,
       oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
       quantity: item.quantity,
       purchaseTotalPrice: item.purchaseTotalPrice,
@@ -376,19 +377,30 @@ const fetchData = async () => {
   variantList.value = initData(arr)
 }
 
-const fetchMoldData = async () => {
-  const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
-  moldData.value = data
-}
+// const fetchMoldData = async () => {
+//   const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
+//   moldData.value = data
+// }
 
 const fetchVariantData = async () => {
   const { data } = await getVariantList({ reviewId: props.reviewId })
   variantDetialList.value = data;
 }
-
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
 onMounted(() => {
+  fetchProductPositionOption()
+  fetchPackagePositionOption()
   fetchData()
-  fetchMoldData()
+  // fetchMoldData()
   fetchVariantData()
 })
 </script>

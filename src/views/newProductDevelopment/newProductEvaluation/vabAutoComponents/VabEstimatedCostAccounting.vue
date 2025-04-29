@@ -77,7 +77,8 @@
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div class="custom-tooltip">{{ row.url1688 }}</div>
+                <!-- <el-link class="link-tooltip" :href="row.url1688" target="_blank" type="primary">{{ row.url1688 }}</el-link> -->
+                <div class="link-tooltip">{{ row.url1688 }}</div>
               </template>
               <el-text style="vertical-align: middle;" truncated>{{ row.url1688 }}</el-text>
             </el-tooltip>
@@ -780,7 +781,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
 }
-
+.link-tooltip {
+  // max-width: 650px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
+}
 // 图片样式
 .image-cell {
   width: 100%;

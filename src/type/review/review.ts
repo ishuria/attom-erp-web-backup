@@ -175,6 +175,7 @@ export interface IReviewCommonItem {
    */
   graphicDesign?: string
   quantity?: number
+  [key: string]: any
 }
 
 /**
@@ -365,10 +366,8 @@ export interface IReviewStepNo1Variant {
    */
   orderEntryId?: number
 
-  /**
-   * 有效计数
-   */
-  effectiveCount?: number
+  productPosition?: number
+  graphicDesign?: number
 
   /**
    * OEM 0不选中 1选中

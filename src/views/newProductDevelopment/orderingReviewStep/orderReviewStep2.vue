@@ -38,16 +38,23 @@
             <template v-if="row['column0'] === 'productSize'">
                 {{ row[prop] }} inch
             </template> -->
-            <template v-if="row['column0'] === 'sampleRetentionStatus'">
-              <span v-show="row[prop] === 0">已有拍照样品,大货无需留样</span>
-              <span v-show="row[prop] === 1">大货需要留样拍照</span>
+            <template v-if="row['column0'] === 'sampleRetention'">
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
+                <el-tag
+                  v-for="id in row[prop]"
+                  :key="id"
+                  type="info"
+                >
+                  {{ packageSampleOption.find(item => item.id === id)?.label }}
+                </el-tag>
+              </div>
             </template>
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
               {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : ''}}
             </template>
             <template 
               v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'
-          && row['column0'] !== 'sampleRetentionStatus' && row['column0'] !== 'purchaseTotalPrice'">
+          && row['column0'] !== 'sampleRetention' && row['column0'] !== 'purchaseTotalPrice'">
               {{ row[prop] }}
             </template>
             
@@ -104,6 +111,7 @@
 </template>
 
 <script lang="ts" setup>
+import { getReviewVariantPackageSampleList } from '~/src/api/devlocal/orderProcess'
 import { getMoldInfoByReviewId, getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewMoldItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
@@ -161,7 +169,7 @@ const labelMap: Record<string, string> = {
   variantSku: '合并变体的SKU',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
-  sampleRetentionStatus: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
+  sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
 }
@@ -269,7 +277,7 @@ const fetchData = async () => {
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
-      sampleRetentionStatus: item.sampleRetentionStatus,
+      sampleRetention: item.sampleRetention,
       productManager: item.productManager,
       productDesign: item.productDesign,
     }
@@ -283,9 +291,19 @@ const fetchMoldData = async () => {
   const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
   moldData.value = data
 }
-
+// const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+// const fetchProductPositionOption = async () => {
+//   const { data } = await getProductPositionList()
+//   productPositionOption.value = data
+// }
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
 
 onMounted(async () => {
+  fetchPackagePositionOption()
   fetchMoldData()
   fetchData()
 })
