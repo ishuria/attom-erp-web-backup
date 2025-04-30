@@ -298,12 +298,12 @@
     <div class="table-container">
       <el-table
         ref="tableRef"
-        border :cell-style="{ 'text-align': 'center' }"
+        border :cell-style="cellStyle"
         :data="variantsList"
         :header-cell-style="{ 'text-align': 'center' }" stripe
         @cell-click="changeInput"
       >
-        <el-table-column align="center" label="变体" prop="variant" :width="flexColumnWidth(variantsList, '变体', 'variant')"/>
+        <el-table-column label="变体" prop="variant" :width="flexColumnWidth(variantsList, '变体', 'variant')"/>
         <el-table-column label="站点" prop="site" width="185">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handlerSiteChange(row)">
@@ -528,6 +528,7 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import type { CSSProperties } from 'vue'
 defineOptions({
   name: 'OrderStep3',
 })
@@ -785,6 +786,7 @@ const handleUpdateHts = async (row: IreviewStepNo3VariantList) => {
     htsId,
    
   })
+  fetchVariantsData()
 }
 const handleClearHts = async (row: IreviewStepNo3VariantList) => {
   // console.log(row)
@@ -807,6 +809,7 @@ const handleClearHts = async (row: IreviewStepNo3VariantList) => {
     actualTotalCost: row.actualTotalCost!,
     htsId: null,
   })
+  await fetchVariantsData()
 }
 // 零件信息完善与售价核对修改站点
 const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
@@ -832,7 +835,7 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) =>{
     actualTotalCost: row.actualTotalCost!,
     htsId,
   })
-  fetchVariantsData()
+  await fetchVariantsData()
 }
 const handleVariantChange = async (row: any) => {
     let _variant: any = {}
@@ -1335,6 +1338,19 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
     return 'clear-padding'
   }
   return ''
+}
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['长(cm)', '宽(cm)', '高(cm)', '重量(g)', '打包￥', '最终售价', '重量系数', '体积系数', '关税%'].includes(label)) { 
+    return {
+      textAlign: 'center',
+      cursor: 'pointer'
+    }
+  }
+  return {
+    cursor: 'not-allowed',
+    textAlign: 'center',
+  }
 }
 onMounted(()=>{
   fetchDataComponent()

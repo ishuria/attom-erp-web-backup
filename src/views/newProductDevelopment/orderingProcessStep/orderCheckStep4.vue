@@ -13,7 +13,7 @@
         fixed 
         :label="labelMap['column0']" 
         :prop="'column0'"
-        width="300"
+        width="310"
       >
         <template #default="{ row }">
           <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>

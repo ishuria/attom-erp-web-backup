@@ -6,7 +6,7 @@
         :show-header="false" stripe style="width: auto; table-layout: fixed;"
       >
         <!-- 第一列固定标签列 -->
-        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="300">
+        <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="310">
           <template #default="{ row }">
             <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
           </template>
