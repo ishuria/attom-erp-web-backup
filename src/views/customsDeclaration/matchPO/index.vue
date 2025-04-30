@@ -476,50 +476,60 @@ const handleCancelEncasement = async (row: any) => {
 const handleDownload = async () => {
   if (confirmTwiceTitle.value === '报关') {
     declarationLoading.value = true
-    const ids = selectRows.value.map((item: any) => item.id).join(',')
-    const { data } = await generateCustomsDeclaration({
-      ids
-    })
-    if (data) {
-      data.forEach(async (fileName: string) => {
-        try {
-          await downloadFileP('/shipment/download', {
-            fileName
-          }).then((res) => {
-            console.log(res);
-          }).catch((error) => {
-            console.error(error);
-          })
-          $baseMessage('生成报关资料成功！', 'success')
-        } catch {
-          $baseMessage('生成报关资料失败！', 'error')
-        }
+    try {
+      const ids = selectRows.value.map((item: any) => item.id).join(',')
+      const { data } = await generateCustomsDeclaration({
+        ids
       })
+      if (data) {
+        data.forEach(async (fileName: string) => {
+          try {
+            await downloadFileP('/shipment/download', {
+              fileName
+            }).then((res) => {
+              console.log(res);
+            }).catch((error) => {
+              console.error(error);
+            })
+            $baseMessage('生成报关资料成功！', 'success')
+          } catch {
+            $baseMessage('生成报关资料失败！', 'error')
+          }
+        })
+      }
+    } catch(error) {
+      console.error(error)
+    } finally {
+      declarationLoading.value = false
     }
-    declarationLoading.value = false
   } else {
     clearanceLoading.value = true
-    const ids = selectRows.value.map((item: any) => item.id).join(',')
-    const { data } = await generateTaxRefund({
-      ids
-    })
-    if (data) {
-      data.forEach(async (fileName: string) => {
-        try {
-          await downloadFileP('/shipment/download', {
-            fileName
-          }).then((res) => {
-            console.log(res);
-          }).catch((error) => {
-            console.error(error);
-          })
-          $baseMessage('生成清关资料成功！', 'success')
-        } catch {
-          $baseMessage('生成清关资料失败！', 'error')
-        }
+    try {
+      const ids = selectRows.value.map((item: any) => item.id).join(',')
+      const { data } = await generateTaxRefund({
+        ids
       })
+      if (data) {
+        data.forEach(async (fileName: string) => {
+          try {
+            await downloadFileP('/shipment/download', {
+              fileName
+            }).then((res) => {
+              console.log(res);
+            }).catch((error) => {
+              console.error(error);
+            })
+            $baseMessage('生成清关资料成功！', 'success')
+          } catch {
+            $baseMessage('生成清关资料失败！', 'error')
+          } 
+        })
+      }
+    } catch(error) {
+      console.error(error)
+    } finally {
+      clearanceLoading.value = false
     }
-    clearanceLoading.value = false
   }
 }
 const isValid = () => {
@@ -545,7 +555,8 @@ const isValid = () => {
   // }
   const allContractNumbers = selectRows.value.map((item: any) => item.contractNumber);
   const hasDifferentContractNumbers = new Set(allContractNumbers).size > 1;
-
+  // console.log(allContractNumbers)
+  // console.log(new Set(allContractNumbers))
   if (hasDifferentContractNumbers) {
     $baseMessage('选中的行包含不同的合同号，无法生成报关资料！', 'error');
     return;

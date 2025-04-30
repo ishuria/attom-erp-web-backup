@@ -7,10 +7,13 @@
       width="40%"
     >
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="addVisible = true">新增</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel >
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" />
+              <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
@@ -35,12 +38,27 @@
         @size-change="handleSizeChange"
       />
     </vab-dialog>
+    <!-- 新增 -->
+    <vab-dialog v-model="addVisible" title="新增" width="20%" @close="handleCloseAdd">
+      <el-form ref="addFormRef" label-position="top" :model="addForm" :rules="addFormRules">
+        <el-form-item label="分类名" prop="name">
+          <el-input v-model="addForm.name" clearable />
+        </el-form-item>
+        <el-form-item label="税收分类编码" prop="code">
+          <el-input v-model="addForm.code" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-
+import type { FormInstance } from 'element-plus'
 
 defineOptions({
   name: 'VabClassificationCodeSettings'
@@ -66,6 +84,31 @@ const queryForm = reactive({
 })
 const total = ref(0)
 const listLoading = ref(false)
+const addVisible = ref(false)
+const addFormRef = ref<FormInstance>()
+const addForm = reactive({
+  name: '',
+  code: ''
+})
+const addFormRules = reactive({
+  name: [
+    { required: true, message: '请输入分类名', trigger: 'blur' }
+  ],
+  code: [
+    { required: true, message: '请输入税收分类编码', trigger: 'blur' }
+  ]
+})
+const handleCloseAdd = () => {
+  addVisible.value = false
+  addFormRef.value?.resetFields()
+}
+const handleConfirmAdd = () => {
+  addFormRef.value?.validate((isValid: boolean) => {
+    if (isValid) {
+      //
+    }
+  })
+}
 const handleDel = (row: any) => {
   console.log(row)
 }
