@@ -32,7 +32,7 @@
             </template>
 
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" :true-value="1"/>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)"/>
             </template>
             <template v-if="row['column0'] === 'productPosition'">
               <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
@@ -45,7 +45,7 @@
               </el-select>
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1"/>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)"/>
             </template>
             <template v-if="row['column0'] === 'sampleRetention'">
               <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
@@ -183,7 +183,23 @@ const labelMap: Record<string, string> = {
   productManager: '产品经理',
   productDesign: '产品设计',
 }
-
+const handleUpdateOEM = (row: any, prop: string) => {
+  // console.log(row, prop)
+  // console.log(variantList.value)
+  // variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
+  if (variantList.value[5][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+    row[prop] = 0
+    $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+    return
+  }
+}
+const handleUpdateGraphicDesign = (row: any, prop: string) => {
+  if (variantList.value[6][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+    row[prop] = 0
+    $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+    return
+  }
+}
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
@@ -212,7 +228,10 @@ const buildParams = (): IReviewStep2Req => {
   vArr.forEach((item: any) => {
     const v: IReviewStep2Item = {
       orderEntryId: item.orderEntryId,
-      sku: item.sku
+      sku: item.sku,
+      productPosition: item.productPosition,
+      graphicDesign: item.graphicDesign,
+      oem: item.oem,
     }
 
     paramVArr.push(v)
@@ -296,6 +315,7 @@ const fetchData = async () => {
   })
 
   variantList.value = initData(arr)
+  // console.log(variantList.value)
 }
 
 // const fetchMoldData = async () => {
@@ -353,5 +373,9 @@ onMounted(async () => {
 }
 :deep(.center-input .el-input__inner ){
   text-align: center;
+}
+:deep(.center-select) {
+  text-align: center;
+  text-align-last: center;
 }
 </style>

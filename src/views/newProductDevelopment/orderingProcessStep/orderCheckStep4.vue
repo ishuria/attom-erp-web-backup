@@ -4,6 +4,7 @@
       ref="tableRef"
       border 
       :data="exchangeList" :header-cell-style="{ 'text-align': 'center' }"
+      :show-header="false"
       stripe
       style="width: auto; table-layout: fixed;"
     >

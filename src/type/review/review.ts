@@ -389,6 +389,7 @@ export interface IReviewStep2Req {
 export interface IReviewStep2Item {
   orderEntryId?: number
   sku?: string
+  [key: string]: any
 }
 
 

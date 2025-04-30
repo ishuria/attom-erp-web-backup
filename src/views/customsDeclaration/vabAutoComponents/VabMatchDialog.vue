@@ -35,10 +35,24 @@
       :span-method="objectSpanMethod1"
     >
       <el-table-column label="SKU">
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
+          <template #default="{ row }">
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              {{ row.sku }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="装箱总数" min-width="100" prop="encasementCount" />
         <el-table-column label="站点" min-width="130" prop="site" />
-        <el-table-column label="匹配的PO" min-width="110" prop="po" />
+        <el-table-column label="匹配的PO" min-width="110" prop="po" >
+          <template #default="{ row }">
+            <span class="copySku"  @click="handleClipboard($event, row.po)" >
+              {{ row.po }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount" />
       </el-table-column>
       <el-table-column label="零件">
@@ -412,6 +426,7 @@
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import {
   archiveMatchSentList,
   archiveShipmentYfwbAggregation,
@@ -1345,5 +1360,14 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>

@@ -119,7 +119,7 @@ export function getProductComponentSuppliser(params: IcomponentId) {
     })
 }
 // SKU详情-查找默认收货仓库列表
-export function getProductComponentStore() {
+export function getProductComponentStore(): Promise<{data: { id: number, label: string }[]}> {
     return request({
       url: `${BASE_API}/product/list/component/store`,
       method: 'get',
