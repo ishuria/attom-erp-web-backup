@@ -27,9 +27,9 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border :header-cell-style="{ textAlign: 'center' }">
+    <el-table border :cell-class-name="clearPadding" class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" >
       <el-table-column type="selection" />
-      <el-table-column label="图片" />
+      <el-table-column label="图片" width="75" />
       <el-table-column label="零件名" />
       <el-table-column label="属于SKU" />
       <el-table-column label="开票/报关品名" />
@@ -87,4 +87,21 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+const clearPadding = (data: {row: any, column: any, rowIndex: number, columnIndex: number}) => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
 </script>
+
+<style lang="scss" scoped>
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>

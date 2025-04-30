@@ -40,7 +40,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed="left" label="SKU品名" prop="sku" :width="flexColumnWidth(list, 'SKU品名', 'sku')"/>
-      <el-table-column label="UPC" min-width="70" prop="upc" >
+      <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" >
         <template #default="{ row }">
           <div v-html="row.upc"></div>
         </template>
@@ -443,19 +443,17 @@ const handleStatus1Change = async () => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 6 || data.columnIndex === 7) {
+  const label = data.column.label
+  if (['SKU品名', 'UPC', '北美FNSKU', '欧洲FNSKU', '日本FNSKU'].includes(label)) {
     return {
-      color: '#bbb',
+      color: '#999',
       cursor: 'not-allowed',
       textAlign:'left'
     }
-  } else if (data.columnIndex === 10 || data.columnIndex === 11) {
-    return {
-      textAlign: 'left'
-    }
   } else {
     return {
-      textAlign:'center'
+      textAlign: 'center',
+      cursor: 'pointer',
     }
   }
 }

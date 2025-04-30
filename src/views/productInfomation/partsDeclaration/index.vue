@@ -157,7 +157,7 @@
           <span>{{ row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="90" prop="statutoryUnit">
+      <el-table-column label="法定第1单位" min-width="90" prop="statutoryUnit">
         <template #header>
           法定第
           <br />
@@ -191,7 +191,7 @@
           <el-checkbox v-model="row.coveredWeightStatus" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleWeightStatusChange(row)"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="品牌" min-width="90" prop="brank">
+      <el-table-column label="品牌" min-width="100" prop="brank">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
@@ -211,7 +211,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="90" prop="taxRate">
+      <el-table-column label="出口退税税率" min-width="90" prop="taxRate">
         <template #header>
           出口退
           <br />
@@ -459,27 +459,30 @@ const handleStatus2Change = async () => {
   status2Loading.value = false
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (
-    data.columnIndex === 1 ||
-    data.columnIndex === 2 ||
-    data.columnIndex === 3 ||
-    data.columnIndex === 4 ||
-    data.columnIndex === 5 ||
-    data.columnIndex === 6
-  ) {
+  const label = data.column.label
+
+  if (['零件名', '供应商', '属于SKU', 'UPC', '北美FNSKU', '欧洲FNSKU'].includes(label)) {
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign: 'left',
     }
-  } else if (data.column.label === "申报要素" || data.column.label === "申报要素缩写") {
+  } else if (label === "申报要素" || label === "申报要素缩写") {
     return {
       textAlign: 'left',
+      cursor: 'pointer',
+    }
+  } else if (label === '出口退税税率' || label === '法定第1单位' ) {
+    return {
+      color: '#999',
+      cursor: 'not-allowed',
+      textAlign: 'center',
     }
   }
   else {
     return {
       textAlign: 'center',
+      cursor: 'pointer',
     }
   }
 }
