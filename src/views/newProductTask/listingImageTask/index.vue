@@ -123,7 +123,16 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column label="备注" min-width="130" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.remark }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
@@ -288,7 +297,16 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column label="备注" min-width="130" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.remark }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
@@ -420,7 +438,16 @@
               {{ '' }}
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="130" prop="remark"/>
+          <el-table-column label="备注" min-width="130" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.remark }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>

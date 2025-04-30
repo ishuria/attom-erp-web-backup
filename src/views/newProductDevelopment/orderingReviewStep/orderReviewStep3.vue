@@ -21,7 +21,7 @@
               </el-image>
             </template>
             <template v-if="scope.row['column0'] === 'vineSite'">
-              <el-select v-model="scope.row[prop]" class="center-select" placeholder="请选择Vine站点" @change="handleUpdate(scope)">
+              <el-select v-model="scope.row[prop]" class="center-select" clearable placeholder="请选择Vine站点" @change="handleUpdate(scope)">
                 <el-option
                   v-for="item in siteList"
                   :key="item.id"
