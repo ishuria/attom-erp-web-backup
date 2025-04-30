@@ -206,6 +206,7 @@ declare module 'vue' {
     VabChartTreemap: typeof import('./../../../src/views/other/echarts/vabAutoComponents/VabChartTreemap.vue')['default']
     VabChartWorldMap: typeof import('./../../../src/views/other/echarts/vabAutoComponents/VabChartWorldMap.vue')['default']
     VabCity: typeof import('./../../../src/plugins/VabCity/index.vue')['default']
+    VabClassificationCodeSettings: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabClassificationCodeSettings.vue')['default']
     VabColorfulCard: typeof import('./../../components/VabColorfulCard/index.vue')['default']
     VabColorPicker: typeof import('./../../components/VabColorPicker/index.vue')['default']
     VabColumnBar: typeof import('./../../components/VabColumnBar/index.vue')['default']

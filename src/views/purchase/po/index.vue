@@ -556,7 +556,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="135" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -611,7 +611,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" />
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -825,7 +825,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" />
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -1031,7 +1031,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" />
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -1101,7 +1101,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="135" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -1156,7 +1156,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" />
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">

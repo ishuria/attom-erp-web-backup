@@ -12,7 +12,7 @@
             <el-button style="margin: 0 0 0 0 !important" type="success">应用</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">分类编码设定</el-button>
+            <el-button type="primary" @click="showDialog">分类编码设定</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -47,6 +47,8 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <vab-classification-code-settings v-model="dialogVisible" />
+
   </div>
 </template>
 
@@ -64,7 +66,11 @@ const queryForm = reactive<any>({
 const total = ref<number>(0)
 const list = ref<any[]>([])
 const listLoading = ref<boolean>(false)
+const dialogVisible = ref<boolean>(false)
 
+const showDialog = () => {
+  dialogVisible.value = true
+}
 const handleCurrentChange = (val: number) => {
   queryForm.pageNo = val
   fetchData()

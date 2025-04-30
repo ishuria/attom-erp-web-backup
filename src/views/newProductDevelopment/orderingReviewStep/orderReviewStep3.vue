@@ -31,12 +31,20 @@
               </el-select>
             </template>
             <template v-if="scope.row['column0'] === 'vineCount'">
-              <el-input
-                v-model="scope.row[prop]"
+              <!-- <el-input
+                v-model.trim="scope.row[prop]"
                 class="center-input"
                 :min="0"
                 placeholder="请输入Vine数量"
                 type="number"
+                @change="handleUpdate(scope)"
+              /> -->
+              <el-input-number
+                v-model="scope.row[prop]"
+                controls-position="right"
+               :min="0"
+                placeholder="请输入Vine数量"
+                style="min-width: 100%;"
                 @change="handleUpdate(scope)"
               />
             </template>
@@ -82,8 +90,8 @@
 
 <script lang="ts" setup>
 
-import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getDistributionList, reviewStepNo3Save, updateReviewStepNo3Vine } from '/@/api/devlocal/orderingReview'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IUpdateReviewStepNo3Vine } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -216,8 +224,26 @@ const fetchData = async () => {
   // console.log(siteQuantityList.value)
   variantList.value = initData(arr)
 }
+const validate = (): boolean => {
+  console.log(variantList.value)
+  for (let i = 1; i <= variantSize.value; i++) {
+    let value1 = variantList.value[4][i]
+    let value2 = variantList.value[5][i]
+    // 如果一个有值一个没值，说明填写不完整 0是可以的 ‘’ null undefined是不行的
+    if ((value1 != null && value2 == null) || (value1 == null && value2 != null)) {
+      return false
+    }
+  }
+  // 所有数据都检查完毕，都符合要求（要么都填了，要么都没填）
+  return true
+}
 // 当点击通过的时候
 const handleSaveAndContinue = () => {
+  const valid = validate()
+  if (!valid) {
+    $baseMessage("Vine站点和数量必须成对填写，要么都填写，要么都不填！", "warning", "hey")
+    return
+  }
   const deleteVNode = h('div', {}, [
     h('p', {
       style: {
