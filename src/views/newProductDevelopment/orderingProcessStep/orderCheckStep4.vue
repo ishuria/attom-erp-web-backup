@@ -278,6 +278,7 @@ const fetchPackagePositionOption = async () => {
 }
 onMounted(async () => {
   fetchProductPositionOption()
+  fetchPackagePositionOption()
   fetchVariantList()
 })
 </script>

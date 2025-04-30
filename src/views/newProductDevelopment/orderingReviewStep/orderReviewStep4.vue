@@ -37,26 +37,20 @@
             <template v-if="scope.row['column0'] === 'vineSite'">
               {{ siteList.find(item => item.id === scope.row[prop])?.label }}
             </template>
-            <!-- <template v-if="['amazonUsOrderQuantity', 'amazonUkOrderQuantity', 'amazonDeOrderQuantity', 'walmartUsOrderQuantity', 'amazonCaOrderQuantity', 'amazonJpOrderQuantity', 'tiktokUsOrderQuantity'].includes(scope.row['column0'])">
-              <el-input
-                v-model="scope.row[prop]"
-                class="center-input"
-                @blur="updateHandlerNumber($event, scope, i)"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="updateHandlerNumber($event, scope, i)"
-              />
-            </template> -->
+            <template v-if="scope.row['column0'] === 'productPosition'">
+              {{ productPositionOption.find(item => item.id === scope.row[prop])?.label }}
+            </template>
+            <template v-if="scope.row['column0'] === 'graphicDesign'">
+              <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+    
             <template
               v-if="
                 scope.row['column0'] !== 'oem' &&
-                // scope.row['column0'] !== 'amazonUsOrderQuantity' &&
-                // scope.row['column0'] !== 'amazonUkOrderQuantity' &&
-                // scope.row['column0'] !== 'amazonDeOrderQuantity' &&
-                // scope.row['column0'] !== 'amazonCaOrderQuantity' &&
-                // scope.row['column0'] !== 'amazonJpOrderQuantity' &&
-                // scope.row['column0'] !== 'walmartUsOrderQuantity' &&
-                // scope.row['column0'] !== 'tiktokUsOrderQuantity' &&
-                scope.row['column0'] !== 'variantImg'
+                scope.row['column0'] !== 'variantImg' &&
+                scope.row['column0'] !== 'productPosition' &&
+                scope.row['column0']!== 'graphicDesign' &&
+                scope.row['column0']!== 'vineSite'
               "
             >
               {{ scope.row[prop] }}
@@ -77,10 +71,11 @@
 </template>
 
 <script lang="ts" setup>
-import { releasePo, reviewProductList, updateStepNoQuantity } from '/@/api/devlocal/orderingReview'
+import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
+import { releasePo, reviewProductList } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { IReviewCommonItem, IReviewStepUpdateReq } from '/@/type/review/review'
+import type { IReviewCommonItem } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
 import { useTableDataLineToColumn } from '/@/utils/tableColum'
 
@@ -121,62 +116,57 @@ const labelMap: Record<string, string> = {
   productName: '产品名称',
   sku: 'SKU',
   effectiveCount: '有效计数',
+  productPosition: '产品定位',
+  graphicDesign: '平面设计',
   oem: 'OEM',
   vineSite: 'Vine站点',
   vineCount: 'Vine数量'
-  // amazonUsOrderQuantity: '订货数量(亚马逊US)',
-  // amazonUkOrderQuantity: '订货数量(亚马逊UK)',
-  // amazonDeOrderQuantity: '订货数量(亚马逊DE)',
-  // amazonCaOrderQuantity: '订货数量(亚马逊CA)',
-  // amazonJpOrderQuantity: '订货数量(亚马逊JP)',
-  // walmartUsOrderQuantity: '订货数量(沃尔玛US)',
-  // tiktokUsOrderQuantity: '订货数量(TiktokUS)',
 }
 
-const buildParams = (idx: number): IReviewStepUpdateReq => {
-  let n: any = {}
-  variantList.value.map((item) => {
-    n[item['column0']] = item[idx]
-  })
+// const buildParams = (idx: number): IReviewStepUpdateReq => {
+//   let n: any = {}
+//   variantList.value.map((item) => {
+//     n[item['column0']] = item[idx]
+//   })
 
-  const params: IReviewStepUpdateReq = {
-    orderEntryId: n.orderEntryId,
-    // amazonUsOrderQuantity: n.amazonUsOrderQuantity,
-    // amazonUkOrderQuantity: n.amazonUkOrderQuantity,
-    // amazonDeOrderQuantity: n.amazonDeOrderQuantity,
-    // amazonCaOrderQuantity: n.amazonCaOrderQuantity,
-    // amazonJpOrderQuantity: n.amazonJpOrderQuantity,
-    // walmartUsOrderQuantity: n.walmartUsOrderQuantity,
-    // tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
-  }
-  return params
-}
+//   const params: IReviewStepUpdateReq = {
+//     orderEntryId: n.orderEntryId,
+//     // amazonUsOrderQuantity: n.amazonUsOrderQuantity,
+//     // amazonUkOrderQuantity: n.amazonUkOrderQuantity,
+//     // amazonDeOrderQuantity: n.amazonDeOrderQuantity,
+//     // amazonCaOrderQuantity: n.amazonCaOrderQuantity,
+//     // amazonJpOrderQuantity: n.amazonJpOrderQuantity,
+//     // walmartUsOrderQuantity: n.walmartUsOrderQuantity,
+//     // tiktokUsOrderQuantity: n.tiktokUsOrderQuantity,
+//   }
+//   return params
+// }
 
-const updateHandlerNumber = async (event: Event, scope: any, index: number) => {
-  const updateParams = buildParams(scope.cellIndex)
-  const targetElement = event.target as HTMLInputElement
-  // 获取当前输入的值
-  const currentValue = Number(targetElement.value)
-  // 获取原始值
-  const originalValue = scope.row[index + 1]
-  // console.log(currentValue)
-  // console.log(scope.row[index + 1])
-  // 如果值没有变化，直接返回
-  if (currentValue === originalValue) {
-    targetElement.blur()
-    return
-  }
+// const updateHandlerNumber = async (event: Event, scope: any, index: number) => {
+//   const updateParams = buildParams(scope.cellIndex)
+//   const targetElement = event.target as HTMLInputElement
+//   // 获取当前输入的值
+//   const currentValue = Number(targetElement.value)
+//   // 获取原始值
+//   const originalValue = scope.row[index + 1]
+//   // console.log(currentValue)
+//   // console.log(scope.row[index + 1])
+//   // 如果值没有变化，直接返回
+//   if (currentValue === originalValue) {
+//     targetElement.blur()
+//     return
+//   }
   
-  targetElement.blur()
+//   targetElement.blur()
 
-  if (event.type === 'blur') {
-    const { data } = await updateStepNoQuantity(updateParams)
-    if (data === true) {
-      $baseMessage('分货数量成功！', 'success', 'hey')
-      fetchData()
-    }
-  }
-}
+//   if (event.type === 'blur') {
+//     const { data } = await updateStepNoQuantity(updateParams)
+//     if (data === true) {
+//       $baseMessage('分货数量成功！', 'success', 'hey')
+//       fetchData()
+//     }
+//   }
+// }
 
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {
@@ -222,16 +212,11 @@ const fetchData = async () => {
       productName: item.productName,
       sku: item.sku,
       effectiveCount: item.effectiveCount == undefined || item.effectiveCount == null ? '' : item.effectiveCount,
+      productPosition: item.productPosition,
+      graphicDesign: item.graphicDesign,
       oem: item.oem == undefined || item.oem == null ? 0 : item.oem,
       vineSite: item.vineSite,
       vineCount: item.vineCount,
-      // amazonUsOrderQuantity: item.amazonUsOrderQuantity,
-      // amazonUkOrderQuantity: item.amazonUkOrderQuantity,
-      // amazonDeOrderQuantity: item.amazonDeOrderQuantity,
-      // amazonCaOrderQuantity: item.amazonCaOrderQuantity,
-      // amazonJpOrderQuantity: item.amazonJpOrderQuantity,
-      // walmartUsOrderQuantity: item.walmartUsOrderQuantity,
-      // tiktokUsOrderQuantity: item.tiktokUsOrderQuantity,
     }
     arr.push(n)
   })
@@ -243,7 +228,20 @@ const fetchSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
+const fetchPackagePositionOption = async () => {
+  const { data } = await getReviewVariantPackageSampleList()
+  packageSampleOption.value = data
+}
+
 onMounted(() => {
+  fetchProductPositionOption()
+  fetchPackagePositionOption()
   fetchSiteList()
   fetchData()
 })

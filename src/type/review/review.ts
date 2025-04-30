@@ -145,7 +145,6 @@ export interface IReviewCommonItem {
   /**
    * 拍照留样状态
    */
-  sampleRetention?: number
   /**
    * 总采购含税价
    */

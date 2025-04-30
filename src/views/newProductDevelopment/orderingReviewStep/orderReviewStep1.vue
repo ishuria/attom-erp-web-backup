@@ -110,10 +110,7 @@
         <el-table-column label="变体" min-width="100" prop="variant" />
         <el-table-column label="站点" min-width="135" prop="site">
           <template #default="{ row }">
-            <span v-if="row.site == 0">亚马逊US</span>
-            <span v-if="row.site == 1">亚马逊DE</span>
-            <span v-if="row.site == 2">亚马逊UK</span>
-            <span v-if="row.site == 3">沃尔玛US</span>
+            {{ siteList.find(item => item.id === row.site)?.label  }}
           </template>
         </el-table-column>
         <el-table-column label="外汇币种" min-width="100" prop="currencyType" />
@@ -126,7 +123,16 @@
         <el-table-column label="尾程$" min-width="70" prop="lastMile" />
         <el-table-column label="头程￥" prop="firstMile" width="90" />
         <el-table-column label="打包￥" prop="packagingPrice" width="90" />
-        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel" />
+        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel" >
+          <template #default="{ row }">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
+              </template>
+              <el-text style="vertical-align: middle;" truncated>{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</el-text>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice" />
         <el-table-column label="毛利率" prop="grossMarginRate">
           <template #default="{ row }">
@@ -145,12 +151,7 @@
         <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient" />
         <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
           <template #default="{ row }">
-            <el-select
-              v-model="row.hts.label"
-              disabled
-              placeholder="点击输入和搜索HTS"
-              style="min-width: 100%"
-            />
+            {{ row.hts.label }}
           </template>
         </el-table-column>
         <el-table-column label="关税%" prop="tariff">
@@ -178,6 +179,8 @@
 </template>
 
 <script lang="ts" setup>
+import { getChannelList } from '/@/api/devlocal/encasement'
+import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
 import { getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -205,7 +208,16 @@ const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
 // const moldData = ref<IReviewMoldItem[]>()
-
+const channelList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
+}
+const fetchSalesSiteList = async () => {
+  const { data } = await getSalesSiteList()
+  siteList.value = data
+}
 const labelMap: Record<string, string> = {
   column0: '',
   orderEntryId: '变体编号',
@@ -367,7 +379,7 @@ const fetchData = async () => {
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
-      sampleRetention: item.sampleRetention,
+      sampleRetention: item.sampleRetention.split(',').map(Number),
       productManager: item.productManager,
       productDesign: item.productDesign,
     }
@@ -401,6 +413,8 @@ onMounted(() => {
   fetchPackagePositionOption()
   fetchData()
   // fetchMoldData()
+  fetchChannelData()
+  fetchSalesSiteList()
   fetchVariantData()
 })
 </script>
@@ -422,5 +436,10 @@ onMounted(() => {
 :deep(.center-select) {
   text-align: center;
   text-align-last: center;
+}
+.custom-tooltip {
+  max-width: 400px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>

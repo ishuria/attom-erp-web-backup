@@ -16,6 +16,8 @@
             <template v-if="row['column0'] === 'sku'">
               <el-input 
                 v-model.trim="row[prop]" 
+                class="center-input"
+                placeholder="请输入SKU"
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="handleEffectiveCountInpute($event)"
               />
@@ -30,14 +32,21 @@
             </template>
 
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1"/>
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="true" :false-value="0" :true-value="1"/>
             </template>
-            <!-- <template v-if="row['column0'] === 'packagingSize'">
-                {{ row[prop] }} cm
+            <template v-if="row['column0'] === 'productPosition'">
+              <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
+                <el-option
+                  v-for="item in productPositionOption"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                />
+              </el-select>
             </template>
-            <template v-if="row['column0'] === 'productSize'">
-                {{ row[prop] }} inch
-            </template> -->
+            <template v-if="row['column0'] === 'graphicDesign'">
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1"/>
+            </template>
             <template v-if="row['column0'] === 'sampleRetention'">
               <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
                 <el-tag
@@ -54,7 +63,8 @@
             </template>
             <template 
               v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'
-          && row['column0'] !== 'sampleRetention' && row['column0'] !== 'purchaseTotalPrice'">
+              && row['column0'] !== 'sampleRetention' && row['column0'] !== 'purchaseTotalPrice'
+              && row['column0'] !== 'productPosition' && row['column0'] !== 'graphicDesign'">
               {{ row[prop] }}
             </template>
             
@@ -66,7 +76,7 @@
       </el-table>
     </div>
 
-    <div style="padding-top: 20px;">
+    <!-- <div style="padding-top: 20px;">
       <el-table border :data="moldData" :header-cell-style="{ 'text-align': 'center' }" style="margin-top: 25px;">
         <el-table-column align="center" label="提交日期">
           <template #default="{ row }">
@@ -100,7 +110,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </div>
+    </div> -->
 
     <div class="pay-button-group">
       <el-button type="danger" @click="goBackToStep1">不通过</el-button>
@@ -111,15 +121,14 @@
 </template>
 
 <script lang="ts" setup>
-import { getReviewVariantPackageSampleList } from '~/src/api/devlocal/orderProcess'
-import { getMoldInfoByReviewId, getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
+import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
+import { getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
-import type { IReviewCommonItem, IReviewMoldItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
-import { formatDate } from '/@/utils/dateUtils'
+import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
 import { inputHandleMouseOver, useTableDataLineToColumn } from '/@/utils/tableColum'
 
-const moldData = ref<IReviewMoldItem[]>()
+// const moldData = ref<IReviewMoldItem[]>()
 const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
@@ -155,7 +164,8 @@ const labelMap: Record<string, string> = {
   variantImg: 'SKU图片',
   productName: '产品名称',
   sku: 'SKU',
-  effectiveCount: '有效计数',
+  productPosition: '产品定位',
+  graphicDesign: '平面设计',
   oem: 'OEM',
   quantity: '订货数量',
   purchaseTotalPrice: '总采购含税价',
@@ -263,6 +273,8 @@ const fetchData = async () => {
       variantImg: item.variantImg,
       productName: item.productName,
       sku: item.sku,
+      productPosition: item.productPositon,
+      graphicDesign: item.graphicDesign,
       oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
       quantity: item.quantity,
       purchaseTotalPrice: item.purchaseTotalPrice,
@@ -276,7 +288,7 @@ const fetchData = async () => {
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
-      sampleRetention: item.sampleRetention,
+      sampleRetention: item.sampleRetention.split(',').map(Number),
       productManager: item.productManager,
       productDesign: item.productDesign,
     }
@@ -286,24 +298,25 @@ const fetchData = async () => {
   variantList.value = initData(arr)
 }
 
-const fetchMoldData = async () => {
-  const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
-  moldData.value = data
-}
-// const productPositionOption = ref<{ id: number, label: string }[]>([])
-const packageSampleOption = ref<{ id: number, label: string }[]>([])
-// const fetchProductPositionOption = async () => {
-//   const { data } = await getProductPositionList()
-//   productPositionOption.value = data
+// const fetchMoldData = async () => {
+//   const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
+//   moldData.value = data
 // }
+const productPositionOption = ref<{ id: number, label: string }[]>([])
+const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const fetchProductPositionOption = async () => {
+  const { data } = await getProductPositionList()
+  productPositionOption.value = data
+}
 const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
 
 onMounted(async () => {
+  fetchProductPositionOption()
   fetchPackagePositionOption()
-  fetchMoldData()
+  // fetchMoldData()
   fetchData()
 })
 </script>
@@ -337,5 +350,8 @@ onMounted(async () => {
 .custom-checkbox {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
+}
+:deep(.center-input .el-input__inner ){
+  text-align: center;
 }
 </style>

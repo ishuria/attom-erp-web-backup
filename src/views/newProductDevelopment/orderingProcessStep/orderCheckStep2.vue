@@ -178,13 +178,9 @@
       >
           <el-table-column align="center" label="变体" min-width="100" prop="variant"/>
           <el-table-column label="站点" min-width="135" prop="site">
-              <template #default="{ row }">
-                  <el-select v-model="row.site" disabled placeholder="请选择站点" style="min-width: 100%;">
-                      <el-option
-v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
-                              :label="dict.label" :value="dict.value"/>
-                  </el-select>
-              </template>
+            <template #default="{ row }">
+              {{ siteList.find(item => item.id === row.site)?.label  }}
+            </template>
           </el-table-column>
           <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
           <el-table-column label="汇率" min-width="100" prop="foreignExchange"/>
@@ -200,35 +196,30 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
           <el-table-column label="头程￥"  prop="firstMile" width="90" />    
           <el-table-column label="打包￥"  prop="packagingPrice" width="90" />
           <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
-              <template #default="{ row }">
-                  <el-select 
-                      v-model="row.firstMileChannel" 
-                      disabled
-                      placeholder="请选择头程渠道"
-                      style="min-width: 100%"
-                  >
-                      <el-option 
-                          v-for="dict in firstLegChannelColumnsNum" 
-                          :key="dict.value" 
-                          :label="dict.label"
-                          :value="dict.value"
-                      />
-                  </el-select>
-              </template>
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
+                </template>
+                <el-text style="vertical-align: middle;" truncated>{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</el-text>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column label="最终售价$" min-width="100" prop="finalSellingPrice"/>
-          <el-table-column label="毛利率" prop="grossMarginRate"/>
+          <el-table-column label="毛利率" prop="grossMarginRate">
+            <template #default="{ row }">
+              <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+              <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+              <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+              <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+            </template>
+          </el-table-column>
           <el-table-column label="ROI" prop="roi"/>
           <el-table-column label="重量系数" min-width="100" prop="weightCoefficient"/>
           <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient"/>
           <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
             <template #default="{ row }">
-              <el-select
-                v-model="row.hts.label"
-                disabled
-                placeholder="点击输入和搜索HTS"
-                style="min-width: 100%"
-              />
+              {{ row.hts.label }}
             </template>
           </el-table-column>
           <el-table-column label="关税%" prop="tariff">
@@ -256,7 +247,9 @@ v-for="dict in estimatedCostAccountingSiteColumnsNum" :key="dict.value"
 </template>
   
 <script lang="ts" setup>
-import { currencyList, estimatedCostAccountingSiteColumnsNum, firstLegChannelColumnsNum, invoicingList } from '../indexCommon'
+import { getChannelList } from '~/src/api/devlocal/encasement'
+import { getSalesSiteList } from '~/src/api/devlocal/evaluation'
+import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { reviewStepNo3ComponentList, reviewStepNo3ComponentSuitDetail, reviewStepNo3ContractTerms, reviewStepNo3GetSelectVariantList, reviewStepNo3PurchaseMatters, reviewStepNo3VariantList } from '/@/api/devlocal/orderProcess'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
@@ -389,9 +382,22 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   }
   return ''
 }
-onMounted(async ()=>{
-    fetchDataComponent()
-    fetchVariantsData()
+const channelList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number, label: string }[]>([])
+const fetchChannelData = async () => {
+  const { data } = await getChannelList()
+  channelList.value = data
+}
+const fetchSalesSiteList = async () => {
+  const { data } = await getSalesSiteList()
+  siteList.value = data
+}
+onMounted(async () => {
+  
+  fetchDataComponent()
+  fetchChannelData()
+  fetchSalesSiteList()
+  fetchVariantsData()
 })
 </script>
   
