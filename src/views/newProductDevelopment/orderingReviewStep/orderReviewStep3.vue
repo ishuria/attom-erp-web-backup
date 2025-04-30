@@ -225,7 +225,7 @@ const fetchData = async () => {
   variantList.value = initData(arr)
 }
 const validate = (): boolean => {
-  console.log(variantList.value)
+  // console.log(variantList.value)
   for (let i = 1; i <= variantSize.value; i++) {
     let value1 = variantList.value[4][i]
     let value2 = variantList.value[5][i]

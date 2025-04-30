@@ -2337,22 +2337,22 @@ const changeInput = async (row: any, column: any) => {
 // 开始确定选择后的的质检列表col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex === 0 && columnIndex === 1) {
+  if (columnIndex === 0 || columnIndex === 1) {
     // 获取当前row的零件id
-    const id = row.id
+    const id = row.skuId
     // 默认不跨行
     let rowspan = 1
     // 遍历后端返回的数据
     for (let i = rowIndex + 1; i < skuQualityList.value.length; i++) {
       // 如果零件id一样需要合并
-      if (skuQualityList.value[i].id === id) {
+      if (skuQualityList.value[i].skuId === id) {
         rowspan++
       } else {
         break
       }
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || skuQualityList.value[rowIndex - 1].id !== id) {
+    if (rowIndex === 0 || skuQualityList.value[rowIndex - 1].skuId !== id) {
       return { rowspan, colspan: 1 }
     } else {
       return { rowspan: 0, colspan: 0 }
