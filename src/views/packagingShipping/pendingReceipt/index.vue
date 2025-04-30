@@ -1102,4 +1102,20 @@ onBeforeMount(() => {
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
 }
+// 选中且不被禁用的样式
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
+}
 </style>

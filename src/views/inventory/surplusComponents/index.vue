@@ -357,5 +357,21 @@ onBeforeMount(() => {
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
+// 选中且不被禁用的样式
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
+}
 </style>
 

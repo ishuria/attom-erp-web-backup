@@ -54,7 +54,8 @@
         </el-table-column>
         <el-table-column label="有已发未报" min-width="110" prop="flag">
           <template #default="{ row }">
-            <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" />
+            <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
+            <el-checkbox v-model="row.flag" disabled  />
           </template>
         </el-table-column>
       </el-table-column>
@@ -1328,5 +1329,21 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
       }
     }
   }
+}
+// 选中且不被禁用的样式
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
 }
 </style>
