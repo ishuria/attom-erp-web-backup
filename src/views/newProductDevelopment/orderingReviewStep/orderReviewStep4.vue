@@ -43,7 +43,7 @@
             <template v-if="scope.row['column0'] === 'graphicDesign'">
               <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
-    
+
             <template
               v-if="
                 scope.row['column0'] !== 'oem' &&
@@ -116,6 +116,7 @@ const labelMap: Record<string, string> = {
   productName: '产品名称',
   sku: 'SKU',
   effectiveCount: '有效计数',
+  oemNumber: 'OEM数',
   productPosition: '产品定位',
   graphicDesign: '平面设计',
   oem: 'OEM',
@@ -156,7 +157,7 @@ const labelMap: Record<string, string> = {
 //     targetElement.blur()
 //     return
 //   }
-  
+
 //   targetElement.blur()
 
 //   if (event.type === 'blur') {
@@ -211,10 +212,11 @@ const fetchData = async () => {
       variantImg: item.variantImg,
       productName: item.productName,
       sku: item.sku,
-      effectiveCount: item.effectiveCount == undefined || item.effectiveCount == null ? '' : item.effectiveCount,
+      effectiveCount: item.effectiveCount === undefined || item.effectiveCount === null ? '' : item.effectiveCount,
+      oemNumber: item.oemNumber === undefined || item.oemNumber === null ? '' : item.oemNumber,
       productPosition: item.productPosition,
       graphicDesign: item.graphicDesign,
-      oem: item.oem == undefined || item.oem == null ? 0 : item.oem,
+      oem: item.oem === undefined || item.oem === null ? 0 : item.oem,
       vineSite: item.vineSite,
       vineCount: item.vineCount,
     }

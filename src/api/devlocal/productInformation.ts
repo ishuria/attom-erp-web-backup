@@ -183,11 +183,11 @@ export function downloadProductSupplier(params?: IsuppliserId): any {
     })
 }
 // 产品补货计算参数 - 获取补货参数列表
-export function getProductReplenList(params: IgetProductReplenListQuery): Promise<IgetProductReplenListResp> {
+export function getProductReplenList(data: IgetProductReplenListQuery): Promise<IgetProductReplenListResp> {
     return request({
       url: `${BASE_API}/product/replen/list`,
-      method: 'get',
-      params
+      method: 'post',
+      data
     })
 }
 // 零件报关信息 - 获取零件报关信息列表
