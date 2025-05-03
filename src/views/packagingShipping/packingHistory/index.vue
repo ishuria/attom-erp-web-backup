@@ -27,6 +27,7 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
+      :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection"/>
@@ -95,7 +96,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -106,6 +107,7 @@
 </template>
 
 <script lang="ts" setup>
+import { sumUniqueByField } from '/@/utils/mapUtil.ts'
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { downloadFileP } from '/@/api/devlocal/download'
@@ -142,23 +144,48 @@ const queryData = () => {
 const selectRows = ref<any>([])
 // 总箱数
 const totalBoxes = computed(() => {
-  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
-    return total + Number(item.numberOfBoxes)
-  }, 0)
+  return sumUniqueByField(selectRows.value,"numberOfBoxes");
 })
 // 总重量
 const totalWeight = computed(() => {
-  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
-    return total + Number(item.totalWeight)
-  }, 0).toFixed(2)
+  return sumUniqueByField(selectRows.value,"totalWeight",2);
 })
 const totalVolume = computed(() => {
-  return selectRows.value.reduce((total: number, item: IGetShippedEncasementList) => {
-    return total + Number(item.totalVolume)
-  }, 0).toFixed(2)
+
+  return sumUniqueByField(selectRows.value,"totalVolume",2);
 })
+
 const setSelectRows = (value: any) => {
   selectRows.value = value
+}
+// 装箱历史列合并方法
+const objectSpanMethod = ({
+                            row,
+                            rowIndex,
+                            columnIndex,
+                          }: any) => {
+  // 设置需要合并的列
+  if ( columnIndex !== 14 && columnIndex !== 15) {
+    // 获取当前row的零件id
+    const id = row.id;
+    // 默认不跨行
+    let rowspan = 1;
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (list.value[i].id === id) {
+        rowspan++;
+      } else {
+        break;
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 };
+    } else {
+      return { rowspan: 0, colspan: 0 };
+    }
+  }
 }
 
 // 下载模板文件
@@ -278,6 +305,6 @@ onBeforeMount(() => {
       font-size: 18px;
     }
   }
-  
+
 }
 </style>

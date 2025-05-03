@@ -166,11 +166,11 @@ export function getProductConsumablesType() {
     })
 }
 // 供应商 - 查询列表
-export function getProductSupplierList(params: IgetProductSupplierListQuery): Promise<IgetProductSupplierListResp> {
+export function getProductSupplierList(data: IgetProductSupplierListQuery): Promise<IgetProductSupplierListResp> {
     return request({
       url: `${BASE_API}/product/suppliser/getList`,
-      method: 'get',
-      params
+      method: 'post',
+      data
     })
 }
 // 供应商-合同模板下载
@@ -661,11 +661,11 @@ export function updateProductCustomsClearanceStatus(params: IUpdateProductCustom
 /**
  * @description 获取货物渠道列表
  */
-export function getMerchandiseList(params: IGetMerchandiseListReq): Promise<IGetMerchandiseListRes> {
+export function getMerchandiseList(data: IGetMerchandiseListReq): Promise<IGetMerchandiseListRes> {
   return request({
     url: `${BASE_API}/merchandise/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**

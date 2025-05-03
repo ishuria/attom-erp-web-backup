@@ -280,11 +280,11 @@ export function updateReductionCostTask(data: IUpdateReductionCostTaskReq): Prom
 /**
  * @description 提成明细-美工图片任务列表查询
  */
-export function getCommissionDetailPictureList(params: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailPictureListRes> {
+export function getCommissionDetailPictureList(data: IGetCommissionDetailPictureListReq): Promise<IGetCommissionDetailPictureListRes> {
   return request({
     url: `${BASE_API}/commission/task/detail/picture/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -300,11 +300,11 @@ export function getCommissionDetailLongList(data: IGetCommissionDetailPictureLis
 /**
  * @description 产品开发设计提成任务明细-获取列表
  */
-export function getCommissionDetailDevelopList(params: IGetCommissionDetailDevelopListReq): Promise<IGetCommissionDetailDevelopListRes> {
+export function getCommissionDetailDevelopList(data: IGetCommissionDetailDevelopListReq): Promise<IGetCommissionDetailDevelopListRes> {
   return request({
     url: `${BASE_API}/develop/design/task/detail/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
