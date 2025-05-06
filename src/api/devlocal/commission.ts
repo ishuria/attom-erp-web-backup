@@ -100,11 +100,11 @@ export function updateCommissionSetting2(data: { id: number, targetRate: number 
 /**
  * @description 提成任务-美工图片任务列表查询
  */
-export function getCommissionTaskPictureList(params: IGetCommissionTaskPictureListReq): Promise<IGetCommissionTaskPictureListRes> {
+export function getCommissionTaskPictureList(data: IGetCommissionTaskPictureListReq): Promise<IGetCommissionTaskPictureListRes> {
   return request({
     url: `${BASE_API}/commission/task/picture/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -140,11 +140,11 @@ export function updateCommissionTaskPicture(data: IUpdateCommissionTaskPictureRe
 /**
  * @description 提成任务-美工长期列表查询
  */
-export function getLongCommissionTaskList(params: IGetLongCommissionTaskListReq): Promise<IGetLongCommissionTaskListRes> {
+export function getLongCommissionTaskList(data: IGetLongCommissionTaskListReq): Promise<IGetLongCommissionTaskListRes> {
   return request({
     url: `${BASE_API}/long/commission/task/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -180,11 +180,11 @@ export function pauseLongCommissionTask(params: { id: number }): Promise<{ data:
 /**
  * @description 产品开发设计提成任务-列表查询
  */
-export function getDevelopDesignTaskList(params: IGetLongCommissionTaskListReq): Promise<IGetDevelopDesignTaskListRes> {
+export function getDevelopDesignTaskList(data: IGetLongCommissionTaskListReq): Promise<IGetDevelopDesignTaskListRes> {
   return request({
     url: `${BASE_API}/develop/design/task/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -220,11 +220,11 @@ export function updateDevelopDesignTask(data: IUpdateDevelopDesignTaskReq): Prom
 /**
  * @description 采购降本提成任务-列表获取
  */
-export function getReductionCostList(params: IGetLongCommissionTaskListReq): Promise<IGetReductionCostListRes> {
+export function getReductionCostList(data: IGetLongCommissionTaskListReq): Promise<IGetReductionCostListRes> {
   return request({
     url: `${BASE_API}/cost/reduction/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**

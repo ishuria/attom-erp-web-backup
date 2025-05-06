@@ -15,19 +15,21 @@
           </vab-query-form-top-panel>
           <vab-query-form-left-panel>
             <el-form inline>
-              <el-form-item label="人员">
-                <el-select v-model="queryForm.userId" placeholder="请选择人员" @change="queryData">
-                  <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="站点">
-                <el-select v-model="queryForm.site" placeholder="请选择站点" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
+              <template  v-if="currentRoleCode === ROLE_BOSS_CODE">
+                <el-form-item label="人员">
+                  <el-select v-model="queryForm.userId" placeholder="请选择人员" @change="queryData">
+                    <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="站点">
+                  <el-select v-model="queryForm.site" placeholder="请选择站点" @change="queryData">
+                    <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+              </template>
               <el-form-item label="发放月份">
                 <el-select v-model="queryForm.month" placeholder="请选择发放月份" @change="queryData" >
-                  <el-option 
+                  <el-option
                     v-for="item in monthOption"
                     :key="item.id"
                     :label="item.label"
@@ -172,19 +174,21 @@
           </vab-query-form-top-panel>
           <vab-query-form-left-panel>
             <el-form inline>
-              <el-form-item label="人员">
-                <el-select v-model="longQueryForm.userId" placeholder="请选择人员" @change="longQueryData">
-                  <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="站点">
-                <el-select v-model="longQueryForm.site" placeholder="请选择站点" @change="longQueryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
+             <template   v-if="currentRoleCode === ROLE_BOSS_CODE">
+               <el-form-item label="人员">
+                 <el-select v-model="longQueryForm.userId" placeholder="请选择人员" @change="longQueryData">
+                   <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+                 </el-select>
+               </el-form-item>
+               <el-form-item label="站点">
+                 <el-select v-model="longQueryForm.site" placeholder="请选择站点" @change="longQueryData">
+                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                 </el-select>
+               </el-form-item>
+             </template>
               <el-form-item label="发放月份">
                 <el-select v-model="longQueryForm.month" placeholder="请选择发放月份" @change="longQueryData" >
-                  <el-option 
+                  <el-option
                     v-for="item in monthOption"
                     :key="item.id"
                     :label="item.label"
@@ -307,19 +311,21 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
-              <el-form-item label="人员">
-                <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
-                  <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="站点">
-                <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
+              <template  v-if="currentRoleCode === ROLE_BOSS_CODE">
+                <el-form-item label="人员">
+                  <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
+                    <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="站点">
+                  <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
+                    <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+              </template>
               <el-form-item label="发放月份">
                 <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData" >
-                  <el-option 
+                  <el-option
                     v-for="item in monthOption"
                     :key="item.id"
                     :label="item.label"
@@ -487,6 +493,8 @@ import type {
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { useAclStore } from '/@/store/modules/acl'
+import {ROLE_BOSS_CODE} from '/@/const/role.ts'
 
 defineOptions({
   name: 'CommissionDetails',
@@ -494,6 +502,7 @@ defineOptions({
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
+const currentRoleCode = useAclStore().getRole[0];
 const option = ref<any>({})
 const data1 = ref<any[]>([
   { value: 300.57, name: '亚马逊UK英国' },
