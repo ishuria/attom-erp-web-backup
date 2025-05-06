@@ -126,6 +126,7 @@ const save = () => {
           password: form.password,
           roleCode: form.roleCode,
           status: form.status,
+          email: form.email,
           currentYearSickLeave: form.currentYearSickLeave,
           nextYearSickLeave: form.nextYearSickLeave,
           currentYearAnnualLeave: form.currentYearAnnualLeave,

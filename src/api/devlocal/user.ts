@@ -4,11 +4,11 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type { IAddParams, IEditParams, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
 
-export function getList(params?: IUserQueryReq) {
+export function getList(data?: IUserQueryReq) {
   return request({
     url: `${BASE_API}/user/getList`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 

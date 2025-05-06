@@ -65,6 +65,7 @@ export interface IEditParams {
     password: string
     roleCode: string
     status: string
+    email: string
     currentYearSickLeave: number | null
     nextYearSickLeave: number | null
     currentYearAnnualLeave: number | null

@@ -819,17 +819,6 @@ const fetchData = async () => {
   if (data) {
     total.value = data.total
     list.value = data.list
-    list.value.forEach((item) => {
-      if (item.cooperationProportion) {
-        item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
-      }
-      if (item.avgConversionRate) {
-        item.avgConversionRate = parseFloat((item.avgConversionRate * 100).toFixed(2))
-      }
-      if (item.lowRate) {
-        item.lowRate = parseFloat((item.lowRate * 100).toFixed(2))
-      }
-    })
   }
   listLoading.value = false
 }
