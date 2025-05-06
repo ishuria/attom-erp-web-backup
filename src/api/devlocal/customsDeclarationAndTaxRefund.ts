@@ -598,11 +598,11 @@ export const finishTaxRefundInvoice = (data: string[]): Promise<IFinishTaxRefund
 /**
  * @description 退税管理 - 发票列表查询
  */
-export const getTaxRefundInvoiceList = (params: IGetTaxRefundInvoiceListQuery): Promise<IGetTaxRefundInvoiceListRes> => {
+export const getTaxRefundInvoiceList = (data: IGetTaxRefundInvoiceListQuery): Promise<IGetTaxRefundInvoiceListRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -628,11 +628,11 @@ export const deleteTaxRefundInvoice = (params: IId): Promise<IBooleanRes> => {
 /**
  * @description 退税管理-匹配
  */
-export const getTaxRefundInvoiceMatch = (params: IGetTaxRefundInvoiceMatchQuery): Promise<IGetTaxRefundInvoiceMatchRes> => {
+export const getTaxRefundInvoiceMatch = (data: IGetTaxRefundInvoiceMatchQuery): Promise<IGetTaxRefundInvoiceMatchRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/match`,
     method: 'post',
-    params
+    data
   })
 }
 /**

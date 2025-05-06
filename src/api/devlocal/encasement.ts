@@ -326,11 +326,11 @@ export const getChannelList = (): Promise<IGetChannelListRes> => {
 /**
  * @description 已发货装箱列表查询列表查询
  */
-export const getShippedEncasementList = (params: IGetEncasementListReq): Promise<IGetShippedEncasementListRes> => {
+export const getShippedEncasementList = (data: IGetEncasementListReq): Promise<IGetShippedEncasementListRes> => {
   return request({
     url: `${BASE_API}/shipment/encasement/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
@@ -580,8 +580,8 @@ export const printBarcodeEncasementSuccess = (data: any) => {
 }
 /**
  * @description 发货（亚马逊）-前置检查check
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const checkEncasementShipment = (data: { encasementIds: string }): Promise<{ data: { siteId: number, siteName: string }}> => {
   return request({
@@ -593,8 +593,8 @@ export const checkEncasementShipment = (data: { encasementIds: string }): Promis
 
 /**
  * @description 装箱-修改页面-修改装箱明细数量
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const updateEncasementDetailCount = (data: { encasementDetailId: number, count: number }): Promise<{ data: boolean }> => {
   return request({
@@ -634,8 +634,8 @@ export const getChannelSiteList = (): Promise<{ data: IGetChannelSiteList[] }> =
 }
 /**
  * 站点货代渠道修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const updateChannelSiteList = (data: { id: number, channelId: number}): Promise<{ data: boolean}> => {
   return request({

@@ -193,7 +193,7 @@
     </template>
   </vab-dialog>
   <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" title="匹配" width="80%">
+  <vab-dialog v-model="matchVisible" title="匹配" width="80%" :draggable="false">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
@@ -235,7 +235,7 @@
       <el-table-column label="shipment ID" min-width="120" prop="shipmentId" />
       <el-table-column label="匹配" min-width="80" prop="status">
         <template #default="{ row }">
-          <el-radio v-model="matchStatus" class="custom-radio" :label="row.id" size="large">{{ '' }}</el-radio>
+          <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
     </el-table>
@@ -317,7 +317,7 @@ const uploadInvoiceVisible = ref<boolean>(false)
 const fileList = ref<any[]>([])
 
 const handleRowClick = (row: any, column: any, event: Event) => {
-  matchStatus.value = row.id
+  matchStatus.value = row.uniqId
 }
 // 展示上传发票
 const showUploadInvoice = () => {
@@ -416,14 +416,20 @@ const handleConfirm = async () => {
     $baseMessage('请选择匹配项','warning')
     return
   }
+
+  // 勾选匹配的value
+  const matchedItem = matchList.value.find(
+    (item: IGetTaxRefundInvoiceMatchList) => item.uniqId === matchStatus.value
+  );
+
   const { data } = await submitTaxRefundInvoiceMatch({
-    id: matchStatus.value,
+    id: matchedItem!.id,
     detailId: matchQueryForm.detailId,
   })
   if (data) {
     $baseMessage('提交成功！', 'success')
     matchVisible.value = false
-    fetchData()
+    await fetchData()
   }
 }
 const handleSubmitConfirm = async () => {
@@ -562,29 +568,29 @@ const handleSizeChange = (value: number) => {
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   switch (label) {
-    case '购方名称': 
-    case '发票代码': 
-    case '发票号码': 
+    case '购方名称':
+    case '发票代码':
+    case '发票号码':
     case '供应商': {
       return {
         textAlign: 'left',
         cursor: 'pointer',
       }
     }
-    case '开票品名': 
-    case '规格型号': 
-    case '发票数量': 
-    case '发票单位': 
-    case '发票含税金额': 
+    case '开票品名':
+    case '规格型号':
+    case '发票数量':
+    case '发票单位':
+    case '发票含税金额':
     case '发票未税金额': {
       return {
         textAlign: 'center',
         cursor: 'pointer',
       }
     }
-    case '匹配合同号': 
-    case '匹配PO': 
-    case '报关数量': 
+    case '匹配合同号':
+    case '匹配PO':
+    case '报关数量':
     case '报关单位': {
       return {
         textAlign: 'center',

@@ -255,6 +255,11 @@ export interface IGetTaxRefundInvoiceMatchRes {
 }
 
 export interface IGetTaxRefundInvoiceMatchList {
+
+  /**
+   * 唯一id
+   */
+  uniqId:number
   /**
    * cif价格
    */
@@ -282,7 +287,7 @@ export interface IGetTaxRefundInvoiceMatchList {
   /**
    * 主键id
    */
-  id?: number;
+  id: number;
   /**
    * 发票数量
    */
