@@ -374,6 +374,7 @@ export interface IGetCommissionDetailPictureListRes {
   data?: {
     list: IGetCommissionDetailPictureList[]
     total: number
+    bonus: number
   }
 }
 
@@ -475,6 +476,7 @@ export interface IGetCommissionDetailLongListRes {
   data?: {
     list: IGetCommissionDetailLongList[]
     total: number
+    bonus: number
   }
 }
 
@@ -560,6 +562,7 @@ export interface IGetCommissionDetailDevelopListRes {
   data?: {
     list: IGetCommissionDetailDevelopList[]
     total: number
+    bonus: number
   }
 }
 

@@ -36,7 +36,14 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" prop="userName" :width="flexColumnWidth(list, '人员', 'userName')" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
@@ -123,7 +130,14 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" prop="userName" :width="flexColumnWidth(longList, '人员', 'userName')" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku')" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
@@ -196,7 +210,14 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" min-width="120" prop="userName" />
-          <el-table-column label="SKU" min-width="200" prop="sku" />
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
@@ -269,8 +290,14 @@
               <el-tag v-if="row.status === '待审核'" type="primary">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku')" />
-
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku', 50)" >
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(costList, '零件名', 'componentName')" />
           <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(costList, '供应商', 'suppliserName')" />
           <el-table-column label="优化前成本￥" min-width="110" prop="optimizationBefore">
@@ -429,6 +456,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import {
   continueCommissionTaskPicture,
   continueDevelopDesignTask,
@@ -992,6 +1020,15 @@ onBeforeMount(() => {
         }
       }
     }
+  }
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
   }
 }
 </style>

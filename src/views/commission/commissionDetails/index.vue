@@ -39,7 +39,7 @@
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px">提成总金额：</el-text>
-                <el-text type="success">234.56元</el-text>
+                <el-text type="success">{{ bonus }}元</el-text>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
@@ -86,10 +86,12 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
             <template #default="{ row }">
-              {{ row.sku }}
-              <br />
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
               {{ row.desc }}
             </template>
           </el-table-column>
@@ -198,7 +200,7 @@
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px">提成总金额：</el-text>
-                <el-text type="success">234.56元</el-text>
+                <el-text type="success">{{ bonus }}元</el-text>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
@@ -245,10 +247,12 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)" >
             <template #default="{ row }">
-              {{ row.sku }}
-              <br />
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
               {{ row.desc }}
             </template>
           </el-table-column>
@@ -334,8 +338,8 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px">提成金额：</el-text>
-                <el-text type="success">{{ amount3.toFixed(2) }}元</el-text>
+                <el-text style="margin-left: 10px">提成总金额：</el-text>
+                <el-text type="success">{{ bonus }}元</el-text>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
@@ -382,10 +386,12 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)" >
             <template #default="{ row }">
-              {{ row.sku }}
-              <br />
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span><br />
               {{ row.desc }}
             </template>
           </el-table-column>
@@ -480,6 +486,7 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getCommissionTypeMonth, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
@@ -522,8 +529,6 @@ const data1 = ref<any[]>([
   // { value: 100.3, name: '亚马逊BE比利时' },
 ])
 const sitePieVisible = ref<boolean>(false)
-
-const amount3 = ref<number>(0)
 
 const list = ref<IGetCommissionDetailPictureList[]>([])
 const longList = ref<IGetCommissionDetailLongList[]>([])
@@ -813,12 +818,14 @@ const fetchUserList = async () => {
   userList.value = data
   userList.value.unshift({ id: -1, label: '全部' })
 }
+const bonus = ref<number>(0)
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getCommissionDetailPictureList(queryForm)
   if (data) {
     total.value = data.total
     list.value = data.list
+    bonus.value = data.bonus
   }
   listLoading.value = false
 }
@@ -828,6 +835,7 @@ const fetchLongData = async () => {
   if (data) {
     total.value = data.total
     longList.value = data.list
+    bonus.value = data.bonus
     longList.value.forEach((item) => {
       if (item.cooperationProportion) {
         item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
@@ -840,13 +848,10 @@ const fetchDevelopData = async () => {
   listLoading.value = true
   const { data } = await getCommissionDetailDevelopList(developQueryForm)
   if (data) {
-    amount3.value = 0
     total.value = data.total
     developList.value = data.list
+    bonus.value = data.bonus
     developList.value.forEach((item) => {
-      if (item.currentMonthBonus) {
-        amount3.value += item.currentMonthBonus
-      }
       if (item.totalCommissionProportion) {
         item.totalCommissionProportion = parseFloat((item.totalCommissionProportion * 100).toFixed(2))
       }
@@ -873,23 +878,22 @@ const monthOption = ref<{ id: number, label: string }[]>([])
 const fetchCommissionTypeMonth = async () => {
   const { data } = await getCommissionTypeMonth({ type: activeName.value })
   monthOption.value = data
+  const now = new Date()
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   switch(activeName.value) {
     case 0: {
-      if (monthOption.value.length > 0) {
-        queryForm.month = monthOption.value[0].label
-      }
+      queryForm.month = currentMonth
+      
       break
     }
     case 1: {
-      if (monthOption.value.length > 0) {
-        longQueryForm.month = monthOption.value[0].label
-      }
+      longQueryForm.month = currentMonth
+      
       break
     }
     case 2: {
-      if (monthOption.value.length > 0) {
-        developQueryForm.month = monthOption.value[0].label
-      }
+      developQueryForm.month = currentMonth
+      
       break
     }
   }
@@ -965,6 +969,15 @@ onBeforeMount(async () => {
         }
       }
     }
+  }
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
   }
 }
 </style>
