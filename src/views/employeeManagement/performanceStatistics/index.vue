@@ -27,7 +27,7 @@
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month"/>
             <el-table-column label="姓名" min-width="100" prop="userName"/>
-            <el-table-column label="角色" min-width="120" prop="roleName"/>
+            <el-table-column label="角色" prop="roleName" :width="flexColumnWidth(list, '角色', 'roleName')"/>
           </el-table-column>
           <el-table-column label="加班和请假">
             <el-table-column min-width="100" prop="packageDuration">
@@ -269,6 +269,7 @@ import type { CSSProperties } from 'vue'
 import { getAssessmentList, getProductManagerAssessmentList, getUserAttendanceList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
 import type { IGetAssessmentList, IGetAssessmentListReq, IGetProductManagerAssessmentList, IGetUserAttendanceList } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 
 defineOptions({
   name: 'PerformanceStatistics'
