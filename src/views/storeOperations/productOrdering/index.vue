@@ -57,8 +57,9 @@
       v-loading="listLoading"
       border
       :cell-class-name="clearPadding" 
-      :cell-style="cellStyle" 
-      class="noneHoverTable" :data="list" :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }"
+      :cell-style="cellStyle"
+      class="noneHoverTable" 
+      :data="list" :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }" :header-cell-class-name="headerStyle"
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       @row-click="handleRowClick"
@@ -88,6 +89,9 @@
                 <div class="custom-tooltip" >月广告销售占比</div>
               </template>
             </el-tooltip>
+          </span>
+          <span v-if="item.label === '原始今补'">
+            原始<br />今补
           </span>
         </template>
         <template #default="{ row }">
@@ -673,7 +677,7 @@ const handleWidth = (item: any) => {
       return calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
     }
     case '库存可售': {
-      return flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 30)
+      return flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 40)
     }
     case '可售含在途': {
       return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 30)
@@ -683,6 +687,23 @@ const handleWidth = (item: any) => {
     }
     case '站点': {
       return flexColumnWidth(list.value, '站点', 'siteName'); // 处理运营分类列
+    }
+    case '今补': {
+      return flexColumnWidth(list.value, '今补', 'nowSupplementCalcu'); 
+    }
+    case '月销售额': {
+      return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 40); 
+    }
+    case '月净利润': {
+      return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40); 
+    }
+    case '剩余库存': {
+      const inventoryWidth = Number(flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0).replace('px', ''));
+      const fbaWidth = Number(flexColumnWidth(list.value, '/', 'fbaCount', 10).replace('px', ''));
+      return `${inventoryWidth + fbaWidth}px`;
+    }
+    case '原始今补': {
+      return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement'); 
     }
     default: {
       return item.minWidth
@@ -742,6 +763,12 @@ const handleSizeChange = (value: number) => {
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
+  } 
+  return ''
+}
+const headerStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+if (data.column.label === '原始今补') {
+    return 'column_caret'
   }
   return ''
 }
@@ -751,7 +778,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     return {
       textAlign: 'left',
     }
-  } else {
+  } else if (label === '剩余库存') {
+    return {
+      textAlign: 'right',
+    }
+  } 
+  else {
     return {
       textAlign: 'center',
     }
@@ -967,5 +999,10 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+:deep(.column_caret .cell) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

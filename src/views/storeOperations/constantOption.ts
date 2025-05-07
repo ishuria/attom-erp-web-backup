@@ -346,7 +346,7 @@ export const orderColumns = [
   {
     label: 'VOC满意度',
     prop: 'vocSatisfaction',
-    minWidth: 120,
+    minWidth: 130,
   },
   {
     label: '月退货%',
@@ -356,7 +356,7 @@ export const orderColumns = [
   {
     label: '操作',
     prop: '',
-    minWidth: 120,
+    minWidth: 130,
   },
   {
     label: '当前售价',
@@ -391,7 +391,7 @@ export const orderColumns = [
   {
     label: '半年有货率',
     prop: 'availableRate',
-    minWidth: 105,
+    minWidth: 110,
   },
   {
     label: '月广告%',
@@ -406,7 +406,7 @@ export const orderColumns = [
   {
     label: '月TACOS',
     prop: 'monthTacos',
-    minWidth: 95,
+    minWidth: 100,
   },
   {
     label: 'SKU',
@@ -421,7 +421,7 @@ export const orderColumns = [
   {
     label: '运营',
     prop: 'operationUserName',
-    minWidth: 75,
+    minWidth: 85,
   },
   {
     label: '今补广',
