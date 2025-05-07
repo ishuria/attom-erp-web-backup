@@ -114,7 +114,7 @@
           <el-table-column label="站点分布" min-width="100" prop="">
             <template #default="{ row }">
               <div style="width: 100%; height: 60px">
-                <vab-echarts-chart-pie :data="row.pieList" />
+                <vab-commission-chart-pie :data="row.pieList" />
               </div>
             </template>
           </el-table-column>
@@ -280,7 +280,7 @@
           <el-table-column label="站点分布" min-width="100" prop="">
             <template #default="{ row }">
               <div style="width: 100%; height: 60px">
-                <vab-echarts-chart-pie :data="row.pieList" />
+                <vab-commission-chart-pie :data="row.pieList" />
               </div>
             </template>
           </el-table-column>
@@ -425,7 +425,7 @@
           <el-table-column label="站点分布" min-width="130" prop="">
             <template #default="{ row }">
               <div style="width: 100%; height: 60px">
-                <vab-echarts-chart-pie :data="row.pieList" />
+                <vab-commission-chart-pie :data="row.pieList" />
               </div>
             </template>
           </el-table-column>
@@ -508,6 +508,7 @@ import type {
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { colorList, redColorList } from '/@/views/commission/constantOption'
 
 defineOptions({
   name: 'CommissionDetails',
@@ -591,7 +592,7 @@ const initChart = () => {
         itemHtmlStrArr = `<div style="display: flex;align-items:center;">
           ${params.marker}
           <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">奖金: </div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">￥${params.data.value} | ${params.percent}%</span>
+          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">￥${params.data.trueValue} | ${params.percent}%</span>
         </div>`
 
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
@@ -634,7 +635,7 @@ const initChart = () => {
             // const sortedData = params.seriesData
             //   .sort((a: any, b: any) => b.value - a.value) // 排序
             //   .slice(0, 3); // 获取前 3 项
-            return `{a|${data.name}}\n{x|￥${data.value} | ${percent}% }`
+            return `{a|${data.name}}\n{x|￥${data.trueValue} | ${percent}% }`
           },
 
           rich: {
@@ -663,24 +664,7 @@ const initChart = () => {
           }
         },
         data: pieList.value,
-        color: [
-          '#62d9ad', // 青绿色
-          '#00aeef', // 天蓝色
-          '#ffdc4c', // 金黄色
-          '#e65a56', // 珊瑚红
-          '#ffa500', // 橙色
-          '#20c997', // 翠绿色
-          '#f94d50', // 鲜红色
-          '#0088cc', // 深天蓝色
-          '#ffcc33', // 明黄色
-          '#66cdaa', // 中青绿色
-          '#d9534f', // 番茄红
-          '#33b5e5', // 浅蓝色
-          '#ffc107', // 柠檬黄
-          '#3cb371', // 春绿色
-          '#dc3545', // 枸杞红
-          '#5bc0de'  // 宝石蓝
-        ],
+        color: colorList
       },
     ],
   }
@@ -831,6 +815,22 @@ const fetchData = async () => {
     total.value = data.total
     list.value = data.list
     bonus.value = data.bonus
+    list.value.forEach((item) => {
+      item.pieList = item.pieList.map((item: any, index: number) => {
+        const trueValue = item.value
+        const itemStyle = { color: colorList[index] }
+        if (item.value < 0) {
+          item.value = Math.abs(item.value)
+          itemStyle.color = redColorList[index]
+        }
+        return {
+          name: item.name,
+          value: item.value,
+          trueValue,
+          itemStyle,
+        }
+      })
+    })
   }
   listLoading.value = false
 }
@@ -845,10 +845,25 @@ const fetchLongData = async () => {
       if (item.cooperationProportion) {
         item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
       }
+      item.pieList = item.pieList.map((item: any, index: number) => {
+        const trueValue = item.value
+        const itemStyle = { color: colorList[index] }
+        if (item.value < 0) {
+          item.value = Math.abs(item.value)
+          itemStyle.color = redColorList[index]
+        }
+        return {
+          name: item.name,
+          value: item.value,
+          trueValue,
+          itemStyle,
+        }
+      })
     })
   }
   listLoading.value = false
 }
+
 const fetchDevelopData = async () => {
   listLoading.value = true
   const { data } = await getCommissionDetailDevelopList(developQueryForm)
@@ -857,6 +872,7 @@ const fetchDevelopData = async () => {
     developList.value = data.list
     bonus.value = data.bonus
     developList.value.forEach((item) => {
+      let i = 0
       if (item.totalCommissionProportion) {
         item.totalCommissionProportion = parseFloat((item.totalCommissionProportion * 100).toFixed(2))
       }
@@ -869,6 +885,23 @@ const fetchDevelopData = async () => {
       if (item.monthProfitMargin) {
         item.monthProfitMargin = parseFloat((item.monthProfitMargin * 100).toFixed(2))
       }
+      
+      item.pieList = item.pieList.map((item: any, index: number) => {
+        const trueValue = item.value
+        const itemStyle = { color: colorList[index] }
+        if (item.value < 0) {
+          item.value = Math.abs(item.value)
+          itemStyle.color = redColorList[i]
+          i++
+        }
+        return {
+          name: item.name,
+          value: item.value,
+          trueValue,
+          itemStyle,
+        }
+      })
+  
     })
   }
   listLoading.value = false

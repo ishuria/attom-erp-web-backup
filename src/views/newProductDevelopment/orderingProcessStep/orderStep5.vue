@@ -201,7 +201,7 @@ const remotePeopleMethod = async (query: string) => {
 const handleUpdateOEM = async (row: any, prop: string) => {
   if (exchangeList.value[3][prop] === 1 && row[prop] === 1) { // o 1 g 1 
       row[prop] = 0
-      $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+      $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
       return
   }
   handlePackingUpdate(row, prop)
@@ -209,7 +209,7 @@ const handleUpdateOEM = async (row: any, prop: string) => {
 const handleUpdateGraphicDesign = async (row: any, prop: string) => {
   if (exchangeList.value[2][prop] === 1 && row[prop] === 1) { // o 1 g 1 
       row[prop] = 0
-      $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
+      $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
       return
   }
   handlePackingUpdate(row, prop)
@@ -756,7 +756,9 @@ const fetchVariantList = async () => {
         // 如果新的table里面的产品经理存在,就是新的; 如果不存在,就是默认的
         item.productManager = defaultProductManager
         item.productManagerId = defaultProductManagerId
-        item.sampleRetention = item.sampleRetention.split(',').map(Number)
+        
+        item.sampleRetention = item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number)
+        
       } else {
         return {
           column0: '',
@@ -773,7 +775,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
-          sampleRetention: item.sampleRetention.split(',').map(Number),
+          sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,

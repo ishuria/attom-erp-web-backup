@@ -8,7 +8,7 @@
 import { colorList } from '/@/views/commission/constantOption'
 
 defineOptions({
-  name: 'VabEchartsChartPie',
+  name: 'VabCommissionChartPie',
 })
   
 const props = defineProps({
@@ -22,7 +22,14 @@ const option = reactive<any>({
   tooltip: {
     show: true,
     confine: true,
-    formatter: '{c}',
+    // formatter: '{c}',
+    formatter: (params: any) => {
+        const contentHtmlStr = `<div>
+          ￥${params.data.trueValue}
+        </div>`
+
+        return contentHtmlStr
+      },
     textStyle: {
       fontSize: 14, // 设置字体大小
     },
@@ -42,6 +49,7 @@ const option = reactive<any>({
       },
       stillShowZeroSum: false,
       data: props.data,
+     
       // color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
       color: colorList,
     },

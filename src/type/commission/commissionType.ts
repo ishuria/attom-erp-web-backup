@@ -471,6 +471,7 @@ export interface IGetCommissionDetailPictureList {
    * 用户名
    */
   userName?: string
+  pieList: any[]
 }
 export interface IGetCommissionDetailLongListRes {
   data?: {
@@ -549,6 +550,7 @@ export interface IGetCommissionDetailLongList {
    * 用户名
    */
   userName?: string
+  pieList: any[]
 }
 export interface IGetCommissionDetailDevelopListReq {
   keyWord: string
@@ -647,6 +649,7 @@ export interface IGetCommissionDetailDevelopList {
    * 用户名
    */
   userName?: string
+  pieList: any[]
 }
 export interface IGetReductionCostDetailListReq {
   keyWord: string
