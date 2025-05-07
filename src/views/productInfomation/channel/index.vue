@@ -253,7 +253,7 @@ const handleConfirmModify = async () => {
       if (data) {
         $baseMessage('批量修改货物类别成功！', 'success')
         modifyVisible.value = false
-        fetchData()
+        await fetchData()
       }
     } else {
       $baseMessage('请先选择货物名', 'error')
@@ -267,7 +267,7 @@ const handleConfirmModify = async () => {
     if (data) {
       $baseMessage('修改货物类别成功！', 'success')
       modifyVisible.value = false
-      fetchData()
+      await fetchData()
     }
   }
 }
@@ -307,7 +307,7 @@ const handleUpdateModifySetUp = async () => {
       $baseMessage('批量修改渠道成功！', 'success')
       setUpModifyVisible.value = false
       fetchSetUpData()
-      fetchData()
+      await fetchData()
     }
   } else {
     const { data } = await updateMerchandise({
@@ -318,7 +318,7 @@ const handleUpdateModifySetUp = async () => {
       $baseMessage('修改渠道成功! ', 'success')
       setUpModifyVisible.value = false
       fetchSetUpData()
-      fetchData()
+      await fetchData()
     }
   }
   
