@@ -2502,6 +2502,7 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
@@ -2510,11 +2511,12 @@ const queryAsinData = () => {
   fetchAsinData()
 }
 const handleAsinCurrentChange = (value: number) => {
-  queryForm.pageNo = value
+  asinQueryForm.pageNo = value
   fetchAsinData()
 }
 const handleAsinSizeChange = (value: number) => {
-  queryForm.pageSize = value
+  asinQueryForm.pageNo = 1
+  asinQueryForm.pageSize = value
   fetchAsinData()
 }
 const queryPAsinData = () => {
@@ -2526,6 +2528,7 @@ const handlePAsinCurrentChange = (value: number) => {
   fetchPAsinData()
 }
 const handlePAsinSizeChange = (value: number) => {
+  pAsinQueryForm.pageNo = 1
   pAsinQueryForm.pageSize = value
   fetchPAsinData()
 }
