@@ -484,6 +484,8 @@ import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommiss
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { ROLE_BOSS_CODE } from '/@/const/role.ts'
+import { useAclStore } from '/@/store/modules/acl'
 import type {
   IGetCommissionDetailDevelopList,
   IGetCommissionDetailDevelopListReq,
@@ -493,8 +495,6 @@ import type {
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { useAclStore } from '/@/store/modules/acl'
-import {ROLE_BOSS_CODE} from '/@/const/role.ts'
 
 defineOptions({
   name: 'CommissionDetails',
@@ -875,15 +875,21 @@ const fetchCommissionTypeMonth = async () => {
   monthOption.value = data
   switch(activeName.value) {
     case 0: {
-      queryForm.month = monthOption.value[0].label
+      if (monthOption.value.length > 0) {
+        queryForm.month = monthOption.value[0].label
+      }
       break
     }
     case 1: {
-      longQueryForm.month = monthOption.value[0].label
+      if (monthOption.value.length > 0) {
+        longQueryForm.month = monthOption.value[0].label
+      }
       break
     }
     case 2: {
-      developQueryForm.month = monthOption.value[0].label
+      if (monthOption.value.length > 0) {
+        developQueryForm.month = monthOption.value[0].label
+      }
       break
     }
   }

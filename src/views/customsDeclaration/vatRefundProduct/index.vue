@@ -67,7 +67,7 @@
             </template>
           </el-table-column>
           <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
-          <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName">
+          <el-table-column label="报关品名" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName')">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.customsDeclarationName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -586,6 +586,7 @@ const handleDeleteMatch = async (row: IGetTaxRefundBatchDetailList) => {
 const ticketReminderVisible = ref<boolean>(false)
 type ITicketReminderForm = {
   dateRange: [string, string]
+  shipmentDate: [string, string]
   suppliser: string
 }
 const ticketReminderForm = reactive<ITicketReminderForm>({
@@ -610,6 +611,8 @@ const handleConfirmTicketReminder = async () => {
           fromDate: ticketReminderForm.dateRange[0],
           toDate: ticketReminderForm.dateRange[1],
           suppliser: ticketReminderForm.suppliser,
+          startDate: ticketReminderForm.shipmentDate[0],
+          endDate: ticketReminderForm.shipmentDate[1],
         })
 
         // 如果返回的是 JSON 类型，说明可能是错误信息
@@ -736,7 +739,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       cursor: 'not-allowed',
       textAlign: 'left',
     }
-  } else if (label !== '报关品名' && label !== '报关数量' && label !== '报关单位') {
+  } else if (label === '报关品名') {
+    return {
+      cursor: 'pointer',
+      textAlign: 'left',
+    }
+  } else if (label !== '报关数量' && label !== '报关单位') {
     return {
       cursor: 'not-allowed',
       textAlign: 'center',

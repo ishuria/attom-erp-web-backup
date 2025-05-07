@@ -39,7 +39,7 @@
       <el-table-column label="SKU" prop="sku" />
       <el-table-column label="供应商" prop="suppliser" />
       <el-table-column label="零件名" prop="componentName" />
-      <el-table-column label="添加数量" prop="count" width="130">
+      <el-table-column label="单个SKU添加数量" prop="count" width="160">
         <template #default="{ row }">
             <el-input v-model="row.count" clearable />
         </template>
