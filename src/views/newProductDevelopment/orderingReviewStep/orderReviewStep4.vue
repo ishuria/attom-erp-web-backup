@@ -197,6 +197,8 @@ const handleSaveAndContinue = async () => {
     })
   } catch {
     releasePoLoading.value = false
+  } finally {
+    releasePoLoading.value = false
   }
 }
 const siteQuantityList = ref<any[]>([])

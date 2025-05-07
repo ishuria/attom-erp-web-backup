@@ -40,6 +40,7 @@ const option = reactive<any>({
       label: {
         show: false,
       },
+      stillShowZeroSum: false,
       data: props.data,
       // color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
       color: [
@@ -64,6 +65,13 @@ const option = reactive<any>({
   ],
 })
 
+watch(
+  () => [props.data],
+  () => {
+      option.series[0].data = props.data
+  },
+  { immediate: true },
+)
 </script>
 
 

@@ -112,9 +112,11 @@
             </template>
           </el-table-column>
           <el-table-column label="站点分布" min-width="100" prop="">
-            <div style="width: 100%; height: 60px">
-              <vab-echarts-chart-pie :data="data1" />
-            </div>
+            <template #default="{ row }">
+              <div style="width: 100%; height: 60px">
+                <vab-echarts-chart-pie :data="row.pieList" />
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="提成开始日期" min-width="130" prop="startDate">
             <template #default="{ row }">
@@ -276,9 +278,11 @@
             </template>
           </el-table-column>
           <el-table-column label="站点分布" min-width="100" prop="">
-            <div style="width: 100%; height: 60px">
-              <vab-echarts-chart-pie :data="data1" />
-            </div>
+            <template #default="{ row }">
+              <div style="width: 100%; height: 60px">
+                <vab-echarts-chart-pie :data="row.pieList" />
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="提成开始日期" min-width="130" prop="startDate">
             <template #default="{ row }">
@@ -419,9 +423,11 @@
             </template>
           </el-table-column>
           <el-table-column label="站点分布" min-width="130" prop="">
-            <div style="width: 100%; height: 60px">
-              <vab-echarts-chart-pie :data="data1" />
-            </div>
+            <template #default="{ row }">
+              <div style="width: 100%; height: 60px">
+                <vab-echarts-chart-pie :data="row.pieList" />
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="总提成比例" min-width="120" prop="totalCommissionProportion">
             <template #default="{ row }">
@@ -474,7 +480,7 @@
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 站点分布 -->
-    <vab-dialog v-model="sitePieVisible" :title="`${'2024年1月'}各站点奖金占比`" width="30%" @open="handlePieOpened">
+    <vab-dialog v-model="sitePieVisible" :draggable="false" :title="`${handleMonth()}各站点奖金占比`" width="30%" @open="handlePieOpened">
       <div ref="chartContainer" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
@@ -486,7 +492,6 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
 import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getCommissionTypeMonth, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
@@ -500,6 +505,7 @@ import type {
   IGetCommissionDetailPictureList,
   IGetCommissionDetailPictureListReq,
 } from '/@/type/commission/commissionType'
+import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -511,23 +517,7 @@ let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
 const currentRoleCode = useAclStore().getRole[0];
 const option = ref<any>({})
-const data1 = ref<any[]>([
-  { value: 300.57, name: '亚马逊UK英国' },
-  { value: 211.02, name: '亚马逊US美国' },
-  { value: 83.31, name: '亚马逊CA加拿大' },
-  { value: 50.31, name: '沃尔玛US美国' },
-  { value: 40.3, name: '亚马逊BR巴西' },
-  { value: 30.3, name: '亚马逊MX墨西哥' },
-  { value: 21.5, name: '亚马逊DE德国' },
-  { value: 20.3, name: '亚马逊IT意大利' },
-  // { value: 10.3, name: '亚马逊FR法国' },
-  // { value: 60.3, name: '亚马逊ES西班牙' },
-  // { value: 40.3, name: '亚马逊NL荷兰' },
-  // { value: 70.3, name: '亚马逊SE瑞典' },
-  // { value: 80.3, name: '亚马逊TR土耳其' },
-  // { value: 90.3, name: '亚马逊PL波兰' },
-  // { value: 100.3, name: '亚马逊BE比利时' },
-])
+const pieList = ref<any[]>([])
 const sitePieVisible = ref<boolean>(false)
 
 const list = ref<IGetCommissionDetailPictureList[]>([])
@@ -568,7 +558,20 @@ const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
-
+const handleMonth = () => {
+  switch (activeName.value) {
+  case 0: {
+    return queryForm.month
+  }
+  case 1: {
+    return longQueryForm.month
+  }
+  case 2: {
+    return developQueryForm.month
+  }
+  // No default
+  }
+}
 const initChart = () => {
   // 配置项
   option.value = {
@@ -618,6 +621,7 @@ const initChart = () => {
           length2: 0,
           maxSurfaceAngle: 80,
         },
+        stillShowZeroSum: false,
         avoidLabelOverlap: true, // 避免标签重叠
         minShowLabelAngle: 5,
         label: {
@@ -658,12 +662,12 @@ const initChart = () => {
             labelLinePoints: points,
           }
         },
-        data: data1,
+        data: pieList.value,
         color: [
-          '#ffdc4c', // 金黄色
           '#62d9ad', // 青绿色
-          '#e65a56', // 珊瑚红
           '#00aeef', // 天蓝色
+          '#ffdc4c', // 金黄色
+          '#e65a56', // 珊瑚红
           '#ffa500', // 橙色
           '#20c997', // 翠绿色
           '#f94d50', // 鲜红色
@@ -675,7 +679,7 @@ const initChart = () => {
           '#ffc107', // 柠檬黄
           '#3cb371', // 春绿色
           '#dc3545', // 枸杞红
-          '#5bc0de', // 宝石蓝
+          '#5bc0de'  // 宝石蓝
         ],
       },
     ],
@@ -700,6 +704,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
   const label = column.label
   if (label === '站点分布') {
     sitePieVisible.value = true
+    pieList.value = row.pieList
   }
 }
 
