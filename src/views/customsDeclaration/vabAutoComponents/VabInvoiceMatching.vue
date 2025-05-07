@@ -193,7 +193,7 @@
     </template>
   </vab-dialog>
   <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" title="匹配" width="80%" :draggable="false">
+  <vab-dialog v-model="matchVisible" :draggable="false" title="匹配" width="80%">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
@@ -218,7 +218,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
-      <el-table-column label="合同编号" min-width="100" prop="contractNumber" />
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(matchList, '合同编号', 'contractNumber')" />
       <el-table-column label="未匹配发票数" min-width="120" prop="notYetInvoice" />
       <el-table-column label="CIF售价" min-width="100" prop="cifPrice" />
       <el-table-column label="运费" min-width="90" prop="freightFee" />
@@ -231,8 +231,8 @@
       <el-table-column label="PO" min-width="100" prop="po" />
       <el-table-column label="含税成本价￥" min-width="130" prop="taxInclusiveCost" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')" />
-      <el-table-column label="零件名" min-width="100" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-      <el-table-column label="shipment ID" min-width="120" prop="shipmentId" />
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(matchList, 'Shipment ID', 'shipmentId')" />
       <el-table-column label="匹配" min-width="80" prop="status">
         <template #default="{ row }">
           <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
