@@ -2643,6 +2643,25 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
         }
       }
     }
+    case '1年ACOS': {
+      const yearAcos = data.row.yearAcos * 100
+      if (yearAcos > 35) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      } else if (yearAcos <= 35 && yearAcos > 30) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-warning)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      }
+    }
     default: {
       return {
         textAlign: 'center',
