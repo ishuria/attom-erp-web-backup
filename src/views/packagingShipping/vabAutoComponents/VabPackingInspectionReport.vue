@@ -240,6 +240,14 @@ const handleUpdateInspection = async () => {
 const handleSubmitInspection = async () => {
   qualityInspectionFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
+      const unUploadedRows = inspectionList.value.filter(
+        row => row.isUploadImages === 1 && (!row.images || row.images.length === 0)
+      )
+      
+      if (unUploadedRows.length > 0) {
+        $baseMessage('存在需要上传图片的质检项目未上传图片', 'error')
+        return
+      }
       const { data } = await submitPackageInspection({
         reportId: reportId.value!,
         type: 1

@@ -78,11 +78,13 @@
             <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-              跨月调整金额：{{ procurementBonusCrossMonth }}
-            </el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -286,11 +288,13 @@
             <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-              跨月调整金额：{{ procurementBonusCrossMonth }}
-            </el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -500,11 +504,13 @@
             <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-              跨月调整金额：{{ procurementBonusCrossMonth }}
-            </el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -714,11 +720,13 @@
             <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-              跨月调整金额：{{ procurementBonusCrossMonth }}
-            </el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -928,11 +936,13 @@
             <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-              跨月调整金额：{{ procurementBonusCrossMonth }}
-            </el-text>
-            <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
@@ -1429,7 +1439,6 @@ import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { debounce } from 'lodash'
 import { ref } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
 import { downloadFile } from '/@/api/devlocal/download'
 import {
   aggregationContract,
@@ -1449,8 +1458,11 @@ import {
   updateComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
+import { ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
+import handleClipboard from '/@/utils/clipboard'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import type { CurrencyCode } from '/@/views/purchase/constantOption'
@@ -1460,6 +1472,7 @@ defineOptions({
   name: 'Po',
 })
 
+const currentRoleCode = useAclStore().getRole[0];
 const procurementBonus = ref<number>(0)
 const procurementBonusCrossMonth = ref<number>(0)
 const _poComponentId = ref<number>(0)

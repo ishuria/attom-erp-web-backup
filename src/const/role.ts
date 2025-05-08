@@ -1,2 +1,8 @@
 
-export const ROLE_BOSS_CODE:string = "ROLE_BOSS"
+export const ROLE_BOSS_CODE = "ROLE_BOSS"
+
+export const ROLE_PURCHASINGASSISTANT_CODE = "ROLE_PURCHASINGASSISTANT" // 采购助理
+
+export const ROLE_PURCHASER_CODE = "ROLE_PURCHASER" // 采购
+
+
