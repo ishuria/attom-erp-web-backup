@@ -89,8 +89,8 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
-import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
+import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
 import { _setStepNo } from '/@/utils/stepNoState'
@@ -216,13 +216,14 @@ const handleSubmit = () => {
             _reviewId.value = parseInt(localStorage.getItem('orderStep1ReviewId')!)
             const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
             if (data !== undefined && data !== null) {
-              router.replace({
+              await router.replace({
                 query: {
                   // ...route.query,
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
               })
+              await fetchData()
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
               $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
             }
@@ -233,13 +234,14 @@ const handleSubmit = () => {
               // const { data: res } = await reviewStepNo1({ reviewId: _reviewId.value })
               // Object.assign(form, res)
 
-              router.replace({
+              await router.replace({
                 query: {
                   // ...route.query,
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
               })
+              await fetchData()
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
               $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
             }
@@ -256,12 +258,13 @@ const handleSubmit = () => {
           // }
 
         } else {
+          // console.log(form)
           const reviewId = parseInt(route.query.reviewId)
           // 根据 reviewId 获得 progressId
           const { data: _progressId } = await reviewProgressId({ reviewId })
           // 保存第一步
           await reviewStepNo1SaveOn({ ...form, progressId: _progressId, reviewId })
-
+          await fetchData()
             $baseMessage(
               "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
               "success",
