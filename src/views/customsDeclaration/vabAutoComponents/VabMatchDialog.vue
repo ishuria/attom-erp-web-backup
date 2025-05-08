@@ -31,11 +31,12 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      height="calc(100vh - 180px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod1"
     >
       <el-table-column label="SKU">
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 100)" >
           <template #default="{ row }">
             <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
               {{ row.sku }}
@@ -44,8 +45,8 @@
           </template>
         </el-table-column>
         <el-table-column label="装箱总数" min-width="100" prop="encasementCount" />
-        <el-table-column label="站点" min-width="130" prop="site" />
-        <el-table-column label="匹配的PO" min-width="110" prop="po" >
+        <el-table-column label="站点" min-width="150" prop="site" />
+        <el-table-column label="匹配的PO" min-width="120" prop="po" >
           <template #default="{ row }">
             <span class="copySku"  @click="handleClipboard($event, row.po)" >
               {{ row.po }}
@@ -53,20 +54,20 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount" />
+        <el-table-column label="SKU实际数量" min-width="120" prop="skuActualCount" />
       </el-table-column>
       <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName', 100)" />
         <el-table-column label="实际数量" min-width="100" prop="actualComponentCount" />
         <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount" />
         <el-table-column label="PO总数" min-width="90" prop="purchaseCount" />
         <el-table-column label="采购方" min-width="90" prop="purchase" />
-        <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus">
+        <el-table-column label="不报关" prop="customsDeclarationStatus" width="80">
           <template #default="{ row }">
             <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="有已发未报" min-width="110" prop="flag">
+        <el-table-column label="有已发未报" prop="flag" width="110">
           <template #default="{ row }">
             <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
             <el-checkbox v-model="row.flag" disabled  />
@@ -1286,13 +1287,32 @@ const stripedRowClass2 = (_row: any) => {
 }
 
 const match1Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 0 && data.columnIndex !== 5) {
+  const label = data.column.label
+  if (label === 'SKU' || label === '零件名') {
     return {
-      textAlign: 'center',
+      textAlign: 'left',
+    }
+  } else if (label === '采购方' || label === 'PO总数') {
+    const purchase = data.row.purchase
+    if (purchase === '云舟') {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-primary)',
+      }
+    } else if (purchase === 'Attom') {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-warning)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: '#6C3483',
+      }
     }
   }
   return {
-    textAlign: 'left',
+    textAlign: 'center',
   }
 }
 const match2Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
