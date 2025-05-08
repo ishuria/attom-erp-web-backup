@@ -136,7 +136,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -346,7 +346,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -562,7 +562,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="135" prop="siteName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -778,7 +778,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -986,7 +986,7 @@
             </template>
           </el-table-column>
           <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="125" prop="siteName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU
@@ -1396,6 +1396,7 @@
           <el-date-picker
             v-model="generateMoneyTransferTime"
             :default-time="defaultTime2"
+            :disabled-date="disabledDate"
             :editable="false"
             end-placeholder="结束日期"
             format="YYYY-MM-DD HH:mm"
@@ -1436,7 +1437,7 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules, TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, type UploadFile, dayjs } from 'element-plus'
 import { debounce } from 'lodash'
 import { ref } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1472,6 +1473,12 @@ defineOptions({
   name: 'Po',
 })
 
+const disabledDate = (time: Date) => {
+  const date = dayjs(time)
+  const now = dayjs()
+  // 不能选择晚于今天的日期
+  return date.isAfter(now, 'day')
+}
 const currentRoleCode = useAclStore().getRole[0];
 const procurementBonus = ref<number>(0)
 const procurementBonusCrossMonth = ref<number>(0)
