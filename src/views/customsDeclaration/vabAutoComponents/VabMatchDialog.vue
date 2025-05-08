@@ -1344,6 +1344,27 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
       }
     }
   }
+  
+  .fixed-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding-bottom: 10px;
+    background: #fff;
+  }
+
+  .table-container {
+    height: calc(100vh - 220px);
+    margin-top: 10px;
+    overflow-y: auto;
+
+    :deep(.el-table__header-wrapper) {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+  }
+
 }
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {

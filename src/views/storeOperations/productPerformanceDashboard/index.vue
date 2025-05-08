@@ -212,7 +212,7 @@
                   <el-tooltip content="" effect="dark" placement="top">
                     <div class="questionIcon">FBA差异 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
-                      <div class="custom-tooltip" >=亚马逊FBA - 自量FBA</div>
+                      <div class="custom-tooltip" >=自量FBA - 亚马逊FBA</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -2578,10 +2578,75 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       textAlign: 'center',
       cursor: 'pointer'
     }
-  }
-  else {
-    return {
-      textAlign: 'center',
+  } else switch (label) {
+    case 'FBA差异': {
+      if (data.row.differenceFba > 0) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      }
+    }
+    case '月净利率': {
+      const monthNetProfitMargin = data.row.monthNetProfitMargin * 100
+      if (monthNetProfitMargin >= 20) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      } else if (monthNetProfitMargin < 20 && monthNetProfitMargin > 0) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-warning)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      }
+    }
+    case '月净利润': {
+      if (data.row.monthNetProfit > 0) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      }
+    }
+    case '月ACOS': {
+      const monthAcos = data.row.monthAcos * 100
+      if (monthAcos > 35) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      } else if (monthAcos <= 35 && monthAcos > 30) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-warning)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      }
+    }
+    default: {
+      return {
+        textAlign: 'center',
+      }
     }
   }
 }
