@@ -1120,8 +1120,27 @@ onActivated(() => {
 // :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
-.noneHoveTable :deep(.warning-row) {
-  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+// .noneHoveTable :deep(.warning-row) {
+//   --el-table-tr-bg-color: var(--el-color-warning-light-9);
+// }
+.noneHoveTable {
+  :deep() {
+    // 选中行样式优先级提高
+    // .warning-row > td {
+    //   background-color: #EDF1F7 !important;
+    // }
+    .warning-row > td {
+      background-color: var(--el-color-warning-light-9) !important;
+    }
+    
+    // 普通行hover时保持白色
+    .el-table__body tr:not(.warning-row) {
+      &.hover-row > td,
+      &:hover > td {
+        background-color: #ffffff !important;
+      }
+    }
+  }
 }
 .none {
   display: none;

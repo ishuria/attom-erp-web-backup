@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" title="发票匹配" top="10vh" width="90%" @close="closeInvoiceMatching">
+  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content; max-height: 90vh" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
@@ -28,11 +28,11 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      max-height="57vh"
+      max-height="80vh"
       :span-method="objectSpanMethod"
       @cell-click="cellClick"
     >
-      <el-table-column fixed="left" label="操作">
+      <el-table-column fixed="left" label="操作" width="70">
         <template #default="{ row }">
           <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
@@ -59,7 +59,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" min-width="120" prop="invoiceCode">
+      <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.invoiceCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -83,7 +83,7 @@
           <span>{{ row.suppliser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="开票品名" min-width="100" prop="invoiceName">
+      <el-table-column label="开票品名" prop="invoiceName" :width="flexColumnWidth(list, '开票品名', 'invoiceName')">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.invoiceName" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
@@ -91,7 +91,7 @@
           <span>{{ row.invoiceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格型号" min-width="100" prop="specificationModel">
+      <el-table-column label="规格型号" prop="specificationModel" :width="flexColumnWidth(list, '规格型号', 'specificationModel')">
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -103,7 +103,7 @@
           <span>{{ row.specificationModel }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票数量" min-width="100" prop="invoiceCount">
+      <el-table-column label="发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '发票数量', 'invoiceCount')">
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -116,7 +116,7 @@
           <span>{{ row.invoiceCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票单位" min-width="100" prop="invoiceUnit">
+      <el-table-column label="发票单位" prop="invoiceUnit" :width="flexColumnWidth(list, '发票单位', 'invoiceUnit')">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.invoiceUnit" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
@@ -124,7 +124,7 @@
           <span>{{ row.invoiceUnit }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票含税金额" min-width="110" prop="includingTaxPrice">
+      <el-table-column label="发票含税金额" prop="includingTaxPrice" :width="flexColumnWidth(list, '发票含税金额', 'includingTaxPrice')">
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -137,7 +137,7 @@
           <span>{{ row.includingTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票未税金额" min-width="110" prop="preTaxPrice">
+      <el-table-column label="发票未税金额" prop="preTaxPrice" :width="flexColumnWidth(list, '发票未税金额', 'preTaxPrice')">
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -150,11 +150,11 @@
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="匹配合同号" min-width="110" prop="matchContractNumber" />
-      <el-table-column label="匹配PO" min-width="100" prop="matchPo" />
-      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-      <el-table-column fixed="right" label="操作" width="130">
+      <el-table-column label="匹配合同号" prop="matchContractNumber" :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')" />
+      <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
+      <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
+      <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
+      <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
           <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>

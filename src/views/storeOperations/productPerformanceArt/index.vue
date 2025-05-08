@@ -117,6 +117,38 @@
                 <br />
                 点击
               </span>
+              <span v-if="item.label === '今销'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip">今日销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月销售额'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的销售额</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退款%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退款占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '月退货%'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+                  <template #content>
+                    <div class="custom-tooltip" >过去30天的退货占比</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -150,21 +182,12 @@
                 <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
               </span>
               <span v-if="item.label === 'VOC满意度'">
-                <el-tag v-if="row.vocSatisfaction === 0" class="customTag customTag-veryPoor">
-                  Very poor
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 1" class="customTag customTag-fair">
-                  Fair
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 2" class="customTag customTag-poor">
-                  Poor
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 3" class="customTag customTag-good">
-                  Good
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === 4" class="customTag customTag-excellent">
-                  Excellent
-                </el-tag>
+                {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
+                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
               </span>
               <span v-if="item.label === '小类排名'">
                 <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
@@ -194,14 +217,20 @@
                   </el-space>
                 </div>
               </span>
-              <span v-if="item.label === '开发人员'">
+              <span v-if="item.label === '状态'">
+                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
+                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
+                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
+                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
+              </span>
+              <!-- <span v-if="item.label === '开发人员'">
                 <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
                   <template #content>
                     <div class="custom-tooltip">{{ row._developNameFull }}</div>
                   </template>
                   <span v-html="row._developName"></span>
                 </el-tooltip>
-              </span>
+              </span> -->
               <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
                 {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}
               </span>
@@ -228,13 +257,13 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, Star } from '@element-plus/icons-vue'
+import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
-import { getAmazonStars } from '/@/utils/rate'
+import { formatPercentage, getAmazonStars } from '/@/utils/rate'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -389,44 +418,25 @@ const columns = ref<any>([
     label: '月销售额',
     prop: 'monthSalesPrice',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '月退货%',
     prop: 'monthReturnGoods',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '月退款%',
     prop: 'monthRefund',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
-  
   {
     label: '最近入库',
     prop: 'recentlyInboundStorage',
     checked: true,
     minWidth: 100,
-  },
-  {
-    label: 'VOC缺陷%',
-    prop: 'vocDefect',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC缺陷#',
-    prop: 'vocNcxCount',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: 'VOC总订单',
-    prop: 'vocTotalOrderCount',
-    checked: true,
-    minWidth: 110,
   },
   {
     label: '产品描述',
@@ -715,17 +725,17 @@ onBeforeMount(() => {
   }
 }
 .customTag {
-  width: 7em; 
+  width: 7em;
   padding: 0 30px;
   color: #fff;
   border: 0;
-  border-radius: 17px; 
-  
+  border-radius: 17px;
+
   &-veryPoor {
-    background-color: #e32e00; 
+    background-color: #e32e00;
   }
   &-good {
-    background-color: #bad411; 
+    background-color: #bad411;
   }
   &-fair {
     background-color: #ffc400;
@@ -750,5 +760,19 @@ onBeforeMount(() => {
   font-weight: 600;
   color: #67C23A;
   transform: scale(0.9, 1.4);  
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
+}
+.custom-tooltip {
+  max-width: 400px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>

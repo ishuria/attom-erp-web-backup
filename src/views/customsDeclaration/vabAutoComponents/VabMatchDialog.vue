@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" class="dialog" :draggable="false" :fullscreen="true" title="匹配" top="10vh" width="80%" @close="handleCloseCheck">
+  <vab-dialog v-model="dflag" class="dialog" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" top="5vh"  @close="handleCloseCheck">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
@@ -31,12 +31,13 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      height="calc(100vh - 180px)"
+      height="calc(90vh - 190px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod1"
+      style="width: fit-content"
     >
       <el-table-column label="SKU">
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 100)" >
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
           <template #default="{ row }">
             <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
               {{ row.sku }}
@@ -44,9 +45,9 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="装箱总数" min-width="100" prop="encasementCount" />
-        <el-table-column label="站点" min-width="150" prop="site" />
-        <el-table-column label="匹配的PO" min-width="120" prop="po" >
+        <el-table-column label="装箱总数" prop="encasementCount" width="95" />
+        <el-table-column label="站点" prop="site" width="140" />
+        <el-table-column label="匹配的PO" prop="po" width="115" >
           <template #default="{ row }">
             <span class="copySku"  @click="handleClipboard($event, row.po)" >
               {{ row.po }}
@@ -54,15 +55,15 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="SKU实际数量" min-width="120" prop="skuActualCount" />
+        <el-table-column label="SKU实际数量" prop="skuActualCount" width="125" />
       </el-table-column>
       <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName', 100)" />
-        <el-table-column label="实际数量" min-width="100" prop="actualComponentCount" />
-        <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount" />
-        <el-table-column label="PO总数" min-width="90" prop="purchaseCount" />
-        <el-table-column label="采购方" min-width="90" prop="purchase" />
-        <el-table-column label="不报关" prop="customsDeclarationStatus" width="80">
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
+        <el-table-column label="实际数量" prop="actualComponentCount" width="95" />
+        <el-table-column label="退税报关数量" prop="customsDeclarationCount" width="125" />
+        <el-table-column label="PO总数" prop="purchaseCount" width="85" />
+        <el-table-column label="采购方" prop="purchase" width="80" />
+        <el-table-column label="不报关" prop="customsDeclarationStatus" width="75">
           <template #default="{ row }">
             <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
           </template>
@@ -1328,14 +1329,13 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
 </script>
 
 <style lang="scss" scoped>
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
 
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
+.noneHoveTable {
+  :deep() {
+    td {
+      background-color: #ffffff !important;
+    }
+  }
 }
 :deep(.striped) {
   background-color: #fafafa;
