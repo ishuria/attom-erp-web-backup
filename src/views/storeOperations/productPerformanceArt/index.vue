@@ -88,7 +88,34 @@
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势<br />(点击看明细)
+                销量趋势
+                <br />
+                (点击看明细)
+              </span>
+              <span v-if="item.label === '小类排名'">
+                小类排名
+                <br />
+                (点击看明细)
+              </span>
+              <span v-if="item.label === '大类排名'">
+                大类排名
+                <br />
+                (点击看明细)
+              </span>
+              <span v-if="item.label === 'VOC满意度'">
+                VOC满意度
+                <br />
+                (点击看明细)
+              </span>
+              <span v-if="item.label === '2周广告转化'">
+                2周广告
+                <br />
+                转化
+              </span>
+              <span v-if="item.label === '2周广告点击'">
+                2周广告
+                <br />
+                点击
               </span>
             </template>
             <template #default="{ row }">
@@ -140,16 +167,32 @@
                 </el-tag>
               </span>
               <span v-if="item.label === '小类排名'">
-                {{ row.nowSubcategoryRanking }}
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <vab-icon v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-down" icon="arrow-down-fill" />
-                <span v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null" style="color: #999">{{ row.nowSubcategoryRanking - row.beforeSubcategoryRanking }}</span>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
+                  <div>{{ row.nowSubcategoryRanking }}</div>
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
+                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
+                </div>
+                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowSubcategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '大类排名'">
-                {{ row.nowMajorCategoryRanking }}
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-down" icon="arrow-down-fill"/>
-                <vab-icon v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking >= 0" class="arrow-up" icon="arrow-up-fill" />
-                <span v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null" style="color: #999">{{ row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking }}</span>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0">
+                  <div>{{ row.nowMajorCategoryRanking }}</div>
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
+                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0" class="arrow-down" icon="arrow-down-fill"/>
+                  <span style="color: #999">{{ Math.abs(row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking) }}</span>
+                </div>
+                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0">
+                  <el-space>
+                    {{ row.nowMajorCategoryRanking }}
+                    <span style="font-weight: 600;">-</span>
+                  </el-space>
+                </div>
               </span>
               <span v-if="item.label === '开发人员'">
                 <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
@@ -253,14 +296,20 @@ const columns = ref<any>([
     isFixed: 'left'
   },
   {
-    label: '站点',
-    prop: 'siteName',
+    label: '今销量',
+    prop: 'currentSalesNumber',
     checked: true,
-    minWidth: 150,
+    minWidth: 90,
   },
   {
-    label: '上新',
-    prop: 'newArrivalDay',
+    label: '销量趋势(点击看明细)',
+    prop: 'trend',
+    checked: true,
+    minWidth: 180,
+  },
+  {
+    label: '今销',
+    prop: 'currentSalesPrice',
     checked: true,
     minWidth: 90,
   },
@@ -271,20 +320,38 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
-    label: '销量趋势(点击看明细)',
-    prop: 'trend',
+    label: '站点',
+    prop: 'siteName',
     checked: true,
-    minWidth: 180,
+    minWidth: 150,
   },
   {
-    label: '今销量',
-    prop: 'currentSalesNumber',
+    label: '小类排名',
+    prop: 'nowSubcategoryRanking',
     checked: true,
-    minWidth: 90,
+    minWidth: 120,
   },
   {
-    label: '今销',
-    prop: 'currentSalesPrice',
+    label: '大类排名',
+    prop: 'nowMajorCategoryRanking',
+    checked: true,
+    minWidth: 120,
+  },
+  {
+    label: 'VOC满意度',
+    prop: 'vocSatisfaction',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '运营分类',
+    prop: 'operationTypeId',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '上新',
+    prop: 'newArrivalDay',
     checked: true,
     minWidth: 90,
   },
@@ -295,28 +362,22 @@ const columns = ref<any>([
     minWidth: 60,
   },
   {
-    label: '运营分类',
-    prop: 'operationTypeId',
+    label: '2周广告转化',
+    prop: 'tWksAdvRate',
     checked: true,
-    minWidth: 130,
+    minWidth: 110,
   },
   {
-    label: '小类排名',
-    prop: 'nowSubcategoryRanking',
+    label: '2周广告点击',
+    prop: 'tWksClickRate',
     checked: true,
-    minWidth: 100,
+    minWidth: 110,
   },
   {
-    label: '大类排名',
-    prop: 'nowMajorCategoryRanking',
+    label: '2周总转化',
+    prop: 'tWksTotalConv',
     checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyInboundStorage',
-    checked: true,
-    minWidth: 100,
+    minWidth: 110,
   },
   {
     label: '月销量',
@@ -342,11 +403,12 @@ const columns = ref<any>([
     checked: true,
     minWidth: 100,
   },
+  
   {
-    label: 'VOC满意度',
-    prop: 'vocSatisfaction',
+    label: '最近入库',
+    prop: 'recentlyInboundStorage',
     checked: true,
-    minWidth: 130,
+    minWidth: 100,
   },
   {
     label: 'VOC缺陷%',

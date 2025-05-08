@@ -28,7 +28,7 @@
               SKU<br />图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" @click="showImagePreview(row.skuImgUrl)">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.skuImgUrl)">
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -93,7 +93,7 @@
               SKU<br />图片
             </template>
             <template #default="{ row }">
-              <el-image :src="row.skuImgUrl" @click="showImagePreview(row.skuImgUrl)">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.skuImgUrl)">
                 <template #error><el-icon /></template>
               </el-image>
             </template>

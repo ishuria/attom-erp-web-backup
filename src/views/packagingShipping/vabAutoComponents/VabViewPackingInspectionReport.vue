@@ -72,8 +72,8 @@
       </el-table>
       <el-form-item label="结论" prop="status" style="margin-top: 10px">
         <el-radio-group v-model="qualityInspectionForm.status" disabled>
-          <el-radio :value="0">通过</el-radio>
-          <el-radio :value="1">不通过</el-radio>
+          <el-radio :value="1">通过</el-radio>
+          <el-radio :value="0">不通过</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -147,7 +147,7 @@ const showPreviewImage = (images: any[], currentIndex: number) => {
 }
 const getImageColumnWidth = (): number => {
   const imageWidth = 75 // 每张图片宽度
-  let maxWidth = 0
+  let maxWidth = 100
   inspectionList.value.forEach((row) => {
     const imageCount = row?.images?.length || 0
     let totalWidth = 0

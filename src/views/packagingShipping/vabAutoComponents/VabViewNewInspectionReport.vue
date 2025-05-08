@@ -211,8 +211,8 @@
       </el-form-item>
       <el-form-item label="结论" prop="status" >
         <el-radio-group v-model="qualityInspectionForm.status" disabled>
-          <el-radio :value="0" >通过</el-radio>
-          <el-radio :value="1" >不通过</el-radio>
+          <el-radio :value="1" >通过</el-radio>
+          <el-radio :value="0" >不通过</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item v-if="qualityInspectionForm.status" label="原因" prop="reason"  >
