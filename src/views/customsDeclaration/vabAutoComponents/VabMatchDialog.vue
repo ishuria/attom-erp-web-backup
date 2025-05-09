@@ -428,7 +428,6 @@
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
 import {
   archiveMatchSentList,
   archiveShipmentYfwbAggregation,
@@ -460,6 +459,7 @@ import type {
   IGetYfwbAggregationList,
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
+import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const aggregationTotal = ref<number>(0)
@@ -1152,17 +1152,43 @@ const handleConfirmCheckMatch = async () => {
     confirmMatchLoading.value = false
   }
 }
+interface PIdInfo {
+  pIds: number[];  // 存储不同的pId
+  encasementCount: number;  // 装箱总数
+  skuActualCount: number[];  // SKU实际数量
+}
+
+// 创建一个Map来存储id与对应的信息
+const idMap = ref(new Map<number, PIdInfo>())
+
 const idList = ref<any[]>([])
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getCheckMatchList({ ...queryForm, shipId: props.shipId })
   list.value = data
   let idSet = new Set()
+  idMap.value.clear() // 每次必须先清空
   list.value.forEach((item: any) => {
     if (item.delStatus === 0) {
       idSet.add(item.id)
     }
+    if (idMap.value.has(item.id)) {
+      // 如果id已存在，更新pIds数组
+      const info = idMap.value.get(item.id);
+      if (info && !info.pIds.includes(item.pId)) {
+        info.pIds.push(item.pId);
+        info.skuActualCount.push(item.skuActualCount);
+      }
+    } else {
+    // 如果是新的id，创建新的记录
+      idMap.value.set(item.id, {
+        pIds: [item.pId], 
+        encasementCount: item.encasementCount,
+        skuActualCount: [item.skuActualCount]
+      });
+    }
   })
+  // console.log(idMap)
   idList.value = Array.from(idSet)
   list.value.sort((a, b) => {
     return a.id - b.id
@@ -1289,31 +1315,93 @@ const stripedRowClass2 = (_row: any) => {
 
 const match1Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === 'SKU' || label === '零件名') {
-    return {
-      textAlign: 'left',
+  switch (label) {
+    case '装箱总数': 
+    case '站点': 
+    case '匹配的PO': 
+    case 'SKU实际数量': {
+      if (idMap.value.has(data.row.id)) {
+        const info = idMap.value.get(data.row.id);
+        if (info) {
+          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0);
+          // console.log(totalSkuActualCount)
+          if (totalSkuActualCount === info.encasementCount) {
+            return {
+              color: '',
+              textAlign: 'center'
+            }
+          } else {
+            return {
+              color: 'var(--el-color-danger)',
+              textAlign: 'center'
+            }
+          }
+
+        }
+      } else {
+        return {
+          textAlign: 'center'
+        }
+      }
+
+      break;
     }
-  } else if (label === '采购方' || label === 'PO总数') {
-    const purchase = data.row.purchase
-    if (purchase === '云舟') {
-      return {
-        textAlign: 'center',
-        color: 'var(--el-color-primary)',
+    case 'SKU': {
+      if (idMap.value.has(data.row.id)) {
+        const info = idMap.value.get(data.row.id);
+        if (info) {
+          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0);
+          if (totalSkuActualCount === info.encasementCount) {
+            return {
+              color: '',
+              textAlign: 'left'
+            }
+          } else {
+            return {
+              color: 'var(--el-color-danger)',
+              textAlign: 'left'
+            }
+          }
+
+        }
+      } else {
+        return {
+          textAlign: 'left'
+        }
       }
-    } else if (purchase === 'Attom') {
+
+      break;
+    }
+    case '零件名': {
       return {
-        textAlign: 'center',
-        color: 'var(--el-color-warning)',
-      }
-    } else {
-      return {
-        textAlign: 'center',
-        color: '#6C3483',
+        textAlign: 'left',
       }
     }
+    case '采购方': 
+    case 'PO总数': {
+      const purchase = data.row.purchase
+      if (purchase === '云舟') {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-primary)',
+        }
+      } else if (purchase === 'Attom') {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-warning)',
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: '#6C3483',
+        }
+      }
+    }
+    // No default
   }
   return {
     textAlign: 'center',
+    color: ''
   }
 }
 const match2Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
