@@ -193,7 +193,7 @@
     </template>
   </vab-dialog>
   <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" :draggable="false" title="匹配" width="80%">
+  <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
@@ -219,21 +219,21 @@
     </vab-query-form>
     <el-table border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
       <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(matchList, '合同编号', 'contractNumber')" />
-      <el-table-column label="未匹配发票数" min-width="120" prop="notYetInvoice" />
-      <el-table-column label="CIF售价" min-width="100" prop="cifPrice" />
-      <el-table-column label="运费" min-width="90" prop="freightFee" />
-      <el-table-column label="FOB售价" min-width="100" prop="fobPrice" />
-      <el-table-column label="利润率" min-width="100" prop="profitMargin" />
-      <el-table-column label="汇率" min-width="90" prop="rate" />
-      <el-table-column label="人民币售价" min-width="110" prop="salePrice" />
-      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-      <el-table-column label="PO" min-width="100" prop="po" />
-      <el-table-column label="含税成本价￥" min-width="130" prop="taxInclusiveCost" />
+      <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
+      <el-table-column label="CIF售价" prop="cifPrice" width="90" />
+      <el-table-column label="运费" prop="freightFee" width="80" />
+      <el-table-column label="FOB售价" prop="fobPrice" width="100" />
+      <el-table-column label="利润率" prop="profitMargin" width="90" />
+      <el-table-column label="汇率" prop="rate" width="80" />
+      <el-table-column label="人民币售价" prop="salePrice" width="110" />
+      <el-table-column label="报关数量" prop="customsDeclarationCount" width="100" />
+      <el-table-column label="报关单位" prop="customsDeclarationUnit" width="100" />
+      <el-table-column label="PO" prop="po" width="100" />
+      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" width="130" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')" />
       <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(matchList, 'Shipment ID', 'shipmentId')" />
-      <el-table-column label="匹配" min-width="80" prop="status">
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(matchList, 'Shipment ID-', 'shipmentId')" />
+      <el-table-column label="匹配" prop="status" width="70">
         <template #default="{ row }">
           <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
         </template>
