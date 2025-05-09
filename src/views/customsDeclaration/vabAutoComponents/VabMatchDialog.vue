@@ -1,7 +1,7 @@
 <template>
   <vab-dialog
-v-model="dflag" class="dialog" :draggable="false" :fullscreen="isFullscreen" style="max-height: 90vh;"
-  title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'"  @close="handleCloseCheck">
+    v-model="dflag" class="dialog" :class="{ fullscreenDialog: isFullscreen, normalDialog: !isFullscreen }" :draggable="false" 
+    :fullscreen="isFullscreen" title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'" @close="handleCloseCheck">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
@@ -31,12 +31,11 @@ v-model="dflag" class="dialog" :draggable="false" :fullscreen="isFullscreen" sty
       border
       :cell-style="match1Style"
       class="noneHoveTable"
+      :class="isFullscreen ? 'fullscreenTable' : 'normalTable'"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      height="calc(90vh - 190px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod1"
-      style="width: fit-content"
     >
       <el-table-column label="SKU">
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
@@ -465,12 +464,7 @@ import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const isFullscreen = ref<boolean>(false)
-const dialogStyle = computed(() => {
-  return {
-    width: dflag.value ? 'fit-content' : '100%',
-    maxHeight: '90vh'
-  }
-})
+
 const aggregationTotal = ref<number>(0)
 const aggregationListLoading = ref<boolean>(false)
 // 0聚合 1明细 默认在聚合页
@@ -1515,5 +1509,21 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
   &:hover {
     color: #000;
   }
+}
+.fullscreenDialog .el-dialog {
+  display: flex;
+  flex-direction: column;
+}
+.normalDialog .el-dialog {
+  height: 90vh;
+  max-height: 90vh;
+}
+.fullscreenTable {
+  height: calc(100vh - 190px);
+  max-height: calc(100vh - 190px);
+}
+.normalTable {
+  height: calc(90vh - 190px);
+  max-height: calc(90vh - 190px);
 }
 </style>
