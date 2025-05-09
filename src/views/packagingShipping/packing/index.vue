@@ -10,6 +10,7 @@
         <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
+        <el-button type="primary" >尺寸导出</el-button>
         <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
             v-for="item in printerOption"

@@ -223,16 +223,19 @@
                 <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
                 <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
               </span>
-              <!-- <span v-if="item.label === '开发人员'">
+              <span v-if="item.label === '开发人员'">
                 <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
                   <template #content>
                     <div class="custom-tooltip">{{ row._developNameFull }}</div>
                   </template>
                   <span v-html="row._developName"></span>
                 </el-tooltip>
-              </span> -->
+              </span>
               <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
                 {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}
+              </span>
+              <span v-if="label2.includes(item.label)">
+                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
               </span>
             </template>
           </el-table-column>
@@ -439,17 +442,44 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
-    label: '产品描述',
-    prop: '',
+    label: '开发人员',
+    prop: 'developName',
     checked: true,
     minWidth: 100,
   },
   {
-    label: '产品经理',
-    prop: '',
+    label: '产品描述',
+    prop: 'productDesc',
     checked: true,
     minWidth: 100,
   },
+])
+const label2 = [
+  '试算毛利',
+  '2周广告转化',
+  '2周广告点击',
+  '2周总转化',
+  '月净利率',
+  '月ACOS',
+  '月TACOS',
+  '1年ACOS',
+  '1年TACOS',
+  '月退货%',
+  '月退款%',
+]
+
+const label2Map = new Map([
+  ['试算毛利', 'grossProfit'],
+  ['2周广告转化', 'tWksAdvRate'],
+  ['2周广告点击', 'tWksClickRate'],
+  ['2周总转化', 'tWksTotalConv'],
+  ['月净利率', 'monthNetProfitMargin'],
+  ['月ACOS', 'monthAcos'],
+  ['月TACOS', 'monthTacos'],
+  ['1年ACOS', 'yearAcos'],
+  ['1年TACOS', 'yearTacos'],
+  ['月退货%', 'monthReturnGoods'],
+  ['月退款%', 'monthRefund'],
 ])
 const handleTabClick = () => {
   //
