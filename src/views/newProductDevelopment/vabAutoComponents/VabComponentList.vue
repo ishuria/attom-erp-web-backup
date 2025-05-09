@@ -595,7 +595,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   if (index === 3 || index === 9) {        
     return {
       // backgroundColor: '#f5f5f5',
-      color: '#bbb',
+      color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 

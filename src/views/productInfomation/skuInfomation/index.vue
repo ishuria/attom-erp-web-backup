@@ -126,7 +126,7 @@
                 <el-dropdown-item @click="handleSkuDetail(row)">
                   <el-link type="primary" :underline="false" >SKU详情</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCopySku">
+                <el-dropdown-item @click="handleCopySku(row)">
                   <el-link type="primary" :underline="false">SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -173,7 +173,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
-import { getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
+import { copyProductSku, getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
@@ -201,6 +201,7 @@ const copySkuForm = reactive({
 const copySkuFormRef = ref()
 const copySkuClose = () => {
   copySkuVisible.value = false
+  copySkuFormRef.value.resetFields()
 }
 const copySkuFormRules = reactive({
   sku: [
@@ -208,15 +209,29 @@ const copySkuFormRules = reactive({
   ],
 })
 const handleCopySkuConfirm = async () => {
-  copySkuFormRef.value.validate((isValid: boolean) => {
+  copySkuFormRef.value.validate(async (isValid: boolean) => {
     if (isValid) {
-      //
+      try {
+        const { data } = await copyProductSku({
+          skuId: skuId.value,
+          sku: copySkuForm.sku
+        })
+        if (data) {
+          $baseMessage('复制成功', 'success')
+          copySkuVisible.value = false
+          fetchData()
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
   })
 }
-const handleCopySku = () => {
+const skuId = ref<number>(0)
+const handleCopySku = (row: any) => {
   $baseConfirm('只能复制相同产品，不支持复制后修改成其他产品', null, () => {
     copySkuVisible.value = true
+    skuId.value = row.skuId
   })
 }
 const handleSkuDetail = async (row: any) => {

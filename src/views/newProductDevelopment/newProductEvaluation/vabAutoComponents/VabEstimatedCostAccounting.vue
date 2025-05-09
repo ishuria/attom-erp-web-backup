@@ -136,7 +136,10 @@
         </el-table-column>
         <el-table-column label="尾程" prop="lastMile">
           <template #default="{ row }">
-            {{ row.lastMile ? row.symbol + row.lastMile : '' }}
+            <div class="none">
+              <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+            </div>
+            <span>{{ row.lastMile ? row.symbol + row.lastMile : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="头程￥" prop="firstMile">
@@ -735,14 +738,22 @@ const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 6 || index === 7 || index === 8) {
+  
+  const label = data.column.label
+  if (label === '产品描述' || label === '价格信息' || label === '1688链接') {
     return {
       textAlign: 'left',
+      cursor: 'pointer',
+    }
+  } else if (label === '日期' || label === '外汇币种' || label === '汇率' || label === '头程￥' || label === '毛利率' || label === 'ROI' || label === '平台佣金' || label === '仓储费2个月') {
+    return {
+      textAlign: 'center',
+      cursor: 'not-allowed'
     }
   }
   return {
     textAlign: 'center',
+    cursor: 'pointer'
   }
 }
 </script>

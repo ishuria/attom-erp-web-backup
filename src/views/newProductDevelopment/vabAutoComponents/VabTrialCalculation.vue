@@ -82,7 +82,10 @@
 
         <el-table-column label="尾程" prop="lastMile">
           <template #default="{ row }">
-            {{ row.lastMile != null ? row.symbol + row.lastMile : '' }}
+            <div class="none">
+              <el-input v-model="row.lastMile" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+            </div>
+            <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
           </template>
         </el-table-column>
 
@@ -327,21 +330,22 @@ const effectiveCountInputHandle = (event: Event) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 2 || index === 3 || index === 8 || index === 22 || index === 10 || index === 11 || index === 15 || index === 16 || index === 20 || index === 21 ) {
+  const label = data.column.label
+  if (['外汇币种', '汇率', '实际总成本￥', '头程￥', '毛利率', 'ROI', '平台佣金', '仓储费2个月'].includes(label)) {
     return {
-      // backgroundColor: '#fafafa',
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     }
-  } else if (index === 4) {
+  } else if (label === '产品描述') {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
+      cursor: 'pointer',
     }
   } else {
     return {
-      textAlign:'center'
+      textAlign: 'center',
+      cursor: 'pointer',
     }
   }
 }
@@ -552,5 +556,10 @@ onMounted(async ()=>{
   max-width: 400px; 
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
+}
+.el-table {
+  :deep(td) {
+    background-color: #fff !important;
+  }
 }
 </style>

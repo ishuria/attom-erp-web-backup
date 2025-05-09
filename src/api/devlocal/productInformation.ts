@@ -818,3 +818,14 @@ export function updateCustomsClearanceSkuHts(data: IUpdateCustomsClearanceSkuHts
     data
   })
 }
+
+/**
+ * sku复制
+ */
+export function copyProductSku(data: { skuId: number, sku: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/sku/copy`,
+    method: 'post',
+    data
+  })
+}
