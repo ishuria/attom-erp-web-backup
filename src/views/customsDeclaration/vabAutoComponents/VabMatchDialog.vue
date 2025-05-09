@@ -1,5 +1,7 @@
 <template>
-  <vab-dialog v-model="dflag" class="dialog" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" top="5vh"  @close="handleCloseCheck">
+  <vab-dialog
+v-model="dflag" class="dialog" :draggable="false" :fullscreen="isFullscreen" style="max-height: 90vh;"
+  title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'"  @close="handleCloseCheck">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
@@ -462,6 +464,13 @@ import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+const isFullscreen = ref<boolean>(false)
+const dialogStyle = computed(() => {
+  return {
+    width: dflag.value ? 'fit-content' : '100%',
+    maxHeight: '90vh'
+  }
+})
 const aggregationTotal = ref<number>(0)
 const aggregationListLoading = ref<boolean>(false)
 // 0聚合 1明细 默认在聚合页
@@ -1473,6 +1482,14 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
     }
   }
 
+  // :deep(.el-dialog) {
+  //   &.is-fullscreen {
+  //     width: 100% !important;
+  //     .el-dialog__body {
+  //       width: 100%;
+  //     }
+  //   }
+  // }
 }
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {

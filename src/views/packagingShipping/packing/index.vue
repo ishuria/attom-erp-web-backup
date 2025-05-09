@@ -10,7 +10,7 @@
         <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
-        <el-button type="primary" >尺寸导出</el-button>
+        <el-button type="primary" @click="showExportSize">尺寸导出</el-button>
         <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
             v-for="item in printerOption"
@@ -445,6 +445,18 @@
         </div>
       </template>
     </vab-dialog>
+    <!-- 尺寸导出 -->
+    <vab-dialog v-model="exportSizeVisible" title="尺寸导出" width="20%">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button :loading="exportSizeLoading" type="primary" @click="handleExportSize">尺寸导出</el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <el-table border :data="newSkuList.map(sku => ({ sku }))" style="width: 100%">
+        <el-table-column label="#" type="index" width="50" />
+        <el-table-column label="SKU" prop="sku" />
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -453,7 +465,7 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
-import { downloadFile } from '/@/api/devlocal/download'
+import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
   checkEncasementShipment,
   confirmEncasementShipments,
@@ -467,6 +479,7 @@ import {
   getEncasementList,
   getEncasementUserPrinter,
   getIncrementBoxNo,
+  getProductNewSkuList,
   getReinsertionBoxNo,
   insertPdf,
   plusEncasementCount,
@@ -499,6 +512,21 @@ const queryForm = reactive<IGetEncasementListReq>({
   pageNo: 1,
   pageSize: 20
 })
+const exportSizeVisible = ref<boolean>(false)
+const exportSizeLoading = ref<boolean>(false)
+const newSkuList = ref<string[]>([])
+const showExportSize = async () => {
+  const { data } = await getProductNewSkuList()
+  newSkuList.value = data
+  exportSizeVisible.value = true
+}
+const handleExportSize = async () => {
+  exportSizeLoading.value = true
+  const res = await downloadFileN('/encasement/exportSize')
+  if (res) {
+    exportSizeLoading.value = false
+  }
+}
 const handleSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data
   // console.log(order)

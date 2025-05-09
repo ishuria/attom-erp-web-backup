@@ -644,3 +644,13 @@ export const updateChannelSiteList = (data: { id: number, channelId: number}): P
     data
   })
 }
+
+/**
+ * 新品的sku列表
+ */
+export const getProductNewSkuList = (): Promise<{ data: string[] }> => {
+  return request({
+    url: `${BASE_API}/product/new/sku`,
+    method: 'get',
+  })
+}

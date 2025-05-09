@@ -38,3 +38,12 @@ export function downloadFilePD(url:string, data:any) {
     responseType: 'blob', // 确保响应类型为二进制流
   })
 }
+
+export function downloadFileN(url:string) {
+
+  return request({
+    method: 'POST',
+    url: `${BASE_API}${url}`,
+    responseType: 'blob', // 确保响应类型为二进制流
+  })
+}
