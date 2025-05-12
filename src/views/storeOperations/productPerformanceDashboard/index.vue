@@ -2873,7 +2873,7 @@ const fetchAsinColumn = async () => {
     if (['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(item.prop)) {
       item.sortable = true
     }
-    if (['asinImgUrl', 'sku', 'asin', 'parentAsin'].includes(item.prop)) {
+    if (['asinImgUrl', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
     if (item.prop === 'nowSubcategoryRanking') {
