@@ -145,7 +145,7 @@
         <el-table
           v-loading="listLoading"
           border
-          :cell-style="{ textAlign: 'center' }"
+          :cell-style="cell3Style"
           :data="assessmentList"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
@@ -266,10 +266,10 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { getAssessmentList, getProductManagerAssessmentList, getUserAttendanceList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
 import type { IGetAssessmentList, IGetAssessmentListReq, IGetProductManagerAssessmentList, IGetUserAttendanceList } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 
 defineOptions({
   name: 'PerformanceStatistics'
@@ -460,6 +460,37 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     return {
       textAlign: 'center',
       cursor: 'pointer'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
+}
+const cell3Style = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+  const label = data.column.label
+  if (label === '总考核完成数') {
+    if (data.row.assessmentNumberFinish >= data.row.assessmentNumber) {
+      return {
+        color: 'var(--el-color-success)',
+        textAlign: 'center'
+      }
+    } else {
+      return {
+        color: 'var(--el-color-danger)',
+        textAlign: 'center'
+      }
+    }
+  } else if (label === 'OEM完成数') {
+    if (data.row.oemFinish >= data.row.oem) {
+      return {
+        color: 'var(--el-color-success)',
+        textAlign: 'center'
+      }
+    } else {
+      return {
+        color: 'var(--el-color-danger)',
+        textAlign: 'center'
+      }
     }
   }
   return {
