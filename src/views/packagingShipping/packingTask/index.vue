@@ -2396,7 +2396,11 @@ onBeforeMount(() => {
   if (pageSize) {
     queryForm.pageSize = Number(pageSize)
   }
-  fetchData()
+  if (queryForm.status !== 5) {
+    fetchData()
+  } else if (queryForm.status === 5) {
+    fetchTaskingData()
+  }
   getSiteList()
 })
 </script>
