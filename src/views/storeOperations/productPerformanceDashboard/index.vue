@@ -2906,7 +2906,14 @@ const operationAndDevelopSelect = () => {
   const role = aclStore.getRole[0]
   switch (role) {
     // 老板和运营主管
-    case 'ROLE_BOSS': 
+    case 'ROLE_BOSS': {
+      disabledOpe.value = false
+      disabledDev.value = false
+      queryForm.site = [0]
+      asinQueryForm.site = [0]
+      pAsinQueryForm.site = [0] //【BOSS】角色，3个tab的默认站点=美国。
+      break;
+    }
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
       disabledOpe.value = false
       disabledDev.value = false

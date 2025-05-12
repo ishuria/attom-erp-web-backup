@@ -133,11 +133,11 @@
       >
         <el-table-column label="SKU">
           <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
-          <el-table-column label="站点" min-width="150" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
-          <el-table-column label="打包完成数(好)" min-width="140" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
-          <el-table-column label="打包任务数" min-width="110" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
-          <el-table-column label="打包任务状态" min-width="130" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
-          <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
+          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
+          <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
+          <el-table-column label="打包任务数" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
+          <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
+          <el-table-column label="SKU实际数量" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
             <template #default="{ row }">
               <el-input
                 v-model="row.skuActualCount"
@@ -153,8 +153,8 @@
         </el-table-column>
         <el-table-column label="零件">
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-          <el-table-column label="实际数量" min-width="100" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
-          <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
+          <el-table-column label="实际数量" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
+          <el-table-column label="退税报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
             <template #default="{ row }">
               <el-input
                 v-model="row.customsDeclarationCount"
@@ -167,16 +167,16 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="剩余可报" min-width="100" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
-          <el-table-column label="PO总数" min-width="90" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
-          <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
-          <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
+          <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
+          <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
+          <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
+          <el-table-column label="不报关" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
             <template #default="{ row }">
               <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
-          <el-table-column label="已发未报" min-width="100" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
-          <el-table-column label="已报未发" min-width="100" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
+          <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
+          <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="230">
           <template #default="{ row }">

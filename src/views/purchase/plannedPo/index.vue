@@ -66,7 +66,7 @@
             </template>
           </el-table-column>
           <el-table-column label="请购人" prop="userName"/>
-          <el-table-column label="站点" min-width="125" prop="siteName"/>
+          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')"/>
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片
@@ -197,7 +197,7 @@
             </template>
           </el-table-column>
           <el-table-column label="请购人" prop="userName"/>
-          <el-table-column label="站点" min-width="125" prop="siteName"/>
+          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')"/>
           <el-table-column label="SKU图片" width="82">
             <template #header>
               SKU<br>图片

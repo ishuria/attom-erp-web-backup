@@ -549,7 +549,7 @@
               </el-row>
 
               <el-row style="width: 100%">
-                  <el-col :span="12">
+                  <el-col :span="8">
                     <el-form-item label="PO站点">
                       <el-select v-model="poDetailData.site" :disabled="createDisabled" placeholder="请选择站点" @change="updateCreate">
                         <el-option
@@ -559,6 +559,11 @@
                           :value="item.id"
                         />
                       </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="4">
+                    <el-form-item label="需新品质检">
+                      <el-checkbox v-model="poDetailData.qualityMark" class="custom-checkbox" :false-value="0" :true-value="1" @change="updateCreate"/>
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
