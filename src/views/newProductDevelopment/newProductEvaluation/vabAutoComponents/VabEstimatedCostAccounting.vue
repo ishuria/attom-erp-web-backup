@@ -12,7 +12,7 @@
         :cell-class-name="getCellStyle"
         :cell-style="cellStyle"
         :data="dList"
-        :header-cell-style="{ 'text-align': 'center' }"
+        :header-cell-style="headerCellStyle"
         max-height="65vh"
         stripe
         @cell-click="changeInput"
@@ -104,7 +104,7 @@
             <div class="none">
               <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
+            <span>{{ row.length != null ? row.length : '' }}</span>
           </template>
         </el-table-column>
 
@@ -113,7 +113,7 @@
             <div class="none">
               <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
+            <span>{{ row.width != null ? row.width : '' }}</span>
           </template>
         </el-table-column>
 
@@ -122,7 +122,7 @@
             <div class="none">
               <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
+            <span>{{ row.height != null ? row.height : '' }}</span>
           </template>
         </el-table-column>
 
@@ -131,7 +131,7 @@
             <div class="none">
               <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+            <span>{{ row.weight != null ? row.weight : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="尾程" prop="lastMile">
@@ -740,20 +740,74 @@ const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   
   const label = data.column.label
-  if (label === '产品描述' || label === '价格信息' || label === '1688链接') {
-    return {
-      textAlign: 'left',
-      cursor: 'pointer',
+  switch (label) {
+    case '产品描述': 
+    case '价格信息': 
+    case '1688链接':
+    case '站点': {
+      return {
+        textAlign: 'left',
+        cursor: 'pointer',
+      }
     }
-  } else if (label === '日期' || label === '外汇币种' || label === '汇率' || label === '头程￥' || label === '毛利率' || label === 'ROI' || label === '平台佣金' || label === '仓储费2个月') {
-    return {
-      textAlign: 'center',
-      cursor: 'not-allowed'
+    case '日期': 
+    case '外汇币种': {
+      return {
+        textAlign: 'left',
+        cursor: 'not-allowed'
+      }
     }
+    case '汇率': 
+    case '头程￥': 
+    case '毛利率': 
+    case 'ROI': 
+    case '平台佣金': 
+    case '仓储费2个月': {
+      return {
+        textAlign: 'right',
+        cursor: 'not-allowed'
+      }
+    }
+  // No default
   }
   return {
-    textAlign: 'center',
+    textAlign: 'right',
     cursor: 'pointer'
+  }
+}
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  
+  const label = data.column.label
+  switch (label) {
+    case '产品描述': 
+    case '价格信息': 
+    case '1688链接':
+    case '站点': 
+    case '图片': {
+      return {
+        textAlign: 'left',
+      }
+    }
+    case '日期': 
+    case '外汇币种': {
+      return {
+        textAlign: 'left',
+      }
+    }
+    case '汇率': 
+    case '头程￥': 
+    case '毛利率': 
+    case 'ROI': 
+    case '平台佣金': 
+    case '仓储费2个月': {
+      return {
+        textAlign: 'right',
+      }
+    }
+  // No default
+  }
+  return {
+    textAlign: 'right',
   }
 }
 </script>

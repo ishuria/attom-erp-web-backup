@@ -48,7 +48,7 @@
       :border="true"
       :cell-style="cellStyle"
       :data="evaluationList"
-      :header-cell-style="{ textAlign: 'center' }"
+      :header-cell-style="cellStyle"
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
@@ -81,7 +81,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" :fixed="fixed" label="操作" width="180px">
+      <el-table-column :fixed="fixed" label="操作" width="180px">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="handleClick(row)">
@@ -171,11 +171,11 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 跑分明细 -->
-    <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="870">
-      <el-table :cell-style="{ textAlign: 'center' }" :data="benchmarkScoreList" :header-cell-style="{ 'text-align': 'center' }">
-        <el-table-column label="描述" prop="desc" />
-        <el-table-column label="数量" prop="quantity" />
-        <el-table-column label="分数" prop="score" >
+    <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="560">
+      <el-table border :data="benchmarkScoreList" :header-cell-style="cellScoreStyle" stripe style="width: fit-content">
+        <el-table-column align="left" label="描述" prop="desc" width="290" />
+        <el-table-column align="right" label="数量" prop="quantity" width="130" />
+        <el-table-column align="right" label="分数" prop="score" width="100" >
           <template #default="{ row }">
             <div v-if="row.desc === '第一部分总分-市场供求评分' || row.desc === '第二部分总分-亚马逊关键词首页评分'">
               {{ Math.round(row.score) }}
@@ -620,13 +620,27 @@ const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (['中文品名', '亚马逊前台关键词', '亚马逊后台关键词', '年市场容量'].includes(data.column.label)) {
+  if (['评估日期', '评估人', '中文品名', '亚马逊前台关键词', '亚马逊后台关键词', '来源'].includes(data.column.label)) {
+    return {
+      textAlign: 'left'
+    }
+  } else if (['操作', '关键词趋势'].includes(data.column.label)) {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'right'
+  }
+}
+const cellScoreStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.column.label === '描述') {
     return {
       textAlign: 'left'
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'right'
   }
 }
 onActivated(() => {
