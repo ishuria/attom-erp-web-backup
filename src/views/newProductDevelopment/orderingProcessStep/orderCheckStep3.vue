@@ -1,29 +1,30 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <h2 style="text-align: center;">新供应商信息完善</h2>
-    <el-table 
-      ref="tableRef" 
-      border :data="list" 
-      :header-cell-style="{ 'text-align': 'center' }" 
+    <el-table
+      ref="tableRef"
+      border :data="list"
+      :header-cell-style="{ 'text-align': 'center' }"
       stripe
     >
-      <el-table-column align="left" label="供应商全名" prop="suppliser" :width="flexColumnWidth(list, '供应商全名', 'suppliser')" />   
-      <el-table-column label="税号" min-width="120" prop="taxNumber" />  
+      <el-table-column align="left" label="供应商全名" prop="suppliser" :width="flexColumnWidth(list, '供应商全名', 'suppliser')" />
+      <el-table-column label="税号" min-width="120" prop="taxNumber" />
       <el-table-column label="地址" prop="address" :width="flexColumnWidth(list, '地址', 'address')" />
       <el-table-column align="center" label="开票电话"  min-width="100" prop="telephone" />
-      <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')"/>    
+      <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')"/>
       <el-table-column label="开户账号"  min-width="120" prop="accountNumber" />
-      <el-table-column label="联行号" min-width="100" prop="bankRoutingNumber"/>    
+      <el-table-column label="联行号" min-width="100" prop="bankRoutingNumber"/>
       <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson"/>
-      <el-table-column align="center" label="联系人电话" min-width="100" prop="contactNumber"/>    
+      <el-table-column align="center" label="联系人电话" min-width="100" prop="contactNumber"/>
+      <el-table-column align="center" label="联系人微信" min-width="100" prop="weChatNumber"/>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <el-table 
-      ref="tableRef" 
-      border :data="qualityInspectionList" 
-      :header-cell-style="{ 'text-align': 'center' }" 
+    <el-table
+      ref="tableRef"
+      border :data="qualityInspectionList"
+      :header-cell-style="{ 'text-align': 'center' }"
       stripe
       style="margin-top: 20px"
       >
@@ -66,7 +67,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { checkTypeList } from '../indexCommon'
@@ -120,7 +121,7 @@ const fetchQualityInspectionData = async () => {
         // 转换为下拉框需要的数据格式
         // variantsSelectList.value.unshift({ id: -1, label: '所有' })
         // console.log(variantsSelectList.value);
-        
+
         variantsSelectStringList.value = [
             { label: '所有', value: '-1' }, // 添加“所有”选项
             ...variantSelectList.map((item: any) => ({
@@ -141,7 +142,7 @@ onMounted(async () => {
     fetchNewSupplier()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
     display: block;
@@ -149,4 +150,3 @@ onMounted(async () => {
     text-align: center;
 }
 </style>
-  

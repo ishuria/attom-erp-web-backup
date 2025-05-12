@@ -1,15 +1,15 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <h2 style="text-align: center;">新供应商信息完善</h2>
-    <el-table 
-      ref="tableRef" 
-      border :cell-style="cellStyle" 
-      :data="list" 
+    <el-table
+      ref="tableRef"
+      border :cell-style="cellStyle"
+      :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
       @cell-click="changeInput"
     >
-      <el-table-column label="供应商全名" prop="suppliser" :width="flexColumnWidth(list, '供应商全名', 'suppliser')" />   
+      <el-table-column label="供应商全名" prop="suppliser" :width="flexColumnWidth(list, '供应商全名', 'suppliser')" />
       <el-table-column label="税号" min-width="120" prop="taxNumber" >
         <template #default="{ row }">
           <div class="none">
@@ -17,7 +17,7 @@
           </div>
           <span>{{ row.taxNumber }}</span>
         </template>
-      </el-table-column>  
+      </el-table-column>
       <el-table-column label="地址"  min-width="160" prop="address" >
         <template #default="{ row }">
           <div class="none">
@@ -41,7 +41,7 @@
           </div>
           <span>{{ row.bank }}</span>
         </template>
-      </el-table-column>    
+      </el-table-column>
       <el-table-column label="开户账号"  min-width="120" prop="accountNumber" >
         <template #default="{ row }">
           <div class="none">
@@ -57,7 +57,7 @@
           </div>
           <span>{{ row.bankRoutingNumber }}</span>
         </template>
-      </el-table-column>    
+      </el-table-column>
       <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson">
         <template #default="{ row }">
           <div class="none">
@@ -73,7 +73,15 @@
           </div>
           <span>{{ row.contactNumber }}</span>
         </template>
-      </el-table-column>    
+      </el-table-column>
+      <el-table-column label="联系人微信" min-width="100" prop="weChatNumber">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.weChatNumber" @blur="supplierClickCancel($event, row)" @keydown.enter="supplierClickCancel($event,row)" />
+          </div>
+          <span>{{ row.weChatNumber }}</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -87,10 +95,10 @@
         <el-button type="primary">读取</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table 
-      ref="tableRef" 
-      border :data="qualityInspectionList" 
-      :header-cell-style="{ 'text-align': 'center' }" 
+    <el-table
+      ref="tableRef"
+      border :data="qualityInspectionList"
+      :header-cell-style="{ 'text-align': 'center' }"
       stripe
       @cell-click="changeInput"
     >
@@ -142,7 +150,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
@@ -214,7 +222,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'left'
-    } 
+    }
   } else if (index === 3 || index === 7 || index === 8) {
     return {
       textAlign: 'center'
@@ -229,8 +237,8 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
  * 当点击时切换输入框，修改输入
  */
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-    
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -287,7 +295,7 @@ const supplierClickCancel = async (event: any, value: any) => {
   if (JSON.stringify(value) === JSON.stringify(copyRow)) {
     return
   }
-  if (event.type === 'blur') { 
+  if (event.type === 'blur') {
     try {
       await reviewStepNo4UpdateSupplier(value)
       await fetchNewSupplier()
@@ -373,7 +381,7 @@ const handleSaveAndContinue = async () => {
       _setStepNo(Number(classReviewId), 3)
       // if (route.query.reviewId) { //编辑进来的，要更改stepNo
       //   await delVisitedRoute(handleActivePath(route, true))
-      // } 
+      // }
     }
   } catch (error) {
     console.error(error)
@@ -393,7 +401,7 @@ const fetchQualityInspectionData = async () => {
     // 转换为下拉框需要的数据格式
     // variantsSelectList.value.unshift({ id: -1, label: '所有' })
     // console.log(variantsSelectList.value);
-    
+
     variantsSelectStringList.value = [
       { label: '所有', value: '0' }, // 添加“所有”选项
       ...variantSelectList.map((item: any) => ({
@@ -416,7 +424,7 @@ onMounted(() => {
   fetchQualityInspectionData()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
   display: block;
@@ -433,4 +441,3 @@ onMounted(() => {
   line-height: 35px;
 }
 </style>
-  

@@ -58,7 +58,7 @@
             <span>{{ row.address }}</span>
         </template>
       </el-table-column>
-      
+
       <el-table-column align="center" label="开票电话" min-width="150" prop="telephone" >
         <template #default="{ row }">
             <div class="none">
@@ -105,6 +105,14 @@
                 <el-input v-model.trim="row.contactNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.contactNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="联系人微信" min-width="150" prop="weChatNumber" >
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model.trim="row.weChatNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.weChatNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="实际税点专票" prop="actualZTaxRate" width="100">
@@ -253,7 +261,7 @@ const UploadRequestHandler = async (params: any, row: any) => {
 }
 const handleDownLoadSpecialFile = async (row: any) => {
   await downloadFile("/product/suppliser/download",{
-    suppliserId: row.suppliserId, 
+    suppliserId: row.suppliserId,
   }).then((res) => {
     console.log(res);
   }).catch((error) => {
@@ -267,8 +275,8 @@ const handleDelFile = async (row: any) => {
   await updateProductSupplier(row)
 }
 let copyRow: any
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -300,7 +308,7 @@ const clickCancel = async (event:any,value:any) =>{
   if (isEqual(copyRow, value)) {
     return
   }
-  
+
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
@@ -395,14 +403,14 @@ const setSelectRows = (value: string) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-   
-   if  (data.columnIndex === 0){        
-   
+
+   if  (data.columnIndex === 0){
+
        return {
             color: '#bbb',
             cursor: 'not-allowed',
             textAlign:'center'
-        } 
+        }
    }
 }
 
