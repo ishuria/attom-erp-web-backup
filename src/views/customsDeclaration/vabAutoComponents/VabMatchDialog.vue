@@ -107,84 +107,86 @@
       </div>
     </template>
   </vab-dialog>
-  <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" class="dialog" title="匹配" top="7vh" width="90%">
-    <div style="margin-bottom: 15px">
-      <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
-      <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
-        SKU：
-        <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
-        品名：
-        <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
-        剩余未匹配数量：
-        <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
-      </el-text>
+  <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content">
+    <div style="width: fit-content; margin: 0 auto">
+      <div style="margin-bottom: 15px">
+        <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
+        <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+          SKU：
+          <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
+          品名：
+          <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
+          剩余未匹配数量：
+          <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
+        </el-text>
+      </div>
+      <el-table
+        border
+        :cell-style="match2Style"
+        class="noneHoveTable"
+        :data="matchList"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="70vh"
+        :row-class-name="stripedRowClass2"
+        :span-method="objectSpanMethod2"
+        style="width: fit-content; margin: 0 auto"
+      >
+        <el-table-column label="SKU">
+          <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
+          <el-table-column label="站点" min-width="150" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
+          <el-table-column label="打包完成数(好)" min-width="140" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
+          <el-table-column label="打包任务数" min-width="110" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
+          <el-table-column label="打包任务状态" min-width="130" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
+          <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
+            <template #default="{ row }">
+              <el-input
+                v-model="row.skuActualCount"
+                :max="row.goodCount"
+                :min="0"
+                type="number"
+                @change="handleUpdateSkuCount(row)"
+                @focus="handleFocus(row)"
+                @wheel.stop.prevent
+              />
+            </template>
+          </el-table-column>
+        </el-table-column>
+        <el-table-column label="零件">
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
+          <el-table-column label="实际数量" min-width="100" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
+          <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
+            <template #default="{ row }">
+              <el-input
+                v-model="row.customsDeclarationCount"
+                :disabled="row.customsDeclarationStatus === 1"
+                :min="0"
+                type="number"
+                @change="handleUpdateComponentCustomCount(row)"
+                @focus="handleFocus(row)"
+                @wheel.stop.prevent
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="剩余可报" min-width="100" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
+          <el-table-column label="PO总数" min-width="90" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
+          <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
+          <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="已发未报" min-width="100" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
+          <el-table-column label="已报未发" min-width="100" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="230">
+          <template #default="{ row }">
+            <el-link type="primary" :underline="false" @click="handleShowPackingCount(row)">修正质检</el-link>
+            <el-link type="primary" :underline="false" @click="handleInsertAll(row)">填入全部</el-link>
+            <el-link type="danger" :underline="false" @click="handleClear(row)">清空</el-link>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-
-    <el-table
-      border
-      :cell-style="match2Style"
-      class="noneHoveTable"
-      :data="matchList"
-      :header-cell-style="{ textAlign: 'center' }"
-      max-height="60vh"
-      :row-class-name="stripedRowClass2"
-      :span-method="objectSpanMethod2"
-    >
-      <el-table-column label="SKU">
-        <el-table-column label="匹配的PO" min-width="100" prop="po" />
-        <el-table-column label="站点" min-width="150" prop="siteName" />
-        <el-table-column label="打包完成数(好)" min-width="140" prop="goodCount" />
-        <el-table-column label="打包任务数" min-width="110" prop="packageTaskCount" />
-        <el-table-column label="打包任务状态" min-width="130" prop="status" />
-        <el-table-column label="SKU实际数量" min-width="130" prop="skuActualCount">
-          <template #default="{ row }">
-            <el-input
-              v-model="row.skuActualCount"
-              :max="row.goodCount"
-              :min="0"
-              type="number"
-              @change="handleUpdateSkuCount(row)"
-              @focus="handleFocus(row)"
-              @wheel.stop.prevent
-            />
-          </template>
-        </el-table-column>
-      </el-table-column>
-      <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-        <el-table-column label="实际数量" min-width="100" prop="componentActualCount" />
-        <el-table-column label="退税报关数量" min-width="130" prop="customsDeclarationCount">
-          <template #default="{ row }">
-            <el-input
-              v-model="row.customsDeclarationCount"
-              :disabled="row.customsDeclarationStatus === 1"
-              :min="0"
-              type="number"
-              @change="handleUpdateComponentCustomCount(row)"
-              @focus="handleFocus(row)"
-              @wheel.stop.prevent
-            />
-          </template>
-        </el-table-column>
-        <el-table-column label="剩余可报" min-width="100" prop="reportable" />
-        <el-table-column label="PO总数" min-width="90" prop="purchaseCount" />
-        <el-table-column label="采购方" min-width="90" prop="purchase" />
-        <el-table-column label="不报关" min-width="80" prop="customsDeclarationStatus">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-          </template>
-        </el-table-column>
-        <el-table-column label="已发未报" min-width="100" prop="yfwbCount" />
-        <el-table-column label="已报未发" min-width="100" prop="ybwfCount" />
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="230">
-        <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="handleShowPackingCount(row)">修正质检</el-link>
-          <el-link type="primary" :underline="false" @click="handleInsertAll(row)">填入全部</el-link>
-          <el-link type="danger" :underline="false" @click="handleClear(row)">清空</el-link>
-        </template>
-      </el-table-column>
-    </el-table>
     <div style="margin-top: 20px; text-align: center">
       <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
         剩余SKU：
