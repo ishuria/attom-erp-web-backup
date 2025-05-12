@@ -154,10 +154,11 @@
     <!-- 评分参数 -->
     <vab-dialog v-model="scoreParametersVisible" title="评分参数" width="500">
       <el-table
-        :cell-style="{ textAlign: 'center' }"
+        border
+        :cell-style="cellParameterStyle"
         :data="scoreParametersList"
-        :header-cell-style="{ 'text-align': 'center' }"
-        height="700px"
+        :header-cell-style="cellParameterStyle"
+        height="700px" stripe
       >
         <el-table-column label="名称" property="key" />
         <el-table-column label="值">
@@ -641,6 +642,16 @@ const cellScoreStyle = (data: { row: any, column: any, rowIndex: number, columnI
   }
   return {
     textAlign: 'right'
+  }
+}
+const cellParameterStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  // if (data.column.label === '名称') {
+  //   return {
+  //     textAlign: 'left'
+  //   }
+  // }
+  return {
+    textAlign: 'left'
   }
 }
 onActivated(() => {

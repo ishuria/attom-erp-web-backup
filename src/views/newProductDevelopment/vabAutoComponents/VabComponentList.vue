@@ -17,7 +17,7 @@
       :cell-class-name="clearPadding" :cell-style="cellStyle"
       class="noneHoveTable"
       :data="progressProductList" 
-      :header-cell-style="{ 'text-align': 'center' }" 
+      :header-cell-style="headerCellStyle" 
       :row-class-name="stripedRowClass" :span-method="objectSpanMethod" 
       @cell-click="componentTableInputChange" 
     >
@@ -591,23 +591,31 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 3 || index === 9) {        
+  const label = data.column.label
+  if (label === '已有零件id' || label === '总未税价') {        
     return {
-      // backgroundColor: '#f5f5f5',
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
-  } else if (index === 2 || index === 18) {
+  } else if (['图片', '零件名', '零件单位', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
     return { textAlign: 'left' }
   } else {
     return {
-      textAlign:'center'
+      textAlign: 'right'
     }
   }
 }
-
+const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+ if (['图片', '零件名', '零件单位', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
+    return { textAlign: 'left' }
+  } else {
+    return {
+      textAlign: 'right'
+    }
+  }
+}
 // 新增零件
 const addComponentHandler = async () => {
   const newComponent: IProgressProdcutComponent = {

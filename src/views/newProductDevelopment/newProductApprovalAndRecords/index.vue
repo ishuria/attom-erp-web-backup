@@ -17,17 +17,18 @@
       ref="tableRef" 
       border 
       :cell-class-name="clearPadding" 
-      class="noneHoveTable" 
-      :data="dataList" :header-cell-style="{ 'text-align': 'center' }" 
-      :row-class-name="stripedRowClass"
-      :span-method="objectSpanMethod" 
+      :cell-style="cellStyle" 
+      class="noneHoveTable" :data="dataList" 
+      :header-cell-style="cellStyle"
+      :row-class-name="stripedRowClass" 
+      :span-method="objectSpanMethod"
     >
-      <el-table-column align="center" label="提交日期" min-width="115" prop="createTime">
+      <el-table-column label="提交日期" min-width="115" prop="createTime">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="SKU图片" width="75">
+      <el-table-column label="SKU图片" width="75">
         <template #header>
           SKU<br />图片
         </template>
@@ -49,23 +50,23 @@
           {{ formattedProgressLog(row.productName) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="首单PO" min-width="100" prop="po" />
-      <el-table-column align="center" label="首单实际成本" prop="firstRealCost" width="130" />
-      <el-table-column align="center" label="审批成本" min-width="100" prop="totalCost" />
-      <el-table-column align="center" label="相差" min-width="70" prop="difference" />
-      <el-table-column align="center" label="有效计数" prop="effectiveCount" width="70">
+      <el-table-column  label="首单PO" min-width="100" prop="po" />
+      <el-table-column  label="首单实际成本" prop="firstRealCost" width="130" />
+      <el-table-column  label="审批成本" min-width="100" prop="totalCost" />
+      <el-table-column  label="相差" min-width="70" prop="difference" />
+      <el-table-column  label="有效计数" prop="effectiveCount" width="70">
         <template #header>
           有效<br />计数
         </template>
       </el-table-column>
-      <el-table-column align="center" label="OEM" min-width="70" prop="oem">
+      <el-table-column  label="OEM" min-width="70" prop="oem">
         <template #default="{ row }">
           <el-checkbox
 v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large"
             :true-value="1" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品经理" min-width="100" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
+      <el-table-column  label="产品经理" min-width="100" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
         <template #header>
           产品<br />经理
         </template>
@@ -73,7 +74,7 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
           <div v-html="row.productManager"></div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="产品设计" min-width="100" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
+      <el-table-column  label="产品设计" min-width="100" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
         <template #header>
           产品<br />设计
         </template>
@@ -81,31 +82,31 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
           {{ row.productDesign }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="立项日期" min-width="115" prop="projectInitiationDate">
+      <el-table-column  label="立项日期" min-width="115" prop="projectInitiationDate">
         <template #default="{ row }">
           <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批日期" min-width="115" prop="reviewDate">
+      <el-table-column  label="审批日期" min-width="115" prop="reviewDate">
         <template #default="{ row }">
           <span> {{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : "" }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="耗时" min-width="100" prop="timeConsuming">
+      <el-table-column  label="耗时" min-width="100" prop="timeConsuming">
         <template #default="{ row }">
           {{ row.timeConsuming }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批状态" prop="reviewStatus" width="110">
+      <el-table-column  label="审批状态" prop="reviewStatus" width="110">
         <template #default="{ row }">
           <span :class="generateStatus(row.reviewStatus).color">
             {{ generateStatus(row.reviewStatus).text }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')" />
+      <el-table-column  label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')" />
 
-      <el-table-column align="center" fixed="right" label="操作" width="120">
+      <el-table-column fixed="right" label="操作" width="120">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="handleOrderProcess(row)">
@@ -187,6 +188,7 @@ v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.l
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { indexColumns } from '../newProductProgress/indexColumns'
 import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
 import { getByIdQueryEvaluation } from '/@/api/devlocal/progress'
@@ -440,7 +442,22 @@ const stripedRowClass = (_row: any) => {
   // 根据当前组索引设置条纹样式
   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
 };
-
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+  const label = data.column.label
+  if (['提交日期', 'SKU', '产品', '首单PO', '产品经理', '产品设计', '立项日期', '审批日期', '审批状态', '审批人'].includes(label)) {
+    return {
+      textAlign: 'left'
+    }
+  } else if (label === 'OEM') {
+    return {
+      textAlign: 'center'
+    }
+  } else {
+    return {
+      textAlign: 'right'
+    }
+  }
+}
 
 onActivated(() => {
   tableRef.value?.doLayout()

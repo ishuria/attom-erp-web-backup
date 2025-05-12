@@ -24,7 +24,7 @@
         :cell-class-name="clearPadding"
         :cell-style="cellStyle" class="noneHoveTable"
         :data="estimatedCostList"
-        :header-cell-style="{ 'text-align': 'center' }" stripe @cell-click="costAccountingChangeInput"
+        :header-cell-style="headerCellStyle" stripe @cell-click="costAccountingChangeInput"
       >
         <el-table-column label="日期" min-width="110" prop="createTime">
           <template #default="{ row }">
@@ -278,9 +278,9 @@ import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableRefs } from 'element-plus'
 import { isEqual } from 'lodash'
 import debounce from 'lodash/debounce'
+import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import type { CSSProperties } from 'vue'
 import {
   addCostAccounting,
   costAccountingCopy,
@@ -450,20 +450,32 @@ const effectiveCountInputHandle = (event: Event) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 0 || index === 2 || index === 3 || index === 12 || index === 17 || index === 23 || index === 24) {
+  const label = data.column.label
+  if (['日期', '外汇币种', '汇率', '尾程', '毛利率', '仓储费2个月'].includes(label)) {
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     }
-  } else if (index === 5 || index === 6) {
+  } else if (['产品描述', '价格信息'].includes(label)) {
     return {
       textAlign: 'left'
     }
   } else {
     return {
-      textAlign:'center'
+      textAlign: 'right'
+    }
+  }
+}
+const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+ if (['产品描述', '价格信息'].includes(label)) {
+    return {
+      textAlign: 'left'
+    }
+  } else {
+    return {
+      textAlign: 'right'
     }
   }
 }

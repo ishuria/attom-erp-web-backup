@@ -159,15 +159,15 @@ onUnmounted(() => {
 
 <style lang="scss">
 .wangEditorDialog {
-  width: 55%;
-  margin: 8vh auto 5vh;
-  height: 87vh;
   display: flex;
   flex-direction: column;
+  width: 55%;
+  height: 87vh;
+  margin: 8vh auto 5vh;
 
   .el-dialog__body {
-    flex: 1 1 auto; // 中间自适应
     display: flex; // 控制 container 垂直居中
+    flex: 1 1 auto; // 中间自适应
     align-items: center;
     justify-content: center;
     overflow: auto; // 防止滚动条问题
@@ -197,9 +197,9 @@ onUnmounted(() => {
         flex: 1; /* 使内容区域填满剩余空间 */
         width: 70%;
         margin: 20px auto;
+        overflow: auto;
         background-color: var(--el-color-white);
         border: 0;
-        overflow: auto;
       }
 
       #w-e-textarea-1 {

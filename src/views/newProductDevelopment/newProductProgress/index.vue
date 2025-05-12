@@ -1,4 +1,3 @@
-handleSubmit
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
@@ -33,7 +32,7 @@ handleSubmit
           border
           :cell-style="cellStyle"
           :data="progressList"
-          :header-cell-style="{ 'text-align': 'center' }"
+          :header-cell-style="headerCellStyle"
           stripe
           @cell-click="changeInput"
         >
@@ -235,11 +234,11 @@ handleSubmit
           border
           :cell-style="cellStyle2"
           :data="progressList"
-          :header-cell-style="{ 'text-align': 'center' }"
+          :header-cell-style="headerCellStyle"
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column align="center" label="优先级" min-width="90" prop="priority">
+          <el-table-column label="优先级" min-width="90" prop="priority">
             <template #default="{ row }">
               <el-select
                 v-model="row.priority"
@@ -253,12 +252,12 @@ handleSubmit
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="立项日期" prop="createTime" width="120">
+          <el-table-column label="立项日期" prop="createTime" width="120">
             <template #default="{ row }">
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="参与人员" min-width="100" prop="sharerName">
+          <el-table-column label="参与人员" min-width="100" prop="sharerName">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -275,7 +274,7 @@ handleSubmit
               {{ row.mainSearchTerms }}
             </template>
           </el-table-column>
-          <el-table-column align="center" label="OEM" min-width="65" prop="oem">
+          <el-table-column label="OEM" min-width="65" prop="oem">
             <template #default="{ row }">
               <el-checkbox
                 v-model="row.oem"
@@ -288,8 +287,8 @@ handleSubmit
               />
             </template>
           </el-table-column>
-          <el-table-column align="center" label="目标月销" min-width="100" prop="targetMonthlySales" />
-          <el-table-column align="center" label="调研报告链接" prop="" width="130">
+          <el-table-column label="目标月销" min-width="100" prop="targetMonthlySales" />
+          <el-table-column label="调研报告链接" prop="" width="130">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
@@ -299,7 +298,7 @@ handleSubmit
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="当前阶段" min-width="100" prop="currentPhaseStatus" />
+          <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus" />
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
@@ -344,7 +343,7 @@ handleSubmit
             </template>
           </el-table-column>
 
-          <el-table-column align="center" :fixed="fixed" label="操作" width="100px">
+          <el-table-column :fixed="fixed" label="操作" width="100px">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制</el-button>
             </template>
@@ -561,13 +560,13 @@ import {
   getProgressPersonList,
   getProgressSharelist,
   getProgressSuppliserList,
+  updateBulkGoodsStatusByProgressId,
   updateProgressArchive,
   updateProgressImgSort,
   updateProgressManage,
   updateProgressMoldAdd,
   updateProgressSharelist,
   uploadFile,
-  updateBulkGoodsStatusByProgressId,
 } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
@@ -1288,7 +1287,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     case '参与人员':
     case '调研报告链接': {
       return {
-        textAlign: 'center',
+        textAlign: 'left',
         color: '#999',
         cursor: 'not-allowed',
       }
@@ -1296,17 +1295,45 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     case '示例图片':
     case '产品':
     case '开发日志':
-    case '备注': {
+    case '备注':
+    case '当前阶段': {
       return {
         cursor: 'pointer',
         textAlign: 'left',
       }
     }
-    case '当前阶段':
     case '目标月销': {
       return {
-        textAlign: 'center',
+        textAlign: 'right',
         cursor: 'pointer',
+      }
+    }
+    default: {
+      return {
+        textAlign: 'center',
+      }
+    }
+  }
+}
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  switch (label) {
+    case '立项日期':
+    case '参与人员':
+    case '调研报告链接':
+    case '当前阶段':
+    case '示例图片':
+    case '产品':
+    case '开发日志':
+    case '备注':
+    case '优先级': {
+      return {
+        textAlign: 'left',
+      }
+    }
+    case '目标月销': {
+      return {
+        textAlign: 'right',
       }
     }
     default: {
@@ -1322,19 +1349,22 @@ const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex
     case '立项日期':
     case '参与人员':
     case '调研报告链接':
-    case '目标月销':
-    case '当前阶段': {
-      return {
-        textAlign: 'center',
-        color: '#999',
-        cursor: 'not-allowed',
-      }
-    }
+    case '当前阶段':
     case '产品': {
       return {
         textAlign: 'left',
         color: '#999',
         cursor: 'not-allowed',
+      }
+    }
+    case '优先级': {
+      return {
+        textAlign: 'left'
+      }
+    }
+    case '目标月销': {
+      return {
+        textAlign: 'right',
       }
     }
     case '示例图片':

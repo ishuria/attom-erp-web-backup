@@ -25,14 +25,15 @@
       <el-table 
         ref="tableRef" 
         v-loading="listLoading" 
-        border :data="moldList" 
-        :header-cell-style="{ 'text-align': 'center' }" 
+        border :cell-style="cellStyle" 
+        :data="moldList"
+        :header-cell-style="cellStyle" 
         stripe
       >
         <el-table-column align="center" label="提交的信息">
-          <el-table-column align="center" label="提交日期" min-width="100">
+          <el-table-column label="提交日期" min-width="100">
             <template #default="{ row }">
-                {{ row.createTime.split(' ')[0] }}
+              {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
           <el-table-column label="产品" min-width="160" prop="productName" >
@@ -41,87 +42,87 @@
             </template>
           </el-table-column>
           <el-table-column label="零件名" min-width="180" prop="componentName" >
-              <template #default="{ row }">
-                  {{ row.componentName  }}
-              </template>
+            <template #default="{ row }">
+              {{ row.componentName  }}
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="供应商">
-              <template #default="{ row }">
-                  {{ row.supplierName }}
-              </template>
+          <el-table-column label="供应商">
+            <template #default="{ row }">
+              {{ row.supplierName }}
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="模具费（未税）" min-width="90">
-              <template #header>
-                  模具费<br>（未税）
-              </template>
-              <template #default="{ row }">
-                  {{ row.excludingTax }}
-              </template>
+          <el-table-column label="模具费（未税）" min-width="90">
+            <template #header>
+              模具费<br>（未税）
+            </template>
+            <template #default="{ row }">
+              {{ row.excludingTax }}
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="模具费（普票税点）" width="120">
-              <template #header>
-                  模具费<br>（普票税点）
-              </template>
-              <template #default="{ row }">
-                  {{ row.standardInvoice }}%
-              </template>
+          <el-table-column label="模具费（普票税点）" width="120">
+            <template #header>
+              模具费<br>（普票税点）
+            </template>
+            <template #default="{ row }">
+              {{ row.standardInvoice }}%
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="模具费（专票税点）" width="120">
-              <template #header>
-                  模具费<br>（专票税点）
-              </template>
-              <template #default="{ row }">
-                  {{ row.specialInvoice }}%
-              </template>
+          <el-table-column label="模具费（专票税点）" width="120">
+            <template #header>
+              模具费<br>（专票税点）
+            </template>
+            <template #default="{ row }">
+              {{ row.specialInvoice }}%
+            </template>
           </el-table-column>
-          <el-table-column align="center" label="预估总采购货值（未税）" min-width="130">
-              <template #header>
-                  预估总采购货值<br>（未税）
-              </template>
-              <template #default="{ row }">
-                  {{ row.purchaseTotal }}
-              </template>
+          <el-table-column label="预估总采购货值（未税）" min-width="130">
+            <template #header>
+              预估总采购货值<br>（未税）
+            </template>
+            <template #default="{ row }">
+              {{ row.purchaseTotal }}
+            </template>
           </el-table-column>
       </el-table-column>
 
       <el-table-column align="center" label="审核结果">
-          <el-table-column align="center" label="状态" min-width="100">
-              <template #default="{ row }">
-                  <span :class="generateStatus(row.status).color">
-                      {{ generateStatus(row.status).text }}
-                  </span>
-              </template>
-          </el-table-column>
-          <el-table-column align="center" label="开模费处理方式" min-width="100">
-              <template #header>
-                  开模费<br>处理方式
-              </template>
-              <template #default="{ row }">
-                  {{ generateDealMethod(row.dealMethod) }}
-              </template>
-          </el-table-column>
-          <el-table-column align="center" label="开票类型" min-width="100">
-              <template #default="{ row }">
-                  {{ generateInvoiceType(row.invoiceType) }}
-              </template>
-          </el-table-column>
-          <el-table-column align="center" label="付款金额" min-width="100">
-              <template #default="{ row }">
-                  {{ row.payPrice }}
-              </template>
-          </el-table-column>
-          <el-table-column align="center" label="审核人" min-width="100">
-              <template #default="{ row }">
-                  {{ row.audit }}
-              </template>
-          </el-table-column>
-          <el-table-column align="center" fixed="right" label="操作" width="200">
-              <template #default="{ row }">
-                  <el-button :disabled="row.status !== 1" text type="primary">付款申请</el-button>
-                  <el-button :disabled="row.status === 1 || row.status === 2" text type="primary" @click="handleAudit(row)">审批</el-button>
-              </template>
-          </el-table-column>
+        <el-table-column label="状态" min-width="100">
+            <template #default="{ row }">
+                <span :class="generateStatus(row.status).color">
+                    {{ generateStatus(row.status).text }}
+                </span>
+            </template>
         </el-table-column>
+        <el-table-column label="开模费处理方式" min-width="100">
+            <template #header>
+                开模费<br>处理方式
+            </template>
+            <template #default="{ row }">
+                {{ generateDealMethod(row.dealMethod) }}
+            </template>
+        </el-table-column>
+        <el-table-column label="开票类型" min-width="100">
+            <template #default="{ row }">
+                {{ generateInvoiceType(row.invoiceType) }}
+            </template>
+        </el-table-column>
+        <el-table-column label="付款金额" min-width="100">
+            <template #default="{ row }">
+                {{ row.payPrice }}
+            </template>
+        </el-table-column>
+        <el-table-column label="审核人" min-width="100">
+            <template #default="{ row }">
+                {{ row.audit }}
+            </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="200">
+            <template #default="{ row }">
+                <el-button :disabled="row.status !== 1" text type="primary">付款申请</el-button>
+                <el-button :disabled="row.status === 1 || row.status === 2" text type="primary" @click="handleAudit(row)">审批</el-button>
+            </template>
+        </el-table-column>
+      </el-table-column>
         
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
@@ -167,6 +168,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
+import type { CSSProperties } from 'vue'
 import { getProgressMoldList, updateProgressMold } from '/@/api/devlocal/progress'
 import type { IProgressMoldList, ISampleListQueryReq } from '/@/type/progress/progressType'
 
@@ -325,6 +327,17 @@ const fetchData = async () => {
  const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
+ }
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['提交日期', '产品', '零件名', '供应商', '状态', '开模费处理方式', '开票类型', '审核人'].includes(label)) {
+    return {
+      textAlign: 'left'
+    }
+  }
+  return {
+    textAlign: 'right'
+  }
 }
 onActivated(() => {
   tableRef.value?.doLayout()

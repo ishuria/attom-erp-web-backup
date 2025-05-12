@@ -25,12 +25,13 @@
       <el-table 
         ref="tableRef" 
         v-loading="listLoading" 
-        border :data="sampleList" 
-        :header-cell-style="{ 'text-align': 'center' }" 
+        border :cell-style="cellStyle" 
+        :data="sampleList"
+        :header-cell-style="cellStyle" 
         stripe
         @cell-click="sampleTableInputChange"
       >
-        <el-table-column align="center" label="图片" min-width="100">
+        <el-table-column label="图片" min-width="100">
           <template #default="{ row }">
             <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" />
           </template>
@@ -42,25 +43,24 @@
           </template>
         </el-table-column>
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(sampleList, '零件名', 'componentName')" />
-        <el-table-column align="center" label="下单日期" width="120">
+        <el-table-column label="下单日期" width="120">
           <template #default="{ row }">
             {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="签收日期" min-width="120">
+        <el-table-column label="签收日期" min-width="120">
           <template #default="{ row }">
             {{ row.receiptDate ? row.receiptDate.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="物流追踪" min-width="100"/>
+        <el-table-column label="物流追踪" min-width="100"/>
         <el-table-column label="供应商" prop="supplier" :width="flexColumnWidth(sampleList, '供应商', 'supplier')" />
         <el-table-column label="1688订单号" prop="orderNo1688" :width="flexColumnWidth(sampleList, '1688订单号', 'orderNo1688')" />
-
-        <el-table-column align="center" label="物流单号（非1688订单）" min-width="200" prop="logisticsNo" />
-        <el-table-column align="center" label="金额￥" min-width="100" prop="price" />
-        <el-table-column align="center" label="大货可退￥" min-width="120" prop="bulkGoodsReturnable" />
-        <el-table-column align="center" label="备注" min-width="130" prop="remark"/>
-        <el-table-column align="center" fixed="right" label="操作" width="160">
+        <el-table-column label="物流单号（非1688订单）" min-width="200" prop="logisticsNo" />
+        <el-table-column label="金额￥" min-width="100" prop="price" />
+        <el-table-column label="大货可退￥" min-width="120" prop="bulkGoodsReturnable" />
+        <el-table-column label="备注" min-width="130" prop="remark"/>
+        <el-table-column fixed="right" label="操作" width="160">
           <template #default="{ row }">
             <el-dropdown >
               <el-button text type="primary" @click="handleSampleReceipt(row)">
@@ -130,11 +130,12 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import type { CSSProperties } from 'vue'
 import { ProgressSampleReceipt, ProgressSampleUpdate, getProgressSampleList } from '/@/api/devlocal/progress'
 import type { IProgressSampleUpdate, ISampleList } from '/@/type/progress/progressType'
 import { getSpecificChildren } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
     name: 'SampleProgressTable'
@@ -177,11 +178,11 @@ const handlerCloseDialog = () => {
     dflag.value = false
     emit('update:sampleProgressVisible', dflag.value);
 }
-const formattedProgressLog = (str: string) => {
-  return str
-    .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
-    .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
-};
+// const formattedProgressLog = (str: string) => {
+//   return str
+//     .replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2')
+//     .replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2');
+// };
 const orderDialogClose = () =>{
     orderVisible.value = false
     orderForm.sampleId = ''
@@ -314,7 +315,21 @@ onActivated(() => {
 // onBeforeMount(() => {
 //   fetchData()
 // })
-
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['金额￥', '大货可退￥'].includes(label)) {
+    return {
+      textAlign: 'right'
+    }
+  } else if (label === '操作') {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'left'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
