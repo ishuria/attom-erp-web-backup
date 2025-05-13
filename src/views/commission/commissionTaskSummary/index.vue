@@ -47,7 +47,7 @@
           <el-table-column label="状态" min-width="100" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
             </template>
@@ -142,7 +142,7 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="任务ID" min-width="100" prop="taskId" />
@@ -286,7 +286,7 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '已结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '待审核'" type="primary">{{ row.status }}</el-tag>
             </template>
           </el-table-column>

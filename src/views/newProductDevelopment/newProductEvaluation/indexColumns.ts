@@ -7,7 +7,7 @@ export const indexColumns = [
   {
     label: '评估人',
     prop: 'evaluatorName',
-    minWidth: 90,
+    minWidth: 100,
   },
   {
     label: '评估日期',
@@ -36,7 +36,7 @@ export const indexColumns = [
   },
   {
     label: '关键词趋势',
-    minWidth: 110,
+    minWidth: 130,
   },
   {
     label: '头部个数',
@@ -46,7 +46,7 @@ export const indexColumns = [
   {
     label: 'CPC$',
     prop: 'cpc',
-    minWidth: 70,
+    minWidth: 80,
   },
   {
     label: '30毛利盈亏自然单占比',
@@ -76,7 +76,7 @@ export const indexColumns = [
   {
     label: '总分',
     prop: 'finalScore',
-    minWidth: 100
+    minWidth: 70
   },
   {
     label: '来源',

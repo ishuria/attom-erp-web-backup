@@ -46,9 +46,9 @@
       ref="tableRef"
       v-loading="listLoading"
       :border="true"
-      :cell-style="cellStyle"
+      :cell-style="{ textAlign: 'center' }"
       :data="evaluationList"
-      :header-cell-style="cellStyle"
+      :header-cell-style="{ textAlign: 'center' }"
       :stripe="true"
       @cell-click="keyWordTrendCellClick"
     >
@@ -75,8 +75,31 @@
           <div v-if="item.label === '关键词趋势'">
             <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
           </div>
-          <div v-if="['供求评分', '关键词首页评分', '总分'].includes(item.label)">
-            <div>{{ Math.round(row[item.prop!]) }}</div>
+         
+          <div v-if="['中文品名', '评估人', '亚马逊前台关键词', '亚马逊后台关键词', '来源'].includes(item.label)" >
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, item.prop!, 0), 'text-align': 'left' }">
+              {{ row[item.prop!] }}
+            </span>
+          </div>
+          <div v-if="['编号', '年市场容量', '头部个数', 'CPC$', '平均转化', '平均售价'].includes(item.label)" >
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, item.prop!, 0), 'text-align': 'right' }">
+              {{ row[item.prop!] }}
+            </span>
+          </div>
+          <div v-if="['30毛利盈亏自然单占比' ].includes(item.label)" >
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, '30毛利盈亏', item.prop!, 0), 'text-align': 'right' }">
+              {{ row[item.prop!] }}
+            </span>
+          </div>
+          <div v-if="['供求评分', '总分'].includes(item.label)">
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, 'other', 0), 'text-align': 'right' }">
+              {{ Math.round(row[item.prop!]) }}
+            </span>
+          </div>
+          <div v-if="['关键词首页评分' ].includes(item.label)" >
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, '首页评分', item.prop!, 0), 'text-align': 'right' }">
+              {{ Math.round(row[item.prop!]) }}
+            </span>
           </div>
         </template>
       </el-table-column>
@@ -337,9 +360,6 @@ const fixed = ref<string>('right')
 
 const handleWidth = (item: any) => {
   switch (item.label) {
-    case '评估人': {
-      return flexColumnWidth(evaluationList.value, '评估人', 'evaluatorName')
-    }
     case '来源': {
       return flexColumnWidth(evaluationList.value, '来源', 'productSource')
     }
@@ -620,20 +640,7 @@ const updateSharedVisibleValue = (newValue: boolean) => {
 const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (['评估日期', '评估人', '中文品名', '亚马逊前台关键词', '亚马逊后台关键词', '来源'].includes(data.column.label)) {
-    return {
-      textAlign: 'left'
-    }
-  } else if (['操作', '关键词趋势'].includes(data.column.label)) {
-    return {
-      textAlign: 'center'
-    }
-  }
-  return {
-    textAlign: 'right'
-  }
-}
+
 const cellScoreStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   if (data.column.label === '描述') {
     return {
@@ -644,12 +651,7 @@ const cellScoreStyle = (data: { row: any, column: any, rowIndex: number, columnI
     textAlign: 'right'
   }
 }
-const cellParameterStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  // if (data.column.label === '名称') {
-  //   return {
-  //     textAlign: 'left'
-  //   }
-  // }
+const cellParameterStyle = (): CSSProperties => {
   return {
     textAlign: 'left'
   }

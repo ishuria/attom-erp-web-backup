@@ -149,20 +149,33 @@ export const flexColumnWidth = (list: any, label: string, prop: string, padding 
   let maxLength = 0;
 
   // 处理普通文本列
-  if (prop === 'operationTypeList') {
-    // 处理下拉框列 (operationTypeList)
-    // 获取每一行的 operationTypeList 并计算出每个选项的最大宽度
-    const maxSelectWidth = Math.max(...list.map((x: any) => getSelectMaxWidth(x.operationTypeList)));
-    maxLength = maxSelectWidth;
-  } else if (prop === 'payRecord') {
-    const arr = list.flatMap((x: any) => x.payRecord || []);
-    arr.push(label); // 加入表头
-    maxLength = getMaxLength(arr);
-  }
-  else {
-    const arr = list.map((x: any) => x[prop]);
-    arr.push(label); // 加入表头
-    maxLength = getMaxLength(arr);
+  switch (prop) {
+    case 'operationTypeList': {
+      // 处理下拉框列 (operationTypeList)
+      // 获取每一行的 operationTypeList 并计算出每个选项的最大宽度
+      const maxSelectWidth = Math.max(...list.map((x: any) => getSelectMaxWidth(x.operationTypeList)));
+      maxLength = maxSelectWidth;
+    
+      break;
+    }
+    case 'payRecord': {
+      const arr = list.flatMap((x: any) => x.payRecord || []);
+      arr.push(label); // 加入表头
+      maxLength = getMaxLength(arr);
+    
+      break;
+    }
+    case 'other': {
+      const arr = [label]
+      maxLength = getMaxLength(arr);
+    
+      break;
+    }
+    default: {
+      const arr = list.map((x: any) => x[prop]);
+      arr.push(label); // 加入表头
+      maxLength = getMaxLength(arr);
+    }
   }
 
   return `${maxLength + padding}px`;
