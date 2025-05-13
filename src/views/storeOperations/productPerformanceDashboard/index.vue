@@ -2953,7 +2953,22 @@ const fetchUpdateDate = async () => {
   updateDate.value = data
 }
 onBeforeMount(() => {
-  fetchUpdateDate()
+  // 获取更新日期
+  fetchUpdateDate() 
+  // 设置运营和开发人是否可选以及boss默认站点为美国
+  operationAndDevelopSelect()
+  // 获取站点列表
+  fetchSiteList()
+  // 获取币种列表
+  fetchCurrencyList()
+  // 获取默认币种
+  fetchCurrency()
+  // 获取运营人员列表
+  fetchOperateUserList()
+  // 获取开发人员列表
+  fetchDevelopUserList()
+  // 获取默认运营人和开发人
+  fetchUser()
   if (activeName.value === 0) {
     fetchData()
     fetchColumn()
@@ -2967,14 +2982,7 @@ onBeforeMount(() => {
     fetchPAsinData()
     tabLoadStatus.value.tab2 = true
   }
-  fetchSiteList()
-  fetchCurrencyList()
-  fetchCurrency()
-  fetchOperateUserList()
-  fetchDevelopUserList()
-  fetchUser()
   // console.log(aclStore.getRole)
-  operationAndDevelopSelect()
 })
 </script>
 

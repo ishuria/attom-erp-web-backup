@@ -47,6 +47,13 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       fs: {
         //cachedChecks: true,
       },
+      proxy: {
+        // 匹配所有 /attom 开头的请求（包括子路径）
+        '^/attom': {
+          target: 'http://192.168.6.12:19000',
+          changeOrigin: true
+        }
+      },
     },
     resolve: {
       alias: {
