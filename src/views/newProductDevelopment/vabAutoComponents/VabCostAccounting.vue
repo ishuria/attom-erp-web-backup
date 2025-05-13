@@ -397,9 +397,6 @@ const isValueAllInput = (row: IProgressEstimatedCostAccounting) => {
   } else if (row.firstMileChannel == null) {
     $baseMessage('产品的头程渠道不能为空，请选择后再进行逆算', 'warning')
     return false
-  } else if (row.sellingPrice == null) {
-    $baseMessage('产品的售价不能为空，请填写后再进行逆算', 'warning')
-    return false
   } else if (row.weightCoefficient == null) {
     $baseMessage('产品的重量系数不能为空，请填写后再进行逆算', 'warning')
     return false

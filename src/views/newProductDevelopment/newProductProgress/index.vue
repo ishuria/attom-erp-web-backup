@@ -40,7 +40,6 @@
             <template #default="{ row }">
               <el-select
                 v-model="row.priority"
-                size="default"
                 style="min-width: 100%"
                 @blur="clickCancel($event, row)"
                 @keyup.enter="clickCancel($event, row)"
@@ -238,9 +237,9 @@
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="优先级" min-width="90" prop="priority">
+          <el-table-column label="优先级" prop="priority" width="100">
             <template #default="{ row }">
-              <el-select
+              <!-- <el-select
                 v-model="row.priority"
                 disabled
                 size="default"
@@ -249,7 +248,8 @@
                 @keyup.enter="clickCancel($event, row)"
               >
                 <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
+              </el-select> -->
+              {{ priorityOptions.find((item) => item.value === row.priority)?.label }}
             </template>
           </el-table-column>
           <el-table-column label="立项日期" prop="createTime" width="120">
@@ -1350,21 +1350,19 @@ const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex
     case '参与人员':
     case '调研报告链接':
     case '当前阶段':
-    case '产品': {
+    case '产品':
+    case '优先级': {
       return {
         textAlign: 'left',
         color: '#999',
         cursor: 'not-allowed',
       }
     }
-    case '优先级': {
-      return {
-        textAlign: 'left'
-      }
-    }
     case '目标月销': {
       return {
         textAlign: 'right',
+        color: '#999',
+        cursor: 'not-allowed',
       }
     }
     case '示例图片':

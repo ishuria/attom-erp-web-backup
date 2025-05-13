@@ -282,7 +282,7 @@ const clickLog = async (val: any) => {
   sampleList.value[_index.value].desc = val
   progressLogCopy.value = val
   await updateTrialcalculationProductdesc({
-    id: parseInt(sampleList.value[_index.value].id!),
+    id: Number(sampleList.value[_index.value].id!),
     productDesc: sampleList.value[_index.value].desc!
   }) 
 }
@@ -320,7 +320,7 @@ const sampleList = ref<IProgressSample[]>([])
 
 // 修改站点和渠道
 const handleUpdateChannel = async (row: any) => {
-  await updateTrialCalculation({ ...row, tariff: `${parseInt(row.tariff!) / 100}`, grossMarginRate: `${parseInt(row.grossMarginRate) / 100}`, roi: `${Number(row.roi) / 100}` })
+  await updateTrialCalculation({ ...row, tariff: `${Number(row.tariff!) / 100}`, grossMarginRate: `${Number(row.grossMarginRate) / 100}`, roi: `${Number(row.roi) / 100}` })
   fetchData()
 }
 // 鼠标enter事件
@@ -352,7 +352,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 
 // 保存拿样清单成本试算
 const saveTrialCalculationHandler = async (row:IProgressSample) => {
-  const { data } = await saveTrialCalculation({ progressId:parseInt(props.progressId), id: row.id! })
+  const { data } = await saveTrialCalculation({ progressId: Number(props.progressId), id: row.id! })
   if (data === true){
     $baseMessage("拿样清单成本试算添加到成本核算成功！", "success", "hey")
       // 获取最新添加的元素
@@ -451,8 +451,7 @@ const clickCancel = async (event:any,value:IProgressSample) =>{
   if (isEqual(copyRow, value)) {
     return
   }
-    
-  await updateTrialCalculation({ ...value, tariff: `${parseInt(value.tariff!) / 100}`, grossMarginRate: `${parseInt(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
 }
 
 // 修改售价 重新刷新
@@ -469,8 +468,7 @@ const clickSaleCancel = async (event:any,value:IProgressSample) =>{
   if (isEqual(copyRow, value)) {
     return
   }
-    
-  await updateTrialCalculation({ ...value, tariff: `${parseInt(value.tariff!) / 100}`, grossMarginRate: `${parseInt(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff!) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
   fetchData()
 }
 const fetchData = async () => {
