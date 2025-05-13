@@ -469,9 +469,14 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 const cell3Style = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
   const label = data.column.label
   if (label === '总考核完成数') {
-    if (data.row.assessmentNumberFinish >= data.row.assessmentNumber) {
+    if (data.row.assessmentNumberFinish > data.row.assessmentNumber) {
       return {
         color: 'var(--el-color-success)',
+        textAlign: 'center'
+      }
+    } else if (data.row.assessmentNumberFinish === data.row.assessmentNumber) {
+      return {
+        color: 'var(--el-color-primary)',
         textAlign: 'center'
       }
     } else {
@@ -484,6 +489,11 @@ const cell3Style = (data: { row: any, column: any, rowIndex: number, columnIndex
     if (data.row.oemFinish >= data.row.oem) {
       return {
         color: 'var(--el-color-success)',
+        textAlign: 'center'
+      }
+    } else if (data.row.oemFinish === data.row.oem) {
+      return {
+        color: 'var(--el-color-primary)',
         textAlign: 'center'
       }
     } else {
