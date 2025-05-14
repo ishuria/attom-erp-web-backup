@@ -45,6 +45,7 @@
                 <el-tag
                   v-for="id in row[prop]"
                   :key="id"
+                  style="font-size: var(--el-font-size-base);"
                   type="info"
                 >
                   {{ packageSampleOption.find(item => item.id === id)?.label }}
