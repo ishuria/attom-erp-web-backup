@@ -13,10 +13,10 @@
         stripe
         @cell-click="sampelTrialTableInputChage"
       >
-        <el-table-column min-width="100" prop="firstColumn">
-          <span style="font-size: var(--el-font-size-base); font-weight: 600; color: var(--el-table-header-text-color);">拿样清单<br>成本试算</span>
+        <el-table-column prop="firstColumn" width="115">
+          <span style="font-size: var(--el-font-size-base); font-weight: 600; color: var(--el-table-header-text-color);">产品实际<br>利润核算</span>
         </el-table-column>
-        <el-table-column label="站点" min-width="175" prop="site">
+        <el-table-column label="站点" prop="site" width="180">
           <template #default="{ row }">
             <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handleUpdateChannel(row)">
               <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
@@ -24,10 +24,10 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="外汇币种" min-width="100" prop="currencyType"/>
-        <el-table-column label="汇率" prop="foreignExchange"/>
+        <el-table-column label="外汇币种" prop="currencyType" width="95"/>
+        <el-table-column label="汇率" prop="foreignExchange" width="80"/>
 
-        <el-table-column label="产品描述" min-width="200" prop="desc">
+        <el-table-column label="产品描述" prop="desc" width="200">
           <template #default="{ row, $index }">
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -38,49 +38,49 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="长(cm)" min-width="80" prop="length">
+        <el-table-column label="长(cm)" prop="length" width="76">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
+            <span>{{ row.length != null ? row.length : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="宽(cm)" min-width="80" prop="width">
+        <el-table-column label="宽(cm)" prop="width" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
+            <span>{{ row.width != null ? row.width : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="高(cm)" min-width="80" prop="height">
+        <el-table-column label="高(cm)" prop="height" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
+            <span>{{ row.height != null ? row.height : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="实际总成本￥" min-width="130" prop="price">
+        <el-table-column label="实际总成本￥" prop="price" width="185">
           <template #default="{ row }">
             {{ row.price != null ? '￥' + row.price : '' }}
           </template>
         </el-table-column>
 
-        <el-table-column label="重量(g)" prop="weight">
+        <el-table-column label="重量(g)" prop="weight" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.weight" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+            <span>{{ row.weight != null ? row.weight : '' }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column label="尾程" prop="lastMile">
+        <el-table-column label="尾程" prop="lastMile" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.lastMile" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -89,13 +89,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="头程￥" prop="firstMile">
+        <el-table-column label="头程￥" prop="firstMile" width="80">
           <template #default="{ row }">
             {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
           </template>
         </el-table-column>
 
-        <el-table-column label="打包￥" prop="packaging">
+        <el-table-column label="打包￥" prop="packaging" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -103,14 +103,14 @@
             <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
+        <el-table-column label="头程渠道" prop="firstMileChannel" width="160">
           <template #default="{ row }">
             <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%" @change="handleUpdateChannel(row)">
               <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="售价" prop="sellingPrice">
+        <el-table-column label="售价" prop="sellingPrice" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.sellingPrice" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -119,7 +119,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="毛利率" prop="grossMarginRate">
+        <el-table-column label="毛利率" prop="grossMarginRate" width="80">
           <template #default="{ row }">
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
@@ -128,13 +128,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="ROI" prop="roi">
+        <el-table-column label="ROI" prop="roi" width="80">
           <template #default="{ row }">
             {{ row.roi != null ? row.roi + '%' : '' }}
           </template>
         </el-table-column>
 
-        <el-table-column label="重量系数" min-width="100" prop="weightCoefficient">
+        <el-table-column label="重量系数" prop="weightCoefficient" width="100">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -143,7 +143,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient">
+        <el-table-column label="体积系数" prop="volumeCoefficient" width="100">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -152,7 +152,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="关税%" prop="tariff">
+        <el-table-column label="关税%" prop="tariff" width="80">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
@@ -161,7 +161,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
+        <el-table-column label="平台佣金" prop="platformCommission" width="100">
           <template #default="{ row }">
             {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
@@ -173,9 +173,9 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed="right" label="操作" min-width="130">
+        <el-table-column fixed="right" label="操作" width="120">
           <template #default="{ row }">
-            <el-space :size="20">
+            <el-space :size="15">
               <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
               <el-link type="success" :underline="false"  @click="saveTrialCalculationHandler(row)">保存</el-link>
             </el-space>

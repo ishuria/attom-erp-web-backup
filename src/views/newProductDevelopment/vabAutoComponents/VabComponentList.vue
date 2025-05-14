@@ -17,29 +17,26 @@
       :cell-class-name="clearPadding" :cell-style="cellStyle"
       class="noneHoveTable"
       :data="progressProductList" 
-      :header-cell-style="headerCellStyle" 
+      :header-cell-style="{ textAlign: 'center' }" 
       :row-class-name="stripedRowClass" :span-method="objectSpanMethod" 
       @cell-click="componentTableInputChange" 
     >
-      <el-table-column fixed="left" label="零件操作" width="170px">
+      <el-table-column fixed="left" label="零件操作" width="115">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="addSuppliserInfo(row)">
-              新增供应商
+              复制
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
             </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <!-- <el-dropdown-item @click="uploadProdcutProgressImage(scope.row, scope.$index)">
-                      <el-link type="primary" :underline="false">上传图片</el-link>
-                  </el-dropdown-item> -->
-                  <el-dropdown-item @click="addSuppliserInfo(row)">
-                    <el-link type="primary" :underline="false">新增供应商</el-link>
-                  </el-dropdown-item>
                   <el-dropdown-item @click="copyComponentInfo(row)">
                     <el-link type="primary" :underline="false">复制</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="addSuppliserInfo(row)">
+                    <el-link type="primary" :underline="false">新增供应商</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -66,7 +63,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(progressProductList, '零件名', 'componentName')" >
+      <el-table-column label="零件名" prop="componentName" width="104" >
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -82,16 +79,16 @@
         </template>
       </el-table-column>
 
-        <el-table-column label="已有零件id" min-width="90"  prop="existingPartId">
+        <el-table-column label="已有零件id" prop="existingPartId" width="95">
           <template #header>
-            已有零<br>件id
+            已有<br>零件id
           </template>
           <template #default="{ row }"  >
             <div>{{ row.existingPartId }}</div>
           </template>
         </el-table-column>
 
-        <el-table-column label="零件数量" min-width="70" prop="componentQuantity">
+        <el-table-column label="零件数量" prop="componentQuantity" width="80">
           <template #header>
             零件<br>数量
           </template>
@@ -103,14 +100,16 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.componentQuantity }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '零m', 'componentQuantity', 0), 'text-align': 'right' }">
+            {{ row.componentQuantity  }}
+          </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="零件单位" min-width="70" prop="componentUnit">
-          <template #header>
+        <el-table-column label="零件单位" prop="componentUnit" width="100">
+          <!-- <template #header>
             零件<br>单位
-          </template>
+          </template> -->
           <template #default="{ row }">
             <div class="none">
               <el-input 
@@ -119,14 +118,15 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.componentUnit }}</span>
+            
+            {{ row.componentUnit  }}
           </template>
         </el-table-column>
 
-        <el-table-column label="出厂单价" min-width="70" prop="unitPrice">
-          <template #header>
+        <el-table-column label="出厂单价" prop="unitPrice" width="100">
+          <!-- <template #header>
             出厂<br>单价
-          </template>
+          </template> -->
           <template #default="{ row }">
             <div class="none">
               <el-input 
@@ -135,11 +135,13 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.unitPrice }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '出厂单m', 'unitPrice', 0), 'text-align': 'right' }">
+            {{ row.unitPrice  }}
+          </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="出厂总价" min-width="70" prop="totalPrice">
+        <el-table-column label="出厂总价" prop="totalPrice" width="76">
           <template #header>
             出厂<br>总价
           </template>
@@ -151,11 +153,13 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.totalPrice }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '出m', 'totalPrice', 0), 'text-align': 'right' }">
+            {{ row.totalPrice  }}
+          </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="运费含税" min-width="70" prop="freight">
+        <el-table-column label="运费含税" prop="freight" width="80">
           <template #header>
             运费<br>含税
           </template>
@@ -167,17 +171,24 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.freight }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '运m', 'freight', 0), 'text-align': 'right' }">
+            {{ row.freight  }}
+          </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="总未税价" min-width="70" prop="preTaxPrice">
+        <el-table-column label="总未税价" prop="preTaxPrice" width="80">
           <template #header>
             总未<br>税价
           </template>
+          <template #default="{ row }">
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '总m', 'preTaxPrice', 0), 'text-align': 'right' }">
+            {{ row.preTaxPrice  }}
+          </span>
+          </template>
         </el-table-column>
 
-        <el-table-column label="总含税价" min-width="70" prop="taxIncludedPrice">
+        <el-table-column label="总含税价" prop="taxIncludedPrice" width="80">
           <template #header>
             总含<br>税价
           </template>
@@ -189,11 +200,13 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.taxIncludedPrice }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '总m', 'taxIncludedPrice', 0), 'text-align': 'right' }">
+            {{ row.taxIncludedPrice  }}
+          </span>
           </template>
         </el-table-column>
 
-        <el-table-column label="货币" prop="currency" width="110px">
+        <el-table-column label="货币" prop="currency" width="105">
           <template #default="{ row }">
             <el-select v-model="row.currency" placeholder="请选择货币" style="min-width: 100%;" @change="handlerCurrencyChange(row)">
               <el-option 
@@ -206,7 +219,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="计入产品成本" min-width="90" prop="includedInCost">
+        <el-table-column label="计入产品成本" prop="includedInCost" width="80">
           <template #header>
             计入产<br>品成本
           </template>
@@ -222,7 +235,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="供应商" min-width="140" prop="supplier">
+        <el-table-column label="供应商" prop="supplier" width="240">
           <template #default="{ row }">
             <div class="none">
               <el-input 
@@ -241,7 +254,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="开票" prop="invoicing" width="140">
+        <el-table-column label="开票" prop="invoicing" width="160">
           <template #default="{ row }">
             <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handlerInvoicingChange(row)">
               <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value"/>
@@ -249,7 +262,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="实际税点" min-width="70" prop="actualTaxRate">
+        <el-table-column label="实际税点" prop="actualTaxRate" width="80">
           <template #header>
             实际<br>税点
           </template>
@@ -261,11 +274,13 @@
                 @keydown.enter="effectiveCountInputeHandle($event)"
               />
             </div>
-            <span>{{ row.actualTaxRate }}</span>
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '实m', 'actualTaxRate', 0), 'text-align': 'right' }">
+            {{ row.actualTaxRate ? row.actualTaxRate + '%' : ''  }}
+          </span>
           </template>
         </el-table-column>
 
-      <el-table-column label="开票税点" min-width="70" prop="invoicingTaxRate">
+      <el-table-column label="开票税点" prop="invoicingTaxRate" width="80">
         <template #header>
           开票<br>税点
         </template>
@@ -277,11 +292,13 @@
               @keydown.enter="effectiveCountInputeHandle($event)"
             />
           </div>
-          <span>{{ row.invoicingTaxRate }}</span>
+          <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressProductList, '开m', 'invoicingTaxRate', 0), 'text-align': 'right' }">
+            {{ row.invoicingTaxRate ? row.invoicingTaxRate + '%' : ''  }}
+          </span>
         </template>
       </el-table-column>
 
-      <el-table-column label="采购链接" min-width="130" prop="purchaseLink">
+      <el-table-column label="采购链接" prop="purchaseLink" width="280">
         <template #default="{ row }">
           <div class="none">
             <el-input 
@@ -310,7 +327,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" fixed="right" label="供应商操作" width="120px">
+      <el-table-column align="center" fixed="right" label="供应商操作" width="120">
         <template #default="scope">
           <el-button text type="danger" @click="deleteSupplserOrComponent(scope.row)">删除</el-button>
         </template>
@@ -370,6 +387,7 @@ import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog, } from '/@/api/devlocal/progress'
@@ -387,7 +405,6 @@ import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progre
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineComponent({
   name: 'VabComponentList',
@@ -449,10 +466,15 @@ interface SpanMethodProps {
 }
 
 const handleUpdateRemark = async (value: string) => {
-  await updateComponenet({
-    ...rowCopy,
-    remarks: value
-  })
+  let invoicingTaxRate = 0
+  let actualTaxRate = 0
+  if (rowCopy.actualTaxRate!== null && rowCopy.actualTaxRate!== undefined) {
+    actualTaxRate = rowCopy.actualTaxRate / 100
+  }
+  if (rowCopy.invoicingTaxRate !== null && rowCopy.invoicingTaxRate !== undefined) {
+    invoicingTaxRate = rowCopy.invoicingTaxRate / 100
+  }
+  await updateComponenet({ ...rowCopy, invoicingTaxRate, actualTaxRate, remarks: value})
  
   remarkVisible.value = false
   rowCopy.remarks = value
@@ -579,43 +601,54 @@ const stripedRowClass = (_row: any) => {
 
 // 零件清单修改开票
 const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
-  await updateComponenet(row)
+  let invoicingTaxRate = 0
+  let actualTaxRate = 0
+  if (row.actualTaxRate!== null && row.actualTaxRate!== undefined) {
+    actualTaxRate = row.actualTaxRate / 100
+  }
+  if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
+    invoicingTaxRate = row.invoicingTaxRate / 100
+  }
+  await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate})
   fetchDataComponent()
   props.trialCalculationData?.()
 }
 
 // 零件清单修改货币
 const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
-  await updateComponenet(row)
+  let invoicingTaxRate = 0
+  let actualTaxRate = 0
+  if (row.actualTaxRate!== null && row.actualTaxRate!== undefined) {
+    actualTaxRate = row.actualTaxRate / 100
+  }
+  if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
+    invoicingTaxRate = row.invoicingTaxRate / 100
+  }
+  await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate})
   props.trialCalculationData?.()
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === '已有零件id' || label === '总未税价') {        
+  if (label === '已有零件id' || label === '总未税价' || label === '零件单位') {        
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
-  } else if (['图片', '零件名', '零件单位', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
-    return { textAlign: 'left' }
+  } else if (['图片', '零件名', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer',
+     }
   } else {
     return {
-      textAlign: 'right'
+      textAlign: 'center',
+      cursor: 'pointer',
     }
   }
 }
-const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const label = data.column.label
- if (['图片', '零件名', '零件单位', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
-    return { textAlign: 'left' }
-  } else {
-    return {
-      textAlign: 'right'
-    }
-  }
-}
+
 // 新增零件
 const addComponentHandler = async () => {
   const newComponent: IProgressProdcutComponent = {
@@ -831,15 +864,30 @@ const componentClickCancel = async (event: any, value: IProgressProdcutComponent
   if (isEqual(rowCopy, value)) {
     return
   }
-
-  await updateComponenet(value)
+  let invoicingTaxRate = 0
+  let actualTaxRate = 0
+  if (value.actualTaxRate!== null && value.actualTaxRate!== undefined) {
+    actualTaxRate = value.actualTaxRate / 100
+  }
+  if (value.invoicingTaxRate !== null && value.invoicingTaxRate !== undefined) {
+    invoicingTaxRate = value.invoicingTaxRate / 100
+  }
+  await updateComponenet({ ...value, invoicingTaxRate, actualTaxRate})
   fetchDataComponent()
   props.trialCalculationData?.()
 }
 
 // 计入成本change
 const includedInCostChange = async (row: IProgressProdcutComponent) => {
-  await updateComponenet(row)
+  let invoicingTaxRate = 0
+  let actualTaxRate = 0
+  if (row.actualTaxRate!== null && row.actualTaxRate!== undefined) {
+    actualTaxRate = row.actualTaxRate / 100
+  }
+  if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
+    invoicingTaxRate = row.invoicingTaxRate / 100
+  }
+  await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate})
   props.trialCalculationData?.()
 }
 
@@ -875,6 +923,8 @@ const fetchDataComponent = async () => {
     progressProductList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
       item.totalPrice = formattedPrice(item.totalPrice)
+      item.invoicingTaxRate = item.invoicingTaxRate * 100
+      item.actualTaxRate = item.actualTaxRate * 100
     })
     progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
     previous = null
@@ -948,7 +998,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .none {
-  display: none;
+  display: none !important;
 }
 
 .block {
