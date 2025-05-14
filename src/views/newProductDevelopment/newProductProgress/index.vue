@@ -654,7 +654,7 @@ const queryForm = reactive<IProgressQueryReq>({
 
 const priorityOptions = [
   {
-    value: '0',
+    value: '2',
     label: '高',
   },
   {
@@ -662,7 +662,7 @@ const priorityOptions = [
     label: '中',
   },
   {
-    value: '2',
+    value: '0',
     label: '低',
   },
 ]

@@ -193,7 +193,7 @@
             <div class="none">
               <el-input v-model="row.actualTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
-            <span>{{ row.actualTaxRate }}</span>
+            <span>{{ row.actualTaxRate ? row.actualTaxRate + '%' : '' }}</span>
           </template>
         </el-table-column>
 
@@ -205,7 +205,7 @@
             <div class="none">
               <el-input v-model="row.invoicingTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
-            <span>{{ row.invoicingTaxRate }}</span>
+            <span>{{ row.invoicingTaxRate ? row.invoicingTaxRate + '%' : '' }}</span>
           </template>
         </el-table-column>
 
@@ -493,6 +493,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
+import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
@@ -528,7 +529,6 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import type { CSSProperties } from 'vue'
 defineOptions({
   name: 'OrderStep3',
 })
@@ -844,28 +844,39 @@ const handleVariantChange = async (row: any) => {
             _variant.variant = item.label
         }
     })
-    // console.log(_variant);
-
+  // console.log(_variant);
+  const actualTaxRate = (row.actualTaxRate ?? 0) / 100
+const invoicingTaxRate = (row.invoicingTaxRate ?? 0) / 100
     await reviewStepNo3ComponentUpdate({
         ...row,
-        variant: _variant.variant
+      variant: _variant.variant,
+      actualTaxRate,
+      invoicingTaxRate,
     })
 
     await fetchDataComponent()
     await fetchVariantsData()
 }
 const handleCurrencyChange = async (row: any) => {
+  const actualTaxRate = (row.actualTaxRate ?? 0) / 100
+const invoicingTaxRate = (row.invoicingTaxRate ?? 0) / 100
     await reviewStepNo3ComponentUpdate({
         ...row,
-        currency: parseInt(row.currency),
+      currency: parseInt(row.currency),
+      actualTaxRate,
+      invoicingTaxRate,
     })
     await fetchDataComponent()
     await fetchVariantsData()
 }
 const handleInvoicingChange = async (row: any) => {
+  const actualTaxRate = (row.actualTaxRate ?? 0) / 100
+const invoicingTaxRate = (row.invoicingTaxRate ?? 0) / 100
     await reviewStepNo3ComponentUpdate({
         ...row,
-        invoicing: parseInt(row.invoicing),
+      invoicing: parseInt(row.invoicing),
+      actualTaxRate,
+      invoicingTaxRate,
     })
     await fetchDataComponent()
     await fetchVariantsData()
@@ -1095,7 +1106,9 @@ const clickCancel = async (event:any,value:any) =>{
   }
   if (event.type === 'blur') {
     try {
-      await reviewStepNo3ComponentUpdate(value)
+      const actualTaxRate = (value.actualTaxRate ?? 0) / 100
+const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
+      await reviewStepNo3ComponentUpdate({ ...value, actualTaxRate, invoicingTaxRate})
       await fetchDataComponent()
       await fetchVariantsData()
     } catch {
@@ -1291,6 +1304,8 @@ const fetchDataComponent = async () =>{
       componentList.value.forEach((item: any) => {
         item.currency = convertString(item.currency)
         item.invoicing = convertString(item.invoicing)
+        item.actualTaxRate = item.actualTaxRate * 100
+        item.invoicingTaxRate = item.invoicingTaxRate * 100
       })
       // 获取下拉变体列表
       const { data: variantSelectList }= await reviewStepNo3GetSelectVariantList({ reviewId: classReviewId! });
