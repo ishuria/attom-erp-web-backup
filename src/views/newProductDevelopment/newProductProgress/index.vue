@@ -32,14 +32,15 @@
           border
           :cell-style="cellStyle"
           :data="progressList"
-          :header-cell-style="headerCellStyle"
+          :header-cell-style="{ textAlign: 'center' }"
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="优先级" min-width="90" prop="priority">
+          <el-table-column label="优先级" prop="priority" width="120">
             <template #default="{ row }">
               <el-select
                 v-model="row.priority"
+                class="center-select"
                 style="min-width: 100%"
                 @blur="clickCancel($event, row)"
                 @keyup.enter="clickCancel($event, row)"
@@ -53,24 +54,27 @@
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" min-width="100" prop="sharerName">
+          <el-table-column label="参与人员" prop="sharerName" width="120">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+                <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '参与人员', 'sharerName', 0), 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                </span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品" min-width="160" prop="product">
+          <el-table-column label="产品" prop="product" :width="flexColumnWidth(progressList, '产品', 'product', 50)">
             <template #default="{ row }">
-              {{ row.product }}
-              <br />
-              {{ row.mainSearchTerms }}
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '产品', 'product', 0), 'text-align': 'left' }" >
+                {{ row.product }}
+                <br />
+                {{ row.mainSearchTerms }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" min-width="65" prop="oem">
+          <el-table-column label="OEM" prop="oem" width="80">
             <template #default="{ row }">
               <el-checkbox
                 v-model="row.oem"
@@ -82,7 +86,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" min-width="100" prop="targetMonthlySales">
+          <el-table-column label="目标月销" prop="targetMonthlySales" width="120">
             <template #default="{ row }">
               <div class="none">
                 <el-input
@@ -92,10 +96,12 @@
                   @keyup.enter="clickCancel($event, row)"
                 />
               </div>
-              <span>{{ row.targetMonthlySales }}</span>
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '目标月销', 'targetMonthlySales', 0), 'text-align': 'right' }" >
+                {{ row.targetMonthlySales }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column label="调研报告链接" prop="" width="130">
+          <el-table-column label="调研报告链接" prop="researchReportLink" width="200">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
@@ -105,12 +111,14 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" width="120">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
-              <span>{{ row.currentPhaseStatus }}</span>
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '当前阶段', 'currentPhaseStatus', 0), 'text-align': 'left' }" >
+                {{ row.currentPhaseStatus }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
@@ -123,7 +131,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="150" prop="remark">
+          <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -233,11 +241,11 @@
           border
           :cell-style="cellStyle2"
           :data="progressList"
-          :header-cell-style="headerCellStyle"
+          :header-cell-style="{ textAlign: 'center' }"
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="优先级" prop="priority" width="100">
+          <el-table-column label="优先级" prop="priority" width="120">
             <template #default="{ row }">
               <!-- <el-select
                 v-model="row.priority"
@@ -257,24 +265,27 @@
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" min-width="100" prop="sharerName">
+          <el-table-column label="参与人员" prop="sharerName" width="120">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span v-html="row.sharerName.replace(/,/g, '<br/>')"></span>
+                <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '参与人员', 'sharerName', 0), 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                </span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品" min-width="160" prop="product">
+          <el-table-column label="产品" prop="product" :width="flexColumnWidth(progressList, '产品', 'product', 50)">
             <template #default="{ row }">
-              {{ row.product }}
-              <br />
-              {{ row.mainSearchTerms }}
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '产品', 'product', 0), 'text-align': 'left' }" >
+                {{ row.product }}
+                <br />
+                {{ row.mainSearchTerms }}
+              </span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" min-width="65" prop="oem">
+          <el-table-column label="OEM" prop="oem" width="80">
             <template #default="{ row }">
               <el-checkbox
                 v-model="row.oem"
@@ -287,8 +298,14 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" min-width="100" prop="targetMonthlySales" />
-          <el-table-column label="调研报告链接" prop="" width="130">
+          <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '目标月销', 'targetMonthlySales', 0), 'text-align': 'right' }" >
+                {{ row.targetMonthlySales }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="调研报告链接" prop="" width="200">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
@@ -298,7 +315,13 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" min-width="100" prop="currentPhaseStatus" />
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" width="120" >
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '当前阶段', 'currentPhaseStatus', 0), 'text-align': 'left' }" >
+                {{ row.currentPhaseStatus }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
@@ -309,7 +332,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="150" prop="remark">
+          <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
@@ -534,6 +557,13 @@
         <el-button type="primary" @click="updateProductName">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 修改调研报告链接 -->
+    <vab-remark-dialog
+      v-model="updateResearchReportLinkVisible"
+      :remark="researchReportLink"
+      title="修改调研报告链接"
+      @update:remark="updateResearchReportLink"
+    />
   </div>
 </template>
 
@@ -572,12 +602,22 @@ import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
-import { removeHtmlTags } from '/@/utils/tableColum'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'NewProductProgress',
 })
 
+const updateResearchReportLinkVisible = ref<boolean>(false)
+const researchReportLink = ref<string>('')
+const updateResearchReportLink = async (val: string) => {
+  const { data } = await updateProgressManage({ ..._row, researchReportLink: val })
+  if (data) {
+    $baseMessage('修改调研报告链接成功', 'success')
+    _row.researchReportLink = val
+    updateResearchReportLinkVisible.value = false
+  }
+}
 const updateFormRef = ref<FormInstance>()
 const updateFormRules = reactive({
   product: [{ required: true, message: '请输入中文品名', trigger: 'blur' }],
@@ -877,6 +917,11 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     updateProductNameVisible.value = true
     updateForm.product = row.product
     updateForm.mainSearchTerms = row.mainSearchTerms
+    _row = row
+    return
+  } else if (column.label === '调研报告链接') {
+    researchReportLink.value = row.researchReportLink
+    updateResearchReportLinkVisible.value = true
     _row = row
     return
   }
@@ -1284,56 +1329,33 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   const label = data.column.label
   switch (label) {
     case '立项日期':
-    case '参与人员':
-    case '调研报告链接': {
+    case '参与人员': {
       return {
-        textAlign: 'left',
+        textAlign: 'center',
         color: '#999',
         cursor: 'not-allowed',
       }
     }
     case '示例图片':
     case '产品':
-    case '开发日志':
-    case '备注':
     case '当前阶段': {
       return {
         cursor: 'pointer',
-        textAlign: 'left',
-      }
-    }
-    case '目标月销': {
-      return {
-        textAlign: 'right',
-        cursor: 'pointer',
-      }
-    }
-    default: {
-      return {
         textAlign: 'center',
       }
     }
-  }
-}
-const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  switch (label) {
-    case '立项日期':
-    case '参与人员':
-    case '调研报告链接':
-    case '当前阶段':
-    case '示例图片':
-    case '产品':
     case '开发日志':
     case '备注':
-    case '优先级': {
+    case '调研报告链接': {
       return {
         textAlign: 'left',
+        cursor: 'pointer',
       }
     }
     case '目标月销': {
       return {
-        textAlign: 'right',
+        textAlign: 'center',
+        cursor: 'pointer',
       }
     }
     default: {
@@ -1348,26 +1370,26 @@ const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex
   switch (label) {
     case '立项日期':
     case '参与人员':
-    case '调研报告链接':
     case '当前阶段':
     case '产品':
     case '优先级': {
       return {
-        textAlign: 'left',
+        textAlign: 'center',
         color: '#999',
         cursor: 'not-allowed',
       }
     }
     case '目标月销': {
       return {
-        textAlign: 'right',
+        textAlign: 'center',
         color: '#999',
         cursor: 'not-allowed',
       }
     }
     case '示例图片':
     case '开发日志':
-    case '备注': {
+    case '备注':
+    case '调研报告链接': {
       return {
         cursor: 'pointer',
         textAlign: 'left',
@@ -1454,7 +1476,7 @@ onBeforeMount(() => {
 
 // 控制编辑框显示与隐藏
 .none {
-  display: none;
+  display: none !important;
 }
 .custom-checkbox {
   transform: scale(1.2); // 放大 20%
@@ -1579,5 +1601,9 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+:deep(.center-select) {
+ text-align: center;
+ text-align-last: center;
 }
 </style>
