@@ -107,7 +107,13 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column  label="审批人" min-width="100" prop="reviewPersonName" />
+      <el-table-column  label="审批人" min-width="100" prop="reviewPersonName" >
+        <template #default="{ row }">
+          <span :style="{ display: 'inline-block','min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
+            {{ row.reviewPersonName }}
+          </span>
+        </template>
+      </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="130">
         <template #default="{ row }">
@@ -218,6 +224,7 @@ const columnWidths = computed(() => ({
   productManager: flexColumnWidth(dataList.value, '产品经理', 'other', 0),
   productDesign: flexColumnWidth(dataList.value, '产品设计', 'other', 0),
   reviewStatus: flexColumnWidth(dataList.value, '审批状态', 'reviewStatus', 0),
+  reviewPersonName: flexColumnWidth(dataList.value, '审批人', 'other', 0),
 }));
 interface SpanMethodProps {
   row: IReviewQueryItem

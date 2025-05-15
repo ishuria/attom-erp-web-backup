@@ -698,9 +698,7 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40); 
     }
     case '剩余库存': {
-      const inventoryWidth = Number(flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0).replace('px', ''));
-      const fbaWidth = Number(flexColumnWidth(list.value, '/', 'fbaCount', 10).replace('px', ''));
-      return `${inventoryWidth + fbaWidth}px`;
+      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0) + flexColumnWidth(list.value, '/', 'fbaCount', 10)}px`;
     }
     case '原始今补': {
       return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement'); 
