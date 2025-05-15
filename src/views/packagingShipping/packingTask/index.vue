@@ -122,8 +122,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
@@ -290,8 +295,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
@@ -456,8 +466,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
@@ -622,8 +637,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
@@ -788,8 +808,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
@@ -953,8 +978,13 @@
               <span class="overflow-text" v-html="row.packageRemarkList"></span>
             </template>
           </el-table-column>
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="getPackageCodePath(row)">
