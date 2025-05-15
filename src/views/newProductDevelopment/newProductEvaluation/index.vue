@@ -2,7 +2,7 @@
   <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary" @click="startEvalution">开始评估</el-button>
+        <el-button v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary" @click="startEvaluation">开始评估</el-button>
         <el-button
           v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }"
           type="primary"
@@ -45,18 +45,19 @@
     <el-table
       ref="tableRef"
       v-loading="listLoading"
-      :border="true"
+      border
       :cell-style="{ textAlign: 'center' }"
       :data="evaluationList"
       :header-cell-style="{ textAlign: 'center' }"
-      :stripe="true"
+      :row-key="row => row.idNo"
+      stripe
       @cell-click="keyWordTrendCellClick"
     >
       <el-table-column
         v-for="(item, index) in indexColumns"
         :key="index"
         :label="item.label"
-        :min-width="handleWidth(item)"
+        :min-width="columnRenderConfig[item.label]?.padding && item.prop && columnWidths[item.prop]?.columnWidth ? columnWidths[item.prop].columnWidth : item.minWidth"
         :prop="item.prop"
       >
         <template #header>
@@ -75,32 +76,16 @@
           <div v-if="item.label === '关键词趋势'">
             <vab-echarts-chart-bar :x-axis-data="row.trendList.xAxis" :y-axis-data="row.trendList.yAxis" />
           </div>
-         
-          <div v-if="['中文品名', '评估人', '亚马逊前台关键词', '亚马逊后台关键词', '来源'].includes(item.label)" >
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, item.prop!, 0), 'text-align': 'left' }">
-              {{ row[item.prop!] }}
-            </span>
-          </div>
-          <div v-if="['编号', '年市场容量', '头部个数', 'CPC$', '平均转化', '平均售价'].includes(item.label)" >
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, item.prop!, 0), 'text-align': 'right' }">
-              {{ row[item.prop!] }}
-            </span>
-          </div>
-          <div v-if="['30毛利盈亏自然单占比' ].includes(item.label)" >
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, '30毛利盈亏', item.prop!, 0), 'text-align': 'right' }">
-              {{ row[item.prop!] }}
-            </span>
-          </div>
-          <div v-if="['供求评分', '总分'].includes(item.label)">
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, item.label, 'other', 0), 'text-align': 'right' }">
-              {{ Math.round(row[item.prop!]) }}
-            </span>
-          </div>
-          <div v-if="['关键词首页评分' ].includes(item.label)" >
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(evaluationList, '首页评分', item.prop!, 0), 'text-align': 'right' }">
-              {{ Math.round(row[item.prop!]) }}
-            </span>
-          </div>
+          <span
+            v-else-if="columnRenderConfig[item.label]"
+            :style="{
+              display: 'inline-block',
+              'min-width': columnWidths[item.prop].contentWidth + 'px',
+              'text-align': columnRenderConfig[item.label].align,
+            }"
+          >
+            {{ columnRenderConfig[item.label].format(row[item.prop]) }}
+          </span>
         </template>
       </el-table-column>
 
@@ -243,6 +228,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import { type TableInstance } from 'element-plus'
+import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
 import {
   getEstimatedCostAccountingList,
@@ -277,6 +263,143 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'NewProductEvaluation',
+})
+
+
+interface RenderConfig {
+  align: 'left' | 'right';
+  format: (value: any) => number | string;
+  widthLabel: string;
+  widthProp: string;
+  padding?: number;
+}
+// 渲染配置
+const columnRenderConfig: Record<string, RenderConfig> = {
+  '中文品名': {
+    align: 'left',
+    format: (value) => value,
+    widthLabel: '中文品名',
+    widthProp: 'productNameZh',
+    padding: 30,
+  },
+  '评估人': {
+    align: 'left',
+    format: (value) => value,
+    widthLabel: '评估人',
+    widthProp: 'prop',
+    padding: 30
+  },
+  '亚马逊前台关键词': {
+    align: 'left',
+    format: (value) => value,
+    widthLabel: '亚马逊前台关键词',
+    widthProp: 'amazonFrontendKeywords',
+    padding: 30,
+  },
+  '亚马逊后台关键词': {
+    align: 'left',
+    format: (value) => value,
+    widthLabel: '亚马逊后台关键词',
+    widthProp: 'amazonBackendKeywords',
+    padding: 30,
+  },
+  '来源': {
+    align: 'left',
+    format: (value) => value,
+    widthLabel: '来源',
+    widthProp: 'productSource',
+    padding: 30, 
+  },
+  '编号': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '编号',
+    widthProp: 'prop',
+    padding: 30,
+  },
+  '年市场容量': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '年市场容量',
+    widthProp: 'prop',
+  },
+  '头部个数': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '头部个m',
+    widthProp: 'other',
+  },
+  'CPC$': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: 'CPC$',
+    widthProp: 'prop',
+  },
+  '平均转化': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '平均转化',
+    widthProp: 'prop',
+   
+  },
+  '平均售价': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '平均售价',
+    widthProp: 'prop',
+  
+  },
+  '30毛利盈亏自然单占比': {
+    align: 'right',
+    format: (value) => value,
+    widthLabel: '30毛利盈亏',
+    widthProp: 'prop',
+   
+  },
+  '供求评分': {
+    align: 'right',
+    format: (value) => Math.round(value),
+    widthLabel: '供求评分',
+    widthProp: 'other',
+   
+  },
+  '总分': {
+    align: 'right',
+    format: (value) => Math.round(value),
+    widthLabel: '总分',
+    widthProp: 'other',
+  
+  },
+  '关键词首页评分': {
+    align: 'right',
+    format: (value) => Math.round(value),
+    widthLabel: '首页评m',
+    widthProp: 'other',
+  
+  },
+};
+
+// 计算列宽
+const columnWidths = computed(() => {
+  return indexColumns.reduce(
+    (acc: Record<string, { contentWidth: number; columnWidth: number }>, item: ColumnConfig) => {
+      if (item.prop && columnRenderConfig[item.label]) {
+        const config = columnRenderConfig[item.label];
+        const widthProp = config.widthProp === 'prop' ? item.prop : config.widthProp;
+        const contentWidth = flexColumnWidth(
+          evaluationList.value,
+          config.widthLabel,
+          widthProp,
+          0,
+        );
+        const padding = config.padding || 0;
+        const columnWidth = contentWidth + padding;
+        acc[item.prop] = { contentWidth, columnWidth };
+      }
+      return acc;
+    },
+    {},
+  );
 })
 
 const route = useRoute()
@@ -358,27 +481,6 @@ const queryForm = reactive<IEvaluationQueryReq>({
 
 const fixed = ref<string>('right')
 
-const handleWidth = (item: any) => {
-  switch (item.label) {
-    case '来源': {
-      return flexColumnWidth(evaluationList.value, '来源', 'productSource')
-    }
-    case '中文品名': {
-      return flexColumnWidth(evaluationList.value, '中文品名', 'productNameZh')
-    }
-    case '亚马逊前台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊前台关键词', 'amazonFrontendKeywords')
-    }
-    case '亚马逊后台关键词': {
-      return flexColumnWidth(evaluationList.value, '亚马逊后台关键词', 'amazonBackendKeywords')
-    }
-    case '年市场容量': {
-      return flexColumnWidth(evaluationList.value, '年市场容量', 'marketVolume')
-    }
-    // No default
-  }
-  return item.minWidth || 100
-}
 /**
  * 获取初始新款评估数据
  */
@@ -424,7 +526,7 @@ const handleCurrentChange = (value: number) => {
 /**
  * 开始新款评估
  */
-const startEvalution = () => {
+const startEvaluation = () => {
   router.push({
     path: '/newProductDevelopment/addOrUpdateEvalution',
     query: {
@@ -663,6 +765,7 @@ onActivated(() => {
 onMounted(async () => {
   const { data } = await getUserInfo()
   currentLoginUserId.value = data.userId
+  console.log(columnWidths.value)
 })
 
 onBeforeMount(() => {

@@ -6,6 +6,7 @@ export interface IProgressQueryReq {
   pageSize: number
   productKeyWord?: string
   status: number
+  userNameList?: string[]
 }
 /**
  * 新品进度-获取共享人列表, 新品进度-查询开发日志

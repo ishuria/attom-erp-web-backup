@@ -60,14 +60,14 @@
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '参与人员', 'sharerName', 0), 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName, 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" :width="flexColumnWidth(progressList, '产品', 'product', 50)">
+          <el-table-column label="产品" prop="product" :width="columnWidths.product + 50">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '产品', 'product', 0), 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product + 'px', 'text-align': 'left' }" >
                 {{ row.product }}
                 <br />
                 {{ row.mainSearchTerms }}
@@ -96,7 +96,7 @@
                   @keyup.enter="clickCancel($event, row)"
                 />
               </div>
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '目标月销', 'targetMonthlySales', 0), 'text-align': 'right' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales + 'px', 'text-align': 'right' }" >
                 {{ row.targetMonthlySales }}
               </span>
             </template>
@@ -111,12 +111,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" width="120">
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '当前阶段', 'currentPhaseStatus', 0), 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px' , 'text-align': 'left' }" >
                 {{ row.currentPhaseStatus }}
               </span>
             </template>
@@ -155,7 +155,7 @@
                     </div>
                   </div>
                 </vue-draggable>
-                <!-- 添加按钮 -->
+               
                 <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
                   <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
                     <el-icon><plus /></el-icon>
@@ -271,14 +271,14 @@
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '参与人员', 'sharerName', 0), 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName+'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" :width="flexColumnWidth(progressList, '产品', 'product', 50)">
+          <el-table-column label="产品" prop="product" :width="columnWidths.product+50">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '产品', 'product', 0), 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product+'px', 'text-align': 'left' }" >
                 {{ row.product }}
                 <br />
                 {{ row.mainSearchTerms }}
@@ -300,7 +300,7 @@
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '目标月销', 'targetMonthlySales', 0), 'text-align': 'right' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales+'px', 'text-align': 'right' }" >
                 {{ row.targetMonthlySales }}
               </span>
             </template>
@@ -315,9 +315,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" width="120" >
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(progressList, '当前阶段', 'currentPhaseStatus', 0), 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus+'px', 'text-align': 'left' }" >
                 {{ row.currentPhaseStatus }}
               </span>
             </template>
@@ -584,8 +584,6 @@ import {
   deleteImage,
   getByIdQueryEvaluation,
   getList,
-  getProgressComponentList,
-  getProgressFilter,
   getProgressLog,
   getProgressPersonList,
   getProgressSharelist,
@@ -596,7 +594,7 @@ import {
   updateProgressManage,
   updateProgressMoldAdd,
   updateProgressSharelist,
-  uploadFile,
+  uploadFile
 } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
@@ -607,6 +605,7 @@ import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'NewProductProgress',
 })
+
 
 const updateResearchReportLinkVisible = ref<boolean>(false)
 const researchReportLink = ref<string>('')
@@ -639,7 +638,13 @@ const evaluationTableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 // 新品进度列表
-let progressList = ref<IProgress[]>([])
+const progressList = ref<IProgress[]>([])
+const columnWidths = computed(() => ({
+  currentPhaseStatus: flexColumnWidth(progressList.value, '当前阶段', 'currentPhaseStatus', 0),
+  sharerName: flexColumnWidth(progressList.value, '参与人员', 'other', 0),
+  product: flexColumnWidth(progressList.value, '产品', 'product', 0),
+  targetMonthlySales: flexColumnWidth(progressList.value, '目标月销', 'targetMonthlySales', 0),
+}));
 let tableClickProgressId = ref<number>(0)
 // 点击上传图标的行下标
 let tableClickRowIndex = ref<number>(0)
@@ -650,6 +655,7 @@ const queryForm = reactive<IProgressQueryReq>({
   pageSize: 20,
   productKeyWord: '',
   status: 0, //查询状态：0表示进行中 1表示已归档
+  userNameList: []
 })
 
 const priorityOptions = [
@@ -766,6 +772,7 @@ const handlerEvaluationCloseDialog = () => {
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   progressList.value = []
+  queryForm.userNameList = []
   if (Number(tab.props.name) === 0) queryForm.status = 0
   else queryForm.status = 1
   router.push({
@@ -1107,16 +1114,16 @@ const handleOrderProcess = async (row: IProgress) => {
 const getSampleProgress = async () => {
   sampleProgressDialog.value = true
 }
-const getMoldProgress = async () => {
-  moldProgressDialog.value = true
-}
+// const getMoldProgress = async () => {
+//   moldProgressDialog.value = true
+// }
 
-// 开模申请
-const addProgressMold = async () => {
-  moldVisible.value = true
-  const { data } = await getProgressComponentList({ progressId: 6 })
-  componentOptions.value = data
-}
+// // 开模申请
+// const addProgressMold = async () => {
+//   moldVisible.value = true
+//   const { data } = await getProgressComponentList({ progressId: 6 })
+//   componentOptions.value = data
+// }
 const handleComponentChange = async (value: any) => {
   if (value) {
     supplierDisabled.value = false
@@ -1250,21 +1257,23 @@ const handleShareSelectConfirm = async () => {
   })
   // console.log(userNameList.value);
   // console.log(shareSelect.value);
-  listLoading.value = true
-  if (shareSelect.value.length === 0) {
-    // 如果没有筛选任何人
-    fetchData()
-  } else {
-    const { data } = await getProgressFilter({
-      userNameList: userNameList.value,
-      status: queryForm.status,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    })
-    progressList.value = data.list
-    total.value = data.total
-    listLoading.value = false
-  }
+  // listLoading.value = true
+  // if (shareSelect.value.length === 0) {
+  //   // 如果没有筛选任何人
+  //   fetchData()
+  // } else {
+  //   const { data } = await getProgressFilter({
+  //     userNameList: userNameList.value,
+  //     status: queryForm.status,
+  //     pageNo: queryForm.pageNo,
+  //     pageSize: queryForm.pageSize,
+  //   })
+  //   progressList.value = data.list
+  //   total.value = data.total
+  //   listLoading.value = false
+  // }
+  queryForm.userNameList = userNameList.value
+  fetchData()
 }
 const handleArchivedShareSelectConfirm = async () => {
   userNameArchivedList.value = []
@@ -1275,22 +1284,21 @@ const handleArchivedShareSelectConfirm = async () => {
     userNameArchivedList.value.push(i.userName)
   })
 
-  listLoading.value = true
-  if (shareArchivedSelect.value.length === 0) {
-    // 如果没有筛选任何人
+  // listLoading.value = true
+  // if (shareArchivedSelect.value.length === 0) {
+  //   // 如果没有筛选任何人
+  //   fetchData()
+  // } else {
+    // const { data } = await getProgressFilter({
+    //   userNameList: userNameArchivedList.value,
+    //   status: queryForm.status,
+    //   pageNo: queryForm.pageNo,
+    //   pageSize: queryForm.pageSize,
+    // })
+  queryForm.userNameList = userNameArchivedList.value
     fetchData()
-  } else {
-    const { data } = await getProgressFilter({
-      userNameList: userNameArchivedList.value,
-      status: queryForm.status,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    })
-    progressList.value = data.list
-    total.value = data.total
-    listLoading.value = false
     // shareSelect.value = []
-  }
+  // }
 }
 const updateSharedVisibleValue = (newValue: boolean) => {
   sharedVisible.value = newValue
@@ -1418,6 +1426,9 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
   }
   fetchData()
+})
+onMounted(() => {
+  console.log(columnWidths.value)
 })
 </script>
 

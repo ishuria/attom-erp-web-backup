@@ -2169,8 +2169,8 @@ const handleWidth = (item: any) => {
         return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
       }
       case '剩余库存': {
-        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory').slice(0, -2)
-        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0).slice(0, -2)
+        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
+        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
         return `${Number(availableWidth) + Number(fbaWidth)}px`
       }
       default: {

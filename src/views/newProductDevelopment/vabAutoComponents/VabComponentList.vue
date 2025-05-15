@@ -446,7 +446,10 @@ const showUploadDialog = (row: any) => {
   copyRow = row
 }
 const formattedPrice = (price: string) => {
-  return parseFloat(price).toFixed(2)
+  if (price === '') {
+    return ''
+  }
+  return Number(price).toFixed(2)
 }
 
 watchEffect(() => {

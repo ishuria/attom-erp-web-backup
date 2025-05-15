@@ -89,17 +89,15 @@ export const inputHandleMouseOver = (event: Event) => {
  * 遍历列的所有内容，获取最宽一列的宽度
  * @param arr
  */
-export const getMaxLength  = (arr: string[])  => {
+export const getMaxLength = (arr: string[]): number => {
   return arr.reduce((acc: number, item: string) => {
     if (item) {
-      const calcLen = getTextWidth(item)
-      if (acc < calcLen) {
-        acc = calcLen
-      }
+      const calcLen = getTextWidth(item);
+      return Math.max(acc, calcLen);
     }
-    return acc
-  }, 0)
-}
+    return acc;
+  }, 0);
+};
 /**
  * 计算文本宽度，包括选项的宽度
  * @param str 文本内容
@@ -172,13 +170,13 @@ export const flexColumnWidth = (list: any, label: string, prop: string, padding 
       break;
     }
     default: {
-      const arr = list.map((x: any) => x[prop]);
+      const arr = list.map((x: any) => String(x[prop] ?? '')); // 修复：转换为字符串
       arr.push(label); // 加入表头
       maxLength = getMaxLength(arr);
     }
   }
 
-  return `${maxLength + padding}px`;
+  return maxLength + padding;
 };
 
 

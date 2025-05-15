@@ -1,13 +1,18 @@
-export const indexColumns = [
+export interface ColumnConfig {
+  label: string
+  prop: string
+  minWidth: number
+}
+export const indexColumns: ColumnConfig[] = [
   {
     label: '编号',
     prop: 'idNo',
-    minWidth: 50,
+    minWidth: 60,
   },
   {
     label: '评估人',
     prop: 'evaluatorName',
-    minWidth: 100,
+    minWidth: 90,
   },
   {
     label: '评估日期',
@@ -36,6 +41,7 @@ export const indexColumns = [
   },
   {
     label: '关键词趋势',
+    prop: 'keywordTrend',
     minWidth: 130,
   },
   {
@@ -66,17 +72,17 @@ export const indexColumns = [
   {
     label: '供求评分',
     prop: 'supplyScore',
-    minWidth: 100
+    minWidth: 100,
   },
   {
     label: '关键词首页评分',
     prop: 'keyWordScore',
-    minWidth: 100
+    minWidth: 100,
   },
   {
     label: '总分',
     prop: 'finalScore',
-    minWidth: 70
+    minWidth: 70,
   },
   {
     label: '来源',
