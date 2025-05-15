@@ -35,7 +35,7 @@
           </div>
 
           <div v-if="item.prop === 'createTime'">
-              <span>{{ formatDate(new Date(row.createTime)) }}</span>
+              <span>{{ row.createTime ? formatDate(new Date(row.createTime)) : '' }}</span>
           </div>
 
           <div v-if="item.prop === 'receiptDate'">

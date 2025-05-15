@@ -765,7 +765,7 @@ onActivated(() => {
 onMounted(async () => {
   const { data } = await getUserInfo()
   currentLoginUserId.value = data.userId
-  console.log(columnWidths.value)
+  // console.log(columnWidths.value)
 })
 
 onBeforeMount(() => {

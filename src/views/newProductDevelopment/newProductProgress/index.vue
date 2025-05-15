@@ -56,13 +56,14 @@
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" width="120">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <!-- <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName, 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                
+              </el-tooltip> -->
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName + 'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
-              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="产品" prop="product" :width="columnWidths.product + 50">
@@ -265,15 +266,16 @@
               {{ row.createTime !== null ? row.createTime.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="参与人员" prop="sharerName" width="120">
+          <el-table-column label="参与人员" prop="sharerName" width="100">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <!-- <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
                 </template>
-                <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName+'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
+                
+              </el-tooltip> -->
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName+'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
-              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="产品" prop="product" :width="columnWidths.product+50">
@@ -642,7 +644,7 @@ const progressList = ref<IProgress[]>([])
 const columnWidths = computed(() => ({
   currentPhaseStatus: flexColumnWidth(progressList.value, '当前阶段', 'currentPhaseStatus', 0),
   sharerName: flexColumnWidth(progressList.value, '参与人员', 'other', 0),
-  product: flexColumnWidth(progressList.value, '产品', 'product', 0),
+  product: Math.max(flexColumnWidth(progressList.value, '中文品名', 'product', 0), flexColumnWidth(progressList.value, '中文品名', 'mainSearchTerms', 0)),
   targetMonthlySales: flexColumnWidth(progressList.value, '目标月销', 'targetMonthlySales', 0),
 }));
 let tableClickProgressId = ref<number>(0)
@@ -1426,9 +1428,6 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
   }
   fetchData()
-})
-onMounted(() => {
-  console.log(columnWidths.value)
 })
 </script>
 

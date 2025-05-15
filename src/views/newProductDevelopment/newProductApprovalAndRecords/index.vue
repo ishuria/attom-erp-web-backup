@@ -19,7 +19,7 @@
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle" 
       class="noneHoveTable" :data="dataList" 
-      :header-cell-style="cellStyle"
+      :header-cell-style="{ 'text-align': 'center' }"
       :row-class-name="stripedRowClass" 
       :span-method="objectSpanMethod"
     >
@@ -40,46 +40,47 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(dataList, 'SKU', 'sku')">
+      <el-table-column label="SKU" :min-width="columnWidths.sku + 25" prop="sku">
         <template #default="{ row }">
-          {{ formattedProgressLog(row.sku) }}
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.sku + 'px', 'text-align': 'left' }">
+            {{ formattedProgressLog(row.sku) }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="产品" prop="productName" :width="flexColumnWidth(dataList, '产品', 'productName')">
+      <el-table-column label="产品" :min-width="columnWidths.productName + 25" prop="productName">
         <template #default="{ row }">
-          {{ formattedProgressLog(row.productName) }}
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.productName + 'px', 'text-align': 'left' }">
+            {{ formattedProgressLog(row.productName) }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column  label="首单PO" min-width="100" prop="po" />
-      <el-table-column  label="首单实际成本" prop="firstRealCost" width="130" />
+      <el-table-column  label="首单实际成本" prop="firstRealCost" width="125" />
       <el-table-column  label="审批成本" min-width="100" prop="totalCost" />
-      <el-table-column  label="相差" min-width="70" prop="difference" />
-      <el-table-column  label="有效计数" prop="effectiveCount" width="70">
-        <template #header>
-          有效<br />计数
+      <el-table-column  label="相差" min-width="100" prop="difference" />
+      <el-table-column  label="有效计数" min-width="100" prop="effectiveCount" >
+        <template #default="{ row }">
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
+            {{ row.effectiveCount  }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column  label="OEM" min-width="70" prop="oem">
+      <el-table-column  label="OEM" prop="oem" width="80">
         <template #default="{ row }">
-          <el-checkbox
-v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large"
-            :true-value="1" />
+          <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
         </template>
       </el-table-column>
-      <el-table-column  label="产品经理" min-width="100" prop="productManager" :width="flexColumnWidth(dataList, '产品', 'productManager')">
-        <template #header>
-          产品<br />经理
-        </template>
+      <el-table-column  label="产品经理" min-width="100" prop="productManager">
         <template #default="{ row }">
-          <div v-html="row.productManager"></div>
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }" v-html="row.productManager">
+          </span>
         </template>
       </el-table-column>
-      <el-table-column  label="产品设计" min-width="100" prop="productDesign" :width="flexColumnWidth(dataList, '产品', 'productDesign')">
-        <template #header>
-          产品<br />设计
-        </template>
+      <el-table-column  label="产品设计"  min-width="100" prop="productDesign">
         <template #default="{ row }">
-          {{ row.productDesign }}
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.productDesign + 'px', 'text-align': 'left' }">
+            {{ row.productDesign }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column  label="立项日期" min-width="115" prop="projectInitiationDate">
@@ -94,19 +95,21 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
       </el-table-column>
       <el-table-column  label="耗时" min-width="100" prop="timeConsuming">
         <template #default="{ row }">
-          {{ row.timeConsuming }}
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.timeConsuming + 'px', 'text-align': 'right' }">
+            {{ row.timeConsuming }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column  label="审批状态" prop="reviewStatus" width="110">
+      <el-table-column  label="审批状态" min-width="130" prop="reviewStatus">
         <template #default="{ row }">
-          <span :class="generateStatus(row.reviewStatus).color">
+          <span :class="generateStatus(row.reviewStatus).color" :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }">
             {{ generateStatus(row.reviewStatus).text }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column  label="审批人" prop="reviewPersonName" :width="flexColumnWidth(dataList, '审批人', 'reviewPersonName')" />
+      <el-table-column  label="审批人" min-width="100" prop="reviewPersonName" />
 
-      <el-table-column fixed="right" label="操作" width="120">
+      <el-table-column fixed="right" label="操作" width="130">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="handleOrderProcess(row)">
@@ -139,8 +142,12 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
       </template>
     </el-table>
     <vab-pagination
-:current-page="queryForm.pageNo" :page-size="queryForm.pageSize" :total="total"
-      @current-change="handleCurrentChange" @size-change="handleSizeChange" />
+      :current-page="queryForm.pageNo" 
+      :page-size="queryForm.pageSize" 
+      :total="total"
+      @current-change="handleCurrentChange" 
+      @size-change="handleSizeChange" 
+    />
     <!-- 新款评估 -->
     <vab-dialog 
       v-model="newScoreVisible" 
@@ -159,8 +166,8 @@ v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size
           stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column
-v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
+          <el-table-column 
+            v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
             :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
             <template #default="{ row }">
               <div v-if="item.label === '关键词趋势'" style="width: 80px; height: 63px;">
@@ -203,6 +210,15 @@ defineOptions({
   name: 'NewProductApprovalAndRecords',
 })
 
+const columnWidths = computed(() => ({
+  sku: flexColumnWidth(dataList.value, 'SKU', 'sku', 0),
+  productName: flexColumnWidth(dataList.value, '产品', 'productName', 0),
+  effectiveCount: flexColumnWidth(dataList.value, '有效计m', 'effectiveCount', 0),
+  timeConsuming: flexColumnWidth(dataList.value, '耗m', 'timeConsuming', 0),
+  productManager: flexColumnWidth(dataList.value, '产品经理', 'other', 0),
+  productDesign: flexColumnWidth(dataList.value, '产品设计', 'other', 0),
+  reviewStatus: flexColumnWidth(dataList.value, '审批状态', 'reviewStatus', 0),
+}));
 interface SpanMethodProps {
   row: IReviewQueryItem
   column: TableColumnCtx<IReviewQueryItem>
@@ -442,20 +458,9 @@ const stripedRowClass = (_row: any) => {
   // 根据当前组索引设置条纹样式
   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
 };
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  const label = data.column.label
-  if (['提交日期', 'SKU', '产品', '首单PO', '产品经理', '产品设计', '立项日期', '审批日期', '审批状态', '审批人'].includes(label)) {
-    return {
-      textAlign: 'left'
-    }
-  } else if (label === 'OEM') {
-    return {
-      textAlign: 'center'
-    }
-  } else {
-    return {
-      textAlign: 'right'
-    }
+const cellStyle = (): CSSProperties => {
+  return {
+    textAlign: 'center'
   }
 }
 

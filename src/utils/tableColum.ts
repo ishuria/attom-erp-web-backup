@@ -163,9 +163,8 @@ export const flexColumnWidth = (list: any, label: string, prop: string, padding 
     
       break;
     }
-    case 'other': {
-      const arr = [label]
-      maxLength = getMaxLength(arr);
+    case 'other': { 
+      maxLength = getMaxLength([label]);
     
       break;
     }

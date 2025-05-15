@@ -76,6 +76,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
+      <h3>站点分货</h3>
       <vab-site-quantity-table :list="siteQuantityList" />
     </div>
     <vab-alert center="center" type="error">
