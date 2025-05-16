@@ -1107,7 +1107,6 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     cursor: pointer;
-    border: 1px dashed var(--el-border-color);
     
     &:hover {
       border-color: var(--el-color-primary);
