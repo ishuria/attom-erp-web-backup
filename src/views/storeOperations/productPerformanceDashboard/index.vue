@@ -807,7 +807,7 @@
                 </el-image>
               </span>
               <span v-if="item.label === 'ASIN'">
-                <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
+                <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
                 <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)" >
                   <vab-icon icon="file-copy-2-fill" />
                 </span>
