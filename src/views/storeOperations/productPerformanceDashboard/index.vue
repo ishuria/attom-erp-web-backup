@@ -351,10 +351,33 @@
                   <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
                     <vab-icon icon="file-copy-2-fill" />
                   </span>
-                  <div class="rate-wrapper">
+                  <!-- <div class="rate-wrapper" >
                     <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                     <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                     <span class="rate-count">{{ row.commentsNumbers }}</span>
+                    <span style="font-size: 28px;">{{ row.flag }}</span>
+                  </div> -->
+                  <!-- <a :href="row.amazonUrl + '#averageCustomerReviewsAnchor'" style=" color: inherit;text-decoration: none;" target="_blank">
+                    <div class="rate-wrapper" style="cursor: pointer;">
+                      <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
+                      <span>
+                        <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
+                      </span>
+                      <span class="rate-count">{{ row.commentsNumbers }}</span>
+                      <span style="font-size: 28px;">{{ row.flag }}</span>
+                    </div>
+                  </a> -->
+                  <div
+                    class="rate-wrapper"
+                    style="cursor: pointer;"
+                    @click="goToReview(row.amazonUrl)"
+                  >
+                    <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
+                    <span>
+                      <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
+                    </span>
+                    <span class="rate-count">{{ row.commentsNumbers }}</span>
+                    <span style="font-size: 28px;">{{ row.flag }}</span>
                   </div>
                 </span>
                 <span v-if="item.label === 'ASIN'">
@@ -815,6 +838,7 @@
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
+                  <span style="font-size: 28px;">{{ row.flag }}</span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
@@ -1256,6 +1280,7 @@
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
+                  <span style="font-size: 28px;">{{ row.flag }}</span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
@@ -1467,6 +1492,15 @@ defineOptions({
   name: 'ProductPerformanceDashboard',
 })
 
+const goToReview = (url: string) => {
+  const newWindow = window.open(url, '_blank');
+  if (newWindow) {
+    // 1000ms 延迟，等待页面加载后设置锚点
+    setTimeout(() => {
+      newWindow.location.href = `${newWindow.location.href}#averageCustomerReviewsAnchor`;
+    }, 10000);
+  }
+};
 // 防抖处理
 const debouncedQueryData = debounce(() => {
   queryData()
@@ -3122,7 +3156,7 @@ onBeforeMount(() => {
     --el-rate-text-color: #f09000; /* 文本颜色一致 */
     --el-rate-disabled-void-color: #fff; /* 未填充星星的颜色 */
     --el-rate-void-color: #fff; /* 空星颜色 */
-
+    
     :deep() {
       .el-rate__item {
         margin-top: -2px;
@@ -3132,6 +3166,7 @@ onBeforeMount(() => {
           stroke: #f09000; /* 星星边框颜色 */
           stroke-width: 60px; /* 星星边框的粗细 */
         }
+        cursor: pointer;
       }
     }
   }
