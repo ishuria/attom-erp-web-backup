@@ -61,15 +61,13 @@
         :prop="item.prop"
       >
         <template #header>
-          <span v-if="item.label === '30毛利盈亏自然单占比'">
-            30毛利盈亏
-            <br />
-            自然单占比
-          </span>
-          <span v-if="item.label === '关键词首页评分'">
-            关键词
-            <br />
-            首页评分
+          <span v-if="item.label === '自然单'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">自然单 <el-icon><info-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip">达到30%毛利所需要的自然销量占比（越低越好）</div>
+              </template>
+            </el-tooltip>
           </span>
         </template>
         <template #default="{ row }">
@@ -226,7 +224,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { ArrowDown, InfoFilled, Search } from '@element-plus/icons-vue'
 import { type TableInstance } from 'element-plus'
 import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
@@ -349,10 +347,10 @@ const columnRenderConfig: Record<string, RenderConfig> = {
     widthProp: 'prop',
   
   },
-  '30毛利盈亏自然单占比': {
+  '自然单': {
     align: 'right',
     format: (value) => value,
-    widthLabel: '30毛利盈亏',
+    widthLabel: '自然单%',
     widthProp: 'prop',
    
   },
@@ -370,7 +368,7 @@ const columnRenderConfig: Record<string, RenderConfig> = {
     widthProp: 'other',
   
   },
-  '关键词首页评分': {
+  '首页评分': {
     align: 'right',
     format: (value) => Math.round(value),
     widthLabel: '首页评m',
@@ -807,5 +805,19 @@ onBeforeMount(() => {
 .ghost {
   background: #c8ebfb;
   opacity: 0.5;
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
+}
+.custom-tooltip {
+  max-width: 400px;
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>

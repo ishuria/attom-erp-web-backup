@@ -12,7 +12,7 @@ export const indexColumns: ColumnConfig[] = [
   {
     label: '评估人',
     prop: 'evaluatorName',
-    minWidth: 90,
+    minWidth: 100,
   },
   {
     label: '评估日期',
@@ -52,12 +52,12 @@ export const indexColumns: ColumnConfig[] = [
   {
     label: 'CPC$',
     prop: 'cpc',
-    minWidth: 80,
+    minWidth: 100,
   },
   {
-    label: '30毛利盈亏自然单占比',
+    label: '自然单',
     prop: 'grossProfitAndLoss',
-    minWidth: 110,
+    minWidth: 100,
   },
   {
     label: '平均转化',
@@ -75,14 +75,14 @@ export const indexColumns: ColumnConfig[] = [
     minWidth: 100,
   },
   {
-    label: '关键词首页评分',
+    label: '首页评分',
     prop: 'keyWordScore',
     minWidth: 100,
   },
   {
     label: '总分',
     prop: 'finalScore',
-    minWidth: 70,
+    minWidth: 80,
   },
   {
     label: '来源',
