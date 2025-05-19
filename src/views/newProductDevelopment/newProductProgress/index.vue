@@ -42,8 +42,7 @@
                 v-model="row.priority"
                 class="center-select"
                 style="min-width: 100%"
-                @blur="clickCancel($event, row)"
-                @keyup.enter="clickCancel($event, row)"
+                @change="updatePriority(row)"
               >
                 <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
@@ -988,6 +987,9 @@ const updateProductName = async () => {
     }
   })
 }
+const updatePriority = async (row: any) => {
+  await updateProgressManage(row)
+}
 /**
  * 输入失焦事件
  */
@@ -1209,7 +1211,7 @@ const handleGetShareList = async (progressId: number) => {
   const { data } = await getProgressSharelist({ progressId })
   shareId.value = convertString(progressId)
   shareUserList.value = data
-  console.log('shareUserList.value', shareUserList.value)
+  // console.log('shareUserList.value', shareUserList.value)
 }
 /**
  * 共享操作
