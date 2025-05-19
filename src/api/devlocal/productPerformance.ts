@@ -36,6 +36,16 @@ export function getOperationAmazonSKUList(data: IGetOperationAmazonSKUListReq): 
   })
 }
 /**
+ * @description 产品表现-亚马逊看板SKU列表
+ */
+export function getOperationWalmartList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+  return request({
+    url: `${BASE_API}/operation/walmart/list`,
+    method: 'post',
+    data
+  })
+}
+/**
  * @description 产品表现-货币下拉列表
  */
 export function getCurrencyList(): Promise<{ data: { id: number, label: string }[] }> {

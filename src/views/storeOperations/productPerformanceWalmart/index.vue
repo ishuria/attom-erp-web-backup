@@ -4,29 +4,37 @@
       <vab-query-form-left-panel :span="20">
         <el-form inline :model="queryForm">
           <el-form-item label="站点">
-            <el-select />
+            <el-select
+              v-model="queryForm.site"
+              class="multiple-select"
+              clearable
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="1"
+              multiple
+              placeholder="全部站点"
+              style="width: 220px"
+              @change="queryData"
+            >
+              <template #header>
+                <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
+              </template>
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </el-form-item>
           <el-form-item label="币种">
-            <el-select />
+            <el-select v-model="currencySKU" clearable placeholder="请选择币种" @change="">
+              <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select v-model="queryForm.operations" style="width: 5em;" >
-              <!-- <el-option 
-                v-for="item in operationsOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              /> -->
+            <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
+              <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="开发人">
-            <el-select v-model="queryForm.developer" style="width: 5em;" >
-              <!-- <el-option 
-                v-for="item in developerOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              /> -->
+            <el-select v-model="queryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryData">
+              <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -63,8 +71,8 @@
                 <el-icon><view /></el-icon>
               </span>
               <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer;" @click="handleChecked(item)">
-                <el-icon v-show="!item.checked"><hide /></el-icon>
-                <el-icon v-show="item.checked"><view /></el-icon>
+                <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
             </div>
           </vab-draggable>
@@ -84,9 +92,10 @@
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
       class="noneHoverTable"
-      :data="fakeData"
+      :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      @cell-click="handleCellClick"
+      @cell-click="cellClick"
+      :header-cell-class-name="headerCell"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -96,6 +105,7 @@
         :min-width="handleWidth(item)"
         :prop="item.prop"
         :width="item.width"
+        :sortable="item.sortable ? 'custom' : false"
       >
         <template #header>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -104,54 +114,86 @@
           <span v-if="item.label === '库存可售'">
             库存<br />可售
           </span>
+          <span v-if="item.label === '月销售额'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip" >过去30天的销售额</div>
+              </template>
+            </el-tooltip>
+          </span>
+          <span v-if="item.label === '月退款%'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip" >过去30天的退款占比</div>
+              </template>
+            </el-tooltip>
+          </span>
+          <span v-if="item.label === '月退货%'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip" >过去30天的退货占比</div>
+              </template>
+            </el-tooltip>
+          </span>
           <span v-if="item.label === '可售含在途'">
-            可售<br />含在途
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+              <template #content>
+                <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
+              </template>
+            </el-tooltip>
           </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image fit="fill" :src="row.componentImage" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.componentImage)" >
-              <template #error>
-                <el-icon/>
-              </template>
+            <el-image
+              fit="fill"
+              :src="row.skuImgUrl"
+              style="display: block; width: 75px; height: 75px"
+              @click="imagePreviewShow(row.skuImgUrl)"
+            >
+              <template #error><el-icon /></template>
             </el-image>
           </span>
+          <!-- SKU 展示-->
           <span v-if="item.label === 'SKU'">
-            {{ row.sku }}
-            <div class="rate-wrapper">
-              <span class="rate-value">{{ row.rate }}</span>
-              <span><el-rate v-model="row.rate" class="custom-rate" disabled :void-icon="Star" /></span>
-              <span class="rate-count">{{ 484 }}</span>
+            <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+            
+            <div
+              class="rate-wrapper"
+              style="cursor: pointer;"
+              @click="goToReview(row.itemNumber)"
+            >
+              <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
+              <span>
+                <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
+              </span>
+              <span class="rate-count">{{ row.commentsNumbers }}</span>
+              <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
-            <div style="width: 100%; height: 50px">
-              <vab-echarts-chart-bar :x-axis-data="row.saleTrendList.xAxis" :y-axis-data="row.saleTrendList.yAxis" />
+            <div class="custom-bar">
+              <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
             </div>
           </span>
           <span v-if="item.label === '运营分类'">
-            <el-select style="min-width: 100%;">
-              <el-option 
-                v-for="o in opeClassOption"
-                :key="o.value"
-                :label="o.label"
-                :value="o.value"
-              />
+            <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="">
+              <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
             </el-select>
           </span>
           <span v-if="item.label === '停产'">
-            <el-checkbox :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="" />
           </span>
-         
-          <span v-if="item.label === '运营备注'">
-            <el-tooltip content=" " effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-              </template>
-              <span>{{ removeHtmlTags(row.remark) }}</span>
-            </el-tooltip>
+          <span v-if="item.label === '自量FBA'">
+            {{ (row.currencyIcon + (row.selfAssessmentFba ?? '')) }} <br /> {{ (row.currencyIcon + (row.amazonFba ?? '')) }}
           </span>
-         
           <span v-if="label1.includes(item.label)">
             {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
           </span>
@@ -162,10 +204,42 @@
             <!-- 处理 天 -->
             {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
           </span>
-          <span v-if="item.label === '季节系数'">
+          
+          <span v-if="item.label === '状态'">
+            <el-tag v-if="row.walmartStatus === 'PUBLISHED'" type="success">{{ row.walmartStatus }}</el-tag>
+            <el-tag v-if="row.walmartStatus === 'UNPUBLISHED'" type="danger">{{ row.walmartStatus }}</el-tag>
+          </span>
+          <span v-if="item.label === '运营备注'">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
+              </template>
+              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
+            </el-tooltip>
+          </span>
+         
+          <span v-if="item.label === '季节趋势'">
             <div style="width: 100%; height: 50px">
-              <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="seasonalYData" />
+              <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
             </div>
+          </span>
+          <span v-if="item.label === '当前售价'">
+            {{ row.currencyIcon + row.sellingPrice }}
+          </span>
+          <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
+          <span v-if="item.label === '库龄'">
+            <span v-html="row.storageAge"></span>
+          </span>
+          <span v-if="item.label === '订货#'">
+            {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
+          </span>
+          <span v-if="item.label === '开发人员'">
+            <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ row._developNameFull }}</div>
+              </template>
+              <span v-html="row._developName"></span>
+            </el-tooltip>
           </span>
         </template>
       </el-table-column>
@@ -208,68 +282,118 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
-     <!-- 季节系数 -->
-     <vab-dialog
-      v-model="seasonalVisible"
-      title="季节系数"
-      width="40%"
-      @open="handleSeasonalOpened"
-    >
-      <div ref="chartContainer1" style="width: 100%; height: 400px;"></div>
+    
+     <!-- 季节趋势 -->
+     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
+      <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Hide, Search, Star } from '@element-plus/icons-vue'
+import { Hide, Search, Star, QuestionFilled } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getDistributionOptionUserList, getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
+import { getCurrencyList, getCurrencySKUAmazonOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation } from '~/src/api/devlocal/productPerformance'
 import { months, opeClassOption } from '../constantOption'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
+import handleClipboard from '~/src/utils/clipboard'
+import CountryFlag from 'vue-country-flag-next'
+import { CheckboxValueType } from 'element-plus'
+import { getAmazonStars, handleImgUrl } from '~/src/utils/rate'
 
 defineOptions({
   name: 'ProductPerformanceWalmart'
 })
+
+const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (['今销', '月销售额'].includes(data.column.label)) {
+    return 'header-cell'
+  }
+  return ''
+}
+const goToReview = (itemNumber: string) => {
+  window.open(`https://www.walmart.com/reviews/product/${itemNumber}`, '_blank');
+}
+let _seasonalCoefficient = {
+  actualList: [],
+  referenceList: []
+} 
+const disabledOpe = ref<boolean>(false)
+const disabledDev = ref<boolean>(false)
+const checkAll = ref<boolean>(false)
+const indeterminate = ref<boolean>(false)
 const seasonalVisible = ref<boolean>(false)
 const chartContainer1 = ref<HTMLElement | null>(null)
 let chartInstance1: echarts.ECharts | null = null
 let chartObserver1: ResizeObserver
 
 const option1 = ref<any>({})
-
-const seasonalXData = months.map((item) => item.label)
-const seasonalYData = [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3]
+const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
-const queryForm = reactive<any>({
-  keyWord: '',
-  pageNo: 1,
-  pageSize: 20
-})
+
 const filterVisible = ref<boolean>(false)
 const keyWordTrendVisible = ref<boolean>(false)
 const opeClassifyVisible = ref<boolean>(false)
-const label1 = ['今销', '当前售价', '月销售额', '盈亏售价', '30毛利售价']
-const label2 = ['试算毛利', '月退货%', '月退款%']
+const label1 = [
+  '今销',
+  'FBA仓储费',
+  'FBA差异',
+  '月净利润',
+  '月销售额',
+  '月广告销售',
+  '月广告支出',
+  '预计下月仓储费',
+  '盈亏售价',
+  '30毛利售价',
+]
+const label2 = [
+  '试算毛利',
+  '2周广告转化',
+  '2周广告点击',
+  '2周总转化',
+  '月净利率',
+  '月ACOS',
+  '月TACOS',
+  '1年ACOS',
+  '1年TACOS',
+  '月退货%',
+  '月退款%',
+]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
 const label1Map = new Map([
-  ['今销', 'totalSellD'],
-  ['当前售价', 'currentPrice'],
-  ['月销售额', 'monthlySales'],
-  ['盈亏售价', 'profitLossPrice'],
-  ['30毛利售价', 'profitPrice'],
+  ['今销', 'currentSalesPrice'],
+  ['FBA仓储费', 'fbaStorageFee'],
+  ['FBA差异', 'differenceFba'],
+  ['月净利润', 'monthNetProfit'],
+  ['月销售额', 'monthSalesPrice'],
+  ['月广告销售', 'monthAdvSales'],
+  ['月广告支出', 'monthAdvExpenditure'],
+  ['预计下月仓储费', 'estimateNextMonthStorageFee'],
+  ['盈亏售价', 'profitLossSellingPrice'],
+  ['30毛利售价', 'grossSellingPrice'],
 ])
 const label2Map = new Map([
-  ['试算毛利', 'trialGrossProfit'],
-  ['月退货%', 'monthlyReturns'],
-  ['月退款%', 'monthlyRefund'],
+  ['试算毛利', 'grossProfit'],
+  ['2周广告转化', 'tWksAdvRate'],
+  ['2周广告点击', 'tWksClickRate'],
+  ['2周总转化', 'tWksTotalConv'],
+  ['月净利率', 'monthNetProfitMargin'],
+  ['月ACOS', 'monthAcos'],
+  ['月TACOS', 'monthTacos'],
+  ['1年ACOS', 'yearAcos'],
+  ['1年TACOS', 'yearTacos'],
+  ['月退货%', 'monthReturnGoods'],
+  ['月退款%', 'monthRefund'],
 ])
 const label3Map = new Map([
-  ['上新', 'newReleases'],
-  ['库存可售', 'stockSale'],
-  ['可售含在途', 'saleTransit'],
+  ['上新', 'newArrivalDay'],
+  ['库存可售', 'esAvailableSaleDay'],
+  ['可售含在途', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
 const columns = ref<any>([
@@ -289,12 +413,12 @@ const columns = ref<any>([
     minWidth: 100,
     isFixed: 'left'
   },
-  {
-    label: '站点',
-    prop: 'site',
-    checked: true,
-    minWidth: 100,
-  },
+  // {
+  //   label: '站点',
+  //   prop: 'siteName',
+  //   checked: true,
+  //   minWidth: 100,
+  // },
   {
     label: '销量趋势(点击看明细)',
     prop: 'trend',
@@ -302,19 +426,21 @@ const columns = ref<any>([
     minWidth: 180,
   },
   {
-    label: '今销#',
-    prop: 'todaySell',
+    label: '今销量',
+    prop: 'currentSalesNumber',
     checked: true,
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true
   },
   {
-    label: '今销',
-    prop: 'todaySellD',
+    label: '今单量',
+    prop: 'currentSalesOrder',
     checked: true,
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true
   },
   {
-    label: '季节系数',
+    label: '季节趋势',
     prop: 'seasonalCoefficient',
     checked: true,
     minWidth: 100,
@@ -327,7 +453,7 @@ const columns = ref<any>([
   },
   {
     label: '停产',
-    prop: 'ting',
+    prop: 'stopProductStatus',
     checked: true,
     minWidth: 60,
   },
@@ -339,43 +465,45 @@ const columns = ref<any>([
   },
   {
     label: '当前售价',
-    prop: 'currentPrice',
+    prop: 'sellingPrice',
     checked: true,
     minWidth: 100,
   },
   {
     label: '试算毛利',
-    prop: 'trialGrossProfit',
+    prop: 'grossProfit',
     checked: true,
     minWidth: 100,
   },
   {
     label: '月销量',
-    prop: 'monthlySell',
+    prop: 'monthSalesVolume',
     checked: true,
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true
   },
   {
     label: '月销售额',
-    prop: 'monthlySales',
+    prop: 'monthSalesPrice',
     checked: true,
-    minWidth: 100,
+    minWidth: 150,
+    sortable: true
   },
   {
     label: '月退货%',
-    prop: 'monthlyReturns',
+    prop: 'monthReturnGoods',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '月退款%',
-    prop: 'monthlyRefund',
+    prop: 'monthRefund',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
   },
   {
     label: '上新',
-    prop: 'newReleases',
+    prop: 'newArrivalDay',
     checked: true,
     minWidth: 90,
   },
@@ -383,7 +511,7 @@ const columns = ref<any>([
     label: '库龄',
     prop: 'storageAge',
     checked: true,
-    minWidth: 90,
+    minWidth: 130,
   },
   {
     label: '剩余库存',
@@ -393,31 +521,31 @@ const columns = ref<any>([
   },
   {
     label: '接收中',
-    prop: 'receiving',
+    prop: 'acceptingCount',
     checked: true,
     minWidth: 90,
   },
   {
     label: '最近入库',
-    prop: 'recentlyStorage',
+    prop: 'recentlyInboundStorage',
     checked: true,
     minWidth: 100,
   },
   {
     label: '总入库',
-    prop: 'totalStorage',
+    prop: 'inboundStorageTotal',
     checked: true,
     minWidth: 90,
   },
   {
     label: '库存可售',
-    prop: 'stockSale',
+    prop: 'esAvailableSaleDay',
     checked: true,
     minWidth: 100,
   },
   {
     label: '可售含在途',
-    prop: 'saleTransit',
+    prop: 'esAvailableSaleDayTotal',
     checked: true,
     minWidth: 110,
   },
@@ -429,43 +557,37 @@ const columns = ref<any>([
   },
   {
     label: '订货#',
-    prop: 'order',
+    prop: 'orderCount',
     checked: true,
-    minWidth: 90,
+    minWidth: 70,
   },
   {
     label: '计划#',
-    prop: 'sign',
+    prop: 'planPoPurchaseSkuNumber',
     checked: true,
-    minWidth: 90,
+    minWidth: 70,
   },
   {
     label: '签收',
-    prop: 'sign',
+    prop: 'quantityReceived',
     checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '订货',
-    prop: 'sign',
-    checked: true,
-    minWidth: 90,
+    minWidth: 60,
   },
   {
     label: '盈亏售价',
-    prop: 'profitLossPrice',
+    prop: 'profitLossSellingPrice',
     checked: true,
     minWidth: 100,
   },
   {
     label: '30毛利售价',
-    prop: 'profitPrice',
+    prop: 'grossSellingPrice',
     checked: true,
     minWidth: 110,
   },
   {
     label: '操作建议',
-    prop: 'suggestions',
+    prop: 'operateSuggestion',
     checked: true,
     minWidth: 100,
   },
@@ -473,317 +595,34 @@ const columns = ref<any>([
     label: '状态',
     prop: 'status',
     checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '开发人员',
+    prop: 'developName',
+    checked: true,
     minWidth: 100,
   },
   {
     label: '产品描述',
-    prop: 'productDes',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '产品经理',
-    prop: 'person',
+    prop: 'productDesc',
     checked: true,
     minWidth: 100,
   },
 ])
-const fakeData = ref<any>([
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU12345',
-    rate: 4.7,
-    asin: 'B08N5M7S6K',
-    pAsin: 'B08N5M7S6K',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 100,
-    todayOrder: 50,
-    todaySellD: 1500,
-    todayAd: 10,
-    ad: 500,
-    pieChart: '',
-    seasonalCoefficient: 1.5,
-    classify: '电子产品',
-    sRank: 5,
-    bRank: 2,
-    topProduct: 200,
-    remark: '备注信息1',
-    monthlyStorageFee: 100,
-    currentPrice: 29.99,
-    trialGrossProfit: 10.5,
-    fba: '是',
-    conversion: 12,
-    click: 300,
-    totalConvert: 25,
-    monthlySell: 1500,
-    monthlyNetProfit: 5000,
-    monthlySales: 45000,
-    monthlyNetInterestRate: 11.1,
-    monthlyAdSales: 1500,
-    monthlyAdSpend: 800,
-    monthlyAd: 30,
-    monthlyACOS: 15,
-    monthlyTACOS: 10,
-    yearACOS: 12,
-    yearTACOS: 8,
-    removeValue: 100,
-    remove: 5,
-    replaceValue: 200,
-    replace: 10,
-    monthlyReturns: 3,
-    monthlyRefund: 2,
-    VOCSatisfaction: 90,
-    VOCDefectP: 1,
-    VOCDefect: 10,
-    VOCOrder: 200,
-    newReleases: 20,
-    storageAge: 30,
-    remainingStock: 100,
-    receiving: 50,
-    recentlyStorage: 200,
-    totalStorage: 500,
-    stockSale: 300,
-    saleTransit: 100,
-    outOfStock: 0,
-    order: 150,
-    sign: '已签收',
-    monthlyAvailabilityRate: 95,
-    lowFeeDays: 5,
-    estimatedFees: 2000,
-    profitLossPrice: 18,
-    profitPrice: 22,
-    suggestions: '增加广告投放',
-    status: '正常',
-    productDes: '这是一款电子产品',
-    person: '张三',
-    id: 1
-  },
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU67890',
-    rate: 4,
-    asin: 'B08XYZ1234',
-    pAsin: 'B08XYZ1234',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 200,
-    todayOrder: 100,
-    todaySellD: 2500,
-    todayAd: 15,
-    ad: 800,
-    pieChart: '',
-    seasonalCoefficient: 1.8,
-    classify: '家居用品',
-    sRank: 3,
-    bRank: 1,
-    topProduct: 400,
-    remark: '备注信息2',
-    monthlyStorageFee: 150,
-    currentPrice: 45.99,
-    trialGrossProfit: 15.5,
-    fba: '否',
-    conversion: 10,
-    click: 500,
-    totalConvert: 20,
-    monthlySell: 2000,
-    monthlyNetProfit: 7000,
-    monthlySales: 80000,
-    monthlyNetInterestRate: 8.75,
-    monthlyAdSales: 2500,
-    monthlyAdSpend: 1200,
-    monthlyAd: 24,
-    monthlyACOS: 14,
-    monthlyTACOS: 9,
-    yearACOS: 13,
-    yearTACOS: 7,
-    removeValue: 200,
-    remove: 3,
-    replaceValue: 400,
-    replace: 12,
-    monthlyReturns: 2,
-    monthlyRefund: 1,
-    VOCSatisfaction: 85,
-    VOCDefectP: 2,
-    VOCDefect: 5,
-    VOCOrder: 300,
-    newReleases: 15,
-    storageAge: 25,
-    remainingStock: 200,
-    receiving: 70,
-    recentlyStorage: 150,
-    totalStorage: 600,
-    stockSale: 350,
-    saleTransit: 120,
-    outOfStock: 0,
-    order: 180,
-    sign: '未签收',
-    monthlyAvailabilityRate: 98,
-    lowFeeDays: 4,
-    estimatedFees: 2500,
-    profitLossPrice: 22,
-    profitPrice: 26,
-    suggestions: '增加促销活动',
-    status: '待处理',
-    productDes: '这是一款家居用品',
-    person: '李四',
-    id: 2
-  },
-  {
-    componentImage: 'https://picsum.photos/200/200',
-    sku: 'SKU12345',
-    rate: 4.3,
-    asin: 'B08N5M7S6K',
-    pAsin: 'B08N5M7S6K',
-    saleTrendList: {
-      xAxis: [
-        "21-04-1",
-				"21-08-1",
-				"22-05-1",
-				"22-06-1",
-				"22-07-1",
-				"22-09-1",
-				"22-10-1",
-				"23-01-1",
-				"23-05-1",
-				"23-07-1",
-				"23-10-1",
-				"23-11-1"
-      ],
-      yAxis: [
-        6611,
-				53824,
-				18712,
-				18991,
-				21611,
-				10277,
-				15420,
-				9159,
-				4192,
-				3064,
-				5619,
-				4500
-      ]
-    },
-    todaySell: 100,
-    todayOrder: 50,
-    todaySellD: 1500,
-    todayAd: 10,
-    ad: 500,
-    pieChart: '',
-    seasonalCoefficient: 1.5,
-    classify: '电子产品',
-    sRank: 5,
-    bRank: 2,
-    topProduct: 200,
-    remark: '备注信息1',
-    monthlyStorageFee: 100,
-    currentPrice: 29.99,
-    trialGrossProfit: 10.5,
-    fba: '是',
-    conversion: 12,
-    click: 300,
-    totalConvert: 25,
-    monthlySell: 1500,
-    monthlyNetProfit: 5000,
-    monthlySales: 45000,
-    monthlyNetInterestRate: 11.1,
-    monthlyAdSales: 1500,
-    monthlyAdSpend: 800,
-    monthlyAd: 30,
-    monthlyACOS: 15,
-    monthlyTACOS: 10,
-    yearACOS: 12,
-    yearTACOS: 8,
-    removeValue: 100,
-    remove: 5,
-    replaceValue: 200,
-    replace: 10,
-    monthlyReturns: 3,
-    monthlyRefund: 2,
-    VOCSatisfaction: 90,
-    VOCDefectP: 1,
-    VOCDefect: 10,
-    VOCOrder: 200,
-    newReleases: 20,
-    storageAge: 30,
-    remainingStock: 100,
-    receiving: 50,
-    recentlyStorage: 200,
-    totalStorage: 500,
-    stockSale: 300,
-    saleTransit: 100,
-    outOfStock: 0,
-    order: 150,
-    sign: '已签收',
-    monthlyAvailabilityRate: 95,
-    lowFeeDays: 5,
-    estimatedFees: 2000,
-    profitLossPrice: 18,
-    profitPrice: 22,
-    suggestions: '增加广告投放',
-    status: '正常',
-    productDes: '这是一款电子产品',
-    person: '张三',
-    id: 3
-  },
-])
+
+const handleCheckAll = (val: CheckboxValueType) => {
+  indeterminate.value = false
+  if (val) {
+    queryForm.site = siteList.value.map((_) => _.id)
+    // 全选的时候获取数据
+    queryData()
+  } else {
+    queryForm.site = []
+    // 取消全选获取数据
+    queryData()
+  }
+}
 // 运营备注
 const remarkVisible = ref<boolean>(false)
 const showRemark = () => {
@@ -797,14 +636,14 @@ const initChart1 = () => {
     },
     tooltip: {
       trigger: 'axis',
-      confine: true
+      confine: true,
     },
     grid: {
       top: 50,
       bottom: 30,
       left: 50,
       right: 50,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -814,44 +653,43 @@ const initChart1 = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
     },
     yAxis: {
       name: '系数',
       type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999'
-        }
-      }
+          color: '#999',
+        },
+      },
     },
     series: [
       {
         name: '实际值',
         type: 'line',
-        data: [1.2, 1.3, 1.2, 1.2, 1.4, 1.3, 1.2, 1.2, 1.4, 1.3, 1.3, 1.3],
+        data: _seasonalCoefficient.actualList,
         itemStyle: {
-          color: '#52bfff'
+          color: '#52bfff',
         },
         smooth: true,
       },
       {
         name: '参考值',
         type: 'line',
-        data: [1.21, 1.38, 1.38, 1.38, 1.2, 1.38, 1.2, 1.2, 1.2, 1.38, 1.38, 1.38],
+        data: _seasonalCoefficient.referenceList,
         itemStyle: {
-          color: '#ff8fa5'
+          color: '#ff8fa5',
         },
         smooth: true,
       },
-    ]
+    ],
   }
-  
+
   chartInstance1?.setOption(option1.value)
 }
 const handleSeasonalOpened = () => {
@@ -868,12 +706,24 @@ const handleSeasonalOpened = () => {
     }
   })
 }
-const handleCellClick = (row: any, column: any) => {
+const cellClick = async (row: any, column: any) => {
   const label = column.label
-  if (label === '运营备注') {
-    showRemark()
-  } else if (label === '季节系数') {
-    seasonalVisible.value = true
+  switch (label) {
+
+  
+    case '运营备注': {
+      showRemark()
+      // _row.value = row
+      // remark.value = row.operationRemark
+      break
+    }
+    case '季节趋势': {
+      seasonalVisible.value = true
+      _seasonalCoefficient = row.seasonalCoefficient
+      break
+    }
+    
+    // No default
   }
 }
 const imagePreviewVisible = ref<boolean>(false)
@@ -901,16 +751,16 @@ const imagePreviewShow = (url: string) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  // fetchData()
+  fetchData()
 }
 
 const showOpeClassify = () => {
@@ -934,34 +784,207 @@ const handleMove = (event: any) => {
 }
 // 处理自适应宽度
 const handleWidth = (item: any) => {
-  if (item.label === 'SKU') {
-    return flexColumnWidth(fakeData.value, 'SKU-SKU-SKU-SKU-', 'sku')
-  } else {
-    return item.minWidth
+  switch (item.label) {
+    case 'SKU': {
+      return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku', 60)
+    }
+    case 'ASIN': {
+      return flexColumnWidth(list.value, 'ASIN', 'asin')
+    }
+    case '父体ASIN': {
+      return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
+    }
+    case '运营分类': {
+      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+    }
+    case '产品描述': {
+      return flexColumnWidth(list.value, '产品描述', 'productDesc');
+    }
+    case '开发人员': {
+      return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
+    }
+    case '剩余库存': {
+      const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
+      const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
+      return `${Number(availableWidth) + Number(fbaWidth)}px`
+    }
+    default: {
+      return item.minWidth
+    }
   }
 }
 
 const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  if (label === 'SKU') {
-    return {
-      textAlign: 'left'
-    }
-  } else {
-    return {
-      textAlign: 'center'
-    }
-  }
-}
+
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
   }
   return ''
 }
+interface optionType {
+  id: number
+  label: string
+}
+const currencyList = ref<optionType[]>([])
+const currencySKU = ref<number | undefined>(0)
+const currencyAsin = ref<number | undefined>(0)
+const currencyPAsin = ref<number | undefined>(0)
+const developUserList = ref<optionType[]>([])
+const siteList = ref<optionType[]>([])
+const operateUserList = ref<optionType[]>([])
+const queryForm = reactive<any>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  site: [],
+  operationUserId: '',
+  developUserId: '',
+  orderByField: 'currentSalesNumber',
+  orderDirection: 'desc',
+})
+const fetchCurrencyList = async () => {
+  const { data } = await getCurrencyList()
+  currencyList.value = data
+}
+const fetchCurrency = async () => {
+  const { data: sku } = await getCurrencySKUAmazonOperation()
+  currencySKU.value = sku
+}
+// const fetchAsinCurrency = async () => {
+//   const { data: asin } = await getCurrencyASINAmazonOperation()
+//   currencyAsin.value = asin
+// }
+// const fetchPAsinCurrency = async () => {
+//   const { data: pAsin } = await getCurrencyParentASINAmazonOperation()
+//   currencyPAsin.value = pAsin
+// }
+const fetchDevelopUserList = async () => {
+  const { data } = await getDevelopUserList()
+  developUserList.value = data
+  developUserList.value.unshift({ id: -1, label: '全部' })
+}
+const fetchUser = async () => {
+  const { data } = await getUserAmazonOperation()
+  queryForm.operationUserId = data.operationUserId
+  queryForm.developUserId = data.developUserId
+  // asinQueryForm.operationUserId = data.operationUserId
+  // asinQueryForm.developUserId = data.developUserId
+  // pAsinQueryForm.operationUserId = data.operationUserId
+  // pAsinQueryForm.developUserId = data.developUserId
+}
+const fetchSiteList = async () => {
+  const { data } = await getDistributionSiteList()
+  siteList.value = data
+}
+const fetchOperateUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operateUserList.value = data
+  operateUserList.value.unshift({ id: -1, label: '全部' })
+}
+const list = ref<any[]>([])
+  const getCurrentMonthIndex = () => {
+  return new Date().getMonth() // 获取当前月份索引(0-11)
+}
+const seasonalXData = computed(() => {
+  const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+  const currentMonthIndex = getCurrentMonthIndex()
+  // 从当前月份开始重新排列月份数组
+  return [...months.slice(currentMonthIndex), ...months.slice(0, currentMonthIndex)]
+})
+const reorderSeasonalData = (data: number[]) => {
+  if (data.length !== 12) return data
+  const currentMonthIndex = getCurrentMonthIndex()
+  return [...data.slice(currentMonthIndex), ...data.slice(0, currentMonthIndex)]
+}
+const fetchData = async () => {
+  if (listLoading.value) return
+  listLoading.value = true
+  const { site, ...filterQueryForm } = queryForm
+  const { data } = await getOperationWalmartList({
+    ...filterQueryForm,
+    siteIds: site.join(','),
+  })
+  total.value = data.total
+  list.value = data.list
+  list.value.forEach((item) => {
+    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+    processField(item, 'developName', 2)
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+    item.storageAge = `
+      <div class="storage-list">
+        <div class="storage-item">
+          <span class="value1">181-270</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">271-360</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">361+</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+        </div>
+      </div>
+    `
+  })
+  listLoading.value = false
+}
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述'].includes(label)) {
+    return {
+      textAlign: 'left',
+    }
+  } else if (label === '运营备注') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
+    }
+  } 
+  else switch (label) {
+    
+   
+    case '月净利润': {
+      if (data.row.monthNetProfit > 0) {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-success)'
+        }
+      } else {
+        return {
+          textAlign: 'center',
+          color: 'var(--el-color-danger)'
+        }
+      }
+    }
+    
+   
+    default: {
+      return {
+        textAlign: 'center',
+      }
+    }
+  }
+}
+onBeforeMount(() => {
+   // 获取站点列表
+   fetchSiteList()
+  // 获取币种列表
+  fetchCurrencyList()
+  // 获取默认币种
+  fetchCurrency()
+  // 获取运营人员列表
+  fetchOperateUserList()
+  // 获取开发人员列表
+  fetchDevelopUserList()
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -979,8 +1002,33 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
       transform: scale(1.3);
       transform-origin: center;
     }
+    .storage-list {
+  display: grid;
+  .storage-item {
+    display: grid;
+    grid-template-columns: 65px 35px 60px; /* 设定固定列宽 */
+    text-align: left;
+
+    .value2 {
+      font-weight: 550;
+      color: #000;
+    }
+
+    .value3 {
+      font-weight: 550;
+      color: var(--el-color-danger);
+    }
   }
 }
+  }
+}
+
+
+    
+
+    
+   
+  
 .rate-wrapper {
   display: flex; 
   gap: 8px;
@@ -1006,6 +1054,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
           stroke: #f09000; /* 星星边框颜色 */
           stroke-width: 60px; /* 星星边框的粗细 */
         }
+        cursor: pointer;
       }
     }
 
@@ -1031,5 +1080,23 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   max-width: 400px; 
   font-size: var(--el-font-size-base);
   white-space: pre-wrap; 
+}
+.custom-bar {
+  width: 100%;
+  height: 50px;
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
+}
+.noneHoverTable :deep(.header-cell .cell) {
+  display: flex;          /* 应用 Flexbox 布局 */
+  align-items: center;   /* 垂直居中 */
+  justify-content: center;
 }
 </style>
