@@ -351,26 +351,11 @@
                   <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
                     <vab-icon icon="file-copy-2-fill" />
                   </span>
-                  <!-- <div class="rate-wrapper" >
-                    <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                    <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-                    <span class="rate-count">{{ row.commentsNumbers }}</span>
-                    <span style="font-size: 28px;">{{ row.flag }}</span>
-                  </div> -->
-                  <a :href="row.amazonUrl" style=" color: inherit;text-decoration: none;" target="_blank">
-                    <div class="rate-wrapper" style="cursor: pointer;">
-                      <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                      <span>
-                        <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
-                      </span>
-                      <span class="rate-count">{{ row.commentsNumbers }}</span>
-                      <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
-                    </div>
-                  </a>
-                  <!-- <div
+                 
+                  <div
                     class="rate-wrapper"
                     style="cursor: pointer;"
-                    @click="goToReview(row.amazonUrl)"
+                    @click="goToReview(row.asin)"
                   >
                     <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                     <span>
@@ -378,7 +363,7 @@
                     </span>
                     <span class="rate-count">{{ row.commentsNumbers }}</span>
                     <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
-                  </div> -->
+                  </div>
                 </span>
                 <span v-if="item.label === 'ASIN'">
                  {{ row.asin }}
@@ -834,20 +819,17 @@
                 <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)" >
                   <vab-icon icon="file-copy-2-fill" />
                 </span>
-                <!-- <div class="rate-wrapper">
+          
+                <div
+                  class="rate-wrapper"
+                  style="cursor: pointer;"
+                  @click="goToReview(row.asin)"
+                >
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
                   <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
-                </div> -->
-                <a :href="row.amazonUrl" style=" color: inherit;text-decoration: none;" target="_blank">
-                  <div class="rate-wrapper" style="cursor: pointer;">
-                    <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                    <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-                    <span class="rate-count">{{ row.commentsNumbers }}</span>
-                    <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
-                  </div>
-                </a>
+                </div>
               </span>
               <span v-if="item.label === 'SKU'">
                 <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
@@ -1284,7 +1266,11 @@
               <!-- 父体ASIN 展示 -->
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
-                <div class="rate-wrapper">
+                <div
+                  class="rate-wrapper"
+                  style="cursor: pointer;"
+                  @click="goToReview(row.asin)"
+                >
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
@@ -1501,15 +1487,9 @@ defineOptions({
   name: 'ProductPerformanceDashboard',
 })
 
-// const goToReview = (url: string) => {
-//   const newWindow = window.open(`${url}?th=1#averageCustomerReviewsAnchor`, '_blank');
-//   if (newWindow) {
-//     // 1000ms 延迟，等待页面加载后设置锚点
-//     setTimeout(() => {
-//       newWindow.location.href = `${newWindow.location.href}#averageCustomerReviewsAnchor`;
-//     }, 10000);
-//   }
-// };
+const goToReview = (asin: string) => {
+  window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank');
+}
 // 防抖处理
 const debouncedQueryData = debounce(() => {
   queryData()

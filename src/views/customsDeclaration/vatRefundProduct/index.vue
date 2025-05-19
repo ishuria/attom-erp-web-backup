@@ -345,7 +345,6 @@
         <el-form-item label="供应商" >
           <el-select
             v-model="ticketReminderForm.suppliser"
-            allow-create
             clearable
             default-first-option
             filterable
@@ -353,7 +352,6 @@
             placeholder="点击输入和搜索"
             remote
             :remote-method="remoteMethod"
-            
           >
             <el-option
               v-for="item in options"
