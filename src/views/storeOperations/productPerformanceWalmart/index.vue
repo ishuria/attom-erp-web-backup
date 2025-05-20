@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="币种">
-            <el-select v-model="currencySKU" clearable placeholder="请选择币种" @change="">
+            <el-select v-model="selectCurrency" clearable placeholder="请选择币种" @change="changeCurrency">
               <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -187,12 +187,12 @@
             </div>
           </span>
           <span v-if="item.label === '运营分类'">
-            <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="">
+            <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
               <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
             </el-select>
           </span>
           <span v-if="item.label === '停产'">
-            <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="" />
+            <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateStopStatus(row)" />
           </span>
           <span v-if="item.label === '自量FBA'">
             {{ (row.currencyIcon + (row.selfAssessmentFba ?? '')) }} <br /> {{ (row.currencyIcon + (row.amazonFba ?? '')) }}
@@ -259,10 +259,10 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 筛选 -->
-    <vab-filter-dialog 
+    <!-- <vab-filter-dialog 
       :filter-visible="filterVisible"
       @update-visible="handleCloseFilterDialog"
-    />
+    /> -->
     <!-- 运营分类 -->
     <vab-operational-classify 
       :ope-classify-visible="opeClassifyVisible"
@@ -279,10 +279,10 @@
       title="运营备注"
       width="20%"
     >
-      <el-input placeholder="请输入运营备注" :rows="15" type="textarea" />
+      <el-input v-model="remark" placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
     
@@ -291,27 +291,87 @@
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
+    <!-- 筛选 -->
+    <vab-filter-walmart-dialog :filter-visible="filterVisible" :loading="filterLoading" @update-filter="handleConfirmFilter" @update-visible="handleCloseFilterDialog" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Hide, Search, Star, QuestionFilled } from '@element-plus/icons-vue'
+import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import type { CSSProperties } from 'vue'
-import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getDistributionOptionUserList, getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
-import { getCurrencyList, getCurrencySKUAmazonOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation } from '~/src/api/devlocal/productPerformance'
-import { months, opeClassOption } from '../constantOption'
-import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
-import handleClipboard from '~/src/utils/clipboard'
-import CountryFlag from 'vue-country-flag-next'
 import { CheckboxValueType } from 'element-plus'
-import { getAmazonStars, handleImgUrl } from '~/src/utils/rate'
+import type { CSSProperties } from 'vue'
+import CountryFlag from 'vue-country-flag-next'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { months } from '../constantOption'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
+import { filterWalmartList, getCurrencyWalmartOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation, getWalmartCurrencyList, getWalmartSiteList, updateCurrencyWalmartOperation, updateOperationWalmartDisContinuedStatus, updateOperationWalmartOperateTypeList, updateRemarkWalmartOperation } from '/@/api/devlocal/productPerformance'
+import handleClipboard from '/@/utils/clipboard'
+import { getAmazonStars } from '/@/utils/rate'
+import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductPerformanceWalmart'
 })
 
+let _row: any
+const remark = ref('')
+const filterLoading = ref<boolean>(false)
+const handleUpdateOpeType = async (row: any) => {
+  await updateOperationWalmartOperateTypeList({
+    id: row.id!,
+    typeId: row.operationTypeId!,
+  })
+}
+const confirmUpdateRemark = async () => {
+  const { data } = await updateRemarkWalmartOperation({
+    id: _row.id,
+    remark: remark.value
+  })
+  if (data) {
+    $baseMessage('运营备注修改成功！', 'success')
+    remarkVisible.value = false
+    _row.operationRemark = remark.value
+  }
+}
+const handleUpdateStopStatus = async (row: any) => {
+  await updateOperationWalmartDisContinuedStatus({
+    id: row.id!,
+    status: row.stopProductStatus!,
+  })
+}
+const changeCurrency = async () => {
+  const { data } = await updateCurrencyWalmartOperation({
+    currency: selectCurrency.value!
+  })
+  if (data) {
+    queryData()
+  }
+}
+const handleConfirmFilter = async (filterForm: any) => {
+  filterLoading.value = true
+  try {
+   
+      const { site, ...filterQueryForm } = queryForm
+      const siteIds = site.join(',')
+      const { data } = await filterWalmartList({
+        ...filterQueryForm,
+        ...filterForm,
+        siteIds,
+      })
+      if (data) {
+        $baseMessage('沃尔玛运营筛选成功！', 'success')
+        filterVisible.value = false
+        total.value = data.total
+        list.value = data.list
+      }
+   
+  } catch {
+    $baseMessage('筛选失败，请重试', 'error')
+  } finally {
+    filterLoading.value = false
+  }
+}
 const walmartSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
   // console.log(column, prop, order)
@@ -735,8 +795,8 @@ const cellClick = async (row: any, column: any) => {
   
     case '运营备注': {
       showRemark()
-      // _row.value = row
-      // remark.value = row.operationRemark
+      _row = row
+      remark.value = row.operationRemark
       break
     }
     case '季节趋势': {
@@ -851,9 +911,8 @@ interface optionType {
   label: string
 }
 const currencyList = ref<optionType[]>([])
-const currencySKU = ref<number | undefined>(0)
-const currencyAsin = ref<number | undefined>(0)
-const currencyPAsin = ref<number | undefined>(0)
+const selectCurrency = ref<number | undefined>(0)
+
 const developUserList = ref<optionType[]>([])
 const siteList = ref<optionType[]>([])
 const operateUserList = ref<optionType[]>([])
@@ -868,21 +927,14 @@ const queryForm = reactive<any>({
   orderDirection: 'desc',
 })
 const fetchCurrencyList = async () => {
-  const { data } = await getCurrencyList()
+  const { data } = await getWalmartCurrencyList()
   currencyList.value = data
 }
 const fetchCurrency = async () => {
-  const { data: sku } = await getCurrencySKUAmazonOperation()
-  currencySKU.value = sku
+  const { data } = await getCurrencyWalmartOperation()
+  selectCurrency.value = data
 }
-// const fetchAsinCurrency = async () => {
-//   const { data: asin } = await getCurrencyASINAmazonOperation()
-//   currencyAsin.value = asin
-// }
-// const fetchPAsinCurrency = async () => {
-//   const { data: pAsin } = await getCurrencyParentASINAmazonOperation()
-//   currencyPAsin.value = pAsin
-// }
+
 const fetchDevelopUserList = async () => {
   const { data } = await getDevelopUserList()
   developUserList.value = data
@@ -892,13 +944,9 @@ const fetchUser = async () => {
   const { data } = await getUserAmazonOperation()
   queryForm.operationUserId = data.operationUserId
   queryForm.developUserId = data.developUserId
-  // asinQueryForm.operationUserId = data.operationUserId
-  // asinQueryForm.developUserId = data.developUserId
-  // pAsinQueryForm.operationUserId = data.operationUserId
-  // pAsinQueryForm.developUserId = data.developUserId
 }
 const fetchSiteList = async () => {
-  const { data } = await getDistributionSiteList()
+  const { data } = await getWalmartSiteList()
   siteList.value = data
 }
 const fetchOperateUserList = async () => {
@@ -994,18 +1042,20 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
   }
 }
-onBeforeMount(() => {
-   // 获取站点列表
-   fetchSiteList()
+onBeforeMount(async () => {
+  // 获取站点列表
+  await fetchSiteList()
   // 获取币种列表
-  fetchCurrencyList()
+  await fetchCurrencyList()
   // 获取默认币种
-  fetchCurrency()
+  await fetchCurrency()
   // 获取运营人员列表
-  fetchOperateUserList()
+  await fetchOperateUserList()
   // 获取开发人员列表
-  fetchDevelopUserList()
-  fetchData()
+  await fetchDevelopUserList()
+  // 获取默认运营人和开发人
+  await fetchUser()
+  await fetchData()
 })
 </script>
 

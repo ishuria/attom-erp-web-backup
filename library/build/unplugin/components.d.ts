@@ -233,6 +233,7 @@ declare module 'vue' {
     VabEstimatedCostAccounting: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEstimatedCostAccounting.vue')['default']
     VabFallBar: typeof import('./../../components/VabFallBar/index.vue')['default']
     VabFilterDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabFilterDialog.vue')['default']
+    VabFilterWalmartDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabFilterWalmartDialog.vue')['default']
     VabFold: typeof import('./../../components/VabFold/index.vue')['default']
     VabFontSize: typeof import('./../../components/VabFontSize/index.vue')['default']
     VabFooter: typeof import('./../../components/VabFooter/index.vue')['default']

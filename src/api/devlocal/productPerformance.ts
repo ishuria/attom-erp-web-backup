@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IFilterAmazonSKUListReq,
+  IFilterWalmartListReq,
   IGetOperationAmazonAsinRankListReq,
   IGetOperationAmazonParentAsinRankListReq,
   IGetOperationAmazonSKUListReq,
@@ -35,16 +36,7 @@ export function getOperationAmazonSKUList(data: IGetOperationAmazonSKUListReq): 
     data
   })
 }
-/**
- * @description 产品表现-亚马逊看板SKU列表
- */
-export function getOperationWalmartList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
-  return request({
-    url: `${BASE_API}/operation/walmart/list`,
-    method: 'post',
-    data
-  })
-}
+
 /**
  * @description 产品表现-货币下拉列表
  */
@@ -380,5 +372,79 @@ export function getOperationUpdateDate(params: { type: number }): Promise<{ data
     url: `${BASE_API}/operation/update/date`,
     method: 'get',
     params
+  })
+}
+
+// ------------------------------ 沃尔玛 ------------------------------
+/**
+ * @description 产品表现-沃尔玛列表
+ */
+export function getOperationWalmartList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+  return request({
+    url: `${BASE_API}/operation/walmart/list`,
+    method: 'post',
+    data
+  })
+}
+
+export function getWalmartSiteList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/walmart/site/list`,
+    method: 'get',
+  })
+}
+
+
+export function getWalmartCurrencyList(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/walmart/currency/list`,
+    method: 'get',
+  })
+}
+
+export function getCurrencyWalmartOperation(): Promise<{ data?: number }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/currency`,
+    method: 'get',
+  })
+}
+
+export function updateCurrencyWalmartOperation(data: { currency: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/currency/update`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateOperationWalmartDisContinuedStatus(data: { id: number, status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/discontinuedStatus/update`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateRemarkWalmartOperation(data: { id: number, remark: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/remark/update`,
+    method: 'post',
+    data
+  })
+}
+
+export function filterWalmartList(data: IFilterWalmartListReq): Promise<IGetOperationAmazonSKUListRes> {
+  return request({
+    url: `${BASE_API}/operation/walmart/screening/list`,
+    method: 'post',
+    data
+  })
+}
+
+export function updateOperationWalmartOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/walmart/operateType/update`,
+    method: 'post',
+    data
   })
 }

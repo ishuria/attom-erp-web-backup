@@ -51,7 +51,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -231,7 +231,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? formatDate(new Date(row.sendDate)) : ''  }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -402,7 +402,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -573,7 +573,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -744,7 +744,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -914,7 +914,7 @@
           <el-table-column fixed="left" type="selection" />
           <el-table-column label="发货日期" min-width="115" prop="sendDate">
             <template #default="{ row }">
-              {{ row.sendData ? row.sendDate.split(' ')[0] : '' }}
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
@@ -1473,6 +1473,7 @@
 import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
+import { formatDate } from '~/src/utils/dateUtils'
 import type { siteValue } from '../constantOption'
 import { siteMap, sizeOption } from '../constantOption'
 import {

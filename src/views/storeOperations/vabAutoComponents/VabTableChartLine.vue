@@ -53,7 +53,6 @@ const option = reactive<any>({
   yAxis: {
     show: false,
     type: 'value',
-    min: 'dataMin',
     boundaryGap: [0, 0.1],
   },
   series: [

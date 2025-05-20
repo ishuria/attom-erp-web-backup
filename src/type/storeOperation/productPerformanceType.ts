@@ -1297,3 +1297,72 @@ export interface IOperationAmazonSkuVocList {
 export interface IGetOperationAmazonSkuVocListRes {
   data: IOperationAmazonSkuVocList[]
 }
+
+export interface IFilterWalmartListReq {
+
+  /**
+   * 开发人员 全部：-1
+   */
+  developUserId?: number
+ 
+
+  /**
+   * 关键词
+   */
+  keyword?: string
+ 
+  
+  /**
+   * 月销售额大
+   */
+  monthSalesVolumeMax?: number
+  /**
+   * 月销售额小
+   */
+  monthSalesVolumeMin?: number
+  /**
+   * 上新天数最小值
+   */
+  newArrivalMaxDay?: number
+  /**
+   * 上新天数最小值
+   */
+  newArrivalMinDay?: number
+  /**
+   * 运营分类筛选id
+   */
+  operationTypeId?: number
+  /**
+   * 运营人员 全部：-1
+   */
+  operationUserId?: number
+  /**
+   * 当前页 默认1
+   */
+  pageNo?: number
+  /**
+   * 每页大小 默认20
+   */
+  pageSize?: number
+  /**
+   * 上海签收最大数量
+   */
+  signCountMax?: number
+  /**
+   * 上海签收最小数量
+   */
+  signCountMin?: number
+  /**
+   * 站点 全部：空字符串
+   */
+  siteIds?: string
+  /**
+   * 当前售价最小值
+   */
+  sellPriceMin?: number
+  /**
+   * 当前售价最大值
+   */
+  sellPriceMax?: number
+  [property: string]: any;
+}
