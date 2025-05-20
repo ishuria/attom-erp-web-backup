@@ -164,7 +164,7 @@
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200" prop="suppliser">
+          <el-table-column label="供应商" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)" prop="suppliser">
             <template #default="{ row }">
               <span v-html="row.suppliser"></span>
             </template>
@@ -321,7 +321,7 @@
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200" prop="suppliser">
+          <el-table-column label="供应商" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)"  prop="suppliser">
             <template #default="{ row }">
               <span v-html="row.suppliser"></span>
             </template>
@@ -351,7 +351,7 @@
               凭证<br>上传
             </template>
             <template #default="{ row }">
-              <el-image fit="fill" :src="row.voucherUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+              <el-image fit="fill" :src="row.voucherUrl" style="display: block; width: 100%; height: 100%" @click="showPreviewImage(row.voucherUrl)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -443,7 +443,7 @@
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200" prop="suppliser">
+          <el-table-column label="供应商" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)"  prop="suppliser">
             <template #default="{ row }">
               <span v-html="row.suppliser"></span>
             </template>
@@ -548,7 +548,7 @@
               <el-checkbox v-model="row.productionHaltStatus" disabled :false-value="0" :true-value="1"/>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="200" prop="suppliser">
+          <el-table-column label="供应商" :width="calculateBrColumnWidth(list, (row: any) => row.suppliser)"  prop="suppliser">
             <template #default="{ row }">
               <span v-html="row.suppliser"></span>
             </template>
