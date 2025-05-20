@@ -949,7 +949,7 @@
         <vab-pagination
           :current-page="asinQueryForm.pageNo"
           :page-size="asinQueryForm.pageSize"
-          :total="total"
+          :total="asinTotal"
           @current-change="handleAsinCurrentChange"
           @size-change="handleAsinSizeChange"
         />
@@ -1359,7 +1359,7 @@
         <vab-pagination
           :current-page="pAsinQueryForm.pageNo"
           :page-size="pAsinQueryForm.pageSize"
-          :total="total"
+          :total="pAsinTotal"
           @current-change="handlePAsinCurrentChange"
           @size-change="handlePAsinSizeChange"
         />
@@ -1671,7 +1671,7 @@ const handleConfirmFilter = async (filterForm: any) => {
       if (data) {
         $baseConfirm('ASIN运营筛选成功！', 'success')
         filterVisible.value = false
-        total.value = data.total
+        asinTotal.value = data.total
         asinList.value = data.list
       }
     }
@@ -2789,6 +2789,7 @@ const fetchData = async () => {
   })
   listLoading.value = false
 }
+const asinTotal = ref<number>(0)
 const fetchAsinData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = asinQueryForm
@@ -2796,7 +2797,7 @@ const fetchAsinData = async () => {
     ...filterQueryForm,
     siteIds: site.join(','),
   })
-  total.value = data.total
+  asinTotal.value = data.total
   asinList.value = data.list
   asinList.value.forEach((item) => {
     item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
@@ -2827,6 +2828,7 @@ const fetchAsinData = async () => {
   })
   listLoading.value = false
 }
+const pAsinTotal = ref<number>(0)
 const fetchPAsinData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = pAsinQueryForm
@@ -2834,7 +2836,7 @@ const fetchPAsinData = async () => {
     ...filterQueryForm,
     siteIds: site.join(','),
   })
-  total.value = data.total
+  pAsinTotal.value = data.total
   pAsinList.value = data.list
   pAsinList.value.forEach((item) => {
     processField(item, 'sku', 2)
