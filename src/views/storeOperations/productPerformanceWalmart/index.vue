@@ -68,7 +68,7 @@
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
               <span style="flex: 1">{{ item.label }}</span>
               <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
-                <el-icon><view /></el-icon>
+                <vab-icon icon="eye-line" />
               </span>
               <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer;" @click="handleChecked(item)">
                 <vab-icon v-show="!item.checked" icon="eye-off-line" />
@@ -96,6 +96,9 @@
       :header-cell-style="{ textAlign: 'center' }"
       @cell-click="cellClick"
       :header-cell-class-name="headerCell"
+      @sort-change="walmartSortChange"
+      :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+      v-loading="listLoading"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -309,6 +312,25 @@ defineOptions({
   name: 'ProductPerformanceWalmart'
 })
 
+const walmartSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  // console.log(column, prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    } 
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  // console.log(order)
+  queryData()
+}
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (['今销', '月销售额'].includes(data.column.label)) {
     return 'header-cell'
