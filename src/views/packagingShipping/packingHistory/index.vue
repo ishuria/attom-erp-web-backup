@@ -50,7 +50,7 @@
       <el-table-column label="高(cm)" min-width="90" prop="height"/>
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight"/>
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume"/>
-      <el-table-column label="箱规号" min-width="125" prop="encasementNo"/>
+      <el-table-column label="箱规号" min-width="135" prop="encasementNo"/>
       <el-table-column label="站点" min-width="130" prop="planSiteName"/>
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')"/>
@@ -107,13 +107,13 @@
 </template>
 
 <script lang="ts" setup>
-import { sumUniqueByField } from '/@/utils/mapUtil.ts'
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { downloadFileP } from '/@/api/devlocal/download'
 import { getShippedEncasementList } from '/@/api/devlocal/encasement'
 import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
+import { sumUniqueByField } from '/@/utils/mapUtil.ts'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -165,7 +165,7 @@ const objectSpanMethod = ({
                             columnIndex,
                           }: any) => {
   // 设置需要合并的列
-  if ( columnIndex !== 14 && columnIndex !== 15) {
+  if ( columnIndex !== 14 && columnIndex !== 15 && columnIndex !== 16 && columnIndex !== 17) {
     // 获取当前row的零件id
     const id = row.id;
     // 默认不跨行
