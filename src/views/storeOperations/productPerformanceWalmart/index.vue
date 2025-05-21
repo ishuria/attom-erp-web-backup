@@ -686,6 +686,12 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
+    label: '运营负责人',
+    prop: 'operationUserName',
+    checked: true,
+    minWidth: 110,
+  },
+  {
     label: '产品描述',
     prop: 'productDesc',
     checked: true,
