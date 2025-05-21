@@ -75,6 +75,7 @@ export interface IGetCommissionTaskPictureListReq {
   site: number
   pageNo: number
   pageSize: number
+  designTaskId: number
 }
 export interface IGetCommissionTaskPictureListRes {
   data: {
@@ -167,6 +168,7 @@ export interface IGetLongCommissionTaskListReq {
   keyWord: string
   pageNo: number
   pageSize: number
+  designTaskId?: number
 }
 export interface IGetLongCommissionTaskListRes {
   data?: {

@@ -8,6 +8,7 @@ export const productClassificationOption = [
   { label: '铺货', value: 2 },
 ]
 export const designTypeOption = [
+  { label: '全部', value: -1 },
   { label: '基础图片', value: 0 },
   { label: '建模渲染', value: 1 },
   { label: 'A+', value: 2 },

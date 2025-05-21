@@ -4,10 +4,15 @@
       <el-tab-pane label="美工图片" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-form>
+            <el-form inline>
               <el-form-item label="站点">
                 <el-select v-model="queryForm.site" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="设计任务">
+                <el-select placeholder="全部" v-model="queryForm.designTaskId" @change="queryData">
+                  <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -106,7 +111,16 @@
       </el-tab-pane>
       <el-tab-pane label="美工长期" :name="1">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="设计任务">
+                <el-select placeholder="全部" v-model="longQueryForm.designTaskId" @change="longQueryData">
+                  <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel >
             <el-form inline :model="longQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -146,7 +160,7 @@
             </template>
           </el-table-column>
           <el-table-column label="任务ID" min-width="100" prop="taskId" />
-          <el-table-column label="任务类型" min-width="100" prop="type" />
+          <el-table-column label="设计任务" min-width="100" prop="type" />
           <el-table-column label="提成结束日期" min-width="100" prop="endDate">
             <template #default="{ row }">
               {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
@@ -488,6 +502,7 @@ import type {
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { designTypeOption } from '../../newProductTask/constantOption'
 
 defineOptions({
   name: 'CommissionTaskSummary',
@@ -506,11 +521,13 @@ const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  designTaskId: -1
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  designTaskId: -1
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
@@ -1006,11 +1023,11 @@ onBeforeMount(() => {
             .el-form-item:first-child {
               // margin: 0 !important;
 
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
+              // .el-check-tag,
+              // .el-form-item__label {
+              //   margin: 0 10px 5px 0;
+              //   border-radius: 99px;
+              // }
             }
           }
         }
