@@ -68,6 +68,9 @@
               </template>
               <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
             </el-tooltip> -->
+            <div class="none">
+              <el-input v-model="row.packagePrecautions" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" @blur="clickCancel($event, row)" />
+            </div>
             <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
           </template>
         </el-table-column>
@@ -82,18 +85,20 @@
       </el-table>
     </div>
   </vab-dialog>
-  <vab-remark-dialog 
+  <!-- <vab-remark-dialog 
     v-model="remarkVisible"
     :remark="remark"
     title="修改打包注意事项"
     @update:remark="handleUpdatePackagePrecautions"
-  />
+  /> -->
 </template>
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
+import { isEqual } from 'lodash'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
 
 defineOptions({
@@ -119,23 +124,23 @@ watch(() => props.modelValue, (val) => {
     fetchSiteData()
   }
 })
-const remarkVisible = ref<boolean>(false)
-const remark = ref<string>('')
+// const remarkVisible = ref<boolean>(false)
+// const remark = ref<string>('')
 const siteList = ref<{ id: number, label: string }[]>([])
 const list = ref<any>([])
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
 const tableRef = ref<TableInstance>()
 
-const handleUpdatePackagePrecautions = async (val: string) => {
-  const { data } = await updateProductQualityInspection({ ...copyRow, packagePrecautions: val })
-  if (data) {
-    remarkVisible.value = false
-    $baseMessage('修改打包注意事项成功','success', 'hey')
-    await fetchData()
-  }
-  copyRow.status = 1
-}
+// const handleUpdatePackagePrecautions = async (val: string) => {
+//   const { data } = await updateProductQualityInspection({ ...copyRow, packagePrecautions: val })
+//   if (data) {
+//     remarkVisible.value = false
+//     $baseMessage('修改打包注意事项成功','success', 'hey')
+//     await fetchData()
+//   }
+//   copyRow.status = 1
+// }
 const handlerCloseDialog = () => {
   visible.value = false
   emit('update:tableValue', list.value)
@@ -195,12 +200,55 @@ const handleAdd = async () => {
   }
 }
 let copyRow: any
-const changeInput = async (row: any, column: any) => { 
-  if (column.label === '打包注意事项') {
-    remarkVisible.value = true
-    remark.value = row.packagePrecautions
-    copyRow = row
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+  // if (column.label === '打包注意事项') {
+  //   remarkVisible.value = true
+  //   remark.value = row.packagePrecautions
+  //   copyRow = row
+  //   return
+  // }
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
     return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+}
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    try {
+      const { data } = await updateProductQualityInspection({ ...copyRow, packagePrecautions: value.packagePrecautions })
+      if (data) {
+        // remarkVisible.value = false
+        $baseMessage('修改打包注意事项成功','success', 'hey')
+        await fetchData()
+      }
+      copyRow.status = 1
+    } catch {
+      Object.assign(value, copyRow)
+    }
   }
 }
 // 删除
