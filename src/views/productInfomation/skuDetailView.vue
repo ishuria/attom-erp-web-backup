@@ -172,7 +172,7 @@
                 <el-col :span="12">
                   <el-form-item style="margin-right: 0">
                     <el-space>
-                      <span style="font-size: var(--el-form-label-font-size);">产品经理自己看的备注</span>
+                      <span style="font-size: var(--el-form-label-font-size);">SKU备注</span>
                       <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handleManagerRemarks"><circle-plus-filled /></el-icon>
                     </el-space>
                     <el-input v-model="sku.remarks" resize="none" :rows="11" type="textarea" @blur="handleRemarksChange"/>

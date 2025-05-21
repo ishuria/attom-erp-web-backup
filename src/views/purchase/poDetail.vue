@@ -2043,7 +2043,7 @@ const updateCreate = () => {
     skuComponentList: JSON.parse(JSON.stringify(skuComponentList.value))
   };
   _updateSku(newSku)
-  console.log('更新', skuStore.data);
+  // console.log('更新', skuStore.data);
 }
 // 采购sku详情更新
 const handleUpdateSku = async () => {
