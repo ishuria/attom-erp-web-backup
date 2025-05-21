@@ -125,9 +125,12 @@
               <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -335,9 +338,12 @@
               <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -551,9 +557,12 @@
               <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -767,9 +776,12 @@
               <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -975,9 +987,12 @@
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
         >
-          <el-table-column label="PO" min-width="100" prop="po">
+        <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -1100,9 +1115,12 @@
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
         >
-          <el-table-column label="PO" min-width="100" prop="po">
+        <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <el-link type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
+              <span class="copySku"  >
+                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">

@@ -52,7 +52,14 @@
                   <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column class="image-wall" label="零件图片" width="82">
             <template #header>
               零件<br>图片
@@ -92,7 +99,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>    
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>    
           <el-table-column label="剩余可售" min-width="100" prop="sellableDay"/>
           <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
           <el-table-column label="站点" min-width="130" prop="site">
@@ -206,7 +220,14 @@
                   <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="零件图片" min-width="82">
             <template #header>
               零件<br>图片
@@ -250,7 +271,14 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
           <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
@@ -498,6 +526,7 @@ import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
+import handleClipboard from '~/src/utils/clipboard'
 
 defineOptions({
   name: 'PendingReceipt',
@@ -1117,5 +1146,15 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>
