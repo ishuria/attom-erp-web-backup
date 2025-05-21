@@ -15,7 +15,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
+                <el-input v-model="queryForm.keyword" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
@@ -24,6 +24,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+        v-loading="listLoading"
           border :cell-class-name="clearPadding"
           :cell-style="cellStyle" class="noneHoveTable"
           :data="list"
@@ -39,13 +40,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="ASIN" min-width="160" prop="">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
             <template #default="{ row }">
-              <el-link type="primary">{{ row.asin }}</el-link>
+              {{  row.sku  }}<br />
+              {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="站点" min-width="150" prop="sites">
+          <el-table-column label="ASIN" min-width="160" prop="asin">
+            <template #default="{ row }">
+              <el-link :href="row.amazonUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
@@ -54,7 +60,7 @@
                 <span v-html="row._sites"></span>
               </el-tooltip>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="任务类型" min-width="100" prop="taskType"/>
           <el-table-column label="产品定位" min-width="100" prop="positioning"/>
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
@@ -190,7 +196,7 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
+                <el-input v-model="queryForm.keyword" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
@@ -199,6 +205,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+        v-loading="listLoading"
           border :cell-class-name="clearPadding"
           :cell-style="cellStyle" class="noneHoveTable"
           :data="list"
@@ -214,13 +221,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="ASIN" min-width="160" prop="">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
             <template #default="{ row }">
-              <el-link  type="primary">{{ row.asin }}</el-link>
+              {{  row.sku  }}<br />
+              {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="站点" min-width="150" prop="sites">
+          <el-table-column label="ASIN" min-width="160" prop="">
+            <template #default="{ row }">
+              <el-link :href="row.amazonUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
@@ -229,7 +241,7 @@
                 <span v-html="row._sites"></span>
               </el-tooltip>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="任务类型" min-width="100" prop="taskType"/>
           <el-table-column label="产品定位" min-width="100" prop="positioning"/>
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
@@ -352,6 +364,7 @@
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
         <el-table
+        v-loading="listLoading"
           border :cell-class-name="clearPadding"
           :cell-style="cellStyle" class="noneHoveTable"
           :data="list"
@@ -367,13 +380,18 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-          <el-table-column label="ASIN" min-width="160" prop="">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
             <template #default="{ row }">
-              <el-link type="primary">{{ row.asin }}</el-link>
+              {{  row.sku  }}<br />
+              {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="站点" min-width="150" prop="sites">
+          <el-table-column label="ASIN" min-width="160" prop="">
+            <template #default="{ row }">
+              <el-link :href="row.amazonUrl" target="_blank" type="primary">{{ row.asin }}</el-link>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="站点" min-width="150" prop="sites">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sites" effect="dark" placement="top">
                 <template #content>
@@ -382,7 +400,7 @@
                 <span v-html="row._sites"></span>
               </el-tooltip>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="任务类型" min-width="100" prop="taskType"/>
           <el-table-column label="产品定位" min-width="100" prop="positioning"/>
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
@@ -395,11 +413,10 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
+          <el-table-column label="提前完成天数" min-width="130" prop="advanceDays">
             <template #default="{ row }">
-              <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
-              <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
-              <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
+              <el-text v-if="row.advanceDays >= 0" type="success">{{ row.advanceDays }}</el-text>
+              <el-text v-if="row.advanceDays < 0" type="danger">{{ row.advanceDays }}</el-text>
             </template>
           </el-table-column>
           <el-table-column label="需求文件地址" min-width="160" prop="requiredAddress"/>
@@ -715,7 +732,7 @@ import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ListingImageTask'
@@ -921,7 +938,7 @@ const imagePreviewList = ref<string[]>([])
 const list = ref<IGetArtDesignTaskList[]>([])
 const activeName = ref<number>(0)
 const queryForm = reactive<IGetArtDesignTaskListReq>({
-  keyWord: '',
+  keyword: '',
   pageNo: 1,
   pageSize: 20,
   status: 0
@@ -1270,7 +1287,7 @@ const imagePreviewShow = (url: string) => {
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '站点', '需求文件地址', '备注'].includes(label)) {
+  if (['SKU', '站点', '需求文件地址', '备注'].includes(label)) {
     return {
       textAlign: 'left'
     }
@@ -1331,7 +1348,7 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   list.value.forEach((item) => {
-    processField(item, 'sites', 3)
+    // processField(item, 'sites', 3)
     item._basePicture = item.basePicture?.replaceAll(',', '<br />')
     item._productManager = item.productManager?.replaceAll(',', '<br />')
     item._modeling = item.modeling?.replaceAll(',', '<br />')

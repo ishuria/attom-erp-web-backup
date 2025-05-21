@@ -1,5 +1,5 @@
 export interface IGetArtDesignTaskListReq {
-  keyWord: string
+  keyword: string
   status: number
   pageNo: number
   pageSize: number
