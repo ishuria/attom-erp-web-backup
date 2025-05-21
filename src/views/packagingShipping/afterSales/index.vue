@@ -36,7 +36,14 @@
               {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="115" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
@@ -73,7 +80,12 @@
           <el-table-column label="待售后￥" min-width="100" prop="salesPrice"/>
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
-              <span v-html="row.remark"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="售后日志" min-width="200" prop="salesLog">
@@ -141,7 +153,14 @@
               {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="115" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
@@ -230,7 +249,12 @@
           </el-table-column>
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
-              <span v-html="row.remark"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="售后日志" min-width="200" prop="salesLog">
@@ -298,7 +322,14 @@
               {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="115" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
@@ -360,7 +391,12 @@
           </el-table-column>
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
-              <span v-html="row.remark"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="售后日志" min-width="200" prop="salesLog">
@@ -420,7 +456,14 @@
               {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="115" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
@@ -457,7 +500,12 @@
           <el-table-column label="待售后￥" min-width="100" prop="salesPrice"/>
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
-              <span v-html="row.remark"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="售后日志" min-width="200" prop="salesLog">
@@ -525,7 +573,14 @@
               {{ row.orderTime ? row.orderTime.split(' ')[0] : ''}}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="115" prop="po"/>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" width="82">
             <template #header>
               产品<br>图片
@@ -568,7 +623,12 @@
           <el-table-column label="坏账金额￥" min-width="110" prop="badDebtPrice"/>
           <el-table-column label="打包反馈备注" min-width="300" prop="remark">
             <template #default="{ row }">
-              <span v-html="row.remark"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="售后日志" min-width="200" prop="salesLog">
@@ -581,9 +641,9 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="120">
+          <el-table-column fixed="right" label="操作" width="140">
             <template #default="{ row }">
-              <el-button text type="primary" @click="showAfterSalesLog(row)">打包反馈日志</el-button>
+              <el-link :underline="false" type="primary" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -697,6 +757,8 @@
 <script lang="ts" setup>
 import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
+import { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import {
   archiveAfterSales,
   badDebtAfterSales,
@@ -1049,12 +1111,22 @@ const badDebtsCellClassName = (data: { row: any, column: any, rowIndex: number, 
   return ''
 }
 // 已联系cellStyle
-const contactedCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex !== 4 && data.columnIndex !== 6 && data.columnIndex !== 17 && data.columnIndex !== 18) {
+const contactedCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (label === '操作') {
     return {
-      textAlign: 'center' as const
+      textAlign: 'center'
+    }
+  } else if (label === '打包反馈备注' || label === 'SKU' || label === '供应商' || label === '售后日志') {
+    return {
+      textAlign: 'left'
     }
   }
+
+  return {
+    textAlign: 'center'
+  }
+  
 }
 // 采购申请cellStyle
 const afterSalesLogCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
@@ -1206,5 +1278,15 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>
