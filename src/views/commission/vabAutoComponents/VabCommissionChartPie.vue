@@ -48,8 +48,7 @@ const option = reactive<any>({
         show: false,
       },
       stillShowZeroSum: false,
-      data: props.data,
-     
+      data: [],
       // color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
       color: colorList,
     },
@@ -59,9 +58,9 @@ const option = reactive<any>({
 watch(
   () => [props.data],
   () => {
-      option.series[0].data = props.data
+      option.series[0].data = props.data?.slice().sort((a: any, b: any) => b.value - a.value)
   },
-  { immediate: true },
+  { immediate: true, deep: true }
 )
 </script>
 

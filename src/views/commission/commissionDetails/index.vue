@@ -64,6 +64,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+        v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -227,6 +228,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+        v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -368,6 +370,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+        v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -663,7 +666,7 @@ const initChart = () => {
             labelLinePoints: points,
           }
         },
-        data: pieList.value,
+        data: pieList.value.slice().sort((a: any, b: any) => b.value - a.value),
         color: colorList
       },
     ],
