@@ -135,7 +135,7 @@
                   <el-col :span="12">
                     <el-form-item style="margin-right: 0">
                       <el-space>
-                          <span style="font-size: var(--el-form-label-font-size);">PO备注</span>
+                          <span style="font-size: var(--el-form-label-font-size);">PO备注(仅采购填写)</span>
                       </el-space>
                       <el-input v-model="poDetailData.poRemarks" resize="none" :rows="11" type="textarea" @change="handleRemarksChange"/>
                     </el-form-item>

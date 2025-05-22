@@ -52,7 +52,7 @@
           <template #default="{ row }">
             <span class="copySku"  @click="handleClipboard($event, row.po)" >
               {{ row.po }}
-              <vab-icon icon="file-copy-2-fill" />
+              <vab-icon v-if="row.po" icon="file-copy-2-fill" />
             </span>
           </template>
         </el-table-column>

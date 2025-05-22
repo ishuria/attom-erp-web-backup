@@ -347,11 +347,25 @@
                 </span>
                 <!-- SKU 展示-->
                 <span v-if="item.label === 'SKU'">
-                  <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
-                  <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
-                    <vab-icon icon="file-copy-2-fill" />
-                  </span>
-                 
+                  <div >
+                    <span class="copySku" @click="handleClipboard($event, row.sku)" >
+                      <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
+                      
+                      <el-tooltip effect="dark" placement="top">
+                        <template #content>
+                          <div class="custom-tooltip">复制SKU</div>
+                        </template>
+                        <vab-icon icon="file-copy-2-fill"/>
+                      </el-tooltip>
+                    </span>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">复制ASIN</div>
+                      </template>
+                      <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
+                    </el-tooltip>
+                  </div>
+                  
                   <div
                     class="rate-wrapper"
                     style="cursor: pointer;"
@@ -364,6 +378,46 @@
                     <span class="rate-count">{{ row.commentsNumbers }}</span>
                     <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
                   </div>
+                  <!-- <div>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">上新时间<=180天</div>
+                      </template>
+                      <vab-icon icon="book-shelf-fill" class="icon-green" />
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">可以做outlet deal</div>
+                      </template>
+                      <vab-icon icon="discount-percent-fill" class="icon-green" />
+                    </el-tooltip>
+                    
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">断货</div>
+                      </template>
+                      <vab-icon icon="shopping-cart-2-fill" />
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">低量仓储费天数28-35天的</div>
+                      </template>
+                      <vab-icon icon="truck-fill" />
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">库龄</div>
+                      </template>
+                      <vab-icon icon="notification-3-fill" class="icon-yellow" />
+                    </el-tooltip>
+                    <el-tooltip v-if="row.vocSatisfaction !== '良好' && row.vocSatisfaction !== '极好'" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
+                      </template>
+                      <vab-icon icon="user-unfollow-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
+                    </el-tooltip>
+                    
+                  </div> -->
                 </span>
                 <span v-if="item.label === 'ASIN'">
                  {{ row.asin }}
@@ -1478,7 +1532,7 @@ import type {
   IOperationAmazonSkuRankList,
   IOperationAmazonSkuVocList
 } from '/@/type/storeOperation/productPerformanceType'
-import handleClipboard from '/@/utils/clipboard'
+import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
@@ -1489,6 +1543,15 @@ defineOptions({
 
 const goToReview = (asin: string) => {
   window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank');
+}
+const handleVocSatisfaction = (voc: string) => {
+  if (voc === '一般') {
+    return 'icon-yellow'
+  } else if (voc === '不合格') {
+    return 'icon-orange'
+  } else if (voc === '极差') {
+    return 'icon-red'
+  }
 }
 // 防抖处理
 const debouncedQueryData = debounce(() => {
@@ -3230,5 +3293,17 @@ onBeforeMount(() => {
   display: flex;          /* 应用 Flexbox 布局 */
   align-items: center;   /* 垂直居中 */
   justify-content: center;
+}
+.icon-green {
+  color: #67C23A;
+}
+.icon-yellow {
+  color: #ffc400;
+}
+.icon-orange {
+  color: #ff9900;
+}
+.icon-red {
+  color: #e32e00;
 }
 </style>
