@@ -508,7 +508,7 @@ const currencyNumList = [
 const queryForm = reactive<IGetForwarderListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 50
 })
 const total = ref<number>(0)
 const list = ref<IGetForwarderList[]>([])

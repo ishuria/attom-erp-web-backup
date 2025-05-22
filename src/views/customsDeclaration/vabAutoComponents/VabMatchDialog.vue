@@ -83,6 +83,9 @@
           <el-link v-if="row.delStatus === 1" type="danger" :underline="false" @click="handleDelCheckMatch(row)">删除</el-link>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty"/>
+      </template>
     </el-table>
     <!-- <vab-pagination
       :current-page="queryForm.pageNo"

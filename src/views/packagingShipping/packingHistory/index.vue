@@ -126,7 +126,7 @@ const listLoading = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 50
 })
 const total = ref<number>(0)
 const list = ref<IGetShippedEncasementList[]>([])
