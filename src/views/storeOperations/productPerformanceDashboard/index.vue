@@ -49,9 +49,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[0] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{  }}</el-text>
+                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[10] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -543,9 +543,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[1] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{  }}</el-text>
+                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[11] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -1004,9 +1004,9 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ updateDate }}</el-text>
+                <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[2] }}</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{  }}</el-text>
+                <el-text style="font-weight: 600">补货数量和月数据更新时间：{{ saleUpdateDate[12] }}</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -1434,6 +1434,7 @@ import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash'
 import type { CSSProperties } from 'vue'
+import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
@@ -1481,7 +1482,6 @@ import handleClipboard from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
-import CountryFlag from 'vue-country-flag-next'
 
 defineOptions({
   name: 'ProductPerformanceDashboard',
@@ -2123,30 +2123,33 @@ const tabLoadStatus = ref({
 
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
+    activeName.value = 0
     // 只在首次加载时获取数据
     if (!tabLoadStatus.value.tab0) {
+      fetchUpdateDate()
       fetchColumn()
       queryData()
       fetchCurrency()
       tabLoadStatus.value.tab0 = true
     }
-    activeName.value = 0
   } else if (tab.props.name === 1) {
+    activeName.value = 1
     if (!tabLoadStatus.value.tab1) {
+      fetchUpdateDate()
       fetchAsinColumn()
       queryAsinData()
       fetchAsinCurrency()
       tabLoadStatus.value.tab1 = true
     }
-    activeName.value = 1
   } else {
+    activeName.value = 2
     if (!tabLoadStatus.value.tab2) {
+      fetchUpdateDate()
       fetchPAsinColumn()
       queryPAsinData()
       fetchPAsinCurrency()
       tabLoadStatus.value.tab2 = true
     }
-    activeName.value = 2
   }
 }
 // 运营分类设定可见
@@ -2972,10 +2975,14 @@ const operationAndDevelopSelect = () => {
   // No default
   }
 }
-const updateDate = ref<string | undefined>('')
+
+const saleUpdateDate = ref<string[] | undefined[]>([])
 const fetchUpdateDate = async () => {
   const { data } = await getOperationUpdateDate({ type: activeName.value })
-  updateDate.value = data
+  saleUpdateDate.value[activeName.value] = data
+  const { data: date } = await getOperationUpdateDate({ type: activeName.value + 10 })
+  saleUpdateDate.value[activeName.value + 10] = date
+  // console.log(saleUpdateDate.value)
 }
 onBeforeMount(() => {
   // 获取更新日期
