@@ -154,14 +154,16 @@ import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import {
-addDistributionList,
-delDistributionList,
-getDistributionList,
-getDistributionOptionUserList,
-getDistributionProductList,
-getDistributionSiteList,
-getDistributionUserType,
-updateDistributionUserType
+  addDistributionList,
+  delDistributionList,
+  getDistributionList,
+  getDistributionOptionUserList,
+  getDistributionProductList,
+  getDistributionSiteList,
+  getDistributionUserType,
+  getDistributionUserTypeList,
+  updateDistributionAsinUser,
+  updateDistributionUserType
 } from '/@/api/devlocal/productDistribution'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -205,17 +207,19 @@ const handleChangeUser = async (row: IGetDistributionProductList) => {
     row.userId = undefined
     return
   }
-  // try {
-  //   const { data } = await updateDistributionAsinUser({
-  //     id: row.id,
-  //     userId: row.userId!
-  //   })
-  //   if (data) {
-  //     const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
-  //     row.userTypeList = typeList
-  //     row.typeId = undefined
-  //   }
-  // } catch {}
+  try {
+    const { data } = await updateDistributionAsinUser({
+      id: row.id,
+      userId: row.userId!
+    })
+    if (data) {
+      const { data: typeList } = await getDistributionUserTypeList({ userId: row.userId! })
+      row.userTypeList = typeList
+      row.typeId = undefined
+    }
+  } catch {
+    row.userId = undefined
+  }
 }
 const handleChangeType = async (row: IGetDistributionProductList) => {
   try {
