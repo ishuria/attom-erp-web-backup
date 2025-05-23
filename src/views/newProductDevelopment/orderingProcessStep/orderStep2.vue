@@ -54,12 +54,12 @@
 </template>
   
 <script lang="ts" setup>
-import { flexColumnWidth } from '/@/utils/tableColum'
 import { currencyList } from '../indexCommon'
-import { reviewProgressId, reviewStepNo2Savetw } from '/@/api/devlocal/orderProcess'
+import { reviewProgressId, reviewStepNo2Savetw, reviewStepNo3ComponentList } from '/@/api/devlocal/orderProcess'
 import { getComponentList } from '/@/api/devlocal/progressSample'
 import type { IComponentAdd } from '/@/type/orderProcess/orderProcessType'
 import { _setStepNo } from '/@/utils/stepNoState'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
     name: 'OrderStep2',
@@ -129,6 +129,20 @@ const handleSkip = () => {
 const handleContinue = async () => {
   if (selectRows.value.length === 0) {
     $baseMessage('请选择需要添加到采购单里的零件', 'warning')
+    return
+  }
+  // 判断选择的零件里面是否供应商重复
+  const { data } = await reviewStepNo3ComponentList({ reviewId: route.query.reviewId! })
+  const supplierList = data.map((item: any) => item.supplier)
+  const hasConflict = selectRows.value.some((item: any) => {
+    if (item.supplier && supplierList.includes(item.supplier)) {
+      $baseMessage('选择的零件的供应商与采购单里的零件供应商重复，请重新选择！', 'warning')
+      return true
+    }
+    return false
+  })
+
+  if (hasConflict) {
     return
   }
   selectRows.value.forEach((item: any) => {

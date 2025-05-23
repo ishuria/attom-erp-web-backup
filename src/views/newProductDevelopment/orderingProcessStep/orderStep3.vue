@@ -168,7 +168,7 @@
         <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
           <template #default="{row}">
             <div class="none">
-              <el-input v-model="row.supplier" autofocus @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.supplier" autofocus @blur="clickSupplierCancel($event, row)" @keyup.enter="clickSupplierCancel($event, row)" />
             </div>
             <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
@@ -643,6 +643,20 @@ const handleCloseCreateConsumable = (value: boolean) => {
 const handleSubmitComponent = async (value: any) => {
 
   let list: ISubmitPurchaseComponent[] = []
+  const supplierList = componentList.value.map((item: any) => {
+    return item.supplier
+  })
+  const hasConflict = value.some((item: any) => {
+    if (item.suppliser && supplierList.includes(item.suppliser)) {
+      $baseMessage('选择的零件的供应商与采购单里的零件供应商重复，请重新选择！', 'warning')
+      return true
+    }
+    return false
+  })
+  if (hasConflict) {
+    createComponentVisible.value = true
+    return
+  }
   value.map((item: any): any => {
     if (item.count) {
       list.push({
@@ -652,7 +666,6 @@ const handleSubmitComponent = async (value: any) => {
         count: Number(item.count)
       })
     }
-
  })
  let classReviewId: number | undefined = route.query.progressId ? props.step1Data : route.query.reviewId;
  try {
@@ -1083,6 +1096,43 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     secondChild.classList.add('none');
 
     focusAndSelectInput(cell);
+  }
+}
+// 修改供应商判断
+const clickSupplierCancel = async (event:any,value:any) =>{
+  // 判断新输入的供应商是否和其余的一样
+  componentList.value.forEach((item: any) => {
+    if (item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
+      value.supplier = ''
+      $baseMessage('零件的供应商不能重复!','error', 'hey')
+      return
+    }
+  })
+
+  // 获取根元素，避免重复调用 getRootElement
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    // 更新 t1 和 t2 的 class
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(_row, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    try {
+      const actualTaxRate = (value.actualTaxRate ?? 0) / 100
+      const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
+      await reviewStepNo3ComponentUpdate({ ...value, actualTaxRate, invoicingTaxRate})
+      await fetchDataComponent()
+      await fetchVariantsData()
+    } catch {
+      Object.assign(value, _row)
+    }
   }
 }
 // 零件table blur事件
