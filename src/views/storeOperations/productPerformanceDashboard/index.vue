@@ -372,6 +372,7 @@
                   
                   <div
                     class="rate-wrapper"
+                    style="cursor: pointer"
                     @click="goToReview(row.asin)"
                   >
                     <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
