@@ -363,6 +363,18 @@
         />
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
+        <vab-query-form>
+          <vab-query-form-right-panel :span="24">
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyword" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"/>
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
         <el-table
         v-loading="listLoading"
           border :cell-class-name="clearPadding"
@@ -1414,22 +1426,11 @@ onBeforeMount(() => {
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
 
         .vab-query-form {
-          // .left-panel { //自加
-          //   margin-bottom: 15px !important;
-          // }
-          .el-form {
-            .el-form-item:first-child {
-              margin: 0 !important;
-
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
-            .el-form-item:last-child { //自加
-              margin: 0 !important;
-            }
+          .left-panel { //自加
+            margin-bottom: 5px !important;
+          }
+          .right-panel {
+            margin-bottom: 5px !important;
           }
         }
 
