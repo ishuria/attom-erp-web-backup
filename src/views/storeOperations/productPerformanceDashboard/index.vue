@@ -150,14 +150,14 @@
                   (点击看明细)
                 </span>
                 <span v-if="item.label === '小类排名'">
-                  小类排名
+                  小类
                   <br />
-                  (点击看明细)
+                  (可点)
                 </span>
                 <span v-if="item.label === '大类排名'">
-                  大类排名
+                  大类
                   <br />
-                  (点击看明细)
+                  (可点)
                 </span>
                 <span v-if="item.label === 'VOC满意度'">
                   VOC满意度
@@ -192,9 +192,9 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '今广%'">
+                <span v-if="item.label === '今广'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">今广 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip">今日广告销售占比</div>
                     </template>
@@ -216,17 +216,17 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '月广告%'">
+                <span v-if="item.label === '月广%'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">月广% <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >月广告销售占比</div>
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '月销售额'">
+                <span v-if="item.label === '月销额'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >过去30天的销售额</div>
                     </template>
@@ -240,9 +240,9 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '月净利率'">
+                <span v-if="item.label === '月净利'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >过去30天的净利润率</div>
                     </template>
@@ -699,14 +699,14 @@
                 (点击看明细)
               </span>
               <span v-if="item.label === '小类排名'">
-                小类排名
+                小类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === '大类排名'">
-                大类排名
+                大类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === '2周广告转化'">
                 2周广告
@@ -736,9 +736,9 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '今广%'">
+              <span v-if="item.label === '今广'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">今广 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日广告销售占比</div>
                   </template>
@@ -752,17 +752,17 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月广告%'">
+              <span v-if="item.label === '月广%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月广% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月销售额'">
+              <span v-if="item.label === '月销额'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的销售额</div>
                   </template>
@@ -776,9 +776,9 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月净利率'">
+              <span v-if="item.label === '月净利'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的净利润率</div>
                   </template>
@@ -1160,14 +1160,14 @@
                 (点击看明细)
               </span>
               <span v-if="item.label === '小类排名'">
-                小类排名
+                小类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === '大类排名'">
-                大类排名
+                大类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === '2周广告转化'">
                 2周广告
@@ -1192,25 +1192,25 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '今广%'">
+              <span v-if="item.label === '今广'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">今广% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">今广 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip">今日广告销售占比</div>
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月广告%'">
+              <span v-if="item.label === '月广%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月广% <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >月广告销售占比</div>
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月销售额'">
+              <span v-if="item.label === '月销额'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的销售额</div>
                   </template>
@@ -1224,9 +1224,9 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月净利率'">
+              <span v-if="item.label === '月净利'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月净利率 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
                     <div class="custom-tooltip" >过去30天的净利润率</div>
                   </template>
@@ -1884,7 +1884,7 @@ const label1 = [
   'FBA仓储费',
   'FBA差异',
   '月净利润',
-  '月销售额',
+  '月销额',
   '月广告销售',
   '月广告支出',
   '预计下月仓储费',
@@ -1896,7 +1896,7 @@ const label2 = [
   '2周广告转化',
   '2周广告点击',
   '2周总转化',
-  '月净利率',
+  '月净利',
   '月ACOS',
   '月TACOS',
   '1年ACOS',
@@ -1905,13 +1905,13 @@ const label2 = [
   '月退款%',
 ]
 const label3 = ['上新', '库存可售', '可售含在途', '断货']
-const label4 = ['今广%', '半年有货率', '月广告%',]
+const label4 = ['今广', '半年有货率', '月广%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
-  ['月销售额', 'monthSalesPrice'],
+  ['月销额', 'monthSalesPrice'],
   ['月广告销售', 'monthAdvSales'],
   ['月广告支出', 'monthAdvExpenditure'],
   ['预计下月仓储费', 'estimateNextMonthStorageFee'],
@@ -1923,7 +1923,7 @@ const label2Map = new Map([
   ['2周广告转化', 'tWksAdvRate'],
   ['2周广告点击', 'tWksClickRate'],
   ['2周总转化', 'tWksTotalConv'],
-  ['月净利率', 'monthNetProfitMargin'],
+  ['月净利', 'monthNetProfitMargin'],
   ['月ACOS', 'monthAcos'],
   ['月TACOS', 'monthTacos'],
   ['1年ACOS', 'yearAcos'],
@@ -1938,9 +1938,9 @@ const label3Map = new Map([
   ['断货', 'outOfStock'],
 ])
 const label4Map = new Map([
-  ['今广%', 'currentAdvertisement'],
+  ['今广', 'currentAdvertisement'],
   ['半年有货率', 'availableRate'],
-  ['月广告%', 'monthAdv'],
+  ['月广%', 'monthAdv'],
 ])
 let _seasonalCoefficient = {
   actualList: [],
@@ -2723,7 +2723,7 @@ const changeCurrencyPASIN = async () => {
   }
 }
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (['今销', '月净利润', '月销售额'].includes(data.column.label)) {
+  if (['今销', '月净利润', '月销额'].includes(data.column.label)) {
     return 'header-cell'
   }
   return ''
@@ -2758,7 +2758,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
         }
       }
     }
-    case '月净利率': {
+    case '月净利': {
       const monthNetProfitMargin = data.row.monthNetProfitMargin * 100
       if (monthNetProfitMargin >= 20) {
         return {
@@ -3021,9 +3021,7 @@ const fetchColumn = async () => {
     if (item.prop === 'selfAssessmentFba') {
       item.minWidth = '120'
     }
-    if (item.prop === 'nowSubcategoryRanking') {
-      item.minWidth = '120'
-    }
+    
   })
    
   for (let i = indicesToDelete.length - 1; i >= 0; i--) {
@@ -3044,9 +3042,7 @@ const fetchAsinColumn = async () => {
     if (['asinImgUrl', 'asin', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
-    if (item.prop === 'nowSubcategoryRanking') {
-      item.minWidth = '120'
-    }
+  
   })
 }
 const fetchPAsinColumn = async () => {
@@ -3063,9 +3059,7 @@ const fetchPAsinColumn = async () => {
     if (['asinImgUrl', 'sku', 'parentAsin'].includes(item.prop)) {
       item.isFixed = true
     }
-    if (item.prop === 'nowSubcategoryRanking') {
-      item.minWidth = '120'
-    }
+  
   })
 }
 const disabledOpe = ref<boolean>(false)

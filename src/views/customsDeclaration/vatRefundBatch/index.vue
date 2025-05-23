@@ -128,6 +128,13 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
       </el-tab-pane>
     </el-tabs>
    
