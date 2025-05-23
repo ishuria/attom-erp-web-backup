@@ -1757,9 +1757,9 @@ onBeforeMount(()=>{
   fetchPurchaseAndRepository()
   fetchInspection()
 })
-onMounted(() => {
+onMounted(async () => {
   setImageColumnHeight();
-  changeTabsMeta({
+  await changeTabsMeta({
     title: 'SKU详情',
     meta: {
       title: `${route.query.title}`,

@@ -346,11 +346,15 @@
                   </el-image>
                 </span>
                 <!-- SKU 展示-->
-                <span v-if="item.label === 'SKU'">
-                  <div >
+                <span v-if="item.label === 'SKU'" class="sku-container">
+                  <div>
                     <span class="copySku" @click="handleClipboard($event, row.sku)" >
-                      <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
-                      
+                      <el-tooltip effect="dark" placement="top">
+                        <template #content>
+                          <div class="custom-tooltip">{{ row.sku }}</div>
+                        </template>
+                        <el-link :href="row.amazonUrl" class="sku-text"  target="_blank">{{ row.sku }}</el-link>
+                      </el-tooltip>
                       <el-tooltip effect="dark" placement="top">
                         <template #content>
                           <div class="custom-tooltip">复制SKU</div>
@@ -368,7 +372,6 @@
                   
                   <div
                     class="rate-wrapper"
-                    style="cursor: pointer;"
                     @click="goToReview(row.asin)"
                   >
                     <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
@@ -378,46 +381,52 @@
                     <span class="rate-count">{{ row.commentsNumbers }}</span>
                     <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
                   </div>
-                  <!-- <div>
-                    <el-tooltip effect="dark" placement="top">
+                  <div class="icon-div">
+                    <el-tooltip v-if="row.newArrivalDay <= 180" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">上新时间<=180天</div>
                       </template>
-                      <vab-icon icon="book-shelf-fill" class="icon-green" />
+                      <vab-icon icon="calendar-2-fill" class="icon-green" />
                     </el-tooltip>
-                    <el-tooltip effect="dark" placement="top">
+                    <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">可以做outlet deal</div>
                       </template>
                       <vab-icon icon="discount-percent-fill" class="icon-green" />
                     </el-tooltip>
                     
-                    <el-tooltip effect="dark" placement="top">
+                    <el-tooltip v-if="isOutOfStock(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">断货</div>
+                        <div class="custom-tooltip">断货警告</div>
                       </template>
-                      <vab-icon icon="shopping-cart-2-fill" />
+                      <vab-icon icon="shopping-cart-2-fill" :class="handleOutOfStock(row)" />
                     </el-tooltip>
-                    <el-tooltip effect="dark" placement="top">
+                    <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">低量仓储费天数28-35天的</div>
+                        <div class="custom-tooltip">低量仓储费预警</div>
                       </template>
-                      <vab-icon icon="truck-fill" />
+                      <vab-icon icon="truck-fill" :class="handleLowDelivery(row)" />
                     </el-tooltip>
-                    <el-tooltip effect="dark" placement="top">
+                    <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">库龄</div>
+                        <div class="custom-tooltip">库龄警告</div>
                       </template>
-                      <vab-icon icon="notification-3-fill" class="icon-yellow" />
+                      <vab-icon icon="alarm-warning-fill" :class="handleStorageAge(row)"/>
                     </el-tooltip>
-                    <el-tooltip v-if="row.vocSatisfaction !== '良好' && row.vocSatisfaction !== '极好'" effect="dark" placement="top">
+                    <el-tooltip v-if="isVoc(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
                       </template>
-                      <vab-icon icon="user-unfollow-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
+                      <vab-icon icon="emotion-unhappy-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
+                    </el-tooltip>
+                    <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">产品健康</div>
+                      </template>
+                      <vab-icon icon="shield-check-fill" class="icon-green" />
                     </el-tooltip>
                     
-                  </div> -->
+                  </div>
                 </span>
                 <span v-if="item.label === 'ASIN'">
                  {{ row.asin }}
@@ -1544,6 +1553,73 @@ defineOptions({
 const goToReview = (asin: string) => {
   window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank');
 }
+
+// 判断断货
+const isOutOfStock = (row: any) => {
+  if (row.fbaCount === 0 || row.outOfStock > 0) {
+    return true
+  }
+  return false
+}
+// 判断低量
+const isLowDelivery = (row: any) => {
+  if ((row.warehousing >= 28 && row.warehousing <= 35) || row.lowVolumeDelivery === 1) {
+    return true
+  }
+  return false
+}
+// 判断库龄
+const isStorageAge = (row: any) => {
+  if (!row.inventoryAgeLevel1Days || !row.inventoryAgeLevel2Days || !row.inventoryAgeLevel3Days) {
+    return true
+  }
+  return false
+}
+const isVoc = (row: any) => {
+  if (row.vocSatisfaction === '一般' || row.vocSatisfaction === '不合格' || row.vocSatisfaction === '极差') {
+    return true
+  }
+  return false
+}
+const isHealthy = (row: any) => {
+  if (!isOutOfStock(row) && !isLowDelivery(row) && !isStorageAge(row) && !isVoc(row)) {
+    return true   
+  }
+  return false
+}
+const handleOutOfStock = (row: any) => {
+  let className = ''
+  if (row.outOfStock > 0) {
+    className = 'icon-yellow'
+  }
+  if (row.fbaCount === 0) {
+    className = 'icon-red'
+  }
+  return className
+}
+const handleLowDelivery = (row: any) => {
+  let className = ''
+  if (row.warehousing >= 28 && row.warehousing <= 35) {
+    className = 'icon-yellow'
+  }
+  if (row.lowVolumeDelivery === 1) {
+    className = 'icon-red'
+  }
+  return className
+}
+const handleStorageAge = (row: any) => {
+  let className = ''
+  if (!row.inventoryAgeLevel1Days) {
+    className = 'icon-yellow'
+  }
+  if (!row.inventoryAgeLevel2Days) {
+    className = 'icon-orange'
+  }
+  if (!row.inventoryAgeLevel3Days) {
+    className = 'icon-red'
+  }
+  return className
+}
 const handleVocSatisfaction = (voc: string) => {
   if (voc === '一般') {
     return 'icon-yellow'
@@ -2240,7 +2316,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku', 60)
+        return 255
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -3121,7 +3197,7 @@ onBeforeMount(() => {
           
           .copySku {
             display: inline-block; /* 使宽度适应内容，方便点击 */
-            padding: 5px 5px 5px 0; 
+            padding: 0; 
             cursor: pointer;
             -webkit-user-select: text;
             user-select: text;
@@ -3206,6 +3282,7 @@ onBeforeMount(() => {
   display: flex;
   gap: 8px;
   align-items: center;
+  margin-top: -5px;
 
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
@@ -3295,15 +3372,38 @@ onBeforeMount(() => {
   justify-content: center;
 }
 .icon-green {
+  font-size: 20px;
   color: #67C23A;
 }
 .icon-yellow {
+  font-size: 20px;
   color: #ffc400;
 }
 .icon-orange {
+  font-size: 20px;
   color: #ff9900;
 }
 .icon-red {
+  font-size: 20px;
   color: #e32e00;
+}
+.sku-text {
+  :deep(.el-link__inner){
+    display: inline-block;
+    max-width: 190px;
+    margin-right: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+.sku-container {
+  .icon-div {
+    margin-top: -6px;
+    .el-tooltip {
+      margin-right: 6px;
+    }
+  }
 }
 </style>

@@ -182,11 +182,10 @@
 <!--                    <el-dropdown-item @click="addProgressMold">-->
 <!--                      <el-link type="primary" :underline="false">开模申请</el-link>-->
 <!--                    </el-dropdown-item>-->
-                    <template v-if="row.bulkGoodsStatus === 0">
-                      <el-dropdown-item @click="handleOrderProcess(row)">
-                        <el-link type="primary" :underline="false">订大货申请</el-link>
-                      </el-dropdown-item>
-                    </template>
+                    <el-dropdown-item @click="handleOrderProcess(row)">
+                      <el-link :disabled="row.bulkGoodsStatus !== 0" type="primary" :underline="false">订大货申请</el-link>
+                    </el-dropdown-item>
+                  
                     <el-dropdown-item @click="handleCopyProgress(row)">
                       <el-link type="primary" :underline="false">复制</el-link>
                     </el-dropdown-item>
