@@ -383,11 +383,12 @@
                     <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
                   </div>
                   <div class="icon-div">
-                    <el-tooltip v-if="row.newArrivalDay <= 180" effect="dark" placement="top">
+                    <el-tooltip v-if="row.newArrivalDay <= 360" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">上新时间<=180天</div>
+                        <div class="custom-tooltip">上新时间<=360天</div>
                       </template>
-                      <vab-icon icon="calendar-2-fill" class="icon-green" />
+                      <!-- <vab-icon icon="calendar-2-fill" class="icon-green" /> -->
+                      <el-tag type="success" size="small" >新</el-tag>
                     </el-tooltip>
                     <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
                       <template #content>
@@ -404,7 +405,7 @@
                     </el-tooltip>
                     <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">低量仓储费预警</div>
+                        <div class="custom-tooltip">有低量配送费或低量仓储费预警</div>
                       </template>
                       <vab-icon icon="truck-fill" :class="handleLowDelivery(row)" />
                     </el-tooltip>
@@ -420,11 +421,11 @@
                       </template>
                       <vab-icon icon="emotion-unhappy-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
                     </el-tooltip>
-                    <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
+                    <el-tooltip  effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">产品健康</div>
                       </template>
-                      <vab-icon icon="shield-check-fill" class="icon-green" />
+                      <vab-icon icon="checkbox-circle-fill" class="icon-green" />
                     </el-tooltip>
                     
                   </div>
@@ -1571,6 +1572,9 @@ const isLowDelivery = (row: any) => {
 }
 // 判断库龄
 const isStorageAge = (row: any) => {
+  if (!row.inventoryAgeLevel1Days && !row.inventoryAgeLevel2Days && !row.inventoryAgeLevel3Days) {
+    return false
+  }
   if (!row.inventoryAgeLevel1Days || !row.inventoryAgeLevel2Days || !row.inventoryAgeLevel3Days) {
     return true
   }
@@ -3395,7 +3399,10 @@ onBeforeMount(() => {
 }
 .sku-container {
   .icon-div {
+    display: flex;
+    align-items: center;
     margin-top: -6px;
+   
     .el-tooltip {
       margin-right: 6px;
     }
