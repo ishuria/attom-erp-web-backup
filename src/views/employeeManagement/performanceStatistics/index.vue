@@ -94,7 +94,7 @@
             <el-table-column label="美工图片" min-width="100" prop="artDesignPicture"/>
             <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime"/>
             <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign"/>
-            <el-table-column label="总奖金" min-width="90" prop="">
+            <el-table-column label="总奖金" min-width="110" prop="">
               <template #default="{ row }">
                 {{ handleCalculateTotalBonus(row) }}
               </template>
@@ -266,10 +266,10 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import { getAssessmentList, getProductManagerAssessmentList, getUserAttendanceList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
 import type { IGetAssessmentList, IGetAssessmentListReq, IGetProductManagerAssessmentList, IGetUserAttendanceList } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PerformanceStatistics'
@@ -446,7 +446,7 @@ const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
   if (row.artDesignPicture != null) totalBonus += row.artDesignPicture
   if (row.artDesignLongTime != null) totalBonus += row.artDesignLongTime
   if (row.developmentDesign != null) totalBonus += row.developmentDesign
-  return totalBonus
+  return totalBonus.toFixed(2)
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
   const index = data.columnIndex
