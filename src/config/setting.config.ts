@@ -76,6 +76,6 @@ export const settingConfig: {
   debounce: ['doEdit'],
   // 分栏布局和综合布局时，是否点击一级菜单默认开启二级菜单(默认第一个，可通过redirect自定义)
   openFirstMenu: true,
-  // 是否持有化多标签页
+  // 是否持久化多标签页（是否把已开启的路由标签缓存到localStorage中）
   persistenceTab: true,
 }
