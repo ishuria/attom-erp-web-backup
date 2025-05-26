@@ -124,7 +124,7 @@
                   <el-link type="primary" :underline="false" >打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
-                  <el-link type="primary" :underline="false">退税归档</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchiveOutbound(row)" >
                   <el-link type="primary" :underline="false" >出库归档</el-link>
