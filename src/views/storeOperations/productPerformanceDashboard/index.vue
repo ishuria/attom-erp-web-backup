@@ -91,7 +91,7 @@
             <el-form inline :model="queryForm">
               <el-form-item>
                 <el-input
-                  v-model.trim="queryForm.keyWord"
+                  v-model.trim="queryForm.keyword"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -642,7 +642,7 @@
             <el-form inline :model="asinQueryForm">
               <el-form-item>
                 <el-input
-                  v-model.trim="asinQueryForm.keyWord"
+                  v-model.trim="asinQueryForm.keyword"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryAsinData"
@@ -1103,7 +1103,7 @@
             <el-form inline :model="pAsinQueryForm">
               <el-form-item>
                 <el-input
-                  v-model.trim="pAsinQueryForm.keyWord"
+                  v-model.trim="pAsinQueryForm.keyword"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryPAsinData"
@@ -1738,7 +1738,7 @@ const operateUserList = ref<optionType[]>([])
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
 const queryForm = reactive<any>({
-  keyWord: '',
+  keyword: '',
   pageNo: 1,
   pageSize: 20,
   site: [],
@@ -1748,7 +1748,7 @@ const queryForm = reactive<any>({
   orderDirection: 'desc',
 })
 const asinQueryForm = reactive<any>({
-  keyWord: '',
+  keyword: '',
   pageNo: 1,
   pageSize: 20,
   site: [],
@@ -1758,7 +1758,7 @@ const asinQueryForm = reactive<any>({
   orderDirection: 'desc',
 })
 const pAsinQueryForm = reactive<any>({
-  keyWord: '',
+  keyword: '',
   pageNo: 1,
   pageSize: 20,
   site: [],
