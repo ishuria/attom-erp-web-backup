@@ -648,7 +648,7 @@ const handleSubmitComponent = async (value: any) => {
   })
   const hasConflict = value.some((item: any) => {
     if (item.suppliser && supplierList.includes(item.suppliser)) {
-      $baseMessage('选择的零件的供应商与采购单里的零件供应商重复，请重新选择！', 'warning')
+      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
       return true
     }
     return false
@@ -1104,7 +1104,7 @@ const clickSupplierCancel = async (event:any,value:any) =>{
   componentList.value.forEach((item: any) => {
     if (item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
       value.supplier = ''
-      $baseMessage('零件的供应商不能重复!','error', 'hey')
+      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！','error', 'hey')
       return
     }
   })

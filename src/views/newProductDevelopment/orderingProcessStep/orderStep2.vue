@@ -136,7 +136,7 @@ const handleContinue = async () => {
   const supplierList = data.map((item: any) => item.supplier)
   const hasConflict = selectRows.value.some((item: any) => {
     if (item.supplier && supplierList.includes(item.supplier)) {
-      $baseMessage('选择的零件的供应商与采购单里的零件供应商重复，请重新选择！', 'warning')
+      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
       return true
     }
     return false
