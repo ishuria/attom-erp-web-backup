@@ -85,6 +85,7 @@ export interface IProgress {
   // 控添加图片样式隐藏显示
   hide?: boolean
   mainSearchTerms?: string
+  bulkGoodsStatus: number
 }
 export interface IProgressFilterResp {
     data: {

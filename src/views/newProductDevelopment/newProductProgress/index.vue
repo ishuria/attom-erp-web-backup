@@ -591,12 +591,39 @@ defineOptions({
 })
 
 const handleSwitchName = (row: any) => {
-  if (row.bulkGoodsStatus !== 0) {
+  if (row.bulkGoodsStatus === 1) {
     return '继续大货申请'
   }
   return '提交大货申请'
 }
+// 订大货
+const handleOrderProcess = async (row: IProgress) => {
 
+  // if (row.bulkGoodsStatus === 1) {
+  //   router.push({
+  //     path: '/newProductDevelopment/orderingProcess',
+  //     query: {
+  //       reviewStatus: '0',
+  //       // reviewId: row.reviewMainId,
+  //     },
+  //   })
+  //   return
+  // } else {
+    // 点击了订大货后，不能再次点击
+    await updateBulkGoodsStatusByProgressId({
+      progressId:row.progressId
+    })
+
+    router.push({
+      path: '/newProductDevelopment/orderingProcess',
+      query: {
+        progressId: row.progressId,
+      },
+    })
+  // }
+
+  
+}
 const updateResearchReportLinkVisible = ref<boolean>(false)
 const researchReportLink = ref<string>('')
 const updateResearchReportLink = async (val: string) => {
@@ -1088,21 +1115,7 @@ const handleSampleCosting = (row: IProgress) => {
     },
   })
 }
-// 订大货
-const handleOrderProcess = async (row: IProgress) => {
 
-  // 点击了订大货后，不能再次点击
-  await updateBulkGoodsStatusByProgressId({
-    progressId:row.progressId
-  })
-
-  router.push({
-    path: '/newProductDevelopment/orderingProcess',
-    query: {
-      progressId: row.progressId,
-    },
-  })
-}
 // 样品进度
 const getSampleProgress = async () => {
   sampleProgressDialog.value = true

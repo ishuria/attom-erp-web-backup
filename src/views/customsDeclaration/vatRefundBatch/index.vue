@@ -58,7 +58,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="290">
+          <el-table-column fixed="right" label="操作" width="300">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
@@ -84,6 +84,16 @@
             <el-button type="primary">出口发票生成（云舟）</el-button>
             <el-button type="primary" @click="handleExportAiTuoMu">出口发票生成（埃托姆）</el-button>
           </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
           border
@@ -118,7 +128,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="180">
+          <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
               <el-link type="primary" :underline="false" @click="showInvoiceCollection()">发票归集</el-link>
@@ -454,17 +464,20 @@ onBeforeMount(() => {
           .left-panel { //自加
             margin-bottom: 5px;
           }
-          .el-form {
-            .el-form-item:first-child {
-              margin: 0 !important;
-
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
+          .right-panel {
+            margin-bottom: 5px;
           }
+          // .el-form {
+          //   .el-form-item:first-child {
+          //     margin: 0 !important;
+
+          //     .el-check-tag,
+          //     .el-form-item__label {
+          //       margin: 0 10px 5px 0;
+          //       border-radius: 99px;
+          //     }
+          //   }
+          // }
         }
         .noneHoveTable .el-checkbox {
           transform: scale(1.3);
