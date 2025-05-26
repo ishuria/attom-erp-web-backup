@@ -31,7 +31,9 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: bold;" >数据更新时间: 2025年1月16日09:34</el-text>
+                <el-text style="margin-left: 10px; font-weight: bold;" >今销更新时间: 2025-05-23 17:27:11</el-text>
+                <el-divider direction="vertical" />
+                <el-text style="font-weight: bold;" >月数据更新时间: 2025-05-23 17:27:11</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -423,18 +425,18 @@ const columns = ref<any>([
     checked: true,
     minWidth: 120,
   },
-  {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '月退款%',
-    prop: 'monthRefund',
-    checked: true,
-    minWidth: 120,
-  },
+  // {
+  //   label: '月退货%',
+  //   prop: 'monthReturnGoods',
+  //   checked: true,
+  //   minWidth: 120,
+  // },
+  // {
+  //   label: '月退款%',
+  //   prop: 'monthRefund',
+  //   checked: true,
+  //   minWidth: 120,
+  // },
   {
     label: '最近入库',
     prop: 'recentlyInboundStorage',
@@ -442,10 +444,35 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
+    label: '2周总转化',
+    prop: '',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '2周广告转化',
+    prop: '',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '2周广告点击',
+    prop: '',
+    checked: true,
+    minWidth: 110,
+  },
+
+  {
     label: '开发人员',
     prop: 'developName',
     checked: true,
     minWidth: 100,
+  },
+  {
+    label: '运营负责人',
+    prop: 'operationUserName',
+    checked: true,
+    minWidth: 110,
   },
   {
     label: '产品描述',

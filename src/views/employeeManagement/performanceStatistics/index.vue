@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-change="handleTabChange">
-      <el-tab-pane label="明细" :name="0">
+      <el-tab-pane label="全员明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-date-picker
@@ -112,7 +112,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="概览" :name="1"/>
+      <el-tab-pane label="全员概览" :name="1"/>
       <el-tab-pane label="产品经理" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -193,6 +193,10 @@
           @size-change="handleAssessmentSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="打包" :name="3" />
+      <el-tab-pane label="产品设计" :name="4" />
+      <el-tab-pane label="平面设计" :name="5" />
+      <el-tab-pane label="采购" :name="6" />
     </el-tabs>
     <!-- 考核数设定 -->
     <vab-dialog

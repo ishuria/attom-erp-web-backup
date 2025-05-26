@@ -165,7 +165,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column :fixed="fixed" label="操作" width="180px">
+          <el-table-column :fixed="fixed" label="操作" width="180">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="handleSampleCosting(row)">
@@ -183,7 +183,7 @@
 <!--                      <el-link type="primary" :underline="false">开模申请</el-link>-->
 <!--                    </el-dropdown-item>-->
                     <el-dropdown-item @click="handleOrderProcess(row)">
-                      <el-link :disabled="row.bulkGoodsStatus !== 0" type="primary" :underline="false">订大货申请</el-link>
+                      <el-link type="primary" :underline="false">{{ handleSwitchName(row) }}</el-link>
                     </el-dropdown-item>
                   
                     <el-dropdown-item @click="handleCopyProgress(row)">
@@ -244,18 +244,8 @@
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="优先级" prop="priority" width="120">
+          <el-table-column label="优先级" prop="priority" width="90">
             <template #default="{ row }">
-              <!-- <el-select
-                v-model="row.priority"
-                disabled
-                size="default"
-                style="min-width: 100%"
-                @blur="clickCancel($event, row)"
-                @keyup.enter="clickCancel($event, row)"
-              >
-                <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select> -->
               {{ priorityOptions.find((item) => item.value === row.priority)?.label }}
             </template>
           </el-table-column>
@@ -266,12 +256,6 @@
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" width="100">
             <template #default="{ row }">
-              <!-- <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-                </template>
-                
-              </el-tooltip> -->
               <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName+'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
             </template>
@@ -285,7 +269,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="OEM" prop="oem" width="80">
+          <el-table-column label="OEM" prop="oem" width="70">
             <template #default="{ row }">
               <el-checkbox
                 v-model="row.oem"
@@ -305,7 +289,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="调研报告链接" prop="" width="200">
+          <el-table-column label="调研报告链接" prop="" width="350">
             <template #default="{ row }">
               <el-tooltip content="" effect="dark" placement="top">
                 <template #content>
@@ -366,9 +350,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column :fixed="fixed" label="操作" width="100px">
+          <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制</el-button>
+              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制到进行中</el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -606,6 +590,12 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+const handleSwitchName = (row: any) => {
+  if (row.bulkGoodsStatus !== 0) {
+    return '继续大货申请'
+  }
+  return '提交大货申请'
+}
 
 const updateResearchReportLinkVisible = ref<boolean>(false)
 const researchReportLink = ref<string>('')
