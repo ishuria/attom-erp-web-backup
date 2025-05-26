@@ -119,7 +119,7 @@
               />
             </div>
             
-            {{ row.componentUnit  }}
+            <span>{{ row.componentUnit  }}</span>
           </template>
         </el-table-column>
 
@@ -387,7 +387,6 @@ import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog, } from '/@/api/devlocal/progress'
@@ -405,6 +404,7 @@ import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progre
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineComponent({
   name: 'VabComponentList',
@@ -633,7 +633,7 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === '已有零件id' || label === '总未税价' || label === '零件单位') {        
+  if (label === '已有零件id' || label === '总未税价') {        
     return {
       color: '#999',
       cursor: 'not-allowed',

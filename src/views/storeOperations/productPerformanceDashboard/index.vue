@@ -228,7 +228,7 @@
                   <el-tooltip content="" effect="dark" placement="top">
                     <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
-                      <div class="custom-tooltip" >过去30天的销售额</div>
+                      <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -764,7 +764,7 @@
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的销售额</div>
+                    <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1212,7 +1212,7 @@
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的销售额</div>
+                    <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
                   </template>
                 </el-tooltip>
               </span>
