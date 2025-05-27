@@ -254,4 +254,12 @@ export function updateBulkGoodsStatusByProgressId(params?: IProgressId) {
   })
 }
 
+export function updateBulkGoodsStatusByReviewId(params: { reviewId: number, status: number}) {
+  return request({
+    url: `${BASE_API}/progress/bulk_goods_status/view/update`,
+    method: 'post',
+    params,
+  })
+}
+
 

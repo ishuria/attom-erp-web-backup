@@ -593,6 +593,8 @@ defineOptions({
 const handleSwitchName = (row: any) => {
   if (row.bulkGoodsStatus === 1) {
     return '继续大货申请'
+  } else if (row.bulkGoodsStatus === 2) {
+    return '查看大货申请'
   }
   return '提交大货申请'
 }
@@ -609,11 +611,19 @@ const handleOrderProcess = async (row: IProgress) => {
       },
     })
     return
-  } else {
+  } else if (row.bulkGoodsStatus === 0) {
     router.push({
       path: '/newProductDevelopment/orderingProcess',
       query: {
         progressId: row.progressId,
+      },
+    })
+  } else {
+    const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
+    await router.push({
+      path: '/newProductDevelopment/orderingProcess',
+      query: {
+        reviewId: data,
       },
     })
   }

@@ -180,6 +180,7 @@
 </template>
 
 <script lang="ts" setup>
+import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
@@ -346,6 +347,7 @@ const handleGoback = () => {
       if (data === true) {
         await delVisitedRoute(handleActivePath(route, true))
         $baseMessage("审核不通过提交成功", "success", "hey")
+        await updateBulkGoodsStatusByReviewId({ reviewId: Number(props.reviewId), status: 1 })
       }
     })
   } catch (error) {

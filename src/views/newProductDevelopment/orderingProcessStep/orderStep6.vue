@@ -140,6 +140,7 @@
 </template>
 
 <script lang="ts" setup>
+import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
 import { getProductPositionList, getReviewVariantPackageSampleList, reviewStepNo6CheckGet, reviewStepNo6PersonList, reviewStepNo6SaveSix } from '/@/api/devlocal/orderProcess'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -185,6 +186,7 @@ const handlePersonSelectConfirm = async () => {
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords'
       })
+      await updateBulkGoodsStatusByReviewId({ reviewId: classReviewId!, status: 2 })
     }
   } catch (error) {
     console.error(error)
