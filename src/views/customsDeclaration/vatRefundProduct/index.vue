@@ -21,6 +21,7 @@
                 type="daterange"
                 value-format="YYYY-MM-DD"
                 @change="queryDateData"
+                :disabled-date="(time: Date) => time.getTime() > Date.now()"
               />
             </span>
             <span style="margin: 0 0 calc(var(--el-margin) / 2) 0">
@@ -48,6 +49,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-style="cellStyle"
           class="noneHoveTable"
@@ -200,6 +202,7 @@
                 type="daterange"
                 value-format="YYYY-MM-DD"
                 @change="queryDateData"
+                :disabled-date="(time: Date) => time.getTime() > Date.now()"
               />
             </span>
           </vab-query-form-left-panel>
@@ -221,6 +224,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
+          v-loading="listLoading"
           border
           :cell-style="cellStyle2"
           class="noneHoveTable"
@@ -407,7 +411,7 @@
 
 <script lang="ts" setup>
 import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
-import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
+import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
