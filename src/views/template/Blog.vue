@@ -201,22 +201,22 @@ onBeforeMount(() => {
       width: 100%;
       margin-bottom: 2px;
       overflow: hidden;
+      text-overflow: ellipsis;
+      line-clamp: 1;
       font-size: 16px;
       font-weight: 600;
       line-height: 26px;
-      text-overflow: ellipsis;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
     }
 
     .blog-abstract {
       display: -webkit-box;
       overflow: hidden;
+      text-overflow: ellipsis;
+      line-clamp: 1;
       font-size: 13px;
       color: var(--el-color-grey);
-      text-overflow: ellipsis;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
     }
 
     .blog-entry {

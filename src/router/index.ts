@@ -1141,13 +1141,22 @@ export const asyncRoutes: VabRouteRecord[] = [
     },
     children: [
       {
+        path: 'grid',
+        name: 'Grid',
+        component: () => import('/@/views/template/Grid.vue'),
+        meta: {
+          title: '自适应布局',
+          icon: 'layout-grid-2-line',
+          badge: 'New',
+        },
+      },
+      {
         path: 'news',
         name: 'News',
         component: () => import('/@/views/template/News.vue'),
         meta: {
           title: '新闻',
           icon: 'newspaper-line',
-          badge: 'New',
         },
       },
       {

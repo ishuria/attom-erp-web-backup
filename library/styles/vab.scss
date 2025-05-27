@@ -174,8 +174,8 @@ html {
       transition: var(--el-transition);
 
       &-active {
-        transition: var(--el-transition);
         transform: rotateZ(180deg);
+        transition: var(--el-transition);
       }
     }
 
@@ -1077,6 +1077,26 @@ html {
 
     .vab-icon {
       --el-font-size-big: var(--el-font-size-medium) !important;
+    }
+
+    .vab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+      &-auto-fill {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+
+      &-auto-fit {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      &-item {
+        height: 200px;
+        margin: calc(var(--el-margin) / 2);
+        background-color: var(--el-color-primary);
+        border-radius: var(--el-border-radius-base);
+      }
     }
   }
 }

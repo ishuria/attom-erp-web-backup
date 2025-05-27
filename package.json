@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "16.4.0",
+  "version": "16.5.0",
   "private": true,
   "author": "github.com/zxwk1998",
   "scripts": {
@@ -54,7 +54,7 @@
     "typeit": "^8.8.7",
     "vsv-context-menu": "^1.4.2",
     "vsv-icon": "^2.2.2",
-    "vue": "^3.5.14",
+    "vue": "^3.5.15",
     "vue-draggable-plus": "^0.6.0",
     "vue-echarts": "6.7.3",
     "vue-i18n": "^11.1.4",
@@ -77,7 +77,7 @@
     "@vitejs/plugin-basic-ssl": "^2.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "@vue/compiler-sfc": "^3.5.14",
+    "@vue/compiler-sfc": "^3.5.15",
     "adm-zip": "^0.5.16",
     "autoprefixer": "^10.4.21",
     "chokidar": "^3.6.0",
