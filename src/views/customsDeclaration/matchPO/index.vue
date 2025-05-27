@@ -34,7 +34,14 @@
         </template>
       </el-table-column>
       <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')"/>
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"/>
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId', 50)">
+        <template #default="{ row }">
+          <span class="copySku" @click="handleClipboard($event, row.shipmentId)" >
+            {{ row.shipmentId }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="Reference ID" min-width="130" prop="referenceId"/>
       <el-table-column label="站点" min-width="130" prop="site"/>
       <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')"/>
@@ -375,6 +382,7 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import { getChannelList } from '/@/api/devlocal/encasement'
@@ -1145,5 +1153,13 @@ onActivated(() => {
 .none {
   display: none;
 }
-
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
+}
 </style>

@@ -24,6 +24,8 @@ export function sumUniqueByField<T extends { id: number | string; [key: string]:
   const sum = Array.from(valueMap.values()).reduce((acc, val) => acc + val, 0);
 
   // 3. 格式化结果
-  return sum.toFixed(precision);
+  const formattedSum = sum.toFixed(precision);
+  // 4. 返回结果
+  return formattedSum;
 }
 
