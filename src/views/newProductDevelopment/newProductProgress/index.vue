@@ -610,11 +610,6 @@ const handleOrderProcess = async (row: IProgress) => {
     })
     return
   } else {
-    //点击了订大货后，不能再次点击
-    // await updateBulkGoodsStatusByProgressId({
-    //   progressId:row.progressId
-    // })
-
     router.push({
       path: '/newProductDevelopment/orderingProcess',
       query: {
