@@ -559,6 +559,7 @@ import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
 import { indexColumns } from './indexColumns'
 import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
@@ -572,7 +573,6 @@ import {
   getProgressPersonList,
   getProgressSharelist,
   getProgressSuppliserList,
-  updateBulkGoodsStatusByProgressId,
   updateProgressArchive,
   updateProgressImgSort,
   updateProgressManage,
@@ -599,20 +599,21 @@ const handleSwitchName = (row: any) => {
 // 订大货
 const handleOrderProcess = async (row: IProgress) => {
 
-  // if (row.bulkGoodsStatus === 1) {
-  //   router.push({
-  //     path: '/newProductDevelopment/orderingProcess',
-  //     query: {
-  //       reviewStatus: '0',
-  //       // reviewId: row.reviewMainId,
-  //     },
-  //   })
-  //   return
-  // } else {
-    // 点击了订大货后，不能再次点击
-    await updateBulkGoodsStatusByProgressId({
-      progressId:row.progressId
+  if (row.bulkGoodsStatus === 1) {
+    const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
+    await router.push({
+      path: '/newProductDevelopment/orderingProcess',
+      query: {
+        reviewStatus: '0',
+        reviewId: data,
+      },
     })
+    return
+  } else {
+    //点击了订大货后，不能再次点击
+    // await updateBulkGoodsStatusByProgressId({
+    //   progressId:row.progressId
+    // })
 
     router.push({
       path: '/newProductDevelopment/orderingProcess',
@@ -620,7 +621,7 @@ const handleOrderProcess = async (row: IProgress) => {
         progressId: row.progressId,
       },
     })
-  // }
+  }
 
   
 }

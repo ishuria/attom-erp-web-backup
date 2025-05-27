@@ -421,7 +421,7 @@
                       </template>
                       <vab-icon icon="emotion-unhappy-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
                     </el-tooltip>
-                    <el-tooltip  effect="dark" placement="top">
+                    <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">产品健康</div>
                       </template>

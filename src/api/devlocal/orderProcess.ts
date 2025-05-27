@@ -169,6 +169,14 @@ export function reviewProgressId(params: IreviewId){
     params
   })
 }
+
+export function getReviewIdByProgressId(params: { progressId: number }) {
+  return request({
+    url: `${BASE_API}/get/reviewId/by/progressId`,
+    method: 'get',
+    params
+  })
+}
 /**
  * 根据审核id获取进度id
  */

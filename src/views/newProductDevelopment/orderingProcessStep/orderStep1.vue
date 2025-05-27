@@ -89,6 +89,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
+import { updateBulkGoodsStatusByProgressId } from '~/src/api/devlocal/progress'
 import { reviewProgressId, reviewSkuInfo, reviewStepNo1, reviewStepNo1Del, reviewStepNo1SaveOn } from '/@/api/devlocal/orderProcess'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -245,17 +246,11 @@ const handleSubmit = () => {
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
               $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
             }
+            // 保存后更新状态 证明不是第一次点击了
+            await updateBulkGoodsStatusByProgressId({
+              progressId: route.query.progressId
+            })
           }
-          // if (firstSave) {
-          //   const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
-          //   if (data) {
-          //     _reviewId.value = data
-          //     localStorage.setItem('orderStep1Form', JSON.stringify(form))
-          //     $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
-          //   }
-          // } else { //是初次保存,保存后刷新
-
-          // }
 
         } else {
           // console.log(form)
@@ -316,6 +311,10 @@ const handleSubmitAndContinue = async () => {
                 "success",
                 "hey"
               )
+              // 保存后更新状态 证明不是第一次点击了
+              await updateBulkGoodsStatusByProgressId({
+                progressId: route.query.progressId
+              })
 
             } else {
               console.error('API 返回没有 data')
