@@ -157,7 +157,9 @@ const totalVolume = computed(() => {
   return sumUniqueByField(selectRows.value,"totalVolume",2);
 })
 const totalProductNumber = computed(() => {
-  return sumUniqueByField(selectRows.value, "productTotalNumber", 0);
+  return selectRows.value.reduce((acc: number, item: any) => {
+    return acc + (item.productTotalNumber || 0);
+  }, 0);
 })
 
 const setSelectRows = (value: any) => {
