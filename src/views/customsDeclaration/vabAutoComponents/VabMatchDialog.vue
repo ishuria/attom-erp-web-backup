@@ -110,7 +110,7 @@
       </div>
     </template>
   </vab-dialog>
-  <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content">
+  <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content" :draggable="false">
     <div style="width: fit-content; margin: 0 auto">
       <div style="margin-bottom: 15px">
         <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
