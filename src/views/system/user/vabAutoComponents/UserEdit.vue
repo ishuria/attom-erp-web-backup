@@ -25,7 +25,11 @@
           <el-option v-for="item in form.companies" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
-
+      <!-- <el-form-item label="所属主管" prop="supervisorIds">
+        <el-select v-model="form.supervisorId" placeholder="请选择所属主管">
+          <el-option v-for="item in supervisorList" :key="item.id" :label="item.label" :value="item.id"/>
+        </el-select>
+      </el-form-item> -->
       <el-form-item label="邮箱" prop="email">
         <el-input v-model.trim="form.email" clearable />
       </el-form-item>
@@ -47,13 +51,14 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { getList } from '/@/api/devlocal/role'
-import { doAdd, doEdit, getCompany } from '/@/api/devlocal/user'
+import { doAdd, doEdit, getCompany, getSupervisorList } from '/@/api/devlocal/user'
 import type { IAddParams, IEditParams } from '/@/type/user/userType'
 
 defineOptions({
   name: 'UserEdit',
 })
 
+const supervisorList = ref<{ id: number, label: string }[]>([])
 const emit = defineEmits(['fetch-data'])
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
@@ -93,6 +98,7 @@ const showEdit = async (row: any) => {
   dialogFormVisible.value = true
   await fetchData()
   await fetchCompanyData()
+  // await fetchSupervisorList()
   nextTick(() => {
     if (row) {
       title.value = '编辑'
@@ -165,5 +171,9 @@ const fetchData = async () => {
 const fetchCompanyData = async () => {
   const { data } = await getCompany()
   form.companies = data
+}
+const fetchSupervisorList = async () => {
+  const { data } = await getSupervisorList()
+  supervisorList.value = data
 }
 </script>

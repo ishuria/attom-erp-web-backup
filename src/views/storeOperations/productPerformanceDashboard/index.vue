@@ -547,6 +547,12 @@
                     <span v-html="row._developName"></span>
                   </el-tooltip>
                 </span>
+                <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center;">
+                  <div style=" width: fit-content;text-align: left;">
+                    <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
+                    <div >({{ row.tWksClicks }})</div>
+                  </div>
+                </span>
               </template>
             </el-table-column>
             <template #empty>
@@ -1005,6 +1011,12 @@
                   <span v-html="row._developName"></span>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center;">
+                <div style=" width: fit-content;text-align: left;">
+                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
+                  <div>({{ row.tWksClicks }})</div>
+                </div>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -1414,6 +1426,12 @@
                   </template>
                   <span v-html="row._developName"></span>
                 </el-tooltip>
+              </span>
+              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center;">
+                <div style=" width: fit-content;text-align: left;">
+                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
+                  <div>({{ row.tWksClicks }})</div>
+                </div>
               </span>
             </template>
           </el-table-column>
@@ -1898,7 +1916,7 @@ const label1 = [
 const label2 = [
   '试算毛利',
   '2周广告转化',
-  '2周广告点击',
+  // '2周广告点击',
   '2周总转化',
   '月净利',
   '月ACOS',
@@ -1925,7 +1943,7 @@ const label1Map = new Map([
 const label2Map = new Map([
   ['试算毛利', 'grossProfit'],
   ['2周广告转化', 'tWksAdvRate'],
-  ['2周广告点击', 'tWksClickRate'],
+  // ['2周广告点击', 'tWksClickRate'],
   ['2周总转化', 'tWksTotalConv'],
   ['月净利', 'monthNetProfitMargin'],
   ['月ACOS', 'monthAcos'],

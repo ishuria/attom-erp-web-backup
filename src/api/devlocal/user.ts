@@ -64,3 +64,14 @@ export function getAllName(params: IGetAllNameReq) {
     params
   })
 }
+
+/**
+ * 获取主管列表
+ * @returns 
+ */
+export function getSupervisorList() {
+  return request({
+    url: `${BASE_API}/get/supervisor/list`,
+    method: 'get',
+  })
+}
