@@ -1070,7 +1070,7 @@ const list: VabRouteRecord[] = [
       {
         path: 'grid',
         name: 'Grid',
-        component: () => import('/@/views/template/Grid.vue'),
+        component: '/@/views/template/Grid.vue',
         meta: {
           title: '自适应布局',
           icon: 'layout-grid-2-line',
