@@ -990,7 +990,7 @@
         <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
               <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <el-link style="margin-right: 3px;" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
                 <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
               </span>
             </template>
