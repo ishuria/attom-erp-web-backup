@@ -39,7 +39,12 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU品名" prop="sku" :width="flexColumnWidth(list, 'SKU品名', 'sku')"/>
+      <el-table-column fixed="left" label="SKU品名" prop="sku" :width="flexColumnWidth(list, 'SKU品名', 'sku')">
+        <template #default="{ row }">
+          {{ row.sku }}<br />
+          {{ row.description }}
+        </template>
+      </el-table-column>
       <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" >
         <template #default="{ row }">
           <div v-html="row.upc"></div>
