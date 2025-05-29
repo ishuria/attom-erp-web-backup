@@ -80,6 +80,7 @@ export interface IGetMatchPackageListReq {
   sku: string
   status: number
   matchId: number
+  keyWord: string
 }
 export interface IGetMatchPackageListRes {
   code: number

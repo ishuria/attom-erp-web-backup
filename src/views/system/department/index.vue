@@ -25,16 +25,17 @@
       ref="tableRef"
       v-loading="listLoading"
       border
-      :data="fakeData"
+      :data="list"
       default-expand-all
       row-key="id"
       :tree-props="{ children: 'children' }"
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="名称" min-width="120" prop="label" />
-      <el-table-column align="center" label="父节点Value" min-width="120" prop="parentValue" />
-      <el-table-column align="center" label="排序" prop="order" />
+      <el-table-column align="center" label="名称" min-width="120" prop="userName" />
+      <el-table-column align="center" label="父节点Value" min-width="120" prop="rootId" />
+      <el-table-column align="center" label="父节点Name" min-width="120" prop="supervisorName" />
+      <el-table-column align="center" label="排序" prop="sort" />
       <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
       <el-table-column align="center" label="操作" width="150">
         <template #default="{ row }">
@@ -59,6 +60,7 @@
 
 <script lang="ts" setup>
 import { TableInstance } from 'element-plus'
+import { getSupervisorList } from '~/src/api/devlocal/user'
 
 defineOptions({
   name: 'Department'
@@ -107,5 +109,13 @@ const fakeData = [
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
-
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getSupervisorList()
+  list.value = data
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>

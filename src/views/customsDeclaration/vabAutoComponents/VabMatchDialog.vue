@@ -112,18 +112,32 @@
   </vab-dialog>
   <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content" :draggable="false">
     <div style="width: fit-content; margin: 0 auto">
-      <div style="margin-bottom: 15px">
-        <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
-        <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
-          SKU：
-          <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
-          品名：
-          <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
-          剩余未匹配数量：
-          <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
-        </el-text>
-      </div>
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
+          <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+            SKU：
+            <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
+            品名：
+            <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
+            剩余未匹配数量：
+            <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
+          </el-text>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline>
+            <el-form-item>
+              <el-input v-model.trim="keyWord" clearable placeholder="请输入搜索关键词" @keydown.enter="fetchMatchData" @input="fetchMatchData" />
+            </el-form-item>
+            <el-form-item>
+              <el-button :loading="match2ListLoading" :icon="Search" type="primary" @click="fetchMatchData" />
+            </el-form-item>
+          </el-form>
+
+        </vab-query-form-right-panel>
+      </vab-query-form>
       <el-table
+        v-loading="match2ListLoading"
         border
         :cell-style="match2Style"
         class="noneHoveTable"
@@ -468,6 +482,7 @@ import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
+const match2ListLoading = ref<boolean>(false)
 const isFullscreen = ref<boolean>(false)
 
 const aggregationTotal = ref<number>(0)
@@ -724,12 +739,15 @@ const handleStartMatch = async () => {
     disabled2.value = false
   }
 }
+const keyWord = ref('')
 // 获取第二个匹配的数据
 const fetchMatchData = async () => {
+  match2ListLoading.value = true
   const { data } = await getMatchPackageList({
     sku: _sku.value,
     status: props.status,
     matchId: _id.value,
+    keyWord: keyWord.value,
   })
   matchList.value = data
   matchList.value.forEach((item: any) => {
@@ -740,6 +758,7 @@ const fetchMatchData = async () => {
       customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
     }
   })
+  match2ListLoading.value = false
 }
 // 上一个显示
 const previousVisible = ref<boolean>(false)
@@ -751,6 +770,7 @@ const _originalCount = ref<number>(0)
 const lastSku = ref<number>(0)
 // 点击上一个
 const fetchPreviousMatchData = async () => {
+  match2ListLoading.value = true
   const index = idList.value.indexOf(_id.value)
   _id.value = idList.value[index - 1]
   const item = list.value.find((item: any) => item.id === _id.value)
@@ -763,6 +783,7 @@ const fetchPreviousMatchData = async () => {
     sku: _sku.value,
     status: props.status,
     matchId: _id.value,
+    keyWord: keyWord.value,
   })
   matchList.value = data
   matchList.value.forEach((item: any) => {
@@ -774,9 +795,11 @@ const fetchPreviousMatchData = async () => {
     }
   })
   handleShowPreviousOrNext(_id.value)
+  match2ListLoading.value = false
 }
 // 点击下一个
 const fetchNextMatchData = async () => {
+  match2ListLoading.value = true
   const index = idList.value.indexOf(_id.value)
   _id.value = idList.value[index + 1]
   const item = list.value.find((item: any) => item.id === _id.value)
@@ -789,6 +812,7 @@ const fetchNextMatchData = async () => {
     sku: _sku.value,
     status: props.status,
     matchId: _id.value,
+    keyWord: keyWord.value,
   })
   matchList.value = data
   matchList.value.forEach((item: any) => {
@@ -800,6 +824,7 @@ const fetchNextMatchData = async () => {
     }
   })
   handleShowPreviousOrNext(_id.value)
+  match2ListLoading.value = false
 }
 const handleShowPreviousOrNext = (id: number) => {
   const length = idList.value.length

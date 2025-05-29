@@ -71,7 +71,7 @@ export function getAllName(params: IGetAllNameReq) {
  */
 export function getSupervisorList() {
   return request({
-    url: `${BASE_API}/get/supervisor/list`,
+    url: `${BASE_API}/supervisor/list`,
     method: 'get',
   })
 }
