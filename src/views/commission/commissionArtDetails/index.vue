@@ -317,169 +317,6 @@
           @size-change="handleLongSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="产品开发设计" :name="2">
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-form inline>
-              <template  v-if="currentRoleCode === ROLE_BOSS_CODE">
-                <el-form-item label="人员">
-                  <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
-                    <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="站点">
-                  <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
-                    <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                  </el-select>
-                </el-form-item>
-              </template>
-              <el-form-item label="发放月份">
-                <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData" >
-                  <el-option
-                    v-for="item in monthOption"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-text style="margin-left: 10px">提成总金额：</el-text>
-                <el-text type="success">{{ bonus }}元</el-text>
-              </el-form-item>
-              <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="developQueryForm" @submit.prevent>
-              <el-form-item>
-                <el-input
-                  v-model="developQueryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="developQueryData"
-                  @keyup.enter="developQueryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="developQueryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table
-        v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          class="noneHoverTable"
-          :data="developList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="cellClick"
-        >
-          <el-table-column label="发布日期" min-width="130" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(developList, '人员', 'userName')" />
-          <el-table-column label="图片" prop="skuImageUrl" width="75">
-            <template #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
-                <template #error><el-icon /></template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)" >
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span><br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" min-width="150" prop="siteName" />
-          <el-table-column label="状态" min-width="100" prop="status">
-            <template #default="{ row }">
-              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
-          <el-table-column label="当月总提成" min-width="110" prop="currentMonthBonus">
-            <template #default="{ row }">
-              <el-text v-if="row.currentMonthBonus >= 0" type="success">
-                {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
-              </el-text>
-              <el-text v-if="row.currentMonthBonus < 0" type="danger">
-                {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
-              </el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU累计提成￥" min-width="140" prop="cumulativeCommission">
-            <template #default="{ row }">
-              {{ row.cumulativeCommission ? '￥' + row.cumulativeCommission : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点分布" min-width="130" prop="">
-            <template #default="{ row }">
-              <div style="width: 100%; height: 60px">
-                <vab-commission-chart-pie :data="row.pieList" />
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="总提成比例" min-width="120" prop="totalCommissionProportion">
-            <template #default="{ row }">
-              {{ row.totalCommissionProportion ? row.totalCommissionProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="基础提成比例" min-width="120" prop="baseProportion">
-            <template #default="{ row }">
-              {{ row.baseProportion ? row.baseProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="超额完成加成" min-width="120" prop="rewardProportion">
-            <template #default="{ row }">
-              {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="月净利润" min-width="130">
-            <template #default="{ row }">
-              <el-text v-if="row.monthProfit >= 0" type="success">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
-              <el-text v-if="row.monthProfit < 0" type="danger">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="月销售额" min-width="130">
-            <template #default="{ row }">{{ row.currencySymbol }}{{ row.monthSales }}</template>
-          </el-table-column>
-          <el-table-column label="月净利率" min-width="130" prop="monthProfitMargin">
-            <template #default="{ row }">
-              <el-text v-if="row.monthProfitMargin >= 0" type="success">
-                {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
-              </el-text>
-              <el-text v-if="row.monthProfitMargin < 0" type="danger">
-                {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
-              </el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="月销量" min-width="100" prop="monthSalesVolume" />
-          <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="developQueryForm.pageNo"
-          :page-size="developQueryForm.pageSize"
-          :total="total"
-          @current-change="handleDevelopCurrentChange"
-          @size-change="handleDevelopSizeChange"
-        />
-      </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 站点分布 -->
@@ -495,18 +332,16 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionDetailLongList, getCommissionDetailPictureList, getCommissionTypeMonth, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
+import { getCommissionDetailLongList, getCommissionDetailPictureList, getCommissionTypeMonth } from '/@/api/devlocal/commission'
 import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role.ts'
 import { useAclStore } from '/@/store/modules/acl'
 import type {
-  IGetCommissionDetailDevelopList,
-  IGetCommissionDetailDevelopListReq,
   IGetCommissionDetailLongList,
   IGetCommissionDetailPictureList,
-  IGetCommissionDetailPictureListReq,
+  IGetCommissionDetailPictureListReq
 } from '/@/type/commission/commissionType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
@@ -514,7 +349,7 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 import { colorList, redColorList } from '/@/views/commission/constantOption'
 
 defineOptions({
-  name: 'CommissionDetails',
+  name: 'CommissionArtDetails',
 })
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
@@ -526,7 +361,6 @@ const sitePieVisible = ref<boolean>(false)
 
 const list = ref<IGetCommissionDetailPictureList[]>([])
 const longList = ref<IGetCommissionDetailLongList[]>([])
-const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
 const siteList = ref<{ id: number; label: string }[]>([])
 const userList = ref<{ id: number; label: string }[]>([])
@@ -549,14 +383,6 @@ const longQueryForm = reactive<IGetCommissionDetailPictureListReq>({
   pageNo: 1,
   pageSize: 20,
 })
-const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
-  keyWord: '',
-  site: -1,
-  userId: -1,
-  month: '',
-  pageNo: 1,
-  pageSize: 20,
-})
 
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -569,9 +395,6 @@ const handleMonth = () => {
   }
   case 1: {
     return longQueryForm.month
-  }
-  case 2: {
-    return developQueryForm.month
   }
   // No default
   }
@@ -708,12 +531,6 @@ const handleTabClick = async (tab: TabsPaneContext) => {
       longQueryData()
       break
     }
-    case 2: {
-      fetchDevelopUserList()
-      developQueryData()
-
-      break
-    }
     // No default
   }
   fetchUpdateDate()
@@ -763,19 +580,6 @@ const longQueryData = () => {
   longQueryForm.pageNo = 1
   fetchLongData()
 }
-const handleDevelopCurrentChange = (value: number) => {
-  developQueryForm.pageNo = value
-  fetchDevelopData()
-}
-const handleDevelopSizeChange = (value: number) => {
-  developQueryForm.pageNo = 1
-  developQueryForm.pageSize = value
-  fetchDevelopData()
-}
-const developQueryData = () => {
-  developQueryForm.pageNo = 1
-  fetchDevelopData()
-}
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
@@ -798,12 +602,6 @@ const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部' })
-}
-const developUserList = ref<{ id: number; label: string }[]>([])
-const fetchDevelopUserList = async () => {
-  const { data } = await getDevelopDesignDetailUserList()
-  developUserList.value = data
-  developUserList.value.unshift({ id: -1, label: '全部' })
 }
 const fetchUserList = async () => {
   const { data } = await getArtDesignTaskUserList()
@@ -867,49 +665,6 @@ const fetchLongData = async () => {
   listLoading.value = false
 }
 
-const fetchDevelopData = async () => {
-  listLoading.value = true
-  const { data } = await getCommissionDetailDevelopList(developQueryForm)
-  if (data) {
-    total.value = data.total
-    developList.value = data.list
-    bonus.value = data.bonus
-    developList.value.forEach((item) => {
-      let i = 0
-      if (item.totalCommissionProportion) {
-        item.totalCommissionProportion = parseFloat((item.totalCommissionProportion * 100).toFixed(2))
-      }
-      if (item.baseProportion) {
-        item.baseProportion = parseFloat((item.baseProportion * 100).toFixed(2))
-      }
-      if (item.rewardProportion) {
-        item.rewardProportion = parseFloat((item.rewardProportion * 100).toFixed(2))
-      }
-      if (item.monthProfitMargin) {
-        item.monthProfitMargin = parseFloat((item.monthProfitMargin * 100).toFixed(2))
-      }
-      
-      item.pieList = item.pieList.map((item: any, index: number) => {
-        const trueValue = item.value
-        const itemStyle = { color: colorList[index] }
-        if (item.value < 0) {
-          item.value = Math.abs(item.value)
-          itemStyle.color = redColorList[i]
-          i++
-        }
-        return {
-          name: item.name,
-          value: item.value,
-          trueValue,
-          itemStyle,
-        }
-      })
-  
-    })
-  }
-  listLoading.value = false
-}
-
 const updateDate = ref<string | undefined>('')
 const fetchUpdateDate = async () => {
   const { data } = await getOperationUpdateDate({ type: activeName.value + 3})
@@ -932,11 +687,6 @@ const fetchCommissionTypeMonth = async () => {
       
       break
     }
-    case 2: {
-      developQueryForm.month = currentMonth
-      
-      break
-    }
   }
 }
 onBeforeMount(async () => {
@@ -952,11 +702,6 @@ onBeforeMount(async () => {
     case 1: {
       fetchUserList()
       longQueryData()
-      break
-    }
-    case 2: {
-      fetchDevelopUserList()
-      developQueryData()
       break
     }
   }
