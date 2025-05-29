@@ -805,7 +805,11 @@ const fetchData = async () => {
     }
     // 处理发票匹配记录
     if (Array.isArray(item.matchInvoiceRecord)) {
-      item.formattedMatchDate = item.matchInvoiceRecord.map(record => formatDate(new Date(record.invoiceMatchDate)))
+      
+      item.formattedMatchDate = item.matchInvoiceRecord.map(record => {
+        if (!record.invoiceMatchDate) return ''
+        return formatDate(new Date(record.invoiceMatchDate))
+      })
       item.formattedInvoiceCode = item.matchInvoiceRecord.map(record => record.invoiceCode)
       item.formattedInvoiceNumber = item.matchInvoiceRecord.map(record => ({
         invoiceNumber: record.invoiceNumber,
