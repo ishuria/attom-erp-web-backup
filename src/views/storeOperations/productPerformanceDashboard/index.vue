@@ -1522,8 +1522,6 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
-  filterAmazonSKUList,
-  filterOperationAmazonAsinList,
   getCurrencyASINAmazonOperation,
   getCurrencyList,
   getCurrencyParentASINAmazonOperation,
@@ -1764,10 +1762,28 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   site: [],
-  operationUserId: '',
-  developUserId: '',
+  operationUserId: undefined,
+  developUserId: undefined,
   orderByField: 'currentSalesNumber',
   orderDirection: 'desc',
+  advStatus: '',
+  esTotalMax: '',
+  esTotalMin: '',
+  fbaMax: '',
+  fbaMin: '',
+  monthInterestRateMax: '',
+  monthInterestRateMin: '',
+  monthProfitMax: '',
+  monthProfitMin: '',
+  monthSalesVolumeMax: '',
+  monthSalesVolumeMin: '',
+  newArrivalMaxDay: '',
+  newArrivalMinDay: '',
+  operationTypeId: '',
+  signCountMax: '',
+  signCountMin: '',
+  sellPriceMin: '',
+  sellPriceMax: ''
 })
 const asinQueryForm = reactive<any>({
   keyword: '',
@@ -1778,6 +1794,22 @@ const asinQueryForm = reactive<any>({
   developUserId: '',
   orderByField: 'currentSalesNumber',
   orderDirection: 'desc',
+  advStatus: '',
+  esTotalMax: '',
+  esTotalMin: '',
+  fbaMax: '',
+  fbaMin: '',
+  monthInterestRateMax: '',
+  monthInterestRateMin: '',
+  monthProfitMax: '',
+  monthProfitMin: '',
+  monthSalesVolumeMax: '',
+  monthSalesVolumeMin: '',
+  newArrivalMaxDay: '',
+  newArrivalMinDay: '',
+  operationTypeId: '',
+  signCountMax: '',
+  signCountMin: '',
 })
 const pAsinQueryForm = reactive<any>({
   keyword: '',
@@ -1809,11 +1841,11 @@ const handleConfirmFilter = async (filterForm: any) => {
   filterLoading.value = true
   try {
     if (activeName.value === 0) {
+      Object.assign(queryForm, filterForm)
       const { site, ...filterQueryForm } = queryForm
       const siteIds = site.join(',')
-      const { data } = await filterAmazonSKUList({
+      const { data } = await getOperationAmazonSKUList({
         ...filterQueryForm,
-        ...filterForm,
         siteIds,
       })
       if (data) {
@@ -1823,15 +1855,15 @@ const handleConfirmFilter = async (filterForm: any) => {
         list.value = data.list
       }
     } else if (activeName.value === 1) {
+      Object.assign(asinQueryForm, filterForm)
       const { site, ...filterQueryForm } = asinQueryForm
       const siteIds = site.join(',')
-      const { data } = await filterOperationAmazonAsinList({
+      const { data } = await getOperationAsinList({
         ...filterQueryForm,
-        ...filterForm,
         siteIds,
       })
       if (data) {
-        $baseConfirm('ASIN运营筛选成功！', 'success')
+        $baseMessage('ASIN运营筛选成功！', 'success')
         filterVisible.value = false
         asinTotal.value = data.total
         asinList.value = data.list

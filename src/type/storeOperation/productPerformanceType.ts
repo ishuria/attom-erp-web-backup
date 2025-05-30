@@ -348,6 +348,8 @@ export interface IGetOperationTypeListRes {
   }
 }
 export interface IFilterAmazonSKUListReq {
+  orderByField?: string
+  orderDirection?: string
   /**
    * 广告状态
    */
@@ -444,7 +446,6 @@ export interface IFilterAmazonSKUListReq {
    * 当前售价最大值
    */
   sellPriceMax?: number
-  [property: string]: any;
 }
 export interface IGetOperationAsinListRes {
   data: {

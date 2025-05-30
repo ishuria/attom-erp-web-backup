@@ -29,7 +29,7 @@ import type {
 /**
  * @description 产品表现-亚马逊看板SKU列表
  */
-export function getOperationAmazonSKUList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
+export function getOperationAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/list`,
     method: 'post',
@@ -138,7 +138,7 @@ export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGet
 /**
  * @description 产品看板表现-asin列表
  */
-export function getOperationAsinList(data: IGetOperationAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
+export function getOperationAsinList(data: IFilterAmazonSKUListReq): Promise<IGetOperationAsinListRes> {
   return request({
     url: `${BASE_API}/operation/asin/list`,
     method: 'post',
