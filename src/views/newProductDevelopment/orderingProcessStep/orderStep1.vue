@@ -217,9 +217,13 @@ const handleSubmit = () => {
             _reviewId.value = parseInt(localStorage.getItem('orderStep1ReviewId')!)
             const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
             if (data !== undefined && data !== null) {
+              // 保存后更新状态 证明不是第一次点击了
+            await updateBulkGoodsStatusByProgressId({
+              progressId: Number(route.query.progressId)
+            })
               await router.replace({
                 query: {
-                  // ...route.query,
+              
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
@@ -232,12 +236,14 @@ const handleSubmit = () => {
             const { data }  = await reviewStepNo1SaveOn({ ...form, progressId: route.query.progressId, reviewId: _reviewId.value })
             if (data !== undefined && data !== null) {
               _reviewId.value = data
-              // const { data: res } = await reviewStepNo1({ reviewId: _reviewId.value })
-              // Object.assign(form, res)
-
+        
+            // 保存后更新状态 证明不是第一次点击了
+            await updateBulkGoodsStatusByProgressId({
+              progressId: Number(route.query.progressId)
+            })
               await router.replace({
                 query: {
-                  // ...route.query,
+         
                   reviewId: _reviewId.value.toString(),
                   reviewStatus: '0'
                 }
@@ -246,10 +252,7 @@ const handleSubmit = () => {
               localStorage.setItem('orderStep1Form', JSON.stringify(form))
               $baseMessage("当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。", "success", "hey")
             }
-            // 保存后更新状态 证明不是第一次点击了
-            await updateBulkGoodsStatusByProgressId({
-              progressId: route.query.progressId
-            })
+            
           }
 
         } else {
@@ -266,7 +269,7 @@ const handleSubmit = () => {
               "hey"
             )
             _setStepNo(Number(reviewId), 0)
-            // await delVisitedRoute(handleActivePath(route, true))
+           
         }
       }
       saveOn()
@@ -298,14 +301,7 @@ const handleSubmitAndContinue = async () => {
               }
               emit('sendDataToStep2', res)
               emit('change-step', 1)
-              // router.replace({
-              //   query: {
-              //     // ...route.query,
-              //     reviewId: data.toString(),
-              //     reviewStatus: '0',
-              //     stepNo: '1'
-              //   }
-              // })
+              
               $baseMessage(
                 "当前进度已成功保存到“新品审核与记录”。如果中途退出后需要继续编辑，请到“新品审核与记录”里查看。",
                 "success",
@@ -332,7 +328,7 @@ const handleSubmitAndContinue = async () => {
 
               emit('change-step', 1)
               _setStepNo(Number(reviewId), 0)
-              // await delVisitedRoute(handleActivePath(route, true))
+              
           }
         } catch (error) {
           console.error('保存过程出错:', error)
