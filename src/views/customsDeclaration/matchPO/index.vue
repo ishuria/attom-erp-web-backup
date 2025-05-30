@@ -125,16 +125,16 @@
                   <el-link type="primary" :underline="false" >匹配</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="showModify(row)">
-                  <el-link type="primary" :underline="false">修改</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchivePackage(row)">
-                  <el-link type="primary" :underline="false" >打包归档</el-link>
+                  <el-link :disabled="row.packArchiveStatus === 1" type="primary" :underline="false" >打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchiveOutbound(row)" >
-                  <el-link type="primary" :underline="false" >出库归档</el-link>
+                  <el-link :disabled="row.outboundStatus === 1" type="primary" :underline="false" >出库归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="showFirstLegFreight(row)">
                   <el-link type="primary" :underline="false" >头程运费</el-link>
