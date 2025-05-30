@@ -420,6 +420,7 @@ const closeGenerate = () => {
   confirmTwiceVisible.value = false
 }
 const showModify = (row: any) => {
+  if (row.taxRefundStatus === 1) return
   modifyVisible.value = true
   _row.value = row
   modifyForm.contractNumber = row.contractNumber

@@ -95,14 +95,14 @@
                 (点击看明细)
               </span>
               <span v-if="item.label === '小类排名'">
-                小类排名
+                小类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === '大类排名'">
-                大类排名
+                大类
                 <br />
-                (点击看明细)
+                (可点)
               </span>
               <span v-if="item.label === 'VOC满意度'">
                 VOC满意度
@@ -158,20 +158,45 @@
                   <template #error><el-icon/></template>
                 </el-image>
               </span>
-              <span v-if="item.label === 'SKU'">
-                {{ row.sku }}
-                <div class="rate-wrapper">
-                  <span class="rate-value">{{ row.rating }}</span>
-                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+           
+              <span v-if="item.label === 'SKU'" class="sku-container">
+                <div>
+                  <span class="copySku" @click="handleClipboard($event, row.sku)" >
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">{{ row.sku }}</div>
+                      </template>
+                      <el-link :href="row.amazonUrl" class="sku-text"  target="_blank">{{ row.sku }}</el-link>
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">复制SKU</div>
+                      </template>
+                      <vab-icon icon="file-copy-2-fill"/>
+                    </el-tooltip>
+                  </span>
+                
+                </div>
+                  
+                <div
+                  class="rate-wrapper"
+                  style="cursor: pointer"
+                  @click=""
+                >
+                  <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
+                  <span>
+                    <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
+                  </span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
+                  <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
                 </div>
               </span>
-              <span v-if="item.label === 'ASIN'" >
+              <!-- <span v-if="item.label === 'ASIN'" >
                 <el-link type="primary" >{{ row.asin }}</el-link>
               </span>
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary" >{{ row.parentAsin }}</el-link>
-              </span>
+              </span> -->
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div style="width: 100%; height: 50px;">
                   <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
@@ -181,8 +206,14 @@
                 {{ row.newArrivalDay != null ? row.newArrivalDay + '天' : '' }}
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
+                <el-checkbox disabled v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
               </span>
+              <span v-if="item.label === '运营分类'">
+                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="">
+                  <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
+                </el-select>
+              </span>
+
               <span v-if="item.label === 'VOC满意度'">
                 {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
                 <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
@@ -233,8 +264,14 @@
                   <span v-html="row._developName"></span>
                 </el-tooltip>
               </span>
-              <span v-if="['月退货%', '月退款%', 'VOC缺陷%'].includes(item.label)" >
-                {{ row[item.prop] != null ? row[item.prop].toFixed(2) + '%' : '' }}
+              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center;">
+                <div style=" width: fit-content;text-align: left;">
+                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
+                  <div >({{ row.tWksClicks }})</div>
+                </div>
+              </span>
+              <span v-if="label1.includes(item.label)">
+                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
               </span>
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
@@ -256,7 +293,25 @@
       <el-tab-pane label="沃尔玛" :name="1" />
       <el-tab-pane label="Tiktok" :name="2" />
     </el-tabs>
-    
+    <!-- 小类排名/大类排名 -->
+    <!-- <vab-dialog v-model="rankVisible" :title="title" width="40%" @open="handleRankOpened">
+      <div style="text-align: center">
+        <el-date-picker 
+          v-model="rankDate"
+          :clearable="false"
+          :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
+          :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          :editable="false"
+          end-placeholder="结束日期"
+          :shortcuts="shortcuts"
+          start-placeholder="开始日期"
+          type="daterange"
+          @change="handleRankChange"
+        />
+      </div>
+      <div ref="chartContainer2" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
+      <template #footer></template>
+    </vab-dialog> -->
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
@@ -270,10 +325,88 @@ import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { formatPercentage, getAmazonStars } from '/@/utils/rate'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import handleClipboard from '~/src/utils/clipboard'
+import CountryFlag from 'vue-country-flag-next'
 
 defineOptions({
   name: 'ProductPerformanceArt'
 })
+
+const title = ref<string>('')
+const rankVisible = ref<boolean>(false)
+const rankDate = ref<[Date, Date]>([
+  new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
+  new Date() // 今天
+])
+const shortcuts = [
+  {
+    text: '近30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 29)
+      return [start, end]
+    },
+  },
+  {
+    text: '近60天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 59)
+      return [start, end]
+    },
+  },
+  {
+    text: '近90天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 89)
+      return [start, end]
+    },
+  },
+  {
+    text: '近半年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setMonth(start.getMonth() - 6)
+      return [start, end]
+    },
+  },
+  {
+    text: '近1年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setFullYear(start.getFullYear() - 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '全部',
+    value: () => {
+      const end = new Date()
+      const start = new Date('2024-12-20') // 设置一个较早的起始日期
+      return [start, end]
+    },
+  },
+]
+// const handleRankOpened = () => {
+//   nextTick(() => {
+//     if (chartContainer2.value) {
+//       chartInstance2 = echarts.init(chartContainer2.value)
+//       chartObserver2 = new ResizeObserver(() => {
+//         if (chartInstance2) {
+//           chartInstance2.resize()
+//         }
+//       })
+//       chartObserver2.observe(chartContainer2.value)
+//       initChart2()
+//     }
+//   })
+// }
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const activeName = ref<number>(0)
 const currency = ref<number | undefined>(0)
@@ -443,24 +576,7 @@ const columns = ref<any>([
     checked: true,
     minWidth: 100,
   },
-  {
-    label: '2周总转化',
-    prop: '',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '2周广告转化',
-    prop: '',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '2周广告点击',
-    prop: '',
-    checked: true,
-    minWidth: 110,
-  },
+ 
 
   {
     label: '开发人员',
@@ -481,10 +597,34 @@ const columns = ref<any>([
     minWidth: 100,
   },
 ])
+
+const label1 = [
+  '今销',
+  'FBA仓储费',
+  'FBA差异',
+  '月净利润',
+  '月销额',
+  '月广告销售',
+  '月广告支出',
+  '预计下月仓储费',
+  '盈亏售价',
+  '30毛利售价',
+]
+const label1Map = new Map([
+  ['今销', 'currentSalesPrice'],
+  ['FBA仓储费', 'fbaStorageFee'],
+  ['FBA差异', 'differenceFba'],
+  ['月净利润', 'monthNetProfit'],
+  ['月销额', 'monthSalesPrice'],
+  ['月广告销售', 'monthAdvSales'],
+  ['月广告支出', 'monthAdvExpenditure'],
+  ['预计下月仓储费', 'estimateNextMonthStorageFee'],
+  ['盈亏售价', 'profitLossSellingPrice'],
+  ['30毛利售价', 'grossSellingPrice'],
+])
 const label2 = [
   '试算毛利',
   '2周广告转化',
-  '2周广告点击',
   '2周总转化',
   '月净利率',
   '月ACOS',
@@ -498,7 +638,6 @@ const label2 = [
 const label2Map = new Map([
   ['试算毛利', 'grossProfit'],
   ['2周广告转化', 'tWksAdvRate'],
-  ['2周广告点击', 'tWksClickRate'],
   ['2周总转化', 'tWksTotalConv'],
   ['月净利率', 'monthNetProfitMargin'],
   ['月ACOS', 'monthAcos'],
@@ -553,13 +692,16 @@ const handleWidth = (item: any) => {
   
   switch (item.label) {
     case 'SKU': {
-      return flexColumnWidth(list.value, 'SKU-SKU-SKU-SKU-', 'sku')
+      return 240
     }
     case 'ASIN': {
       return flexColumnWidth(list.value, 'ASIN', 'asin')
     }
     case '父体ASIN': {
       return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
+    }
+    case '产品描述': {
+      return flexColumnWidth(list.value, '产品描述', 'productDesc')
     }
     default: {
       return item.minWidth
@@ -715,6 +857,21 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
+
+          .copySku {
+            display: inline-block; /* 使宽度适应内容，方便点击 */
+            padding: 0; 
+            cursor: pointer;
+            -webkit-user-select: text;
+            user-select: text;
+            // transition: all 0.3s;
+            &:hover {
+              color: #000;
+            }
+          }
+          .el-checkbox {
+            transform: scale(1.3);
+          }
         }
       }
     }
@@ -831,5 +988,28 @@ onBeforeMount(() => {
   max-width: 400px;
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
+}
+
+.sku-text {
+  :deep(.el-link__inner){
+    display: inline-block;
+    max-width: 190px;
+    margin-right: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+.sku-container {
+  .icon-div {
+    display: flex;
+    align-items: center;
+    margin-top: -6px;
+   
+    .el-tooltip {
+      margin-right: 6px;
+    }
+  }
 }
 </style>

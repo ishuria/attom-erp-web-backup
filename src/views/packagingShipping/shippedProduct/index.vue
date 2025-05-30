@@ -169,7 +169,75 @@
         />
       </el-tab-pane>
       <el-tab-pane label="接收完毕" :name="2">
-        <el-empty class="vab-data-empty" description="暂无数据" />
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="站点" prop="site">
+                <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="">
+                  <el-option 
+                    v-for="item in siteList"
+                    :key="item.id"
+                    :label="item.label"
+                    :value="item.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="" @keyup.enter="" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click=""/>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table 
+          ref="tableRef" 
+          border 
+          :cell-class-name="cellClassName2" 
+          class="noneHoveTable"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          :span-method="objectSpanMethod2"
+        >
+          <el-table-column label="产品图片" prop="skuImgUrl" width="75">
+            <template #header>
+              产品<br>图片
+            </template>
+            <template #default="{ row }">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
+                <template #error>
+                  <el-icon/>
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" min-width="170" prop="sku">
+            <template #default="{ row }">
+              {{ row.sku }}<br />{{ row.description }}
+            </template>
+          </el-table-column>
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
+          <el-table-column label="已接收数" min-width="110" prop="receiptsCount"/>
+          <el-table-column label="缺数" min-width="80" prop="lackCount"/>
+          <el-table-column label="已接收" min-width="90" prop="acceptDays"/>
+          <el-table-column label="PO" min-width="100" prop="po"/>
+          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
