@@ -83,7 +83,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
     </el-table>
 
@@ -140,7 +140,7 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;" />
       </template>
     </el-table>
     <div class="pay-button-group">
@@ -168,9 +168,9 @@ import {
 import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
+import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { _setStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
   name: 'OrderStep4',
@@ -428,7 +428,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .pay-button-group {
   display: block;
-  margin: 20px auto;
+  margin: 20px auto 0 auto;
   text-align: center;
 }
 .none {
