@@ -30,6 +30,7 @@
         </vab-query-form>
 
         <el-table 
+          v-loading="listLoading"
           ref="tableRef" 
           border 
           :cell-class-name="cellClassName" 
@@ -125,6 +126,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
+          v-loading="listLoading"
           ref="tableRef" 
           border 
           :cell-class-name="cellClassName2" 
@@ -196,6 +198,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
+          v-loading="listLoading"
           ref="tableRef" 
           border 
           :cell-class-name="cellClassName2" 
