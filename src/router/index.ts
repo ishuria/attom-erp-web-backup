@@ -646,7 +646,7 @@ export const asyncRoutes: VabRouteRecord[] = [
     name: 'Other',
     component: Layout,
     meta: {
-      title: '其他',
+      title: '其它',
       icon: 'archive-line',
       guard: ['Admin'],
     },
@@ -670,6 +670,16 @@ export const asyncRoutes: VabRouteRecord[] = [
           title: '甘特图',
           guard: ['Admin'],
           icon: 'organization-chart',
+        },
+      },
+      {
+        path: 'excel',
+        name: 'Excel',
+        component: () => import('/@/views/other/excel/index.vue'),
+        meta: {
+          title: 'Excel',
+          guard: ['Admin'],
+          icon: 'file-excel-2-line',
         },
       },
       {
