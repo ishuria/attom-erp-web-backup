@@ -7,7 +7,7 @@
             <el-button type="primary">出口发票生成（云舟）</el-button>
             <el-button type="primary" @click="handleExportAiTuoMu">出口发票生成（埃托姆）</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel >
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -466,6 +466,9 @@ onBeforeMount(() => {
           }
           .right-panel {
             margin-bottom: 5px;
+            .el-input {
+              width: 13em;
+            }
           }
           // .el-form {
           //   .el-form-item:first-child {

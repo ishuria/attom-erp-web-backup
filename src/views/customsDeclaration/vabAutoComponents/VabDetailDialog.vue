@@ -5,6 +5,7 @@
     top="10vh"
     width="97%"
     @close="closeDetail"
+    :draggable="false"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
