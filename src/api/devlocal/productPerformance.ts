@@ -284,6 +284,16 @@ export function getUserAmazonOperation(): Promise<IGetUserAmazonOperationRes> {
 }
 
 /**
+ * @description 产品表现-获取美工人员信息
+ */
+export function getUserAmazonArtDesignOperation(): Promise<IGetUserAmazonOperationRes> {
+  return request({
+    url: `${BASE_API}/operation/amazon/artDesign/user`,
+    method: 'get',
+  })
+}
+
+/**
  * 产品表现SKU-查询小类排名
  * @returns 
  */

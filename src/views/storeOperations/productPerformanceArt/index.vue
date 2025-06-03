@@ -30,6 +30,11 @@
                   <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="美工人员">
+                <el-select v-model="queryForm.artDesignUserId" clearable placeholder="请选择美工人员" @change="queryData" :disabled="disableArtDesign">
+                  <el-option v-for="item in artDesignUserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: bold;" >今销更新时间: 2025-05-23 17:27:11</el-text>
                 <el-divider direction="vertical" />
@@ -354,18 +359,25 @@ import { dayjs, type CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, getOperationAmazonAsinRankList, getOperationAmazonParentAsinRankList, getOperationAmazonSkuRankCateList, getOperationAmazonSkuRankList, getOperationAmazonSkuVocList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
+import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, getOperationAmazonAsinRankList, getOperationAmazonParentAsinRankList, getOperationAmazonSkuRankCateList, getOperationAmazonSkuRankList, getOperationAmazonSkuVocList, getUserAmazonArtDesignOperation, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { flexColumnWidth, processField } from '/@/utils/tableColum'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import CountryFlag from 'vue-country-flag-next'
-import { IOperationAmazonSkuRankList, IOperationAmazonSkuVocList } from '~/src/type/storeOperation/productPerformanceType'
+import { IOperationAmazonSkuRankList, IOperationAmazonSkuVocList } from '/@/type/storeOperation/productPerformanceType'
 import * as echarts from 'echarts'
+import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
+import { useAclStore } from '/@/store/modules/acl'
+import { ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNLEAD_CODE } from '/@/const/role.ts'
 
 defineOptions({
   name: 'ProductPerformanceArt'
 })
 
+const currentRoleCode = useAclStore().getRole[0]
+const disableArtDesign = computed(() => {
+  return currentRoleCode !== ROLE_GRAPHICDESIGNLEAD_CODE && currentRoleCode !== ROLE_BOSS_CODE
+})
 let copyRow: any
 const vocVisible = ref<boolean>(false)
 const chartLoading = ref<boolean>(false)
@@ -749,6 +761,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   orderByField: 'currentSalesNumber',
   orderDirection: 'desc',
+  artDesignUserId: ''
 })
 const { site } = toRefs(queryForm)
 const checkList = computed(() => {
@@ -892,6 +905,12 @@ const columns = ref<any>([
     prop: 'recentlyInboundStorage',
     checked: true,
     minWidth: 110,
+  },
+  {
+    label: '美工人员',
+    prop: 'artDesignUserName',
+    checked: true,
+    minWidth: 100,
   },
   {
     label: '开发人员',
@@ -1114,11 +1133,23 @@ const fetchCurrency = async () => {
   const { data } = await getCurrencySKUAmazonOperation()
   currency.value = data
 }
-onBeforeMount(() => {
-  fetchCurrencyList()
-  fetchCurrency()
-  fetchSiteList()
-  fetchData()
+const artDesignUserList = ref<any>([])
+const fetchArtDesignUserList = async () => {
+  const { data } = await getArtDesignTaskUserList()
+  artDesignUserList.value = data
+  artDesignUserList.value.unshift({ id: -1, label: '全部' })
+}
+const setDefaultArtDesignUser = async () => {
+  const { data } = await getUserAmazonArtDesignOperation()
+  queryForm.artDesignUserId = data
+}
+onBeforeMount(async () => {
+  await fetchSiteList()
+  await fetchCurrencyList()
+  await fetchCurrency()
+  await fetchArtDesignUserList()
+  await setDefaultArtDesignUser()
+  await fetchData()
 })
 </script>
 
