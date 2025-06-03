@@ -62,7 +62,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -140,7 +140,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
                 <template #error>
                   <el-icon/>
                 </template>
@@ -212,7 +212,7 @@
               产品<br>图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 100%; height: 100%;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
                 <template #error>
                   <el-icon/>
                 </template>

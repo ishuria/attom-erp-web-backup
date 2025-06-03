@@ -323,7 +323,7 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
-import { formatPercentage, getAmazonStars } from '/@/utils/rate'
+import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import handleClipboard from '~/src/utils/clipboard'
 import CountryFlag from 'vue-country-flag-next'
@@ -722,15 +722,25 @@ const handleMove = (event: any) => {
 
   return true; // 允许其他操作
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '父体ASIN', '最近入库', '产品描述'].includes(label)) {
+  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述'].includes(label)) {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
+    }
+  } else if (label === '运营备注') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
+    }
+  } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
+    return {
+      textAlign: 'center',
+      cursor: 'pointer'
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
@@ -773,37 +783,9 @@ const fetchData = async () => {
     total.value = data.total
     list.value = data.list
     list.value.forEach((item: any) => {
+      if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
       item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers));
-      item.saleTrendList = {
-        xAxis: [
-          "21-04-1",
-          "21-08-1",
-          "22-05-1",
-          "22-06-1",
-          "22-07-1",
-          "22-09-1",
-          "22-10-1",
-          "23-01-1",
-          "23-05-1",
-          "23-07-1",
-          "23-10-1",
-          "23-11-1"
-        ],
-        yAxis: [
-          6611,
-          53824,
-          18712,
-          18991,
-          21611,
-          10277,
-          15420,
-          9159,
-          4192,
-          3064,
-          5619,
-          4500
-        ]
-      }
+      
     })
   }
   listLoading.value = false
@@ -1011,5 +993,22 @@ onBeforeMount(() => {
       margin-right: 6px;
     }
   }
+}
+
+// 选中且不被禁用的样式
+:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+  background-color: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
 }
 </style>
