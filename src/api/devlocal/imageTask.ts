@@ -26,11 +26,11 @@ import type {
  * @description 获取美工任务列表
  * @param IGetArtDesignTaskListReq 
  */
-export function getArtDesignTaskList(params: IGetArtDesignTaskListReq): Promise<IGetArtDesignTaskListRes> {
+export function getArtDesignTaskList(data: IGetArtDesignTaskListReq): Promise<IGetArtDesignTaskListRes> {
   return request({
     url: `${BASE_API}/artdesign/task/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 /**

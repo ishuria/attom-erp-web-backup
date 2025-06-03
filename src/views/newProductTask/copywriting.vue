@@ -9,8 +9,8 @@
         </template>
       </el-page-header>
     
-      <div style="display: flex; flex-direction: column; flex: 1; ">
-        <el-row :gutter="50" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+      <div style="display: flex; flex: 1; flex-direction: column; ">
+        <el-row :gutter="50" style=" display: flex;flex-grow: 1; align-items: center; justify-content: center;">
           <!-- 左侧表单 -->
           <el-col :span="12" style="display: flex; justify-content: flex-end;">
             <el-form class="custom-form" label-position="right" label-width="10.5em" :model="form" style="width: 80%; padding-right: 50px">
@@ -42,7 +42,7 @@
           </el-col>
 
           <!-- 右侧表单 -->
-          <el-col :span="12" style="padding-right: 250px; display: flex; flex-direction: column; justify-content: flex-start; margin-top: 25px;">
+          <el-col :span="12" style=" display: flex; flex-direction: column; justify-content: flex-start;padding-right: 250px; margin-top: 25px;">
             <el-form ref="formRef" class="custom-form" label-position="right" label-width="10.5em" :model="form" :rules="formRules" style="width: 100%; height: 100%;">
               <el-form-item label="标题1" prop="title1">
                 <el-input v-model="form.title1" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
