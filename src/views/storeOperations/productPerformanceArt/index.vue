@@ -65,7 +65,7 @@
             </el-popover>
             <el-form inline :model="queryForm" @submit.prevent >
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @click="queryData" @keyup.enter="queryData" />
+                <el-input v-model="queryForm.keyword" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -74,10 +74,17 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
-          :cell-style="cellStyle" class="noneHoverTable" :data="list"
+          :cell-style="cellStyle" 
+          class="noneHoverTable" 
+          @cell-click="cellClick"
+          :data="list"
           :header-cell-style="{ textAlign: 'center' }"
+          :header-cell-class-name="headerCell"
+          :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+          @sort-change="artSortChange"
         >
           <el-table-column
             v-for="(item, index) in checkList"
@@ -87,6 +94,7 @@
             :min-width="handleWidth(item)"
             :prop="item.prop"
             :width="item.width"
+            :sortable="item.sortable ? 'custom' : false"
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -175,7 +183,12 @@
                       <vab-icon icon="file-copy-2-fill"/>
                     </el-tooltip>
                   </span>
-                
+                  <el-tooltip effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">复制ASIN</div>
+                    </template>
+                    <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
+                  </el-tooltip>
                 </div>
                   
                 <div
@@ -294,7 +307,7 @@
       <el-tab-pane label="Tiktok" :name="2" />
     </el-tabs>
     <!-- 小类排名/大类排名 -->
-    <!-- <vab-dialog v-model="rankVisible" :title="title" width="40%" @open="handleRankOpened">
+    <vab-dialog v-model="rankVisible" :title="title" width="40%" @open="handleRankOpened">
       <div style="text-align: center">
         <el-date-picker 
           v-model="rankDate"
@@ -311,27 +324,61 @@
       </div>
       <div ref="chartContainer2" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
       <template #footer></template>
-    </vab-dialog> -->
+    </vab-dialog>
+    <!-- VOC满意度 -->
+    <vab-dialog v-model="vocVisible" title="VOC满意度" width="40%" @open="handleVocOpened">
+      <div style="text-align: center">
+        <el-date-picker 
+          v-model="rankDate"
+          :clearable="false"
+          :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
+          :disabled-date="(time: Date) => time.getTime() > Date.now()"
+          :editable="false"
+          end-placeholder="结束日期"
+          :shortcuts="shortcuts"
+          start-placeholder="开始日期"
+          type="daterange"
+          @change="fetchSkuVocData"
+        />
+      </div>
+      <div ref="chartContainer3" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
+      <template #footer></template>
+    </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
-import type { CheckboxValueType } from 'element-plus'
+import { dayjs, type CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
+import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, getOperationAmazonAsinRankList, getOperationAmazonParentAsinRankList, getOperationAmazonSkuRankCateList, getOperationAmazonSkuRankList, getOperationAmazonSkuVocList, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
-import { flexColumnWidth } from '/@/utils/tableColum'
-import handleClipboard from '~/src/utils/clipboard'
+import { flexColumnWidth, processField } from '/@/utils/tableColum'
+import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import CountryFlag from 'vue-country-flag-next'
+import { IOperationAmazonSkuRankList, IOperationAmazonSkuVocList } from '~/src/type/storeOperation/productPerformanceType'
+import * as echarts from 'echarts'
 
 defineOptions({
   name: 'ProductPerformanceArt'
 })
 
+let copyRow: any
+const vocVisible = ref<boolean>(false)
+const chartLoading = ref<boolean>(false)
+const rankValue = ref<IOperationAmazonSkuRankList[]>([])
+const chartContainer2 = ref<HTMLElement | null>(null)
+const chartContainer3 = ref<HTMLElement | null>(null)
+let chartInstance2: echarts.ECharts | null = null
+let chartInstance3: echarts.ECharts | null = null
+let chartObserver2: ResizeObserver
+let chartObserver3: ResizeObserver
+const option2 = ref<any>({})
+const option3 = ref<any>({})
+const vocValue = ref<IOperationAmazonSkuVocList[]>([])
 const title = ref<string>('')
 const rankVisible = ref<boolean>(false)
 const rankDate = ref<[Date, Date]>([
@@ -393,20 +440,296 @@ const shortcuts = [
     },
   },
 ]
-// const handleRankOpened = () => {
-//   nextTick(() => {
-//     if (chartContainer2.value) {
-//       chartInstance2 = echarts.init(chartContainer2.value)
-//       chartObserver2 = new ResizeObserver(() => {
-//         if (chartInstance2) {
-//           chartInstance2.resize()
-//         }
-//       })
-//       chartObserver2.observe(chartContainer2.value)
-//       initChart2()
-//     }
-//   })
-// }
+const handleRankOpened = () => {
+  nextTick(() => {
+    if (chartContainer2.value) {
+      chartInstance2 = echarts.init(chartContainer2.value)
+      chartObserver2 = new ResizeObserver(() => {
+        if (chartInstance2) {
+          chartInstance2.resize()
+        }
+      })
+      chartObserver2.observe(chartContainer2.value)
+      initChart2()
+    }
+  })
+}
+const handleVocOpened = () => {
+  nextTick(() => {
+    if (chartContainer3.value) {
+      chartInstance3 = echarts.init(chartContainer3.value)
+      chartObserver3 = new ResizeObserver(() => {
+        if (chartInstance3) {
+          chartInstance3.resize()
+        }
+      })
+      chartObserver3.observe(chartContainer3.value)
+      initChart3()
+    }
+  })
+}
+const initChart2 = () => {
+  option2.value = {
+    tooltip: {
+      trigger: 'axis',
+      confine: true,
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: () => rankValue.value.map((item) => item.updateDate),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    yAxis: {
+      name: '小类排名',
+      type: 'value',
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    series: [
+      {
+        name: '小类排名',
+        type: 'line',
+        data: () => rankValue.value.map((item) => item.rank),
+        itemStyle: {
+          color: '#52bfff',
+        },
+        smooth: true,
+      },
+    ],
+  }
+
+  chartInstance2?.setOption(option2.value)
+}
+const initChart3 = () => {
+  option3.value = {
+    tooltip: {
+      trigger: 'axis',
+      confine: true,
+      formatter: (params: any[]) => {
+        // tooltip标题
+        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">不满意率</div>`
+
+        // tooltip详情内容
+        const itemHtmlStrArr = params.map((item) => {
+          return `<div style="display: flex;align-items:center;">
+            ${item.marker}
+            <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px -1px 2px;">${params[0].name}</div>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${item.value}%</span>
+          </div>`
+        })
+        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
+          ${itemHtmlStrArr.join('')}
+        </div>`
+        // 最终html字符串
+        const resHtmlStr = titleHtmlStr + contentHtmlStr
+        return resHtmlStr
+      }
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: () => vocValue.value.map((item) => item.eventDate),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    yAxis: {
+      name: '不满意率(%)',
+      type: 'value',
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    series: [
+      {
+        name: '不满意率',
+        type: 'line',
+        data: () => vocValue.value.map((item) => item.ncxRate),
+        itemStyle: {
+          color: '#52bfff',
+        },
+        smooth: true,
+      },
+    ],
+  }
+
+  chartInstance3?.setOption(option3.value)
+}
+const handleRankChange = () => {
+  if (title.value === '小类排名') {
+    fetchSkuRankData()
+  } else if(title.value === '大类排名') {
+    fetchSkuCateRankData()
+  }
+}
+// 获取小类排名数据
+const fetchSkuRankData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = rankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  // console.log('日期范围：', formatStartDate, formatEndDate)
+  
+    const { data } = await getOperationAmazonSkuRankList({
+      sku: copyRow.sku,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    rankValue.value = data
+  
+  
+  // 更新图表数据
+  if (chartInstance2) {
+    option2.value.yAxis.name = '小类排名'
+    option2.value.series[0].name = '小类排名'
+    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map(item => item.rank)
+    chartInstance2.setOption(option2.value)
+  }
+  chartLoading.value = false
+}
+const fetchSkuCateRankData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = rankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  // console.log('日期范围：', formatStartDate, formatEndDate)
+
+    const { data } = await getOperationAmazonSkuRankCateList({
+      sku: copyRow.sku,
+      siteId: copyRow.site,
+      startDate: formatStartDate,
+      endDate: formatEndDate,
+    })
+    rankValue.value = data
+  
+  
+  // 更新图表数据
+  if (chartInstance2) {
+    option2.value.yAxis.name = '大类排名'
+    option2.value.series[0].name = '大类排名'
+    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map(item => item.rank)
+    chartInstance2.setOption(option2.value)
+  }
+  chartLoading.value = false
+}
+// sku获取voc满意度趋势
+const fetchSkuVocData = async () => {
+  chartLoading.value = true
+  const [startDate, endDate] = rankDate.value
+  const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
+  const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
+  const { data } = await getOperationAmazonSkuVocList({
+    sku: copyRow.sku,
+    siteId: copyRow.site,
+    startDate: formatStartDate,
+    endDate: formatEndDate,
+  })
+  vocValue.value = data
+  // 更新图表数据
+  if (chartInstance3) {
+    option3.value.xAxis.data = vocValue.value.map(item => item.eventDate)
+    option3.value.series[0].data = vocValue.value.map(item => item.ncxRate)
+    chartInstance3?.setOption(option3.value)
+  }
+  chartLoading.value = false
+}
+const cellClick = async (row: any, column: any) => {
+  const label = column.label
+  switch (label) {
+    case '小类排名': {
+      rankVisible.value = true
+      // 默认打开是近30天
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      title.value = '小类排名'
+      fetchSkuRankData()
+      break
+    }
+    case '大类排名': {
+      rankVisible.value = true
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      title.value = '大类排名'
+      fetchSkuCateRankData()
+      break
+    }
+    case 'VOC满意度': {
+      vocVisible.value = true
+      rankDate.value = [
+        new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
+        new Date() // 今天
+      ]
+      copyRow = row
+      title.value = 'VOC满意度'
+      fetchSkuVocData()
+      break
+    }
+    // No default
+  }
+}
+const artSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  // console.log(column, prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    } 
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  // console.log(order)
+  queryData()
+}
+
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const activeName = ref<number>(0)
 const currency = ref<number | undefined>(0)
@@ -420,10 +743,12 @@ const list = ref<any>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive<any>({
-  keyWord: '',
+  keyword: '',
   site: [],
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  orderByField: 'currentSalesNumber',
+  orderDirection: 'desc',
 })
 const { site } = toRefs(queryForm)
 const checkList = computed(() => {
@@ -466,7 +791,8 @@ const columns = ref<any>([
     label: '今销量',
     prop: 'currentSalesNumber',
     checked: true,
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true
   },
   {
     label: '销量趋势(点击看明细)',
@@ -478,13 +804,14 @@ const columns = ref<any>([
     label: '今销',
     prop: 'currentSalesPrice',
     checked: true,
-    minWidth: 90,
+    minWidth: 110,
+    sortable: true
   },
   {
     label: '状态',
     prop: 'status',
     checked: true,
-    minWidth: 100,
+    minWidth: 80,
   },
   {
     label: '站点',
@@ -496,13 +823,13 @@ const columns = ref<any>([
     label: '小类排名',
     prop: 'nowSubcategoryRanking',
     checked: true,
-    minWidth: 120,
+    minWidth: 90,
   },
   {
     label: '大类排名',
     prop: 'nowMajorCategoryRanking',
     checked: true,
-    minWidth: 120,
+    minWidth: 100,
   },
   {
     label: 'VOC满意度',
@@ -532,13 +859,13 @@ const columns = ref<any>([
     label: '2周广告转化',
     prop: 'tWksAdvRate',
     checked: true,
-    minWidth: 110,
+    minWidth: 100,
   },
   {
     label: '2周广告点击',
     prop: 'tWksClickRate',
     checked: true,
-    minWidth: 110,
+    minWidth: 100,
   },
   {
     label: '2周总转化',
@@ -550,34 +877,22 @@ const columns = ref<any>([
     label: '月销量',
     prop: 'monthSalesVolume',
     checked: true,
-    minWidth: 90,
+    minWidth: 100,
+    sortable: true
   },
   {
     label: '月销售额',
     prop: 'monthSalesPrice',
     checked: true,
-    minWidth: 120,
+    minWidth: 140,
+    sortable: true
   },
-  // {
-  //   label: '月退货%',
-  //   prop: 'monthReturnGoods',
-  //   checked: true,
-  //   minWidth: 120,
-  // },
-  // {
-  //   label: '月退款%',
-  //   prop: 'monthRefund',
-  //   checked: true,
-  //   minWidth: 120,
-  // },
   {
     label: '最近入库',
     prop: 'recentlyInboundStorage',
     checked: true,
-    minWidth: 100,
+    minWidth: 110,
   },
- 
-
   {
     label: '开发人员',
     prop: 'developName',
@@ -603,7 +918,7 @@ const label1 = [
   'FBA仓储费',
   'FBA差异',
   '月净利润',
-  '月销额',
+  '月销售额',
   '月广告销售',
   '月广告支出',
   '预计下月仓储费',
@@ -615,7 +930,7 @@ const label1Map = new Map([
   ['FBA仓储费', 'fbaStorageFee'],
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
-  ['月销额', 'monthSalesPrice'],
+  ['月销售额', 'monthSalesPrice'],
   ['月广告销售', 'monthAdvSales'],
   ['月广告支出', 'monthAdvExpenditure'],
   ['预计下月仓储费', 'estimateNextMonthStorageFee'],
@@ -634,7 +949,6 @@ const label2 = [
   '月退货%',
   '月退款%',
 ]
-
 const label2Map = new Map([
   ['试算毛利', 'grossProfit'],
   ['2周广告转化', 'tWksAdvRate'],
@@ -692,7 +1006,7 @@ const handleWidth = (item: any) => {
   
   switch (item.label) {
     case 'SKU': {
-      return 240
+      return 255
     }
     case 'ASIN': {
       return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -724,7 +1038,7 @@ const handleMove = (event: any) => {
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述'].includes(label)) {
+  if (['SKU', '库龄', '产品描述'].includes(label)) {
     return {
       textAlign: 'left',
     }
@@ -742,6 +1056,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   return {
     textAlign: 'center',
   }
+}
+const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (['今销', '月销售额'].includes(data.column.label)) {
+    return 'header-cell'
+  }
+  return ''
 }
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (data.column.label === '图片') {
@@ -785,7 +1105,7 @@ const fetchData = async () => {
     list.value.forEach((item: any) => {
       if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
       item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers));
-      
+      processField(item, 'developName', 2)
     })
   }
   listLoading.value = false
@@ -1010,5 +1330,11 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+.noneHoverTable :deep(.header-cell .cell) {
+  display: flex;          /* 应用 Flexbox 布局 */
+  align-items: center;   /* 垂直居中 */
+  justify-content: center;
 }
 </style>
