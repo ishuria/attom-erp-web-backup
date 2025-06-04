@@ -10,21 +10,33 @@
             <el-scrollbar>
               <ul v-if="badge">
                 <li v-for="(item, index) in notices" :key="index">
-                  <el-avatar :size="45" :src="item.image" />
-                  <span v-html="item.notice"></span>
+                  <div v-if="item.icon" class="notice-list-left">
+                    <vab-icon :icon="item.icon" />
+                  </div>
+                  <el-avatar v-else :size="45" :src="item.image" />
+                  <div class="notice-list-right">
+                    <div v-html="item.notice"></div>
+                    <div class="notice-time" v-html="item.datetime"></div>
+                  </div>
                 </li>
               </ul>
               <el-empty v-else description="暂无数据" />
             </el-scrollbar>
           </div>
         </el-tab-pane>
-        <el-tab-pane :label="translate('邮件')" name="email">
+        <el-tab-pane :label="translate('待办')" name="done">
           <div class="notice-list">
             <el-scrollbar>
               <ul v-if="badge">
                 <li v-for="(item, index) in notices" :key="index">
-                  <el-avatar :size="45" :src="item.image" />
-                  <span>{{ item.email }}</span>
+                  <div v-if="item.icon" class="notice-list-left">
+                    <vab-icon :icon="item.icon" />
+                  </div>
+                  <el-avatar v-else :size="45" :src="item.image" />
+                  <div class="notice-list-right">
+                    <div v-html="item.notice"></div>
+                    <div class="notice-time" v-html="item.datetime"></div>
+                  </div>
                 </li>
               </ul>
               <el-empty v-else description="暂无数据" />
@@ -86,16 +98,38 @@ onBeforeMount(() => {
 }
 
 .notice-list {
-  height: 315px;
+  height: 275px;
 
   ul {
-    padding: 0 15px 0 0;
+    padding: 0;
     margin: 0;
 
     li {
       display: flex;
       align-items: center;
-      padding: 10px 0 15px 0;
+      padding: 10px;
+
+      > .notice-list-left {
+        i {
+          display: inline-block;
+          width: 45px;
+          height: 45px;
+          font-size: 20px;
+          line-height: 45px;
+          color: var(--el-color-primary);
+          background: var(--el-color-primary-light-9);
+          border-radius: var(--el-border-radius-base);
+        }
+      }
+
+      > .notice-list-right {
+        margin-left: calc(var(--el-margin) / 2);
+
+        .notice-time {
+          font-size: var(--el-font-size-small);
+          color: var(--el-color-info);
+        }
+      }
 
       &:hover {
         background-color: var(--el-color-primary-light-9);
