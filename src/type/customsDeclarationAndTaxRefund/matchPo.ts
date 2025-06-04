@@ -289,7 +289,7 @@ export interface IClearMatchComponent {
 }
 
 export interface IClearAllMatchComponent {
-  mIds: string
+  list: { mid: number, poComponentId: number }[]
   id: number
 }
 

@@ -1116,15 +1116,24 @@ const handleClearCheckAll = async () => {
 }
 // 清空全部
 const handleClearAll = async () => {
-  const setMids = new Set()
-  matchList.value.forEach((item: IGetMatchPackageList) => {
-    setMids.add(item.mId)
+  // const setMids = new Set()
+  let list: { mid: number, poComponentId: number}[]  = []
+  matchList.value.forEach((row: IGetMatchPackageList) => {
+    const exists = list.some(item => 
+      item.mid === row.mId && item.poComponentId === row.poComponentId
+    );
+    if (!exists && row.skuActualCount) {
+      list.push({ mid: row.mId, poComponentId: row.poComponentId });
+    }
+    // if (item.skuActualCount) {
+    //   setMids.add(item.mId)
+    // }
   })
-  const mIds = Array.from(setMids).join(',')
+  // const mIds = Array.from(setMids).join(',')
   $baseConfirm('确定要清空全部吗?', null, async () => {
     try {
       const { data } = await clearAllMatchComponent({
-        mIds,
+        list,
         id: _id.value,
       })
       if (data) {

@@ -87,11 +87,11 @@ export const getCheckMatchList = (data: IGetMatchPoListReq): Promise<IGetCheckMa
 /**
  * @description 匹配PO、报关资料详情列表匹配接口
  */
-export const getMatchPackageList = (params: IGetMatchPackageListReq): Promise<IGetMatchPackageListRes> => {
+export const getMatchPackageList = (data: IGetMatchPackageListReq): Promise<IGetMatchPackageListRes> => {
   return request({
     url: `${BASE_API}/shipment/match/packageList`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**
@@ -147,11 +147,11 @@ export const clearMatchComponent = (data: IClearMatchComponent): Promise<IBoolea
 /**
  * @description 匹配PO、报关资料详情列表匹配清空全部
  */
-export const clearAllMatchComponent = (params: IClearAllMatchComponent): Promise<IBooleanRes> => {
+export const clearAllMatchComponent = (data: IClearAllMatchComponent): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/component/clear/all`,
     method: 'post',
-    params
+    data
   })
 }
 /**
