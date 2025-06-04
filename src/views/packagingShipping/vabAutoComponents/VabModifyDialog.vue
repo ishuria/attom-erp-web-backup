@@ -479,7 +479,8 @@ const confirmUpdateEncasement = async () => {
     width: modifyForm.width,
     height: modifyForm.height,
     site: modifyForm.siteId,
-    boxNumber: modifyForm.boxNumber
+    boxNumber: modifyForm.boxNumber,
+    skuList: skuDetailList.value
   })
   if (data) {
     $baseMessage('修改成功', 'success')

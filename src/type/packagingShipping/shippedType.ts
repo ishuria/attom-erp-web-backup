@@ -207,6 +207,7 @@ export interface IUpdateEncasementReq {
   height?: number
   site?: number
   boxNumber?: number
+  skuList?: EncasementDetailList[];
 }
 /**
  * @description 装箱-修改页面-新增新的明细
