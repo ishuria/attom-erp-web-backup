@@ -959,8 +959,10 @@ const handleCloseCheck = () => {
 // 用于存储改变过的项
 const skuActualCountMap = reactive<Record<string, number>>({})
 const customsDeclarationCountMap = reactive<Record<string, number>>({})
-
+let originalSkuActualCount = 0
 const handleFocus = (row: IGetMatchPackageList) => {
+  // console.log('原来', row.skuActualCount)
+  originalSkuActualCount = Number(row.skuActualCount)
   // 如果该 mId 不存在于 changedItems 中，初始化记录
   if (!(row.mId in skuActualCountMap)) {
     skuActualCountMap[row.mId] = Number(row.skuActualCount) || 0
@@ -970,6 +972,13 @@ const handleFocus = (row: IGetMatchPackageList) => {
   }
 }
 const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
+  // console.log('改变后', row.skuActualCount)
+  // console.log(originalSkuActualCount)
+  if (originalSkuActualCount !== 0 && Number(row.skuActualCount) === 0) {
+    $baseMessage('已填入的sku数量如果要设置为0，请使用清空按钮，而不是直接填0！', 'error')
+    row.skuActualCount = originalSkuActualCount
+    return
+  }
   if (row.goodCount == null || row.goodCount == undefined) {
     $baseMessage('当前打包显示的打包任务没有好的数量，不能输入数量！', 'error')
     if (row.mId in skuActualCountMap) {
