@@ -190,8 +190,8 @@ const list2 = ref<any>([
       width: 192px;
       height: 192px;
       background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
-      filter: blur(40px);
       border-radius: 50%;
+      filter: blur(40px);
     }
 
     :deep() {
@@ -223,11 +223,11 @@ const list2 = ref<any>([
       height: 120px;
       padding: 40px 0;
       background-color: rgba(255, 255, 255, 0.6);
-      -webkit-backdrop-filter: blur(20px);
-      backdrop-filter: blur(20px);
       border: 1.5px solid #fff;
       border-radius: 15px;
       box-shadow: 0 4px 33px rgba(190, 196, 207, 0.28);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
       transform: translate(-50%, 0);
       -ms-flex-align: center;
 

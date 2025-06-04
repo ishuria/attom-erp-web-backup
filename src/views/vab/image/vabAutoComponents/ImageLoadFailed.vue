@@ -29,8 +29,8 @@ import { Picture as IconPicture } from '@element-plus/icons-vue'
   display: inline-block;
   width: 49%;
   padding: 30px 0;
-  text-align: center;
   vertical-align: top;
+  text-align: center;
   border-right: solid 1px var(--el-border-color);
 }
 

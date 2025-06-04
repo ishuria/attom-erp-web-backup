@@ -57,8 +57,8 @@ const goBack = async () => {
     align-items: center;
     justify-content: center;
     margin: 20px 15px;
-    text-align: center;
     text-overflow: ellipsis;
+    text-align: center;
     word-break: break-all;
     white-space: nowrap;
 

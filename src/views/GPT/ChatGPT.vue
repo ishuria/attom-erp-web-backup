@@ -234,9 +234,9 @@ $border-top-color_1: var(--el-color-primary);
         margin-top: 20px;
         font-size: 14px;
         line-height: 22px;
+        vertical-align: top;
         color: $color_2;
         word-break: break-all;
-        vertical-align: top;
         background-color: $background-color_1;
         border-radius: var(--el-border-radius-base);
 

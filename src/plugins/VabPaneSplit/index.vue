@@ -97,8 +97,8 @@ const startResize = (mde: MouseEvent) => {
   }
 
   .sub {
-    flex-basis: 0;
     flex-grow: 1;
+    flex-basis: 0;
     align-content: stretch;
     align-items: stretch;
     width: 100%;

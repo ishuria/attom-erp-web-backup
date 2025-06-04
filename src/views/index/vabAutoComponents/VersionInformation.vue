@@ -107,8 +107,8 @@ const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
       position: relative;
       padding: 12px 15px !important;
       overflow: hidden;
-      font-size: var(--el-font-size-base);
       text-overflow: ellipsis;
+      font-size: var(--el-font-size-base);
       white-space: nowrap;
       border: 1px solid var(--el-border-color);
 

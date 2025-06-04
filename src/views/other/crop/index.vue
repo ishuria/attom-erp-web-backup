@@ -123,8 +123,8 @@ const handleChange = (value: any) => {
     .tiny-crop {
       z-index: calc(var(--el-z-index) + 2);
       background-color: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(2.5px);
       opacity: 1;
+      backdrop-filter: blur(2.5px);
 
       &__dialog {
         background: var(--el-color-white);

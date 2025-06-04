@@ -159,8 +159,8 @@ const list = reactive<any>([
       width: 192px;
       height: 192px;
       background-image: linear-gradient(-45deg, #2e65e7 50%, #50d79a 50%);
-      filter: blur(40px);
       border-radius: 50%;
+      filter: blur(40px);
     }
 
     :deep() {

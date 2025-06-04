@@ -188,7 +188,14 @@ const routeName = ref<RouteRecordName | null | undefined>(route.name)
 const { theme, device, mode, persistenceTab } = storeToRefs(settingsStore)
 const { saveTheme, resetTheme, updateTheme, updateCaughtTabs, setCssVar } = settingsStore
 const drawerVisible = ref<boolean>(false)
-const layoutList = ref<string[]>(['column', 'vertical', 'horizontal', 'comprehensive', 'fall'])
+const layoutList = ref<string[]>([
+  'column',
+  'vertical',
+  'horizontal',
+  'comprehensive',
+  'fall',
+  'double',
+])
 const tabsBarStyleList = ref<ListType[]>([
   { value: 'card', label: '卡片' },
   { value: 'smart', label: '灵动' },
@@ -216,7 +223,7 @@ const pageTransitionList = ref<ListType[]>([
   { value: 'el-zoom-in-top', label: 'zoom-in-top' },
   { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
 ])
-const size = ref<string>('337px')
+const size = ref<string>('340px')
 
 const handleOpenTheme = () => {
   drawerVisible.value = true
@@ -373,15 +380,14 @@ onMounted(() => {
           .el-form-item__content {
             .vab-shop-layout-radio-group {
               display: flex;
-              flex-wrap: nowrap;
               align-items: center;
               justify-content: flex-end;
 
               .el-radio-button {
-                width: 45px;
-                height: 45px;
+                width: 40px;
+                height: 40px;
                 padding: 0;
-                margin: 10px 10px 5px 5px;
+                margin: 10px 0px 5px 10px;
                 cursor: pointer;
                 background: transparent;
                 border: 0;
@@ -406,16 +412,16 @@ onMounted(() => {
                     top: 0;
                     left: 0;
                     display: block;
-                    width: 50px;
-                    height: 50px;
+                    width: inherit;
+                    height: inherit;
                     padding: 0;
                     margin: 0;
                     border: 0;
                     box-shadow: none;
 
                     .vab-icon {
-                      width: 50px;
-                      height: 50px;
+                      width: inherit;
+                      height: inherit;
                       padding: 0;
                       margin: 0;
                       border: 1px solid var(--el-border-color);

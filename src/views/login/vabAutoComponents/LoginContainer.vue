@@ -134,8 +134,8 @@ const handleShow = () => {
       border: 1px solid var(--el-border-color);
       border-radius: 15px;
       opacity: 0;
-      transition: var(--el-transition);
       transform: translateY(30px);
+      transition: var(--el-transition);
       animation: identifier 0.3s ease-in-out 0.15s forwards;
 
       .left-img {

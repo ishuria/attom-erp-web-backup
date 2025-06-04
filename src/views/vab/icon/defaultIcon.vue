@@ -218,10 +218,10 @@ onBeforeMount(() => {
     height: 30px;
     margin-top: -15px;
     overflow: hidden;
+    text-overflow: ellipsis;
     font-size: var(--el-font-size-extra-small);
     line-height: 30px;
     text-align: center;
-    text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
   }

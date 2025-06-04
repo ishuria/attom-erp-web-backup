@@ -127,8 +127,8 @@ onBeforeMount(() => {
   ul {
     padding: 0;
     margin: 0;
-    list-style: none;
     outline: none;
+    list-style: none;
 
     .list-item {
       padding: calc(var(--el-padding) / 2);
@@ -171,10 +171,10 @@ onBeforeMount(() => {
         &-description {
           display: -webkit-box;
           overflow: hidden;
+          -webkit-line-clamp: 2;
           font-size: var(--el-font-size-base);
           color: var(--el-color-grey);
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
         }
 
         :deep() {

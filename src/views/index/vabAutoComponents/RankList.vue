@@ -50,10 +50,10 @@ const iconList = ref<any>([
 .medal-list {
   &-item {
     position: relative;
+    clear: both;
     display: flex;
     width: 100%;
     height: 80px;
-    clear: both;
     background: var(--el-color-white);
     border-radius: 0;
 

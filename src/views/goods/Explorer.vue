@@ -267,8 +267,8 @@ onBeforeMount(() => {
         .el-image {
           width: 100%;
           height: 180px;
-          transition: all ease-in-out 0.3s !important;
           scale: 1.05;
+          transition: all ease-in-out 0.3s !important;
         }
 
         .el-checkbox {

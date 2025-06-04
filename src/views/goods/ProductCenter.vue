@@ -204,17 +204,17 @@ const handleOpen = () => {
         padding-top: 8px;
         margin: 0 48px 4px 0;
         overflow: hidden;
+        text-overflow: ellipsis;
         font-size: var(--el-font-size-normal);
         color: var(--el-color-grey);
-        text-overflow: ellipsis;
         white-space: nowrap;
       }
 
       .description {
         overflow: hidden;
+        text-overflow: ellipsis;
         font-size: var(--el-font-size-extra-small);
         color: var(--el-color-grey);
-        text-overflow: ellipsis;
         white-space: nowrap;
       }
     }

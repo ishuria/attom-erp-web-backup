@@ -252,8 +252,8 @@ const tableData = [
     width: 100%;
     height: 180px;
     background: url('/@/assets/portal_images/carousel_1.jpg');
-    filter: blur(100px);
     opacity: 0.5;
+    filter: blur(100px);
   }
 
   main {

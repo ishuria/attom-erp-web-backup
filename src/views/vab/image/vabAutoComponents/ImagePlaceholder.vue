@@ -28,8 +28,8 @@ const src = ref<string>('https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d51
   display: inline-block;
   width: 49%;
   padding: 30px 0;
-  text-align: center;
   vertical-align: top;
+  text-align: center;
   border-right: solid 1px var(--el-border-color);
 }
 

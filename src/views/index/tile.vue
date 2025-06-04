@@ -262,9 +262,9 @@ $breakpoints: (
         display: inline-block;
         margin-left: 10px;
         overflow: hidden;
+        text-overflow: ellipsis;
         line-height: 20px;
         color: var(--el-color-grey);
-        text-overflow: ellipsis;
         white-space: nowrap;
 
         .icon-panel-tips {
@@ -296,9 +296,9 @@ $breakpoints: (
             content: '';
             background: var(--el-color-primary-light-9);
             border-radius: 50%;
-            transition: transform 0.8s ease-in-out !important;
             transform: translate3d(50%, 50%, 0) scale3d(0, 0, 0);
             transform-origin: center;
+            transition: transform 0.8s ease-in-out !important;
           }
 
           &:hover {

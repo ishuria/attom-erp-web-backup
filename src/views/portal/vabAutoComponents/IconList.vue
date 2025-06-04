@@ -79,8 +79,8 @@ const handleMore = () => {
       padding: 10px !important;
 
       i {
-        display: block;
         float: left;
+        display: block;
         width: 46px;
         height: 46px;
         margin: auto auto 10px auto;

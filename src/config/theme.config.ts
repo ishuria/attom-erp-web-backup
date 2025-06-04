@@ -2,7 +2,7 @@
  @description 导出主题配置，注意事项：此配置下的项修改后需清理浏览器缓存！！！
  */
 export const themeConfig: ThemeType = {
-  //布局支持：分栏布局column、纵向布局vertical、横向布局horizontal、瀑布布局fall
+  //布局支持：分栏布局column、纵向布局vertical、横向布局horizontal、瀑布布局fall、多列布局double
   layout: 'column',
   //主题支持：默认default、简洁plain、科技technology
   themeName: 'default',

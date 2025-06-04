@@ -342,8 +342,8 @@ $breakpoints: (
 
           &:hover {
             [class*='vab-icon'] {
-              transition: all 0.3s;
               scale: 1.2;
+              transition: all 0.3s;
             }
           }
         }
