@@ -11,6 +11,7 @@
         <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
         <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
         <el-button type="primary" @click="showExportSize">尺寸导出</el-button>
+        <el-button type="primary" @click="showUpdateError">误差</el-button>
         <el-button type="success">装箱检查</el-button>
         <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
@@ -458,6 +459,18 @@
         <el-table-column label="SKU" prop="sku" />
       </el-table>
     </vab-dialog>
+    <!-- 误差 -->
+    <vab-dialog title="修改误差" width="20%" v-model="updateErrorVisible">
+      <el-form ref="errorFormRef" :rules="errorFormRules" label-position="top" >
+        <el-form-item label="误差" prop="error">
+          <el-input v-model="errorForm.error" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button>取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -502,6 +515,18 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'Packing'
 })
+
+const updateErrorVisible = ref<boolean>(false)
+const showUpdateError = () => {
+  updateErrorVisible.value = true
+}
+const errorFormRef = ref<FormInstance>()
+const errorForm = reactive({ error: '' })
+const errorFormRules: FormRules = {
+  error: [
+    { required: true, message: '请输入误差', trigger: 'blur' }
+  ]
+}
 const router = useRouter()
 const route = useRoute()
 const printer = ref<string>('')

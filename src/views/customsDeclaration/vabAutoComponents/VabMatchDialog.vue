@@ -275,8 +275,8 @@
           prop="purchaseCount"
           :width="flexColumnWidth(sentList, 'PO零件数', 'purchaseCount')"
         />
-        <el-table-column align="center" label="已发未报" prop="yfwbCount" width="100" />
-        <el-table-column align="center" label="已报未发" prop="ybwfCount" width="100" />
+        <el-table-column align="center" label="总发货数" prop="shippedQuantity" width="100" />
+        <el-table-column align="center" label="总报关数" prop="customQuantity" width="100" />
         <el-table-column label="采购方" min-width="90" prop="purchase" :width="flexColumnWidth(sentList, '采购方', 'purchase')" />
         <el-table-column label="备注" min-width="100" prop="remark">
           <template #default="{ row }">
@@ -551,12 +551,16 @@ const handleConfirmAgg = async () => {
     return
   }
   const valid = selectAggRows.value.every((item) => item.pendingCustomsClearance && item.pendingCustomsClearance > 0)
-  const req = selectAggRows.value.map((item) => {
-    return {
-      poId: item.poId!,
-      poComponentId: item.poComponentId!,
-      sku: item.sku!,
-    }
+  // const req = selectAggRows.value.map((item) => {
+  //   return {
+  //     poId: item.poId!,
+  //     poComponentId: item.poComponentId!,
+  //     sku: item.sku!,
+  //   }
+  // })
+  let req: number[] = []
+  selectAggRows.value.forEach((item) => {
+    req.push(item.id)
   })
   if (valid) {
     const { data } = await submitMatchSentList({

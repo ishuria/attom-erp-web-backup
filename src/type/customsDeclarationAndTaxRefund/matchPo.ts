@@ -358,11 +358,12 @@ export interface IClearUnlockMatchShipment {
 }
 export interface ISubmitMatchSentList {
   id: number
-  list: {
-    poId: number
-    poComponentId: number
-    sku: string
-  }[]
+  // list: {
+  //   poId: number
+  //   poComponentId: number
+  //   sku: string
+  // }[]
+  list: number[]
 }
 
 export interface IUpdateMatchQuality {
@@ -480,4 +481,5 @@ export interface IGetYfwbAggregationList {
    * 已发未报数量
    */
   yfwbCount?: number
+  id: number
 }
