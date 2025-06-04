@@ -285,12 +285,13 @@ export interface IInsertAllMatchComponent {
 export interface IClearMatchComponent {
   mId: number
   id: number
-  poComponentId: number
+  // poComponentId: string
 }
 
 export interface IClearAllMatchComponent {
   list: { mid: number, poComponentId: number }[]
-  id: number
+  id: number,
+  mIds: string
 }
 
 export interface IGetMatchSentListRes {

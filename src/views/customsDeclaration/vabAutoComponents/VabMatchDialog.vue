@@ -989,6 +989,7 @@ const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
   }
 
   try {
+    match2ListLoading.value = true
     const { data } = await updateMatchSkuActualCount({
       id: _id.value,
       poId: row.poId,
@@ -1008,6 +1009,7 @@ const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
       row.skuActualCount = previousValues
     }
   }
+  match2ListLoading.value = false
 }
 
 const _encasementCount = computed(() => {
@@ -1044,6 +1046,7 @@ const handleInsertAll = async (row: IGetMatchPackageList) => {
   //   return
   // }
   try {
+    match2ListLoading.value = true
     const { data } = await insertAllMatchComponent({
       id: _id.value,
       poId: row.poId,
@@ -1054,6 +1057,7 @@ const handleInsertAll = async (row: IGetMatchPackageList) => {
       $baseMessage('填入全部成功', 'success')
       await fetchMatchData()
     }
+    match2ListLoading.value = false
   } catch (error) {
     console.error(error)
   }
@@ -1078,16 +1082,28 @@ const handleCheckClear = async (row: IGetCheckMatchList) => {
 const handleClear = async (row: IGetMatchPackageList) => {
   $baseConfirm('确定要清空吗?', null, async () => {
     try {
+      match2ListLoading.value = true
+      // let list: number[] = []
+      // matchList.value.forEach((item: any) => {
+      //   if (item.mId === row.mId && item.customsDeclarationStatus === 0) {
+      //     list.push(item.poComponentId)
+      //   }
+      // })
+      // if (Number(row.skuActualCount) === 0 && list.length === 0) {
+        
+      //   return
+      // }
       const { data } = await clearMatchComponent({
         mId: row.mId,
         id: _id.value,
-        poComponentId: row.poComponentId
+        // poComponentId: list.join(','),
       })
       if (data) {
         $baseMessage('清空成功', 'success')
         await fetchMatchData()
         skuActualCountMap[row.mId] = 0
       }
+      match2ListLoading.value = false
     } catch (error) {
       console.error(error)
     }
@@ -1116,25 +1132,26 @@ const handleClearCheckAll = async () => {
 }
 // 清空全部
 const handleClearAll = async () => {
-  // const setMids = new Set()
+  const setMids = new Set()
   let list: { mid: number, poComponentId: number}[]  = []
   matchList.value.forEach((row: IGetMatchPackageList) => {
-    const exists = list.some(item => 
-      item.mid === row.mId && item.poComponentId === row.poComponentId
-    );
-    if (!exists && row.skuActualCount) {
+    // const exists = list.some(item => 
+    //   item.mid === row.mId && item.poComponentId === row.poComponentId
+    // );
+    if (row.skuActualCount && row.customsDeclarationStatus === 0) {
       list.push({ mid: row.mId, poComponentId: row.poComponentId });
     }
-    // if (item.skuActualCount) {
-    //   setMids.add(item.mId)
-    // }
+    if (row.skuActualCount) {
+      setMids.add(row.mId)
+    }
   })
-  // const mIds = Array.from(setMids).join(',')
+  const mIds = Array.from(setMids).join(',')
   $baseConfirm('确定要清空全部吗?', null, async () => {
     try {
       const { data } = await clearAllMatchComponent({
         list,
         id: _id.value,
+        mIds
       })
       if (data) {
         $baseMessage('清空全部成功', 'success')
@@ -1364,6 +1381,7 @@ const stripedRowClass2 = (_row: any) => {
   // 根据当前组索引设置条纹样式
   return currentGroupIndex2 % 2 === 0 ? 'el-table__row--striped' : ''
 }
+
 
 const match1Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
