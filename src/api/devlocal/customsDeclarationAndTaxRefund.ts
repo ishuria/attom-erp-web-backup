@@ -137,11 +137,11 @@ export const insertAllMatchComponent = (data: IInsertAllMatchComponent): Promise
 /**
  * @description 匹配PO、报关资料详情列表匹配清空
  */
-export const clearMatchComponent = (params: IClearMatchComponent): Promise<IBooleanRes> => {
+export const clearMatchComponent = (data: IClearMatchComponent): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/component/clear`,
     method: 'post',
-    params
+    data
   })
 }
 /**

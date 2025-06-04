@@ -285,6 +285,7 @@ export interface IInsertAllMatchComponent {
 export interface IClearMatchComponent {
   mId: number
   id: number
+  poComponentId: number
 }
 
 export interface IClearAllMatchComponent {

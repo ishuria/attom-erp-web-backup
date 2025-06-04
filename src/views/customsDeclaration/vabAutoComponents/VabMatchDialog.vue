@@ -1072,6 +1072,7 @@ const handleClear = async (row: IGetMatchPackageList) => {
       const { data } = await clearMatchComponent({
         mId: row.mId,
         id: _id.value,
+        poComponentId: row.poComponentId
       })
       if (data) {
         $baseMessage('清空成功', 'success')

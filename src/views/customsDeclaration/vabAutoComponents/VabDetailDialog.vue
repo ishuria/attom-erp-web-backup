@@ -3,11 +3,11 @@
     v-model="dflag"
     :title="`明细 | ${props.contractNumber}`"
     top="10vh"
-    width="97%"
+    width="100%"
     @close="closeDetail"
     :draggable="false"
   >
-    <vab-query-form>
+    <vab-query-form >
       <vab-query-form-left-panel>
         <el-button type="primary">展示埃托姆</el-button>
       </vab-query-form-left-panel>
@@ -22,70 +22,82 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table
-      border
-      :cell-style="cellStyle"
-      :data="list"
-      :header-cell-style="headerCellStyle"
-    >
-      <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName"/>
-      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount"/>
-      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit"/>
-      <el-table-column label="CIF售价$" min-width="105" prop="cifPrice"/>
-      <el-table-column label="运费$" min-width="95" prop="freightFee"/>
-      <el-table-column label="FOB售价$" min-width="105" prop="fobPrice"/>
-      <el-table-column label="汇率" min-width="90" prop="rate"/>
-      <el-table-column label="人民币售价￥" min-width="130" prop="salePrice">
-        <template #header>
-          人民币<br />售价￥
-        </template>
-      </el-table-column>
-      <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
-        <template #header>
-          含税<br />成本￥
-        </template>
-      </el-table-column>
-      <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost">
-        <template #header>
-          退税后<br />成本￥
-        </template>
-      </el-table-column>
-      <el-table-column label="利润￥" min-width="100" prop="profit"/>
-      <el-table-column label="利润率" min-width="100" prop="profitMargin"/>
-      <el-table-column label="退税额￥" min-width="100" prop="taxRebate"/>
-      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"/>
-      <el-table-column label="供应商税号展示" prop="suppliserTaxNumber" :width="flexColumnWidth(list, '税号展示', 'suppliserTaxNumber')">
-        <template #header>
-          供应商<br />税号展示
-        </template>
-      </el-table-column>
-      <el-table-column label="PO" min-width="100" prop="po"/>
-      <el-table-column label="发票匹配日期" min-width="100" prop="invoiceMatchDate">
-        <template #header>
-          发票匹<br />配日期
-        </template>
-      </el-table-column>
-      <el-table-column label="发票代码" min-width="100" prop="invoiceCode"/>
-      <el-table-column label="发票号码" min-width="100" prop="invoiceNumber"/>
-      <el-table-column label="发票数量" min-width="100" prop="invoiceCount"/>
-      <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath"/>
-      <el-table-column label="SKU" min-width="90" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
-      <el-table-column label="PO零件数" min-width="110" prop="componentCount"/>
-      <el-table-column label="shipmentID" min-width="130" prop="shipmentId"/>
-      <el-table-column label="付款记录" min-width="220" prop="payRecordList">
-        <template #default="{ row }">
-          <span v-html="row.payRecordList"></span>
-        </template>
-      </el-table-column>
-    </el-table>
-    <vab-pagination 
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
-    <template #footer></template>
+    <div style="max-height: 80vh; ">
+      <el-table
+        border
+        :cell-style="cellStyle"
+        :data="list"
+        :header-cell-style="headerCellStyle"
+        max-height="60vh"
+      >
+        <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName')"/>
+        <el-table-column label="报关数量" width="70" prop="customsDeclarationCount">
+          <template #header>
+            报关<br />数量
+          </template>
+        </el-table-column>
+        <el-table-column label="报关单位" min-width="60" prop="customsDeclarationUnit">
+          <template #header>
+            报关<br />单位
+          </template>
+        </el-table-column>
+        <el-table-column label="CIF售价$" min-width="105" prop="cifPrice"/>
+        <el-table-column label="运费$" min-width="90" prop="freightFee"/>
+        <el-table-column label="FOB售价$" min-width="105" prop="fobPrice"/>
+        <el-table-column label="汇率" min-width="90" prop="rate"/>
+        <el-table-column label="人民币售价￥" min-width="100" prop="salePrice">
+          <template #header>
+            人民币<br />售价￥
+          </template>
+        </el-table-column>
+        <el-table-column label="含税成本￥" min-width="90" prop="taxInclusiveCost">
+          <template #header>
+            含税<br />成本￥
+          </template>
+        </el-table-column>
+        <el-table-column label="退税后成本￥" min-width="100" prop="taxRefundsCost">
+          <template #header>
+            退税后<br />成本￥
+          </template>
+        </el-table-column>
+        <el-table-column label="利润￥" min-width="100" prop="profit"/>
+        <el-table-column label="利润率" min-width="100" prop="profitMargin"/>
+        <el-table-column label="退税额￥" min-width="100" prop="taxRebate"/>
+        <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')"/>
+        <el-table-column label="供应商税号展示" prop="suppliserTaxNumber" :width="flexColumnWidth(list, '税号展示', 'suppliserTaxNumber')">
+          <template #header>
+            供应商<br />税号展示
+          </template>
+        </el-table-column>
+        <el-table-column label="PO" min-width="100" prop="po"/>
+        <el-table-column label="发票匹配日期" min-width="100" prop="invoiceMatchDate">
+          <template #header>
+            发票匹<br />配日期
+          </template>
+        </el-table-column>
+        <el-table-column label="发票代码" min-width="100" prop="invoiceCode"/>
+        <el-table-column label="发票号码" min-width="100" prop="invoiceNumber"/>
+        <el-table-column label="发票数量" min-width="100" prop="invoiceCount"/>
+        <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath"/>
+        <el-table-column label="SKU" min-width="90" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+        <el-table-column label="PO零件数" min-width="110" prop="componentCount"/>
+        <el-table-column label="shipmentID" min-width="130" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
+        <el-table-column label="付款记录" min-width="230" prop="payRecordList">
+          <template #default="{ row }">
+            <span v-html="row.payRecordList"></span>
+          </template>
+        </el-table-column>
+      </el-table>
+    
+      <vab-pagination 
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </div>
+   
   </vab-dialog>
 
 </template>
