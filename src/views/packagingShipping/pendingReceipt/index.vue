@@ -210,6 +210,7 @@
               </el-dropdown>
             </template>
           </el-table-column>
+          <el-table-column label="签收人" min-width="90" prop="signName"/>
           <el-table-column label="签收日期" min-width="115" prop="signDate">
             <template #default="{ row }">
               {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
@@ -244,7 +245,7 @@
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
           <el-table-column label="单位" min-width="60" prop="unit" />
           <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
-          <el-table-column label="签收物流单号" prop="signOrder" width="130" >
+          <el-table-column label="签收物流单号" prop="signOrder" :width="flexColumnWidth(list, '签收物流单号', 'signOrder')" >
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.signOrder"></span>
             </template>
@@ -309,7 +310,7 @@
             </template>
 
           </el-table-column>
-          
+         
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -502,7 +503,8 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash'
-import { ref } from 'vue'
+import { CSSProperties, ref } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
@@ -526,7 +528,6 @@ import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
-import handleClipboard from '~/src/utils/clipboard'
 
 defineOptions({
   name: 'PendingReceipt',
@@ -854,11 +855,15 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     } 
   }
 }
-const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 9  && data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 17) {
+const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
     return {
-      textAlign:'center'
+      textAlign: 'left'
     } 
+  }
+  return {
+    textAlign: 'center'
   }
 }
 const cellStyle3 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
@@ -1018,7 +1023,7 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.columnIndex === 4 || data.columnIndex === 12) {
+  if (data.column.label === '零件图片' || data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
   return ''

@@ -12,7 +12,11 @@
     >
       <el-table-column label="图片" min-width="90" prop="componentImg">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" @click="showPreviewImage(row.componentImg)" />
+          <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" @click="showPreviewImage(row.componentImg)" >
+            <template #error>
+              <el-icon />
+            </template>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="已有零件ID" width="120"/>   

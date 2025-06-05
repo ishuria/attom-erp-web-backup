@@ -2925,10 +2925,12 @@ const changeCurrencyPASIN = async () => {
   }
 }
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  const label = data.column.label
   if (['今销', '月净利润', '结算月额', '结算月量'].includes(data.column.label)) {
-    return 'header-cell'
+    return 'header-cell clearLR-padding'
   }
-  return ''
+ 
+  return 'clearLR-padding'
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
@@ -3447,6 +3449,10 @@ onBeforeMount(() => {
   padding-bottom: 0px;
 }
 .noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.noneHoverTable :deep(.clearLR-padding .cell) {
   padding-right: 0px;
   padding-left: 0px;
 }
