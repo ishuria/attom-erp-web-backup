@@ -654,3 +654,18 @@ export const getProductNewSkuList = (): Promise<{ data: string[] }> => {
     method: 'get',
   })
 }
+
+export const getEncasementError = () => {
+  return request({
+    url: `${BASE_API}/encasement/error/get`,
+    method: 'get',
+  })
+}
+
+export const updateEncasementError = (params: { error: number }) => {
+  return request({
+    url: `${BASE_API}/encasement/error/update`,
+    method: 'post',
+    params
+  })
+}
