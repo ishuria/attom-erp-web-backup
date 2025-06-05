@@ -449,6 +449,24 @@
                       </template>
                       <vab-icon icon="emotion-unhappy-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
                     </el-tooltip>
+                    <el-tooltip v-if="isAvailableSaleDayTotal(row)" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">低动销预警</div>
+                      </template>
+                      <vab-icon icon="notification-3-fill" :class="handleAvailableSaleDayTotal(row)" />
+                    </el-tooltip>
+                    <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">高退回率</div>
+                      </template>
+                      <vab-icon icon="reply-fill" :class="handleReturnGoods(row)" />
+                    </el-tooltip>
+                    <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">FBA差异 < 0 </div>
+                      </template>
+                      <vab-icon icon="home-2-fill" class="icon-red" />
+                    </el-tooltip>
                     <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">产品健康</div>
@@ -1674,8 +1692,29 @@ const isVoc = (row: any) => {
   }
   return false
 }
+// 判断可售总
+const isAvailableSaleDayTotal = (row: any) => {
+  if (row.esAvailableSaleDayTotal > 180) {
+    return true
+  }
+  return false
+}
+// 判断月退货率
+const isReturnGoods = (row: any) => {
+  if (row.monthReturnGoods >= 0.05) {
+    return true
+  }
+  return false
+}
+// 判断FBA
+const isFBA = (row: any) => {
+  if (row.differenceFba < 0) {
+    return true
+  }
+  return false
+}
 const isHealthy = (row: any) => {
-  if (!isOutOfStock(row) && !isLowDelivery(row) && !isStorageAge(row) && !isVoc(row)) {
+  if (!isOutOfStock(row) && !isLowDelivery(row) && !isStorageAge(row) && !isVoc(row) && !isAvailableSaleDayTotal(row) && !isReturnGoods(row) && !isFBA(row)) {
     return true   
   }
   return false
@@ -1721,6 +1760,26 @@ const handleVocSatisfaction = (voc: string) => {
   } else if (voc === '极差') {
     return 'icon-red'
   }
+}
+const handleAvailableSaleDayTotal = (row: any) => {
+  let className = ''
+  if (row.esAvailableSaleDayTotal > 180) {
+    className = 'icon-yellow'
+  } else if (row.esAvailableSaleDayTotal > 270) {
+    className = 'icon-orange'
+  } else if (row.esAvailableSaleDayTotal > 365) {
+    className = 'icon-red'
+  }
+  return className
+}
+const handleReturnGoods = (row: any) => {
+  let className = ''
+  if (row.monthReturnGoods >= 0.05) {
+    className = 'icon-yellow'
+  } else if (row.monthReturnGoods >= 0.08) {
+    className = 'icon-red'
+  }
+  return className
 }
 // 防抖处理
 const debouncedQueryData = debounce(() => {
