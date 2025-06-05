@@ -174,11 +174,7 @@
                   <br />
                   点击
                 </span>
-                <span v-if="item.label === '库存可售'">
-                  库存
-                  <br />
-                  可售
-                </span>
+              
                 <span v-if="item.prop === 'outletDeal'">
                   可报
                   <br />
@@ -224,11 +220,35 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '月销额'">
+                <span v-if="item.label === '结算月量'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">结算<br />月量 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
-                      <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
+                      <div class="custom-tooltip" >过去30天的结算销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '结算月额'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">结算<br />月额 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的结算销售额</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '订单月量'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月量 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '订单月额'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月额 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销售额</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -320,11 +340,19 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '可售含在途'">
+                <span v-if="item.label === '可售总'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">可售总 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
-                      <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
+                      <div class="custom-tooltip" >SKU对应ASIN的(总FBA库存+在途数量)的可售天数+断货天数</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '库存可售'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">库存<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -726,10 +754,13 @@
                 点击
               </span>
               <span v-if="item.label === '库存可售'">
-                库存
-                <br />
-                可售
-              </span>
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">库存<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
+                    </template>
+                  </el-tooltip>
+                </span>
               <span v-if="item.prop === 'outletDeal'">
                 可报
                 <br />
@@ -767,14 +798,38 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月销额'">
+              <span v-if="item.label === '结算月量'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">结算<br />月量 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的结算销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+              <span v-if="item.label === '结算月额'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">结算<br />月额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
+                    <div class="custom-tooltip" >过去30天的结算销售额</div>
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '订单月量'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月量 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '订单月额'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月额 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销售额</div>
+                    </template>
+                  </el-tooltip>
+                </span>
               <span v-if="item.label === '月净利润'">
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月净利润 <el-icon><question-filled /></el-icon> </div>
@@ -863,14 +918,14 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '可售含在途'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
-                  <template #content>
-                    <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
+              <span v-if="item.label === '可售总'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">可售总 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应ASIN的(总FBA库存+在途数量)的可售天数+断货天数</div>
+                    </template>
+                  </el-tooltip>
+                </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -1221,14 +1276,38 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '月销额'">
+              <span v-if="item.label === '结算月量'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">结算<br />月量 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的结算销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+              <span v-if="item.label === '结算月额'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月销额 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">结算<br />月额 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的【结算】销售额，与下单时间有10天左右的延迟</div>
+                    <div class="custom-tooltip" >过去30天的结算销售额</div>
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '订单月量'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月量 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销量</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '订单月额'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">订单月额 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >过去30天的订单销售额</div>
+                    </template>
+                  </el-tooltip>
+                </span>
               <span v-if="item.label === '月净利润'">
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月净利润 <el-icon><question-filled /></el-icon> </div>
@@ -1317,14 +1396,7 @@
                   </template>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '可售含在途'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
-                  <template #content>
-                    <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
+        
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -1938,7 +2010,8 @@ const label1 = [
   'FBA仓储费',
   'FBA差异',
   '月净利润',
-  '月销额',
+  '结算月额',
+  '订单月额',
   '月广告销售',
   '月广告支出',
   '预计下月仓储费',
@@ -1958,14 +2031,15 @@ const label2 = [
   '月退货%',
   '月退款%',
 ]
-const label3 = ['上新', '库存可售', '可售含在途', '断货']
+const label3 = ['上新', '库存可售', '可售总', '断货']
 const label4 = ['今广', '半年有货率', '月广%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
   ['FBA仓储费', 'fbaStorageFee'],
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
-  ['月销额', 'monthSalesPrice'],
+  ['结算月额', 'monthSalesPrice'],
+  ['订单月额','monthOrderVolume'],
   ['月广告销售', 'monthAdvSales'],
   ['月广告支出', 'monthAdvExpenditure'],
   ['预计下月仓储费', 'estimateNextMonthStorageFee'],
@@ -1988,7 +2062,7 @@ const label2Map = new Map([
 const label3Map = new Map([
   ['上新', 'newArrivalDay'],
   ['库存可售', 'esAvailableSaleDay'],
-  ['可售含在途', 'esAvailableSaleDayTotal'],
+  ['可售总', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
 const label4Map = new Map([
@@ -2393,6 +2467,9 @@ const handleWidth = (item: any) => {
         const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
         return `${Number(availableWidth) + Number(fbaWidth)}px`
       }
+      case '最近入库': {
+        return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
+      }
       default: {
         return item.minWidth
       }
@@ -2416,6 +2493,9 @@ const handleWidth = (item: any) => {
       }
       case '开发人员': {
         return calculateBrColumnWidth(asinList.value, (row: any) => row._developName, 100)
+      }
+      case '最近入库': {
+        return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
       }
       default: {
         return item.minWidth
@@ -2777,7 +2857,7 @@ const changeCurrencyPASIN = async () => {
   }
 }
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (['今销', '月净利润', '月销额'].includes(data.column.label)) {
+  if (['今销', '月净利润', '结算月额', '结算月量'].includes(data.column.label)) {
     return 'header-cell'
   }
   return ''
