@@ -476,12 +476,12 @@
                     
                   </div>
                 </span>
-                <span v-if="item.label === 'ASIN'">
+                <!-- <span v-if="item.label === 'ASIN'">
                  {{ row.asin }}
                 </span>
                 <span v-if="item.label === '父体ASIN'">
                   <el-link type="primary">{{ row.parentAsin }}</el-link>
-                </span>
+                </span> -->
                 <span v-if="item.label === '销量趋势(点击看明细)'">
                   <div class="custom-bar">
                     <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
@@ -504,9 +504,12 @@
                 <span v-if="label2.includes(item.label)">
                   {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
                 </span>
-                <span v-if="label3.includes(item.label)">
+                <span v-if="label3.includes(item.label)" >
                   <!-- 处理 天 -->
+              
                   {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
+         
+    
                 </span>
                 <span v-if="label4.includes(item.label)">
                   {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
@@ -578,7 +581,13 @@
                     </el-space>
                   </div>
                 </span>
-                <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
+                <span v-if="item.label === '剩余库存'" >
+                  
+                
+                   {{ row.availableInventory }}/{{ row.fbaCount }}
+                   
+           
+                </span>
                 <span v-if="item.label === '库龄'">
                   <span v-html="row.storageAge"></span>
                 </span>
@@ -2923,7 +2932,7 @@ const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述'].includes(label)) {
+  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '运营分类', '运营负责人', '开发人员'].includes(label)) {
     return {
       textAlign: 'left',
     }

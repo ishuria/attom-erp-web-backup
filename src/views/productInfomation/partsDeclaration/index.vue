@@ -309,7 +309,7 @@
       <template #footer>
         <div style="text-align: center">
           <el-button type="danger" @click="closePriceCoefficientSetting">取消</el-button>
-          <el-button type="success" @click="confirmPriceCoefficientSetting">确定</el-button>
+          <el-button :loading="confirmLoading" type="success" @click="confirmPriceCoefficientSetting">确定</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -382,8 +382,10 @@ const showPriceCoefficientSetting = async () => {
 const closePriceCoefficientSetting = () => {
   priceCoefficientSettingVisible.value = false
 }
+const confirmLoading = ref<boolean>(false)
 // 确认价格系数
 const confirmPriceCoefficientSetting = async () => {
+  confirmLoading.value = true
   const { data } = await updateCustomsClearanceRatio({
     minProcurementCoefficient: priceCoefficientSettingForm.minProcurementCoefficient,
     maxProcurementCoefficient: priceCoefficientSettingForm.maxProcurementCoefficient,
@@ -395,6 +397,7 @@ const confirmPriceCoefficientSetting = async () => {
     $baseMessage('价格系数修改成功', 'success')
     closePriceCoefficientSetting()
   }
+  confirmLoading.value = false
 }
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
