@@ -164,11 +164,7 @@
                   <br />
                   (点击看明细)
                 </span>
-                <span v-if="item.label === '2周广告转化'">
-                  2周广告
-                  <br />
-                  转化
-                </span>
+             
                 <span v-if="item.label === '2周广告点击'">
                   2周广告
                   <br />
@@ -348,11 +344,27 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '库存可售'">
+                <span v-if="item.label === '剩余可售'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">库存<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">剩余<br />可售 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '2周广告转化'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周广告<br />转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >2周订单数之和/2周点击之和</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '2周总转化'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周总转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应的ASIN的2周总转化率</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -779,18 +791,29 @@
                 (可点)
               </span>
               <span v-if="item.label === '2周广告转化'">
-                2周广告
-                <br />
-                转化
-              </span>
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周广告<br />转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >2周订单数之和/2周点击之和</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '2周总转化'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周总转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应的ASIN的2周总转化率</div>
+                    </template>
+                  </el-tooltip>
+                </span>
               <span v-if="item.label === '2周广告点击'">
                 2周广告
                 <br />
                 点击
               </span>
-              <span v-if="item.label === '库存可售'">
+              <span v-if="item.label === '剩余可售'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">库存<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">剩余<br />可售 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
                     </template>
@@ -1273,19 +1296,25 @@
                 (可点)
               </span>
               <span v-if="item.label === '2周广告转化'">
-                2周广告
-                <br />
-                转化
-              </span>
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周广告<br />转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >2周订单数之和/2周点击之和</div>
+                    </template>
+                  </el-tooltip>
+                </span>
+                <span v-if="item.label === '2周总转化'">
+                  <el-tooltip content="" effect="dark" placement="top">
+                    <div class="questionIcon">2周总转化 <el-icon><question-filled /></el-icon> </div>
+                    <template #content>
+                      <div class="custom-tooltip" >SKU对应的ASIN的2周总转化率</div>
+                    </template>
+                  </el-tooltip>
+                </span>
               <span v-if="item.label === '2周广告点击'">
                 2周广告
                 <br />
                 点击
-              </span>
-              <span v-if="item.label === '库存可售'">
-                库存
-                <br />
-                可售
               </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
@@ -2116,7 +2145,7 @@ const label2 = [
   '月退货%',
   '月退款%',
 ]
-const label3 = ['上新', '库存可售', '可售总', '断货']
+const label3 = ['上新', '剩余可售', '可售总', '断货']
 const label4 = ['今广', '半年有货率', '月广%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
@@ -2146,7 +2175,7 @@ const label2Map = new Map([
 ])
 const label3Map = new Map([
   ['上新', 'newArrivalDay'],
-  ['库存可售', 'esAvailableSaleDay'],
+  ['剩余可售', 'esAvailableSaleDay'],
   ['可售总', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
@@ -2545,12 +2574,12 @@ const handleWidth = (item: any) => {
         return flexColumnWidth(list.value, '产品描述', 'productDesc');
       }
       case '开发人员': {
-        return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
+        return calculateBrColumnWidth(list.value, (row: any) => row._developName, 90)
       }
       case '剩余库存': {
         const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
         const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
-        return `${Number(availableWidth) + Number(fbaWidth)}px`
+        return `${Number(availableWidth) + Number(fbaWidth) - 20}px`
       }
       case '最近入库': {
         return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
@@ -2723,6 +2752,7 @@ const cellClick = async (row: any, column: any) => {
         path: '/storeOperations/productAnalysis',
         query: {
           activeName: 0,
+          field: activeName.value
         },
       })
       _addData(row) 
@@ -2943,7 +2973,7 @@ const changeCurrencyPASIN = async () => {
 }
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   const label = data.column.label
-  if (['今销', '月净利润', '结算月额', '结算月量'].includes(data.column.label)) {
+  if (['今销', '月净利润', '结算月额', '结算月量', '2周广告转化', '2周总转化'].includes(data.column.label)) {
     return 'header-cell clearLR-padding'
   }
  
@@ -2954,27 +2984,32 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '运营分类', '运营负责人', '开发人员'].includes(label)) {
     return {
       textAlign: 'left',
+      verticalAlign: 'top',
     }
   } else if (label === '运营备注') {
     return {
       textAlign: 'left',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      verticalAlign: 'top',
     }
   } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
     return {
       textAlign: 'center',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      verticalAlign: 'top',
     }
   } else switch (label) {
     case 'FBA差异': {
       if (data.row.differenceFba > 0) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-success)'
         }
       } else {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-danger)'
         }
       }
@@ -2984,16 +3019,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (monthNetProfitMargin >= 20) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-success)'
         }
       } else if (monthNetProfitMargin < 20 && monthNetProfitMargin > 0) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-danger)'
         }
       }
@@ -3002,11 +3040,13 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (data.row.monthNetProfit > 0) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-success)'
         }
       } else {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-danger)'
         }
       }
@@ -3016,16 +3056,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (monthAcos > 35) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-danger)'
         }
       } else if (monthAcos <= 35 && monthAcos > 30) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-success)'
         }
       }
@@ -3035,16 +3078,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (yearAcos > 35) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-danger)'
         }
       } else if (yearAcos <= 35 && yearAcos > 30) {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
+          verticalAlign: 'top',
           color: 'var(--el-color-success)'
         }
       }
@@ -3052,6 +3098,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     default: {
       return {
         textAlign: 'center',
+        verticalAlign: 'top',
       }
     }
   }

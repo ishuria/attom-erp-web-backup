@@ -91,7 +91,20 @@ export function getDefaultStringTime(): [string, string] {
   const formattedTodayDate = todayDate.toISOString().split('T')[0];
   return [formattedLastMonthDate, formattedTodayDate];
 }
-
+/**
+ * 
+ * @returns 获取当前日期的前30天
+ */
+export function getLast30DaysStringTime(): [string, string] {
+  const today = new Date();
+  const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29);
+  // 今天的日期
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  // 格式化为字符串形式
+  const formattedThirtyDaysAgo = thirtyDaysAgo.toISOString().split('T')[0];
+  const formattedTodayDate = todayDate.toISOString().split('T')[0];
+  return [formattedThirtyDaysAgo, formattedTodayDate];
+}
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
  * @param date 

@@ -27,7 +27,7 @@
           <div style="position: absolute; top: 0px; right: -9px;">
             <el-form v-if="activeName === 0" inline>
               <el-form-item label="展示">
-                <el-select>
+                <el-select v-model="selectField">
                   <el-option 
                     v-for="item in levelOption"
                     :key="item.value"
@@ -43,7 +43,7 @@
                 </el-radio-group>
               </el-form-item>
               <el-form-item>
-                <el-select>
+                <el-select v-model="selectDate">
                   <el-option 
                     v-for="item in dateOption"
                     :key="item.value"
@@ -54,10 +54,13 @@
               </el-form-item>
               <el-form-item>
                 <el-date-picker
+                  v-model="selectDateRange"
                   end-placeholder="结束日期"
                   range-separator="至"
                   start-placeholder="开始日期"
                   type="daterange"
+                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
+              
                 />
               </el-form-item>
             </el-form>
@@ -320,10 +323,11 @@
 <script lang="ts" setup>
 import { Star } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
+import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
+import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 
 defineOptions({
   name: 'ProductAnalysis',
@@ -331,6 +335,12 @@ defineOptions({
 
 const route: any = useRoute()
 const router: any = useRouter()
+// 选择的维度 SKU ASIN 父体ASIN
+const selectField = ref<Number>(0)
+// 选择的日期
+const selectDate = ref<Number>(0)
+// 选择的日期范围
+const selectDateRange = ref<[string, string]>(getLast30DaysStringTime())
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const activeName = ref<number>(0)
@@ -432,6 +442,11 @@ onBeforeMount(() => {
 onMounted(() => {
   setImageHeight()
   activeName.value = Number(route.query.activeName);  
+})
+watch(() => route.query.field, (newField) => {
+  if (newField) {
+    selectField.value = Number(newField);
+  }
 })
 </script>
 

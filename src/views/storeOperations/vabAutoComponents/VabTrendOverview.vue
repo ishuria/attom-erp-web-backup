@@ -1,6 +1,6 @@
 <template>
   <div class="overview-container">
-    <vab-card data-label="card" style="height: 550px; margin-bottom: 10px; display: flex; flex-direction: column;">
+    <vab-card data-label="card" style=" display: flex; flex-direction: column;height: 550px; margin-bottom: 10px;">
       <el-row :gutter="20">
         <!-- 总销售额 -->
         <el-col :span="4">
@@ -208,7 +208,7 @@
       </vab-query-form>
       <div ref="chartContainer" style="width: 100%; height: 350px"></div>
     </vab-card>
-    <div style="text-align: right; margin-bottom: 10px;">
+    <div style=" margin-bottom: 10px;text-align: right;">
       <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
         <template #reference>
           <el-button>
@@ -220,14 +220,14 @@
             v-for="item in columns"
             :key="item.label"
             :class="{'non-draggable': item.disableCheck}"
-            style="font-size: var(--el-font-size-base); display: flex; align-items: center;" 
+            style=" display: flex; align-items: center;font-size: var(--el-font-size-base);" 
           >
             <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
             <span style="flex: 1">{{ item.label }}</span>
             <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
               <el-icon><view /></el-icon>
             </span>
-            <span v-else class="icon-hover" style="cursor: pointer; display: flex; align-items: center;" @click="handleChecked(item)">
+            <span v-else class="icon-hover" style=" display: flex; align-items: center;cursor: pointer;" @click="handleChecked(item)">
               <el-icon v-show="!item.checked"><hide /></el-icon>
               <el-icon v-show="item.checked"><view /></el-icon>
             </span>
@@ -1546,8 +1546,8 @@ onBeforeUnmount(() => chartObserver.disconnect());
   border-radius: 4px; /* 圆角 */
   transition: background-color 0.3s; /* 动画过渡效果 */
   &:hover {
-    background-color: #f2f2f2; /* 浅灰色背景 */
     color: var(--el-color-primary);
+    background-color: #f2f2f2; /* 浅灰色背景 */
   }
 }
 .disabled-handle {
