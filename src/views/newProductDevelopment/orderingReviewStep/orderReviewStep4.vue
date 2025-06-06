@@ -187,13 +187,13 @@ const handleSaveAndContinue = async () => {
       releasePoLoading.value = true
       const { data } = await releasePo({ reviewId: props.reviewId })
       if (data === true) {
-        releasePoLoading.value = false
         $baseMessage('发布PO成功！', 'success', 'hey')
         await delVisitedRoute(handleActivePath(route, true))
         router.push({
           path: '/newProductDevelopment/newProductApprovalAndRecords',
         })
       }
+      releasePoLoading.value = false
     })
   } catch {
     releasePoLoading.value = false
