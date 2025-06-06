@@ -433,9 +433,15 @@
                     </el-tooltip>
                     <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">有低量配送费或低量仓储费预警</div>
+                        <div class="custom-tooltip">有低量配送费</div>
                       </template>
-                      <vab-icon icon="truck-fill" :class="handleLowDelivery(row)" />
+                      <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;">
+                    </el-tooltip>
+                    <el-tooltip v-if="isWareHousing(row)"  effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">低量仓储费预警</div>
+                      </template>
+                      <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;">
                     </el-tooltip>
                     <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
                       <template #content>
@@ -453,19 +459,21 @@
                       <template #content>
                         <div class="custom-tooltip">低动销预警</div>
                       </template>
-                      <vab-icon icon="notification-3-fill" :class="handleAvailableSaleDayTotal(row)" />
+                      <vab-icon icon="line-chart-fill" :class="handleAvailableSaleDayTotal(row)" />
                     </el-tooltip>
                     <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">高退回率</div>
+                        <div class="custom-tooltip">高退货率</div>
                       </template>
                       <vab-icon icon="reply-fill" :class="handleReturnGoods(row)" />
                     </el-tooltip>
                     <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
                       <template #content>
-                        <div class="custom-tooltip">FBA差异 < 0 </div>
+                        <div class="custom-tooltip">FBA费异常</div>
                       </template>
-                      <vab-icon icon="home-2-fill" class="icon-red" />
+                   
+                      <img src="../../../icon/FBA费异常.svg" alt="FBA" style="width: 20px; height: 20px; margin-top: -1px;">
+             
                     </el-tooltip>
                     <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
                       <template #content>
@@ -1680,7 +1688,13 @@ const isOutOfStock = (row: any) => {
 }
 // 判断低量
 const isLowDelivery = (row: any) => {
-  if ((row.warehousing >= 28 && row.warehousing <= 35) || row.lowVolumeDelivery === 1) {
+  if (row.lowVolumeDelivery === 1) {
+    return true
+  }
+  return false
+}
+const isWareHousing = (row: any) => {
+  if (row.warehousing >= 28 && row.warehousing <= 35) {
     return true
   }
   return false
@@ -1723,7 +1737,7 @@ const isFBA = (row: any) => {
   return false
 }
 const isHealthy = (row: any) => {
-  if (!isOutOfStock(row) && !isLowDelivery(row) && !isStorageAge(row) && !isVoc(row) && !isAvailableSaleDayTotal(row) && !isReturnGoods(row) && !isFBA(row)) {
+  if (!isOutOfStock(row) && !isLowDelivery(row) && !isWareHousing(row) && !isStorageAge(row) && !isVoc(row) && !isAvailableSaleDayTotal(row) && !isReturnGoods(row) && !isFBA(row)) {
     return true   
   }
   return false
@@ -1774,9 +1788,11 @@ const handleAvailableSaleDayTotal = (row: any) => {
   let className = ''
   if (row.esAvailableSaleDayTotal > 180) {
     className = 'icon-yellow'
-  } else if (row.esAvailableSaleDayTotal > 270) {
+  }
+  if (row.esAvailableSaleDayTotal > 270) {
     className = 'icon-orange'
-  } else if (row.esAvailableSaleDayTotal > 365) {
+  }
+  if (row.esAvailableSaleDayTotal > 365) {
     className = 'icon-red'
   }
   return className
@@ -1785,7 +1801,8 @@ const handleReturnGoods = (row: any) => {
   let className = ''
   if (row.monthReturnGoods >= 0.05) {
     className = 'icon-yellow'
-  } else if (row.monthReturnGoods >= 0.08) {
+  }
+  if (row.monthReturnGoods >= 0.08) {
     className = 'icon-red'
   }
   return className
