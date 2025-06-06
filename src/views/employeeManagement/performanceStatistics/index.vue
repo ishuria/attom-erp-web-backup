@@ -453,7 +453,8 @@ const queryForm = reactive<IGetAssessmentListReq>({
   pageNo: 1,
   pageSize: 20,
   startDate: '',
-  endDate: ''
+  endDate: '',
+  status: 0
 })
 const list = ref<IGetUserAttendanceList[]>([])
 /* ============================== 考核数设定变量 ============================== */
@@ -677,10 +678,14 @@ const cell3Style = (data: { row: any, column: any, rowIndex: number, columnIndex
 }
 // tab切换
 const handleTabChange = () => {
-  if (activeName.value === 0) {
-    queryData()
-  } else if (activeName.value === 2) {
+  if (activeName.value === 2) {
     queryAssessmentData()
+  } else if (activeName.value === 3) {
+    queryForm.status = 1
+    queryData()
+  } else {
+    queryForm.status = 0
+    queryData()
   }
 }
 

@@ -35,6 +35,7 @@ export interface IGetAssessmentListReq {
   endDate: string
   pageNo: number
   pageSize: number
+  status?: number
 }
 
 export interface IGetAssessmentListRes {
