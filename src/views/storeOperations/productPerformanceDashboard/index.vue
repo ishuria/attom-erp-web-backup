@@ -2752,7 +2752,10 @@ const cellClick = async (row: any, column: any) => {
         path: '/storeOperations/productAnalysis',
         query: {
           activeName: 0,
-          field: activeName.value
+          field: activeName.value,
+          sku: row.sku,
+          asin: row.asin,
+          site: row.site
         },
       })
       _addData(row) 

@@ -337,24 +337,24 @@ const columns = ref<any>([
     checked: true,
     minWidth: 100,
   },
-  {
-    label: '预计下月仓储费',
-    prop: 'expectedStorageCostData',
-    checked: true,
-    minWidth: 140,
-  },
+  // {
+  //   label: '预计下月仓储费',
+  //   prop: 'expectedStorageCostData',
+  //   checked: true,
+  //   minWidth: 140,
+  // },
   {
     label: '退款金额',
     prop: 'refundPrice',
     checked: true,
     minWidth: 90,
   },
-  {
-    label: '毛利润',
-    prop: 'grossProfit',
-    checked: true,
-    minWidth: 90,
-  },
+  // {
+  //   label: '毛利润',
+  //   prop: 'grossProfit',
+  //   checked: true,
+  //   minWidth: 90,
+  // },
   {
     label: '点击成本',
     prop: 'clickCost',
@@ -409,12 +409,12 @@ const columns = ref<any>([
     checked: true,
     minWidth: 90,
   },
-  {
-    label: '毛利润率',
-    prop: 'grossProfitMargin',
-    checked: true,
-    minWidth: 90,
-  },
+  // {
+  //   label: '毛利润率',
+  //   prop: 'grossProfitMargin',
+  //   checked: true,
+  //   minWidth: 90,
+  // },
   {
     label: 'TACOS',
     prop: 'tacos',
@@ -519,9 +519,9 @@ const dropdownItems = ref([
   { label: '广告销售额' },
   { label: '广告花费' },
   { label: '净利润' },
-  { label: '预计下月仓储费' },
+  // { label: '预计下月仓储费' },
   { label: '退款金额', },
-  { label: '毛利润', },
+  // { label: '毛利润', },
   { label: '点击成本' },
   { label: '售价' },
   { label: 'CPA' },
@@ -531,7 +531,7 @@ const dropdownItems = ref([
   { label: '退货率', },
   { label: '退款率', },
   { label: '净利润率', },
-  { label: '毛利润率', },
+  // { label: '毛利润率', },
   { label: 'TACOS', },
   { label: 'ACOS', },
   { label: '广告点击率', },
@@ -585,10 +585,10 @@ type IData = {
   returnQuantity: number
 }
 const groups = {
-  price1: ['总销售额', '广告销售额', '广告花费', '净利润', '预计下月仓储费', '退款金额', '毛利润'],
+  price1: ['总销售额', '广告销售额', '广告花费', '净利润', '退款金额'],
   price2: ['点击成本', '售价', 'CPA'],
   percent1: ['广告转化率', '自然转化率', '综合转化率'],
-  percent2: ['退货率', '退款率', '净利润率', '毛利润率', 'TACOS', 'ACOS'],
+  percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
   percent3: ['广告点击率'],
   int1: ['总访客', 'PC端访客', '移动端访客', '自然点击/访客', '广告点击/访客'],
   int2: ['Rating'],
@@ -606,9 +606,9 @@ const nameMapProp: Record<string, IDataProp> = {
   '广告销售额': 'adSalesData',
   '广告花费': 'adCostData',
   '净利润': 'netProfitData',
-  '预计下月仓储费': 'expectedStorageCostData',
+  // '预计下月仓储费': 'expectedStorageCostData',
   '退款金额': 'refundPrice',
-  '毛利润': 'grossProfit',
+  // '毛利润': 'grossProfit',
   '点击成本': 'clickCost',
   '售价': 'priceData',
   'CPA': 'cpa',
@@ -618,7 +618,7 @@ const nameMapProp: Record<string, IDataProp> = {
   '退货率': 'returnRate',
   '退款率': 'refundRate',
   '净利润率': 'netProfitMargin',
-  '毛利润率': 'grossProfitMargin',
+  // '毛利润率': 'grossProfitMargin',
   'TACOS': 'tacos',
   'ACOS': 'acos',
   '广告点击率': 'adClickRate',
@@ -686,7 +686,7 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
   const groupedData: Record<string, number> = {}
   const adCostData: Record<string, number> = {} // ∑广告花费
   const totalSales: Record<string, number> = {} // ∑总销售额
-  const grossProfit: Record<string, number> = {} // ∑毛利润
+  // const grossProfit: Record<string, number> = {} // ∑毛利润
   const netProfitData: Record<string, number> = {} // ∑净利润
   const refundPrice: Record<string, number> = {} // ∑退款金额
   const returnQuantity: Record<string, number> = {} // ∑退货量
@@ -734,18 +734,18 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
     
     break;
     }
-    case 'grossProfitMargin': {
-      // 处理毛利润率类型，计算 ∑毛利润 / ∑总销售额
-      if (!groupedData[timeKey]) {
-        grossProfit[timeKey] = 0
-        totalSales[timeKey] = 0
-      }
-      grossProfit[timeKey] += item.grossProfit
-      totalSales[timeKey] += item.totalSales
-      groupedData[timeKey] = formatNumber(grossProfit[timeKey] / totalSales[timeKey] * 100) 
+    // case 'grossProfitMargin': {
+    //   // 处理毛利润率类型，计算 ∑毛利润 / ∑总销售额
+    //   if (!groupedData[timeKey]) {
+    //     grossProfit[timeKey] = 0
+    //     totalSales[timeKey] = 0
+    //   }
+    //   grossProfit[timeKey] += item.grossProfit
+    //   totalSales[timeKey] += item.totalSales
+    //   groupedData[timeKey] = formatNumber(grossProfit[timeKey] / totalSales[timeKey] * 100) 
     
-    break;
-    }
+    // break;
+    // }
     case 'netProfitMargin': {
       // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
       if (!groupedData[timeKey]) {
