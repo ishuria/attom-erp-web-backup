@@ -5,6 +5,7 @@
     top="5%"
     width="60%"
     @close="handlerCloseDialog"
+    style="width: fit-content"
   >
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
@@ -25,7 +26,7 @@
       :cell-style="cellStyle"
       :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
-      max-height="550px"
+      max-height="650px"
       stripe
     >
       <el-table-column  class="image-wall" label="图片" width="75">
@@ -36,9 +37,9 @@
         </template>
       </el-table-column>
       <el-table-column label="零件ID" prop="id" width="100"/>
-      <el-table-column label="SKU" prop="sku" />
-      <el-table-column label="供应商" prop="suppliser" />
-      <el-table-column label="零件名" prop="componentName" />
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
+      <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
       <el-table-column label="单个SKU添加数量" prop="count" width="160">
         <template #default="{ row }">
             <el-input v-model="row.count" clearable />
@@ -69,6 +70,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { getAddComponentList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({

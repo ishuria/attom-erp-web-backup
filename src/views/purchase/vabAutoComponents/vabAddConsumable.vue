@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="零件ID" prop="id" width="100"/>
       <el-table-column label="供应商" min-width="200" prop="suppliser"/>
-      <el-table-column label="耗材名" min-width="200" prop="componentName"/>
+      <el-table-column label="耗材名" min-width="200" prop="componentName" />
       <el-table-column label="添加数量" prop="count" width="150">
         <template #default="{ row }">
           <el-input v-model="row.count" clearable />
