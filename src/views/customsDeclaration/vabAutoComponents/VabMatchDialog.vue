@@ -233,10 +233,7 @@
     <!-- 明细 -->
     <div v-if="tab === 1">
       <vab-query-form>
-        <vab-query-form-left-panel>
-          <el-button type="primary" @click="handleArchive">归档</el-button>
-        </vab-query-form-left-panel>
-        <vab-query-form-right-panel>
+        <vab-query-form-right-panel :span="24">
           <el-form inline :model="querySentForm" @submit.prevent>
             <el-form-item>
               <el-input
@@ -262,8 +259,9 @@
         stripe
         @cell-click="changeInput"
         @selection-change="setSelectRows"
+        :row-class-name="tableRowClassName"
+        style="height: calc(80vh - 200px); max-height: calc(80vh - 200px);"
       >
-        <el-table-column align="center" type="selection" />
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')" />
         <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')" />
@@ -334,6 +332,7 @@
         :header-cell-style="{ textAlign: 'center' }"
         stripe
         @selection-change="setSelectAggRows"
+         style="height: calc(80vh - 230px); max-height: calc(80vh - 230px);"
       >
         <el-table-column align="center" type="selection" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(aggregationList, 'SKU', 'sku')" />
@@ -917,6 +916,7 @@ const handleArchiveAgg = async () => {
         poId: item.poId!,
         poComponentId: item.poComponentId!,
         sku: item.sku!,
+        id: item.id
       }
     })
     const { data } = await archiveShipmentYfwbAggregation(req)
@@ -1488,12 +1488,27 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
     textAlign: 'left',
   }
 }
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (!row.shipmentId) {
+    return 'danger-row'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 
 .noneHoveTable {
   :deep() {
+    .danger-row > td {
+      background-color: var(--el-color-danger-light-9) !important;
+    }
+    
     td {
       background-color: #ffffff !important;
     }
@@ -1511,6 +1526,10 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
   white-space: pre-wrap;
 }
 .dialog {
+  .el-dialog {
+    height: 80vh;
+    max-height: 80vh;
+  }
   .vab-query-form {
     .top-panel {
       .el-form {
