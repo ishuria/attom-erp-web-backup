@@ -189,6 +189,14 @@ const list: VabRouteRecord[] = [
             },
           },
           {
+            path: 'narrowTable',
+            name: 'NarrowTable',
+            component: '/@/views/vab/table/narrowTable.vue',
+            meta: {
+              title: '极窄表格',
+            },
+          },
+          {
             path: 'columnTable',
             name: 'ColumnTable',
             component: '/@/views/vab/table/columnTable.vue',

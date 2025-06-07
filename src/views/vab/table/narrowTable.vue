@@ -1,5 +1,5 @@
 <template>
-  <div class="default-table-container auto-height-container">
+  <div class="narrow-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -60,6 +60,7 @@
       ref="tableRef"
       v-loading="listLoading"
       border
+      class="vab-narrow-table"
       :data="list"
       @selection-change="setSelectRows"
     >
@@ -153,7 +154,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 
 defineOptions({
-  name: 'DefaultTable',
+  name: 'NarrowTable',
 })
 
 const router = useRouter()

@@ -247,6 +247,14 @@ export const asyncRoutes: VabRouteRecord[] = [
             },
           },
           {
+            path: 'narrowTable',
+            name: 'NarrowTable',
+            component: () => import('/@/views/vab/table/narrowTable.vue'),
+            meta: {
+              title: '极窄表格',
+            },
+          },
+          {
             path: 'columnTable',
             name: 'ColumnTable',
             component: () => import('/@/views/vab/table/columnTable.vue'),

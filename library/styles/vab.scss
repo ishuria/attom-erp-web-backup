@@ -443,6 +443,14 @@ html {
       }
     }
 
+    /* 极窄表格 */
+    .vab-narrow-table {
+      .el-table__cell {
+        //0.5px是最窄，需要调就往上加数字，别超过4px，要不太丑
+        padding: 0.5px 0;
+      }
+    }
+
     /* el-pagination分页 */
     .el-pagination {
       --el-pagination-border-radius: var(--el-border-radius-base);

@@ -23,6 +23,10 @@ declare type LayoutName =
    * 瀑布布局
    */
   | 'fall'
+  /**
+   * 多列布局
+   */
+  | 'double'
 
 declare type ThemeName = 'default' | 'plain' | 'technology'
 
