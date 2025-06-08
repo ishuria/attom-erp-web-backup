@@ -1106,5 +1106,12 @@ html {
         border-radius: var(--el-border-radius-base);
       }
     }
+
+    .vab-color-picker {
+      .el-color-picker {
+        width: inherit;
+        height: inherit;
+      }
+    }
   }
 }

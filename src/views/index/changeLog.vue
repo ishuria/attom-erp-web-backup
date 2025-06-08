@@ -102,7 +102,7 @@ onBeforeMount(async () => {
   // })
 
   const _data: any = sortLogs(data)
-  _data[0].timestamp = lastTime
+  // _data[0].timestamp = lastTime
   _data.unshift({
     timestamp: lastTime,
     content: `
