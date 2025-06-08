@@ -35,7 +35,14 @@ const randomTheme = async () => {
     const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
     const layout =
       device.value === 'desktop'
-        ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall'])
+        ? shuffle(theme.value.layout, [
+            'horizontal',
+            'vertical',
+            'column',
+            'comprehensive',
+            'fall',
+            'double',
+          ])
         : 'vertical'
     const _color = shuffle(theme.value.color, [
       '#1e90ff',

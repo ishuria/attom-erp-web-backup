@@ -128,7 +128,14 @@ const randomTheme = async () => {
     const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
     const layout =
       device.value === 'desktop'
-        ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall'])
+        ? shuffle(theme.value.layout, [
+            'horizontal',
+            'vertical',
+            'column',
+            'comprehensive',
+            'fall',
+            'double',
+          ])
         : 'vertical'
     const _color = shuffle(theme.value.color, [
       '#1e90ff',
@@ -273,9 +280,9 @@ watch(
         padding: 0;
         margin: 0;
         overflow: hidden;
+        text-overflow: ellipsis;
         font-size: var(--el-font-size-extra-small);
         line-height: 25px;
-        text-overflow: ellipsis;
         white-space: nowrap;
       }
     }
