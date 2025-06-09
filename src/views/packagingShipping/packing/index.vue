@@ -96,7 +96,7 @@
         <template #default="{ row, $index }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
           <el-link type="primary" :underline="false" @click="showSplit(row)">拆分</el-link>
-          <el-link type="danger" :underline="false" @click="handleDelEncasement(row, $index)">删除</el-link>
+          <el-link type="danger" :underline="false" @click="handleDelEncasement(row)">删除</el-link>
           <el-link type="primary" :underline="false" @click="showPrint(row)">打印</el-link>
         </template>
       </el-table-column>
@@ -1127,14 +1127,14 @@ const showSplit= (row: any) => {
   splitVisible.value = true
 }
 // 删除装箱
-const handleDelEncasement = async (row: any, index: number) => {
+const handleDelEncasement = async (row: any) => {
   $baseConfirm('确定删除本条装箱信息吗？', null, async () => {
     const { data } = await delEncasement({
       encasementId: row.id
     })
     if (data) {
       $baseMessage('删除本条装箱信息成功', 'success')
-      list.value.splice(index, 1)
+      fetchData()
     }
   })
 }
