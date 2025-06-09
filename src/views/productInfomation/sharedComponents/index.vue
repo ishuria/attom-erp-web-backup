@@ -13,6 +13,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table 
+      v-loading="listLoading"
       ref="tableRef" 
       border class="noneHoveTable" 
       :data="list" 
@@ -37,14 +38,14 @@
         </template>
       </el-table-column>
       <el-table-column label="默认供应商" min-width="200" prop="suppliser"/>
-      <el-table-column label="云舟采购价格系数" min-width="80" prop="ratio">
+      <!-- <el-table-column label="云舟采购价格系数" min-width="80" prop="ratio">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.ratio" clearable @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.ratio }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
@@ -125,37 +126,6 @@ const cellClick = async (row: any, column: any, cell: HTMLTableCellElement) => {
     focusAndSelectInput(cell);
   }
 }
-// table blur事件
-const clickCancel = async (event: any, value: any) => {
-  // 获取根元素，避免重复调用 getRootElement
-  const rootElement = getRootElement(event.srcElement, ".cell");
-
-  if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
-
-    // 更新 t1 和 t2 的 class
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
-  }
-
-  // 只有在数据变化时才处理更新
-  if (isEqual(value, copyRow)) {
-    return; // 数据没有变化，不执行更新
-  }
-
-  if (event.type === 'blur') {
-    // 执行失去焦点时的处理逻辑
-    try {
-      await updateProductAlreadyComponent({
-        id: value.id,
-        ratio: value.ratio
-      })
-    } catch {
-      Object.assign(value, copyRow); // 恢复原始数据
-    }
-  }
-};
 
 interface Option2 {
   key: number
@@ -285,12 +255,13 @@ const queryData = () => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getProductAllReadyCOmponentList(queryForm)
-  listLoading.value = false
+
   list.value = data.list
   total.value = data.total
   list.value.forEach((item: any) => {
     item.sku = item.sku.replaceAll(',', '<br>');
   })
+  listLoading.value = false
 }
 
 onBeforeMount(() => {

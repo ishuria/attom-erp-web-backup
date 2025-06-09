@@ -252,6 +252,14 @@
           <span>{{ row.contractName }}</span>
         </template>
       </el-table-column> -->
+      <el-table-column label="云舟采购价格系数" min-width="100" prop="ratio">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.ratio" clearable @blur="clickRatioCancel($event, row)" @keyup.enter="clickRatioCancel($event, row)" />
+          </div>
+          <span>{{ row.ratio }}</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -332,6 +340,7 @@ import {
   getHsSelectList,
   getProductCustomsList,
   updateCustomsClearanceRatio,
+  updateProductAlreadyComponent,
   updateProductCustomsClearance,
   updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
@@ -644,6 +653,38 @@ const clickCancel = async (event: any, value: any) => {
     }
   }
 }
+
+// 云州采购价格系数
+const clickRatioCancel = async (event: any, value: any) => {
+  // 获取根元素，避免重复调用 getRootElement
+  const rootElement = getRootElement(event.srcElement, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    // 更新 t1 和 t2 的 class
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+
+  // 只有在数据变化时才处理更新
+  if (isEqual(value, copyRow)) {
+    return; // 数据没有变化，不执行更新
+  }
+
+  if (event.type === 'blur') {
+    // 执行失去焦点时的处理逻辑
+    try {
+      await updateProductAlreadyComponent({
+        id: value.componentId,
+        ratio: value.ratio
+      })
+    } catch {
+      Object.assign(value, copyRow); // 恢复原始数据
+    }
+  }
+};
 
 // 修改HS
 const handleCustomsChange = async (row: any) => {
