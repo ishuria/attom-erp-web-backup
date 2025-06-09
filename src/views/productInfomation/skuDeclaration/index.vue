@@ -292,6 +292,26 @@
       </div>
     </template>
     </vab-dialog>
+    <!-- 查看HTS -->
+    <vab-dialog>
+      <el-form>
+        <el-form-item label="HTS美国">
+          <!-- <el-select
+            v-model="row.hts.us"
+            filterable
+            placeholder="请选择HTS美国"
+            @change="handleChangeHtsUsa(row)"
+          >
+            <el-option
+              v-for="item in usaList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            /> -->
+          <!-- </el-select> -->
+        </el-form-item>
+      </el-form>
+    </vab-dialog>
   </div>
 </template>
 
@@ -300,7 +320,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsUkList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
+import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 

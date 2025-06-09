@@ -260,7 +260,7 @@
                   <el-tooltip content="" effect="dark" placement="top">
                     <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
-                      <div class="custom-tooltip" >过去30天的净利润率</div>
+                      <div class="custom-tooltip" >过去30天的结算净利润率</div>
                     </template>
                   </el-tooltip>
                 </span>
@@ -900,7 +900,7 @@
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的净利润率</div>
+                    <div class="custom-tooltip" >过去30天的结算净利润率</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1384,7 +1384,7 @@
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">月净利 <el-icon><question-filled /></el-icon> </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的净利润率</div>
+                    <div class="custom-tooltip" >过去30天的结算净利润率</div>
                   </template>
                 </el-tooltip>
               </span>
@@ -2989,7 +2989,13 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       textAlign: 'left',
       verticalAlign: 'top',
     }
-  } else if (label === '运营备注') {
+  } else if (label === '季节趋势' || label === '销量趋势(点击看明细)') {
+    return {
+
+      verticalAlign: 'middle',
+    }
+  }
+  else if (label === '运营备注') {
     return {
       textAlign: 'left',
       cursor: 'pointer',
