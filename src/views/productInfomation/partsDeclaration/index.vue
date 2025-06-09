@@ -386,18 +386,23 @@ const confirmLoading = ref<boolean>(false)
 // 确认价格系数
 const confirmPriceCoefficientSetting = async () => {
   confirmLoading.value = true
-  const { data } = await updateCustomsClearanceRatio({
-    minProcurementCoefficient: priceCoefficientSettingForm.minProcurementCoefficient,
-    maxProcurementCoefficient: priceCoefficientSettingForm.maxProcurementCoefficient,
-    salesCoefficient1: priceCoefficientSettingForm.salesCoefficient1,
-    salesCoefficient2: priceCoefficientSettingForm.salesCoefficient2,
-    customClearanceCoefficient: priceCoefficientSettingForm.customClearanceCoefficient,
-  })
-  if (data) {
-    $baseMessage('价格系数修改成功', 'success')
-    closePriceCoefficientSetting()
+  try {
+    const { data } = await updateCustomsClearanceRatio({
+      minProcurementCoefficient: priceCoefficientSettingForm.minProcurementCoefficient,
+      maxProcurementCoefficient: priceCoefficientSettingForm.maxProcurementCoefficient,
+      salesCoefficient1: priceCoefficientSettingForm.salesCoefficient1,
+      salesCoefficient2: priceCoefficientSettingForm.salesCoefficient2,
+      customClearanceCoefficient: priceCoefficientSettingForm.customClearanceCoefficient,
+    })
+    if (data) {
+      $baseMessage('价格系数修改成功', 'success')
+      closePriceCoefficientSetting()
+    }
+  } catch (error) {
+    console.error('更新价格系数失败:', error)
+  } finally {
+    confirmLoading.value = false
   }
-  confirmLoading.value = false
 }
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
