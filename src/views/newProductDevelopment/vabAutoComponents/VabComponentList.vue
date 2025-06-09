@@ -63,7 +63,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="零件名" prop="componentName" width="104" >
+      <el-table-column label="零件名" prop="componentName" width="199" >
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -78,7 +78,7 @@
           <span>{{ row.componentName }}</span>
         </template>
       </el-table-column>
-
+<!-- 
         <el-table-column label="已有零件id" prop="existingPartId" width="95">
           <template #header>
             已有<br>零件id
@@ -86,7 +86,7 @@
           <template #default="{ row }"  >
             <div>{{ row.existingPartId }}</div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column label="零件数量" prop="componentQuantity" width="80">
           <template #header>
