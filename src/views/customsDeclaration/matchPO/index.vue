@@ -77,6 +77,7 @@
           </el-select>
         </template>
       </el-table-column>
+      <el-table-column label="箱数" prop="encasementNumber" min-width="80" />
       <el-table-column label="产品总数" min-width="100" prop="totalNumber"/>
       <el-table-column label="重量" min-width="70" prop="weight"/>
       <el-table-column label="体积" min-width="70" prop="volume"/>
