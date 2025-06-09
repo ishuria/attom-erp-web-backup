@@ -65,7 +65,7 @@ const { foldSideBar } = settingsStore
   :deep() {
     .vab-side-bar {
       .el-menu--inline {
-        padding-left: 10px;
+        padding-left: 15px;
       }
 
       .el-sub-menu {
@@ -94,10 +94,10 @@ const { foldSideBar } = settingsStore
         }
 
         // 建议隐藏所有的子集图标
-        [class*='ri-'],
-        .vab-icon {
-          display: none;
-        }
+        // [class*='ri-'],
+        // .vab-icon {
+        // display: none;
+        // }
       }
     }
   }
