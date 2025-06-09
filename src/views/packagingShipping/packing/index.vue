@@ -57,7 +57,7 @@
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="装箱日期" prop="createTime" width="115">
+      <el-table-column label="装箱日期" prop="createTime" sortable="custom" width="115" >
         <template #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
@@ -460,7 +460,7 @@
       </el-table>
     </vab-dialog>
     <!-- 误差 -->
-    <vab-dialog title="修改误差" width="20%" v-model="updateErrorVisible">
+    <vab-dialog title="修改误差" width="10%" v-model="updateErrorVisible">
       <el-form :model="errorForm" ref="errorFormRef" :rules="errorFormRules" label-position="top" >
         <el-form-item label="误差" prop="error">
           <el-input v-model="errorForm.error" clearable >
@@ -581,6 +581,7 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
     } 
     queryForm.shipmentDataSort = column.order === "ascending" ? 0 : 1
     queryForm.grossWeightSort = undefined
+    queryForm.createTimeSort = undefined
   }
   else if (prop === 'grossWeight') {
     if (!order) {
@@ -591,6 +592,19 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
       }
     } 
     queryForm.grossWeightSort = column.order === "ascending" ? 0 : 1
+    queryForm.shipmentDataSort = undefined
+    queryForm.createTimeSort = undefined
+  }
+  else if (prop === 'createTime') {
+    if (!order) {
+      if (queryForm.createTimeSort === 0) {
+        column.order = 'descending'
+      } else if (queryForm.createTimeSort === 1) {
+        column.order = 'ascending'
+      }
+    } 
+    queryForm.createTimeSort = column.order === "ascending" ? 0 : 1
+    queryForm.grossWeightSort = undefined
     queryForm.shipmentDataSort = undefined
   }
   queryData()

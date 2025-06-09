@@ -25,6 +25,7 @@ export interface IGetEncasementListReq {
   pageSize: number
   shipmentDataSort?: number //发货计划排序 0升序 1降序
   grossWeightSort?: number //毛重排序 0升序 1降序
+  createTimeSort?: number
 }
 export interface IEncasementList {
   /**
