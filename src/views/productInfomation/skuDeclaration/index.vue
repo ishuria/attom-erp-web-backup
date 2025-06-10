@@ -242,7 +242,7 @@
           <span>{{ row.usageEn }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column align="center" fixed="right" label="操作" width="230">
         <template #default="{ row }">
           <el-link :underline="false" type="primary" @click="showHts(row)">查看HTS</el-link>
           <el-link :underline="false" type="primary" @click="showClearance(row)">查看清关信息</el-link>
@@ -306,7 +306,7 @@
             v-model="htsForm.us"
             filterable
             placeholder="请选择HTS美国"
-            
+            @change="handleChangeHtsUsa"
           >
             <el-option
               v-for="item in usaList"
@@ -321,7 +321,7 @@
             v-model="htsForm.uk"
             filterable
             placeholder="请选择HTS英国"
-     
+            @change="handleChangeHtsUk"
           >
             <el-option
               v-for="item in ukHtsList"
@@ -336,7 +336,7 @@
             v-model="htsForm.de"
             filterable
             placeholder="请选择HTS德国"
-     
+            @change="handleChangeHtsDe"
           >
             <el-option
               v-for="item in deHtsList"
@@ -351,7 +351,7 @@
             v-model="htsForm.ca"
             filterable
             placeholder="请选择HTS加拿大"
-     
+            @change="handleChangeHtsCa"
           >
             <el-option
               v-for="item in caHtsList"
@@ -366,7 +366,7 @@
             v-model="htsForm.jp"
             filterable
             placeholder="请选择HTS日本"
-        
+            @change="handleChangeHtsJp"
           >
             <el-option
               v-for="item in jpHtsList"
@@ -376,21 +376,19 @@
             />
           </el-select>
         </el-form-item>
-        
-     
       </el-form>
-      <template #footer>
+      <!-- <template #footer>
 
         <el-button @click="closeHts">取消</el-button>
         <el-button type="primary" @click="confirmHts">确定</el-button>
 
-      </template>
+      </template> -->
     </vab-dialog>
     <!-- 查看清关信息 -->
     <vab-dialog v-model="clearanceVisible" title="查看和修改清关信息" width="60%">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary" @click="addClearanceVisible = true">新增</el-button>
+          <el-button type="primary" @click="showAddClearance">新增</el-button>
           <el-button type="primary" @click="showBatchUpdate">批量修改</el-button>
           
         </vab-query-form-left-panel>
@@ -410,9 +408,16 @@
       <template #footer></template>
     </vab-dialog>
     <vab-dialog v-model="addClearanceVisible" title="新增" width="30%">
-      <el-form :model="addClearanceForm" label-position="top">
-        <el-form-item label="国家">
-          <el-select placeholder="请选择国家" />
+      <el-form ref="addClearanceFormRef" :model="addClearanceForm" label-position="top" :rules="addClearanceFormRules" >
+        <el-form-item label="国家" prop="countryIds">
+          <el-select v-model="addClearanceForm.countryIds" placeholder="请选择国家" multiple >
+            <el-option
+              v-for="item in countryList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="制造商名称" prop="manufacturer">
           <el-input v-model="addClearanceForm.manufacturer" clearable />
@@ -436,8 +441,8 @@
       </template>
     </vab-dialog>
     <!-- 批量修改 -->
-    <vab-dialog title="批量修改" width="20%" v-model="batchUpdateVisible">
-      <el-form :model="batchUpdateForm" label-position="top">
+    <vab-dialog title="批量修改" width="30%" v-model="batchUpdateVisible">
+      <el-form ref="batchUpdateFormRef" :model="batchUpdateForm" label-position="top">
         <el-form-item label="制造商名称" prop="manufacturer">
           <el-input v-model="batchUpdateForm.manufacturer" clearable />
         </el-form-item>
@@ -464,10 +469,10 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import type { TableInstance } from 'element-plus'
+import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
+import { addCustomsClearanceSkuInfo, getCustomsClearanceCountryList, getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
 import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -508,25 +513,47 @@ const showClearance = async (row: any) => {
 }
 const addClearanceVisible = ref<boolean>(false)
 const addClearanceForm = reactive<any>({
-  
+  countryIds: []
 })
-
+const addClearanceFormRef = ref<FormInstance>()
+const addClearanceFormRules = reactive<any>({
+  countryIds: [
+    { required: true, message: '请选择国家', trigger: 'change' },
+  ],
+})
+const countryList = ref<{ id: number, label: string }[]>([])
+const showAddClearance = async () => {
+  const { data } = await getCustomsClearanceCountryList()
+  countryList.value = data
+  addClearanceVisible.value = true
+}
+let id = -1
 const showHts = async (row: any) => {
-  htsVisible.value = true
   const { data } = await getCustomsClearanceSkuHtsList({ skuCustomsDeclarationId: row.id })
   Object.assign(htsForm, data)
-}
-const closeHts = () => {
-  htsVisible.value = false
-}
-const confirmHts = async () => {
-  //
+  id = row.id
+  htsVisible.value = true
 }
 const closeAddClearance = () => {
   addClearanceVisible.value = false
+  addClearanceForm.countryIds = []
 }
 const confirmAddClearance = async () => {
-  //
+  addClearanceFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      const { data } = await addCustomsClearanceSkuInfo({
+        ...addClearanceForm,
+        skuClearanceId: skuCustomId,
+        countryIds: addClearanceForm.countryIds.join(','),
+      })
+      if (data) {
+        $baseMessage("新增成功！", "success")
+        addClearanceVisible.value = false
+        const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
+        clearanceList.value = data
+      }
+    }
+  })
 }
 const batchUpdateVisible = ref<boolean>(false)
 const selectRows = ref<any>([])
@@ -536,10 +563,15 @@ const setSelectRows = (value: any) => {
 const batchUpdateForm = reactive<any>({
   
 })
+const batchUpdateFormRef = ref<FormInstance>()
 const showBatchUpdate = () => {
   if (selectRows.value.length === 0) {
     $baseMessage("请选择要修改的行！", "warning")
     return
+  } else if (selectRows.value.length === 1) {
+    Object.assign(batchUpdateForm, selectRows.value[0])
+  } else {
+    batchUpdateFormRef.value?.resetFields()
   }
   batchUpdateVisible.value = true
 }
@@ -562,41 +594,41 @@ const confirmBatchUpdate = async () => {
 const priceCoefficientSettingVisible = ref<boolean>(false)
 const priceCoefficientSettingForm = reactive<any>({})
 
-const handleChangeHtsUsa = async (row: any) => {
+const handleChangeHtsUsa = async () => {
   await updateCustomsClearanceSkuHts({
-    id: row.id,
-    htsId: row.hts.us,
+    id: id,
+    htsId: htsForm.us,
     type: 0
   })
 }
-const handleChangeHtsUk = async (row: any) => {
+const handleChangeHtsUk = async () => {
   await updateCustomsClearanceSkuHts({
-    id: row.id,
-    htsId: row.hts.uk,
+    id: id,
+    htsId: htsForm.uk,
     type: 1
   })
 }
 
-const handleChangeHtsDe = async (row: any) => {
+const handleChangeHtsDe = async () => {
   await updateCustomsClearanceSkuHts({
-    id: row.id,
-    htsId: row.hts.de,
+    id: id,
+    htsId: htsForm.de,
     type: 2
   })
 }
 
-const handleChangeHtsCa = async (row: any) => {
+const handleChangeHtsCa = async () => {
   await updateCustomsClearanceSkuHts({
-    id: row.id,
-    htsId: row.hts.ca,
+    id: id,
+    htsId: htsForm.ca,
     type: 3
   })
 }
 
-const handleChangeHtsJp = async (row: any) => {
+const handleChangeHtsJp = async () => {
   await updateCustomsClearanceSkuHts({
-    id: row.id,
-    htsId: row.hts.jp,
+    id: id,
+    htsId: htsForm.jp,
     type: 4
   })
 }

@@ -884,3 +884,14 @@ export function addCustomsClearanceSkuInfo(data: IAddCustomsClearanceSkuInfo): P
   })
 }
 
+/**
+ * 获取sku报关国家列表
+ * @returns 
+ */
+export function getCustomsClearanceCountryList(): Promise<{ data: { id: number, label: string }[] }>  {
+  return request({
+    url: `${BASE_API}/customs/clearance/country/list`,
+    method: 'get',
+  })
+}
+
