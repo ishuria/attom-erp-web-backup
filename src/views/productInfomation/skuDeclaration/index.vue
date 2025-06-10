@@ -299,7 +299,7 @@
     </template>
     </vab-dialog>
     <!-- 查看HTS -->
-    <vab-dialog width="20%" title="查看和修改HTS" v-model="htsVisible">
+    <vab-dialog width="20%" title="查看和修改HTS" v-model="htsVisible" :draggable="false">
       <el-form label-width="auto" style=" margin-right: 0;margin-left: 0;">
         <el-form-item label="HTS美国">
           <el-select
@@ -361,7 +361,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="HTS加拿大">
+        <el-form-item label="HTS日本">
           <el-select
             v-model="htsForm.jp"
             filterable
@@ -385,12 +385,12 @@
       </template> -->
     </vab-dialog>
     <!-- 查看清关信息 -->
-    <vab-dialog v-model="clearanceVisible" title="查看和修改清关信息" width="60%">
+    <vab-dialog v-model="clearanceVisible" title="查看和修改清关信息" width="60%" :draggable="false">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAddClearance">新增</el-button>
           <el-button type="primary" @click="showBatchUpdate">批量修改</el-button>
-          
+
         </vab-query-form-left-panel>
       </vab-query-form>
       <el-table border stripe max-height="700" :data="clearanceList" @selection-change="setSelectRows">
@@ -587,7 +587,7 @@ const confirmBatchUpdate = async () => {
     ids: selectRows.value.map((item: any) => item.id).join(','),
     ...batchUpdateForm
   })
-  if (data) { 
+  if (data) {
     $baseMessage("修改成功！", "success")
     batchUpdateVisible.value = false
     const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
