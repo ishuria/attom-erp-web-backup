@@ -63,7 +63,7 @@ const { foldSideBar } = settingsStore
 <style lang="scss" scoped>
 .vab-layout-double {
   :deep() {
-    .vab-side-bar {
+    .vab-side-bar:not(.is-collapse) {
       .el-menu--inline {
         padding-left: 15px;
       }

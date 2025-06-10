@@ -64,13 +64,20 @@ export const settingConfig: {
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
   defaultOpeneds: [
+    '/',
+    '/vab',
     '/vab/icon',
     '/vab/table',
     '/vab/editor',
     '/vab/form',
+    '/operate',
     '/operate/dynamicSegment',
     '/operate/menu1/menu11/menu111',
+    '/other',
     '/other/iframe',
+    '/template',
+    '/goods',
+    '/chat',
   ],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
