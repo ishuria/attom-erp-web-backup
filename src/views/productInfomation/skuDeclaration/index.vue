@@ -561,7 +561,11 @@ const setSelectRows = (value: any) => {
   selectRows.value = value
 }
 const batchUpdateForm = reactive<any>({
-  
+  manufacturer: '',
+  manufacturerAddress: '',
+  clearanceName: '',
+  material: '',
+  usage: '',
 })
 const batchUpdateFormRef = ref<FormInstance>()
 const showBatchUpdate = () => {
