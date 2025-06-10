@@ -200,7 +200,7 @@
           <el-input v-model="shipmentWalmartForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentWalmartForm.channel" clearable placeholder="请选择货代渠道">
+          <el-select v-model="shipmentWalmartForm.channel" filterable clearable placeholder="请选择货代渠道">
             <el-option 
               v-for="item in channelList"
               :key="item.id"
