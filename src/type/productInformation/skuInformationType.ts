@@ -1297,3 +1297,34 @@ export interface IUpdateCustomsClearanceSkuHtsReq {
   type: number
 }
 
+export interface IGetCustomsClearanceSkuInfoRes {
+  data: IGetCustomsClearanceSkuInfo[]
+}
+export interface IGetCustomsClearanceSkuInfo {
+  id: number
+  clearanceName: string
+  countryName: string
+  manufacturer: string
+  manufacturerAddress: string
+  material: string
+  usage: string
+}
+export interface IUpdateCustomsClearanceSkuInfo {
+  ids: string
+  clearanceName: string
+  manufacturer: string
+  manufacturerAddress: string
+  material: string
+  usage: string
+}
+export interface IAddCustomsClearanceSkuInfo {
+  skuClearanceId: number
+  countryIds: string
+  manufacturer: string
+  manufacturerAddress: string
+  clearanceName: string
+  material: string
+  usage: string
+}
+
+

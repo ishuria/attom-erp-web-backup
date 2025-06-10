@@ -111,7 +111,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="110">
+      <el-table-column fixed="right" label="操作" width="115">
         <template #default="{ row }">
           <el-dropdown>
             <el-button text type="primary" @click="showMatch(row)">
@@ -182,7 +182,7 @@
     >
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary" @click="handleAddCost">添加费用</el-button>
+          <el-button type="primary" @click="showAddFee">添加费用</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
       <el-table
@@ -190,6 +190,7 @@
         class="noneHoveTable center-table"
         :data="costList"
         :header-cell-style="{ textAlign: 'center' }"
+        :summary-cell-style="{ textAlign: 'center' }"
         max-height="70vh"
         show-summary
         stripe
@@ -375,6 +376,25 @@
         <el-button :loading="confirmTwiceTitle === '报关' ? declarationLoading : clearanceLoading" type="primary" @click="handleDownload">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 头程运费-添加费用 -->
+    <vab-dialog v-model="addFeeVisible" :title="`货代渠道：${freightName}`" width="20%" >
+      <el-form ref="addFeeFormRef" label-position="top" :model="addFeeForm" :rules="addFeeFormRules" >
+        <el-form-item label="费用名" prop="costNameId">
+          <el-select placeholder="请选择费用名" v-model="addFeeForm.costNameId" clearable >
+            <el-option
+              v-for="item in costNameList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="addFeeVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleAddFee">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -383,11 +403,11 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
-import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
@@ -395,6 +415,41 @@ defineOptions({
   name: 'MatchPO'
 })
 
+const addFeeFormRef = ref<FormInstance>()
+const addFeeVisible = ref<boolean>(false)
+const addFeeForm = reactive<any>({})
+const addFeeFormRules = reactive<any>({
+  costNameId: [
+    { required: true, message: '请选择费用名', trigger: 'change' }
+  ]
+})
+const costNameList = ref<{ id: number, label: string }[]>([])
+const showAddFee = async () => {
+  addFeeVisible.value = true
+  if (channelId) {
+    const { data } = await getCostNameListByChannelId({ channelId: channelId })
+    costNameList.value = data
+  } else {
+    costNameList.value = []
+  }
+  
+  addFeeFormRef.value?.resetFields()
+}
+const handleAddFee = async () => {
+  addFeeFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      const { data } = await addShipmentCost({
+        shipId: _shipId.value!,
+        costName: costNameList.value.find((item: any) => item.id === addFeeForm.costNameId)?.label!
+      })
+      if (data) {
+        $baseMessage('添加费用成功！', 'success')
+        addFeeVisible.value = false
+        fetchCostData(_shipId.value!)
+      }
+    }
+  })
+}
 const router = useRouter()
 const route = useRoute()
 const tableRef = ref<TableInstance>()
@@ -712,16 +767,7 @@ const _shipId = ref<number>()
 const _freightForwardingNumber = ref<string>('')
 const _weight = ref<number>()
 const _volume = ref<number>()
-// 新增费用
-const handleAddCost = async () => {
-  const { data } = await addShipmentCost({
-    shipId: _shipId.value!
-  })
-  if (data) {
-    $baseMessage('添加费用成功！', 'success')
-    fetchCostData(_shipId.value!)
-  }
-}
+
 // 修改头程运费合并报关
 const handleUpdateBgStatus = async (row: any) => {
   await updateBgShipmentLeg({
@@ -778,7 +824,9 @@ const fetchCostData = async (id: number) => {
   }
 }
 
-const currencyList = ref<{ id: number, label: string}[]>([])
+const currencyList = ref<{ id: number, label: string }[]>([])
+let channelId = -1;
+let freightName = ''
 // 展示头程运费
 const showFirstLegFreight = async (row: any) => {
   costList.value = []
@@ -786,6 +834,8 @@ const showFirstLegFreight = async (row: any) => {
   _freightForwardingNumber.value = row.freightForwardingNumber
   _weight.value = row.weight
   _volume.value = row.volume
+  channelId = row.channelId!
+  freightName = forwarderOption.value.find((item: any) => item.id === row.channelId)?.label!
   fetchCostData(row.id)
   const { data } = await getShipmentLegCurrencyList()
   currencyList.value = data
@@ -958,7 +1008,7 @@ const handleSizeChange = (value: number) => {
 }
 
 const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
-  if ([2, 3, 4, 6, 7, 8, 9, 16].includes(data.columnIndex)) {
+  if ([2, 3, 4, 6, 7, 8, 9].includes(data.columnIndex)) {
     return {
       textAlign: 'left'
     }
@@ -991,7 +1041,7 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
     case 3: {
       return {
         fontWeight: '600',
-        textAlign: 'center',
+        textAlign: 'left',
         cursor: 'not-allowed'
       }
     }
@@ -1006,6 +1056,14 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
       return {
         fontWeight: '600',
         textAlign: 'center'
+      }
+    }
+    case 1:
+    case 2:
+    case 4: {
+      return {
+        textAlign: 'left',
+        cursor: 'pointer'
       }
     }
     default: {
@@ -1075,10 +1133,10 @@ onActivated(() => {
 //   padding-right: 3px;
 //   padding-left: 3px;
 // }
-:deep(.center-table tr:last-child td), 
-:deep(.center-table tr:last-child th) {
-  text-align: center !important;
-}
+// :deep(.center-table tr:last-child td), 
+// :deep(.center-table tr:last-child th) {
+//   text-align: center !important;
+// }
 .checkbox-yellow {
   :deep() {
     .el-checkbox__inner {

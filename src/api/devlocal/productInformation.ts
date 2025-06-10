@@ -17,9 +17,11 @@ import type {
   IUpdateSkuShippingChannelMerchandise
 } from '/@/type/productInformation/channelType'
 import type {
+  IAddCustomsClearanceSkuInfo,
   IBooleanResp,
   IConsumablesType,
   IGetCustomsClearanceRatioRes,
+  IGetCustomsClearanceSkuInfoRes,
   IGetCustomsClearanceSkuListReq,
   IGetCustomsClearanceSkuListRes,
   IGetProductAllReadyCOmponentListQuery,
@@ -31,6 +33,7 @@ import type {
   IUpdateCustomsClearanceRatioReq,
   IUpdateCustomsClearanceSku,
   IUpdateCustomsClearanceSkuHtsReq,
+  IUpdateCustomsClearanceSkuInfo,
   IUpdateProductAlreadyComponent,
   IUpdateProductCustomsClearanceReq,
   IUpdateProductCustomsClearanceStatus,
@@ -829,3 +832,55 @@ export function copyProductSku(data: { skuId: number, sku: string }): Promise<{ 
     data
   })
 }
+
+/**
+ * sku hts 信息列表查询
+ * @param params 
+ * @returns 
+ */
+export function getCustomsClearanceSkuHtsList(params: { skuCustomsDeclarationId: number }): Promise<{ data: Object }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/hts/list`,
+    method: 'post',
+    params
+  })
+}
+
+
+/**
+ * sku清关信息查看
+ * @param params 
+ * @returns 
+ */
+export function getCustomsClearanceSkuInfo(params: { skuCustomId: number }): Promise<IGetCustomsClearanceSkuInfoRes> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/info`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * sku清关信息修改
+ * @param params 
+ * @returns 
+ */
+export function updateCustomsClearanceSkuInfo(data: IUpdateCustomsClearanceSkuInfo): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/info/update`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * sku清关信息新增
+ * @param data 
+ * @returns 
+ */
+export function addCustomsClearanceSkuInfo(data: IAddCustomsClearanceSkuInfo): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/info/add`,
+    method: 'post',
+    data
+  })
+}
+

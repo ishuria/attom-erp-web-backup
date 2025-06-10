@@ -39,33 +39,33 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU品名" prop="sku" :width="flexColumnWidth(list, 'SKU品名', 'sku')">
+      <el-table-column fixed="left" label="SKU品名" prop="sku" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')">
         <template #default="{ row }">
           {{ row.sku }}<br />
           {{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" >
+      <el-table-column label="UPC" prop="upc" :min-width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" >
         <template #default="{ row }">
           <div v-html="row.upc"></div>
         </template>
       </el-table-column>
-      <el-table-column label="北美FNSKU" prop="northAmericaFnSku" :width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" >
+      <el-table-column label="北美FNSKU" prop="northAmericaFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" >
         <template #default="{ row }">
           <div v-html="row.northAmericaFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="欧洲FNSKU" prop="europeFnSku" :width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" >
+      <el-table-column label="欧洲FNSKU" prop="europeFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" >
         <template #default="{ row }">
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="日本FNSKU" prop="jpFnSku" :width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" >
+      <el-table-column label="日本FNSKU" prop="jpFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" >
         <template #default="{ row }">
           <div v-html="row.jpFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" prop="brank" :width="flexColumnWidth(list, '品牌', 'brank')">
+      <el-table-column label="品牌" prop="brank" :min-width="flexColumnWidth(list, '品牌', 'brank')">
         <template #default="{ row }">
           <div class="none">
               <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
@@ -73,7 +73,7 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HTS美国" width="160" >
+      <!-- <el-table-column label="HTS美国" width="160" >
         <template #default="{ row }">
           <el-select
             v-model="row.hts.us"
@@ -158,9 +158,9 @@
             />
           </el-select>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
+      <!-- <el-table-column label="制造商英文名称" min-width="140" prop="manufacturerEn" >
         <template #default="{ row }">
           <div class="none">
             <el-input
@@ -241,6 +241,12 @@
           </div>
           <span>{{ row.usageEn }}</span>
         </template>
+      </el-table-column> -->
+      <el-table-column fixed="right" label="操作" width="200">
+        <template #default="{ row }">
+          <el-link :underline="false" type="primary" @click="showHts(row)">查看HTS</el-link>
+          <el-link :underline="false" type="primary" @click="showClearance(row)">查看清关信息</el-link>
+        </template>
       </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
@@ -293,24 +299,165 @@
     </template>
     </vab-dialog>
     <!-- 查看HTS -->
-    <vab-dialog>
-      <el-form>
+    <vab-dialog width="20%" title="查看和修改HTS" v-model="htsVisible">
+      <el-form label-width="auto" style=" margin-right: 0;margin-left: 0;">
         <el-form-item label="HTS美国">
-          <!-- <el-select
-            v-model="row.hts.us"
+          <el-select
+            v-model="htsForm.us"
             filterable
             placeholder="请选择HTS美国"
-            @change="handleChangeHtsUsa(row)"
+            
           >
             <el-option
               v-for="item in usaList"
               :key="item.id"
               :label="item.label"
               :value="item.id"
-            /> -->
-          <!-- </el-select> -->
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="HTS英国">
+          <el-select
+            v-model="htsForm.uk"
+            filterable
+            placeholder="请选择HTS英国"
+     
+          >
+            <el-option
+              v-for="item in ukHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="HTS德国">
+          <el-select
+            v-model="htsForm.de"
+            filterable
+            placeholder="请选择HTS德国"
+     
+          >
+            <el-option
+              v-for="item in deHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="HTS加拿大">
+          <el-select
+            v-model="htsForm.ca"
+            filterable
+            placeholder="请选择HTS加拿大"
+     
+          >
+            <el-option
+              v-for="item in caHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="HTS加拿大">
+          <el-select
+            v-model="htsForm.jp"
+            filterable
+            placeholder="请选择HTS日本"
+        
+          >
+            <el-option
+              v-for="item in jpHtsList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        
+     
+      </el-form>
+      <template #footer>
+
+        <el-button @click="closeHts">取消</el-button>
+        <el-button type="primary" @click="confirmHts">确定</el-button>
+
+      </template>
+    </vab-dialog>
+    <!-- 查看清关信息 -->
+    <vab-dialog v-model="clearanceVisible" title="查看和修改清关信息" width="60%">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="addClearanceVisible = true">新增</el-button>
+          <el-button type="primary" @click="showBatchUpdate">批量修改</el-button>
+          
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <el-table border stripe max-height="700" :data="clearanceList" @selection-change="setSelectRows">
+        <el-table-column align="center" type="selection" />
+        <el-table-column label="国家" prop="countryName" min-width="80"/>
+        <el-table-column label="制造商名称" prop="manufacturer" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" />
+        <el-table-column label="制造商地址" prop="manufacturerAddress" :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')" />
+        <el-table-column label="清关品名" prop="clearanceName" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')"/>
+        <el-table-column label="材质比例" prop="material" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')"/>
+        <el-table-column label="用途" prop="usage" min-width="100" />
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" />
+        </template>
+      </el-table>
+      <template #footer></template>
+    </vab-dialog>
+    <vab-dialog v-model="addClearanceVisible" title="新增" width="30%">
+      <el-form :model="addClearanceForm" label-position="top">
+        <el-form-item label="国家">
+          <el-select placeholder="请选择国家" />
+        </el-form-item>
+        <el-form-item label="制造商名称" prop="manufacturer">
+          <el-input v-model="addClearanceForm.manufacturer" clearable />
+        </el-form-item>
+        <el-form-item label="制造商地址" prop="manufacturerAddress">
+          <el-input v-model="addClearanceForm.manufacturerAddress" clearable />
+        </el-form-item>
+        <el-form-item label="清关品名" prop="clearanceName">
+          <el-input v-model="addClearanceForm.clearanceName" clearable />
+        </el-form-item>
+        <el-form-item label="材质比例" prop="material">
+          <el-input v-model="addClearanceForm.material" clearable />
+        </el-form-item>
+        <el-form-item label="用途" prop="usage">
+          <el-input v-model="addClearanceForm.usage" clearable />
         </el-form-item>
       </el-form>
+      <template #footer>
+        <el-button @click="closeAddClearance">取消</el-button>
+        <el-button type="primary" @click="confirmAddClearance">确定</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 批量修改 -->
+    <vab-dialog title="批量修改" width="20%" v-model="batchUpdateVisible">
+      <el-form :model="batchUpdateForm" label-position="top">
+        <el-form-item label="制造商名称" prop="manufacturer">
+          <el-input v-model="batchUpdateForm.manufacturer" clearable />
+        </el-form-item>
+        <el-form-item label="制造商地址" prop="manufacturerAddress">
+          <el-input v-model="batchUpdateForm.manufacturerAddress" clearable />
+        </el-form-item>
+        <el-form-item label="清关品名" prop="clearanceName">
+          <el-input v-model="batchUpdateForm.clearanceName" clearable />
+        </el-form-item>
+        <el-form-item label="材质比例" prop="material">
+          <el-input v-model="batchUpdateForm.material" clearable />
+        </el-form-item>
+        <el-form-item label="用途" prop="usage">
+          <el-input v-model="batchUpdateForm.usage" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="closeBatchUpdate">取消</el-button>
+        <el-button type="primary" @click="confirmBatchUpdate">确定</el-button>
+      </template>
     </vab-dialog>
   </div>
 </template>
@@ -320,7 +467,8 @@ import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getCustomsClearanceRatio, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts } from '/@/api/devlocal/productInformation'
+import { getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
+import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
@@ -345,6 +493,71 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
+const htsVisible = ref<boolean>(false)
+const htsForm = reactive<any>({
+
+})
+const clearanceVisible = ref<boolean>(false)
+const clearanceList = ref<IGetCustomsClearanceSkuInfo[]>([])
+let skuCustomId = -1
+const showClearance = async (row: any) => {
+  clearanceVisible.value = true
+  skuCustomId = row.id
+  const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
+  clearanceList.value = data
+}
+const addClearanceVisible = ref<boolean>(false)
+const addClearanceForm = reactive<any>({
+  
+})
+
+const showHts = async (row: any) => {
+  htsVisible.value = true
+  const { data } = await getCustomsClearanceSkuHtsList({ skuCustomsDeclarationId: row.id })
+  Object.assign(htsForm, data)
+}
+const closeHts = () => {
+  htsVisible.value = false
+}
+const confirmHts = async () => {
+  //
+}
+const closeAddClearance = () => {
+  addClearanceVisible.value = false
+}
+const confirmAddClearance = async () => {
+  //
+}
+const batchUpdateVisible = ref<boolean>(false)
+const selectRows = ref<any>([])
+const setSelectRows = (value: any) => {
+  selectRows.value = value
+}
+const batchUpdateForm = reactive<any>({
+  
+})
+const showBatchUpdate = () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage("请选择要修改的行！", "warning")
+    return
+  }
+  batchUpdateVisible.value = true
+}
+const closeBatchUpdate = () => {
+  batchUpdateVisible.value = false
+}
+const confirmBatchUpdate = async () => {
+  const { data } = await updateCustomsClearanceSkuInfo({
+    ids: selectRows.value.map((item: any) => item.id).join(','),
+    ...batchUpdateForm
+  })
+  if (data) { 
+    $baseMessage("修改成功！", "success")
+    batchUpdateVisible.value = false
+    const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
+    clearanceList.value = data
+  }
+}
 // 价格系数设定
 const priceCoefficientSettingVisible = ref<boolean>(false)
 const priceCoefficientSettingForm = reactive<any>({})
@@ -634,5 +847,8 @@ onBeforeMount(() => {
   max-width: 400px;
   font-size: var(--el-font-size-base);
   white-space: pre-wrap;
+}
+:deep(.el-checkbox) {
+  transform: scale(1.3);
 }
 </style>

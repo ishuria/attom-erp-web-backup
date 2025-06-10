@@ -363,7 +363,7 @@ export const cancelShipmentEncasement = (params: IId): Promise<IBooleanRes> => {
 /**
  * @description 头程运费-添加费用
  */
-export const addShipmentCost = (params: IShipId): Promise<IBooleanRes> => {
+export const addShipmentCost = (params: { shipId: number, costName: string }): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/cost/add`,
     method: 'post',
@@ -786,5 +786,17 @@ export const getHtsSkuList = (data: IGetHtsSkuListReq): Promise<IGetHtsSkuListRe
     url: `${BASE_API}/hts/sku/list`,
     method: 'post',
     data
+  })
+}
+/**
+ * 获取费用名
+ * @param params 
+ * @returns 
+ */
+export const getCostNameListByChannelId = (params: { channelId: number }): Promise<{ data: { id: number, label: string }[] }> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/costName/list`,
+    method: 'get',
+    params
   })
 }
