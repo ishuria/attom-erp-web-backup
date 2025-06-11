@@ -3,6 +3,7 @@
     <div class="left-panel">
       <vab-logo v-if="layout === 'comprehensive'" class="hidden-sm-and-down" />
       <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+      <vab-box />
       <el-tabs
         v-if="layout === 'comprehensive'"
         v-model="tab.data"
@@ -138,6 +139,7 @@ watch(
   }
 }
 </style>
+
 <style lang="scss" scoped>
 .vab-nav {
   position: relative;

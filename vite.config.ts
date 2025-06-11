@@ -41,7 +41,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       host: '0.0.0.0',
       warmup: {
-        clientFiles: ['./index.html', './library/{components,layouts}/*', './src/{views,plugins}/*'],
+        clientFiles: [
+          './index.html',
+          './library/{components,layouts}/*',
+          './src/{views,plugins}/*',
+        ],
       },
       https,
       fs: {
@@ -72,7 +76,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         output: {
           chunkFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
           entryFileNames: outputHash ? 'static/js/[name]-[hash].js' : 'static/js/[name].js',
-          assetFileNames: outputHash ? 'static/[ext]/[name]-[hash].[ext]' : 'static/[ext]/[name].[ext]',
+          assetFileNames: outputHash
+            ? 'static/[ext]/[name]-[hash].[ext]'
+            : 'static/[ext]/[name].[ext]',
           manualChunks: {
             'vsv-element-plus': ['element-plus'],
             'vsv-nprogress': ['nprogress'],

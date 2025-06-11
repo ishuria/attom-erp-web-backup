@@ -137,7 +137,7 @@ export const asyncRoutes: VabRouteRecord[] = [
         component: () => import('/@/views/index/dataScreen.vue'),
         meta: {
           title: '数据大屏',
-          icon: 'database-2-line',
+          icon: 'bar-chart-box-ai-line',
           target: '_blank',
           badge: 'Hot',
           guard: ['Admin'],

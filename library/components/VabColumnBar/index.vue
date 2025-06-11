@@ -306,8 +306,8 @@ onBeforeUnmount(() => {
     align-items: center;
     width: var(--el-left-menu-width-min);
     overflow: hidden;
-    text-align: center;
     text-overflow: ellipsis;
+    text-align: center;
     word-break: break-all;
     white-space: nowrap;
 
@@ -407,8 +407,8 @@ onBeforeUnmount(() => {
       .el-sub-menu__title {
         height: var(--el-menu-item-height);
         overflow: hidden;
-        line-height: var(--el-menu-item-height);
         text-overflow: ellipsis;
+        line-height: var(--el-menu-item-height);
         white-space: nowrap;
 
         @include active;

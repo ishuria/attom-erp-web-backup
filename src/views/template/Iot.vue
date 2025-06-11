@@ -114,7 +114,7 @@ const menuList = ref<MenuListType[]>([
     path: '/portal',
   },
   {
-    icon: 'database-2-line',
+    icon: 'bar-chart-box-ai-line',
     title: '数据大屏',
     path: '/dataScreen',
   },

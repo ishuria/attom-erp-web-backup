@@ -38,7 +38,7 @@
           <el-tag effect="dark" size="small" type="danger">99+</el-tag>
         </li>
         <li class="el-dropdown-menu__item" @click="handleCommand('dataScreen')">
-          <vab-icon icon="database-2-line" />
+          <vab-icon icon="bar-chart-box-ai-line" />
           <span>{{ translate('数据大屏') }}</span>
         </li>
         <li class="el-dropdown-menu__item" @click="handleCommand('portal')">

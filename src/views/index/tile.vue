@@ -25,7 +25,10 @@
           >
             <vab-link target="_blank" to="/dataScreen">
               <div class="icon-panel">
-                <vab-icon icon="database-2-line" style="background: var(--el-color-primary)" />
+                <vab-icon
+                  icon="bar-chart-box-ai-line"
+                  style="background: var(--el-color-primary)"
+                />
                 <div class="icon-panel-title">
                   数据大屏
                   <div class="icon-panel-tips">点击跳转</div>
