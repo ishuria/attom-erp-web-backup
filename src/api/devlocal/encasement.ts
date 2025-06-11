@@ -669,3 +669,11 @@ export const updateEncasementError = (params: { error: number }) => {
     params
   })
 }
+
+export const updateEncasementRemark = (params: { id: number, remarks: string }) => {
+  return request({
+    url: `${BASE_API}/encasement/remark/update`,
+    method: 'post',
+    params
+  })
+}

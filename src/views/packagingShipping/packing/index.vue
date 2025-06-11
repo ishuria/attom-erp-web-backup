@@ -92,7 +92,16 @@
       </el-table-column>
       <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')"/>
       <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')"/>
-      <el-table-column label="备注" prop="remarks" min-width="100"/>
+      <el-table-column label="备注" prop="remarks" min-width="100">
+        <template #default="{ row }">
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.remarks }}</div>
+            </template>
+            <el-text truncated style="vertical-align: middle;">{{ row.remarks }}</el-text>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
@@ -482,6 +491,7 @@
       v-model="remarkVisible"
       title="修改备注"
       :remark="remark"
+      @update:remark="handleUpdateRemark"
     />
   </div>
 </template>
@@ -516,6 +526,7 @@ import {
   splitEncasementCsv,
   unlockEncasement,
   updateEncasementError,
+  updateEncasementRemark,
   updateEncasementShipmentDate,
   updateEncasementUserPrinter,
   uploadEncasementFile,
@@ -530,12 +541,26 @@ defineOptions({
   name: 'Packing'
 })
 
+let _row: any
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
 const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '备注') {
     remarkVisible.value = true
     remark.value = row.remarks
+    _row = row
+  }
+}
+const handleUpdateRemark = async (val: string) => {
+  try {
+    const { data } = await updateEncasementRemark({ id: _row.id, remarks: val })
+    if (data) {
+      $baseMessage("修改备注成功！",'success')
+      remarkVisible.value = false
+      _row.remarks = val
+    }
+  } catch (error) {
+    
   }
 }
 const updateErrorVisible = ref<boolean>(false)
@@ -1189,16 +1214,16 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 11 && data.columnIndex !== 12) {
-    return {
-      textAlign: 'center'
-    }
-  } else if (data.column.label === '备注') {
+  if (data.column.label === '备注') {
     return {
       textAlign: 'left',
       cursor: 'pointer'
     }
-  }
+  } else if (data.columnIndex !== 11 && data.columnIndex !== 12) {
+    return {
+      textAlign: 'center'
+    }
+  } 
   return {
     textAlign: 'left'
   }
@@ -1326,5 +1351,10 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+.custom-tooltip { 
+  max-width: 400px; 
+  font-size: var(--el-font-size-base);
+  white-space: pre-wrap;
 }
 </style>
