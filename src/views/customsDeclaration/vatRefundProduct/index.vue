@@ -53,22 +53,28 @@
           :cell-style="cellStyle"
           class="noneHoveTable"
           :data="list"
+          :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
           :header-cell-style="headerCellStyle"
+          :header-cell-class-name="headerCell"
           @cell-click="cellClick"
+          @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="120" prop="shipmentDate">
+          <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="报关单出口日期" min-width="140" prop="exportDate">
+          <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
+            <template #header>
+              报关单<br />出口日期
+            </template>
             <template #default="{ row }">
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
-          <el-table-column label="报关品名" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName')">
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.customsDeclarationName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -116,9 +122,9 @@
           <el-table-column label="利润￥" min-width="100" prop="profit" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
+          <el-table-column label="供应商" sortable="custom" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
-          <el-table-column label="PO" min-width="100" prop="po" />
+          <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
@@ -129,7 +135,7 @@
               <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="formattedInvoiceNumber" >
+          <el-table-column label="发票号码" sortable="custom" min-width="330" prop="invoiceNumber" >
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
                 <span>{{ item.invoiceNumber }}</span>
@@ -194,7 +200,6 @@
               <el-date-picker
                 v-model="date"
                 :clearable="false"
-                :editable="false"
                 end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -226,24 +231,30 @@
           v-loading="listLoading"
           border
           :cell-style="cellStyle2"
+          :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
+         :header-cell-class-name="headerCell"
           class="noneHoveTable"
           :data="list"
           :header-cell-style="headerCellStyle"
           @cell-click="cellClick"
+          @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="120" prop="shipmentDate">
+          <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="报关单出口日期" min-width="140" prop="exportDate">
+          <el-table-column label="报关单出口日期" sortable="custom" min-width="140" prop="exportDate">
+            <template #header>
+              报关单<br />出口日期
+            </template>
             <template #default="{ row }">
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
-          <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" />
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="报关品名" sortable="custom" min-width="120" prop="customsDeclarationName" />
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
           <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
           <el-table-column label="CIF售价$" min-width="120" prop="cifPrice" />
@@ -265,9 +276,9 @@
           <el-table-column label="利润￥" min-width="100" prop="profit" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
+          <el-table-column label="供应商" sortable="custom" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
-          <el-table-column label="PO" min-width="100" prop="po" />
+          <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
@@ -278,7 +289,7 @@
               <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="formattedInvoiceNumber" >
+          <el-table-column label="发票号码" sortable="custom" min-width="330" prop="invoiceNumber" >
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
                 <span>{{ item.invoiceNumber }}</span>
@@ -475,6 +486,20 @@ const downloadInvoice = (path: string) => {
   document.body.removeChild(link)
 }
 
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  queryForm.orderByField = prop
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryData()
+}
 // 当 PDF 加载完成时获取宽度
 // const onPdfLoaded = (pdf: any) => {
 //   console.log(pdf);
@@ -511,6 +536,8 @@ const queryForm = reactive<IGetTaxRefundListQuery>({
   taxRefundStatus: 0,
   fromDate: date.value[0],
   toDate: date.value[1],
+  orderByField: 'shipmentDate',
+  orderDirection: 'desc'
 })
 const queryDateData = () => {
   queryForm.fromDate = date.value[0]
@@ -679,7 +706,12 @@ const clickCancel = (event: Event, value: any) => {
     return
   }
 }
-
+const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+  if (['报关单出口日期'].includes(data.column.label)) {
+    return 'header-cell'
+  }
+  return ''
+}
 const queryData = () => {
   queryForm.pageNo = 1
   router.push({
@@ -932,5 +964,10 @@ onBeforeMount(() => {
   max-width: 400px; 
   font-size: 14px;
   white-space: pre-wrap; 
+}
+.noneHoveTable :deep(.header-cell .cell) {
+  display: flex;          /* 应用 Flexbox 布局 */
+  align-items: center;   /* 垂直居中 */
+  justify-content: center;
 }
 </style>
