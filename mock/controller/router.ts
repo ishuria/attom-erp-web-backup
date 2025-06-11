@@ -231,6 +231,14 @@ const list: VabRouteRecord[] = [
             },
           },
           {
+            path: 'dragTable',
+            name: 'DragTable',
+            component: '/@/views/vab/table/dragTable.vue',
+            meta: {
+              title: '拖拽表格',
+            },
+          },
+          {
             path: 'splitTable',
             name: 'SplitTable',
             component: '/@/views/vab/table/splitTable.vue',

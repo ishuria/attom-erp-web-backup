@@ -289,6 +289,14 @@ export const asyncRoutes: VabRouteRecord[] = [
             },
           },
           {
+            path: 'dragTable',
+            name: 'DragTable',
+            component: () => import('/@/views/vab/table/dragTable.vue'),
+            meta: {
+              title: '拖拽表格',
+            },
+          },
+          {
             path: 'splitTable',
             name: 'SplitTable',
             component: () => import('/@/views/vab/table/splitTable.vue'),
