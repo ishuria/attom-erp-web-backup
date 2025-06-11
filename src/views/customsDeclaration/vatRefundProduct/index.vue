@@ -14,7 +14,6 @@
               <el-date-picker
                 v-model="date"
                 :clearable="false"
-                :editable="false"
                 end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"

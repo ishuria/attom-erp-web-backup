@@ -50,6 +50,7 @@
       :span-method="objectSpanMethod"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
+      @cell-click="handleCellClick"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
@@ -91,7 +92,7 @@
       </el-table-column>
       <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')"/>
       <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')"/>
-      <el-table-column label="备注" prop="remarks"/>
+      <el-table-column label="备注" prop="remarks" min-width="100"/>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
@@ -475,6 +476,13 @@
         <el-button type="primary" @click="handleConfirmUpdateError">确定</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 修改备注 -->
+    <vab-remark-dialog 
+      v-model="remarkVisible"
+      title="修改备注"
+      :remark="remark"
+    />
   </div>
 </template>
 
@@ -522,6 +530,14 @@ defineOptions({
   name: 'Packing'
 })
 
+const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
+const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '备注') {
+    remarkVisible.value = true
+    remark.value = row.remarks
+  }
+}
 const updateErrorVisible = ref<boolean>(false)
 const showUpdateError = async () => {
   updateErrorVisible.value = true
@@ -1176,6 +1192,11 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   if (data.columnIndex !== 11 && data.columnIndex !== 12) {
     return {
       textAlign: 'center'
+    }
+  } else if (data.column.label === '备注') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
     }
   }
   return {
