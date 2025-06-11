@@ -4,7 +4,7 @@
       <el-tab-pane label="待退税" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
-            <el-button type="primary">出口发票生成（云舟）</el-button>
+            <!-- <el-button type="primary">出口发票生成（云舟）</el-button> -->
             <el-button type="primary" @click="handleExportAiTuoMu">出口发票生成（埃托姆）</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel >

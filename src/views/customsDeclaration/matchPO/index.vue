@@ -791,10 +791,13 @@ const handleUpdateLegPayStatus = async (row: any) => {
 }
 // 修改头程运费货币
 const handleUpdateLegCurrency = async (row: any) => {
-  await updateShipmentLegCurrency({
+  const { data } = await updateShipmentLegCurrency({
     id: row.id,
     currency: row.currency
   })
+  if (data) {
+    row.estimateExchangeRate = data
+  }
 }
 // 删除头程运费
 const handleDelLeg = async (index: number, row: any) => {
@@ -808,6 +811,7 @@ const handleDelLeg = async (index: number, row: any) => {
     }
   })
 }
+// 展示头程运费
 const fetchCostData = async (id: number) => {
   try {
     const { data } = await getShipmentCostList({
@@ -815,15 +819,14 @@ const fetchCostData = async (id: number) => {
     })
     costList.value = data
     costList.value.forEach((item: any) => {
-      item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join(',').replace(',', '<br />')
-      item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join(',').replace(',', '<br />')
+      item.mergeCustomsDeclarationList = item.mergeCustomsDeclarationList.join('<br />')
+      item.mergeCustomsClearanceList = item.mergeCustomsClearanceList.join('<br />')
     })
     firstLegFreightVisible.value = true
   } catch {
     firstLegFreightVisible.value = false
   }
 }
-
 const currencyList = ref<{ id: number, label: string }[]>([])
 let channelId = -1;
 let freightName = ''
@@ -836,9 +839,9 @@ const showFirstLegFreight = async (row: any) => {
   _volume.value = row.volume
   channelId = row.channelId!
   freightName = forwarderOption.value.find((item: any) => item.id === row.channelId)?.label!
-  fetchCostData(row.id)
   const { data } = await getShipmentLegCurrencyList()
   currencyList.value = data
+  await fetchCostData(row.id)
 }
 // 关闭头程运费
 const closeFirstLegFreight = () => {
