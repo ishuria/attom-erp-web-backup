@@ -99,7 +99,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -124,7 +124,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -272,7 +272,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -297,7 +297,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -443,7 +443,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -468,7 +468,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -614,7 +614,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -639,7 +639,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -785,7 +785,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -810,7 +810,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -955,7 +955,7 @@
           </el-table-column>
           <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
             <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -980,7 +980,7 @@
           </el-table-column>
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="产品经理" min-width="100" prop="productManager" />
@@ -1245,7 +1245,7 @@
         </el-table-column>
         <el-table-column align="center" label="需拍照" min-width="80" prop="isUploadImages">
           <template #default="{ row }">
-            <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
+            <el-checkbox class="custom-checkbox" v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="修改日期" min-width="110" prop="updateTime">
@@ -2583,19 +2583,19 @@ onBeforeMount(() => {
   padding-top: 0;
 }
 // 选中且不被禁用的样式
-:deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
+:deep(.custom-checkbox .el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);
   border-color: var(--el-checkbox-checked-input-border-color);
 }
 
 // 选中且被禁用的样式
-:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+:deep(.custom-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
   background: var(--el-checkbox-checked-bg-color);
   border-color: var(--el-checkbox-checked-input-border-color);
 }
 
 // 选中后中间的 “✔” 的样式
-:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+:deep(.custom-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
 }
 </style>
