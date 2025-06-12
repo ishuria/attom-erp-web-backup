@@ -8,7 +8,7 @@
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
             <!-- <el-button type="primary">云舟开票导出</el-button> -->
-            <el-button :loading="exportLoading" type="primary" @click="handleExportATM">埃托姆开票导出</el-button>
+            <!-- <el-button :loading="exportLoading" type="primary" @click="handleExportATM">埃托姆开票导出</el-button> -->
             <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
@@ -195,7 +195,7 @@
           <vab-query-form-left-panel :span="20">
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <!-- <el-button type="primary">云舟开票导出</el-button> -->
-            <el-button type="primary">埃托姆开票导出</el-button>
+            <!-- <el-button type="primary">埃托姆开票导出</el-button> -->
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
                 v-model="date"
@@ -424,7 +424,7 @@ import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
@@ -583,16 +583,23 @@ const handleExportATM = async () => {
 const handleExportInvoiceMatch = async () => {
   invoiceMatchExportFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      const response = await downloadFilePD('/taxRefund/match/invoice/export', {
+      const { data } = await checkTaxRefundInvoiceExport({
         fromDate: invoiceMatchExportForm.time[0],
         toDate: invoiceMatchExportForm.time[1],
       })
-      // console.log(response)
-      if (response.type === 'application/json') {
-          const text = await response.text(); // 把 blob 转成文本
-          const json = JSON.parse(text);      // 解析成 JSON 对象
-          $baseMessage(json?.msg, 'error')
+      if (data) {
+        const response = await downloadFilePD('/taxRefund/match/invoice/export', {
+          fromDate: invoiceMatchExportForm.time[0],
+          toDate: invoiceMatchExportForm.time[1],
+        })
+        // console.log(response)
+        // if (response.type === 'application/json') {
+        //     const text = await response.text(); // 把 blob 转成文本
+        //     const json = JSON.parse(text);      // 解析成 JSON 对象
+        //     $baseMessage(json?.msg, 'error')
+        // }
       }
+     
     }
   })
 }

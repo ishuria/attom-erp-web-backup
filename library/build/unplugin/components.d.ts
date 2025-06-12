@@ -9,6 +9,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     ActiveUsersBar: typeof import('./../../../src/views/index/vabAutoComponents/ActiveUsersBar.vue')['default']
     AddPanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/AddPanel.vue')['default']
+    AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
+    AiTuoMuInvoiceMatch: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceMatch.vue')['default']
     Authorization: typeof import('./../../../src/views/index/vabAutoComponents/Authorization.vue')['default']
     AwardGrid: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardGrid.vue')['default']
     AwardSlotMachine: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardSlotMachine.vue')['default']
@@ -188,6 +190,7 @@ declare module 'vue' {
     VabAddConsumable: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAddConsumable.vue')['default']
     VabAddRepository: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAddRepository.vue')['default']
     VabAdPieTab: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabAdPieTab.vue')['default']
+    VabAiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabAiTuoMuInvoiceImport.vue')['default']
     VabAlert: typeof import('./../../components/VabAlert/index.vue')['default']
     VabApp: typeof import('./../../components/VabApp/index.vue')['default']
     VabAppMain: typeof import('./../../components/VabAppMain/index.vue')['default']

@@ -208,7 +208,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { checkTaxRefundBatchAiTuoMuExport, getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
@@ -272,14 +272,18 @@ const handleExportAiTuoMu = async () => {
     return
   }
   const ids = selectRows.value.map((item: IGetTaxRefundBatchList) => item.id).join(',')
-  
-  await downloadFileP('/taxRefund/batch/aiTuoMuExport', {
-    ids
-  }).then((res) => {
-    console.log(res)
-  }).catch((error) => {
-    $baseMessage(error, 'error')
-  })
+
+  const { data } = await checkTaxRefundBatchAiTuoMuExport({ ids })
+  if (data) {
+    await downloadFileP('/taxRefund/batch/aiTuoMuExport', {
+      ids
+    })
+    // .then((res) => {
+    //   console.log(res)
+    // }).catch((error) => {
+    //   $baseMessage(error, 'error')
+    // })
+  }
 }
 // 更新报关单出口日期
 const handleUpdateDate = async (row: IGetTaxRefundBatchList) => {

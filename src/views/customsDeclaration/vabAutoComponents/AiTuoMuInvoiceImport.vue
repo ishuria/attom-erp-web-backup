@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content; max-height: 90vh" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
+  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content; max-height: 90vh" :title="title" top="10vh" @close="closeInvoiceMatching">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
@@ -32,9 +32,10 @@
       :span-method="objectSpanMethod"
       @cell-click="cellClick"
     >
-      <el-table-column fixed="left" label="操作" width="70">
+ 
+      <el-table-column v-if="props.from === 'match'" label="匹配" prop="status" width="70">
         <template #default="{ row }">
-          <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
+          <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
@@ -150,14 +151,10 @@
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="匹配合同号" prop="matchContractNumber" :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')" />
-      <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-      <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
-      <el-table-column fixed="right" label="操作" width="100">
+   
+      <el-table-column fixed="right" label="操作" width="70">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
-          <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>
+          <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -192,67 +189,6 @@
       </div>
     </template>
   </vab-dialog>
-  <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" >
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
-          供应商：{{ _supplier }}，开票品名：{{ _invoiceName }}，单位：{{ _invoiceUnit }}，数量：{{ _invoiceCount }}，发票含税金额: {{ _includingTaxPrice }}
-        </el-text>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form inline :model="matchQueryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="matchQueryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="queryMatchData"
-              @keyup.enter="queryMatchData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="matchListLoading" native-type="submit" type="primary" @click="queryMatchData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table max-height="50vh" border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(matchList, '合同编号', 'contractNumber')" />
-      <el-table-column label="未匹配发票数" prop="notYetInvoice" :width="flexColumnWidth(matchList, '未匹配发票数', 'notYetInvoice')" />
-      <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(matchList, 'CIF售价', 'cifPrice')" />
-      <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(matchList, '运费', 'freightFee')" />
-      <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(matchList, 'FOB售价', 'fobPrice')" />
-      <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(matchList, '利润率', 'profitMargin')" />
-      <el-table-column label="汇率" prop="rate" :width="flexColumnWidth(matchList, '汇率', 'rate')" />
-      <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(matchList, '人民币售价', 'salePrice')" />
-      <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '报关数量', 'customsDeclarationCount')" />
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(matchList, '报关单位', 'customsDeclarationUnit')" />
-      <el-table-column label="PO" prop="po" :width="flexColumnWidth(matchList, 'PO', 'po')" />
-      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" :width="flexColumnWidth(matchList, '含税成本价￥', 'taxInclusiveCost')" />
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')" />
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(matchList, 'Shipment ID-', 'shipmentId')" />
-      <el-table-column label="匹配" prop="status" width="70">
-        <template #default="{ row }">
-          <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
-        </template>
-      </el-table-column>
-    </el-table>
-    <vab-pagination
-      :current-page="matchQueryForm.pageNo"
-      :page-size="matchQueryForm.pageSize"
-      :total="matchTotal"
-      @current-change="handleMatchCurrentChange"
-      @size-change="handleMatchSizeChange"
-    />
-    <template #footer>
-      <div style="text-align: center">
-        <el-button @click="matchVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确定</el-button>
-      </div>
-    </template>
-  </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
 </template>
 
@@ -261,16 +197,12 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
-  cleanTaxRefundInvoice,
   deleteTaxRefundInvoice,
   finishTaxRefundInvoice,
-  getTaxRefundInvoiceList,
-  getTaxRefundInvoiceMatch,
   submitConfirmTaxRefundInvoiceMatch,
-  submitTaxRefundInvoiceMatch,
   updateTaxRefundInvoice,
   updateTaxRefundInvoiceDetail,
-  uploadTaxRefund,
+  uploadTaxRefund
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type {
   IGetTaxRefundInvoiceList,
@@ -281,17 +213,24 @@ import type {
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
-  name: 'VabInvoiceMatching',
+  name: 'AiTuoMuInvoiceImport',
 })
 
+const title = ref<string>('')
 const dflag = ref<boolean>(false)
 const props = defineProps<{
   invoiceMatchingVisible: boolean
+  from: string
 }>()
 watchEffect(() => {
   dflag.value = props.invoiceMatchingVisible
   if (dflag.value) {
     fetchData()
+  }
+  if (props.from === 'match') {
+    title.value = '发票匹配'
+  } else {
+    title.value = '发票导入'
   }
 })
 const emit = defineEmits<{
@@ -316,9 +255,7 @@ const uploadInvoiceVisible = ref<boolean>(false)
 
 const fileList = ref<any[]>([])
 
-const handleRowClick = (row: any, column: any, event: Event) => {
-  matchStatus.value = row.uniqId
-}
+
 // 展示上传发票
 const showUploadInvoice = () => {
   fileList.value = []
@@ -351,18 +288,7 @@ const handleFinishUpload = async () => {
     finishLoading.value = false
   }
 }
-// 发票匹配清空
-const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
-  $baseConfirm('确定要清空吗？', null, async () => {
-    const { data } = await cleanTaxRefundInvoice({
-      detailId: row.detailId!,
-    })
-    if (data) {
-      $baseMessage('清空成功！', 'success')
-      fetchData()
-    }
-  })
-}
+
 // 删除发票
 const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
   $baseConfirm('确定要删除吗？', null, async () => {
@@ -397,41 +323,9 @@ const matchQueryForm = reactive<IGetTaxRefundInvoiceMatchQuery>({
 const matchTotal = ref<number>(0)
 const matchListLoading = ref<boolean>(false)
 const matchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
-const queryMatchData = () => {
-  matchQueryForm.pageNo = 1
-  fetchMatchData()
-}
-const handleMatchCurrentChange = (value: number) => {
-  matchQueryForm.pageNo = value
-  fetchMatchData()
-}
-const handleMatchSizeChange = (value: number) => {
-  matchQueryForm.pageSize = value
-  matchQueryForm.pageNo = 1
-  fetchMatchData()
-}
 
-const handleConfirm = async () => {
-  if (matchStatus.value === -1){
-    $baseMessage('请选择匹配项','warning')
-    return
-  }
 
-  // 勾选匹配的value
-  const matchedItem = matchList.value.find(
-    (item: IGetTaxRefundInvoiceMatchList) => item.uniqId === matchStatus.value
-  );
 
-  const { data } = await submitTaxRefundInvoiceMatch({
-    id: matchedItem!.id,
-    detailId: matchQueryForm.detailId,
-  })
-  if (data) {
-    $baseMessage('提交成功！', 'success')
-    matchVisible.value = false
-    await fetchData()
-  }
-}
 const handleSubmitConfirm = async () => {
   let detailIds: number[] = []
   let isNotNull = false
@@ -452,32 +346,8 @@ const handleSubmitConfirm = async () => {
   }
 }
 
-const _supplier = ref<string>('')
-const _invoiceName = ref<string>('')
-const _invoiceUnit = ref<string>('')
-const _invoiceCount = ref<number>(0)
-const _includingTaxPrice = ref<number>(0)
 let copyRow: any
-// 展示匹配
-const showMatch = async (row: IGetTaxRefundInvoiceList) => {
-  matchQueryForm.detailId = row.detailId!
-  matchListLoading.value = true
-  const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
-  if (data) {
-    // 使用响应式赋值
-    _supplier.value = row.suppliser!
-    _invoiceName.value = row.invoiceName!
-    _invoiceUnit.value = row.invoiceUnit!
-    _invoiceCount.value = row.invoiceCount!
-    _includingTaxPrice.value = row.includingTaxPrice!
-    matchTotal.value = data?.total!
-    matchList.value = data?.list!
-    matchVisible.value = true
-    matchListLoading.value = false
-  } else {
-    matchVisible.value = false
-  }
-}
+
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
@@ -605,16 +475,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
   // 发票数量和发票单位与报关数量和报关单位不一致，报关数量和单位就标红
 }
-const matchCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 12 || data.columnIndex === 13 || data.columnIndex === 14) {
-    return {
-      textAlign: 'left',
-    }
-  }
-  return {
-    textAlign: 'center',
-  }
-}
+
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.columnIndex === 10) {
     return 'clear-padding'
@@ -646,19 +507,13 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
     }
   }
 }
-const fetchMatchData = async () => {
-  matchListLoading.value = true
-  const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
-  matchTotal.value = data?.total!
-  matchList.value = data?.list!
-  matchListLoading.value = false
-}
+
 const fetchData = async () => {
-  listLoading.value = true
-  const { data } = await getTaxRefundInvoiceList(queryForm)
-  total.value = data?.total!
-  list.value = data?.list!
-  listLoading.value = false
+  // listLoading.value = true
+  // const { data } = await getTaxRefundInvoiceList(queryForm)
+  // total.value = data?.total!
+  // list.value = data?.list!
+  // listLoading.value = false
 }
 </script>
 

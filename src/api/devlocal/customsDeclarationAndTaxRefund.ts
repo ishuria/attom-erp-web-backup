@@ -800,3 +800,29 @@ export const getCostNameListByChannelId = (params: { channelId: number }): Promi
     params
   })
 }
+
+/**
+ * 退税管理 发票匹配导出 前置接口
+ * @param data 
+ * @returns 
+ */
+export const checkTaxRefundInvoiceExport = (data: { fromDate: string, toDate: string }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/match/invoice/export/check`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 退税批次 出口发票生成 前置接口
+ * @param data 
+ * @returns 
+ */
+export const checkTaxRefundBatchAiTuoMuExport = (params: { ids: string }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/aiTuoMuExport/check`,
+    method: 'post',
+    params,
+  })
+}
+
