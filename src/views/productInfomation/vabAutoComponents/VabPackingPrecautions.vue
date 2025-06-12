@@ -74,7 +74,7 @@
             <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="130">
           <template #default="{ row, $index }">
             <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row, $index)">删除</el-link>
           </template>
@@ -152,9 +152,9 @@ const handleCheckType = async (row: any) => {
 }
 const handleStatusChange = async (row: any) => {
   // 勾选了需拍照的，需质检列必须也勾选
-  if (row.isUploadImages === 1) {
+  if (row.isUploadImages === 1 && row.status === 0) {
+    $baseMessage('勾选了需拍照的，需质检列必须也勾选', 'warning', 'hey')
     row.status = 1
-    $baseMessage('勾选了需拍照的，需质检列必须也勾选','warning', 'hey')
   }
   await updateProductQualityInspection(row)
   fetchData()
