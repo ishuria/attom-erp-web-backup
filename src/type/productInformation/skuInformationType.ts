@@ -1327,4 +1327,42 @@ export interface IAddCustomsClearanceSkuInfo {
   usage: string
 }
 
+// ------------------------- 开票分类 -------------------------
+export interface IGetComponentInvoiceTypeReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetComponentInvoiceTypeRes {
+  data: {
+    total: number
+    list: IGetComponentInvoiceType[]
+  }
+}
+export interface IGetComponentInvoiceType {
+  id: number
+  componentName?: string
+  componentImgUrl?: string
+  declarationElementsAbbreviation?: string
+  customsDeclarationNameZh?: string
+  sku?: string
+  type?: string
+  taxationEncoding?: string
+}
+export interface IAddComponentEncoding {
+  typeEncodingName: string
+  encodingCode: string
+}
+export interface IGetComponentEncodingListRes {
+  data: {
+    total: number
+    list: IGetComponentEncodingList[]
+  }
+}
+export interface IGetComponentEncodingList {
+  id: number
+  typeName?: string
+  encodingCode?: string
+}
+
 

@@ -23,7 +23,7 @@
   "editor.tabSize": 2,
   "emmet.triggerExpansionOnTab": true,
   "explorer.confirmDelete": false,
-  "files.autoSave": "onFocusChange",
+  "files.autoSave": "off",
   "files.eol": "\n",
   "files.exclude": { "**/.idea": true },
   "git.autofetch": true,

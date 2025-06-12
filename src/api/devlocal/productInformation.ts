@@ -17,9 +17,13 @@ import type {
   IUpdateSkuShippingChannelMerchandise
 } from '/@/type/productInformation/channelType'
 import type {
+  IAddComponentEncoding,
   IAddCustomsClearanceSkuInfo,
   IBooleanResp,
   IConsumablesType,
+  IGetComponentEncodingListRes,
+  IGetComponentInvoiceTypeReq,
+  IGetComponentInvoiceTypeRes,
   IGetCustomsClearanceRatioRes,
   IGetCustomsClearanceSkuInfoRes,
   IGetCustomsClearanceSkuListReq,
@@ -895,3 +899,86 @@ export function getCustomsClearanceCountryList(): Promise<{ data: { id: number, 
   })
 }
 
+// ----------------------- 开票分类 ---------------------------
+/**
+ * 零件开票分类-列表获取
+ * @param params 
+ * @returns 
+ */
+export function getComponentInvoiceTypeList(params: IGetComponentInvoiceTypeReq): Promise<IGetComponentInvoiceTypeRes> {
+  return request({
+    url: `${BASE_API}/component/invoice/type/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 零件开票分类-添加分类编码
+ * @param data 
+ * @returns 
+ */
+export function addComponentEncoding(data: IAddComponentEncoding): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/component/encoding/add`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 零件开票分类-删除分类编码
+ * @param data 
+ * @returns 
+ */
+export function delComponentEncoding(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/component/encoding/del`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 零件开票分类-分类编码设定列表获取
+ * @param params 
+ * @returns 
+ */
+export function getComponentEncodingList(params: IGetComponentInvoiceTypeReq): Promise<IGetComponentEncodingListRes> {
+  return request({
+    url: `${BASE_API}/component/encoding/list`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 零件开票分类-修改税收分类编码和分类名
+ * @param params 
+ * @returns 
+ */
+export function updateComponentEncoding(params: { id: number, taxationEncoding?: string, typeName?: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/component/encoding/update`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 零件开票分类-分类名列表获取
+ * @returns 
+ */
+export function getComponentTypeList() {
+  return request({
+    url: `${BASE_API}/component/type/list`,
+    method: 'get',
+  })
+}
+/**
+ * 零件开票分类-修改零件的分类
+ * @param params 
+ * @returns 
+ */
+export function updateBatchComponentType(params: { ids: string, typeEncodingId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/component/batch/encoding/update`,
+    method: 'post',
+    params
+  })
+}
