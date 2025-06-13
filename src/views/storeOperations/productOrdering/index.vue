@@ -706,6 +706,9 @@ const handleWidth = (item: any) => {
     case '签收': {
       return flexColumnWidth(list.value, '签收', 'quantityReceived', 40);
     }
+    case '最近入库': {
+      return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage');
+    }
     default: {
       return item.minWidth
     }
