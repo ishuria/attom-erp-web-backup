@@ -807,3 +807,16 @@ export function getQualityInspectionPackage(params: { reportId: number }): Promi
     params
   })
 }
+
+/**
+ * 修改发货数量调整
+ * @param params 
+ * @returns 
+ */
+export function updateShippingCountAdjustment(params: { id: number, count: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/shipment/count/adjust`,
+    method: 'post',
+    params
+  })
+}

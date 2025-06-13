@@ -39,6 +39,8 @@
           :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
+          @cell-click="cellClick"
+          :cell-style="cellStyle"
         >
           <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
             <template #default="{ row }">
@@ -80,9 +82,17 @@
               <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdateLostGoodsStatus(row)" />
             </template>
           </el-table-column>
+          <el-table-column label="发货数量调整" min-width="120" prop="shippingCountAdjustment" >
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.shippingCountAdjustment" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.shippingCountAdjustment }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="站点" min-width="120" prop="site"/>
           <el-table-column label="Shipment ID" min-width="120" prop="shipmentId"/>
-          <el-table-column label="货代单号" min-width="100" prop="freightForwardingNumber"/>
+          <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" />
           <el-table-column label="PO" min-width="100" prop="po"/>
           <el-table-column label="发货数" min-width="100" prop="actualCount"/>
           <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName')"/>
@@ -251,10 +261,12 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { getShipmentArrivedList, updateLostGoodsStatus } from '/@/api/devlocal/encasement'
-import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { getPackageSiteList, updateShippingCountAdjustment } from '/@/api/devlocal/packagingShipping'
 import type { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { isEqual } from 'lodash'
 
 defineOptions({
   name: 'ShippedProduct',
@@ -283,6 +295,49 @@ const imagePreviewShow = (row: any) => {
   imagePreviewList.value = []
   imagePreviewVisible.value = true
   imagePreviewList.value.push(row.skuImgUrl)
+}
+
+let copyRow: any
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  copyRow = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+}
+const clickCancel = async (event: Event, value: IGetShipmentArrivedList) => {
+  const rootElement = getRootElement(event.target, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    try {
+      await updateShippingCountAdjustment({
+        id: value.id!,
+        count: value.shippingCountAdjustment!
+      })
+    } catch {
+      Object.assign(value, copyRow)
+    }
+  }
 }
 const handleClick = (tab: TabsPaneContext) => {
   list.value = []
@@ -365,6 +420,13 @@ const queryData = () => {
   fetchData()
 }
 
+const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
+  if (data.column.label === '发货数量调整') {
+    return {
+      cursor: 'pointer'
+    }
+  } 
+}
 const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4) {
     return 'clear-padding'
@@ -545,6 +607,9 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.none {
+  display: none;
 }
 </style>
 

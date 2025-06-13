@@ -2742,7 +2742,7 @@ onUnmounted(() => {
           }
           .el-form {
             .el-form-item:first-child {
-              margin: 0 !important;
+              margin-bottom: 5px !important;
 
               .el-check-tag,
               .el-form-item__label {
@@ -2751,7 +2751,7 @@ onUnmounted(() => {
               }
             }
             .el-form-item:last-child {
-              margin: 0 !important;
+              margin-bottom: 5px !important;
             }
           }
         }

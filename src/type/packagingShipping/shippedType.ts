@@ -849,6 +849,7 @@ export interface IGetShipmentArrivedList {
   lackCount?: number
   // 已接收天数
   acceptDays?: number
+  shippingCountAdjustment?: number
 }
 
 export interface IUpdateLostGoodsStatus {
