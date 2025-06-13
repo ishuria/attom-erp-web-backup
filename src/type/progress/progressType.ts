@@ -114,7 +114,7 @@ export interface IDelImgQueryReq {
 export interface ISharelistQueryReq {
     progressId?: number
     userId?: string // 共享人id
-    type?: string //类型 0 增加 1移除
+    type?: number //类型 0 增加 1移除
 }
 /**
  * 样品进度查询参数

@@ -1233,7 +1233,7 @@ const handlerSwitchChange = async (row: any) => {
   const { data } = await updateProgressSharelist({
     progressId: parseInt(shareId.value),
     userId: row.userID,
-    type: convertString(type),
+    type: type,
   })
 
   if (data === true && type === 0) {
