@@ -11,6 +11,7 @@ declare module 'vue' {
     AddPanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/AddPanel.vue')['default']
     AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
     AiTuoMuInvoiceMatch: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceMatch.vue')['default']
+    AiTuoMuTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuTable.vue')['default']
     Authorization: typeof import('./../../../src/views/index/vabAutoComponents/Authorization.vue')['default']
     AwardGrid: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardGrid.vue')['default']
     AwardSlotMachine: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardSlotMachine.vue')['default']
