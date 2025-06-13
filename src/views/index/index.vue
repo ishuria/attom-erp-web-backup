@@ -34,7 +34,7 @@
       </el-col>
       <!-- 第四层 -->
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <!-- <performance-history /> -->
+        <performance-history />
       </el-col>
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <authorization />

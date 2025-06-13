@@ -33,7 +33,7 @@ const initChart = () => {
   option.value = {
    
     legend: {
-      bottom: '2%'
+      bottom: '4%'
     },
     tooltip: {
       trigger: 'axis',
@@ -60,7 +60,7 @@ const initChart = () => {
     },
     grid: {
       left: '0',
-      bottom: '10%',
+      bottom: '15%',
       right: '0',
       top: '0',
       containLabel: true
@@ -83,12 +83,15 @@ const initChart = () => {
         name: '',
         position: 'left',
         min: 0,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#999',
-          },
+        axisLabel: {
+          show: false,
         },
+        // axisLine: {
+        //   show: true,
+        //   lineStyle: {
+        //     color: '#999',
+        //   },
+        // },
         boundaryGap: [0, 0.1]  // 为顶部留出空间
       },
       {
@@ -96,15 +99,16 @@ const initChart = () => {
         name: '',
         position: 'right',
         axisLabel: {
-          formatter: '{value}%',
+          show: false,
+          // formatter: '{value}%',
         },
         min: 0,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#999',
-          },
-        },
+        // axisLine: {
+        //   show: true,
+        //   lineStyle: {
+        //     color: '#999',
+        //   },
+        // },
         splitLine: {
           show: false,
         },
@@ -114,16 +118,16 @@ const initChart = () => {
         type: 'value',
         name: '',
         position: 'right',
-        axisLabel: {
-          formatter: '{value}%',
-        },
+        // axisLabel: {
+        //   formatter: '{value}%',
+        // },
         min: 0,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            color: '#999',
-          },
-        },
+        // axisLine: {
+        //   show: true,
+        //   lineStyle: {
+        //     color: '#999',
+        //   },
+        // },
         splitLine: {
           show: false,
         },

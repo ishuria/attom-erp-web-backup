@@ -528,7 +528,7 @@ const startEvaluation = () => {
   router.push({
     path: '/newProductDevelopment/addOrUpdateEvalution',
     query: {
-      title: '评估',
+      title: '新款评估',
       timestamp: Date.now(),
     },
   })

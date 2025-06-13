@@ -1,20 +1,19 @@
 <template>
-  <div class="default-table-detail-container">
+  <div class="comprehensive-table-container">
     <el-page-header :content="`修改 ${route.query.title}`" @back="goBack" />
-    <el-row>
-      <el-col :span="12">
+    <div style="height: 100%; display: flex; justify-content: center; margin-top: 50px; margin-left: -75px;">
+      <el-row :gutter="100" style="max-width: 80vw; ">
+      <el-col :span="12" >
         <el-form
           ref="inputFormRef"
           label-position="right" 
           label-width="auto"
           :model="inputForm"
           :rules="rules"
-          style="max-width: 750px"
+          style="width: 100%;"
           @submit.prevent
-         >
+        >
           <el-form-item label="产品来源"  prop="productSource">
-            <!-- <el-input v-model="inputForm.productSource" clearable style="width: 600px" /> -->
-
             <el-select
               v-model="inputForm.productSource"
               allow-create
@@ -24,7 +23,6 @@
             >
               <el-option
                 v-for="item in selectOptions"
-               
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -32,34 +30,34 @@
             </el-select>
           </el-form-item>
           <el-form-item label="中文品名" prop="productNameZh">
-            <el-input v-model="inputForm.productNameZh" clearable style="width: 600px" />
+            <el-input v-model="inputForm.productNameZh" clearable style="width: 100%;" />
           </el-form-item>
           <el-form-item label="亚马逊前台关键词" prop="amazonFrontendKeywords">
-            <el-input v-model="inputForm.amazonFrontendKeywords" clearable style="width: 600px" />
+            <el-input v-model="inputForm.amazonFrontendKeywords" clearable style="width: 100%;" />
           </el-form-item>
           <el-form-item label="亚马逊后台关键词" prop="amazonBackendKeywords">
-            <el-input v-model="inputForm.amazonBackendKeywords" clearable style="width: 600px" />
+            <el-input v-model="inputForm.amazonBackendKeywords" clearable />
           </el-form-item>
           <el-form-item label="亚马逊listing数量" prop="amazonListingQuantity">
-            <el-input v-model="inputForm.amazonListingQuantity" clearable style="width: 600px" />
+            <el-input v-model="inputForm.amazonListingQuantity" clearable  />
           </el-form-item>
           <el-form-item label="90天搜索量" prop="searchVolume90Days">
-            <el-input v-model="inputForm.searchVolume90Days" clearable style="width: 600px" />
+            <el-input v-model="inputForm.searchVolume90Days" clearable  />
           </el-form-item>
           <el-form-item label="平均售价" prop="averageSellingPrice">
-            <el-input v-model="inputForm.averageSellingPrice" clearable style="width: 600px" />
+            <el-input v-model="inputForm.averageSellingPrice" clearable  />
           </el-form-item>
           <el-form-item label="360天平均销量" prop="averageSales360Days">
-            <el-input v-model="inputForm.averageSales360Days" clearable style="width: 600px" />
+            <el-input v-model="inputForm.averageSales360Days" clearable />
           </el-form-item>
           <el-form-item label="前80%点击的产品个数"  prop="top80PercentClickedProductsCount">
-            <el-input v-model="inputForm.top80PercentClickedProductsCount" clearable style="width: 600px" />
+            <el-input v-model="inputForm.top80PercentClickedProductsCount" clearable />
           </el-form-item>
           <el-form-item label="亚马逊广告单个点击价格$(CPC)"  prop="amazonAdCpc">
-            <el-input v-model="inputForm.amazonAdCpc" clearable style="width: 600px" />
+            <el-input v-model="inputForm.amazonAdCpc" clearable  />
           </el-form-item>
           <el-form-item label="类目平均转化率" prop="categoryAvgConversionRate">
-            <el-input v-model="inputForm.categoryAvgConversionRate" clearable style="width: 600px" >
+            <el-input v-model="inputForm.categoryAvgConversionRate" clearable  >
               <template #suffix>
                 %
               </template>
@@ -106,50 +104,50 @@
           label-position="right"
           label-width="auto"
           :model="outputForm"
-          style="max-width: 750px"
+          style="width: 95%;"
           @submit.prevent
-         >
-         <el-form-item label="评估编号"  prop="productSource">
-            <el-input v-model="outputForm.evaluationId" disabled style="width: 600px" />
+        >
+        <el-form-item label="评估编号"  prop="productSource">
+            <el-input v-model="outputForm.evaluationId" disabled  />
           </el-form-item>
           
           <div style="display: flex;">
             <el-form-item label="年市场容量"  prop="marketCapacity">
-            <el-input v-model="outputForm.marketCapacity" disabled style="width: 250px" />
+            <el-input v-model="outputForm.marketCapacity" disabled  />
             </el-form-item>
             <el-form-item label="竞争度"  prop="competitiveness">
-              <el-input v-model="outputForm.competitiveness" disabled style="width: 250px" />
+              <el-input v-model="outputForm.competitiveness" disabled  />
             </el-form-item>
           </div>
 
           <div style="display: flex;">
             <el-form-item label="首页平均销售额"  prop="avgSalse">
-              <el-input v-model="outputForm.avgSalse" disabled style="width: 250px" />
+              <el-input v-model="outputForm.avgSalse" disabled />
             </el-form-item>
             <el-form-item label="首页平均销售额偏离度"  prop="salseDeviation">
-              <el-input v-model="outputForm.salseDeviation" disabled style="width: 250px" />
+              <el-input v-model="outputForm.salseDeviation" disabled />
             </el-form-item>
           </div>
 
           <div style="display: flex;">
             <el-form-item label="30%毛利盈亏自然单占比"  prop="grossProfitAndLoss">
-              <el-input v-model="outputForm.grossProfitAndLoss" disabled style="width: 250px" />
+              <el-input v-model="outputForm.grossProfitAndLoss" disabled />
             </el-form-item>
             <el-form-item label="平均上架天数"  prop="avgDaysListed">
-              <el-input v-model="outputForm.avgDaysListed" disabled style="width: 250px" />
+              <el-input v-model="outputForm.avgDaysListed" disabled  />
             </el-form-item>
           </div>
 
           <div style="display: flex;">
             <el-form-item label="亚马逊关键词首页评分"  prop="amazonKeyWordScore">
-              <el-input v-model="outputForm.amazonKeyWordScore" disabled style="width: 250px" />
+              <el-input v-model="outputForm.amazonKeyWordScore" disabled  />
             </el-form-item>
             <el-form-item label="市场供求评分"  prop="supplyScore">
-              <el-input v-model="outputForm.supplyScore" disabled style="width: 250px" />
+              <el-input v-model="outputForm.supplyScore" disabled  />
             </el-form-item>
           </div>
           <el-form-item label="总评分"  prop="finalScore">
-            <el-input v-model="outputForm.finalScore" disabled style="width: 600px" />
+            <el-input v-model="outputForm.finalScore" disabled />
           </el-form-item>
           
           <el-form-item label="关键词趋势跨度"  prop="finalScore">
@@ -160,7 +158,6 @@
             >
               <el-option
                 v-for="item in idxKeyWordOptions"
-               
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -168,21 +165,24 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item style="width: 850px">
+          <el-form-item style="margin-left: 100px; margin-right: -20px">
             <vab-echarts-chart-line 
               v-if="echartsFlag" 
               :x-axis-data="x" 
-              :y-axis-data="y"/>
+              :y-axis-data="y"
+            />
           </el-form-item>
 
           <div style="display: flex;justify-content: end;">
-              <el-button  v-if="aginAnalyzeFlg" type="success" @click="aginAnalyze">再分析一个</el-button>
-              <el-button type="success" @click="goBack">退出</el-button>
+            <el-button v-if="aginAnalyzeFlg" type="success" @click="aginAnalyze">再分析一个</el-button>
+            <el-button type="danger" @click="goBack">退出</el-button>
           </div>
-         </el-form>
+        </el-form>
 
       </el-col>
     </el-row>
+    </div>
+ 
   </div>
 </template>
 
