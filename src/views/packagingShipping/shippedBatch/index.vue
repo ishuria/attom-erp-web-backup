@@ -21,8 +21,9 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
+      @cell-click="cellClick"
     >
-      <el-table-column label="FBA SHIPMENT ID" prop="fbaShipmentId" :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId')" />
+      <el-table-column label="FBA SHIPMENT ID" prop="fbaShipmentId" :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId', 30)" />
       <el-table-column label="站点" min-width="130" prop="site"/>
       <el-table-column label="状态" min-width="100" prop="status"/>
       <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')"/>
@@ -77,12 +78,12 @@
       </el-table-column>
       <el-table-column label="不计入渠道时效" min-width="140" prop="timelinessStatus">
         <template #default="{ row }">
-          <el-checkbox v-model="row.timelinessStatus" :false-value="0" :true-value="1" />
+          <el-checkbox v-model="row.timelinessStatus" :false-value="0" :true-value="1" @change="handleUpdate(row)" />
         </template>
       </el-table-column>
       <el-table-column label="丢货标记" min-width="100" prop="lostGoodsStatus">
         <template #default="{ row }">
-          <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" />
+          <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdate(row)" />
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="260">
@@ -129,6 +130,7 @@
         :data="detailList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
+        max-height="60vh"
       >
         <el-table-column label="图片" width="70">
           <template #default="{ row }">
@@ -164,7 +166,7 @@
       width="20%"
       @close="closeUpdateStorageTime"
     >
-      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-right: 20px; margin-left: 20px;">
+      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-right: 0px; margin-left: 0px;">
         <el-form-item label="最新预计入库时间" prop="date">
           <el-date-picker 
             v-model="storageTimeForm.date" 
@@ -235,6 +237,13 @@
         <el-button type="primary" @click="confirmFilter">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 备注 -->
+    <vab-remark-dialog 
+      v-model="remarkVisible"
+      :remark="remark"
+      title="修改备注"
+      @update:remark="handleUpdateRemark"
+    />
   </div>
 </template>
 
@@ -242,7 +251,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
+import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFBA, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
 import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -250,6 +259,9 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'ShippedBatch'
 })
+
+const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
 
 const router = useRouter()
 const route = useRoute()
@@ -302,6 +314,37 @@ const filterFormRef = ref<FormInstance>()
 const storageTimeFormRef = ref<FormInstance>()
 // 传给明细的id
 const _id = ref<number | undefined>(0)
+
+let copyRow: any
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '备注') {
+    remarkVisible.value = true
+    remark.value = row.remarks
+    copyRow = row
+  }
+}
+const handleUpdateRemark = async (val: string) => {
+  try {
+    const { data } = await updateShipmentFBA({
+      id: copyRow.id!,
+      remarks: val
+    })
+    if (data) {
+      $baseMessage('修改备注成功！', 'success')
+      remarkVisible.value = false
+      copyRow.remarks = val
+    }
+  } catch (error) {
+    
+  }
+}
+const handleUpdate = async (row: IGetShipmentFbaList) => {
+  await updateShipmentFBA({
+    id: row.id,
+    timelinessStatus: row.timelinessStatus,
+    lostGoodsStatus: row.lostGoodsStatus,
+  })
+}
 // 展示明细
 const showDetails = (row: IGetShipmentFbaList) => {
   detailsVisible.value = true
@@ -444,6 +487,12 @@ const handleDetailSizeChange = (value: number) => {
 }
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  if (data.column.label === '备注') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer'
+    }
+  }
   if (data.columnIndex !== 0 && data.columnIndex !== 3 && data.columnIndex !== 19) {
     return {
       textAlign: 'center'
@@ -503,5 +552,10 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+}
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: 14px;
+  white-space: pre-wrap; 
 }
 </style>

@@ -1225,4 +1225,9 @@ onActivated(() => {
     color: #000;
   }
 }
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: 14px;
+  white-space: pre-wrap; 
+}
 </style>

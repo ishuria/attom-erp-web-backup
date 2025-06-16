@@ -907,7 +907,7 @@ export interface IGetShipmentFbaList {
   /**
    * 主键id
    */
-  id?: number
+  id: number
   /**
    * 初始预计入库日期
    */
@@ -954,6 +954,12 @@ export interface IGetShipmentFbaList {
   weight?: number
   // 体积
   volume?: number
+}
+export interface IUpdateShipmentFBA {
+  id: number
+  remarks?: string
+  lostGoodsStatus?: number
+  timelinessStatus?: number
 }
 
 export interface IUpdateShipmentFbaDate {

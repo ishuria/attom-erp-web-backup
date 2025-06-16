@@ -49,6 +49,7 @@ import type {
   IUpdateFreightForwarderType,
   IUpdateLostGoodsStatus,
   IUpdateSafeDaysFreightForwarder,
+  IUpdateShipmentFBA,
   IUpdateShipmentFbaDate
 } from '/@/type/packagingShipping/shippedType'
 
@@ -511,6 +512,18 @@ export const getShipmentFbaList = (params: IGetShipmentFbaListReq): Promise<IGet
     url: `${BASE_API}/shipment/fba/list`,
     method: 'get',
     params
+  })
+}
+/**
+ * 已发批次 修改
+ * @param data 
+ * @returns 
+ */
+export const updateShipmentFBA = (data: IUpdateShipmentFBA): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/update`,
+    method: 'post',
+    data
   })
 }
 /**
