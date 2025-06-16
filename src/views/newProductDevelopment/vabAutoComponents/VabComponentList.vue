@@ -21,29 +21,45 @@
       :row-class-name="stripedRowClass" :span-method="objectSpanMethod" 
       @cell-click="componentTableInputChange" 
     >
-      <el-table-column fixed="left" label="零件操作" width="115">
+      <el-table-column fixed="left" label="零件操作" width="125">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="addSuppliserInfo(row)">
-              复制
+            <el-link :underline="false" type="primary" @click="addSuppliserInfo(row)">
+              新增供应商
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
-            </el-button>
+            </el-link>
+              
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="copyComponentInfo(row)">
-                    <el-link type="primary" :underline="false">复制</el-link>
-                  </el-dropdown-item>
                   <el-dropdown-item @click="addSuppliserInfo(row)">
                     <el-link type="primary" :underline="false">新增供应商</el-link>
                   </el-dropdown-item>
+                  <el-dropdown-item @click="copyComponentInfo(row)">
+                    <el-link type="primary" :underline="false">复制</el-link>
+                  </el-dropdown-item>
+               
                 </el-dropdown-menu>
               </template>
           </el-dropdown>
         </template>
       </el-table-column>
-
+      <el-table-column label="" prop="includedInCost" width="80">
+          <template #header>
+            计入利<br>润核算
+          </template>
+          <template #default="{ row }">
+            <el-checkbox 
+              v-model="row.includedInCost" 
+              class="custom-checkbox" 
+              :false-value="1" 
+              size="large"
+              :true-value="0" 
+              @change="includedInCostChange(row)"
+            />
+          </template>
+        </el-table-column>
       <el-table-column label="图片" prop="componentImg" width="76">
         <template #default="{ row }">
           <div class="image-cell">
@@ -216,22 +232,6 @@
                 :value="dict.value" 
               />
             </el-select>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="计入产品成本" prop="includedInCost" width="80">
-          <template #header>
-            计入产<br>品成本
-          </template>
-          <template #default="{ row }">
-            <el-checkbox 
-              v-model="row.includedInCost" 
-              class="custom-checkbox" 
-              :false-value="1" 
-              size="large"
-              :true-value="0" 
-              @change="includedInCostChange(row)"
-            />
           </template>
         </el-table-column>
 
@@ -633,13 +633,14 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (label === '已有零件id' || label === '总未税价') {        
+  if (label === '总未税价') {        
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign:'center'
     } 
-  } else if (['图片', '零件名', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
+  } 
+  else if (['图片', '零件名', '货币', '供应商', '开票', '采购链接', '备注'].includes(label)) {
     return {
       textAlign: 'left',
       cursor: 'pointer',
@@ -989,7 +990,7 @@ const clickLog = async (val: any) => {
 }
 // 去掉图片列的padding
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): string => {
-  if (data.columnIndex === 1) {
+  if (data.columnIndex === 2 || data.columnIndex === 0) {
     return 'clear-padding'
   }
   return ''

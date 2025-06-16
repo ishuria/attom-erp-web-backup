@@ -28,10 +28,7 @@
           <span>{{ formatDate(new Date(row.createTime)) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="SKU图片" width="75">
-        <template #header>
-          SKU<br />图片
-        </template>
+      <el-table-column label="图片" width="75">
         <template #default="{ row }">
           <el-image fit="fill" :src="row.skuImage" style="display: block; width: 75px; height: 75px;" @click="setPreviewList(row.skuImage)">
             <template #error>

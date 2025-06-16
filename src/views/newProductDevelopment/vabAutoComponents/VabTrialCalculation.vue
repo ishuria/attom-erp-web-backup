@@ -13,7 +13,7 @@
         stripe
         @cell-click="sampelTrialTableInputChage"
       >
-        <el-table-column prop="firstColumn" width="115">
+        <el-table-column prop="firstColumn" width="125">
           <span style="font-size: var(--el-font-size-base); font-weight: 600; color: var(--el-table-header-text-color);">产品实际<br>利润核算</span>
         </el-table-column>
         <el-table-column label="站点" prop="site" width="180">
@@ -105,7 +105,7 @@
         </el-table-column>
         <el-table-column label="头程渠道" prop="firstMileChannel" width="160">
           <template #default="{ row }">
-            <el-select v-model="row.firstMileChannel" placeholder="请选择头程渠道" style="min-width: 100%" @change="handleUpdateChannel(row)">
+            <el-select v-model="row.firstMileChannel" filterable placeholder="请选择头程渠道" style="min-width: 100%" @change="handleUpdateChannel(row)">
               <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
             </el-select>
           </template>

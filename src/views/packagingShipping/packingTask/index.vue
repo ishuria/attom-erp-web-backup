@@ -104,7 +104,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -277,7 +277,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -448,7 +448,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -619,7 +619,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -790,7 +790,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -960,7 +960,7 @@
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch

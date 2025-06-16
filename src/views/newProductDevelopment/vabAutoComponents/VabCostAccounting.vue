@@ -27,7 +27,7 @@
         :data="estimatedCostList"
         :header-cell-style="{ textAlign: 'center' }" stripe @cell-click="costAccountingChangeInput"
       >
-        <el-table-column label="日期" prop="createTime" width="115">
+        <el-table-column label="日期" prop="createTime" width="125">
           <template #default="{ row }">
             <span>{{ row.createTime ? formatDate(new Date(row.createTime)) : '' }}</span>
           </template>
@@ -170,6 +170,7 @@
               v-model="row.firstMileChannel" 
               placeholder="请选择头程渠道"
               style="min-width: 100%;"
+              filterable
               @change="handlerEstimatendChange(row)"
             >
               <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
