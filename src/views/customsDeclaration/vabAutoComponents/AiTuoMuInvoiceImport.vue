@@ -36,12 +36,12 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       max-height="80vh"
-      :span-method="objectSpanMethod"
+     
       @cell-click="cellClick"
     >
       <el-table-column v-if="!invoiceFlag" label="匹配" prop="status" width="70">
         <template #default="{ row }">
-          <el-radio v-model="matchStatus" class="custom-radio" :label="row.id" size="large">{{ '' }}</el-radio>
+          <el-radio v-model="matchStatus" class="custom-radio" :label="row.detailId" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
@@ -345,10 +345,12 @@ const handleSubmitConfirm = async () => {
 
   // let detailIds: number[] = []
   // console.log(matchStatus.value)
+  const invoiceId = list.value.find((item) => item.detailId = matchStatus.value)?.id
   if (matchStatus.value) {
     const { data } = await aiTuoMuInvoiceMatch({
       idList: props.idList,
-      invoiceId: matchStatus.value
+      invoiceDetailId: matchStatus.value,
+      invoiceId
     })
     if (data) {
       $baseMessage('确认成功！', 'success')
@@ -517,31 +519,6 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
     return 'clear-padding'
   }
   return ''
-}
-// col合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
-    // 获取当前row的零件id
-    const id = row.id
-    // 默认不跨行
-    let rowspan = 1
-    // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < list.value.length; i++) {
-      // 如果零件id一样需要合并
-      if (list.value[i].id === id) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
-      return { rowspan, colspan: 1 }
-    } else {
-      return { rowspan: 0, colspan: 0 }
-    }
-  }
 }
 
 const fetchData = async () => {

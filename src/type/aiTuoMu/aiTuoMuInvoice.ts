@@ -178,4 +178,5 @@ export interface IAiTuoMuMatchReq {
    * 发票id
    */
   invoiceId?: number
+  invoiceDetailId?: number
 }
