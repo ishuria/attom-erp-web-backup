@@ -3,7 +3,7 @@
     <el-page-header :content="`修改 ${route.query.title}`" @back="goBack" />
     <div style="height: 100%; display: flex; justify-content: center; margin-top: 50px; margin-left: -75px;">
       <el-row :gutter="100" style="max-width: 80vw; ">
-      <el-col :span="12" >
+      <el-col :span="outPutResFlg ? 12 : 24" >
         <el-form
           ref="inputFormRef"
           label-position="right" 
@@ -314,7 +314,7 @@ const handlerSave = async() =>{
     formData.append("id",route.query.idNo)
 
     $baseConfirm('您确定要修改保存新款评估吗', null, async () => {
-      aginAnalyzeFlg.value = false
+      // aginAnalyzeFlg.value = false
       const { data } = await updateEvaluation(formData)
       if (data) {
         $baseMessage("新款评估修改保存成功!","success","hey")
@@ -327,7 +327,9 @@ const handlerSave = async() =>{
       const { data } = await doAddEvaluation(formData)
       await $baseMessage("评估分析成功！", "success", "hey")
       setResponseValue(data)
-      
+      route.query.idNo = data.evaluationId
+      aginAnalyzeFlg.value = true
+      saveBtnText.value = "修改保存"
     } catch {
       isSaveLoading.value = false
     }
@@ -361,6 +363,8 @@ const close = () => {
 // 再分析一个
 const aginAnalyze = async () =>{
   outPutResFlg.value = false
+  saveBtnText.value = "分析并保存"
+  route.query.idNo = ''
   fileList.value = []
   inputForm.productSource = "亚马逊随机浏览"
   inputForm.productNameZh = ""
