@@ -104,7 +104,7 @@
           </template>
         </el-table-column> -->
 
-        <el-table-column label="零件数量" prop="componentQuantity" width="80">
+        <el-table-column label="零件数量" prop="componentQuantity" width="76">
           <template #header>
             零件<br>数量
           </template>
@@ -157,7 +157,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="出厂总价" prop="totalPrice" width="76">
+        <el-table-column label="出厂总价" prop="totalPrice" width="80">
           <template #header>
             出厂<br>总价
           </template>

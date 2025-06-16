@@ -58,11 +58,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="300">
+          <el-table-column fixed="right" label="操作" width="380">
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
               <el-link type="primary" :underline="false" @click="showInvoiceCollection()">发票归集</el-link>
+              <el-link type="primary" :underline="false" @click="">出库归档</el-link>
               <el-link type="success" :underline="false" @click="handleUpdateStatus(row)">退税完成</el-link>
             </template>
           </el-table-column>
