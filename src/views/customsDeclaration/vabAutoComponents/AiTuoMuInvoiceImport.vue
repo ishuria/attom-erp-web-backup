@@ -36,7 +36,6 @@
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       max-height="80vh"
-     
       @cell-click="cellClick"
     >
       <el-table-column v-if="!invoiceFlag" label="匹配" prop="status" width="70">
@@ -218,7 +217,7 @@ import {
   getAiTuoMuInvoiceList,
   updateAiTuoMuInvoice,
   updateAiTuoMuInvoiceDetail,
-  uploadAiTuoInvoice
+  uploadAiTuoInvoice,
 } from '/@/api/devlocal/aiTuoMu'
 import { IAiTuoMuInvoiceItem, IAiTuoMuInvoiceReq } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 
@@ -341,16 +340,12 @@ const queryForm = reactive<IAiTuoMuInvoiceReq>({
 const listLoading = ref<boolean>(false)
 
 const handleSubmitConfirm = async () => {
-  // console.log('选中的id', props.idList)
-
-  // let detailIds: number[] = []
-  // console.log(matchStatus.value)
-  const invoiceId = list.value.find((item) => item.detailId = matchStatus.value)?.id
+  const invoiceId = list.value.find((item) => (item.detailId = matchStatus.value))?.id
   if (matchStatus.value) {
     const { data } = await aiTuoMuInvoiceMatch({
       idList: props.idList,
       invoiceDetailId: matchStatus.value,
-      invoiceId
+      invoiceId,
     })
     if (data) {
       $baseMessage('确认成功！', 'success')
@@ -358,7 +353,7 @@ const handleSubmitConfirm = async () => {
       emit('refresh')
     }
   } else {
-    $baseMessage("您未选择任何行！", 'warning')
+    $baseMessage('您未选择任何行！', 'warning')
   }
 }
 
@@ -366,7 +361,6 @@ let copyRow: any
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '发票图片') {
-    // console.log(row.invoicePath)
     showPdf(row.invoicePath)
     return
   }
@@ -493,7 +487,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       case '供应商': {
         return {
           textAlign: 'left',
-
         }
       }
       case '开票品名':
@@ -504,7 +497,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       case '发票未税金额': {
         return {
           textAlign: 'center',
-
         }
       }
     }

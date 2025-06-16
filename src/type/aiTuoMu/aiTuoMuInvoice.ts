@@ -178,5 +178,18 @@ export interface IAiTuoMuMatchReq {
    * 发票id
    */
   invoiceId?: number
+  /** 发票明细id */
+  invoiceDetailId?: number
+}
+
+/** 埃托姆发票删除Req */
+export interface IAiTuoMuMatchDeleteReq {
+  /**
+   * 发票id
+   */
+  id?: number
+  /**
+   * 发票明细id
+   */
   invoiceDetailId?: number
 }

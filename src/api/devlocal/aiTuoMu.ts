@@ -7,6 +7,7 @@ import {
   IAiTuoMuDeleteReq,
   IAiTuoMuInvoiceList,
   IAiTuoMuInvoiceReq,
+  IAiTuoMuMatchDeleteReq,
   IAiTuoMuMatchReq,
   IAiTuoMuUpdateDetailReq,
   IAiTuoMuUpdateReq,
@@ -93,7 +94,7 @@ export function updateAiTuoMuInvoiceDetail(data: IAiTuoMuUpdateDetailReq): Promi
 
 /**
  * 埃托姆-删除发票
- * @param params
+ * @param data
  * @returns
  */
 export const deleteAiTuoMuInvoice = (data: IAiTuoMuDeleteReq): Promise<IAiTuoMuBoolean> => {
@@ -112,6 +113,19 @@ export const deleteAiTuoMuInvoice = (data: IAiTuoMuDeleteReq): Promise<IAiTuoMuB
 export const aiTuoMuInvoiceMatch = (data: IAiTuoMuMatchReq): Promise<IAiTuoMuBoolean> => {
   return request({
     url: `${BASE_API}/aituomu/invoice/match`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 埃托姆-已匹配发票删除
+ * @param data 删除发票信息
+ * @returns
+ */
+export const aiTuoMuInvoiceMatchDelete = (data: IAiTuoMuMatchDeleteReq): Promise<IAiTuoMuBoolean> => {
+  return request({
+    url: `${BASE_API}/aituomu/invoice/match/delete`,
     method: 'post',
     data,
   })
