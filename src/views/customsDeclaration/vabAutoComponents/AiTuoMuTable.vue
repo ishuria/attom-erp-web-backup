@@ -32,50 +32,71 @@
       class="noneHoverTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      @selection-change="setSelectRows"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="PO" prop="po" min-width="100" />
-      <el-table-column label="采购日期" prop="po" min-width="115" />
-      <el-table-column label="SKU图片" prop="po" width="75" >
+      <el-table-column label="采购日期" prop="poPurchaseDate" min-width="115" />
+      <el-table-column label="SKU图片" prop="skuImageUrl" width="75">
         <template #header>
-          SKU<br />图片
+          SKU
+          <br />
+          图片
+        </template>
+        <template #default="{ row }">
+          <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="SKU/品名" prop="sku" min-width="120" />
-      <el-table-column label="零件图片" prop="po" width="75" >
+      <el-table-column label="零件图片" prop="componentUrl" width="75">
         <template #header>
-          零件<br />图片
+          零件
+          <br />
+          图片
+        </template>
+        <template #default="{ row }">
+          <el-image :src="row.componentUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.componentUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="零件名" prop="po" min-width="120" />
-      <el-table-column label="PO零件总数" prop="po" min-width="100" >
+      <el-table-column label="零件名" prop="componentName" min-width="120" />
+      <el-table-column label="PO零件总数" prop="purchaseCount" min-width="100">
         <template #header>
-          PO零件<br />总数
+          PO零件
+          <br />
+          总数
         </template>
       </el-table-column>
-      <el-table-column label="PO零件单位" prop="po" min-width="100" >
+      <el-table-column label="PO零件单位" prop="unit" min-width="100">
         <template #header>
-          PO零件<br />单位
+          PO零件
+          <br />
+          单位
         </template>
       </el-table-column>
-      <el-table-column label="PO总含税价" prop="po" min-width="110" />
-      <el-table-column label="订单号" prop="po" min-width="" />
-      <el-table-column label="供应商" prop="po" min-width="" />
-      <el-table-column label="发货日期" prop="po" min-width="115" />
-      <el-table-column label="合同编号" prop="po" min-width="" />
-      <el-table-column label="报关品名" prop="po" min-width="" />
-      <el-table-column label="报关数量" prop="po" min-width="100" />
-      <el-table-column label="报关单位" prop="po" min-width="100" />
-      <el-table-column label="该批次零件数量" prop="po" min-width="100" >
+      <el-table-column label="PO总含税价" prop="taxIncludedPrice" min-width="110" />
+      <el-table-column label="订单号" prop="orderNo" min-width="" />
+      <el-table-column label="供应商" prop="suppliser" min-width="" />
+      <el-table-column label="发货日期" prop="shipmentDate" min-width="115" />
+      <el-table-column label="合同编号" prop="" min-width="" />
+      <el-table-column label="报关品名" prop="customsDeclarationName" min-width="" />
+      <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100" />
+      <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100" />
+      <el-table-column label="该批次零件数量" prop="componentCount" min-width="100">
         <template #header>
-          该批次<br />零件数量
+          该批次
+          <br />
+          零件数量
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" min-width="" />
       <el-table-column label="发票号码" prop="invoiceNumber" min-width="" />
       <el-table-column label="开票数量" prop="invoiceDate" min-width="100" />
-      <el-table-column label="发票单位" prop="invoiceAmount" min-width="100" />
-      <el-table-column label="发票金额" prop="invoiceAmount" min-width="100" />
+      <el-table-column label="发票单位" prop="invoiceUnit" min-width="100" />
+      <el-table-column label="发票金额" prop="includingTaxPrice" min-width="100" />
       <el-table-column align="center" v-if="showActions" label="操作" width="120">
         <template #default="{ row }">
           <el-button text type="danger" @click="$emit('delete-match', row)">删除匹配</el-button>
@@ -92,28 +113,46 @@
       @current-change="$emit('page-change', $event)"
       @size-change="$emit('size-change', $event)"
     />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-
+import { IAiTuoMuItem } from '/@/type/aiTuoMu/aiTuoMuList'
 
 defineOptions({
-  name: 'AiTuoMuTable'
+  name: 'AiTuoMuTable',
 })
 
 const props = defineProps<{
-  list: any[],
-  loading: boolean,
-  showButtons: boolean,
-  showActions: boolean,
-  queryForm: Record<string, any>,
+  list: any[]
+  loading: boolean
+  showButtons: boolean
+  showActions: boolean
+  queryForm: Record<string, any>
   total: number
 }>()
-defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change'])
+const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change', 'obtain-id-list'])
 
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const selectRowsData = ref<IAiTuoMuItem[]>([])
 
+const imagePreviewShow = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+
+const setSelectRows = (value: IAiTuoMuItem[]) => {
+  selectRowsData.value = value
+  emit('obtainIdList', selectRowsData.value)
+}
 </script>
 
 <style lang="scss" scoped>

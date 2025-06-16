@@ -6,23 +6,24 @@
           :showButtons="true"
           :showActions="false"
           :list="list"
-          :loading="listLoading" 
+          :loading="listLoading"
           :query-form="queryForm"
           :total="total"
           @export="atmExportVisible = true"
           @import="importVisible = true"
-          @match="matchVisible = true"
+          @match="checkMatch"
           @query="queryData"
           @page-change="handleCurrentChange"
           @size-change="handleSizeChange"
+          @obtain-id-list="handleAiTuoMuTabelData"
         />
       </el-tab-pane>
       <el-tab-pane label="已匹配" :name="1">
-        <AiTuoMuTable 
+        <AiTuoMuTable
           :showButtons="false"
           :showActions="true"
           :list="list"
-          :loading="listLoading" 
+          :loading="listLoading"
           :query-form="queryForm"
           :total="total"
           @query="queryData"
@@ -35,17 +36,17 @@
     <!-- 发票导入 -->
     <AiTuoMuInvoiceImport from="import" :invoice-matching-visible="importVisible" @update-invoice-matching-visible="updateImportVisible" />
     <!-- 发票匹配 -->
-    <AiTuoMuInvoiceImport from="match" :invoice-matching-visible="matchVisible" @update-invoice-matching-visible="updateMatchVisible" />
+    <AiTuoMuInvoiceImport
+      from="match"
+      :invoice-matching-visible="matchVisible"
+      @update-invoice-matching-visible="updateMatchVisible"
+      :idList="selectChildIdList"
+    />
     <!-- 催票文件导出 -->
     <vab-dialog title="催票文件导出" v-model="atmExportVisible" width="20%">
       <el-form label-position="top">
         <el-form-item label="发货日期">
-          <el-date-picker 
-            v-model="date"
-            type="daterange" 
-            :disabled-date="(time: Date) => time.getTime() > Date.now()"
-            :clearable="false"
-          />
+          <el-date-picker v-model="date" type="daterange" :disabled-date="(time: Date) => time.getTime() > Date.now()" :clearable="false" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -57,28 +58,32 @@
 </template>
 
 <script lang="ts" setup>
-
 import { getDefaultStringTime } from '/@/utils/dateUtils'
 import { downloadFilePD } from '/@/api/devlocal/download'
+import { getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
+
+import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
 
 defineOptions({
-  name: 'AituomuFapiaoManagement'
+  name: 'AituomuFapiaoManagement',
 })
 
 const date = ref<[string, string]>(getDefaultStringTime())
 const activeName = ref<number>(0)
-const queryForm = reactive<any>({
+const queryForm = reactive<IAiTuoMuListReq>({
   keyWord: '',
+  status: activeName.value,
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
-const list = ref<any[]>([])
+const list = ref<IAiTuoMuItem[]>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const importVisible = ref<boolean>(false)
 const matchVisible = ref<boolean>(false)
 const atmExportVisible = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
+const selectChildIdList = ref<number[]>([])
 // 打开导出弹窗
 // const showExport = () => {
 //   atmExportVisible.value = true
@@ -86,6 +91,7 @@ const exportLoading = ref<boolean>(false)
 const deleteMatch = () => {
   //
 }
+
 // 埃托姆发票导出
 const handleExportATM = async () => {
   exportLoading.value = true
@@ -96,6 +102,15 @@ const handleExportATM = async () => {
     exportLoading.value = false
   })
 }
+
+const checkMatch = () => {
+  if (selectChildIdList.value.length === 0) {
+    $baseMessage('请选择需要匹配埃托姆发票的零件！！', 'error')
+    return
+  }
+  matchVisible.value = true
+}
+
 const updateMatchVisible = () => {
   matchVisible.value = false
 }
@@ -116,12 +131,23 @@ const handleSizeChange = (val: number) => {
   fetchData()
 }
 const fetchData = async () => {
-  //
+  const { data } = await getAiTuoMuList(queryForm)
+  list.value = data.list
 }
+
+const handleAiTuoMuTabelData = (data: IAiTuoMuItem[]) => {
+  selectChildIdList.value = []
+  for (const item of data) {
+    selectChildIdList.value.push(item.id)
+  }
+}
+
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
-
 .tabs-table-container {
   :deep() {
     .el-tabs {

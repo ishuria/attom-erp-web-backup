@@ -1,8 +1,15 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content; max-height: 90vh" :title="title" top="10vh" @close="closeInvoiceMatching">
+  <vab-dialog
+    v-model="dflag"
+    :draggable="false"
+    style="width: fit-content; max-height: 90vh"
+    :title="title"
+    top="10vh"
+    @close="closeInvoiceMatching"
+  >
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
+        <el-button v-if="invoiceFlag" type="primary" @click="showUploadInvoice">发票导入</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -32,15 +39,14 @@
       :span-method="objectSpanMethod"
       @cell-click="cellClick"
     >
- 
-      <el-table-column v-if="props.from === 'match'" label="匹配" prop="status" width="70">
+      <el-table-column v-if="!invoiceFlag" label="匹配" prop="status" width="70">
         <template #default="{ row }">
           <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.purchaseName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.purchaseName }}</span>
@@ -62,7 +68,7 @@
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.invoiceCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceCode }}</span>
@@ -70,7 +76,7 @@
       </el-table-column>
       <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.invoiceNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceNumber }}</span>
@@ -78,7 +84,7 @@
       </el-table-column>
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.suppliser }}</span>
@@ -86,7 +92,7 @@
       </el-table-column>
       <el-table-column label="开票品名" prop="invoiceName" :width="flexColumnWidth(list, '开票品名', 'invoiceName')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.invoiceName" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceName }}</span>
@@ -94,7 +100,7 @@
       </el-table-column>
       <el-table-column label="规格型号" prop="specificationModel" :width="flexColumnWidth(list, '规格型号', 'specificationModel')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input
               v-model="row.specificationModel"
               @blur="clickDetailCancel($event, row)"
@@ -106,7 +112,7 @@
       </el-table-column>
       <el-table-column label="发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '发票数量', 'invoiceCount')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input
               v-model="row.invoiceCount"
               type="number"
@@ -119,7 +125,7 @@
       </el-table-column>
       <el-table-column label="发票单位" prop="invoiceUnit" :width="flexColumnWidth(list, '发票单位', 'invoiceUnit')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input v-model="row.invoiceUnit" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceUnit }}</span>
@@ -127,7 +133,7 @@
       </el-table-column>
       <el-table-column label="发票含税金额" prop="includingTaxPrice" :width="flexColumnWidth(list, '发票含税金额', 'includingTaxPrice')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input
               v-model="row.includingTaxPrice"
               type="number"
@@ -140,7 +146,7 @@
       </el-table-column>
       <el-table-column label="发票未税金额" prop="preTaxPrice" :width="flexColumnWidth(list, '发票未税金额', 'preTaxPrice')">
         <template #default="{ row }">
-          <div class="none">
+          <div class="none" v-if="invoiceFlag">
             <el-input
               v-model="row.preTaxPrice"
               type="number"
@@ -151,14 +157,14 @@
           <span>{{ row.preTaxPrice }}</span>
         </template>
       </el-table-column>
-   
-      <el-table-column fixed="right" label="操作" width="70">
+
+      <el-table-column fixed="right" label="操作" width="70" v-if="invoiceFlag">
         <template #default="{ row }">
           <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
-    <template #footer>
+    <template #footer v-if="!invoiceFlag">
       <div style="text-align: center">
         <el-button @click="closeInvoiceMatching">取消</el-button>
         <el-button type="primary" @click="handleSubmitConfirm">确认</el-button>
@@ -196,20 +202,18 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+
+import { IAiTuoMuInvoiceList, IAiTuoMuInvoiceReq, IAiTuoMuInvoiceItem } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 import {
-  deleteTaxRefundInvoice,
-  finishTaxRefundInvoice,
-  submitConfirmTaxRefundInvoiceMatch,
-  updateTaxRefundInvoice,
-  updateTaxRefundInvoiceDetail,
-  uploadTaxRefund
-} from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import type {
-  IGetTaxRefundInvoiceList,
-  IGetTaxRefundInvoiceListQuery,
-  IGetTaxRefundInvoiceMatchList,
-  IGetTaxRefundInvoiceMatchQuery,
-} from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+  uploadAiTuoInvoice,
+  finishAiTuoMuInvoice,
+  getAiTuoMuInvoiceList,
+  updateAiTuoMuInvoice,
+  updateAiTuoMuInvoiceDetail,
+  deleteAiTuoMuInvoice,
+  aiTuoMuInvoiceMatch,
+} from '/@/api/devlocal/aiTuoMu'
+
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
@@ -218,9 +222,11 @@ defineOptions({
 
 const title = ref<string>('')
 const dflag = ref<boolean>(false)
+const invoiceFlag = ref<boolean>(false)
 const props = defineProps<{
   invoiceMatchingVisible: boolean
   from: string
+  idList?: number[]
 }>()
 watchEffect(() => {
   dflag.value = props.invoiceMatchingVisible
@@ -229,8 +235,10 @@ watchEffect(() => {
   }
   if (props.from === 'match') {
     title.value = '发票匹配'
+    invoiceFlag.value = false
   } else {
     title.value = '发票导入'
+    invoiceFlag.value = true
   }
 })
 const emit = defineEmits<{
@@ -255,13 +263,13 @@ const uploadInvoiceVisible = ref<boolean>(false)
 
 const fileList = ref<any[]>([])
 
-
 // 展示上传发票
 const showUploadInvoice = () => {
   fileList.value = []
   uploadInvoiceVisible.value = true
 }
 const finishLoading = ref<boolean>(false)
+
 // 完成发票导入
 const handleFinishUpload = async () => {
   finishLoading.value = true
@@ -270,11 +278,11 @@ const handleFinishUpload = async () => {
     formData.append('files', item.raw)
   })
   try {
-    const { data } = await uploadTaxRefund(formData)
+    const { data } = await uploadAiTuoInvoice(formData)
 
     if (data) {
       $baseMessage('上传成功', 'success')
-      const { data: resData, msg } = await finishTaxRefundInvoice(data)
+      const { data: resData, msg } = await finishAiTuoMuInvoice(data)
       if (resData) {
         $baseMessage(resData, 'error')
       } else {
@@ -290,9 +298,9 @@ const handleFinishUpload = async () => {
 }
 
 // 删除发票
-const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
+const handleDeleteInvoice = async (row: IAiTuoMuInvoiceItem) => {
   $baseConfirm('确定要删除吗？', null, async () => {
-    const { data } = await deleteTaxRefundInvoice({
+    const { data } = await deleteAiTuoMuInvoice({
       id: row.id!,
     })
     if (data) {
@@ -305,49 +313,36 @@ const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
 const matchVisible = ref<boolean>(false)
 const matchStatus = ref<number>(-1)
 const total = ref<number>(0)
-const list = ref<IGetTaxRefundInvoiceList[]>([])
+const list = ref<IAiTuoMuInvoiceItem[]>([])
 
-// const invoiceList = ref<UploadUserFile[]>([])
-const queryForm = reactive<IGetTaxRefundInvoiceListQuery>({
+const queryForm = reactive<IAiTuoMuInvoiceReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
 })
 const listLoading = ref<boolean>(false)
-const matchQueryForm = reactive<IGetTaxRefundInvoiceMatchQuery>({
-  keyWord: '',
-  pageNo: 1,
-  pageSize: 20,
-  detailId: -1,
-})
-const matchTotal = ref<number>(0)
-const matchListLoading = ref<boolean>(false)
-const matchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
-
-
 
 const handleSubmitConfirm = async () => {
+  console.log('选中的id', props.idList)
+
   let detailIds: number[] = []
   let isNotNull = false
   list.value.forEach((item) => {
-    if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit ) {
-      isNotNull = true
-      detailIds.push(item.detailId!)
-    }
+    console.log(item)
   })
-  if (isNotNull) {
-    const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds)
-    if (data) {
-      $baseMessage('确认成功！', 'success')
-      closeInvoiceMatching()
-    }
-  } else {
-    closeInvoiceMatching()
-  }
+
+  // if (isNotNull) {
+  //   const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds)
+  //   if (data) {
+  //     $baseMessage('确认成功！', 'success')
+  //     closeInvoiceMatching()
+  //   }
+  // } else {
+  //   closeInvoiceMatching()
+  // }
 }
 
 let copyRow: any
-
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
@@ -366,7 +361,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
     focusAndSelectInput(cell)
   }
 }
-const clickCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
+const clickCancel = async (event: Event, value: IAiTuoMuInvoiceItem) => {
   const rootElement = getRootElement(event.target, '.cell')
 
   if (rootElement) {
@@ -381,7 +376,7 @@ const clickCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
   }
   if (event.type === 'blur') {
     try {
-      await updateTaxRefundInvoice({
+      await updateAiTuoMuInvoice({
         id: value.id!,
         purchaseName: value.purchaseName,
         invoiceCode: value.invoiceCode,
@@ -393,7 +388,7 @@ const clickCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
     }
   }
 }
-const clickDetailCancel = async (event: Event, value: IGetTaxRefundInvoiceList) => {
+const clickDetailCancel = async (event: Event, value: IAiTuoMuInvoiceItem) => {
   const rootElement = getRootElement(event.target, '.cell')
 
   if (rootElement) {
@@ -408,8 +403,8 @@ const clickDetailCancel = async (event: Event, value: IGetTaxRefundInvoiceList) 
   }
   if (event.type === 'blur') {
     try {
-      await updateTaxRefundInvoiceDetail({
-        id: value.detailId!,
+      await updateAiTuoMuInvoiceDetail({
+        detailId: value.detailId!,
         invoiceName: value.invoiceName!,
         specificationModel: value.specificationModel!,
         invoiceCount: value.invoiceCount!,
@@ -465,7 +460,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       return {
         textAlign: 'center',
         cursor: 'not-allowed',
-        color: '#999'
+        color: '#999',
       }
     }
     // No default
@@ -509,11 +504,15 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 }
 
 const fetchData = async () => {
-  // listLoading.value = true
-  // const { data } = await getTaxRefundInvoiceList(queryForm)
-  // total.value = data?.total!
-  // list.value = data?.list!
-  // listLoading.value = false
+  try {
+    listLoading.value = true
+    const { data } = await getAiTuoMuInvoiceList(queryForm)
+    total.value = data?.total!
+    list.value = data?.list!
+    listLoading.value = false
+  } catch (e: error) {
+    listLoading.value = false
+  }
 }
 </script>
 
