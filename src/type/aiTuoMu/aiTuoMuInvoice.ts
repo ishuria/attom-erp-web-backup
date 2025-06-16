@@ -4,8 +4,10 @@ export interface IFinishAiTuoMuInvoiceRes {
 }
 
 export interface IAiTuoMuInvoiceList {
-  total: number
-  list: IAiTuoMuInvoiceItem[]
+  data: {
+    total: number
+    list: IAiTuoMuInvoiceItem[]
+  }
 }
 
 /** 埃托姆发票Item */
@@ -56,7 +58,7 @@ export interface IAiTuoMuInvoiceItem {
   /**
    * 发票数量
    */
-  invoiceCount?: string
+  invoiceCount?: number
 
   /**
    * 发票单位
@@ -66,12 +68,12 @@ export interface IAiTuoMuInvoiceItem {
   /**
    * 未税金额
    */
-  preTaxPrice?: string
+  preTaxPrice?: number
 
   /**
    * 含税金额
    */
-  includingTaxPrice?: string
+  includingTaxPrice?: number
 }
 
 /**

@@ -32,11 +32,17 @@
       class="noneHoverTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
       @selection-change="setSelectRows"
     >
-      <el-table-column fixed="left" type="selection" />
+      <el-table-column label="selection" fixed="left" type="selection" />
       <el-table-column label="PO" prop="po" min-width="100" />
-      <el-table-column label="采购日期" prop="poPurchaseDate" min-width="115" />
+      <el-table-column label="采购日期" prop="poPurchaseDate" min-width="115" >
+        <template #default="{ row }">
+          {{  row.poPurchaseDate ? row.poPurchaseDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="SKU图片" prop="skuImageUrl" width="75">
         <template #header>
           SKU
@@ -49,7 +55,13 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU/品名" prop="sku" min-width="120" />
+      <el-table-column label="SKU/品名" prop="sku" :min-width="flexColumnWidth(list, 'SKU/品名', 'productName')" >
+        <template #default="{ row }">
+          {{ row.sku }}
+          <br />
+          {{ row.productName }}
+        </template>
+      </el-table-column>
       <el-table-column label="零件图片" prop="componentUrl" width="75">
         <template #header>
           零件
@@ -62,7 +74,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="零件名" prop="componentName" min-width="120" />
+      <el-table-column label="零件名" prop="componentName" :min-width="flexColumnWidth(list, '零件名', 'componentName')" />
       <el-table-column label="PO零件总数" prop="purchaseCount" min-width="100">
         <template #header>
           PO零件
@@ -77,12 +89,12 @@
           单位
         </template>
       </el-table-column>
-      <el-table-column label="PO总含税价" prop="taxIncludedPrice" min-width="110" />
+      <el-table-column label="PO总含税价" prop="taxIncludedPrice" min-width="120" />
       <el-table-column label="订单号" prop="orderNo" min-width="" />
-      <el-table-column label="供应商" prop="suppliser" min-width="" />
+      <el-table-column label="供应商" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser')" />
       <el-table-column label="发货日期" prop="shipmentDate" min-width="115" />
-      <el-table-column label="合同编号" prop="" min-width="" />
-      <el-table-column label="报关品名" prop="customsDeclarationName" min-width="" />
+      <el-table-column label="合同编号" prop="" min-width="100" />
+      <el-table-column label="报关品名" prop="customsDeclarationName" min-width="100" />
       <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100" />
       <el-table-column label="该批次零件数量" prop="componentCount" min-width="100">
@@ -92,8 +104,8 @@
           零件数量
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" prop="invoiceCode" min-width="" />
-      <el-table-column label="发票号码" prop="invoiceNumber" min-width="" />
+      <el-table-column label="发票代码" prop="invoiceCode" min-width="100" />
+      <el-table-column label="发票号码" prop="invoiceNumber" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" />
       <el-table-column label="开票数量" prop="invoiceDate" min-width="100" />
       <el-table-column label="发票单位" prop="invoiceUnit" min-width="100" />
       <el-table-column label="发票金额" prop="includingTaxPrice" min-width="100" />
@@ -119,7 +131,9 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import { CSSProperties } from 'vue'
 import { IAiTuoMuItem } from '/@/type/aiTuoMu/aiTuoMuList'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'AiTuoMuTable',
@@ -148,10 +162,26 @@ const imagePreviewShow = (url: string) => {
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
-
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === 'SKU图片' || data.column.label === '零件图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (['selection', 'PO', '采购日期', 'PO零件单位', '发票单位'].includes(label)) {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'left'
+  }
+}
 const setSelectRows = (value: IAiTuoMuItem[]) => {
   selectRowsData.value = value
-  emit('obtainIdList', selectRowsData.value)
+  emit('obtain-id-list', selectRowsData.value)
 }
 </script>
 
@@ -186,7 +216,19 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
 
     .el-table {
       flex: 1;
+      .el-checkbox {
+        transform: scale(1.3);
+      }
+      .clear-padding {
+        padding-top: 0;
+        padding-bottom: 0;
+        .cell {
+          padding-right: 0;
+          padding-left: 0;
+        }
+      }
     }
   }
 }
+
 </style>

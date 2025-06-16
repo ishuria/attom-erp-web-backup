@@ -74,35 +74,12 @@
             </template>
           </el-table-column>
           <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
-          <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.customsDeclarationName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.customsDeclarationName }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.customsDeclarationCount"
-                  type="number"
-                  @blur="clickCancel($event, row)"
-                  @keyup.enter="clickCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.customsDeclarationCount }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.customsDeclarationUnit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
-              <span>{{ row.customsDeclarationUnit }}</span>
-            </template>
-          </el-table-column>
+          <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)" />
+      
+          <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
+      
+          <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
+   
           <el-table-column label="CIF售价$" min-width="120" prop="cifPrice" />
           <el-table-column label="运费$" min-width="100" prop="freightFee" />
           <el-table-column label="FOB售价$" min-width="120" prop="fobPrice" />
@@ -119,7 +96,7 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" min-width="100" prop="profit" />
+          <el-table-column label="利润￥" min-width="110" prop="profit" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
           <el-table-column label="供应商" sortable="custom" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
@@ -422,7 +399,6 @@
 <script lang="ts" setup>
 import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
-import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
@@ -431,7 +407,7 @@ import VabPdf from '/@/plugins/VabPdf'
 import { getProductAllSupplier } from '~/src/api/devlocal/productInformation'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'VatRefundProduct',
@@ -698,20 +674,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
     focusAndSelectInput(cell)
   }
 }
-const clickCancel = (event: Event, value: any) => {
-  const rootElement = getRootElement(event?.target, '.cell')
 
-  if (rootElement) {
-    const t1 = rootElement.children[0]
-    const t2 = rootElement.children[1]
-
-    if (t1) t1.classList.add('none')
-    if (t2) t2.classList.remove('none')
-  }
-  if (isEqual(copyRow, value)) {
-    return
-  }
-}
 const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
   if (['报关单出口日期'].includes(data.column.label)) {
     return 'header-cell'
@@ -775,23 +738,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     label === '付款记录'
   ) {
     return {
-      cursor: 'not-allowed',
       textAlign: 'left',
     }
   } else if (label === '报关品名') {
     return {
-      cursor: 'pointer',
       textAlign: 'left',
     }
   } else if (label !== '报关数量' && label !== '报关单位') {
     return {
-      cursor: 'not-allowed',
       textAlign: 'center',
     }
   }
   return {
     textAlign: 'center',
-    cursor: 'pointer',
   }
 }
 const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {

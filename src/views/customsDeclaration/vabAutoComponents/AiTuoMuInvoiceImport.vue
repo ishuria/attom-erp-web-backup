@@ -41,7 +41,7 @@
     >
       <el-table-column v-if="!invoiceFlag" label="匹配" prop="status" width="70">
         <template #default="{ row }">
-          <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
+          <el-radio v-model="matchStatus" class="custom-radio" :label="row.id" size="large">{{ '' }}</el-radio>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
@@ -52,18 +52,19 @@
           <span>{{ row.purchaseName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发票图片" prop="invoicePath" width="75">
-        <template #header>
+      <el-table-column label="发票图片" prop="invoicePath" width="100">
+        <!-- <template #header>
           发票
           <br />
           图片
-        </template>
+        </template> -->
         <template #default="{ row }">
-          <el-image :src="row.invoicePath" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.url)">
+          <!-- <el-image :src="row.invoicePath" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.url)">
             <template #error>
               <el-icon />
             </template>
-          </el-image>
+          </el-image> -->
+          <el-button size="small" type="primary" @click="showPdf(row.invoicePath)">查看PDF</el-button>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
@@ -196,23 +197,30 @@
     </template>
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
+  <!-- 预览pdf -->
+  <vab-dialog v-model="pdfVisible" top="5vh" @close="pdfVisible = false">
+    <div v-loading="pdfLoading" class="pdf-container">
+      <vab-pdf :source="source" />
+    </div>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
+import VabPdf from '/@/plugins/VabPdf'
 
-import { IAiTuoMuInvoiceList, IAiTuoMuInvoiceReq, IAiTuoMuInvoiceItem } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 import {
-  uploadAiTuoInvoice,
+  aiTuoMuInvoiceMatch,
+  deleteAiTuoMuInvoice,
   finishAiTuoMuInvoice,
   getAiTuoMuInvoiceList,
   updateAiTuoMuInvoice,
   updateAiTuoMuInvoiceDetail,
-  deleteAiTuoMuInvoice,
-  aiTuoMuInvoiceMatch,
+  uploadAiTuoInvoice
 } from '/@/api/devlocal/aiTuoMu'
+import { IAiTuoMuInvoiceItem, IAiTuoMuInvoiceReq } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -243,11 +251,22 @@ watchEffect(() => {
 })
 const emit = defineEmits<{
   updateInvoiceMatchingVisible: [value: boolean]
+  refresh: any
 }>()
 const closeInvoiceMatching = () => {
   emit('updateInvoiceMatchingVisible', false)
 }
 
+const pdfVisible = ref<boolean>(false)
+const pdfLoading = ref<boolean>(false)
+const source = ref<string>('')
+
+const showPdf = (path: string) => {
+  pdfLoading.value = true
+  source.value = path
+  pdfVisible.value = true
+  pdfLoading.value = false
+}
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const closeImagePreview = () => {
@@ -309,8 +328,7 @@ const handleDeleteInvoice = async (row: IAiTuoMuInvoiceItem) => {
     }
   })
 }
-// 匹配可见
-const matchVisible = ref<boolean>(false)
+
 const matchStatus = ref<number>(-1)
 const total = ref<number>(0)
 const list = ref<IAiTuoMuInvoiceItem[]>([])
@@ -323,28 +341,33 @@ const queryForm = reactive<IAiTuoMuInvoiceReq>({
 const listLoading = ref<boolean>(false)
 
 const handleSubmitConfirm = async () => {
-  console.log('选中的id', props.idList)
+  // console.log('选中的id', props.idList)
 
-  let detailIds: number[] = []
-  let isNotNull = false
-  list.value.forEach((item) => {
-    console.log(item)
-  })
-
-  // if (isNotNull) {
-  //   const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds)
-  //   if (data) {
-  //     $baseMessage('确认成功！', 'success')
-  //     closeInvoiceMatching()
-  //   }
-  // } else {
-  //   closeInvoiceMatching()
-  // }
+  // let detailIds: number[] = []
+  // console.log(matchStatus.value)
+  if (matchStatus.value) {
+    const { data } = await aiTuoMuInvoiceMatch({
+      idList: props.idList,
+      invoiceId: matchStatus.value
+    })
+    if (data) {
+      $baseMessage('确认成功！', 'success')
+      closeInvoiceMatching()
+      emit('refresh')
+    }
+  } else {
+    $baseMessage("您未选择任何行！", 'warning')
+  }
 }
 
 let copyRow: any
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '发票图片') {
+    // console.log(row.invoicePath)
+    showPdf(row.invoicePath)
+    return
+  }
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -430,47 +453,65 @@ const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   fetchData()
 }
+
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  switch (label) {
-    case '购方名称':
-    case '发票代码':
-    case '发票号码':
-    case '供应商': {
-      return {
-        textAlign: 'left',
-        cursor: 'pointer',
+  if (invoiceFlag.value) {
+    switch (label) {
+      case '购方名称':
+      case '发票代码':
+      case '发票号码':
+      case '供应商': {
+        return {
+          textAlign: 'left',
+          cursor: 'pointer',
+        }
       }
-    }
-    case '开票品名':
-    case '规格型号':
-    case '发票数量':
-    case '发票单位':
-    case '发票含税金额':
-    case '发票未税金额': {
-      return {
-        textAlign: 'center',
-        cursor: 'pointer',
+      case '开票品名':
+      case '规格型号':
+      case '发票数量':
+      case '发票单位':
+      case '发票含税金额':
+      case '发票未税金额': {
+        return {
+          textAlign: 'center',
+          cursor: 'pointer',
+        }
       }
+      // No default
     }
-    case '匹配合同号':
-    case '匹配PO':
-    case '报关数量':
-    case '报关单位': {
-      return {
-        textAlign: 'center',
-        cursor: 'not-allowed',
-        color: '#999',
-      }
+    return {
+      textAlign: 'center',
     }
-    // No default
-  }
-  return {
-    textAlign: 'center',
-  }
-  // 发票数量和发票单位与报关数量和报关单位不一致，报关数量和单位就标红
-}
+  } else {
+    switch (label) {
+      case '购方名称':
+      case '发票代码':
+      case '发票号码':
+      case '供应商': {
+        return {
+          textAlign: 'left',
 
+        }
+      }
+      case '开票品名':
+      case '规格型号':
+      case '发票数量':
+      case '发票单位':
+      case '发票含税金额':
+      case '发票未税金额': {
+        return {
+          textAlign: 'center',
+
+        }
+      }
+    }
+    return {
+      textAlign: 'center',
+    }
+    // 发票数量和发票单位与报关数量和报关单位不一致，报关数量和单位就标红
+  }
+}
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.columnIndex === 10) {
     return 'clear-padding'
@@ -504,15 +545,11 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 }
 
 const fetchData = async () => {
-  try {
-    listLoading.value = true
-    const { data } = await getAiTuoMuInvoiceList(queryForm)
-    total.value = data?.total!
-    list.value = data?.list!
-    listLoading.value = false
-  } catch (e: error) {
-    listLoading.value = false
-  }
+  listLoading.value = true
+  const { data } = await getAiTuoMuInvoiceList(queryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
 }
 </script>
 

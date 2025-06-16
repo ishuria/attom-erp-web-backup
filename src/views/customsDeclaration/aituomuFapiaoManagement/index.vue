@@ -1,6 +1,6 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" type="border-card" @tab-click="">
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabChange">
       <el-tab-pane label="未匹配" :name="0">
         <AiTuoMuTable
           :showButtons="true"
@@ -15,7 +15,7 @@
           @query="queryData"
           @page-change="handleCurrentChange"
           @size-change="handleSizeChange"
-          @obtain-id-list="handleAiTuoMuTabelData"
+          @obtain-id-list="handleAiTuoMuTableData"
         />
       </el-tab-pane>
       <el-tab-pane label="已匹配" :name="1">
@@ -41,6 +41,7 @@
       :invoice-matching-visible="matchVisible"
       @update-invoice-matching-visible="updateMatchVisible"
       :idList="selectChildIdList"
+      @refresh="queryData"
     />
     <!-- 催票文件导出 -->
     <vab-dialog title="催票文件导出" v-model="atmExportVisible" width="20%">
@@ -58,11 +59,11 @@
 </template>
 
 <script lang="ts" setup>
-import { getDefaultStringTime } from '/@/utils/dateUtils'
-import { downloadFilePD } from '/@/api/devlocal/download'
+import { TabsPaneContext } from 'element-plus'
 import { getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
-
+import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
+import { getDefaultStringTime } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'AituomuFapiaoManagement',
@@ -84,10 +85,12 @@ const matchVisible = ref<boolean>(false)
 const atmExportVisible = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
 const selectChildIdList = ref<number[]>([])
-// 打开导出弹窗
-// const showExport = () => {
-//   atmExportVisible.value = true
-// }
+
+const handleTabChange = (tab: TabsPaneContext) => {
+  activeName.value = Number(tab.props.name)
+  queryForm.status = activeName.value
+  queryData()
+}
 const deleteMatch = () => {
   //
 }
@@ -131,11 +134,14 @@ const handleSizeChange = (val: number) => {
   fetchData()
 }
 const fetchData = async () => {
+  listLoading.value = true
   const { data } = await getAiTuoMuList(queryForm)
   list.value = data.list
+  total.value = data.total
+  listLoading.value = false
 }
 
-const handleAiTuoMuTabelData = (data: IAiTuoMuItem[]) => {
+const handleAiTuoMuTableData = (data: IAiTuoMuItem[]) => {
   selectChildIdList.value = []
   for (const item of data) {
     selectChildIdList.value.push(item.id)

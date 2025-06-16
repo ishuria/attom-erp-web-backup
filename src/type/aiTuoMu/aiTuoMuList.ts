@@ -1,13 +1,15 @@
 export interface IAiTuoMuList {
-  total: number
-  list: IAiTuoMuItem[]
+  data: {
+    total: number
+    list: IAiTuoMuItem[]
+  }
 }
 
 export interface IAiTuoMuItem {
   /** poId */
   poId?: number
   /** id */
-  id?: number
+  id: number
   /** 已有零件id */
   componentId?: number
   /** po零件id */
