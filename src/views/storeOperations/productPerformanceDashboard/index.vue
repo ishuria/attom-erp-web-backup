@@ -2153,7 +2153,7 @@ const label1Map = new Map([
   ['FBA差异', 'differenceFba'],
   ['月净利润', 'monthNetProfit'],
   ['结算月额', 'monthSalesPrice'],
-  ['订单月额','monthOrderVolume'],
+  ['订单月额','monthOrderSales'],
   ['月广告销售', 'monthAdvSales'],
   ['月广告支出', 'monthAdvExpenditure'],
   ['预计下月仓储费', 'estimateNextMonthStorageFee'],
