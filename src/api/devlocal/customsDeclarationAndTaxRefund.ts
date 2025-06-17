@@ -565,6 +565,18 @@ export const getTaxRefundBatchDetail = (params: IGetTaxRefundBatchDetailQuery): 
   })
 }
 /**
+ * 退税批次中的出库归档
+ * @param data 
+ * @returns 
+ */
+export const archiveTaxRefundBatchOutbound = (data: { contractNumber: string }): Promise<{ data: string }> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/outbound/archive`,
+    method: 'post',
+    data
+  })
+}
+/**
  * @description 退税管理 - 查询列表
  */
 export const getTaxRefundList = (data: IGetTaxRefundListQuery): Promise<IGetTaxRefundBatchDetailRes> => {

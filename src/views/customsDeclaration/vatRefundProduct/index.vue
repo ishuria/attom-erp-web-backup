@@ -73,8 +73,8 @@
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
-          <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)" />
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :min-width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)" />
       
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
       
@@ -96,10 +96,10 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" min-width="110" prop="profit" />
+          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit')" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" sortable="custom" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
+          <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
           <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
@@ -134,11 +134,11 @@
             </template>
           </el-table-column>
           <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
-          <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
+          <el-table-column label="SKU" prop="sku" :min-width="flexColumnWidth(list, 'SKU', 'sku')" />
+          <el-table-column label="PO零件名" prop="poComponentName" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
-          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" />
-          <el-table-column label="付款记录" prop="payRecordList" :width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
+          <el-table-column label="shipmentID" prop="shipmentId" :min-width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" />
+          <el-table-column label="付款记录" prop="payRecordList" :min-width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
             <template #default="{ row }">
               <span v-html="row.payRecordList"></span>
             </template>
@@ -222,7 +222,7 @@
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="报关单出口日期" sortable="custom" min-width="140" prop="exportDate">
+          <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
             <template #header>
               报关单<br />出口日期
             </template>
@@ -230,7 +230,7 @@
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关品名" sortable="custom" min-width="120" prop="customsDeclarationName" />
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
           <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
@@ -250,10 +250,10 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" min-width="100" prop="profit" />
+          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit')"/>
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" sortable="custom" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
+          <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
           <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
           <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
@@ -277,11 +277,11 @@
             </template>
           </el-table-column>
           <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
-          <el-table-column label="PO零件名" prop="poComponentName" :width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
+          <el-table-column label="SKU" prop="sku" :min-width="flexColumnWidth(list, 'SKU', 'sku')" />
+          <el-table-column label="PO零件名" prop="poComponentName" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
-          <el-table-column label="shipmentID" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" />
-          <el-table-column label="付款记录" prop="payRecordList" :width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
+          <el-table-column label="shipmentID" prop="shipmentId" :min-width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" />
+          <el-table-column label="付款记录" prop="payRecordList" :min-width="flexColumnWidth(list, '付款记录', 'payRecord', 60)">
             <template #default="{ row }">
               <span v-html="row.payRecordList"></span>
             </template>
@@ -725,6 +725,7 @@ const headerCellStyle = (): CSSProperties => {
   // }
   return {
     textAlign: 'center',
+    verticalAlign: 'top'
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {

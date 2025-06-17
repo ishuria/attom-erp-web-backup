@@ -52,11 +52,12 @@
           图片
         </template>
         <template #default="{ row }">
-          <el-image :src="row.invoicePath" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.url)">
+          <!-- <el-image :src="row.invoicePath" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.url)">
             <template #error>
               <el-icon />
             </template>
-          </el-image>
+          </el-image> -->
+          <el-button style="min-width: 20px; min-height: 35px" size="small" @click="showPdf(row.invoicePath)">PDF</el-button>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
@@ -156,7 +157,7 @@
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
+          <el-link type="primary" :loading="matchListLoading" :underline="false" @click="showMatch(row)">匹配</el-link>
           <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>
         </template>
       </el-table-column>
@@ -217,22 +218,22 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table max-height="50vh" border :cell-style="matchCellStyle" class="noneHoveTable" :data="matchList" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(matchList, '合同编号', 'contractNumber')" />
-      <el-table-column label="未匹配发票数" prop="notYetInvoice" :width="flexColumnWidth(matchList, '未匹配发票数', 'notYetInvoice')" />
-      <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(matchList, 'CIF售价', 'cifPrice')" />
-      <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(matchList, '运费', 'freightFee')" />
-      <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(matchList, 'FOB售价', 'fobPrice')" />
-      <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(matchList, '利润率', 'profitMargin')" />
-      <el-table-column label="汇率" prop="rate" :width="flexColumnWidth(matchList, '汇率', 'rate')" />
-      <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(matchList, '人民币售价', 'salePrice')" />
-      <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '报关数量', 'customsDeclarationCount')" />
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(matchList, '报关单位', 'customsDeclarationUnit')" />
-      <el-table-column label="PO" prop="po" :width="flexColumnWidth(matchList, 'PO', 'po')" />
-      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" :width="flexColumnWidth(matchList, '含税成本价￥', 'taxInclusiveCost')" />
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(matchList, 'SKU', 'sku')" />
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(matchList, 'Shipment ID-', 'shipmentId')" />
+    <el-table v-loading="matchListLoading" max-height="50vh" border :cell-style="matchCellStyle" class="noneHoveTable" :data="pagedData" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(pagedData, '合同编号', 'contractNumber')" />
+      <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
+      <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" />
+      <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(pagedData, '运费', 'freightFee')" />
+      <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(pagedData, 'FOB售价', 'fobPrice')" />
+      <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(pagedData, '利润率', 'profitMargin')" />
+      <el-table-column label="汇率" prop="rate" width="80" />
+      <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(pagedData, '人民币售价', 'salePrice')" />
+      <el-table-column label="报关数量" prop="customsDeclarationCount" width="95" />
+      <el-table-column label="报关单位" prop="customsDeclarationUnit" width="95" />
+      <el-table-column label="PO" prop="po" width="100" />
+      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" width="125" />
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(pagedData, 'SKU', 'sku')" />
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(pagedData, '零件名', 'componentName')" />
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" />
       <el-table-column label="匹配" prop="status" width="70">
         <template #default="{ row }">
           <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
@@ -254,6 +255,12 @@
     </template>
   </vab-dialog>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
+  <!-- 预览pdf -->
+  <vab-dialog v-model="pdfVisible" top="5vh" @close="pdfVisible = false">
+    <div v-loading="pdfLoading" class="pdf-container">
+      <vab-pdf :source="source" />
+    </div>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -280,10 +287,22 @@ import type {
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'VabInvoiceMatching',
 })
 
+
+const pdfVisible = ref<boolean>(false)
+const pdfLoading = ref<boolean>(false)
+const source = ref<string>('')
+
+const showPdf = (path: string) => {
+  pdfLoading.value = true
+  source.value = path
+  pdfVisible.value = true
+  pdfLoading.value = false
+}
 const dflag = ref<boolean>(false)
 const props = defineProps<{
   invoiceMatchingVisible: boolean
@@ -399,16 +418,37 @@ const matchListLoading = ref<boolean>(false)
 const matchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
 const queryMatchData = () => {
   matchQueryForm.pageNo = 1
-  fetchMatchData()
+  applyKeywordFilter()
+}
+// 计算当前页的数据
+const pagedData = computed(() => {
+  const start = (matchQueryForm.pageNo - 1) * matchQueryForm.pageSize
+  const end = start + matchQueryForm.pageSize
+  return matchList.value.slice(start, end)  // 获取当前页的数据
+})
+// 根据关键词过滤数据
+const applyKeywordFilter = () => {
+  const keyword = matchQueryForm.keyWord.trim().toLowerCase()
+  if (keyword) {
+    matchList.value = matchList.value.filter((item: any) => 
+      item.contractNumber.toLowerCase().includes(keyword) ||
+      item.po.toLowerCase().includes(keyword) ||
+      item.sku.toLowerCase().includes(keyword)
+    )
+  } else {
+    fetchMatchData()
+  }
 }
 const handleMatchCurrentChange = (value: number) => {
   matchQueryForm.pageNo = value
-  fetchMatchData()
+  // fetchMatchData()
 }
 const handleMatchSizeChange = (value: number) => {
+  matchListLoading.value = true
   matchQueryForm.pageSize = value
   matchQueryForm.pageNo = 1
-  fetchMatchData()
+  matchListLoading.value = false
+  // fetchMatchData()
 }
 
 const handleConfirm = async () => {
@@ -460,6 +500,10 @@ const _includingTaxPrice = ref<number>(0)
 let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
+  if (row.matchContractNumber) {
+    $baseMessage("请先清空再进行匹配！", 'warning')
+    return
+  }
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
