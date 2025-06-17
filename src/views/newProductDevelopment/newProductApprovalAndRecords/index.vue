@@ -37,29 +37,30 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" :min-width="columnWidths.sku + 25" prop="sku">
+      <el-table-column label="SKU" :min-width="columnWidths.sku + 30" prop="sku">
         <template #default="{ row }">
           <span :style="{ display: 'inline-block', 'min-width': columnWidths.sku + 'px', 'text-align': 'left' }">
             {{ formattedProgressLog(row.sku) }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="产品" :min-width="columnWidths.productName + 25" prop="productName">
+      <el-table-column label="产品" :min-width="columnWidths.productName + 30" prop="productName">
         <template #default="{ row }">
           <span :style="{ display: 'inline-block', 'min-width': columnWidths.productName + 'px', 'text-align': 'left' }">
             {{ formattedProgressLog(row.productName) }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column  label="首单PO" min-width="100" prop="po" />
-      <el-table-column  label="首单实际成本" prop="firstRealCost" width="125" />
-      <el-table-column  label="审批成本" min-width="100" prop="totalCost" />
-      <el-table-column  label="相差" min-width="100" prop="difference" />
-      <el-table-column  label="有效计数" min-width="100" prop="effectiveCount" >
+      <el-table-column label="主站点" prop="siteName" min-width="130" />
+      <el-table-column label="首单PO" min-width="100" prop="po" />
+      <el-table-column label="首单实际成本" prop="firstRealCost" width="125" />
+      <el-table-column label="审批成本" min-width="100" prop="totalCost" />
+      <el-table-column label="相差" min-width="100" prop="difference" />
+      <el-table-column label="产品定位" prop="productPosition" :min-width="columnWidths.productPosition + 30" />
+      <el-table-column label="Vine数量" prop="vineCount" min-width="100" />
+      <el-table-column label="平面设计" prop="graphicDesign" min-width="90" >
         <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
-            {{ row.effectiveCount  }}
-          </span>
+          <el-checkbox v-model="row.graphicDesign" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
         </template>
       </el-table-column>
       <el-table-column  label="OEM" prop="oem" width="80">
@@ -67,6 +68,15 @@
           <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
         </template>
       </el-table-column>
+
+      <el-table-column  label="有效计数" min-width="100" prop="effectiveCount" >
+        <template #default="{ row }">
+          <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
+            {{ row.effectiveCount  }}
+          </span>
+        </template>
+      </el-table-column>
+      
       <el-table-column  label="产品经理" min-width="100" prop="productManager">
         <template #default="{ row }">
           <span :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }" v-html="row.productManager">
@@ -222,6 +232,7 @@ const columnWidths = computed(() => ({
   productDesign: flexColumnWidth(dataList.value, '产品设计', 'other', 0),
   reviewStatus: flexColumnWidth(dataList.value, '审批状态', 'reviewStatus', 0),
   reviewPersonName: flexColumnWidth(dataList.value, '审批人', 'other', 0),
+  productPosition: flexColumnWidth(dataList.value, '产品定位', 'productPosition', 0),
 }));
 interface SpanMethodProps {
   row: IReviewQueryItem
@@ -411,12 +422,13 @@ const setPreviewList = (url: string) => {
 // 列表col合并方法
 const objectSpanMethod = ({
   row,
+  column,
   rowIndex,
   columnIndex,
 }: SpanMethodProps) => {
+  const label = column.label
   // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12 || columnIndex === 13 || columnIndex === 14
-    || columnIndex === 15 || columnIndex === 16 || columnIndex === 17
+  if (['提交日期', '图片', '立项日期', '审批日期', '耗时', '审批状态', '审批人', '操作'].includes(label)
 
   ) {
     // 获取当前row的id

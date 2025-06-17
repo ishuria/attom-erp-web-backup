@@ -63,7 +63,7 @@
               <el-icon />
             </template>
           </el-image> -->
-          <el-button size="small" type="primary" @click="showPdf(row.invoicePath)">查看PDF</el-button>
+          <el-button style="min-width: 70px; min-height: 35px" size="small" @click="showPdf(row.invoicePath)">PDF</el-button>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">

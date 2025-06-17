@@ -55,7 +55,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU/品名" prop="sku" :min-width="flexColumnWidth(list, 'SKU/品名', 'productName')" >
+      <el-table-column label="SKU/品名" prop="sku" :min-width="Math.max(flexColumnWidth(list, 'SKU/品名', 'productName'), flexColumnWidth(list, 'SKU/品名', 'sku'))" >
         <template #default="{ row }">
           {{ row.sku }}
           <br />

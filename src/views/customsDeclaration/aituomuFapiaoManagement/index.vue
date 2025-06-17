@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import { TabsPaneContext } from 'element-plus'
-import { getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
+import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
 import { getDefaultStringTime } from '/@/utils/dateUtils'
@@ -91,8 +91,17 @@ const handleTabChange = (tab: TabsPaneContext) => {
   queryForm.status = activeName.value
   queryData()
 }
-const deleteMatch = () => {
-  //
+const deleteMatch = (row: any) => {
+  $baseConfirm("确定要删除匹配吗？", null, async () => {
+    const { data } = await aiTuoMuInvoiceMatchDelete({
+      id: row.id,
+      invoiceDetailId: row.invoiceDetailId
+    })
+    if (data) {
+      $baseMessage("删除匹配成功！", 'success')
+      queryData()
+    }
+  })
 }
 
 // 埃托姆发票导出

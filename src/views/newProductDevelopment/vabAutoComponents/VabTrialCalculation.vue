@@ -452,6 +452,7 @@ const clickCancel = async (event:any,value:IProgressSample) =>{
     return
   }
   await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  await fetchData()
 }
 
 // 修改售价 重新刷新
@@ -469,7 +470,7 @@ const clickSaleCancel = async (event:any,value:IProgressSample) =>{
     return
   }
   await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff!) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
-  fetchData()
+  await fetchData()
 }
 const fetchData = async () => {
   sampleList.value = []

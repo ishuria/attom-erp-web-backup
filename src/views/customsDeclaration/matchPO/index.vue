@@ -4,6 +4,7 @@
       <vab-query-form-left-panel>
         <el-button :loading="declarationLoading" type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
         <el-button :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
+        <el-button type="primary" @click="sentButNotReportedVisible = true">已发未报</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -134,9 +135,9 @@
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleArchiveOutbound(row)" >
+                <!-- <el-dropdown-item @click="handleArchiveOutbound(row)" >
                   <el-link :disabled="row.outboundStatus === 1" type="primary" :underline="false" >出库归档</el-link>
-                </el-dropdown-item>
+                </el-dropdown-item> -->
                 <el-dropdown-item @click="showFirstLegFreight(row)">
                   <el-link type="primary" :underline="false" >头程运费</el-link>
                 </el-dropdown-item>
@@ -395,6 +396,7 @@
         <el-button type="primary" @click="handleAddFee">确定</el-button>
       </template>
     </vab-dialog>
+    <sent-but-not-reported v-model="sentButNotReportedVisible" />
   </div>
 </template>
 
@@ -415,6 +417,7 @@ defineOptions({
   name: 'MatchPO'
 })
 
+const sentButNotReportedVisible = ref<boolean>(false)
 const addFeeFormRef = ref<FormInstance>()
 const addFeeVisible = ref<boolean>(false)
 const addFeeForm = reactive<any>({})

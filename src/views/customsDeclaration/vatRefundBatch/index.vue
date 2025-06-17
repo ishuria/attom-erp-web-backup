@@ -63,7 +63,7 @@
               <el-link type="primary" :underline="false" @click="showFreightFee(row)">退税运费</el-link>
               <el-link type="primary" :underline="false" @click="showDetail(row)">明细</el-link>
               <el-link type="primary" :underline="false" @click="showInvoiceCollection()">发票归集</el-link>
-              <el-link type="primary" :underline="false" @click="">出库归档</el-link>
+              <el-link type="primary" :underline="false" @click="handleArchiveOutbound(row)">出库归档</el-link>
               <el-link type="success" :underline="false" @click="handleUpdateStatus(row)">退税完成</el-link>
             </template>
           </el-table-column>
@@ -209,7 +209,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { checkTaxRefundBatchAiTuoMuExport, getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { archiveTaxRefundBatchOutbound, checkTaxRefundBatchAiTuoMuExport, getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
@@ -250,6 +250,13 @@ const id = ref<number>()
 const contractNumber = ref<string>()
 const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
   selectRows.value = value
+}
+
+const handleArchiveOutbound = async (row: any) => {
+  const { data } = await archiveTaxRefundBatchOutbound({ contractNumber: row.contractNumber })
+  if (data) {
+    $baseMessage('出库归档成功!', 'success')
+  }
 }
 const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
