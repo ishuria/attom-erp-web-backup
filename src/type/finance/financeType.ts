@@ -74,6 +74,9 @@ export interface IGetOutBoundList {
    * 含税总价
    */
   taxInclusivePrice?: number
+
+  /** 操作时间 */
+  createTime?: Date
 }
 
 export interface IGetInBoundListRes {

@@ -5,13 +5,13 @@
         <el-button type="primary" @click="handleExport">导出</el-button>
         <el-button type="primary" @click="showWhVerify">入库核对</el-button>
         <el-button type="primary" @click="showSummary">导出未匹配发票汇总信息</el-button>
-        <el-date-picker 
-          v-model="date" 
-          :clearable="false" 
-          :editable="false" 
-          end-placeholder="结束日期" 
-          start-placeholder="开始日期" 
-          style="margin: 0 10px calc(var(--el-margin) / 2) 0; max-width: 20em;"
+        <el-date-picker
+          v-model="date"
+          :clearable="false"
+          :editable="false"
+          end-placeholder="结束日期"
+          start-placeholder="开始日期"
+          style="max-width: 20em; margin: 0 10px calc(var(--el-margin) / 2) 0"
           type="daterange"
           @change="queryDateData"
         />
@@ -19,7 +19,13 @@
       <vab-query-form-right-panel :span="14">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
@@ -28,9 +34,12 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border :cell-style="cellStyle"
+      border
+      class="noneHoveTable"
+      :cell-style="cellStyle"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="tableRowClassName"
       stripe
     >
       <el-table-column label="报关单出库日期" min-width="130" prop="outboundDate">
@@ -38,18 +47,19 @@
           {{ formatDate(new Date(row.outboundDate)) }}
         </template>
       </el-table-column>
-      <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')"/>
-      <el-table-column label="PO" min-width="90" prop="po"/>
-      <el-table-column label="产品名称/型号" prop="sku" :width="flexColumnWidth(list, '产品名称/型号', 'sku')"/>
-      <el-table-column label="报关品名" min-width="200" prop="customDeclarationName"/>
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
-      <el-table-column label="零件数量" min-width="100" prop="quantity"/>
-      <el-table-column label="未税总价￥" min-width="110" prop="preTaxPrice"/>
-      <el-table-column label="含税总价￥" min-width="110" prop="taxInclusivePrice"/>
-      <el-table-column label="销售价格$" min-width="110" prop="salePrice"/>
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')"/>
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')"/>
-      <el-table-column label="备注" min-width="150" prop="remark"/>
+      <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')" />
+      <el-table-column label="PO" min-width="90" prop="po" />
+      <el-table-column label="产品名称/型号" prop="sku" :width="flexColumnWidth(list, '产品名称/型号', 'sku')" />
+      <el-table-column label="报关品名" min-width="200" prop="customDeclarationName" />
+      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
+      <el-table-column label="零件数量" min-width="100" prop="quantity" />
+      <el-table-column label="未税总价￥" min-width="110" prop="preTaxPrice" />
+      <el-table-column label="含税总价￥" min-width="110" prop="taxInclusivePrice" />
+      <el-table-column label="销售价格$" min-width="110" prop="salePrice" />
+      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId')" />
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
+      <el-table-column label="操作时间" min-width="150" prop="createTime" />
+      <el-table-column label="备注" min-width="150" prop="remark" />
       <!-- <el-table-column label="操作" prop="" width="140">
         <template #default="{ row }">
           <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
@@ -57,10 +67,10 @@
         </template>
       </el-table-column> -->
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -153,17 +163,20 @@
         <el-button type="primary">确认</el-button>
       </template>
     </vab-dialog> -->
-   
+
     <!-- 入库核对 -->
-    <vab-dialog
-      v-model="whVerifyVisible"
-      title="入库核对"
-    >
+    <vab-dialog v-model="whVerifyVisible" title="入库核对">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="whVerifyForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="whVerifyForm.keyWord" clearable placeholder="请输入搜索关键词" @input="whQueryData" @keyup.enter="whQueryData" />
+              <el-input
+                v-model.trim="whVerifyForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="whQueryData"
+                @keyup.enter="whQueryData"
+              />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="whVerifyListLoading" native-type="submit" type="primary" @click="whQueryData" />
@@ -171,26 +184,22 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table
-        border
-        :data="paginatedList"
-        :header-cell-style="{ textAlign: 'center' }"
-      >
+      <el-table border :data="paginatedList" :header-cell-style="{ textAlign: 'center' }">
         <el-table-column align="center" label="出库日期" min-width="110" prop="outboundDate">
           <template #default="{ row }">
             {{ formatDate(new Date(row.outboundDate)) }}
           </template>
         </el-table-column>
-        <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(checkList, '供应商名称', 'suppliser')"/>
-        <el-table-column label="PO" min-width="100" prop="po"/>
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(checkList, 'SKU', 'sku')"/>
-        <el-table-column label="品名" min-width="100" prop="customDeclarationName"/>
-        <el-table-column align="center" label="数量" min-width="90" prop="quantity"/>
-        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(checkList, 'Shipment ID', 'shipmentId')"/>
-        <el-table-column label="合同编号" min-width="140" prop="contractNumber"/>
-        <el-table-column label="错误类型" min-width="130" prop="remark"/>
+        <el-table-column label="供应商名称" prop="suppliser" :width="flexColumnWidth(checkList, '供应商名称', 'suppliser')" />
+        <el-table-column label="PO" min-width="100" prop="po" />
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(checkList, 'SKU', 'sku')" />
+        <el-table-column label="品名" min-width="100" prop="customDeclarationName" />
+        <el-table-column align="center" label="数量" min-width="90" prop="quantity" />
+        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(checkList, 'Shipment ID', 'shipmentId')" />
+        <el-table-column label="合同编号" min-width="140" prop="contractNumber" />
+        <el-table-column label="错误类型" min-width="130" prop="remark" />
       </el-table>
-      <vab-pagination 
+      <vab-pagination
         :current-page="whVerifyForm.pageNo"
         :page-size="whVerifyForm.pageSize"
         :total="whTotal"
@@ -211,7 +220,7 @@ import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'Outbound'
+  name: 'Outbound',
 })
 const date = ref<[string, string]>(getDefaultStringTime())
 const queryForm = reactive<IGetOutBoundListReq>({
@@ -219,7 +228,7 @@ const queryForm = reactive<IGetOutBoundListReq>({
   pageNo: 1,
   pageSize: 20,
   fromDate: date.value[0],
-  toDate: date.value[1]
+  toDate: date.value[1],
 })
 const list = ref<IGetOutBoundList[]>([])
 const total = ref<number>(0)
@@ -230,14 +239,12 @@ const whVerifyVisible = ref<boolean>(false)
 const whVerifyForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const filteredList = computed(() => {
   // 如果有关键词则过滤数据
   if (whVerifyForm.keyWord) {
-    return checkList.value.filter(item => 
-      item.suppliser.toLowerCase().includes(whVerifyForm.keyWord.toLowerCase())
-    )
+    return checkList.value.filter((item) => item.suppliser.toLowerCase().includes(whVerifyForm.keyWord.toLowerCase()))
   }
   return checkList.value
 })
@@ -273,16 +280,15 @@ const showWhVerify = async () => {
 const showSummary = async () => {
   const { data } = await checkOutboundNotMatchInvoiceExport({
     fromDate: date.value[0],
-    toDate: date.value[1]
+    toDate: date.value[1],
   })
   if (data) {
     await downloadFilePD('/outbound/notMatch/invoiceExport', {
       fromDate: date.value[0],
-      toDate: date.value[1]
+      toDate: date.value[1],
     })
-  } 
+  }
 }
-
 
 // 调增调减展示
 // const inOrDeVisible = ref<boolean>(false)
@@ -300,19 +306,27 @@ const showSummary = async () => {
 // const confirmModify = () => {
 //   modifyFormRef.value?.validate((isValid: boolean) => {
 //     if (isValid) {
-      
+
 //     }
 //   })
 // }
+
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.redStatus === 1) {
+    return 'danger-row'
+  }
+}
 
 // 导出
 const handleExport = async () => {
   await downloadFilePD('/outbound/export', {
     fromDate: date.value[0],
-    toDate: date.value[1]
-  }).then(() => {}).catch((error) => {
-    $baseMessage(error, 'error')
+    toDate: date.value[1],
   })
+    .then(() => {})
+    .catch((error) => {
+      $baseMessage(error, 'error')
+    })
 }
 // 展示修改
 // const showModify = (row: any) => {
@@ -336,14 +350,21 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 4 || data.columnIndex === 5 || data.columnIndex === 10 || data.columnIndex === 11) {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  if (
+    data.columnIndex === 1 ||
+    data.columnIndex === 3 ||
+    data.columnIndex === 4 ||
+    data.columnIndex === 5 ||
+    data.columnIndex === 10 ||
+    data.columnIndex === 11
+  ) {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 const fetchData = async () => {
@@ -372,6 +393,18 @@ onBeforeMount(() => {
     //   color: var(--el-color-danger);
     //   border-color: var(--el-color-danger);
     // }
+  }
+}
+
+.noneHoveTable {
+  :deep() {
+    .danger-row > td {
+      background-color: var(--el-color-danger-light-9) !important;
+    }
+
+    td {
+      background-color: #ffffff !important;
+    }
   }
 }
 </style>

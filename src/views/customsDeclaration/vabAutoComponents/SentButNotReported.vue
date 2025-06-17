@@ -1,6 +1,6 @@
 <template>
   <!-- 已发未报 -->
-  <vab-dialog v-model="visible" class="dialog" title="已发未报" top="10vh" width="65%">
+  <vab-dialog v-model="visible" :draggable="false" class="dialog" title="已发未报" top="10vh" width="65%">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline :model="querySentForm" @submit.prevent>
@@ -41,7 +41,7 @@
         @cell-click="changeInput"
         @selection-change="setSelectRows"
         :row-class-name="tableRowClassName"
-        style="height: calc(80vh - 200px); max-height: calc(80vh - 200px);"
+        style="height: calc(80vh - 200px); max-height: calc(80vh - 200px)"
       >
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')" />
@@ -79,7 +79,7 @@
     <!-- 聚合 -->
     <div v-if="tab === 0">
       <vab-query-form>
-        <vab-query-form-left-panel >
+        <vab-query-form-left-panel>
           <template v-if="shipId">
             <el-button type="primary" @click="handleArchiveAgg">归档</el-button>
           </template>
@@ -115,7 +115,7 @@
         :header-cell-style="{ textAlign: 'center' }"
         stripe
         @selection-change="setSelectAggRows"
-         style="height: calc(80vh - 230px); max-height: calc(80vh - 230px);"
+        style="height: calc(80vh - 230px); max-height: calc(80vh - 230px)"
       >
         <el-table-column v-if="shipId" align="center" type="selection" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(aggregationList, 'SKU', 'sku')" />
@@ -155,12 +155,18 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { archiveShipmentYfwbAggregation, getMatchSentList, getShipmentYfwbAggregationList, submitMatchSentList, updateShipmentYfwbRemark } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import {
+  archiveShipmentYfwbAggregation,
+  getMatchSentList,
+  getShipmentYfwbAggregationList,
+  submitMatchSentList,
+  updateShipmentYfwbRemark,
+} from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoListReq, IGetMatchSentList, IGetYfwbAggregationList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'SentButNotReported'
+  name: 'SentButNotReported',
 })
 
 const props = defineProps<{
@@ -174,7 +180,7 @@ const visible = computed({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
 
 const querySentForm = reactive<any>({
@@ -264,7 +270,7 @@ const handleArchiveAgg = async () => {
         poId: item.poId!,
         poComponentId: item.poComponentId!,
         sku: item.sku!,
-        id: item.id
+        id: item.id,
       }
     })
     const { data } = await archiveShipmentYfwbAggregation(req)
@@ -331,13 +337,7 @@ const fetchAggregationData = async () => {
   aggregationList.value = data.list
   aggregationListLoading.value = false
 }
-const tableRowClassName = ({
-  row,
-  rowIndex,
-}: {
-  row: any
-  rowIndex: number
-}) => {
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (!row.shipmentId) {
     return 'danger-row'
   }
@@ -345,7 +345,7 @@ const tableRowClassName = ({
 onBeforeMount(() => {
   fetchAggregationData()
 })
-</script> 
+</script>
 
 <style lang="scss" scoped>
 .dialog {
@@ -368,7 +368,7 @@ onBeforeMount(() => {
       }
     }
   }
-  
+
   .fixed-header {
     position: sticky;
     top: 0;
@@ -394,7 +394,7 @@ onBeforeMount(() => {
     .danger-row > td {
       background-color: var(--el-color-danger-light-9) !important;
     }
-    
+
     td {
       background-color: #ffffff !important;
     }
