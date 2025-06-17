@@ -155,9 +155,9 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { archiveShipmentYfwbAggregation, getMatchSentList, getShipmentYfwbAggregationList, submitMatchSentList, updateShipmentYfwbRemark } from '~/src/api/devlocal/customsDeclarationAndTaxRefund'
-import { IGetMatchPoListReq, IGetMatchSentList, IGetYfwbAggregationList } from '~/src/type/customsDeclarationAndTaxRefund/matchPo'
-import { flexColumnWidth, removeHtmlTags } from '~/src/utils/tableColum'
+import { archiveShipmentYfwbAggregation, getMatchSentList, getShipmentYfwbAggregationList, submitMatchSentList, updateShipmentYfwbRemark } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { IGetMatchPoListReq, IGetMatchSentList, IGetYfwbAggregationList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'SentButNotReported'
