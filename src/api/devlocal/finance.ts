@@ -7,14 +7,14 @@ import type {
   IGetInBoundListRes,
   IGetOutBoundListReq,
   IGetOutBoundListRes,
-  IGetOutboundInventoryCheckRes
+  IGetOutboundInventoryCheckRes,
 } from '/@/type/finance/financeType'
 
-export function getOutBoundList(params: IGetOutBoundListReq): Promise<IGetOutBoundListRes> {
+export function getOutBoundList(data: IGetOutBoundListReq): Promise<IGetOutBoundListRes> {
   return request({
     url: `${BASE_API}/outbound/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 
