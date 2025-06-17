@@ -36,8 +36,14 @@
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <performance-history />
       </el-col>
-      <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <authorization />
+      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank title="上月超额完成排行" />
+      </el-col>
+      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank title="上月提成排行" />
+      </el-col>
+      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank title="上月新品提成排行(上线1年以内)" />
       </el-col>
     </el-row>
   </div>

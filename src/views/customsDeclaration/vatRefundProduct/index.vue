@@ -58,8 +58,10 @@
           :header-cell-class-name="headerCell"
           @cell-click="cellClick"
           @sort-change="handleSortChange"
+          show-summary
+          :summary-method="handleSummaryMethod"
         >
-          <el-table-column fixed="left" type="selection" />
+          <el-table-column width="60" fixed="left" type="selection" />
           <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
@@ -96,7 +98,7 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit')" />
+          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" />
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
           <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
@@ -215,8 +217,10 @@
           :header-cell-style="headerCellStyle"
           @cell-click="cellClick"
           @sort-change="handleSortChange"
+          show-summary
+          :summary-method="handleSummaryMethod"
         >
-          <el-table-column fixed="left" type="selection" />
+          <el-table-column width="60" fixed="left" type="selection" />
           <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
@@ -250,7 +254,7 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit')"/>
+          <el-table-column label="利润￥" prop="profit" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)"/>
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
           <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
@@ -447,6 +451,38 @@ const remoteMethod = async (query: string) => {
   } else {
     options.value = []
   }
+}
+
+const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
+
+  const sums: string[] = [];
+
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'; // 第一列显示“合计”字样
+      return;
+    }
+
+    // 对特定字段执行求和
+    if (['customsDeclarationCount', 'cifPrice', 'freightFee', 'fobPrice', 'salePrice', 'taxInclusiveCost', 'includingTaxPriceTotal', 'taxRefundsCost', 'profit', 'taxRebate'].includes(column.property)) {
+      const total = data.reduce((sum, row) => {
+        const value = Number(row[column.property]);
+        return isNaN(value) ? sum : sum + value;
+      }, 0);
+      sums[index] = total.toFixed(2); // 保留两位小数
+    } else if (['invoiceTotal', 'componentCount'].includes(column.property)) {
+      const total = data.reduce((sum, row) => {
+        const value = Number(row[column.property]);
+        return isNaN(value) ? sum : sum + value;
+      }, 0);
+      sums[index] = total
+    } else {
+      // 其他列不显示合计
+      sums[index] = '';
+    }
+  });
+
+  return sums;
 }
 /**
  * 下载发票信息
@@ -731,27 +767,24 @@ const headerCellStyle = (): CSSProperties => {
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (
-    label === '合同编号' ||
-    label === '供应商' ||
-    label === 'SKU' ||
-    label === 'PO零件名' ||
-    label === 'shipmentID' ||
-    label === '付款记录'
+    label === '发货日期' ||
+    label === '报关单出口日期' ||
+    label === '报关单位' ||
+    label === '汇率' ||
+    label === 'PO' ||
+    label === '发票匹配日期'
   ) {
-    return {
-      textAlign: 'left',
-    }
-  } else if (label === '报关品名') {
-    return {
-      textAlign: 'left',
-    }
-  } else if (label !== '报关数量' && label !== '报关单位') {
     return {
       textAlign: 'center',
     }
   }
+  // else if (label !== '报关数量' && label !== '报关单位') {
+  //   return {
+  //     textAlign: 'center',
+  //   }
+  // }
   return {
-    textAlign: 'center',
+    textAlign: 'left',
   }
 }
 const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
