@@ -565,7 +565,7 @@ const clickCancel2 = async (event: Event, value: any) => {
         hsId: value.hsId,
         bgWeightStatus: value.bgWeightStatus
       })
-      await fetchData()
+      // await fetchData()
     } catch {
       Object.assign(value, copyRow)
     }
@@ -579,7 +579,8 @@ const handleUpdateRemark = async (value: string) => {
     declarationElements: value,
     declarationElementsAbbreviation: _row.declarationElementsAbbreviation,
   })
-  fetchData()
+  // fetchData()
+  _row.declarationElements = value
   remarkVisible.value = false
 }
 // 处理申报要素缩写
@@ -647,7 +648,7 @@ const clickCancel = async (event: any, value: any) => {
         declarationElements: value.declarationElements,
         declarationElementsAbbreviation: value.declarationElementsAbbreviation,
       })
-      await fetchData()
+      // await fetchData()
     } catch {
       Object.assign(value, copyRow)
     }
