@@ -61,7 +61,7 @@
           show-summary
           :summary-method="handleSummaryMethod"
         >
-          <el-table-column width="60" fixed="left" type="selection" />
+          <el-table-column label="selection" width="60" fixed="left" type="selection" />
           <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
@@ -220,7 +220,7 @@
           show-summary
           :summary-method="handleSummaryMethod"
         >
-          <el-table-column width="60" fixed="left" type="selection" />
+          <el-table-column label="selection" width="60" fixed="left" type="selection" />
           <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
@@ -767,6 +767,7 @@ const headerCellStyle = (): CSSProperties => {
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (
+    label === 'selection' ||
     label === '发货日期' ||
     label === '报关单出口日期' ||
     label === '报关单位' ||
@@ -790,19 +791,20 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (
-    label === '合同编号' ||
-    label === '供应商' ||
-    label === 'SKU' ||
-    label === 'PO零件名' ||
-    label === 'shipmentID' ||
-    label === '付款记录'
+    label === 'selection' ||
+    label === '发货日期' ||
+    label === '报关单出口日期' ||
+    label === '报关单位' ||
+    label === '汇率' ||
+    label === 'PO' ||
+    label === '发票匹配日期'
   ) {
     return {
-      textAlign: 'left',
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'center',
+    textAlign: 'left',
   }
 }
 const fetchData = async () => {
