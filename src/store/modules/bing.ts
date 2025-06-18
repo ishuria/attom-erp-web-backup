@@ -4,6 +4,7 @@
  */
 
 import dayjs from 'dayjs'
+
 const today = dayjs().format('YYYY-MM-DD')
 
 export const useBingStore = defineStore('bing', {

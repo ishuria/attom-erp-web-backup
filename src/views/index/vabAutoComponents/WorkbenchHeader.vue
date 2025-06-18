@@ -13,6 +13,7 @@
         </el-col>
     </el-row>
 </template>
+
 <style lang="scss" scoped>
 .data-screen-header {
     width: 100%;

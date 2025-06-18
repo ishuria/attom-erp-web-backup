@@ -10,6 +10,7 @@
         </template>
     </el-segmented>
 </template>
+
 <script lang="ts" setup>
 import { Apple, Cherry, Grape, Orange, Pear } from '@element-plus/icons-vue'
 

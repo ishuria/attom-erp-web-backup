@@ -497,8 +497,8 @@ onMounted(() => {
                         border-top-right-radius: var(--el-border-radius-base);
 
                         &.is-active {
-                            background: var(--el-color-primary-light-9);
                             outline: none;
+                            background: var(--el-color-primary-light-9);
 
                             &:after {
                                 width: 100%;

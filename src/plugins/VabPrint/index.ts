@@ -94,9 +94,8 @@ Print.prototype = {
         doc.open()
         doc.write(content)
         doc.close()
-        const _this = this
         iframe.addEventListener('load', () => {
-            _this.toPrint(w)
+            this.toPrint(w)
             setTimeout(() => {
                 document.body.removeChild(iframe)
             }, 100)

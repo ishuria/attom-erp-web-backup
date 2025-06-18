@@ -114,6 +114,7 @@ export default defineComponent({
     },
 })
 </script>
+
 <style scoped>
 .add-node-btn {
     margin-right: 20px;

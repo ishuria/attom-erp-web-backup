@@ -169,9 +169,9 @@ onMounted(() => {
             color: var(--el-color-grey);
             text-align: center;
             background: var(--el-mask-color);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--el-border-color);
             border-radius: 15px;
+            backdrop-filter: blur(10px);
 
             > span {
                 font-size: var(--el-font-size-extra-small);

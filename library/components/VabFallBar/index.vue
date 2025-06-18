@@ -168,8 +168,8 @@ useEventListener('mousemove', (e: MouseEvent) => {
                 min-width: 100%;
 
                 li {
-                    display: block;
                     float: none;
+                    display: block;
                     width: 100%;
 
                     a {

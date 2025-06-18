@@ -23,6 +23,7 @@
         </el-col>
     </el-row>
 </template>
+
 <style lang="scss" scoped>
 @keyframes flare {
     0% {

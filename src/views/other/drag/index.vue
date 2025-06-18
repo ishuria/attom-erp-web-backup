@@ -95,6 +95,7 @@ onBeforeMount(() => {
     }
 }
 </style>
+
 <style>
 .fade-move,
 .fade-enter-active,

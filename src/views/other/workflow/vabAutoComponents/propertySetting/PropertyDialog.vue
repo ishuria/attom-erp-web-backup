@@ -29,6 +29,7 @@ export default defineComponent({
     },
 })
 </script>
+
 <style>
 .property-dialog {
     padding: var(--el-padding);

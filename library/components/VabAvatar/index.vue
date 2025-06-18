@@ -165,6 +165,7 @@ const handleCommand = async (command: any) => {
     }
 }
 </style>
+
 <style lang="scss">
 .vab-avatar-popper {
     padding: 0 !important;
