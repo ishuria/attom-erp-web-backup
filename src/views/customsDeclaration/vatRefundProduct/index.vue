@@ -31,6 +31,14 @@
             </span>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="4">
+            <!-- <el-select>
+              <el-option 
+                v-for="item in searchOptions"
+                :label="item.label"
+                :value="item.value"
+                :key="item.value"
+              />
+            </el-select> -->
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -417,6 +425,16 @@ defineOptions({
   name: 'VatRefundProduct',
 })
 
+const searchOptions = [
+  { label: 'ShipmentId', value: 'shipmentId' },
+  { label: 'PO', value: 'po' },
+  { label: 'SKU', value: 'sku' },
+  { label: '报关品名', value: 'declarationName' },
+  { label: '合同号', value: 'contractNumber' },
+  { label: '报关单出库日期', value: 'exportDate' },
+  { label: '供应商', value: 'suppliser' },
+  { label: '发票号码', value: 'invoiceNumber' },
+]
 const router = useRouter()
 const route = useRoute()
 // const dialogWidth = ref<number>(0)

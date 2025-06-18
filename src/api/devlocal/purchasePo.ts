@@ -24,6 +24,7 @@ import type {
   IGetPoListQuery,
   IGetPoListResp,
   IGetPoSkuComponentListResp,
+  IGetPurchaseComponentCustomInfo,
   IGetSignatureSettingListQuery,
   IGetSignatureSettingListResp,
   IGetSupplierRateResp,
@@ -637,3 +638,28 @@ export function updatePurchasePlanPoQualityMark(params: { poSkuId: number, statu
     params,
   })
 }
+
+/**
+ * 采购订单-查看零件报关信息
+ * @param params 
+ * @returns 
+ */
+export function getPurchaseComponentCustomInfo(params: { id: number }): Promise<{ data: IGetPurchaseComponentCustomInfo }> {
+  return request({
+    url: `${BASE_API}/purchase/component/custom/info`,
+    method: 'get',
+    params,
+  })
+} 
+/**
+ * 采购订单-修改保存零件报关信息
+ * @param data 
+ * @returns 
+ */
+export function updatePurchaseComponentCustomInfo(data: IGetPurchaseComponentCustomInfo ): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/purchase/component/custom/update`,
+    method: 'post',
+    data,
+  })
+} 

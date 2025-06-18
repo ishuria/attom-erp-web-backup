@@ -199,3 +199,15 @@ export interface IGetHtsSkuListRes {
     list: IHtsSkuList[]
   }
 }
+
+export interface IGetPurchaseComponentHsInfo {
+  id: number
+  hsId?: number
+  statutoryUnit?: string
+  quorum?: string
+}
+export interface IUpdatePurchaseComponentHs {
+  id: number
+  hsId?: number
+  quorum?: string
+}

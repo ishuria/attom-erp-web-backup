@@ -940,3 +940,10 @@ export interface IApplyPurchaseReductionCostReq {
   beforePrice: number
   afterPrice: number
 }
+
+export interface IGetPurchaseComponentCustomInfo {
+  id: number
+  unit?: string
+  quantity?: string
+  billingUnit?: string
+}

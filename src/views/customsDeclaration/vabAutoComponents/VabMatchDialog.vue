@@ -75,6 +75,17 @@
             <el-checkbox v-model="row.flag" disabled  />
           </template>
         </el-table-column>
+        <el-table-column label="有HS" width="70">
+          <template #default="{ row }">
+            <vab-icon v-if="row.componentInformationStatus === 1" icon="check-fill" style="color: var(--el-color-success)" />
+            <vab-icon v-if="row.componentInformationStatus === 2" icon="close-fill" style="color: var(--el-color-danger)" />
+          </template>
+        </el-table-column>
+        <el-table-column label="零件操作" width="95">
+          <template #default="{ row }">
+            <el-link type="primary" :underline="false" @click="showModifyHS(row)" :disabled="!row.poComponentId || row.customsDeclarationStatus === 1" >修改HS</el-link>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column v-if="!disabled3 && !disabled1 && !disabled2" fixed="right" label="操作" width="150">
         <template #default="{ row }">
@@ -293,13 +304,38 @@
       <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
     </template>
   </vab-dialog>
-  <!-- <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" /> -->
+  <!-- 修改HS -->
+  <vab-dialog title="修改HS" width="20%" v-model="modifyHSVisible">
+    <el-form :model="modifyHsForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
+      <el-form-item label="HS">
+        <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" >
+          <el-option 
+            v-for="item in hsOption"
+            :label="item.label"
+            :key="item.id"
+            :value="item.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="法定单位">
+        <el-input v-model="modifyHsForm.statutoryUnit" disabled clearable />
+      </el-form-item>
+      <el-form-item label="每零件单位有多少个法定第1单位">
+        <el-input v-model="modifyHsForm.quorum" clearable />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="modifyHSVisible = false">取消</el-button>
+      <el-button type="primary" @click="handleConfirmModify">确认</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
 import { CirclePlus, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { getHsSelectList } from '~/src/api/devlocal/productInformation'
 import {
   clearAllMatchComponent,
   clearAllMatchShipment,
@@ -309,12 +345,14 @@ import {
   delMatchShipment,
   getCheckMatchList,
   getMatchPackageList,
+  getPurchaseComponentHsInfo,
   insertAllMatchComponent,
   lockMatchShipment,
   submitMatchShipment,
   updateMatchComponentCustomCount,
   updateMatchQuality,
-  updateMatchSkuActualCount
+  updateMatchSkuActualCount,
+  updatePurchaseComponentHs
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
 import type {
@@ -325,6 +363,40 @@ import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const modifyHSVisible = ref<boolean>(false)
+const modifyHsForm = reactive<any>({
+
+})
+const hsOption = ref<{ id: number, label: string }[]>([]) 
+const showModifyHS = async (row: any) => {
+  modifyHSVisible.value = true
+  // 获取hs下拉列表
+  await fetchHsSelectList()
+  const { data } = await getPurchaseComponentHsInfo({
+    id: row.poComponentId
+  })
+  Object.assign(modifyHsForm, data)
+}
+const handleConfirmModify = async () => {
+  try {
+    const { data } = await updatePurchaseComponentHs({
+      id: modifyHsForm.id,
+      hsId: modifyHsForm.hsId,
+      quorum: modifyHsForm.quorum
+    })            
+    if (data) {
+      $baseMessage("修改HS成功！", 'success')
+      modifyHSVisible.value = false
+      fetchData()
+    }
+  } catch (error) {
+    $baseMessage("修改HS失败！", 'error')
+  }
+}
+const fetchHsSelectList = async () => {
+  const { data } = await getHsSelectList()
+  hsOption.value = data
+}
 const match2ListLoading = ref<boolean>(false)
 const isFullscreen = ref<boolean>(false)
 
@@ -1129,7 +1201,7 @@ const queryData = () => {
 const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
 
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 12) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 14) {
     const id = row.id
 
     for (let i = rowIndex + 1; i < list.value.length; i++) {

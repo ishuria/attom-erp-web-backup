@@ -346,12 +346,7 @@
                 </div>
                 <span>{{ row.useStockCount }}</span>
               </span>
-              <span v-if="item.label === '单位'">
-                <div class="none">
-                  <el-input v-model="row.unit" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.unit }}</span>
-              </span>
+              
               <span v-if="item.label === '出厂单价'">
                 <div class="none">
                   <el-input
@@ -555,14 +550,29 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" min-width="200">
+          <el-table-column fixed="right" label="操作" min-width="160">
             <template #default="{ row, $index }">
-              <el-space>
-                <el-button v-if="route.query.from !== 'plannedPoCreate'" text type="primary" @click="handleUpdateComponentPrice(row)">
-                  更新单价
-                </el-button>
-                <el-button text type="danger" @click="handleDelPoSKuComponent(row, $index)">删除</el-button>
-              </el-space>
+              <el-dropdown>
+              <el-button text type="primary" @click="handleUpdateComponentPrice(row)">
+                更新单价
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                <el-dropdown-item @click="handleUpdateComponentPrice(row)">
+                    <el-link type="primary" :underline="false" >更新单价</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="handleDelPoSKuComponent(row, $index)">
+                    <el-link type="danger" :underline="false" >删除</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="showModify(row)">
+                    <el-link type="primary" :underline="false" >修改零件报关</el-link>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -1349,7 +1359,6 @@
           :data="skuComponentList"
           :header-cell-style="{ 'text-align': 'center' }"
           stripe
-          @cell-click="changeCreateInput"
         >
           <el-table-column align="center" fixed="left" label="图片" width="81.2px">
             <template #default="{ row }">
@@ -1651,11 +1660,29 @@
     <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
     <!-- 零件上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
+    <!-- 零件报关修改 -->
+    <vab-dialog title="修改零件报关" v-model="modifyVisible" width="20%">
+      <el-form :model="modifyForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
+        <el-form-item label="采购单位" prop="unit">
+          <el-input v-model="modifyForm.unit" clearable />
+        </el-form-item>
+        <el-form-item label="开票单位" prop="billingUnit">
+          <el-input v-model="modifyForm.billingUnit" clearable />
+        </el-form-item>
+        <el-form-item label="每零件单位有多少个开票单位" prop="quantity">
+          <el-input v-model="modifyForm.quantity" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="modifyVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmModify">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
@@ -1678,6 +1705,7 @@ import {
   getPoSkuComponentSuitDetail,
   getPoSkuIdList,
   getPoSkuList,
+  getPurchaseComponentCustomInfo,
   getPurchaseSKU,
   submitPurchaseComponent,
   submitPurchaseConsumable,
@@ -1693,6 +1721,7 @@ import {
   updatePoSkuComponent,
   updatePoSkuComponentSuitDetail,
   updatePoSkuComponentSuppliser,
+  updatePurchaseComponentCustomInfo,
   updatePurchasePlanPoQualityMark,
   updateSkuCount,
   updateSkuDetail,
@@ -1714,6 +1743,28 @@ defineOptions({
   name: 'PoDetail',
 })
 
+const modifyVisible = ref<boolean>(false)
+const modifyForm = reactive<any>({
+
+})
+const showModify = (row: any) => {
+  $baseConfirm("需要一起修改否则报关资料会有错误！", null, async () => {
+    modifyVisible.value = true
+    const { data } = await getPurchaseComponentCustomInfo({ id: row.id })
+    Object.assign(modifyForm, data)
+  })
+}
+const handleConfirmModify = async () => {
+  try {
+    const { data } = await updatePurchaseComponentCustomInfo({ ...modifyForm })
+    if (data) {
+      $baseMessage('修改零件报关信息成功！', 'success')
+      modifyVisible.value = false
+    }
+  } catch (error) {
+    $baseMessage('修改零件报关信息失败！', 'error')
+  }
+}
 const createPoLoading = ref<boolean>(false)
 const handleMove = (event: any) => {
   const { related } = event
@@ -1823,18 +1874,6 @@ const columns = ref<any>([
   {
     label: '货币',
     prop: 'currency',
-    checked: true,
-    minWidth: 105,
-  },
-  {
-    label: '开票单位',
-    prop: 'billingUnit',
-    checked: true,
-    minWidth: 105,
-  },
-  {
-    label: '每零件单位对应的开票单位数量',
-    prop: 'quantity',
     checked: true,
     minWidth: 105,
   },
@@ -2517,6 +2556,57 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
     focusAndSelectInput(cell)
   }
 }
+// let deleteRow: any
+// const changeDeleteInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+ 
+//   const firstChild = cell?.children[0]?.children[0]
+//   const secondChild = cell?.children[0]?.children[1]
+
+//   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+//     return
+//   }
+
+//   deleteRow = JSON.parse(JSON.stringify(row))
+
+//   if (firstChild.classList.contains('none')) {
+//     firstChild.classList.remove('none')
+//     secondChild.classList.add('none')
+
+//     focusAndSelectInput(cell)
+//   }
+//   // console.log(deleteRow)
+// }
+// 零件table blur事件
+// const clickDeleteCancel = async (event: any, value: any) => {
+//   const rootElement = getRootElement(event.srcElement, '.cell')
+
+//   if (rootElement) {
+//     const t1 = rootElement.children[0]
+//     const t2 = rootElement.children[1]
+
+//     if (t1) t1.classList.add('none')
+//     if (t2) t2.classList.remove('none')
+//   }
+//   if (isEqual(deleteRow, value)) {
+//     return
+//   }
+//   // console.log(value)
+//   if (event.type === 'blur') {
+//     // 执行失去焦点处理逻辑
+//     try {
+//       const { data } = await updatePoSkuComponent(value)
+//       if (data === true) {
+//         fetchSkuComponent()
+//         fetchData()
+//       } else {
+//         Object.assign(value, deleteRow)
+//       }
+//     } catch {
+//       // 更新失败时，恢复为原始值
+//       Object.assign(value, deleteRow)
+//     }
+//   }
+// }
 // 修改po-sku零件信息
 const updateSkuComponent = async (row: any) => {
   try {
@@ -2975,7 +3065,7 @@ const handleCreateDelComponent = (index: number) => {
 }
 // po-sku零配件删除
 const handleDelPoSKuComponent = async (row: any, index: number) => {
-  console.log(route.query.from)
+  // console.log(route.query.from)
   if (route.query.from === 'plannedPoDetail') {
     //采购计划的详情
     $baseConfirm('确定要删除该条零件信息吗', '系统提示', async () => {

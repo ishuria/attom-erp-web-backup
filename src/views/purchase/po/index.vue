@@ -2294,7 +2294,7 @@ const handlePoDetail = async (row: any) => {
         from: row.po,
         poSkuId: row.poSkuId,
         poId: row.id,
-        del,
+        del
         // timestamp: Date.now(),
       },
     })

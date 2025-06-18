@@ -10,8 +10,10 @@ import type {
   IGetHTSListRes,
   IGetHtsSkuListReq,
   IGetHtsSkuListRes,
+  IGetPurchaseComponentHsInfo,
   IUpdateHSListReq,
-  IUpdateHTSListReq
+  IUpdateHTSListReq,
+  IUpdatePurchaseComponentHs
 } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import type {
   IBooleanRes,
@@ -837,4 +839,28 @@ export const checkTaxRefundBatchAiTuoMuExport = (params: { ids: string }): Promi
     params,
   })
 }
+
+/**
+ * po零件hs信息查询
+ * @param params 
+ * @returns 
+ */
+export const getPurchaseComponentHsInfo = (params: { id: number }): Promise<{ data: IGetPurchaseComponentHsInfo }> => {
+  return request({
+    url: `${BASE_API}/purchase/component/hs/info`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * po零件hs信息修改
+ */
+export const updatePurchaseComponentHs = (data: IUpdatePurchaseComponentHs): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/purchase/component/hs/update`,
+    method: 'post',
+    data,
+  })
+}
+
 

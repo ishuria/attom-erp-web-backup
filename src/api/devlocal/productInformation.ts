@@ -29,6 +29,7 @@ import type {
   IGetCustomsClearanceSkuListReq,
   IGetCustomsClearanceSkuListRes,
   IGetProductAllReadyCOmponentListQuery,
+  IGetSkuComponentInfo,
   IGetSkuInfoRes,
   ISkuId,
   ISubmitProductComponentQuery,
@@ -42,6 +43,7 @@ import type {
   IUpdateProductCustomsClearanceReq,
   IUpdateProductCustomsClearanceStatus,
   IUpdateProductCustomsClearanceSuppliserInfoReq,
+  IUpdateSkuComponent,
   IaddConsumablesOtherSku,
   IaddProductComponentOtherSku,
   IaddProductQualityInspection,
@@ -980,5 +982,31 @@ export function updateBatchComponentType(params: { ids: string, typeEncodingId: 
     url: `${BASE_API}/component/batch/encoding/update`,
     method: 'post',
     params
+  })
+}
+
+/**
+ * sku查询零件报关信息
+ * @param data 
+ * @returns 
+ */
+export function getSkuComponentInfo(data: { existingPartsListId: number, suppliserId: number }): Promise<{ data: IGetSkuComponentInfo }> {
+  return request({
+    url: `${BASE_API}/sku/component/info`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * sku零件报关信息修改
+ * @param data 
+ * @returns 
+ */
+export function updateSkuComponentInfo(data: IUpdateSkuComponent): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/sku/component/update`,
+    method: 'post',
+    data
   })
 }

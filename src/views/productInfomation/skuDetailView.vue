@@ -266,6 +266,9 @@
             <span v-if="item.label === '开票税点'">
               开票<br />税点
             </span>
+            <span v-if="item.label === '采购单位'">
+              采购<br />单位
+            </span>
           </template>
           <template #default="{ row }">
             <span v-if="item.label === '图片'">
@@ -428,7 +431,10 @@
                     <el-link type="primary" :underline="false" >添加到其他SKU</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleUpdateComponentName(row)">
-                    <el-link type="primary" :underline="false" >修改</el-link>
+                    <el-link type="primary" :underline="false" >修改零件名</el-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item @click="handleShowModify(row)">
+                    <el-link type="primary" :underline="false">修改零件报关</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleDel(row, $index)">
                     <el-link type="danger" :underline="false" >删除</el-link>
@@ -623,6 +629,36 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- SKU上传图片 -->
     <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
+    <vab-dialog v-model="updateVisible" width="20%" title="修改零件报关">
+      <el-form :model="modifyForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0" >
+        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位">
+          <el-input v-model="modifyForm.billingUnit" clearable />
+        </el-form-item>
+        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="每零件单位都多少个开票单位">
+          <el-input v-model="modifyForm.quantity" clearable />
+        </el-form-item>
+        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS">
+          <el-select v-model="modifyForm.hsId" >
+            <el-option 
+              v-for="item in hsOption"
+              :label="item.label"
+              :key="item.id"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="法定单位">
+          <el-input v-model="modifyForm.statutoryUnit" disabled />
+        </el-form-item>
+        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="每零件单位有多少个法定第1单位">
+          <el-input v-model="modifyForm.quorum" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="updateVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmModify">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -632,6 +668,7 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE } from '~/src/const/role'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
   addProductComponentOtherSku,
@@ -639,6 +676,7 @@ import {
   delComponentImage,
   delProductComponent,
   delSkuImage,
+  getHsSelectList,
   getProductAllName,
   getProductAllSupplier,
   getProductComponentPurchase,
@@ -649,6 +687,7 @@ import {
   getProductSkuDetail,
   getProductSkuList,
   getProductSupplier,
+  getSkuComponentInfo,
   saveProductComponentSuitDetail,
   saveProductContractTerms,
   saveProductPurchaseMatters,
@@ -658,9 +697,11 @@ import {
   updateProductComponentName,
   updateProductSku,
   updateProductSkuRemark,
+  updateSkuComponentInfo,
   uploadComponentImage,
   uploadSkuImage
 } from '/@/api/devlocal/productInformation'
+import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -671,6 +712,46 @@ defineOptions({
   name: 'SkuDetailView',
 })
 
+const currentRoleCode = useAclStore().getRole[0];
+const updateVisible = ref<boolean>(false)
+const modifyForm = reactive<any>({
+
+})
+const hsOption = ref<{ id: number, label: string }[]>([]) 
+const fetchHsSelectList = async () => {
+  const { data } = await getHsSelectList()
+  hsOption.value = data
+}
+let _existingPartsListId = -1
+let _suppliserId = -1
+const handleShowModify = async (row: any) => {
+  $baseConfirm("需要一起修改否则报关资料会有错误！", null, async () => {
+    updateVisible.value = true
+    _existingPartsListId = row.existingPartsListId
+    _suppliserId = row.defaultSuppliserId
+    await fetchHsSelectList()
+    const { data } = await getSkuComponentInfo({ existingPartsListId: row.existingPartsListId, suppliserId: row.defaultSuppliserId })
+    Object.assign(modifyForm, data)
+  })
+}
+const handleConfirmModify = async () => {
+  try {
+    const { data } = await updateSkuComponentInfo({
+      existingPartsListId: _existingPartsListId,
+      suppliserId: _suppliserId,
+      hsId: modifyForm.hsId,
+      statutoryCount: modifyForm.quorum,
+      quantity: modifyForm.quantity,
+      billingUnit: modifyForm.billingUnit,
+    })
+    if (data) {
+      $baseMessage("修改成功！", 'success')
+      updateVisible.value = false
+    }
+  } catch (error) {
+    $baseMessage("修改失败！", 'error')
+  }
+}
 const route: any = useRoute()
 const router = useRouter()
 const tabsStore = useTabsStore()
@@ -757,7 +838,7 @@ const columns = ref<any>([
     minWidth: 60,
   },
   {
-    label: '单位',
+    label: '采购单位',
     prop: 'componentUnit',
     checked: true,
     minWidth: 60,

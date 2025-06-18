@@ -1365,4 +1365,20 @@ export interface IGetComponentEncodingList {
   encodingCode?: string
 }
 
+export interface IGetSkuComponentInfo {
+  componentId: number
+  hsId?: number
+  quorum?: string
+  statutoryUnit?: string
+  quantity?: string
+  billingUnit?: string
+}
+export interface IUpdateSkuComponent {
+  existingPartsListId: number
+  suppliserId: number
+  hsId?: number
+  statutoryCount?: string
+  quantity?: string
+  billingUnit?: string
+}
 
