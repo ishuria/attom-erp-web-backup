@@ -2319,6 +2319,7 @@ const handleDelPoDetail = (row: any) => {
       poId: row.id,
       // timestamp: Date.now(),
       del: 'true',
+      tab: 'view'
     },
   })
 

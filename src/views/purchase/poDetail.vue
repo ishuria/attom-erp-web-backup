@@ -281,6 +281,11 @@
                 <br />
                 税点
               </span>
+              <span v-if="item.label === '采购单位'">
+                采购
+                <br />
+                单位
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -896,18 +901,12 @@
               库存
             </template>
           </el-table-column>
-          <el-table-column align="center" label="单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.unit"
-                  @blur="clickCreateOtherCancel($event, row)"
-                  @keyup.enter="clickCreateOtherCancel($event, row)"
-                />
-              </div>
-              <span>{{ row.unit }}</span>
+          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')" >
+            <template #header>
+              采购<br />单位
             </template>
           </el-table-column>
+       
           <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
             <template #header>
               出厂
@@ -1198,7 +1197,7 @@
           </el-table-column>
           <el-table-column align="center" fixed="right" label="操作" min-width="100">
             <template #default="{ $index }">
-              <el-button text type="danger" @click="handleCreateDelComponent($index)">删除</el-button>
+              <el-link type="danger" :underline="false" @click="handleCreateDelComponent($index)">删除</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -1432,7 +1431,11 @@
               库存
             </template>
           </el-table-column>
-          <el-table-column align="center" label="单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')" />
+          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')" >
+            <template #header>
+              采购<br />单位
+            </template>
+          </el-table-column>
           <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
             <template #header>
               出厂
@@ -1584,6 +1587,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="操作" fixed="right" min-width="130" >
+            <template #default="{ row }">
+              <el-link type="primary" :underline="false" @click="handleShowModify(row)">{{ route.query.tab === 'view' ? '查看' : '修改' }}零件报关</el-link>
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
           </template>
@@ -1661,10 +1669,10 @@
     <!-- 零件上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- 零件报关修改 -->
-    <vab-dialog title="修改零件报关" v-model="modifyVisible" width="20%">
+    <vab-dialog :title="`${route.query.tab === 'view' ? '查看' : '修改'}零件报关`" v-model="modifyVisible" width="20%">
       <el-form :model="modifyForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
         <el-form-item label="采购单位" prop="unit">
-          <el-input v-model="modifyForm.unit" clearable />
+          <el-input v-model="modifyForm.unit" disabled />
         </el-form-item>
         <el-form-item label="开票单位" prop="billingUnit">
           <el-input v-model="modifyForm.billingUnit" clearable />
@@ -1675,7 +1683,7 @@
       </el-form>
       <template #footer>
         <el-button @click="modifyVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirmModify">确定</el-button>
+        <el-button v-if="route.query.tab !== 'view'" type="primary" @click="handleConfirmModify">确定</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -1747,11 +1755,21 @@ const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({
 
 })
+const handleShowModify = async (row: any) => {
+  if (route.query.tab === 'view') {
+    await fetchPurchaseComponentCustomInfo(row)
+  } else {
+    await showModify(row)
+  }
+}
+const fetchPurchaseComponentCustomInfo = async (row: any) => {
+  modifyVisible.value = true
+  const { data } = await getPurchaseComponentCustomInfo({ id: row.id })
+  Object.assign(modifyForm, data)
+}
 const showModify = (row: any) => {
   $baseConfirm("需要一起修改否则报关资料会有错误！", null, async () => {
-    modifyVisible.value = true
-    const { data } = await getPurchaseComponentCustomInfo({ id: row.id })
-    Object.assign(modifyForm, data)
+    await fetchPurchaseComponentCustomInfo(row)
   })
 }
 const handleConfirmModify = async () => {
@@ -1830,7 +1848,7 @@ const columns = ref<any>([
     minWidth: 80,
   },
   {
-    label: '单位',
+    label: '采购单位',
     prop: 'unit',
     checked: true,
     minWidth: 75,

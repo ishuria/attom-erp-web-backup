@@ -747,6 +747,7 @@ const handleConfirmModify = async () => {
     if (data) {
       $baseMessage("修改成功！", 'success')
       updateVisible.value = false
+      await fetchComponentData()
     }
   } catch (error) {
     $baseMessage("修改失败！", 'error')

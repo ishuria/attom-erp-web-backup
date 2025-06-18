@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待退税" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="20">
+          <vab-query-form-left-panel :span="18">
             <el-button type="primary" @click="showInvoiceMatching">发票匹配</el-button>
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
@@ -30,16 +30,18 @@
               </el-text>
             </span>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="4">
-            <!-- <el-select>
-              <el-option 
-                v-for="item in searchOptions"
-                :label="item.label"
-                :value="item.value"
-                :key="item.value"
-              />
-            </el-select> -->
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-select placeholder="请选择搜索字段">
+                  <el-option 
+                    v-for="item in searchOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -179,7 +181,7 @@
       </el-tab-pane>
       <el-tab-pane label="已退税" :name="1">
         <vab-query-form>
-          <vab-query-form-left-panel :span="20">
+          <vab-query-form-left-panel :span="18">
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <!-- <el-button type="primary">云舟开票导出</el-button> -->
             <!-- <el-button type="primary">埃托姆开票导出</el-button> -->
@@ -197,8 +199,18 @@
               />
             </span>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="4">
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-select placeholder="请选择搜索字段">
+                  <el-option 
+                    v-for="item in searchOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -911,6 +923,9 @@ onBeforeMount(() => {
           }
           .el-form {
             .el-form-item:first-child {
+              margin: 0 10px 0 0  !important;
+            }
+            .el-form-item:nth-child(2) {
               margin: 0 !important;
 
               .el-check-tag,
