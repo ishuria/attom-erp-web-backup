@@ -15,11 +15,12 @@ const settingsStore = useSettingsStore()
 const { updateTheme } = settingsStore
 const route = useRoute()
 
-const resizeContainer = () => {
-    let vh = window.innerHeight * 0.01
+// 使用防抖优化resize事件处理
+const resizeContainer = useDebounceFn(() => {
+    const vh = window.innerHeight * 0.01
     const el = ref<HTMLElement | null>(null)
     useCssVar('--vh', el).value = `${vh}px`
-}
+}, 100)
 
 onBeforeMount(() => {
     updateTheme()
@@ -27,13 +28,14 @@ onBeforeMount(() => {
      * @description: 修复ios、android等移动端浏览器100vh兼容问题
      * @author sundan
      */
-
-    globalThis.addEventListener('orientationchange', resizeContainer)
-    globalThis.addEventListener('resize', resizeContainer)
     resizeContainer()
 })
 
 onMounted(() => {
+    // 添加事件监听器
+    globalThis.addEventListener('orientationchange', resizeContainer)
+    globalThis.addEventListener('resize', resizeContainer)
+
     // 是否允许生产环境进行代码调试，请前往config/cli.config.ts文件配置
     setTimeout(() => {
         if (
@@ -42,11 +44,18 @@ onMounted(() => {
             (location.hostname.includes('vuejs-core') || disableDebugger) &&
             route.query &&
             route.query.debugger !== 'auto'
-        )
+        ) {
             DisableDevtool({
                 url: 'https://vuejs-core.cn/debugger',
                 timeOutUrl: 'https://vuejs-core.cn/debugger',
             })
+        }
     }, 1000)
+})
+
+onUnmounted(() => {
+    // 清理事件监听器
+    globalThis.removeEventListener('orientationchange', resizeContainer)
+    globalThis.removeEventListener('resize', resizeContainer)
 })
 </script>

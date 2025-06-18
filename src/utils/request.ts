@@ -8,16 +8,18 @@ import { isArray } from '/@/utils/validate'
 import { addErrorLog, needErrorLog } from '/@vab/plugins/errorLog'
 import { gp } from '/@vab/plugins/vab'
 
-let loadingInstance: any
+interface LoadingInstance {
+    close: () => void
+}
 
+let loadingInstance: LoadingInstance | null = null
 let refreshToking = false
-
-let requests: any[] = []
+let requests: Array<() => void> = []
 
 // 操作正常Code数组
 const codeVerificationArray = isArray(successCode) ? [...successCode] : [successCode]
 
-const CODE_MESSAGE: any = {
+const CODE_MESSAGE: Record<number, string> = {
     200: '服务器成功返回请求数据',
     201: '新建或修改数据成功',
     202: '一个请求已经进入后台排队(异步任务)',
@@ -44,23 +46,26 @@ const CODE_MESSAGE: any = {
 const requestConfig = (config: any): any => {
     const userStore = useUserStore()
     const { token } = userStore
-    // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
-    // if (token) config.headers[tokenName] = token
 
     // 规范写法 不可随意自定义
-    if (token) config.headers['Authorization'] = `Bearer ${token}`
+    if (token && config.headers) {
+        config.headers['Authorization'] = `Bearer ${token}`
+    }
 
-    if (config.data && config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8')
+    if (config.data && config.headers && config.headers['Content-Type'] === 'application/x-www-form-urlencoded;charset=UTF-8') {
         config.data = stringify(config.data)
+    }
 
-    if (debounce.some((item: string) => config.url.includes(item))) loadingInstance = gp.$baseLoading()
+    if (config.url && debounce.some((item: string) => config.url.includes(item))) {
+        loadingInstance = gp.$baseLoading()
+    }
     return config
 }
 
 /**
  * 刷新刷新令牌
  * @param config 过期请求配置
- * @returns {any} 返回结果
+ * @returns {Promise<any>} 返回结果
  */
 const tryRefreshToken = async (config: any): Promise<any> => {
     if (refreshToking) {
@@ -80,41 +85,38 @@ const tryRefreshToken = async (config: any): Promise<any> => {
                 const { setToken } = useUserStore()
                 setToken(token)
                 // 已经刷新了token，将所有队列中的请求进行重试
-                requests.forEach((cb) => cb(token))
+                requests.forEach((cb) => cb())
                 requests = []
                 return instance(requestConfig(config))
             }
         } catch (error) {
-            console.error('refreshToken error =>', error)
+            console.error('刷新令牌失败:', error)
             router.push({ path: '/login', replace: true }).then(() => {})
         } finally {
             refreshToking = false
         }
     }
+    return {}
 }
 
 /**
  * axios响应拦截器
- * @param config {any} 请求配置
- * @param data {any} response数据
- * @param status {any} HTTP status
- * @param statusText {any} HTTP status text
- * @returns {Promise<*|*>}
+ * @param response {any} 响应对象
+ * @returns {Promise<any>}
  */
-const handleData = async ({ config, data, status, statusText }: any): Promise<any | any> => {
+const handleData = async (response: any): Promise<any> => {
     const { resetAll } = useUserStore()
     if (loadingInstance) loadingInstance.close()
+
+    const { config, data, status, statusText } = response
+
     // 若data.code存在，覆盖默认code
     let code = data && data[statusName] ? data[statusName] : status
     // 若code属于操作正常code，则status修改为200
     if (codeVerificationArray.indexOf(data[statusName]) + 1) code = 200
+
     switch (code) {
         case 200: {
-            // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理
-            // 例如响应内容：
-            // 错误内容：{ code: 1, msg: '非法参数' }
-            // 正确内容：{ code: 200, data: {  }, msg: '操作正常' }
-            // return data
             return data
         }
         case 205: {
@@ -141,8 +143,9 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
             break
         }
     }
+
     // 若code非操作正常code，且非205锁屏，则抛出错误
-    if (code != 205) {
+    if (code !== 205) {
         // 异常处理
         // 若data.msg存在，覆盖默认提醒消息
         const errMsg = `${data && data[messageName] ? data[messageName] : CODE_MESSAGE[code] ? CODE_MESSAGE[code] : statusText}`
@@ -151,7 +154,10 @@ const handleData = async ({ config, data, status, statusText }: any): Promise<an
         if (needErrorLog()) addErrorLog({ message: errMsg, stack: data, isRequest: true })
         throw data
     }
+
+    return data
 }
+
 /**
  * @description axios初始化
  */

@@ -9,8 +9,16 @@ export const needErrorLog = () => {
     return errorLogArray.includes(import.meta.env.MODE)
 }
 
-export const addErrorLog = (err: any) => {
-    if (!err.isRequest) console.error('vue-shop-vite 错误拦截:', err)
+export const addErrorLog = (err: Error | any) => {
+    // 区分请求错误和其他错误
+    if (!err.isRequest) {
+        console.error('Vue Shop Vite 错误拦截:', {
+            message: err.message,
+            stack: err.stack,
+            timestamp: new Date().toISOString(),
+        })
+    }
+
     const url = globalThis.location.href
     const { addErrorLog } = useErrorLogStore(pinia)
     addErrorLog({ err, url })
