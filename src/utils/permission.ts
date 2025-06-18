@@ -6,30 +6,30 @@ import { useAclStore } from '/@/store/modules/acl'
  * @returns {boolean} 满足访问条件
  */
 export const hasPermission = (targetRoleOrPermission: string[] | GuardType) => {
-  const { getAdmin, getRole, getPermission } = useAclStore()
-  if (getAdmin) return true
-  if (getPermission.includes('*')) return true
-  if (Array.isArray(targetRoleOrPermission)) {
-    return can([...getRole, ...getPermission], {
-      permission: targetRoleOrPermission,
-      mode: 'oneOf',
-    })
-  } else {
-    const { role = [], permission = [], mode = 'oneOf' } = targetRoleOrPermission
-    return can([mode !== 'except'], {
-      permission: [
-        can(getRole, {
-          permission: role,
-          mode,
-        }),
-        can(getPermission, {
-          permission,
-          mode,
-        }),
-      ],
-      mode,
-    })
-  }
+    const { getAdmin, getRole, getPermission } = useAclStore()
+    if (getAdmin) return true
+    if (getPermission.includes('*')) return true
+    if (Array.isArray(targetRoleOrPermission)) {
+        return can([...getRole, ...getPermission], {
+            permission: targetRoleOrPermission,
+            mode: 'oneOf',
+        })
+    } else {
+        const { role = [], permission = [], mode = 'oneOf' } = targetRoleOrPermission
+        return can([mode !== 'except'], {
+            permission: [
+                can(getRole, {
+                    permission: role,
+                    mode,
+                }),
+                can(getPermission, {
+                    permission,
+                    mode,
+                }),
+            ],
+            mode,
+        })
+    }
 }
 
 /**
@@ -39,13 +39,10 @@ export const hasPermission = (targetRoleOrPermission: string[] | GuardType) => {
  * @returns {boolean} 满足访问条件
  */
 const can = (roleOrPermission: (string | boolean)[], target: CanType): boolean => {
-  let hasRole = false
-  const { permission = [], mode = 'oneOf' } = target
-  if (mode === 'allOf')
-    hasRole = permission.every((item: string | boolean) => roleOrPermission.includes(item))
-  if (mode === 'oneOf')
-    hasRole = permission.some((item: string | boolean) => roleOrPermission.includes(item))
-  if (mode === 'except')
-    hasRole = !permission.every((item: string | boolean) => roleOrPermission.includes(item))
-  return hasRole
+    let hasRole = false
+    const { permission = [], mode = 'oneOf' } = target
+    if (mode === 'allOf') hasRole = permission.every((item: string | boolean) => roleOrPermission.includes(item))
+    if (mode === 'oneOf') hasRole = permission.some((item: string | boolean) => roleOrPermission.includes(item))
+    if (mode === 'except') hasRole = !permission.every((item: string | boolean) => roleOrPermission.includes(item))
+    return hasRole
 }

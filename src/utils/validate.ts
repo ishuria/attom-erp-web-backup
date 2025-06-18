@@ -4,7 +4,7 @@
  * @returns {boolean}
  */
 export const isExternal = (value: string) => {
-  return /^(https?:|mailto:|tel:|\/\/)/.test(value)
+    return /^(https?:|mailto:|tel:|\/\/)/.test(value)
 }
 
 /**
@@ -13,7 +13,7 @@ export const isExternal = (value: string) => {
  * @returns {boolean}
  */
 export const isPassword = (value: string) => {
-  return value.length >= 6
+    return value.length >= 6
 }
 
 /**
@@ -22,8 +22,8 @@ export const isPassword = (value: string) => {
  * @returns {boolean}
  */
 export const isNumber = (value: string) => {
-  const reg = /^-?\d+(\.\d+)?$/
-  return reg.test(value)
+    const reg = /^-?\d+(\.\d+)?$/
+    return reg.test(value)
 }
 
 /**
@@ -32,8 +32,8 @@ export const isNumber = (value: string) => {
  * @returns {boolean}
  */
 export const isName = (value: string) => {
-  const reg = /^[\dA-Za-z\u4e00-\u9fa5]+$/
-  return reg.test(value)
+    const reg = /^[\dA-Za-z\u4e00-\u9fa5]+$/
+    return reg.test(value)
 }
 
 /**
@@ -42,9 +42,9 @@ export const isName = (value: string) => {
  * @returns {boolean}
  */
 export const isIP = (value: string) => {
-  const reg =
-    /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
-  return reg.test(value)
+    const reg =
+        /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+    return reg.test(value)
 }
 
 /**
@@ -53,8 +53,8 @@ export const isIP = (value: string) => {
  * @returns {boolean}
  */
 export const isUrl = (value: string) => {
-  const reg = /^https?:\/\/([^/:]+\.)+[^/:]+(:\d+)?(\/.+)$/
-  return reg.test(value)
+    const reg = /^https?:\/\/([^/:]+\.)+[^/:]+(:\d+)?(\/.+)$/
+    return reg.test(value)
 }
 
 /**
@@ -63,8 +63,8 @@ export const isUrl = (value: string) => {
  * @returns {boolean}
  */
 export const isLowerCase = (value: string) => {
-  const reg = /^[a-z]+$/
-  return reg.test(value)
+    const reg = /^[a-z]+$/
+    return reg.test(value)
 }
 
 /**
@@ -73,8 +73,8 @@ export const isLowerCase = (value: string) => {
  * @returns {boolean}
  */
 export const isUpperCase = (value: string) => {
-  const reg = /^[A-Z]+$/
-  return reg.test(value)
+    const reg = /^[A-Z]+$/
+    return reg.test(value)
 }
 
 /**
@@ -83,8 +83,8 @@ export const isUpperCase = (value: string) => {
  * @returns {boolean}
  */
 export const isAlphabets = (value: string) => {
-  const reg = /^[A-Za-z]+$/
-  return reg.test(value)
+    const reg = /^[A-Za-z]+$/
+    return reg.test(value)
 }
 
 /**
@@ -93,7 +93,7 @@ export const isAlphabets = (value: string) => {
  * @returns {boolean}
  */
 export const isString = (value: any) => {
-  return typeof value === 'string' || value instanceof String
+    return typeof value === 'string' || value instanceof String
 }
 
 /**
@@ -101,8 +101,8 @@ export const isString = (value: any) => {
  * @param value
  */
 export const isArray = (value: any) => {
-  if (Array.isArray === undefined) return Object.prototype.toString.call(value) === '[object Array]'
-  return Array.isArray(value)
+    if (Array.isArray === undefined) return Object.prototype.toString.call(value) === '[object Array]'
+    return Array.isArray(value)
 }
 
 /**
@@ -111,9 +111,8 @@ export const isArray = (value: any) => {
  * @returns {boolean}
  */
 export const isPort = (value: string) => {
-  const reg =
-    /^(\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
-  return reg.test(value)
+    const reg = /^(\d|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+    return reg.test(value)
 }
 
 /**
@@ -122,8 +121,8 @@ export const isPort = (value: string) => {
  * @returns {boolean}
  */
 export const isPhone = (value: string) => {
-  const reg = /^1[3-9]\d{9}$/
-  return reg.test(value)
+    const reg = /^1[3-9]\d{9}$/
+    return reg.test(value)
 }
 
 /**
@@ -132,8 +131,8 @@ export const isPhone = (value: string) => {
  * @returns {boolean}
  */
 export const isIdCard = (value: string) => {
-  const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}([\dXx])$)/
-  return reg.test(value)
+    const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}([\dXx])$)/
+    return reg.test(value)
 }
 
 /**
@@ -142,8 +141,8 @@ export const isIdCard = (value: string) => {
  * @returns {boolean}
  */
 export const isEmail = (value: string) => {
-  const reg = /^\w+([+.-]\w+)*@\w+([.-]\w+)*\.\w+([.-]\w+)*$/
-  return reg.test(value)
+    const reg = /^\w+([+.-]\w+)*@\w+([.-]\w+)*\.\w+([.-]\w+)*$/
+    return reg.test(value)
 }
 
 /**
@@ -152,8 +151,8 @@ export const isEmail = (value: string) => {
  * @returns {boolean}
  */
 export const isChina = (value: string) => {
-  const reg = /^[\u4E00-\u9FA5]{2,4}$/
-  return reg.test(value)
+    const reg = /^[\u4E00-\u9FA5]{2,4}$/
+    return reg.test(value)
 }
 
 /**
@@ -162,13 +161,7 @@ export const isChina = (value: string) => {
  * @returns {boolean}
  */
 export const isBlank = (value: string) => {
-  return (
-    value === null ||
-    false ||
-    value === '' ||
-    value.trim() === '' ||
-    value.toLocaleLowerCase().trim() === 'null'
-  )
+    return value === null || false || value === '' || value.trim() === '' || value.toLocaleLowerCase().trim() === 'null'
 }
 
 /**
@@ -177,8 +170,8 @@ export const isBlank = (value: string) => {
  * @returns {boolean}
  */
 export const isTel = (value: string) => {
-  const reg = /^(400|800)([\d\\-]{7,10})|((\d{4}|\d{3})([ -])?)?(\d{7,8})(([ 转-])*(\d{1,4}))?$/
-  return reg.test(value)
+    const reg = /^(400|800)([\d\\-]{7,10})|((\d{4}|\d{3})([ -])?)?(\d{7,8})(([ 转-])*(\d{1,4}))?$/
+    return reg.test(value)
 }
 
 /**
@@ -187,11 +180,11 @@ export const isTel = (value: string) => {
  * @returns {boolean}
  */
 export const isJson = (value: any) => {
-  if (typeof value === 'string') {
-    const obj = JSON.parse(value)
-    return !!(typeof obj === 'object' && obj)
-  }
-  return false
+    if (typeof value === 'string') {
+        const obj = JSON.parse(value)
+        return !!(typeof obj === 'object' && obj)
+    }
+    return false
 }
 
 /**
@@ -200,8 +193,8 @@ export const isJson = (value: any) => {
  * @returns {boolean}
  */
 export const isChinese = (value: string) => {
-  const reg = /^[\u4e00-\u9fa5]+$/
-  return reg.test(value)
+    const reg = /^[\u4e00-\u9fa5]+$/
+    return reg.test(value)
 }
 
 /**
@@ -210,6 +203,6 @@ export const isChinese = (value: string) => {
  * @returns {boolean}
  */
 export const isEnglish = (value: string) => {
-  const reg = /^[A-Za-z]+$/
-  return reg.test(value)
+    const reg = /^[A-Za-z]+$/
+    return reg.test(value)
 }

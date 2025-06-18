@@ -1,6 +1,6 @@
 export default {
-  printWidth: 100,
-  tabWidth: 2,
+  printWidth: 140,
+  tabWidth: 4,
   useTabs: false,
   semi: false,
   singleQuote: true,

@@ -9,10 +9,10 @@ import { useSettingsStore } from '/@/store/modules/settings'
  * @returns {string}
  */
 export default function getPageTitle(pageTitle: any) {
-  const { getTitle } = useSettingsStore(pinia)
-  let newTitles = []
-  if (pageTitle) newTitles.push(translate(pageTitle))
-  if (getTitle) newTitles.push(getTitle)
-  if (titleReverse) newTitles = newTitles.reverse()
-  return newTitles.join(titleSeparator)
+    const { getTitle } = useSettingsStore(pinia)
+    let newTitles = []
+    if (pageTitle) newTitles.push(translate(pageTitle))
+    if (getTitle) newTitles.push(getTitle)
+    if (titleReverse) newTitles = newTitles.reverse()
+    return newTitles.join(titleSeparator)
 }

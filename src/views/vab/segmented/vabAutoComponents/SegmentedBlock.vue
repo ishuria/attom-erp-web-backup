@@ -1,5 +1,5 @@
 <template>
-  <el-segmented v-model="value" block :options="options" />
+    <el-segmented v-model="value" block :options="options" />
 </template>
 <script lang="ts" setup>
 const value = ref<string>('周一')
