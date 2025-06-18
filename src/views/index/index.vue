@@ -23,14 +23,14 @@
       </el-col>
       <!-- 第二层 -->
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <pending2 />
+        <!-- <pending2 /> -->
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <version-information />
       </el-col>
       <!-- 第三层 -->
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <recommendation2 />
+        <!-- <recommendation2 /> -->
       </el-col>
       <!-- 第四层 -->
       <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
