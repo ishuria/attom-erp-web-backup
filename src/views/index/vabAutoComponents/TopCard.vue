@@ -1,45 +1,54 @@
 <template>
   <vab-card class="top-card" :class="'top-card-' + background">
-    {{ title }}
-    <template v-if="$slots.tag">
-      <slot name="tag"></slot>
-    </template>
-    <p>
-      <vab-count
-        :decimals="countConfig.decimals"
-        :duration="countConfig.duration"
-        :end-value="countConfig.endValue"
-        :prefix="countConfig.prefix"
-        :separator="countConfig.separator"
-        :start-value="countConfig.startValue"
-        :suffix="countConfig.suffix"
-      />
-      <vab-icon icon="bar-chart-2-fill" style="font-size: 20px; color: var(--el-color-info); margin-left: 5px" />
-    </p>
+    <el-row>
+      <el-col :span="12">
+        {{ title }}
+        <template v-if="$slots.select">
+          <slot name="select"></slot>
+        </template>
+        <p>
+          <template v-if="$slots.count">
+            <slot name="count">
+            </slot>
+          </template>
+          <template v-else>
+            <vab-count
+              :decimals="countConfig.decimals"
+              :duration="countConfig.duration"
+              :end-value="countConfig.endValue"
+              :prefix="countConfig.prefix"
+              :separator="countConfig.separator"
+              :start-value="countConfig.startValue"
+              :suffix="countConfig.suffix"
+            />
+          </template>
+          
+          <vab-icon icon="bar-chart-2-fill" style="font-size: 20px; color: var(--el-color-info); margin-left: 5px" @click="handleJumpTo" />
+        </p>
     
-    <div v-if="icon" class="right-icon">
-      <vab-icon :icon="icon" />
-    </div>
+        <div v-if="icon" class="right-icon">
+          <vab-icon :icon="icon" />
+        </div>
 
-    <div class="bottom">
-      <div>
-        较上月
-      <vab-icon icon="arrow-up-line" />
-      <span>{{ percentage }}</span>
-      <template v-if="$slots.chart">
+        <div class="bottom">
+          <div>
+            较上月
+            <vab-icon icon="arrow-up-line" />
+            <span>{{ percentage }}</span>
+          </div>
+          <div>
+            较去年
+            <vab-icon icon="arrow-up-line" />
+            <span>{{ percentage }}</span>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="12">
+        <template v-if="$slots.chart">
         <slot name="chart"></slot>
       </template>
-      </div>
-     <div>
-      较去年
-      <vab-icon icon="arrow-up-line" />
-      <span>{{ percentage }}</span>
-      <template v-if="$slots.chart">
-        <slot name="chart"></slot>
-      </template>
-     </div>
-     
-    </div>
+      </el-col>
+    </el-row>
   </vab-card>
 </template>
 
@@ -50,7 +59,13 @@ defineOptions({
   name: 'TopCard',
 })
 
-defineProps({
+const router = useRouter()
+
+const props = defineProps({
+  url: {
+    type: String,
+    default: 'index'
+  },
   background: {
     type: String,
     default: 'white',
@@ -82,6 +97,10 @@ defineProps({
     },
   },
 })
+
+const handleJumpTo = () => {
+  router.push(props.url!)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -90,7 +109,11 @@ defineProps({
   height: 168px !important;
 
   :deep() {
-    .el-tag {
+    .el-select {
+      transform: translateX(-10px);
+      margin-top: -2px;
+      min-width: 20px;
+      width: 60px;
       float: right;
     }
   }

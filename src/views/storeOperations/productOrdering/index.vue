@@ -160,6 +160,9 @@
           <span v-if="item.label === '剩余库存'">
             {{ row.availableInventory }} / {{ row.fbaCount }}
           </span>
+          <span v-if="item.label === '库龄'">
+            <span v-html="row.storageAge"></span>
+          </span>
           <span v-if="item.label === '操作'">
             <el-button type="primary" @click="handleShowReleaseOrder(row)" >发布订货</el-button>
           </span>
@@ -815,6 +818,25 @@ const fetchData = async () => {
     processField(item, 'sku', 2)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+    item.storageAge = `
+      <div class="storage-list">
+        <div class="storage-item">
+          <span class="value1">181-270</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">271-360</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">361+</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+        </div>
+      </div>
+    `
   })
   listLoading.value = false
 }

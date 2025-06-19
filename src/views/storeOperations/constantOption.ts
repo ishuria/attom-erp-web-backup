@@ -277,8 +277,8 @@ export const orderColumns = [
   },
   {
     label: '库龄',
-    prop: 'inventoryAge',
-    minWidth: 60,
+    prop: 'storageAge',
+    minWidth: 180,
   },
   {
     label: '剩余库存',
@@ -322,7 +322,7 @@ export const orderColumns = [
     sortable: true,
   },
   {
-    label: '装箱#',
+    label: '发货#',
     prop: 'encasementCount',
     minWidth: 90,
     sortable: true,
