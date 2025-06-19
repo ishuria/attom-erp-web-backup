@@ -15,14 +15,21 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
-      border :cell-style="{ textAlign: 'center' }" 
+    <el-table
+      border
+      :cell-style="{ textAlign: 'center' }"
       class="noneHoverTable"
-      :data="list" :header-cell-style="{ textAlign: 'center'}"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
       stripe
       @cell-click="changeInput"
     >
-      <el-table-column label="HS" min-width="" prop="hs"/>
+      <el-table-column label="法定单位有且仅有千克" min-width="25">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.isKgFlag" @change="checkIsKgFlg(row)" />
+        </template>
+      </el-table-column>
+      <el-table-column label="HS" min-width="" prop="hs" />
       <el-table-column label="法定第1单位" min-width="" prop="statutoryUnit">
         <template #default="{ row }">
           <div class="none">
@@ -45,23 +52,18 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <vab-dialog
-      v-model="addVisible"
-      title="新增"
-      width="20%"
-      @close="handleCloseAdd"
-    >
-      <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0;">
+    <vab-dialog v-model="addVisible" title="新增" width="20%" @close="handleCloseAdd">
+      <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0">
         <el-form-item label="HS" prop="hs">
           <el-input v-model="addForm.hs" />
         </el-form-item>
@@ -69,10 +71,8 @@
           <el-input v-model="addForm.statutoryUnit" />
         </el-form-item>
         <el-form-item label="出口退税税率" prop="taxRate">
-          <el-input v-model="addForm.taxRate" type="number" >
-            <template #append>
-              %
-            </template>
+          <el-input v-model="addForm.taxRate" type="number">
+            <template #append>%</template>
           </el-input>
         </el-form-item>
       </el-form>
@@ -82,7 +82,6 @@
       </template>
     </vab-dialog>
   </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -94,7 +93,7 @@ import type { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDe
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'HSettings'
+  name: 'HSettings',
 })
 
 const router = useRouter()
@@ -105,7 +104,7 @@ const list = ref<IGetHSList[]>([])
 const queryForm = reactive<IGetHSListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 let copyRow: IGetHSList | null = null
 const addVisible = ref<boolean>(false)
@@ -125,7 +124,7 @@ const handleConfirmAdd = async () => {
     if (isValid) {
       const { data } = await addHSList({
         ...addForm,
-        taxRate: addForm.taxRate / 100
+        taxRate: addForm.taxRate / 100,
       })
       if (data) {
         $baseMessage('新增成功！', 'success')
@@ -135,8 +134,17 @@ const handleConfirmAdd = async () => {
     }
   })
 }
+const checkIsKgFlg = async (val: IGetHSList) => {
+  try {
+    await updateHSList({
+      ...val,
+      taxRate: val.taxRate / 100,
+    })
+  } catch {
+    Object.assign(val, copyRow)
+  }
+}
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -152,18 +160,17 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 
     focusAndSelectInput(cell)
   }
-
 }
 // table blur事件
 const clickCancel = async (event: any, value: IGetHSList) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -173,7 +180,7 @@ const clickCancel = async (event: any, value: IGetHSList) => {
     try {
       await updateHSList({
         ...value,
-        taxRate: value.taxRate / 100
+        taxRate: value.taxRate / 100,
       })
     } catch {
       Object.assign(value, copyRow)
@@ -195,8 +202,8 @@ const queryData = () => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -206,8 +213,8 @@ const handleCurrentChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -218,8 +225,8 @@ const handleSizeChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -245,5 +252,4 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
-
 </style>

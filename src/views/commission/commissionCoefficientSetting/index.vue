@@ -181,6 +181,7 @@
       v-model="paramSetting"
       title="参数设定"
       width="20%"
+      :draggable="false"
     >
       <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 0 20px 0;">
         <el-form-item label="初始目标ACOS" prop="acos">
@@ -206,6 +207,9 @@
           <el-input v-model="form.instructionManualRate" disabled >
             <template #append>%</template>
           </el-input>
+        </el-form-item>
+        <el-form-item label="转化率不达标豁免金额($)">
+          <el-input v-model="form.price" />
         </el-form-item>
       </el-form>
       <el-table 

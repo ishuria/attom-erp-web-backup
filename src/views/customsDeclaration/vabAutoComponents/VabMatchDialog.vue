@@ -308,7 +308,7 @@
   <vab-dialog title="修改HS" width="20%" v-model="modifyHSVisible">
     <el-form :model="modifyHsForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
       <el-form-item label="HS">
-        <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" >
+        <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" filterable clearable>
           <el-option 
             v-for="item in hsOption"
             :label="item.label"

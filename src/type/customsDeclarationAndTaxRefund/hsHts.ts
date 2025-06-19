@@ -10,6 +10,7 @@ export interface IGetHSListRes {
   }
 }
 export interface IGetHSList {
+  isKgFlag?: boolean
   id: number
   hs: string
   statutoryUnit: string
@@ -94,44 +95,44 @@ export interface IAddHTSListReq {
    */
   categoryOne?: string
   /**
-  * 3级大类
-  */
+   * 3级大类
+   */
   categoryThree?: string
   /**
-  * 2级大类
-  */
+   * 2级大类
+   */
   categoryTwo?: string
   /**
-  * 德国关税率
-  */
+   * 德国关税率
+   */
   deTariffRate?: number
   /**
-  * 杂费
-  */
+   * 杂费
+   */
   extras?: number
   /**
-  * HTS
-  */
+   * HTS
+   */
   hts?: string
   /**
-  * 产品大类
-  */
+   * 产品大类
+   */
   productCategory?: string
   /**
-  * 美国(北美)关税率
-  */
+   * 美国(北美)关税率
+   */
   tariffRate?: number
   /**
-  * 301税率
-  */
+   * 301税率
+   */
   threeZeroOne?: number
   /**
-  * 关税类型 0美国（北美） 1欧洲（德国、英国）
-  */
+   * 关税类型 0美国（北美） 1欧洲（德国、英国）
+   */
   type?: number
   /**
-  * 英国关税率
-  */
+   * 英国关税率
+   */
   ukTariffRate?: number
 }
 export interface IUpdateHTSListReq {
