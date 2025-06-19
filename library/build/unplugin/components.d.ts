@@ -165,6 +165,7 @@ declare module 'vue' {
     Step2: typeof import('./../../../src/views/vab/form/vabAutoComponents/Step2.vue')['default']
     Step3: typeof import('./../../../src/views/vab/form/vabAutoComponents/Step3.vue')['default']
     Tabs: typeof import('./../../../src/views/index/vabAutoComponents/Tabs.vue')['default']
+    TopBarCard: typeof import('./../../../src/views/index/vabAutoComponents/TopBarCard.vue')['default']
     TopCard: typeof import('./../../../src/views/index/vabAutoComponents/TopCard.vue')['default']
     Transactions: typeof import('./../../../src/views/goods/vabAutoComponents/Transactions.vue')['default']
     TreeAccordion: typeof import('./../../../src/views/vab/tree/vabAutoComponents/TreeAccordion.vue')['default']

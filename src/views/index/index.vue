@@ -74,11 +74,11 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" :count-config="countConfig4"  percentage="10%" title="推进中的项目" url="/newProductDevelopment/newProductProgress">
+        <top-bar-card v-if="ableViewCard" background="white" :count-config="countConfig4"  percentage="10%" title="推进中的项目" url="/newProductDevelopment/newProductProgress">
           <template #chart>
-            <in-progress-projects-bar />
+            <in-progress-projects-bar :data="inProgressProjectsData" :total="countConfig4.endValue" />
           </template>
-        </top-card>
+        </top-bar-card>
       </el-col>
       <!-- 第二层 -->
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
@@ -110,6 +110,8 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
+import { getFrontPageProgressProjects } from '~/src/api/devlocal/frontPage'
+import { IGetFrontPageProgressProjectsItem } from '~/src/type/index/frontPage'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '/@/const/role'
@@ -251,6 +253,15 @@ onBeforeMount(() => {
     }
   })
 })
+const inProgressProjectsData = ref<IGetFrontPageProgressProjectsItem[]>([])
+const fetchInProgressProjectsData = async () => {
+  const { data } = await getFrontPageProgressProjects()
+  countConfig4.endValue = data.total
+  inProgressProjectsData.value = data.list
+}
+onBeforeMount(() => {
+  fetchInProgressProjectsData()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -272,11 +283,6 @@ onBeforeMount(() => {
 
       .el-card__body {
         position: relative;
-
-        .echarts {
-          width: 100%;
-          height: 127px;
-        }
 
         .card-footer-tag {
           position: absolute;

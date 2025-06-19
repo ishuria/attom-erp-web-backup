@@ -1,15 +1,25 @@
 <template>
 
-    <vab-chart :option="option" />
+  <vab-chart :option="option" />
 
 </template>
 
 <script lang="ts" setup>
 import { useSettingsStore } from '/@/store/modules/settings'
+import { IGetFrontPageProgressProjectsItem } from '/@/type/index/frontPage'
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 // let timer: ReturnType<typeof setInterval>
+
+const props = defineProps<{
+  data: IGetFrontPageProgressProjectsItem[]
+  total: number
+}>()
+
+
+// const yAxisMax = Math.ceil(props.total / 10) * 10 // 向上取整到10的倍数
+// const yAxisInterval = yAxisMax / 2 // 5个刻度间隔，实际显示为：0, interval, 2*interval, ...
 
 const option = reactive({
   grid: {
@@ -21,16 +31,10 @@ const option = reactive({
   tooltip: {
     trigger: 'axis',
     confine: true,
-    // formatter: '{d}%'
   },
-  // dataZoom: {
-  //   show: false,
-  //   start: 0,
-  //   end: 100
-  // },
   xAxis: {
     type: 'category',
-    data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    data: props.data.map((item) => item.spendTime),
     boundaryGap: false,
     name: '已用时间',
     nameLocation: 'center',
@@ -49,12 +53,13 @@ const option = reactive({
       fontSize: 12,
       formatter: (val: number) => `${val}个`,
     },
+    // interval: yAxisInterval,
     splitLine: {
       show: false,
     },
-    offset: 6,
+    offset: 7,
     axisTick: { show: false },
-    axisLine: { show: false },
+    axisLine: { show: true },
   },
   series: [
     {
@@ -62,7 +67,7 @@ const option = reactive({
       name: 'OEM',
       type: 'bar',
       stack: 'one',
-      data: [1, 2, 3, 1, 1, 1],
+      data: props.data.map((item) => item.oem0Count),
       itemStyle: {
         color: '#91cc75', 
       },
@@ -72,7 +77,7 @@ const option = reactive({
       name: '非OEM',
       type: 'bar',
       stack: 'one',
-      data: [2, 2, 2, 1, 1, 1],
+      data: props.data.map((item) => item.oem1Count),
       itemStyle: {
         color: '#fac858', 
       },
@@ -80,6 +85,11 @@ const option = reactive({
   ],
 })
 
+watch(() => props.data, (newVal) => {
+  option.xAxis.data = newVal.map((item) => item.spendTime)
+  option.series[0].data = newVal.map((item) => item.oem0Count)
+  option.series[1].data = newVal.map((item) => item.oem1Count)
+})
 
 </script>
 
@@ -88,9 +98,10 @@ const option = reactive({
 //   .echarts {
 //     position: absolute;
 //     // right: 10px;
-//     // bottom: 22px;
-//     width: calc(100% - 160px) !important;
-//     height: 100% !important;
+//     // bottom: 0;
+//     // width: calc(100% - 160px) !important;
+//     // height: 100% !important;
+//     // transform: translateY(-10px);
 //   }
 // }
 </style>
