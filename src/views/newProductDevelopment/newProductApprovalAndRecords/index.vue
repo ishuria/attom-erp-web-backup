@@ -13,14 +13,14 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table 
-      ref="tableRef" 
-      border 
-      :cell-class-name="clearPadding" 
-      :cell-style="cellStyle" 
-      class="noneHoveTable" :data="dataList" 
+    <el-table
+      ref="tableRef"
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      class="noneHoveTable" :data="dataList"
       :header-cell-style="{ 'text-align': 'center' }"
-      :row-class-name="stripedRowClass" 
+      :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
     >
       <el-table-column label="提交日期" min-width="115" prop="createTime">
@@ -52,9 +52,9 @@
         </template>
       </el-table-column>
       <el-table-column label="主站点" prop="siteName" min-width="130" />
-      <el-table-column label="首单PO" min-width="100" prop="po" />
-      <el-table-column label="首单实际成本" prop="firstRealCost" width="125" />
-      <el-table-column label="审批成本" min-width="100" prop="totalCost" />
+      <el-table-column label="主站首单Po" min-width="100" prop="po" />
+      <el-table-column label="首单实际成本" prop="poCost" width="125" />
+      <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
       <el-table-column label="相差" min-width="100" prop="difference" />
       <el-table-column label="产品定位" prop="productPosition" :min-width="columnWidths.productPosition + 30" />
       <el-table-column label="Vine数量" prop="vineCount" min-width="100" />
@@ -76,7 +76,7 @@
           </span>
         </template>
       </el-table-column>
-      
+
       <el-table-column  label="产品经理" min-width="100" prop="productManager">
         <template #default="{ row }">
           <span :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }" v-html="row.productManager">
@@ -155,31 +155,31 @@
       </template>
     </el-table>
     <vab-pagination
-      :current-page="queryForm.pageNo" 
-      :page-size="queryForm.pageSize" 
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
       :total="total"
-      @current-change="handleCurrentChange" 
-      @size-change="handleSizeChange" 
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
     <!-- 新款评估 -->
-    <vab-dialog 
-      v-model="newScoreVisible" 
-      :before-close="handlerScoreCloseDialog" 
+    <vab-dialog
+      v-model="newScoreVisible"
+      :before-close="handlerScoreCloseDialog"
       class="moldDialog"
       title="分数明细"
       width="90%"
     >
       <el-divider style="margin-top: 0; margin-bottom: 20px"/>
       <div id="table-height-container">
-        <el-table 
-          ref="evaluationTableRef" 
-          v-loading="listLoading" 
-          border :data="newEvaluationData" 
-          :header-cell-style="{ 'text-align': 'center' }" 
+        <el-table
+          ref="evaluationTableRef"
+          v-loading="listLoading"
+          border :data="newEvaluationData"
+          :header-cell-style="{ 'text-align': 'center' }"
           stripe
           @cell-click="keyWordTrendCellClick"
         >
-          <el-table-column 
+          <el-table-column
             v-for="(item, index) in indexColumns" :key="index" align="center" :label="item.label"
             :min-width="item.minWidth || 100" :prop="item.prop" width="auto">
             <template #default="{ row }">
@@ -193,7 +193,7 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 关键词趋势图表 -->
-    <vab-trend 
+    <vab-trend
       :key-word = "inputKeyWord"
       :trend-data = "trendEcahts"
       :trend-echarts-visible="keyWordTrendEchatsVisible"
@@ -339,7 +339,7 @@ const fetchData = async () => {
   dataList.value = data.list!
   total.value = data.total
   listLoading.value = false
-  previous = null; 
+  previous = null;
   currentGroupIndex = 0;
 }
 
@@ -460,7 +460,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 
-let previous: any = null; 
+let previous: any = null;
 let currentGroupIndex = 0; // 当前组索引
 
 const stripedRowClass = (_row: any) => {
@@ -468,8 +468,8 @@ const stripedRowClass = (_row: any) => {
   const currentId = row.reviewMainId;
   // 检查当前行是否与上一行不同
   if (currentId !== previous) {
-    previous = currentId; 
-    currentGroupIndex++; 
+    previous = currentId;
+    currentGroupIndex++;
   }
   // 根据当前组索引设置条纹样式
   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
@@ -539,7 +539,7 @@ onBeforeMount(() => {
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.5px;
 }
-:deep(.moldDialog .el-dialog__body) { 
+:deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
 }
 :deep(.row-striped) {

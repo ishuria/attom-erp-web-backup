@@ -75,9 +75,9 @@ export interface IGetAssessmentList {
    */
   month?: string
   /**
-   * 当月产品提成
+   * 上新一年内产品提成
    */
-  monthProductCommission?: number
+  newProductOneYearCommission?: number
   /**
    * 过去6个月月均上线1年内新品提成
    */

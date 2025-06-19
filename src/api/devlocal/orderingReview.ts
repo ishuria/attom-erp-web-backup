@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import type { IreviewId } from '/@/type/orderProcess/orderProcessType'
 import type {
   IReviewCommonReq,
   IReviewCommonResp,
@@ -15,14 +16,13 @@ import type {
   IUpdateReviewStepNo3Vine,
   IVariantInfoResp,
 } from '/@/type/review/review'
-import type { IreviewId } from '/@/type/orderProcess/orderProcessType'
 
 // 新品审核与记录-获取新品审核列表
-export function getReviewList(params?: IReviewQueryReq): Promise<IReviewQueryResp> {
+export function getReviewList(data?: IReviewQueryReq): Promise<IReviewQueryResp> {
   return request({
     url: `${BASE_API}/review/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 
@@ -80,7 +80,7 @@ export function getSkuVariantList(params?: IReviewCommonReq): Promise<IReviewCom
   })
 }
 // 获取评估id
-export function getReviewEvaluationId(params?: IreviewId){
+export function getReviewEvaluationId(params?: IreviewId) {
   return request({
     url: `${BASE_API}/review/evaluationId`,
     method: 'get',

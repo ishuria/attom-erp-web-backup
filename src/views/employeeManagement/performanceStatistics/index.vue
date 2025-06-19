@@ -4,18 +4,18 @@
       <el-tab-pane label="全员明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker
-              v-model="date"
-              style="max-width: 300px;"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="queryData"
-            />
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -23,56 +23,119 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
           <el-table-column label="基本信息">
-            <el-table-column label="月份" min-width="100" prop="month"/>
-            <el-table-column label="姓名" min-width="100" prop="userName"/>
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
             <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
           <el-table-column label="加班和请假">
             <el-table-column min-width="100" prop="overtimeHours">
-              <template #header>加班时长<br>(小时)</template>
+              <template #header>
+                加班时长
+                <br />
+                (小时)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="personalLeave">
-              <template #header>事假<br>(天)</template>
+              <template #header>
+                事假
+                <br />
+                (天)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="annualLeave">
-              <template #header>年假<br>(天)</template>
+              <template #header>
+                年假
+                <br />
+                (天)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="sickLeave">
-              <template #header>病假<br>(小时)</template>
+              <template #header>
+                病假
+                <br />
+                (小时)
+              </template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="考勤异常">
             <el-table-column min-width="100" prop="sWorkCount">
-              <template #header>上班缺卡<br>(次)</template>
+              <template #header>
+                上班缺卡
+                <br />
+                (次)
+              </template>
             </el-table-column>
             <el-table-column min-width="100" prop="xWorkCount">
-              <template #header>下班缺卡<br>(次)</template>
+              <template #header>
+                下班缺卡
+                <br />
+                (次)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="absenteeismCount">
-              <template #header>旷工<br>(天)</template>
+              <template #header>
+                旷工
+                <br />
+                (天)
+              </template>
             </el-table-column>
             <el-table-column min-width="100" prop="absenceDuration">
-              <template #header>缺勤时长<br>(小时)</template>
+              <template #header>
+                缺勤时长
+                <br />
+                (小时)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="leaveEarlyCount">
-              <template #header>早退<br>(次)</template>
+              <template #header>
+                早退
+                <br />
+                (次)
+              </template>
             </el-table-column>
             <el-table-column min-width="100" prop="leaveEarlyDuration">
-              <template #header>早退时长<br>(小时)</template>
+              <template #header>
+                早退时长
+                <br />
+                (小时)
+              </template>
             </el-table-column>
             <el-table-column min-width="90" prop="lateCount">
-              <template #header>迟到<br>(次数)</template>
+              <template #header>
+                迟到
+                <br />
+                (次数)
+              </template>
             </el-table-column>
             <el-table-column min-width="100" prop="seriousLateCount">
-              <template #header>严重迟到<br>(次数)</template>
+              <template #header>
+                严重迟到
+                <br />
+                (次数)
+              </template>
             </el-table-column>
             <el-table-column min-width="100" prop="lateDuration">
-              <template #header>迟到时长<br>(小时)</template>
+              <template #header>
+                迟到时长
+                <br />
+                (小时)
+              </template>
             </el-table-column>
             <el-table-column min-width="130" prop="seriousLateDuration">
-              <template #header>严重迟到时长<br>(小时)</template>
+              <template #header>
+                严重迟到时长
+                <br />
+                (小时)
+              </template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="总奖金" min-width="110" prop="">
@@ -92,7 +155,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="全员概览" :name="1"/>
+      <el-tab-pane label="全员概览" :name="1" />
       <el-tab-pane label="产品经理" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -100,7 +163,7 @@
               <el-form-item>
                 <el-date-picker
                   v-model="assessmentDate"
-                  style="max-width: 300px;"
+                  style="max-width: 300px"
                   type="monthrange"
                   value-format="YYYY-MM"
                   @change="queryAssessmentData"
@@ -114,7 +177,13 @@
           <vab-query-form-right-panel>
             <el-form inline :model="assessmentQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="assessmentQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryAssessmentData" @keyup.enter="queryAssessmentData" />
+                <el-input
+                  v-model.trim="assessmentQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryAssessmentData"
+                  @keyup.enter="queryAssessmentData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryAssessmentData" />
@@ -134,15 +203,11 @@
           <el-table-column label="姓名" min-width="100" prop="userName" />
           <el-table-column label="角色" min-width="120" prop="roleName" />
           <el-table-column label="职级" min-width="100" prop="jobLevel" />
-          <el-table-column label="总考核完成数" min-width="120" >
-            <template #default="{ row }">
-              {{ row.assessmentNumberFinish }} / {{ row.assessmentNumber }}
-            </template>
+          <el-table-column label="总考核完成数" min-width="120">
+            <template #default="{ row }">{{ row.assessmentNumberFinish }} / {{ row.assessmentNumber }}</template>
           </el-table-column>
-          <el-table-column label="OEM完成数" min-width="110"  >
-            <template #default="{ row }">
-              {{ row.oemFinish }} / {{ row.oem }}
-            </template>
+          <el-table-column label="OEM完成数" min-width="110">
+            <template #default="{ row }">{{ row.oemFinish }} / {{ row.oem }}</template>
           </el-table-column>
           <el-table-column label="新款采购额" min-width="110" prop="purchaseAmount" />
           <el-table-column label="新款评估跑分次数" min-width="145" prop="runsNumbers" />
@@ -151,17 +216,31 @@
           <el-table-column label="侵权产品数" min-width="110" prop="infringementProductNumber" />
           <el-table-column label="下架产品数" min-width="110" prop="removeProductNumber" />
           <el-table-column label="销毁货值" min-width="100" prop="destroyGoodsValue" />
-          <el-table-column label="当月产品提成" min-width="120" prop="monthProductCommission" />
-          <el-table-column min-width="120" prop="sixPastCommission" >
-            <template #header>过去6个月<br />月均产品提成</template>
+          <el-table-column min-width="120" prop="sixPastCommission">
+            <template #header>
+              过去6个月
+              <br />
+              月均产品提成
+            </template>
           </el-table-column>
           <el-table-column min-width="155" prop="newProductCommission">
-            <template #header>过去6个月月均<br />上线1年内新品提成</template>
+            <template #header>
+              过去6个月月均
+              <br />
+              上线1年内新品提成
+            </template>
           </el-table-column>
           <el-table-column label="总开发数" min-width="100" prop="totalNumber" />
           <el-table-column label="总停产数" min-width="100" prop="totalStopNumber" />
           <el-table-column label="停产%" min-width="90" prop="stopPercentage" />
-          <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign" />
+          <el-table-column min-width="120" prop="newProductOneYearCommission">
+            <template #header>
+              上新1年内
+              <br />
+              产品提成
+            </template>
+          </el-table-column>
+          <el-table-column label="当月产品总提成" min-width="130" prop="developmentDesign" />
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -174,21 +253,21 @@
           @size-change="handleAssessmentSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="打包" :name="3" >
+      <el-tab-pane label="打包" :name="3">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker
-              v-model="date"
-              style="max-width: 300px;"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="queryData"
-            />
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -196,106 +275,21 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
           <el-table-column label="基本信息">
-            <el-table-column label="月份" min-width="100" prop="month"/>
-            <el-table-column label="姓名" min-width="100" prop="userName"/>
-            <el-table-column label="角色" prop="roleName" min-width="130"/>
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="角色" prop="roleName" min-width="130" />
           </el-table-column>
-    
-            <el-table-column label="打包时长(小时)" min-width="100" prop="packageDuration" />
-     
-        
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        />
-      </el-tab-pane>
-      <el-tab-pane label="产品设计" :name="4" >
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-date-picker
-              v-model="date"
-              style="max-width: 300px;"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="queryData"
-            />
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table v-loading="listLoading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
-          <el-table-column label="基本信息">
-            <el-table-column label="月份" min-width="100" prop="month"/>
-            <el-table-column label="姓名" min-width="100" prop="userName"/>
-            <el-table-column label="角色" prop="roleName" min-width="130"/>
-          </el-table-column>
-      
-          
-            <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign"/>
-           
-    
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
-        />
-      </el-tab-pane>
-      <el-tab-pane label="平面设计" :name="5" >
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-date-picker
-              v-model="date"
-              style="max-width: 300px;"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="queryData"
-            />
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table v-loading="listLoading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
-          <el-table-column label="基本信息">
-            <el-table-column label="月份" min-width="100" prop="month"/>
-            <el-table-column label="姓名" min-width="100" prop="userName"/>
-            <el-table-column label="角色" prop="roleName" min-width="130"/>
-          </el-table-column>
-      
-           
-            <el-table-column label="美工图片" min-width="100" prop="artDesignPicture"/>
-            <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime"/>
-           
+
+          <el-table-column label="打包时长(小时)" min-width="100" prop="packageDuration" />
 
           <template #empty>
             <el-empty class="vab-data-empty" />
@@ -309,21 +303,21 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="采购" :name="6" >
+      <el-tab-pane label="产品设计" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker
-              v-model="date"
-              style="max-width: 300px;"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="queryData"
-            />
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -331,25 +325,131 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
           <el-table-column label="基本信息">
-            <el-table-column label="月份" min-width="100" prop="month"/>
-            <el-table-column label="姓名" min-width="100" prop="userName"/>
-            <el-table-column label="角色" prop="roleName" min-width="130"/>
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="角色" prop="roleName" min-width="130" />
           </el-table-column>
-    
-            <el-table-column label="采购奖金" min-width="100" prop="procurementBonus"/>
-            <el-table-column label="采购奖金跨月调整" min-width="100" prop="procurementBonusCrossMonth">
-          
-              <template #default="{ row }">
-                <span :class="{ 'negative-value': row.procurementBonusCrossMonth < 0 }">
-                  {{ row.procurementBonusCrossMonth ?? '' }}
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction"/>
-          
-      
+
+          <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign" />
+
+          <template #empty>
+            <el-empty class="vab-data-empty" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="平面设计" :name="5">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="基本信息">
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="角色" prop="roleName" min-width="130" />
+          </el-table-column>
+
+          <el-table-column label="美工图片" min-width="100" prop="artDesignPicture" />
+          <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime" />
+
+          <template #empty>
+            <el-empty class="vab-data-empty" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="采购" :name="6">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="基本信息">
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="角色" prop="roleName" min-width="130" />
+          </el-table-column>
+
+          <el-table-column label="采购奖金" min-width="100" prop="procurementBonus" />
+          <el-table-column label="采购奖金跨月调整" min-width="100" prop="procurementBonusCrossMonth">
+            <template #default="{ row }">
+              <span :class="{ 'negative-value': row.procurementBonusCrossMonth < 0 }">
+                {{ row.procurementBonusCrossMonth ?? '' }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction" />
+
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -364,17 +464,18 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 考核数设定 -->
-    <vab-dialog
-      v-model="settingVisible"
-      :draggable="false"
-      title="产品经理考核设定和追踪"
-      top="10vh"
-    >
+    <vab-dialog v-model="settingVisible" :draggable="false" title="产品经理考核设定和追踪" top="10vh">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="settingQueryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="settingQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="querySettingData" @keyup.enter="querySettingData" />
+              <el-input
+                v-model.trim="settingQueryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="querySettingData"
+                @keyup.enter="querySettingData"
+              />
             </el-form-item>
             <el-form-item>
               <el-button :icon="Search" :loading="settingListLoading" type="primary" @click="querySettingData" />
@@ -393,9 +494,9 @@
         stripe
         @cell-click="changeInput"
       >
-        <el-table-column label="姓名" min-width="100" prop="userName"/>
-        <el-table-column label="月份" min-width="100" prop="month"/>
-        <el-table-column label="总考核完成数" min-width="120" prop="assessmentNumberFinish"/>
+        <el-table-column label="姓名" min-width="100" prop="userName" />
+        <el-table-column label="月份" min-width="100" prop="month" />
+        <el-table-column label="总考核完成数" min-width="120" prop="assessmentNumberFinish" />
         <el-table-column label="总考核数" min-width="100" prop="assessmentNumber">
           <template #default="{ row }">
             <div class="none">
@@ -404,7 +505,7 @@
             <span>{{ row.assessmentNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="OEM完成数" min-width="110" prop="oemFinish"/>
+        <el-table-column label="OEM完成数" min-width="110" prop="oemFinish" />
         <el-table-column label="OEM考核数" min-width="110" prop="oem">
           <template #default="{ row }">
             <div class="none">
@@ -435,12 +536,22 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { getAssessmentList, getProductManagerAssessmentList, getUserAttendanceList, updateProductManagerAssessment } from '/@/api/devlocal/performanceStatistics'
-import type { IGetAssessmentList, IGetAssessmentListReq, IGetProductManagerAssessmentList, IGetUserAttendanceList } from '/@/type/employeeManagement/performanceStatistics'
+import {
+  getAssessmentList,
+  getProductManagerAssessmentList,
+  getUserAttendanceList,
+  updateProductManagerAssessment,
+} from '/@/api/devlocal/performanceStatistics'
+import type {
+  IGetAssessmentList,
+  IGetAssessmentListReq,
+  IGetProductManagerAssessmentList,
+  IGetUserAttendanceList,
+} from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'PerformanceStatistics'
+  name: 'PerformanceStatistics',
 })
 
 const activeName = ref<number>(0)
@@ -454,7 +565,7 @@ const queryForm = reactive<IGetAssessmentListReq>({
   pageSize: 20,
   startDate: '',
   endDate: '',
-  status: 0
+  status: 0,
 })
 const list = ref<IGetUserAttendanceList[]>([])
 /* ============================== 考核数设定变量 ============================== */
@@ -462,7 +573,7 @@ const settingVisible = ref<boolean>(false)
 const settingQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const settingTotal = ref<number>(0)
 const settingListLoading = ref<boolean>(false)
@@ -475,7 +586,7 @@ const assessmentQueryForm = reactive<IGetAssessmentListReq>({
   pageNo: 1,
   pageSize: 20,
   startDate: '',
-  endDate: ''
+  endDate: '',
 })
 const assessmentList = ref<IGetAssessmentList[]>([])
 const assessmentTotal = ref<number>(0)
@@ -531,7 +642,6 @@ const handleSettingSizeChange = (value: number) => {
   fetchSettingData()
 }
 const changeInput = async (row: IGetProductManagerAssessmentList, column: any, cell: HTMLTableCellElement) => {
-
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -549,14 +659,14 @@ const changeInput = async (row: IGetProductManagerAssessmentList, column: any, c
 }
 // 考核数设定修改
 const clickCancel = async (event: any, value: IGetProductManagerAssessmentList) => {
-const rootElement = getRootElement(event.srcElement, ".cell")
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -581,7 +691,7 @@ const handleChangeSettingStatus = async (row: IGetProductManagerAssessmentList) 
     id: row.id,
     status: row.status,
     oem: row.oem,
-    totalAssessment: row.assessmentNumber
+    totalAssessment: row.assessmentNumber,
   })
 }
 /* ============================== 考勤明细数据 ============================== */
@@ -617,63 +727,62 @@ const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
   if (row.developmentDesign != null) totalBonus += row.developmentDesign
   return totalBonus.toFixed(2)
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const index = data.columnIndex
   if (index === 0 || index === 1 || index === 2 || index === 4) {
     return {
       textAlign: 'center',
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
     }
-  }
-  else if (index === 3 || index === 5) {
+  } else if (index === 3 || index === 5) {
     return {
       textAlign: 'center',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
-const cell3Style = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+const cell3Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === '总考核完成数') {
     if (data.row.assessmentNumberFinish > data.row.assessmentNumber) {
       return {
         color: 'var(--el-color-success)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     } else if (data.row.assessmentNumberFinish === data.row.assessmentNumber) {
       return {
         color: 'var(--el-color-primary)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     } else {
       return {
         color: 'var(--el-color-danger)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     }
   } else if (label === 'OEM完成数') {
     if (data.row.oemFinish >= data.row.oem) {
       return {
         color: 'var(--el-color-success)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     } else if (data.row.oemFinish === data.row.oem) {
       return {
         color: 'var(--el-color-primary)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     } else {
       return {
         color: 'var(--el-color-danger)',
-        textAlign: 'center'
+        textAlign: 'center',
       }
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 // tab切换
@@ -691,7 +800,7 @@ const handleTabChange = () => {
 
 onBeforeMount(() => {
   // 设置默认月份为当月
-  const now = dayjs();
+  const now = dayjs()
   const startOfMonth = now.startOf('month').format('YYYY-MM')
   const endOfMonth = now.endOf('month').format('YYYY-MM')
   date.value = [startOfMonth, endOfMonth]
