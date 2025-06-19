@@ -652,6 +652,8 @@ export interface IGetCommissionDetailDevelopList {
    */
   userName?: string
   pieList: any[]
+  /** 上新天数 */
+  days?: number
 }
 export interface IGetReductionCostDetailListReq {
   keyWord: string
