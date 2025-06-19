@@ -1,171 +1,164 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
-    
-  
-  
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-form inline>
-              <template  v-if="currentRoleCode === ROLE_BOSS_CODE">
-                <el-form-item label="人员">
-                  <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
-                    <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="站点">
-                  <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
-                    <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                  </el-select>
-                </el-form-item>
-              </template>
-              <el-form-item label="发放月份">
-                <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData" >
-                  <el-option
-                    v-for="item in monthOption"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.label"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-text style="margin-left: 10px">提成总金额：</el-text>
-                <el-text type="success">{{ bonus }}元</el-text>
-              </el-form-item>
-              <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="developQueryForm" @submit.prevent>
-              <el-form-item>
-                <el-input
-                  v-model="developQueryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="developQueryData"
-                  @keyup.enter="developQueryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="developQueryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-        <el-table
-        v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          class="noneHoverTable"
-          :data="developList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-          @cell-click="cellClick"
-        >
-          <el-table-column label="发布日期" min-width="130" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="人员" prop="userName" :width="flexColumnWidth(developList, '人员', 'userName')" />
-          <el-table-column label="图片" prop="skuImageUrl" width="75">
-            <template #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
-                <template #error><el-icon /></template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)" >
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span><br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" min-width="150" prop="siteName" />
-          <el-table-column label="状态" min-width="100" prop="status">
-            <template #default="{ row }">
-              <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
-              <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
-          <el-table-column label="当月总提成" min-width="110" prop="currentMonthBonus">
-            <template #default="{ row }">
-              <el-text v-if="row.currentMonthBonus >= 0" type="success">
-                {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
-              </el-text>
-              <el-text v-if="row.currentMonthBonus < 0" type="danger">
-                {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
-              </el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU累计提成￥" min-width="140" prop="cumulativeCommission">
-            <template #default="{ row }">
-              {{ row.cumulativeCommission ? '￥' + row.cumulativeCommission : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点分布" min-width="130" prop="">
-            <template #default="{ row }">
-              <div style="width: 100%; height: 60px">
-                <vab-commission-chart-pie :data="row.pieList" />
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="总提成比例" min-width="120" prop="totalCommissionProportion">
-            <template #default="{ row }">
-              {{ row.totalCommissionProportion ? row.totalCommissionProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="基础提成比例" min-width="120" prop="baseProportion">
-            <template #default="{ row }">
-              {{ row.baseProportion ? row.baseProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="超额完成加成" min-width="120" prop="rewardProportion">
-            <template #default="{ row }">
-              {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="月净利润" min-width="130">
-            <template #default="{ row }">
-              <el-text v-if="row.monthProfit >= 0" type="success">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
-              <el-text v-if="row.monthProfit < 0" type="danger">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="月销售额" min-width="130">
-            <template #default="{ row }">{{ row.currencySymbol }}{{ row.monthSales }}</template>
-          </el-table-column>
-          <el-table-column label="月净利率" min-width="130" prop="monthProfitMargin">
-            <template #default="{ row }">
-              <el-text v-if="row.monthProfitMargin >= 0" type="success">
-                {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
-              </el-text>
-              <el-text v-if="row.monthProfitMargin < 0" type="danger">
-                {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
-              </el-text>
-            </template>
-          </el-table-column>
-          <el-table-column label="月销量" min-width="100" prop="monthSalesVolume" />
-          <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
-          <template #empty>
-            <el-empty class="vab-data-empty" />
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-form inline>
+          <template v-if="currentRoleCode === ROLE_BOSS_CODE">
+            <el-form-item label="人员">
+              <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
+                <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="站点">
+              <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
+                <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
+            </el-form-item>
           </template>
-        </el-table>
-        <vab-pagination
-          :current-page="developQueryForm.pageNo"
-          :page-size="developQueryForm.pageSize"
-          :total="total"
-          @current-change="handleDevelopCurrentChange"
-          @size-change="handleDevelopSizeChange"
-        />
-    
-   
+          <el-form-item label="发放月份">
+            <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData">
+              <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-text style="margin-left: 10px">提成总金额：</el-text>
+            <el-text type="success">{{ bonus }}元</el-text>
+          </el-form-item>
+          <el-form-item>
+            <el-text style="margin-left: 10px" type="info">(更新时间：{{ updateDate }})</el-text>
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="developQueryForm" @submit.prevent>
+          <el-form-item>
+            <el-input
+              v-model="developQueryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="developQueryData"
+              @keyup.enter="developQueryData"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="developQueryData" />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      class="noneHoverTable"
+      :data="developList"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @cell-click="cellClick"
+    >
+      <el-table-column label="发布日期" min-width="130" prop="releaseDate">
+        <template #default="{ row }">
+          {{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="人员" prop="userName" :width="flexColumnWidth(developList, '人员', 'userName')" />
+      <el-table-column label="图片" prop="skuImageUrl" width="75">
+        <template #default="{ row }">
+          <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)">
+        <template #default="{ row }">
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+            {{ row.sku }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+          <br />
+          {{ row.desc }}
+        </template>
+      </el-table-column>
+      <el-table-column label="站点" min-width="150" prop="siteName" />
+      <el-table-column label="上新天数" min-width="150" prop="days" />
+      <el-table-column label="状态" min-width="100" prop="status">
+        <template #default="{ row }">
+          <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
+          <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
+      <el-table-column label="当月总提成" min-width="110" prop="currentMonthBonus">
+        <template #default="{ row }">
+          <el-text v-if="row.currentMonthBonus >= 0" type="success">
+            {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
+          </el-text>
+          <el-text v-if="row.currentMonthBonus < 0" type="danger">
+            {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
+          </el-text>
+        </template>
+      </el-table-column>
+      <el-table-column label="SKU累计提成￥" min-width="140" prop="cumulativeCommission">
+        <template #default="{ row }">
+          {{ row.cumulativeCommission ? '￥' + row.cumulativeCommission : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="站点分布" min-width="130" prop="">
+        <template #default="{ row }">
+          <div style="width: 100%; height: 60px">
+            <vab-commission-chart-pie :data="row.pieList" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="总提成比例" min-width="120" prop="totalCommissionProportion">
+        <template #default="{ row }">
+          {{ row.totalCommissionProportion ? row.totalCommissionProportion + '%' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="基础提成比例" min-width="120" prop="baseProportion">
+        <template #default="{ row }">
+          {{ row.baseProportion ? row.baseProportion + '%' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="超额完成加成" min-width="120" prop="rewardProportion">
+        <template #default="{ row }">
+          {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="月净利润" min-width="130">
+        <template #default="{ row }">
+          <el-text v-if="row.monthProfit >= 0" type="success">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
+          <el-text v-if="row.monthProfit < 0" type="danger">{{ row.currencySymbol }}{{ row.monthProfit }}</el-text>
+        </template>
+      </el-table-column>
+      <el-table-column label="月销售额" min-width="130">
+        <template #default="{ row }">{{ row.currencySymbol }}{{ row.monthSales }}</template>
+      </el-table-column>
+      <el-table-column label="月净利率" min-width="130" prop="monthProfitMargin">
+        <template #default="{ row }">
+          <el-text v-if="row.monthProfitMargin >= 0" type="success">
+            {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
+          </el-text>
+          <el-text v-if="row.monthProfitMargin < 0" type="danger">
+            {{ row.monthProfitMargin ? row.monthProfitMargin + '%' : '' }}
+          </el-text>
+        </template>
+      </el-table-column>
+      <el-table-column label="月销量" min-width="100" prop="monthSalesVolume" />
+      <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
+      <template #empty>
+        <el-empty class="vab-data-empty" />
+      </template>
+    </el-table>
+    <vab-pagination
+      :current-page="developQueryForm.pageNo"
+      :page-size="developQueryForm.pageSize"
+      :total="total"
+      @current-change="handleDevelopCurrentChange"
+      @size-change="handleDevelopSizeChange"
+    />
+
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 站点分布 -->
     <vab-dialog v-model="sitePieVisible" :draggable="false" :title="`${handleMonth()}各站点奖金占比`" width="30%" @open="handlePieOpened">
@@ -184,10 +177,7 @@ import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role.ts'
 import { useAclStore } from '/@/store/modules/acl'
-import type {
-  IGetCommissionDetailDevelopList,
-  IGetCommissionDetailDevelopListReq
-} from '/@/type/commission/commissionType'
+import type { IGetCommissionDetailDevelopList, IGetCommissionDetailDevelopListReq } from '/@/type/commission/commissionType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -199,16 +189,14 @@ defineOptions({
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
-const currentRoleCode = useAclStore().getRole[0];
+const currentRoleCode = useAclStore().getRole[0]
 const option = ref<any>({})
 const pieList = ref<any[]>([])
 const sitePieVisible = ref<boolean>(false)
 
-
 const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
 const siteList = ref<{ id: number; label: string }[]>([])
-
 
 const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
   keyWord: '',
@@ -224,9 +212,7 @@ const total = ref<number>(0)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const handleMonth = () => {
-  
   return developQueryForm.month
-  
 }
 const initChart = () => {
   // 配置项
@@ -319,7 +305,7 @@ const initChart = () => {
           }
         },
         data: pieList.value.slice().sort((a: any, b: any) => b.value - a.value),
-        color: colorList
+        color: colorList,
       },
     ],
   }
@@ -346,8 +332,6 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement, event: Eve
     pieList.value = row.pieList
   }
 }
-
-
 
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -403,7 +387,6 @@ const fetchDevelopUserList = async () => {
 
 const bonus = ref<number>(0)
 
-
 const fetchDevelopData = async () => {
   listLoading.value = true
   const { data } = await getCommissionDetailDevelopList(developQueryForm)
@@ -425,7 +408,7 @@ const fetchDevelopData = async () => {
       if (item.monthProfitMargin) {
         item.monthProfitMargin = parseFloat((item.monthProfitMargin * 100).toFixed(2))
       }
-      
+
       item.pieList = item.pieList.map((item: any, index: number) => {
         const trueValue = item.value
         const itemStyle = { color: colorList[index] }
@@ -441,7 +424,6 @@ const fetchDevelopData = async () => {
           itemStyle,
         }
       })
-  
     })
   }
   listLoading.value = false
@@ -449,10 +431,10 @@ const fetchDevelopData = async () => {
 
 const updateDate = ref<string | undefined>('')
 const fetchUpdateDate = async () => {
-  const { data } = await getOperationUpdateDate({ type: 5})
+  const { data } = await getOperationUpdateDate({ type: 5 })
   updateDate.value = data
 }
-const monthOption = ref<{ id: number, label: string }[]>([])
+const monthOption = ref<{ id: number; label: string }[]>([])
 const fetchCommissionTypeMonth = async () => {
   const { data } = await getCommissionTypeMonth({ type: 2 })
   monthOption.value = data
