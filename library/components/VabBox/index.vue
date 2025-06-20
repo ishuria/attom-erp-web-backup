@@ -186,4 +186,26 @@ const handleCardClick = (card: any) => {
     color: var(--el-color-info-light-4);
     white-space: nowrap;
 }
+
+.vab-box:hover {
+    animation: boxShake 0.5s;
+}
+@keyframes boxShake {
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+    20% {
+        transform: rotate(-18deg);
+    }
+    40% {
+        transform: rotate(15deg);
+    }
+    60% {
+        transform: rotate(-10deg);
+    }
+    80% {
+        transform: rotate(8deg);
+    }
+}
 </style>
