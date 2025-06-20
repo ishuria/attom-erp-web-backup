@@ -99,6 +99,30 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@keyframes float-scale-effect {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.1);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes subtle-float {
+    0% {
+        transform: scale(1) translateY(0);
+    }
+    50% {
+        transform: scale(1.05) translateY(-3px);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
 .data-screen-bottom {
     display: flex;
     align-items: center;
@@ -113,7 +137,39 @@ onBeforeUnmount(() => {
         margin: 8px auto 0 auto;
         background: #101f58;
         border-radius: 50%;
-        animation: twink 3s linear infinite;
+        animation: subtle-float 4s ease-in-out infinite alternate;
+
+        :deep(.el-image__inner) {
+            animation: float-scale-effect 3s ease-in-out infinite alternate;
+        }
+    }
+
+    // Delay for the outer div
+    > .el-col:nth-child(1) .data-screen-bottom-icon {
+        animation-delay: 0s;
+    }
+    > .el-col:nth-child(2) .data-screen-bottom-icon {
+        animation-delay: 0.1s;
+    }
+    > .el-col:nth-child(3) .data-screen-bottom-icon {
+        animation-delay: 0.2s;
+    }
+    > .el-col:nth-child(4) .data-screen-bottom-icon {
+        animation-delay: 0.3s;
+    }
+
+    // Delay for the inner image
+    > .el-col:nth-child(1) .data-screen-bottom-icon :deep(.el-image__inner) {
+        animation-delay: 0.1s;
+    }
+    > .el-col:nth-child(2) .data-screen-bottom-icon :deep(.el-image__inner) {
+        animation-delay: 0.2s;
+    }
+    > .el-col:nth-child(3) .data-screen-bottom-icon :deep(.el-image__inner) {
+        animation-delay: 0.3s;
+    }
+    > .el-col:nth-child(4) .data-screen-bottom-icon :deep(.el-image__inner) {
+        animation-delay: 0.4s;
     }
 
     &-text {

@@ -143,16 +143,16 @@ export const asyncRoutes: VabRouteRecord[] = [
                     guard: ['Admin'],
                 },
             },
-            // {
-            //   path: 'workbench',
-            //   name: 'Workbench',
-            //   component: () => import('/@/views/index/workbench.vue'),
-            //   meta: {
-            //     title: '工作台',
-            //     icon: 'artboard-line',
-            //     target: '_blank',
-            //   },
-            // },
+            {
+                path: 'workbench',
+                name: 'Workbench',
+                component: () => import('/@/views/index/workbench.vue'),
+                meta: {
+                    title: '工作台',
+                    icon: 'artboard-line',
+                    target: '_blank',
+                },
+            },
             {
                 path: 'application',
                 name: 'Application',
