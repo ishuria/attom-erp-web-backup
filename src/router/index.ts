@@ -323,6 +323,15 @@ export const asyncRoutes: VabRouteRecord[] = [
                             dynamicNewTab: true, //详情页根据id传参不同可打开多个
                         },
                     },
+                    {
+                        path: 'pullTable',
+                        name: 'PullTable',
+                        component: () => import('/@/views/vab/table/pullTable.vue'),
+                        meta: {
+                            title: '下拉表格',
+                            badge: 'Hot',
+                        },
+                    },
                 ],
             },
             {

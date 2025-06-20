@@ -1,5 +1,5 @@
-import { handleRandomImage } from '../utils/index.ts'
 import type { MockMethod } from 'vite-plugin-mock'
+import { handleRandomImage } from '../utils/index.ts'
 
 const List: {
     uuid: string
@@ -17,7 +17,7 @@ const List: {
     'type|1': number[]
     percentage: string
 }[] = []
-const count = 50
+const count = 200
 for (let i = 0; i < count; i++) {
     List.push({
         uuid: '@uuid',

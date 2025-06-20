@@ -109,6 +109,9 @@
         "节流防抖": "Throttle Debounce",
         "解锁": "Unlock",
         "进度条": "Progress",
+        "居右": "Align Right",
+        "居中": "Align Center",
+        "居左": "Align Left",
         "矩形": "Rect",
         "卡片": "Card",
         "卡片拖拽": "Card Drag",
@@ -218,6 +221,7 @@
         "物联网管理": "Iot",
         "物料源": "Material",
         "系统日志": "System Log",
+        "下拉表格": "Pull Table",
         "详情页": "Detail",
         "新闻": "News",
         "行内编辑表格": "In line edit table",
@@ -259,9 +263,6 @@
         "纵向": "Vertical",
         "走马灯": "Carousel",
         "组件": "Part",
-        "左树右表": "Left tree right table",
-        "居左": "Align Left",
-        "居中": "Align Center",
-        "居右": "Align Right"
+        "左树右表": "Left tree right table"
     }
 }

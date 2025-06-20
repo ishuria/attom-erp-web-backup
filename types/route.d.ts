@@ -38,17 +38,17 @@ declare interface VabRouteMeta {
     fullscreen?: boolean
 }
 
-// @ts-ignore
 declare interface VabRouteRecord extends Omit<RouteRecordRaw, 'meta'> {
     path: string
     // name 首字母必须大写
-    name: Capitalize<string>
+    name: string
     meta: VabRouteMeta
     fullPath?: string
     component?: Component | any
     components?: Component | string
     children?: VabRouteRecord[]
     childrenNameList?: (string | undefined)[]
+    [key: string]: any
 }
 
 declare interface VabRoute extends Omit<VabRouteRecord, 'children' | 'childrenNameList'> {
