@@ -487,11 +487,11 @@ export const getUpdateForwarderList = (params: IId) => {
 /**
  * @description 已发货 - 获取列表数据
  */
-export const getShipmentArrivedList = (params: IGetShipmentArrivedListReq): Promise<IGetShipmentArrivedListRes> => {
+export const getShipmentArrivedList = (data: IGetShipmentArrivedListReq): Promise<IGetShipmentArrivedListRes> => {
   return request({
     url: `${BASE_API}/shipment/arrived/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 /**

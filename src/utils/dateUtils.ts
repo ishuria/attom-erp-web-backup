@@ -91,6 +91,22 @@ export function getDefaultStringTime(): [string, string] {
   const formattedTodayDate = todayDate.toISOString().split('T')[0];
   return [formattedLastMonthDate, formattedTodayDate];
 }
+
+/**
+ * @description 获取当年日期范围
+ * @returns 
+ */
+export function getThisYearStringTime(): [string, string] {
+  const today = new Date();
+  const startOfYear = new Date(today.getFullYear(), 0, 1 + 1); // 1月是0索引
+  const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+  const formattedStart = startOfYear.toISOString().split('T')[0];
+  const formattedEnd = endOfToday.toISOString().split('T')[0];
+
+  return [formattedStart, formattedEnd];
+}
+
 /**
  * 
  * @returns 获取当前日期的前30天

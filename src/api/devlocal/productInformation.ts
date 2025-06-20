@@ -84,11 +84,11 @@ import type {
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
-export function getProductList(params: IgetProductListQuery): Promise<IgetProductListResp> {
+export function getProductList(data: IgetProductListQuery): Promise<IgetProductListResp> {
   return request({
     url: `${BASE_API}/product/list`,
-    method: 'get',
-    params
+    method: 'post',
+    data
   })
 }
 
@@ -200,11 +200,11 @@ export function getProductReplenList(data: IgetProductReplenListQuery): Promise<
     })
 }
 // 零件报关信息 - 获取零件报关信息列表
-export function getProductCustomsList(params: IgetProductCustomsListQuery): Promise<IgetProductCustomsListResp> {
+export function getProductCustomsList(data: IgetProductCustomsListQuery): Promise<IgetProductCustomsListResp> {
     return request({
       url: `${BASE_API}/product/customs/clearance/list`,
-      method: 'get',
-      params
+      method: 'post',
+      data
     })
 }
 // 零件报关信息 - 修改报关零件供应商信息

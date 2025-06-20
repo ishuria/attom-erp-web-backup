@@ -59,11 +59,11 @@ import type {
 } from '/@/type/purchase/po'
 
 // 采购计划-获取采购计划PlanPo
-export function getPlanPoList(params?: IGetPlanPoListQuery): Promise<IGetPlanPoListResp> {
+export function getPlanPoList(data?: IGetPlanPoListQuery): Promise<IGetPlanPoListResp> {
   return request({
     url: `${BASE_API}/purchase/planPo/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 
