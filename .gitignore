@@ -44,3 +44,6 @@ public/video
 *.zip
 *.7z
 *.rar
+
+
+changeLog.json
