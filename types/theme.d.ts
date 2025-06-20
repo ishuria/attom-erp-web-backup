@@ -167,4 +167,6 @@ declare interface ThemeType {
     fontSize: string
     // 顶部右侧图标是否允许拖拽
     rightToolsDrag: boolean
+    // 是否显示VabBox组件
+    showBox: boolean
 }

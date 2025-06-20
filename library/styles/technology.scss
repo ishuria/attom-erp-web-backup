@@ -53,6 +53,12 @@ html > body.vab-theme-technology {
     color: var(--el-color-grey) !important;
     background-color: var(--el-color-white) !important;
 
+    .card {
+        &:hover {
+            background-color: var(--el-color-primary-light-9);
+        }
+    }
+
     .vab-side-bar {
         border-right: 1px solid var(--el-border-color) !important;
     }

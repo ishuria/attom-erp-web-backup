@@ -48,18 +48,20 @@ export const themeConfig: ThemeType = {
     foldSidebar: false,
     //是否开启页面动画  null、el-fade-in-linear、el-fade-in、el-zoom-in-center、el-zoom-in-top、el-zoom-in-bottom。
     pageTransition: 'el-fade-in-linear',
-    // 圆角（单位px，类型必须为数字）
+    //圆角（单位px，类型必须为数字）
     radius: 5,
-    // 是否开启锁屏
+    //是否开启锁屏
     showLock: true,
-    // 是否开启颜色选择器组件
+    //是否开启颜色选择器组件
     showColorPicker: true,
-    // 色弱
+    //色弱
     colorWeakness: false,
     //是否显示字体大小组件
     showFontSize: true,
-    // 默认字体大小
+    //默认字体大小
     fontSize: '14px',
-    // 顶部右侧图标是否允许拖拽（影响性能建议关闭）
+    //顶部右侧图标是否允许拖拽（影响性能建议关闭）
     rightToolsDrag: false,
+    //是否开启快捷盒子
+    showBox: true,
 }

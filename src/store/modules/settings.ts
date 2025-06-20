@@ -18,6 +18,7 @@ import {
     pageTransition,
     radius,
     rightToolsDrag,
+    showBox,
     showColorPicker,
     showDark,
     showFontSize,
@@ -72,6 +73,7 @@ const defaultTheme: ThemeType = {
     tabDrag,
     fontSize,
     rightToolsDrag,
+    showBox,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')

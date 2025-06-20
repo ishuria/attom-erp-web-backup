@@ -112,6 +112,9 @@
                 <el-form-item :label="translate('锁屏')">
                     <el-switch v-model="theme.showLock" />
                 </el-form-item>
+                <el-form-item :label="translate('快捷盒子')">
+                    <el-switch v-model="theme.showBox" />
+                </el-form-item>
                 <el-form-item :label="translate('右侧浮窗')">
                     <el-switch v-model="theme.showThemeSetting" />
                 </el-form-item>

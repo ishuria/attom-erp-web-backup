@@ -100,4 +100,5 @@ export const {
     uniqueOpened,
     columnDrag,
     rightToolsDrag,
+    showBox,
 } = config

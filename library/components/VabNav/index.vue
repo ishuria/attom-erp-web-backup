@@ -3,7 +3,7 @@
         <div class="left-panel">
             <vab-logo v-if="layout === 'comprehensive'" class="hidden-sm-and-down" />
             <vab-fold fold="contract-left-line" unfold="contract-right-line" />
-            <vab-box />
+            <vab-box v-if="theme.showBox" />
             <el-tabs
                 v-if="layout === 'comprehensive'"
                 v-model="tab.data"
@@ -15,7 +15,7 @@
                     <el-tab-pane :name="item.name">
                         <template #label>
                             <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-                            {{ translate(item.meta.title) }}
+                            {{ translate(typeof item.meta.title === 'string' ? item.meta.title : '') }}
                         </template>
                     </el-tab-pane>
                 </template>
@@ -55,10 +55,15 @@ const { theme } = storeToRefs(settingsStore)
 
 const handleTabClick = () => {
     nextTick(() => {
-        if (isExternal(tabMenu.value.path)) {
-            window.open(tabMenu.value.path)
+        if (!tabMenu.value) return
+        const path = (tabMenu.value as any).path
+        if (path && isExternal(path)) {
+            window.open(path)
             router.push('/redirect')
-        } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+        } else if (openFirstMenu) {
+            const redirect = (tabMenu.value as any).redirect
+            router.push(redirect || tabMenu.value)
+        }
     })
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <el-popover class="box-item hidden-xs-only" placement="bottom-start" :width="342">
+    <el-popover class="box-item hidden-xs-only" placement="bottom-start" :width="350">
         <template #reference>
             <vab-icon class="vab-box" icon="apps-2-ai-line" />
         </template>
@@ -10,7 +10,7 @@
                     <vab-icon class="card-icon" :icon="item.icon" :style="{ backgroundColor: item.bgColor, color: item.color }" />
                     <div class="text-wrapper">
                         <span class="card-title">{{ translate(item.title) }}</span>
-                        <span class="card-desc">{{ item.description }}</span>
+                        <span class="card-desc">{{ translate(item.description) }}</span>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@ const colors = [
 
 // 卡片数据（含 description）
 const cards = ref<any>([
-    { title: '主题配置', description: '对主题进行配置', icon: 't-shirt-line' },
+    { title: '主题配置', description: '将主题配置', icon: 't-shirt-line' },
     {
         title: '角色权限',
         description: '切换用户权限',
@@ -53,7 +53,7 @@ const cards = ref<any>([
     },
     {
         title: '页面引导',
-        description: '对页面进行引导',
+        description: '开始页面引导',
         icon: 'guide-line',
         link: '/operate/guide',
     },
@@ -178,7 +178,10 @@ const handleCardClick = (card: any) => {
 }
 
 .card-desc {
+    width: 80px;
     margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 12px;
     color: var(--el-color-info-light-4);
     white-space: nowrap;
