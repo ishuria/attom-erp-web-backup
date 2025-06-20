@@ -1,9 +1,9 @@
-import { handleRandomImage } from '../utils/index.ts'
 import type { MockMethod } from 'vite-plugin-mock'
+import { handleRandomImage } from '../utils/index.ts'
 
 const list = [
     {
-        span: 12,
+        span: 6,
         user: '@ctitle(5, 10)',
         title: '@ctitle(30, 35)',
         logo: handleRandomImage(),
@@ -85,7 +85,7 @@ const list = [
         content: '@cparagraph(100, 200)',
     },
     {
-        span: 12,
+        span: 6,
         user: '@ctitle(5, 10)',
         title: '@ctitle(30, 35)',
         logo: handleRandomImage(),
