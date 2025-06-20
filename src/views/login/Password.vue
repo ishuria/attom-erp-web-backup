@@ -1,6 +1,13 @@
 <template>
     <login-container>
-        <div class="login-form">
+        <div class="align-segmented hidden-xs-only">
+            <el-radio-group v-model="alignType" size="large">
+                <el-radio-button label="left">{{ translate('居左') }}</el-radio-button>
+                <el-radio-button label="center">{{ translate('居中') }}</el-radio-button>
+                <el-radio-button label="right">{{ translate('居右') }}</el-radio-button>
+            </el-radio-group>
+        </div>
+        <div class="login-form" :class="`align-${alignType}`">
             <img alt="" class="left-img" :src="leftImg" />
             <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
                 <div class="title">hello !</div>
@@ -84,6 +91,8 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 import { isPassword, isPhone } from '/@/utils/validate'
 
+const alignType = ref('center')
+
 defineOptions({
     name: 'Register',
 })
@@ -127,7 +136,6 @@ const validatePassword = (rule: any, value: any, callback: any) => {
         callback(new Error(translate('密码不能少于6位')))
     }
 }
-
 const validatePassword2 = (rule: any, value: any, callback: any) => {
     if (value === form.password) {
         callback()
@@ -223,6 +231,50 @@ const handleRegister = () => {
 }
 
 onUnmounted(() => {
-    clearInterval(timer)
+    if (timer) clearInterval(timer)
 })
 </script>
+
+<style lang="scss" scoped>
+.login-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+}
+.align-segmented {
+    position: fixed;
+    top: calc(var(--el-margin) * 1.4);
+    left: 50%;
+    z-index: 10;
+    transform: translateX(-50%);
+}
+.login-form {
+    width: 400px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    &.align-left,
+    &.align-right {
+        height: 100vh;
+        margin: 0;
+        border-radius: 0;
+    }
+    &.align-left {
+        /* 靠左 */
+    }
+    &.align-center {
+        height: 680px;
+        margin: 0 auto;
+        border-radius: 15px;
+    }
+    &.align-right {
+        margin-right: 0;
+        margin-left: auto;
+    }
+}
+</style>

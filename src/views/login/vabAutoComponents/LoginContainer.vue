@@ -44,6 +44,7 @@ const handleShow = () => {
         position: fixed;
         top: var(--el-margin);
         right: var(--el-margin);
+        z-index: 1001;
         display: flex;
         align-items: center;
         justify-content: space-between;

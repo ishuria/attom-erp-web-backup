@@ -259,6 +259,9 @@
         "纵向": "Vertical",
         "走马灯": "Carousel",
         "组件": "Part",
-        "左树右表": "Left tree right table"
+        "左树右表": "Left tree right table",
+        "居左": "Align Left",
+        "居中": "Align Center",
+        "居右": "Align Right"
     }
 }
