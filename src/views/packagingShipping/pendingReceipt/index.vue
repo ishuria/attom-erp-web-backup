@@ -6,7 +6,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleAllSigned">批量签收</el-button>
             <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-              <el-option 
+              <el-option
                 v-for="item in printerOption"
                 :key="item.value"
                 :label="item.label"
@@ -25,9 +25,9 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          ref="tableRef" 
-          v-loading="listLoading" border 
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading" border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
           class="noneHoveTable"
@@ -41,7 +41,7 @@
             <template #default="{ row }">
               <el-space>
                 <el-link type="primary" :underline="false" @click="showSignDialog(row)">签收</el-link>
-                <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">修改</el-link>
+                <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">明细</el-link>
                 <el-link type="primary" :underline="false" @click="showPrint(row)">打印</el-link>
               </el-space>
             </template>
@@ -106,7 +106,7 @@
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
-          </el-table-column>    
+          </el-table-column>
           <el-table-column label="剩余可售" min-width="100" prop="sellableDay"/>
           <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
           <el-table-column label="站点" min-width="130" prop="site">
@@ -155,7 +155,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
             <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-              <el-option 
+              <el-option
                 v-for="item in printerOption"
                 :key="item.value"
                 :label="item.label"
@@ -174,9 +174,9 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          ref="tableRef" 
-          v-loading="listLoading" border 
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading" border
           :cell-class-name="getCellClass2"
           :cell-style="cellStyle2"
           class="noneHoveTable"
@@ -285,7 +285,7 @@
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
             </template>
-          </el-table-column>  
+          </el-table-column>
           <el-table-column label="生产完成日期" min-width="170" prop="produceCompletionDate">
             <template #default="{ row }">
               <el-date-picker
@@ -310,17 +310,17 @@
             </template>
 
           </el-table-column>
-         
+
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
-        <vab-pagination 
-          :current-page="queryForm.pageNo" 
-          :page-size="queryForm.pageSize" 
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange" 
-          @size-change="handleSizeChange" 
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
@@ -339,6 +339,7 @@
       title="修改"
       width="40%"
       @close="closeModifyPendingDialog"
+      :draggable="false"
     >
       <el-table
         border
@@ -347,19 +348,8 @@
         :header-cell-style="{ textAlign: 'center' }"
         @cell-click="changeModifyInput"
       >
-        <el-table-column label="签收日期" prop="createTime">
-          <template #default="{ row }">
-            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="签收数量" prop="signCount">
-          <template #default="{ row }">
-            <div class="none">
-              <el-input v-model="row.signCount" clearable @blur="clickModifyCountCancel($event, row)" @keyup.enter="clickModifyCountCancel($event, row)" />
-            </div>
-            <span>{{ row.signCount }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column label="签收日期" prop="createTime"/>
+        <el-table-column label="签收数量" prop="signCount"/>
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
@@ -427,14 +417,14 @@
     >
       <el-form ref="receiptExportFormRef" :model="receiptExportForm">
         <el-form-item label="日期" label-width="70px" prop="date">
-          <el-date-picker 
-            v-model="receiptExportForm.date" 
-            :editable="false" 
-            end-placeholder="结束日期" 
-            format="YYYY-MM-DD" 
-            range-separator="至" 
-            start-placeholder="开始日期" 
-            type="daterange"	
+          <el-date-picker
+            v-model="receiptExportForm.date"
+            :editable="false"
+            end-placeholder="结束日期"
+            format="YYYY-MM-DD"
+            range-separator="至"
+            start-placeholder="开始日期"
+            type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
@@ -498,7 +488,7 @@
     </vab-dialog>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
@@ -537,7 +527,7 @@ const printer = ref<string>('')
 const activeName = ref<number>(0)
 const printCountVisible = ref<boolean>(false)
 const printForm = reactive<{ count: number | undefined }>({
-  count: undefined 
+  count: undefined
 })
 const printFormRef = ref<FormInstance>()
 const printFormRules = reactive<FormRules>({
@@ -728,6 +718,7 @@ const handleDeleteSignRecord = async (row: any, index: number) => {
     })
     if (data) {
       pendingSignRecord.value.splice(index, 1)
+      $baseMessage('删除取消零件签收成功！','success')
     }
   })
 }
@@ -738,6 +729,7 @@ const handleDeleteSignedRecord = async (row: any, index: number) => {
     })
     if (data) {
       signedRecord.value.splice(index, 1)
+      $baseMessage('删除取消零件签收成功！','success')
     }
   })
 }
@@ -808,7 +800,7 @@ const changeProductDate = async (row: any) => {
     date: row.produceCompletionDate
   })
   // console.log(row.produceCompletionDate);
-  
+
 }
 
 
@@ -836,7 +828,7 @@ const handleTabClick = async (tab: TabsPaneContext) => {
     activeName.value = tabName
     queryForm.status = tabName
   }
-  
+
   await router.push({
     query: {
       ...route.query,
@@ -852,7 +844,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
   if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 13 && data.columnIndex !== 15) {
     return {
       textAlign:'center'
-    } 
+    }
   }
 }
 const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
@@ -860,7 +852,7 @@ const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex
   if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
     return {
       textAlign: 'left'
-    } 
+    }
   }
   return {
     textAlign: 'center'
@@ -894,8 +886,7 @@ const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
-const changeInput = async (row: any, column: any) => { 
-  // console.log(column);
+const changeInput = async (row: any, column: any) => {
   if (column.property === 'log') {
     clickRow.value = row
     const { data } = await getSignLog({ signId: row.signId })
@@ -904,7 +895,7 @@ const changeInput = async (row: any, column: any) => {
     wangEditorTitle.value = '编辑跟单日志'
     classify.value = 'signLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
-  } 
+  }
 }
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
@@ -915,7 +906,7 @@ let _row: any
 /**
  * 当点击修改时切换输入框，修改输入
  */
-const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
@@ -932,30 +923,7 @@ const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellEleme
     focusAndSelectInput(cell);
   }
 }
-const clickModifyCountCancel = async (event: any, value: any) =>{
-  const rootElement = getRootElement(event.srcElement, ".cell");
 
-  if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
-
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
-  }
-  if (isEqual(_row, value)) {
-    return
-  }
-  if (event.type === 'blur') {
-    try {
-      await updateRecordCount({
-        signRecordId: value.id,
-        count: value.signCount
-      })
-    } catch {
-      Object.assign(value, _row)
-    }
-  }
-}
 const clickModifyOrderCancel = async (event: any, value: any) =>{
   const rootElement = getRootElement(event.srcElement, ".cell");
 
@@ -990,7 +958,7 @@ const clickLog = async (val: any) => {
     progressLogCopy.value = val
     clickRow.value.log = val
   }
-  
+
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
@@ -1028,7 +996,7 @@ const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIn
   }
   return ''
 }
-onActivated(() => { 
+onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
@@ -1047,7 +1015,7 @@ onBeforeMount(() => {
   fetchData()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .tabs-table-container {
   :deep() {
@@ -1109,7 +1077,7 @@ onBeforeMount(() => {
         transform: scale(1.2); // 放大 20%
         transform-origin: center; // 确保放大从中心开始
       }
-     
+
     }
   }
 }
@@ -1132,9 +1100,9 @@ onBeforeMount(() => {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {

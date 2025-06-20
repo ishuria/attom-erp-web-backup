@@ -71,11 +71,11 @@ import type {
   IGetPackagingTimeConsolidationListRes
 } from '/@/type/packagingShipping/timeConsolidationType'
 
-export function getSignList(params: IGetSignListQuery): Promise<IGetSignListResp> {
+export function getSignList(data: IGetSignListQuery): Promise<IGetSignListResp> {
   return request({
     url: `${BASE_API}/sign/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 
@@ -562,7 +562,7 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
 
 /**
  * 获取sku信息
- * @returns 
+ * @returns
  */
 export function getPackagingSkuSelectList(params: IGetPackagingTimeConsolidationListReq): Promise<IGetPackagingSkuSelectListRes> {
   return request({
@@ -573,8 +573,8 @@ export function getPackagingSkuSelectList(params: IGetPackagingTimeConsolidation
 }
 /**
  * 获取工时合并列表
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getPackagingTimeConsolidationList(params: IGetPackagingTimeConsolidationListReq): Promise<IGetPackagingTimeConsolidationListRes> {
   return request({
@@ -586,8 +586,8 @@ export function getPackagingTimeConsolidationList(params: IGetPackagingTimeConso
 
 /**
  * 工时合并-新增合并分类
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function addPackagingTimeConsolidation(data: IAddPackagingTimeConsolidationReq): Promise<{ data: boolean }> {
   return request({
@@ -599,8 +599,8 @@ export function addPackagingTimeConsolidation(data: IAddPackagingTimeConsolidati
 
 /**
  * 工时合并-添加SKU
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function addSkuPackagingTimeConsolidation(data: IAddSkuPackagingTimeConsolidationReq): Promise<{ data: boolean }> {
   return request({
@@ -611,8 +611,8 @@ export function addSkuPackagingTimeConsolidation(data: IAddSkuPackagingTimeConso
 }
 /**
  * 工时合并-删除分类
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function deletePackagingTimeConsolidation(params: { id: number }): Promise<{ data: boolean }> {
   return request({
@@ -623,8 +623,8 @@ export function deletePackagingTimeConsolidation(params: { id: number }): Promis
 }
 /**
  * 工时合并-删除SKU
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function deleteSkuPackagingTimeConsolidation(params: { id: number }): Promise<{ data: boolean }> {
   return request({
@@ -636,7 +636,7 @@ export function deleteSkuPackagingTimeConsolidation(params: { id: number }): Pro
 
 /**
  * 打包工时-打包成本获取
- * @returns 
+ * @returns
  */
 export function getPackagingCost(): Promise<{ data: number }> {
   return request({
@@ -646,7 +646,7 @@ export function getPackagingCost(): Promise<{ data: number }> {
 }
 /**
  * 打包工时-修改打包成本
- * @returns 
+ * @returns
  */
 export function updatePackagingCost(params: { cost: number }): Promise<{ data: boolean }> {
   return request({
@@ -657,7 +657,7 @@ export function updatePackagingCost(params: { cost: number }): Promise<{ data: b
 }
 /**
  * 打包工时-工时查错
- * @returns 
+ * @returns
  */
 export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq): Promise<ICheckingPackagingTimeErrorRes> {
   return request({
@@ -670,8 +670,8 @@ export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq)
 // ------------------------------------------- 新品质检报告 --------------------------------------------
 /**
  * 新品质检报告查询
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getNewPackageInspection(params: { sku: string }): Promise<IGetNewPackageInspectionRes> {
   return request({
@@ -682,8 +682,8 @@ export function getNewPackageInspection(params: { sku: string }): Promise<IGetNe
 }
 /**
  * 新品质检报告内容修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updateNewPackageInspection(data: IUpdateNewPackageInspectionReq): Promise<{ data: boolean }> {
   return request({
@@ -694,8 +694,8 @@ export function updateNewPackageInspection(data: IUpdateNewPackageInspectionReq)
 }
 /**
  * 新品质检报告零件材质内容修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updatePackageInspectionComponent(data: IUpdatePackageInspectionComponentReq): Promise<{ data: boolean }> {
   return request({
@@ -706,8 +706,8 @@ export function updatePackageInspectionComponent(data: IUpdatePackageInspectionC
 }
 /**
  * 新品质检报告-图片上传
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function uploadPackageInspectionImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
   return request({
@@ -719,8 +719,8 @@ export function uploadPackageInspectionImage(data: FormData): Promise<{ data: { 
 }
 /**
  * 新品质检报告-删除图片
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function deletePackageInspectionImage(params: { id: number }): Promise<{ data: boolean }> {
   return request({
@@ -731,8 +731,8 @@ export function deletePackageInspectionImage(params: { id: number }): Promise<{ 
 }
 /**
  * 质检报告-提交
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function submitPackageInspection(data: { reportId: number, type: number }): Promise<{ data: boolean }> {
   return request({
@@ -743,8 +743,8 @@ export function submitPackageInspection(data: { reportId: number, type: number }
 }
 /**
  * 打包质检项-图片上传
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function uploadPackageInspectionItemImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
   return request({
@@ -756,8 +756,8 @@ export function uploadPackageInspectionItemImage(data: FormData): Promise<{ data
 }
 /**
  * 打包质检项-删除图片
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function deletePackageInspectionItemImage(params: { id: number }): Promise<{ data: boolean }> {
   return request({
@@ -810,8 +810,8 @@ export function getQualityInspectionPackage(params: { reportId: number }): Promi
 
 /**
  * 修改发货数量调整
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateShippingCountAdjustment(params: { id: number, count: number }): Promise<{ data: boolean }> {
   return request({

@@ -91,24 +91,8 @@ export function getDefaultStringTime(): [string, string] {
   const formattedTodayDate = todayDate.toISOString().split('T')[0];
   return [formattedLastMonthDate, formattedTodayDate];
 }
-
 /**
- * @description 获取当年日期范围
- * @returns 
- */
-export function getThisYearStringTime(): [string, string] {
-  const today = new Date();
-  const startOfYear = new Date(today.getFullYear(), 0, 1 + 1); // 1月是0索引
-  const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-
-  const formattedStart = startOfYear.toISOString().split('T')[0];
-  const formattedEnd = endOfToday.toISOString().split('T')[0];
-
-  return [formattedStart, formattedEnd];
-}
-
-/**
- * 
+ *
  * @returns 获取当前日期的前30天
  */
 export function getLast30DaysStringTime(): [string, string] {
@@ -123,7 +107,7 @@ export function getLast30DaysStringTime(): [string, string] {
 }
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
- * @param date 
+ * @param date
  */
 export function getWeekOfYear(date: Date | string | number): string {
   // 确保当前日期 date 参数可以被解析为有效的日期对象
@@ -157,3 +141,19 @@ export const getCurrentFormatDate = () => {
 
   return `${year}${month}${day}`;
 };
+
+
+/**
+ * @description 获取当年日期范围
+ * @returns
+ */
+export function getThisYearStringTime(): [string, string] {
+  const today = new Date();
+  const startOfYear = new Date(today.getFullYear(), 0, 1 + 1); // 1月是0索引
+  const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+  const formattedStart = startOfYear.toISOString().split('T')[0];
+  const formattedEnd = endOfToday.toISOString().split('T')[0];
+
+  return [formattedStart, formattedEnd];
+}

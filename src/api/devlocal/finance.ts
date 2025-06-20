@@ -25,11 +25,11 @@ export function getOutboundInventoryCheck(): Promise<IGetOutboundInventoryCheckR
   })
 }
 
-export function getInboundList(params: IGetOutBoundListReq): Promise<IGetInBoundListRes> {
+export function getInboundList(data: IGetOutBoundListReq): Promise<IGetInBoundListRes> {
   return request({
     url: `${BASE_API}/inbound/list`,
-    method: 'get',
-    params,
+    method: 'post',
+    data,
   })
 }
 
