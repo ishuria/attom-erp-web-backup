@@ -34,9 +34,9 @@ declare interface RoutesModuleType {
     activeMenu: {
         data: string | undefined
     }
-    routes: RouteItem[]
-    allRoutes: RouteItem[]
-    breadcrumbRoutes: RouteItem[]
+    routes: any[]
+    allRoutes: any[]
+    breadcrumbRoutes: any[]
 }
 
 declare type DeviceType = 'mobile' | 'desktop'

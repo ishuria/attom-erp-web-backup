@@ -8,7 +8,7 @@
                 @tab-click="handleTabClick"
                 @tab-remove="handleTabRemove"
             >
-                <el-tab-pane v-for="item in visitedRoutes" :key="item" :closable="!isNoClosable(item)" :name="item.path">
+                <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoClosable(item as any)" :name="item.path">
                     <template #label>
                         <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
                             <template v-if="theme.showTabsIcon">
@@ -17,13 +17,13 @@
                                     :icon="item.meta.icon"
                                     :is-custom-svg="item.meta.isCustomSvg"
                                 />
-                                <vab-icon v-else :icon="item.parentIcon" />
+                                <vab-icon v-else :icon="(item as any).parentIcon ?? 'menu-line'" />
                             </template>
-                            <span v-if="!isNoClosable(item)" @dblclick="handleTabRemove(item.path)">
-                                {{ translate(item.meta.title) }}
+                            <span v-if="!isNoClosable(item as any)" @dblclick="handleTabRemove(item.path)">
+                                {{ translate((item.meta.title ?? '') as string) }}
                             </span>
                             <span v-else>
-                                {{ translate(item.meta.title) }}
+                                {{ translate((item.meta.title ?? '') as string) }}
                             </span>
                         </span>
                     </template>
@@ -93,14 +93,21 @@
                 <vab-icon icon="close-line" />
                 <span>{{ translate('关闭其他') }}</span>
             </li>
-            <li class="el-dropdown-menu__item" :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }" @click="closeLeftTabs">
+            <li
+                class="el-dropdown-menu__item"
+                :class="{ 'is-disabled': !hoverRoute || visitedRoutes.indexOf(hoverRoute) === -1 }"
+                @click="closeLeftTabs"
+            >
                 <vab-icon icon="arrow-left-line" />
                 <span>{{ translate('关闭左侧') }}</span>
             </li>
             <li
                 class="el-dropdown-menu__item"
                 :class="{
-                    'is-disabled': visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
+                    'is-disabled':
+                        !hoverRoute ||
+                        visitedRoutes.indexOf(hoverRoute) === -1 ||
+                        visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
                 }"
                 @click="closeRightTabs"
             >
@@ -127,6 +134,20 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { moveElement } from '/@/utils/index'
 import { handleActivePath, handleTabs } from '/@/utils/routes'
 
+// 新增类型定义
+interface VisitedRoute {
+    path: string
+    name: string
+    meta: {
+        title?: string
+        noClosable?: boolean
+        icon?: string
+        isCustomSvg?: boolean
+    }
+    parentIcon?: string
+    [key: string]: any
+}
+
 defineOptions({
     name: 'VabTabs',
 })
@@ -146,7 +167,7 @@ const routesStore = useRoutesStore()
 const { getRoutes: routes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { getVisitedRoutes: visitedRoutes } = storeToRefs(tabsStore)
-const _visitedRoutes = ref<any>([...visitedRoutes.value])
+const _visitedRoutes = ref<VisitedRoute[]>([...(visitedRoutes.value as VisitedRoute[])])
 const {
     addVisitedRoute,
     delVisitedRoute,
@@ -159,14 +180,14 @@ const {
 } = tabsStore
 const tabActive = ref<string>('')
 const active = ref<boolean>(false)
-const hoverRoute = ref<any>()
+const hoverRoute = ref<VisitedRoute | null>(null)
 const visible = ref<boolean>(false)
 const top = ref<any>(0)
 const left = ref<any>(0)
 const tabsSettingRef = ref<any>(null)
 
 const isActive = (path: any) => path === handleActivePath(route, true)
-const isNoClosable = (tag: { meta: { noClosable: any } }) => tag.meta && tag.meta.noClosable
+const isNoClosable = (tag: VisitedRoute) => tag.meta && tag.meta.noClosable
 
 const handleTabClick: any = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
@@ -305,7 +326,7 @@ const openMenu = (item: any) => {
     left.value = x.value
     top.value = y.value
     hoverRoute.value = item
-    hoverRoute.value.path = item.path
+    if (hoverRoute.value) hoverRoute.value.path = item.path
     visible.value = true
 }
 

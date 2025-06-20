@@ -45,11 +45,7 @@ export const useRoutesStore = defineStore('routes', {
         getRoutes: (state) => state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
         getAllRoutes: (state) => state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
         getBreadcrumbRoutes: (state) => state.breadcrumbRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
-        getPartialRoutes: (state) =>
-            state.tab.data
-                ? state.routes.find((route) => route.name === state.tab.data) &&
-                  state.routes.find((route) => route.name === state.tab.data).children
-                : [],
+        getPartialRoutes: (state) => (state.tab.data ? (state.routes.find((route) => route.name === state.tab.data)?.children ?? []) : []),
     },
     actions: {
         /**
