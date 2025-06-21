@@ -4,11 +4,11 @@ declare interface VabRouteMeta {
     // badge小标签(只支持子级)
     badge?: string
     // badge小标签类型(只支持子级)
-    badgeType?: 'primary' | 'success' | 'warning' | 'danger'
+    badgeType?: 'primary' | 'success' | 'warning' | 'danger' | string
     // 是否隐藏面包屑
     breadcrumbHidden?: boolean
     // 是否显示小圆点
-    dot?: boolean | 'primary' | 'success' | 'warning' | 'danger'
+    dot?: boolean | 'primary' | 'success' | 'warning' | 'danger' | string
     // 动态传参路由是否新开标签页
     dynamicNewTab?: boolean
     // 权限
@@ -31,7 +31,7 @@ declare interface VabRouteMeta {
     // 当前路由是否不显示多标签页
     tabHidden?: boolean
     // 在新窗口中打开
-    target?: '_blank' | false
+    target?: '_blank' | false | string
     // 菜单、面包屑、多标签页显示的名称
     title?: string
     // 是否全屏

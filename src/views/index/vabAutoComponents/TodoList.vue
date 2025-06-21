@@ -944,11 +944,11 @@ onMounted(() => {
 
         :deep(.el-radio__input) {
             .el-radio__inner {
+                width: 16px;
+                height: 16px;
                 background: rgba(0, 0, 0, 0.3);
                 border: 1px solid #01ffff;
                 border-radius: 50%;
-                width: 16px;
-                height: 16px;
                 transition: all 0.3s ease;
 
                 &:hover {
@@ -957,9 +957,9 @@ onMounted(() => {
                 }
 
                 &::after {
-                    background: #01ffff;
                     width: 6px;
                     height: 6px;
+                    background: #01ffff;
                     border-radius: 50%;
                 }
             }
@@ -979,10 +979,10 @@ onMounted(() => {
         }
 
         :deep(.el-radio__label) {
-            color: #fff;
+            padding-left: 8px;
             font-size: 14px;
             font-weight: 500;
-            padding-left: 8px;
+            color: #fff;
         }
 
         &.priority-high {

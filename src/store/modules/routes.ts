@@ -55,7 +55,7 @@ export const useRoutesStore = defineStore('routes', {
          */
         async setRoutes(mode = 'none') {
             // 默认前端路由
-            let routes = [...asyncRoutes]
+            let routes: VabRouteRecord[] = [...asyncRoutes]
             // 设置游客路由关闭路由拦截(不需要可以删除)
             const control = mode === 'visit' ? false : rolesControl
             // 设置后端路由(不需要可以删除)
