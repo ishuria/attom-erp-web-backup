@@ -17,10 +17,6 @@
                 <el-input v-model="form.password" clearable type="password" />
             </el-form-item>
         </el-form>
-        <div class="pay-button-group">
-            <el-button :loading="loading" type="primary" @click="handleSubmit">提交</el-button>
-            <el-button @click="handlePrev">上一步</el-button>
-        </div>
     </div>
 </template>
 
@@ -38,7 +34,6 @@ defineProps({
         },
     },
 })
-const emit = defineEmits(['change-step'])
 
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
@@ -47,24 +42,25 @@ const form = reactive<any>({
 const rules = reactive<any>({
     password: [{ required: true, message: '请输入支付密码', trigger: 'blur' }],
 })
-const loading = ref<boolean>(false)
 
-const handleSubmit = () => {
-    formRef.value?.validate((valid: any) => {
-        if (valid) {
-            loading.value = true
-            setTimeout(() => {
-                emit('change-step', 2)
-                loading.value = false
-            }, 2000)
-        } else {
-            loading.value = false
-        }
+// 暴露表单验证方法给父组件
+const validate = () => {
+    return new Promise((resolve, reject) => {
+        formRef.value?.validate((valid: any) => {
+            if (valid) {
+                resolve(form)
+            } else {
+                reject(new Error('表单验证失败'))
+            }
+        })
     })
 }
-const handlePrev = () => {
-    emit('change-step', 0)
-}
+
+// 暴露给父组件
+defineExpose({
+    validate,
+    form,
+})
 </script>
 
 <style lang="scss" scoped>

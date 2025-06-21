@@ -18,9 +18,6 @@
                 <strong>￥{{ infoData.price }}元</strong>
             </el-form-item>
         </el-form>
-        <div class="pay-button-group">
-            <el-button type="primary" @click="handlePrev">再转一笔</el-button>
-        </div>
     </div>
 </template>
 
@@ -36,11 +33,6 @@ defineProps({
         },
     },
 })
-const emit = defineEmits(['change-step'])
-
-const handlePrev = () => {
-    emit('change-step', 0)
-}
 </script>
 
 <style lang="scss" scoped>
@@ -61,11 +53,5 @@ const handlePrev = () => {
     background-color: var(--el-color-primary-light-9);
     border: 1px dashed var(--el-border-color);
     border-radius: var(--el-border-radius-base);
-}
-
-.pay-button-group {
-    display: block;
-    margin: var(--el-margin) auto;
-    text-align: center;
 }
 </style>

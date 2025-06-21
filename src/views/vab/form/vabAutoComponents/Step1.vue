@@ -14,9 +14,6 @@
                 <el-input v-model="form.price" clearable />
             </el-form-item>
         </el-form>
-        <div class="pay-button-group">
-            <el-button native-type="submit" type="primary" @click="handleSubmit">下一步</el-button>
-        </div>
         <vab-alert>
             <h3>转账到支付宝</h3>
             <p>生活好，支付宝。生活好，支付宝。生活好，支付宝。生活好，支付宝。</p>
@@ -32,7 +29,6 @@ import type { FormInstance } from 'element-plus'
 defineOptions({
     name: 'Step1',
 })
-const emit = defineEmits(['change-step'])
 
 const formRef = ref<FormInstance>()
 const form = reactive<any>({
@@ -54,13 +50,24 @@ const rules = reactive<any>({
     ],
 })
 
-const handleSubmit = () => {
-    formRef.value?.validate((valid: any) => {
-        if (valid) {
-            emit('change-step', 1, form)
-        }
+// 暴露表单验证方法给父组件
+const validate = () => {
+    return new Promise((resolve, reject) => {
+        formRef.value?.validate((valid: any) => {
+            if (valid) {
+                resolve(form)
+            } else {
+                reject(new Error('表单验证失败'))
+            }
+        })
     })
 }
+
+// 暴露给父组件
+defineExpose({
+    validate,
+    form,
+})
 </script>
 
 <style lang="scss" scoped>
