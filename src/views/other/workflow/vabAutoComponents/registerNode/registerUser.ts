@@ -1,5 +1,25 @@
-export default function registerUser(lf) {
-    lf.register('user', ({ PolygonNode, PolygonNodeModel, h }) => {
+import type { LogicFlow } from '@logicflow/core'
+
+interface UserNodeData {
+    text?: {
+        value: string
+        x: number
+        y: number
+    }
+    x: number
+    y: number
+    id: string
+}
+
+interface MenuItem {
+    text: string
+    className: string
+    icon?: boolean
+    callback: (node: any) => void
+}
+
+export default function registerUser(lf: LogicFlow) {
+    lf.register('user', ({ PolygonNode, PolygonNodeModel, h }: any) => {
         class Node extends PolygonNode {
             getIconShape() {
                 const stroke = 'var(--el-color-grey)'
@@ -24,7 +44,7 @@ export default function registerUser(lf) {
                 const { width, height, x, y, fillOpacity, strokeOpacity, points } = model
                 const style = model.getNodeStyle()
                 const transform = `matrix(1 0 0 1 ${x - width / 2} ${y - height / 2})`
-                const pointsPath = points.map((point) => point.join(',')).join(' ')
+                const pointsPath = points.map((point: number[]) => point.join(',')).join(' ')
                 return h(
                     'g',
                     {
@@ -44,7 +64,10 @@ export default function registerUser(lf) {
         }
 
         class Model extends PolygonNodeModel {
-            constructor(data, graphModel) {
+            points: number[][]
+            menu: MenuItem[]
+
+            constructor(data: UserNodeData, graphModel: any) {
                 data.text = {
                     value: (data.text && data.text.value) || '',
                     x: data.x,
@@ -64,7 +87,7 @@ export default function registerUser(lf) {
                         text: '删除',
                         className: 'lf-menu-delete',
                         icon: true,
-                        callback(node) {
+                        callback(node: any) {
                             const confirm = globalThis.confirm('您确定要删除吗？')
                             confirm && lf.deleteNode(node.id)
                         },
@@ -72,14 +95,14 @@ export default function registerUser(lf) {
                     {
                         text: '编辑',
                         className: 'lf-menu-item',
-                        callback(node) {
+                        callback(node: any) {
                             lf.editText(node.id)
                         },
                     },
                     {
                         text: '复制',
                         className: 'lf-menu-item',
-                        callback(node) {
+                        callback(node: any) {
                             lf.cloneNode(node.id)
                         },
                     },

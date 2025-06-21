@@ -17,40 +17,47 @@
     </div>
 </template>
 
-<script>
-export default defineComponent({
-    props: {
-        nodeData: {
-            type: Object,
-            default: () => {},
-        },
-        lf: {
-            type: Object || String,
-            default: () => {},
-        },
-    },
-    emits: ['onClose'],
-    data() {
-        return {
-            formData: {
-                name: '',
-                region: '',
-                type: '',
-            },
-        }
-    },
-    mounted() {
-        const { properties } = this.$props.nodeData
-        if (properties) {
-            this.$data.formData = Object.assign({}, this.$data.formData, properties)
-        }
-    },
-    methods: {
-        onSubmit() {
-            const { id } = this.$props.nodeData
-            this.$props.lf.setProperties(id, this.$data.formData)
-            this.$emit('onClose')
-        },
-    },
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+
+interface FormData {
+    name: string
+    region: string
+    type: string
+}
+
+interface NodeData {
+    id: string
+    properties?: FormData
+    [key: string]: any
+}
+
+interface Props {
+    nodeData: NodeData
+    lf: any
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+    onClose: []
+}>()
+
+const formData = ref<FormData>({
+    name: '',
+    region: '',
+    type: '',
 })
+
+onMounted(() => {
+    const { properties } = props.nodeData
+    if (properties) {
+        formData.value = Object.assign({}, formData.value, properties)
+    }
+})
+
+const onSubmit = () => {
+    const { id } = props.nodeData
+    props.lf.setProperties(id, formData.value)
+    emit('onClose')
+}
 </script>

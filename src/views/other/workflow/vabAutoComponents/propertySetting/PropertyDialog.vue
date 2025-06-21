@@ -5,29 +5,26 @@
     </div>
 </template>
 
-<script>
-export default defineComponent({
-    name: 'PropertyDialog',
-    props: {
-        nodeData: {
-            type: Object,
-            default: () => {},
-        },
-        lf: {
-            type: Object,
-            default: () => {},
-        },
-    },
-    emits: ['setPropertiesFinish'],
-    data() {
-        return {}
-    },
-    methods: {
-        handleClose() {
-            this.$emit('setPropertiesFinish')
-        },
-    },
-})
+<script lang="ts" setup>
+interface NodeData {
+    id: string
+    type: string
+    [key: string]: any
+}
+
+interface Props {
+    nodeData: NodeData
+    lf: any
+}
+
+defineProps<Props>()
+const emit = defineEmits<{
+    setPropertiesFinish: []
+}>()
+
+const handleClose = () => {
+    emit('setPropertiesFinish')
+}
 </script>
 
 <style>

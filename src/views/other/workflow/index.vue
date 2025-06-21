@@ -21,11 +21,12 @@
     </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import LogicFlow from '@logicflow/core'
 import '@logicflow/core/lib/style/index.css'
 import { Menu, Snapshot } from '@logicflow/extension'
 import '@logicflow/extension/lib/style/index.css'
+import { onMounted, ref } from 'vue'
 import {
     registerDownload,
     registerEnd,
@@ -37,204 +38,230 @@ import {
 import { getList } from '/@/api/workflow'
 import { gp } from '/@vab/plugins/vab'
 
-export default defineComponent({
+defineOptions({
     name: 'Workflow',
-    data() {
-        return {
-            data: [],
-            lf: null,
-            showAddPanel: false,
-            addPanelStyle: {
-                top: 0,
-                left: 0,
+})
+
+interface WorkflowData {
+    id: string
+    type: string
+    x: number
+    y: number
+    properties?: any
+}
+
+interface AddPanelStyle {
+    top: string
+    left: string
+}
+
+const data = ref<WorkflowData[]>([])
+const lf = ref<any>(null)
+const showAddPanel = ref(false)
+const addPanelStyle = ref<AddPanelStyle>({
+    top: '0px',
+    left: '0px',
+})
+const addClickNode = ref<any>(null)
+const clickNode = ref<any>(null)
+const dialogVisible = ref(false)
+const graphData = ref<any>(null)
+const dataVisible = ref(false)
+const container = ref<HTMLElement>()
+
+const fetchData = async () => {
+    const { data: responseData } = await getList()
+    data.value = responseData as any
+    initLf()
+}
+
+const initLf = () => {
+    if (!container.value) return
+
+    // 画布配置
+    const config = {
+        container: container.value,
+        background: {
+            backgroundColor: 'var(--el-color-white)',
+        },
+        grid: {
+            size: 10,
+            visible: false,
+        },
+        keyboard: {
+            enabled: true,
+        },
+        edgeTextDraggable: true,
+        guards: {
+            beforeClone() {
+                return true
             },
-            addClickNode: null,
-            clickNode: null,
-            dialogVisible: false,
-            graphData: null,
-            dataVisible: false,
-        }
-    },
-    created() {
-        this.fetchData()
-    },
-    methods: {
-        async fetchData() {
-            const { data } = await getList()
-            this.data = data
-            this.$_initLf()
+            beforeDelete() {
+                return true
+            },
         },
-        $_initLf() {
-            // 画布配置
-            const config = {
-                container: this.$refs.container,
-                background: {
-                    backgroundColor: 'var(--el-color-white)',
-                },
-                grid: {
-                    size: 10,
-                    visible: false,
-                },
-                keyboard: {
-                    enabled: true,
-                },
-                edgeTextDraggable: true,
-                guards: {
-                    beforeClone() {
-                        return true
-                    },
-                    beforeDelete() {
-                        return true
-                    },
-                },
-            }
-            LogicFlow.use(Menu)
-            LogicFlow.use(Snapshot)
-            this.lf = new LogicFlow({ ...config })
+    }
+    LogicFlow.use(Menu)
+    LogicFlow.use(Snapshot)
+    lf.value = new LogicFlow({ ...config })
 
-            this.lf.setMenuConfig({
-                nodeMenu: [],
-                edgeMenu: [],
-            })
-            this.lf.addMenuConfig({
-                nodeMenu: [
-                    {
-                        text: '分享',
-                        callback() {
-                            alert('分享成功！')
-                        },
-                    },
-                    {
-                        text: '属性',
-                        callback(node) {
-                            alert(`
-                  节点id：${node.id}
-                  节点类型：${node.type}
-                  节点坐标：(x: ${node.x}, y: ${node.y})`)
-                        },
-                    },
-                ],
-                edgeMenu: [
-                    {
-                        text: '属性',
-                        callback(edge) {
-                            alert(`
-                  边id：${edge.id}
-                  边类型：${edge.type}
-                  边坐标：(x: ${edge.x}, y: ${edge.y})
-                  源节点id：${edge.sourceNodeId}
-                  目标节点id：${edge.targetNodeId}`)
-                        },
-                    },
-                ],
-            })
-            this.lf.setTheme({
-                circle: {
-                    r: 20,
-                    fill: 'var(--el-color-white)',
-                    stroke: 'var(--el-color-grey)',
-                    strokeWidth: 1,
+    lf.value.setMenuConfig({
+        nodeMenu: [],
+        edgeMenu: [],
+    })
+    lf.value.addMenuConfig({
+        nodeMenu: [
+            {
+                text: '分享',
+                callback() {
+                    alert('分享成功！')
                 },
-                rect: {
-                    fill: 'var(--el-color-white)',
-                    stroke: 'var(--el-color-grey)',
-                    strokeWidth: 1,
+            },
+            {
+                text: '属性',
+                callback(node: any) {
+                    alert(`
+          节点id：${node.id}
+          节点类型：${node.type}
+          节点坐标：(x: ${node.x}, y: ${node.y})`)
                 },
-                diamond: {
-                    fill: 'var(--el-color-white)',
-                    stroke: 'var(--el-color-grey)',
-                    strokeWidth: 1,
+            },
+        ],
+        edgeMenu: [
+            {
+                text: '属性',
+                callback(edge: any) {
+                    alert(`
+          边id：${edge.id}
+          边类型：${edge.type}
+          边坐标：(x: ${edge.x}, y: ${edge.y})
+          源节点id：${edge.sourceNodeId}
+          目标节点id：${edge.targetNodeId}`)
                 },
-                ellipse: {
-                    fill: 'var(--el-color-white)',
-                    stroke: 'var(--el-color-grey)',
-                    strokeWidth: 1,
-                },
-                polygon: {
-                    fill: 'var(--el-color-white)',
-                    stroke: 'var(--el-color-grey)',
-                    strokeWidth: 1,
-                },
-                polyline: {
-                    stroke: 'var(--el-color-grey)',
-                    hoverStroke: 'var(--el-color-grey)',
-                    selectedStroke: 'var(--el-color-grey)',
+            },
+        ],
+    })
+    lf.value.setTheme({
+        circle: {
+            r: 20,
+            fill: 'var(--el-color-white)',
+            stroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        rect: {
+            fill: 'var(--el-color-white)',
+            stroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        diamond: {
+            fill: 'var(--el-color-white)',
+            stroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        ellipse: {
+            fill: 'var(--el-color-white)',
+            stroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        polygon: {
+            fill: 'var(--el-color-white)',
+            stroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        polyline: {
+            stroke: 'var(--el-color-grey)',
+            hoverStroke: 'var(--el-color-grey)',
+            selectedStroke: 'var(--el-color-grey)',
+            strokeWidth: 1,
+        },
+        nodeText: {
+            color: 'var(--el-color-grey)',
+            fontSize: 12,
+        },
+        edgeText: {
+            color: 'var(--el-color-grey)',
+            fontSize: 12,
+            textWidth: 100,
+            background: {
+                fill: 'var(--el-color-white)',
+            },
+        },
+    })
+    registerNode()
+}
 
-                    strokeWidth: 1,
-                },
-                nodeText: {
-                    color: 'var(--el-color-grey)',
-                },
-                edgeText: {
-                    color: 'var(--el-color-grey)',
-                    background: {
-                        fill: 'var(--el-color-white)',
-                    },
-                },
-            })
-            this.registerNode()
-        },
-        registerNode() {
-            registerStart(this.lf)
-            registerUser(this.lf)
-            registerEnd(this.lf)
-            registerPush(this.lf, this.clickPlus, this.mouseDownPlus)
-            registerDownload(this.lf)
-            registerPolyline(this.lf)
-            this.render()
-        },
-        render() {
-            this.lf.render(this.data)
-            this.event()
-        },
-        getData() {
-            this.lf.getGraphData()
-        },
-        event() {
-            this.lf.on('node:click', ({ data }) => {
-                this.clickNode = data
-                this.dialogVisible = true
-            })
-            this.lf.on('edge:click', ({ data }) => {
-                this.clickNode = data
-                this.dialogVisible = true
-            })
-            this.lf.on('element:click', () => {
-                this.hideAddPanel()
-            })
-            this.lf.on('blank:click', () => {
-                this.hideAddPanel()
-            })
-            this.lf.on('connection:not-allowed', (data) => {
-                gp.$baseMessage(data.msg, 'error', 'hey')
-            })
-            this.lf.on('node:mousemove', () => {})
-        },
-        clickPlus(e, attributes) {
-            e.stopPropagation()
-            const { clientX, clientY } = e
-            this.addPanelStyle.top = `${clientY - 40}px`
-            this.addPanelStyle.left = `${clientX}px`
-            this.showAddPanel = true
-            this.addClickNode = attributes
-        },
-        mouseDownPlus(e) {
-            e.stopPropagation()
-        },
-        hideAddPanel() {
-            this.showAddPanel = false
-            this.addPanelStyle.top = 0
-            this.addPanelStyle.left = 0
-            this.addClickNode = null
-        },
-        closeDialog() {
-            this.dialogVisible = false
-        },
-        catData() {
-            this.graphData = this.lf.getGraphData()
-            this.dataVisible = true
-        },
-    },
+const registerNode = () => {
+    if (!lf.value) return
+    registerStart(lf.value)
+    registerUser(lf.value)
+    registerEnd(lf.value)
+    registerPush(lf.value, clickPlus, mouseDownPlus)
+    registerDownload(lf.value)
+    registerPolyline(lf.value)
+    render()
+}
+
+const render = () => {
+    if (!lf.value) return
+    lf.value.render(data.value)
+    event()
+}
+
+const event = () => {
+    if (!lf.value) return
+    lf.value.on('node:click', ({ data }: any) => {
+        clickNode.value = data
+        dialogVisible.value = true
+    })
+    lf.value.on('edge:click', ({ data }: any) => {
+        clickNode.value = data
+        dialogVisible.value = true
+    })
+    lf.value.on('element:click', () => {
+        hideAddPanel()
+    })
+    lf.value.on('blank:click', () => {
+        hideAddPanel()
+    })
+    lf.value.on('connection:not-allowed', (data: any) => {
+        gp.$baseMessage(data.msg, 'error', 'hey')
+    })
+    lf.value.on('node:mousemove', () => {})
+}
+
+const clickPlus = (e: Event, attributes: any) => {
+    e.stopPropagation()
+    const event = e as MouseEvent
+    const { clientX, clientY } = event
+    addPanelStyle.value.top = `${clientY - 40}px`
+    addPanelStyle.value.left = `${clientX}px`
+    showAddPanel.value = true
+    addClickNode.value = attributes
+}
+
+const mouseDownPlus = (e: Event) => {
+    e.stopPropagation()
+}
+
+const hideAddPanel = () => {
+    showAddPanel.value = false
+    addPanelStyle.value.top = '0px'
+    addPanelStyle.value.left = '0px'
+    addClickNode.value = null
+}
+
+const closeDialog = () => {
+    dialogVisible.value = false
+}
+
+const catData = () => {
+    if (!lf.value) return
+    graphData.value = lf.value.getGraphData()
+    dataVisible.value = true
+}
+
+onMounted(() => {
+    fetchData()
 })
 </script>
 

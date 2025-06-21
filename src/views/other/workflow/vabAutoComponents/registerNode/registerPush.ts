@@ -1,5 +1,28 @@
-export default function registerPush(lf, clickPlus, mouseDownPlus) {
-    lf.register('push', ({ PolygonNode, PolygonNodeModel, h }) => {
+import type { LogicFlow } from '@logicflow/core'
+
+interface PushNodeData {
+    text?: {
+        value: string
+        x: number
+        y: number
+    }
+    x: number
+    y: number
+    id: string
+}
+
+interface GraphData {
+    edges: Array<{
+        sourceNodeId: string
+    }>
+}
+
+export default function registerPush(
+    lf: LogicFlow,
+    clickPlus: (e: Event, model: any) => void,
+    mouseDownPlus: (e: Event, model: any) => void
+) {
+    lf.register('push', ({ PolygonNode, PolygonNodeModel, h }: any) => {
         class Node extends PolygonNode {
             getIconShape() {
                 const stroke = 'var(--el-color-grey)'
@@ -22,7 +45,7 @@ export default function registerPush(lf, clickPlus, mouseDownPlus) {
             getPlusShape() {
                 const { model } = this.props
                 // 判断当前节点是否子节点
-                const graphData = lf.getGraphData()
+                const graphData = lf.getGraphData() as GraphData
                 const edges = graphData.edges
                 const hasChildNode = edges.some((_) => _.sourceNodeId === model.id)
                 if (hasChildNode) {
@@ -37,9 +60,9 @@ export default function registerPush(lf, clickPlus, mouseDownPlus) {
                         height: 30,
                         viewBox: '0 0 1024 1024',
                         class: 'time-plus',
-                        onClick: (e) => clickPlus(e, model),
-                        onMousedown: (e) => mouseDownPlus(e, model),
-                        onMouseUp: (e) => mouseDownPlus(e, model),
+                        onClick: (e: Event) => clickPlus(e, model),
+                        onMousedown: (e: Event) => mouseDownPlus(e, model),
+                        onMouseUp: (e: Event) => mouseDownPlus(e, model),
                     },
                     h('path', {
                         fill: '#f17611',
@@ -61,7 +84,7 @@ export default function registerPush(lf, clickPlus, mouseDownPlus) {
                 const { width, height, x, y, fillOpacity, strokeOpacity, points } = model
                 const style = model.getNodeStyle()
                 const transform = `matrix(1 0 0 1 ${x - width / 2} ${y - height / 2})`
-                const pointsPath = points.map((point) => point.join(',')).join(' ')
+                const pointsPath = points.map((point: number[]) => point.join(',')).join(' ')
                 return h(
                     'g',
                     {
@@ -82,7 +105,9 @@ export default function registerPush(lf, clickPlus, mouseDownPlus) {
         }
 
         class Model extends PolygonNodeModel {
-            constructor(data, graphModel) {
+            points: number[][]
+
+            constructor(data: PushNodeData, graphModel: any) {
                 data.text = {
                     value: (data.text && data.text.value) || '',
                     x: data.x,

@@ -1,6 +1,19 @@
+import type { LogicFlow } from '@logicflow/core'
+
 const NODE_COLOR = 'var(--el-color-grey)'
-export default function registerDownload(lf) {
-    lf.register('download', ({ PolygonNode, PolygonNodeModel, h }) => {
+
+interface DownloadNodeData {
+    text?: {
+        value: string
+        x: number
+        y: number
+    }
+    x: number
+    y: number
+}
+
+export default function registerDownload(lf: LogicFlow) {
+    lf.register('download', ({ PolygonNode, PolygonNodeModel, h }: any) => {
         class Node extends PolygonNode {
             getIconShape() {
                 return h(
@@ -28,7 +41,7 @@ export default function registerDownload(lf) {
                 const { width, height, x, y, fillOpacity, strokeOpacity, points } = model
                 const style = model.getNodeStyle()
                 const transform = `matrix(1 0 0 1 ${x - width / 2} ${y - height / 2})`
-                const pointsPath = points.map((point) => point.join(',')).join(' ')
+                const pointsPath = points.map((point: number[]) => point.join(',')).join(' ')
                 return h(
                     'g',
                     {
@@ -48,7 +61,9 @@ export default function registerDownload(lf) {
         }
 
         class Model extends PolygonNodeModel {
-            constructor(data, graphModel) {
+            points: number[][]
+
+            constructor(data: DownloadNodeData, graphModel: any) {
                 data.text = {
                     value: (data.text && data.text.value) || '',
                     x: data.x,

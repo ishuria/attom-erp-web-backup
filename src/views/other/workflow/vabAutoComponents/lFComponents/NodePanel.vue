@@ -9,60 +9,60 @@
     </div>
 </template>
 
-<script>
-export default defineComponent({
-    name: 'NodePanel',
-    props: {
-        lf: {
-            type: Object,
-            default: () => {},
-        },
+<script lang="ts" setup>
+interface NodeItem {
+    text: string
+    type: string
+    icon: string
+    class?: string
+    label?: string
+}
+
+interface Props {
+    lf: any
+}
+
+const props = defineProps<Props>()
+
+const nodeList: NodeItem[] = [
+    {
+        text: '开始',
+        type: 'start',
+        icon: 'play-circle-line',
     },
-    data() {
-        return {
-            nodeList: [
-                {
-                    text: '开始',
-                    type: 'start',
-                    icon: 'play-circle-line',
-                },
-                {
-                    text: '矩形',
-                    type: 'rect',
-                    icon: 'shape-line',
-                },
-                {
-                    type: 'user',
-                    text: '用户',
-                    icon: 'user-3-line',
-                },
-                {
-                    type: 'push',
-                    text: '推送',
-                    icon: 'share-line',
-                },
-                {
-                    type: 'download',
-                    text: '位置',
-                    icon: 'user-location-line',
-                },
-                {
-                    type: 'end',
-                    text: '结束',
-                    icon: 'stop-circle-line',
-                },
-            ],
-        }
+    {
+        text: '矩形',
+        type: 'rect',
+        icon: 'shape-line',
     },
-    methods: {
-        $_dragNode(item) {
-            this.$props.lf.dnd.startDrag({
-                type: item.type,
-                text: item.label,
-            })
-        },
+    {
+        type: 'user',
+        text: '用户',
+        icon: 'user-3-line',
     },
-})
+    {
+        type: 'push',
+        text: '推送',
+        icon: 'share-line',
+    },
+    {
+        type: 'download',
+        text: '位置',
+        icon: 'user-location-line',
+    },
+    {
+        type: 'end',
+        text: '结束',
+        icon: 'stop-circle-line',
+    },
+]
+
+const $_dragNode = (item: NodeItem) => {
+    props.lf.dnd.startDrag({
+        type: item.type,
+        text: item.label,
+    })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,7 +1,21 @@
-export default function registerEnd(lf) {
-    lf.register('end', ({ CircleNode, CircleNodeModel, h }) => {
-        class EndNode extends CircleNode {
-            getIconShape() {
+import type { LogicFlow } from '@logicflow/core'
+
+interface StartNodeData {
+    text?: {
+        value: string
+        x: number
+        y: number
+        dragable: boolean
+        editable: boolean
+    }
+    x: number
+    y: number
+}
+
+export default function registerStart(lf: LogicFlow) {
+    lf.register('start', ({ CircleNode, CircleNodeModel, h }: any) => {
+        class StartNode extends CircleNode {
+            getLabelShape() {
                 const { x, y } = this.props.model
                 return h(
                     'text',
@@ -13,7 +27,7 @@ export default function registerEnd(lf) {
                         width: 50,
                         height: 25,
                     },
-                    '结束'
+                    '开始'
                 )
             }
 
@@ -27,25 +41,27 @@ export default function registerEnd(lf) {
                         cx: x,
                         cy: y,
                     }),
-                    this.getIconShape(),
+                    this.getLabelShape(),
                 ])
             }
         }
 
-        class EndModel extends CircleNodeModel {
-            constructor(data, graphModel) {
+        class StartModel extends CircleNodeModel {
+            constructor(data: StartNodeData, graphModel: any) {
                 data.text = {
                     value: (data.text && data.text.value) || '',
                     x: data.x,
                     y: data.y + 35,
+                    dragable: false,
+                    editable: true,
                 }
                 super(data, graphModel)
             }
 
-            getConnectedSourceRules() {
-                const rules = super.getConnectedSourceRules()
+            getConnectedTargetRules() {
+                const rules = super.getConnectedTargetRules()
                 const notAsTarget = {
-                    message: '终止节点不能作为连线的起点',
+                    message: '起始节点不能作为连线的终点',
                     validate: () => false,
                 }
                 rules.push(notAsTarget)
@@ -54,8 +70,8 @@ export default function registerEnd(lf) {
         }
 
         return {
-            view: EndNode,
-            model: EndModel,
+            view: StartNode,
+            model: StartModel,
         }
     })
 }

@@ -12,59 +12,62 @@
     </el-button-group>
 </template>
 
-<script>
-export default defineComponent({
-    name: 'Control',
-    props: {
-        lf: {
-            type: Object || String,
-            default: () => {},
-        },
-    },
-    emits: ['cat-data'],
-    data() {
-        return {
-            undoDisable: true,
-            redoDisable: true,
-            graphData: null,
-            dataVisible: false,
-        }
-    },
-    mounted() {
-        this.$props.lf.on('history:change', ({ data: { undoAble, redoAble } }) => {
-            this.$data.undoDisable = !undoAble
-            this.$data.redoDisable = !redoAble
-        })
-    },
-    methods: {
-        $_zoomIn() {
-            this.$props.lf.zoom(true)
-        },
-        $_zoomOut() {
-            this.$props.lf.zoom(false)
-        },
-        $_zoomReset() {
-            this.$props.lf.resetZoom()
-        },
-        $_translateRest() {
-            this.$props.lf.resetTranslate()
-        },
-        $_reset() {
-            this.$props.lf.resetZoom()
-            this.$props.lf.resetTranslate()
-        },
-        $_undo() {
-            this.$props.lf.undo()
-        },
-        $_redo() {
-            this.$props.lf.redo()
-        },
-        $_download() {
-            this.$props.lf.getSnapshot()
-        },
-        $_catData() {
-            this.$emit('cat-data')
-        },
-    },
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+
+interface Props {
+    lf: any
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+    'cat-data': []
+}>()
+
+const undoDisable = ref(true)
+const redoDisable = ref(true)
+
+onMounted(() => {
+    props.lf.on('history:change', ({ data: { undoAble, redoAble } }: any) => {
+        undoDisable.value = !undoAble
+        redoDisable.value = !redoAble
+    })
 })
+
+const $_zoomIn = () => {
+    props.lf.zoom(true)
+}
+
+const $_zoomOut = () => {
+    props.lf.zoom(false)
+}
+
+const $_zoomReset = () => {
+    props.lf.resetZoom()
+}
+
+const $_translateRest = () => {
+    props.lf.resetTranslate()
+}
+
+const $_reset = () => {
+    props.lf.resetZoom()
+    props.lf.resetTranslate()
+}
+
+const $_undo = () => {
+    props.lf.undo()
+}
+
+const $_redo = () => {
+    props.lf.redo()
+}
+
+const $_download = () => {
+    props.lf.getSnapshot()
+}
+
+const $_catData = () => {
+    emit('cat-data')
+}
 </script>

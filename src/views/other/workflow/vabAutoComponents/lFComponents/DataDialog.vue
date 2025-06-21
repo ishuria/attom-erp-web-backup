@@ -4,31 +4,31 @@
     </div>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import VabJsonViewer from 'vue-json-viewer'
 
-export default defineComponent({
-    components: { VabJsonViewer },
-    props: {
-        graphData: {
-            type: Object,
-            default: () => {},
-        },
-    },
-    data() {
-        return {
-            data: [],
-        }
-    },
-    created() {
-        this.data = JSON.parse(
-            JSON.stringify([
-                {
-                    edges: this.graphData.edges,
-                    nodes: this.graphData.nodes,
-                },
-            ])
-        )
-    },
+interface GraphData {
+    edges: any[]
+    nodes: any[]
+}
+
+interface Props {
+    graphData: GraphData
+}
+
+const props = defineProps<Props>()
+
+const data = ref<any[]>([])
+
+onMounted(() => {
+    data.value = JSON.parse(
+        JSON.stringify([
+            {
+                edges: props.graphData.edges,
+                nodes: props.graphData.nodes,
+            },
+        ])
+    )
 })
 </script>
