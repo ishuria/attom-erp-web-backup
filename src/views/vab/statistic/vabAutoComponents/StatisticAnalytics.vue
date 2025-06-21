@@ -273,18 +273,6 @@ const analyticsData = ref({
     retentionChart: [78, 65, 89, 67, 45, 78, 56],
 })
 
-// 用户行为数据
-const behaviorData = ref({
-    avgStayTime: 8.5,
-    stayTimeGrowth: 12.3,
-    bounceRate: 23.4,
-    bounceDecline: 5.6,
-    pageViews: 45678,
-    pageViewsGrowth: 15.7,
-    sessionDuration: 12.3,
-    sessionGrowth: 8.9,
-})
-
 // 渠道数据
 const channelData = ref([
     {

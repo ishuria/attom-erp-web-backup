@@ -236,104 +236,6 @@ const kpiData = ref({
     viewsGrowth: 12.5,
     viewsChart: [89, 67, 78, 45, 67, 89, 78],
 })
-
-// 图表周期
-const chartPeriod = ref('month')
-
-// 销售趋势
-const salesTrend = ref({
-    total: 1256789,
-    avg: 45678,
-    peak: 89234,
-})
-
-// 系统状态
-const systemStatus = ref({
-    cpu: 45,
-    memory: 67,
-    disk: 23,
-    network: 12,
-})
-
-// 在线用户
-const onlineUsers = ref([
-    { id: 1, name: '张三', avatar: '', status: 'online', statusText: '在线' },
-    { id: 2, name: '李四', avatar: '', status: 'away', statusText: '离开' },
-    { id: 3, name: '王五', avatar: '', status: 'online', statusText: '在线' },
-    { id: 4, name: '赵六', avatar: '', status: 'busy', statusText: '忙碌' },
-    { id: 5, name: '钱七', avatar: '', status: 'online', statusText: '在线' },
-])
-
-// 最近交易
-const recentTransactions = ref([
-    {
-        id: 'TX001',
-        customer: '张三',
-        product: 'iPhone 15 Pro',
-        amount: 8999,
-        status: 'completed',
-        statusText: '已完成',
-        date: '2024-01-15 14:30:25',
-    },
-    {
-        id: 'TX002',
-        customer: '李四',
-        product: 'MacBook Air',
-        amount: 12999,
-        status: 'pending',
-        statusText: '处理中',
-        date: '2024-01-15 14:25:18',
-    },
-    {
-        id: 'TX003',
-        customer: '王五',
-        product: 'AirPods Pro',
-        amount: 1999,
-        status: 'completed',
-        statusText: '已完成',
-        date: '2024-01-15 14:20:42',
-    },
-    {
-        id: 'TX004',
-        customer: '赵六',
-        product: 'iPad Air',
-        amount: 4999,
-        status: 'cancelled',
-        statusText: '已取消',
-        date: '2024-01-15 14:15:33',
-    },
-    {
-        id: 'TX005',
-        customer: '钱七',
-        product: 'Apple Watch',
-        amount: 2999,
-        status: 'completed',
-        statusText: '已完成',
-        date: '2024-01-15 14:10:15',
-    },
-])
-
-// 格式化数字
-const formatNumber = (num: number) => {
-    return num.toString().replaceAll(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
-
-// 获取进度条颜色
-const getProgressColor = (percentage: number) => {
-    if (percentage < 50) return 'var(--el-color-success)'
-    if (percentage < 80) return 'var(--el-color-warning)'
-    return 'var(--el-color-danger)'
-}
-
-// 获取状态类型
-const getStatusType = (status: string) => {
-    const statusMap: Record<string, string> = {
-        completed: 'success',
-        pending: 'warning',
-        cancelled: 'danger',
-    }
-    return statusMap[status] || 'info'
-}
 </script>
 
 <style lang="scss" scoped>
@@ -346,7 +248,9 @@ const getStatusType = (status: string) => {
     .kpi-card {
         position: relative;
         display: flex;
+        flex-direction: column;
         align-items: center;
+        height: 700px;
         padding: 24px;
         overflow: hidden;
         background: var(--el-bg-color-overlay);
@@ -584,23 +488,25 @@ const getStatusType = (status: string) => {
             .online-users {
                 .user-item {
                     display: flex;
+                    gap: 8px;
                     align-items: center;
                     margin-bottom: 8px;
 
-                    &:last-child {
-                        margin-bottom: 0;
+                    :deep(.el-avatar) {
+                        padding: 5px;
+                        background: var(--el-bg-color-page);
+                        border: 1px solid var(--el-border-color-lighter);
                     }
 
                     .user-name {
                         flex: 1;
-                        margin-left: 8px;
-                        font-size: 12px;
+                        font-size: 14px;
                         color: var(--el-text-color-primary);
                     }
 
                     .user-status {
                         padding: 2px 6px;
-                        font-size: 10px;
+                        font-size: 12px;
                         border-radius: 10px;
 
                         &.online {
