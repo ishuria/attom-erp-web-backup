@@ -1,7 +1,7 @@
 <template>
     <div class="application-container">
         <!-- 自动安装提示 -->
-        <div v-if="showAutoInstallPrompt && !hasShownAutoPrompt" class="auto-install-prompt">
+        <div v-if="showAutoInstallPrompt && !hasShownAutoPrompt && !isInstalled" class="auto-install-prompt">
             <div class="prompt-content">
                 <div class="prompt-header">
                     <div class="prompt-icon">
