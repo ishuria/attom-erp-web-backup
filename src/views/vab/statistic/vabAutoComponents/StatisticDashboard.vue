@@ -248,9 +248,9 @@ const kpiData = ref({
     .kpi-card {
         position: relative;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        height: 700px;
+        height: 168px;
         padding: 24px;
         overflow: hidden;
         background: var(--el-bg-color-overlay);
