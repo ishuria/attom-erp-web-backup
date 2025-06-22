@@ -2,7 +2,7 @@
     <div class="real-time-monitor">
         <!-- 顶部统计指标 -->
         <div class="monitor-stats">
-            <div v-for="(stat, index) in stats" :key="stat.id" class="stat-item">
+            <div v-for="stat in stats" :key="stat.id" class="stat-item">
                 <div class="stat-icon">
                     <el-icon :size="16">
                         <component :is="getIconComponent(stat.icon)" />

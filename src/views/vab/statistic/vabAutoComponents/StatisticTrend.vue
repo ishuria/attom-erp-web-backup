@@ -68,9 +68,6 @@ defineOptions({
     name: 'StatisticTrend',
 })
 
-// 时间范围
-const timeRange = ref('month')
-
 // 趋势数据
 const trendData = ref({
     totalSales: 1256789,
