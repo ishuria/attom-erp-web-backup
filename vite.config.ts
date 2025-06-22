@@ -29,7 +29,6 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     const env = loadEnv(mode, root)
     createWatch(env)
 
-    // 只在开发环境输出构建时间
     if (mode === 'development') {
         console.log(`构建时间: ${lastBuildTime}`)
     }
@@ -48,9 +47,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
                 clientFiles: ['./index.html', './library/{components,layouts}/*', './src/{views,plugins}/*'],
             },
             https,
-            fs: {
-                //cachedChecks: true,
-            },
+            fs: {},
         },
         resolve: {
             alias: {
@@ -104,21 +101,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             },
             preprocessorOptions: {
                 scss: {
-                    api: 'modern-compiler', // 修复警告: Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-                    // sassOptions: { outputStyle: 'expanded' },
-                    // additionalData(content: string, loaderContext: string) {
-                    //   return ['variables.scss'].includes(basename(loaderContext))
-                    //     ? content
-                    //     : `@use "~/library/styles/variables.scss" as *;${content}`
-                    // },
+                    api: 'modern-compiler',
                 },
             },
             devSourcemap: true,
         },
         plugins: createVitePlugin(env),
-        define: {
-            // 如果您必须使用华为组件库且打包报错，请放开该行，放开注释后会将您的环境变量暴露给华为组件库
-            // 'process.env': { ...process.env },
-        },
+        define: {},
     }
 })

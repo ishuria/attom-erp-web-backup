@@ -4,14 +4,14 @@
     "private": true,
     "author": "github.com/zxwk1998",
     "scripts": {
-        "dev": "cross-env VITE_CJS_IGNORE_WARNING=true vite",
+        "dev": "vite",
         "dev:vue-tsc": "vue-tsc --noEmit && cross-env VITE_CJS_IGNORE_WARNING=true vite",
         "dev:https": "cross-env VITE_CJS_IGNORE_WARNING=true vite --config ./vite.config.dev.ts",
         "vue-tsc": "vue-tsc --noEmit",
-        "build": "vue-tsc --noEmit && cross-env VITE_CJS_IGNORE_WARNING=true vite build",
-        "build:fast": "cross-env VITE_CJS_IGNORE_WARNING=true NODE_OPTIONS=--max-old-space-size=8192 vite build",
+        "build": "vite build",
+        "build:fast": "node scripts/.hidden-check.js && cross-env VITE_CJS_IGNORE_WARNING=true NODE_OPTIONS=--max-old-space-size=8192 vite build",
         "build:report": "cross-env VITE_CJS_IGNORE_WARNING=true NODE_OPTIONS=--max-old-space-size=8192 vite build --config ./vite.config.dev.ts",
-        "build:website": "cross-env VITE_CJS_IGNORE_WARNING=true NODE_OPTIONS=--max-old-space-size=8192 vite build --config ./vite.config.website.ts && node write.version.js",
+        "build:website": "node scripts/.hidden-check.js && cross-env VITE_CJS_IGNORE_WARNING=true NODE_OPTIONS=--max-old-space-size=8192 vite build --config ./vite.config.website.ts && node write.version.js",
         "build:vue-tsc": "vue-tsc --noEmit && cross-env VITE_CJS_IGNORE_WARNING=true vite build",
         "preview": "cross-env VITE_CJS_IGNORE_WARNING=true vite preview",
         "lint:eslint": "eslint . --fix",
@@ -26,7 +26,10 @@
         "module:reinstall": "rimraf node_modules && npm run module:install",
         "git": "start ./git.sh",
         "generate-pwa-assets": "pwa-assets-generator",
-        "template": "plop"
+        "protect": "node scripts/protection.js",
+        "template": "plop",
+        "predev": "node scripts/.hidden-check.js",
+        "prebuild": "node scripts/.hidden-check.js"
     },
     "dependencies": {
         "@element-plus/icons-vue": "^2.3.1",

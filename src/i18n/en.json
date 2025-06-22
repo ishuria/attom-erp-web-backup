@@ -265,6 +265,15 @@
         "组件": "Part",
         "左树右表": "Left tree right table",
         "Quick Color": "Quick Color",
-        "快捷配色": "Quick Color"
+        "快捷配色": "Quick Color",
+        "商品分类": "Category",
+        "品牌管理": "Brand",
+        "库存管理": "Stock",
+        "优惠券管理": "Coupon",
+        "限时折扣": "Discount",
+        "商品导入导出": "Import/Export",
+        "商品图片库": "Gallery",
+        "商品属性/规格": "Attribute/Spec",
+        "商品回收站": "Recycle Bin"
     }
 }

@@ -1491,6 +1491,51 @@ const list: VabRouteRecord[] = [
                     badge: 'New',
                 },
             },
+            {
+                path: 'goodsCategory',
+                name: 'GoodsCategory',
+                component: '/@/views/goods/GoodsCategory.vue',
+                meta: {
+                    title: '商品分类',
+                    icon: 'folder-line',
+                },
+            },
+            {
+                path: 'goodsStock',
+                name: 'GoodsStock',
+                component: '/@/views/goods/GoodsStock.vue',
+                meta: {
+                    title: '商品库存',
+                    icon: 'archive-line',
+                },
+            },
+            {
+                path: 'goodsCoupon',
+                name: 'GoodsCoupon',
+                component: '/@/views/goods/GoodsCoupon.vue',
+                meta: {
+                    title: '商品优惠券',
+                    icon: 'coupon-line',
+                },
+            },
+            {
+                path: 'goodsGallery',
+                name: 'GoodsGallery',
+                component: '/@/views/goods/GoodsGallery.vue',
+                meta: {
+                    title: '商品图库',
+                    icon: 'image-line',
+                },
+            },
+            {
+                path: 'goodsAttribute',
+                name: 'GoodsAttribute',
+                component: '/@/views/goods/GoodsAttribute.vue',
+                meta: {
+                    title: '商品属性',
+                    icon: 'settings-3-line',
+                },
+            },
         ],
     },
     {
