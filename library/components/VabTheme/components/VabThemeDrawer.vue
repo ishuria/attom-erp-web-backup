@@ -34,6 +34,9 @@
                 <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
                     <vab-color-picker />
                 </el-form-item>
+                <el-form-item v-if="'technology' != theme.themeName" :label="translate('快捷配色')">
+                    <vab-quick-color :model-value="theme.color" @select="handleQuickColor" />
+                </el-form-item>
                 <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
                     <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
                 </el-form-item>
@@ -272,6 +275,13 @@ const handleSaveTheme = () => {
     drawerVisible.value = false
     //@ts-ignore
     //if (device.value === 'mobile') location.reload(true)
+}
+
+const handleQuickColor = (color: string) => {
+    theme.value.color = color
+    setCssVar()
+    updateTheme()
+    saveTheme()
 }
 
 watch(

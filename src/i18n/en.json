@@ -263,6 +263,8 @@
         "纵向": "Vertical",
         "走马灯": "Carousel",
         "组件": "Part",
-        "左树右表": "Left tree right table"
+        "左树右表": "Left tree right table",
+        "Quick Color": "Quick Color",
+        "快捷配色": "Quick Color"
     }
 }
