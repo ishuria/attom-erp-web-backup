@@ -493,8 +493,7 @@ onMounted(() => {
                         height: var(--el-tab-item-height);
                         margin-right: 5px;
                         overflow: hidden;
-                        color: var(--el-color-primary-light-1);
-                        border: 1px solid var(--el-color-primary-light-1) !important;
+                        border: 1px solid var(--el-border-color) !important;
                         border-radius: var(--el-border-radius-base) !important;
                         transition:
                             all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
