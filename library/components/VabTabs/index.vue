@@ -431,10 +431,6 @@ onMounted(() => {
     }
 
     :deep() {
-        .fold-unfold {
-            margin-right: var(--el-margin);
-        }
-
         .el-tabs {
             &__nav-wrap::after {
                 background: none;
@@ -493,13 +489,10 @@ onMounted(() => {
                         height: var(--el-tab-item-height);
                         margin-right: 5px;
                         overflow: hidden;
-                        border: 1px solid var(--el-border-color) !important;
+                        color: var(--el-color-primary-light-1);
+                        border: 1px solid var(--el-color-primary-light-1) !important;
                         border-radius: var(--el-border-radius-base) !important;
-                        transition:
-                            all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                            border 0s,
-                            color 0s,
-                            font-size 0s;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
                         &:hover {
                             color: #fff; //不要用动态变量
