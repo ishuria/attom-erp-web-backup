@@ -493,8 +493,8 @@ onMounted(() => {
                         height: var(--el-tab-item-height);
                         margin-right: 5px;
                         overflow: hidden;
-                        color: var(--el-color-primary);
-                        border: 1px solid var(--el-color-primary) !important;
+                        color: var(--el-color-primary-light-1);
+                        border: 1px solid var(--el-color-primary-light-1) !important;
                         border-radius: var(--el-border-radius-base) !important;
                         transition:
                             all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -504,7 +504,7 @@ onMounted(() => {
 
                         &:hover {
                             color: #fff; //不要用动态变量
-                            background: var(--el-color-primary);
+                            background: var(--el-color-primary-light-1);
 
                             &::before {
                                 position: absolute;
@@ -520,8 +520,8 @@ onMounted(() => {
 
                         &.is-active {
                             color: #fff; //不要用动态变量
-                            background: var(--el-color-primary);
-                            border-color: var(--el-color-primary) !important;
+                            background: var(--el-color-primary-light-1);
+                            border-color: var(--el-color-primary-light-1) !important;
                         }
 
                         @keyframes shimmer {
