@@ -238,6 +238,9 @@ const generateSearchResults = (keyword: string): SearchResult[] => {
                     } else {
                         fullPath = parentPath + path
                     }
+                } else if (parentPath === '/' && path !== '/') {
+                    // 特殊处理：父路径是根路径，子路径不是根路径
+                    fullPath = `/${path}`
                 }
 
                 // 搜索标题、路径、图标等
@@ -262,8 +265,8 @@ const generateSearchResults = (keyword: string): SearchResult[] => {
 
             // 递归搜索子路由
             if (route.children && route.children.length > 0) {
-                // 对于根路径，传递空字符串
-                const currentPath = route.path === '/' ? '' : route.path
+                // 对于根路径，传递根路径字符串
+                const currentPath = route.path === '/' ? '/' : route.path
                 searchInRoutes(route.children, currentPath)
             }
         })
@@ -359,18 +362,28 @@ const selectResult = (result: SearchResult) => {
         try {
             console.log('尝试跳转到:', result)
 
-            // 检查是否是外部链接
-            if (result.meta && result.meta.target === '_blank') {
-                window.open(result.route, '_blank')
+            // 检查是否是外部链接或有target配置
+            if (result.meta && (result.meta.target === '_blank' || result.meta.target === '_self')) {
+                // 使用hash路由格式在新标签页打开
+                const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
+                const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
+                window.open(url, result.meta.target || '_blank')
                 addToHistory(result.title)
                 dialogVisible.value = false
                 searchKeyword.value = ''
+                $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
                 return
             }
 
             // 检查是否是隐藏路由
             if (result.meta && result.meta.isHidden) {
                 $baseMessage(`${result.title} 是隐藏路由，可能需要特殊权限`, 'warning', 'hey')
+            }
+
+            // 检查权限
+            if (result.meta && result.meta.guard) {
+                console.log('路由需要权限:', result.meta.guard)
+                // 这里可以添加权限检查逻辑，暂时跳过
             }
 
             // 检查是否是动态路由（包含参数）
@@ -401,13 +414,36 @@ const selectResult = (result: SearchResult) => {
                         router.push(result.route)
                     } catch (pathError) {
                         console.error('路径跳转也失败:', pathError)
-                        throw pathError
+                        // 如果路径跳转也失败，尝试使用window.open
+                        console.log('尝试使用window.open跳转:', result.route)
+                        const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
+                        const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
+                        window.open(url, '_blank')
+                        $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                        addToHistory(result.title)
+                        dialogVisible.value = false
+                        searchKeyword.value = ''
+                        return
                     }
                 }
             } else {
                 // 没有名称时使用路径跳转
                 console.log('使用路径跳转:', result.route)
-                router.push(result.route)
+                try {
+                    router.push(result.route)
+                } catch (pathError) {
+                    console.error('路径跳转失败:', pathError)
+                    // 如果路径跳转失败，尝试使用window.open
+                    console.log('尝试使用window.open跳转:', result.route)
+                    const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
+                    const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
+                    window.open(url, '_blank')
+                    $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                    addToHistory(result.title)
+                    dialogVisible.value = false
+                    searchKeyword.value = ''
+                    return
+                }
             }
 
             addToHistory(result.title)
@@ -416,8 +452,19 @@ const selectResult = (result: SearchResult) => {
             $baseMessage(`已跳转到 ${result.title}`, 'success', 'hey')
         } catch (error) {
             console.error('路由跳转失败:', error, result)
-            // 可以在这里添加用户提示
-            $baseMessage(`无法跳转到 ${result.title}，请检查路由配置`, 'error', 'hey')
+            // 最后的备选方案：使用window.open
+            try {
+                const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
+                const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
+                window.open(url, '_blank')
+                $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                addToHistory(result.title)
+                dialogVisible.value = false
+                searchKeyword.value = ''
+            } catch (finalError) {
+                console.error('所有跳转方式都失败:', finalError)
+                $baseMessage(`无法跳转到 ${result.title}，请检查路由配置`, 'error', 'hey')
+            }
         }
     }
 }
