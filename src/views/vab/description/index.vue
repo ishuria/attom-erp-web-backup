@@ -8,67 +8,61 @@
             </el-radio-group>
             <el-descriptions border :column="3" :size="size" title="带边框">
                 <template #extra>
-                    <el-button size="small" type="primary">Operation</el-button>
+                    <el-button size="small" type="primary">操作</el-button>
                 </template>
                 <el-descriptions-item>
-                    <template #label>Username</template>
+                    <template #label>用户名</template>
                     kooriookami
                 </el-descriptions-item>
                 <el-descriptions-item>
-                    <template #label>Telephone</template>
+                    <template #label>电话</template>
                     18100000000
                 </el-descriptions-item>
                 <el-descriptions-item>
-                    <template #label>Place</template>
-                    Suzhou
+                    <template #label>地点</template>
+                    苏州
                 </el-descriptions-item>
                 <el-descriptions-item>
-                    <template #label>Remarks</template>
-                    <el-tag size="small">School</el-tag>
+                    <template #label>备注</template>
+                    <el-tag size="small">学校</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item>
-                    <template #label>Address</template>
-                    No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
+                    <template #label>地址</template>
+                    江苏省苏州市吴中区吴中大道1188号
                 </el-descriptions-item>
             </el-descriptions>
 
             <el-descriptions :column="3" :size="size" title="不带边框">
                 <template #extra>
-                    <el-button size="small" type="primary">Operation</el-button>
+                    <el-button size="small" type="primary">操作</el-button>
                 </template>
-                <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-                <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-                <el-descriptions-item label="Place">Suzhou</el-descriptions-item>
-                <el-descriptions-item label="Remarks">
-                    <el-tag size="small">School</el-tag>
+                <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+                <el-descriptions-item label="电话">18100000000</el-descriptions-item>
+                <el-descriptions-item label="地点">苏州</el-descriptions-item>
+                <el-descriptions-item label="备注">
+                    <el-tag size="small">学校</el-tag>
                 </el-descriptions-item>
-                <el-descriptions-item label="Address">
-                    No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-                </el-descriptions-item>
+                <el-descriptions-item label="地址">江苏省苏州市吴中区吴中大道1188号</el-descriptions-item>
             </el-descriptions>
 
             <el-descriptions border :column="4" direction="vertical" :size="size" title="带边框的垂直列表">
-                <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-                <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-                <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-                <el-descriptions-item label="Remarks">
-                    <el-tag size="small">School</el-tag>
+                <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+                <el-descriptions-item label="电话">18100000000</el-descriptions-item>
+                <el-descriptions-item label="地点" :span="2">苏州</el-descriptions-item>
+                <el-descriptions-item label="备注">
+                    <el-tag size="small">学校</el-tag>
                 </el-descriptions-item>
-                <el-descriptions-item label="Address">
-                    No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-                </el-descriptions-item>
+                <el-descriptions-item label="地址">江苏省苏州市吴中区吴中大道1188号</el-descriptions-item>
             </el-descriptions>
 
             <el-descriptions :column="4" direction="vertical" :size="size" title="无边框的垂直列表">
-                <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-                <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-                <el-descriptions-item label="Place" :span="2">Suzhou</el-descriptions-item>
-                <el-descriptions-item label="Remarks">
-                    <el-tag size="small">School</el-tag>
+                <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
+                <el-descriptions-item label="电话">18100000000</el-descriptions-item>
+                <el-descriptions-item label="地点" :span="2">苏州</el-descriptions-item>
+                <el-descriptions-item label="备注">
+                    <el-tag size="small">学校</el-tag>
                 </el-descriptions-item>
-                <el-descriptions-item label="Address">
-                    No.1188, Wuzhong Avenue, Wuzhong District, Suzhou, Jiangsu Province
-                </el-descriptions-item>
+                <el-descriptions-item label="地址">江苏省苏州市吴中区吴中大道1188号</el-descriptions-item>
             </el-descriptions>
         </vab-card>
 
@@ -77,38 +71,22 @@
             <el-switch v-model="accordion" inline-prompt @change="handleAccordion" />
 
             <el-collapse v-model="activeName" :accordion="accordion">
-                <el-collapse-item name="1" title="Consistency">
-                    <div>
-                        Consistent with real life: in line with the process and logic of real life, and comply with languages and habits
-                        that the users are used to;
-                    </div>
-                    <div>
-                        Consistent within interface: all elements should be consistent, such as: design style, icons and texts, position of
-                        elements, etc.
-                    </div>
+                <el-collapse-item name="1" title="一致性">
+                    <div>与现实生活一致：与现实生活的流程和逻辑保持一致，遵循用户习惯的语言和概念；</div>
+                    <div>在界面中一致：所有的元素和结构需保持一致，比如：设计风格、图标和文本、元素的位置等。</div>
                 </el-collapse-item>
-                <el-collapse-item name="2" title="Feedback">
-                    <div>
-                        Operation feedback: enable the users to clearly perceive their operations by style updates and interactive effects;
-                    </div>
-                    <div>Visual feedback: reflect current state by updating or rearranging elements of the page.</div>
+                <el-collapse-item name="2" title="反馈">
+                    <div>操作反馈：让用户清楚地感知到他们的操作，通过样式更新和交互效果；</div>
+                    <div>视觉反馈：通过更新或重新排列页面元素来反映当前状态。</div>
                 </el-collapse-item>
-                <el-collapse-item name="3" title="Efficiency">
-                    <div>Simplify the process: keep operating process simple and intuitive;</div>
-                    <div>
-                        Definite and clear: enunciate your intentions clearly so that the users can quickly understand and make decisions;
-                    </div>
-                    <div>
-                        Easy to identify: the interface should be straightforward, which helps the users to identify and frees them from
-                        memorizing and recalling.
-                    </div>
+                <el-collapse-item name="3" title="效率">
+                    <div>简化流程：保持操作流程简单直观；</div>
+                    <div>明确清晰：清楚地表达您的意图，让用户能够快速理解和做出决策；</div>
+                    <div>易于识别：界面应该直观明了，帮助用户识别，避免记忆和回忆。</div>
                 </el-collapse-item>
-                <el-collapse-item name="4" title="Controllability">
-                    <div>Decision making: giving advices about operations is acceptable, but do not make decisions for the users;</div>
-                    <div>
-                        Controlled consequences: users should be granted the freedom to operate, including canceling, aborting or
-                        terminating current operation.
-                    </div>
+                <el-collapse-item name="4" title="可控性">
+                    <div>决策：关于操作的建议是可以接受的，但不要为用户做决定；</div>
+                    <div>可控结果：用户应该被授予操作的自由，包括取消、中止或终止当前操作。</div>
                 </el-collapse-item>
             </el-collapse>
         </vab-card>
