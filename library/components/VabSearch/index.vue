@@ -12,7 +12,7 @@
         </div>
 
         <!-- 搜索弹框 -->
-        <el-dialog
+        <vab-dialog
             v-model="dialogVisible"
             :append-to-body="true"
             class="search-dialog"
@@ -143,7 +143,7 @@
                     </div>
                 </div>
             </template>
-        </el-dialog>
+        </vab-dialog>
     </div>
 </template>
 
