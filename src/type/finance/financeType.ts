@@ -145,3 +145,60 @@ export interface ICheckOutboundNotMatchInvoiceExport {
 export interface IBooleanRes {
   data: boolean
 }
+
+export interface IGetInboundSummaryRes {
+  data?: {
+    list?: IGetInboundSummaryItem[]
+    total?: number
+  }
+
+}
+
+export interface IGetInboundSummaryItem {
+  /** 供应商名 */
+  supplierNam?: string
+
+  /** 发票价格 */
+  invoicePrice?: string
+
+  /** po未税价 */
+  preTaxPrice?: string
+
+  /** 差额 */
+  diffPrice?: string
+}
+
+
+export interface IGetInboundSummaryComponentRes {
+  data?: {
+    list?: IGetInboundSummaryComponentItem[]
+    total?: number
+  }
+}
+
+export interface IGetInboundSummaryComponentItem {
+  /** 发票价格 */
+  invoicePrice?: string
+  /** 差额 */
+  diffPrice?: string
+  /** po未税价 */
+  poPreTaxPrice?: string
+  /** po零件id */
+  poComponentId?: string
+  /** 供应商名 */
+  suppliser?: string
+  /** sku */
+  sku?: string
+  /** po零件名 */
+  componentName?: string
+  /** po号 */
+  po?: string
+  /** 入库数量 */
+  inboundCount?: string
+  /** 零件采购总数 */
+  purchaseCount?: string
+  /** 单位 */
+  unit?: string
+  /** 状态 */
+  status?:boolean
+}

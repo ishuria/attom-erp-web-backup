@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="签收数据" :name="0">
+      <el-tab-pane label="入库明细数据" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleExport">导出</el-button>
@@ -78,7 +78,7 @@
 
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">PO零件汇总导出</el-button>
+            <el-button type="primary" @click="handlePoComponentExport">入库PO零件汇总导出</el-button>
             <span style="margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
                 v-model="componentSummaryDate"
@@ -102,7 +102,7 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" />
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryComponentData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -110,20 +110,20 @@
 
         <el-table
           border
-          :cell-style="cellStyle"
+          :data="componentSummaryList"
           class="noneHoverTable"
           :header-cell-style="{ textAlign: 'center' }"
-          :row-class-name="tableRowClassName"
+          :row-class-name="componentSummaryRowClassName"
         >
-          <el-table-column label="供应商名称" min-width="130" prop="supplier" />
+          <el-table-column label="供应商名称" min-width="130" prop="suppliser" />
           <el-table-column label="PO" min-width="130" prop="po" />
           <el-table-column label="Sku" min-width="130" prop="sku" />
           <el-table-column label="零件名" min-width="130" prop="componentName" />
-          <el-table-column label="已入库数量" min-width="130" prop="inBoundCount" />
-          <el-table-column label="PO零件总数" min-width="130" prop="poComponentCount" />
+          <el-table-column label="已入库数量" min-width="130" prop="inboundCount" />
+          <el-table-column label="PO零件总数" min-width="130" prop="purchaseCount" />
           <el-table-column label="零件单位" min-width="130" prop="unit" />
-          <el-table-column label="已入库的零件未税价" min-width="130" prop="inBoundComponentPreTaxPrice" />
-          <el-table-column label="发票未税价" min-width="130" prop="invoiceTaxPrice" />
+          <el-table-column label="已入库的零件未税价" min-width="130" prop="poPreTaxPrice" />
+          <el-table-column label="发票未税价" min-width="130" prop="invoicePrice" />
           <el-table-column label="未匹配发票金额" min-width="130" prop="diffPrice" />
 
           <template #empty>
@@ -144,7 +144,7 @@
 
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">入库汇总导出</el-button>
+            <el-button type="primary" @click="handleSuppliserExport">入库汇总导出</el-button>
             <span style="margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
                 v-model="supplierSummaryDate"
@@ -155,8 +155,6 @@
                 start-placeholder="开始日期"
                 type="daterange"
                 @change="querySupplierSummaryData"
-                show-summary
-                :summary-method="handleSupplierSummaryMethod"
               />
             </span>
           </vab-query-form-left-panel>
@@ -170,7 +168,7 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" />
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="querySuppliserData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -178,14 +176,15 @@
 
         <el-table
           border
-          :cell-style="cellStyle"
+          :data="supplierSummaryList"
           class="noneHoverTable"
           :header-cell-style="{ textAlign: 'center' }"
-          :row-class-name="tableRowClassName"
+          :summary-method="handleSummaryMethod"
+          show-summary
         >
-          <el-table-column label="供应商名称" min-width="130" prop="supplier" />
-          <el-table-column label="PO未税价" min-width="130" prop="preTaxPriceTotal" />
-          <el-table-column label="发票未税价" min-width="130" prop="invoiceTaxPrice" />
+          <el-table-column label="供应商名称" min-width="130" prop="supplierName" />
+          <el-table-column label="PO未税价" min-width="130" prop="preTaxPrice" />
+          <el-table-column label="发票未税价" min-width="130" prop="invoicePrice" />
           <el-table-column label="未匹配发票金额" min-width="130" prop="diffPrice" />
 
           <template #empty>
@@ -266,10 +265,11 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
+import type { TableColumnCtx } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { downloadFilePD } from '~/src/api/devlocal/download'
-import { getInboundList } from '/@/api/devlocal/finance'
-import type { IGetInBoundList, IGetOutBoundListReq } from '/@/type/finance/financeType'
+import { getInboundList,queryInboundSummaryList,queryInboundSummaryComponentList } from '/@/api/devlocal/finance'
+import type { IGetInBoundList, IGetOutBoundListReq,IGetInboundSummaryItem,IGetInboundSummaryComponentItem } from '/@/type/finance/financeType'
 import { formatDate, getDefaultStringTime, getThisYearStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -283,6 +283,7 @@ const date = ref<[string, string]>(getDefaultStringTime())
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const list = ref<IGetInBoundList[]>([])
+
 const queryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',
   pageNo: 1,
@@ -293,6 +294,7 @@ const queryForm = reactive<IGetOutBoundListReq>({
 
 const supplierSummaryDate = ref<[string, string]>(getThisYearStringTime())
 const supplierSummaryTotal = ref<number>(0)
+const supplierSummaryList = ref<IGetInboundSummaryItem[]>([])
 const  supplierSummaryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',
   pageNo: 1,
@@ -303,6 +305,7 @@ const  supplierSummaryForm = reactive<IGetOutBoundListReq>({
 
 const componentSummaryDate = ref<[string, string]>(getThisYearStringTime())
 const componentSummaryTotal = ref<number>(0)
+const componentSummaryList = ref<IGetInboundSummaryComponentItem[]>([])
 const componentSummaryForm = reactive<IGetOutBoundListReq>({
   keyWord: '',
   pageNo: 1,
@@ -313,6 +316,12 @@ const componentSummaryForm = reactive<IGetOutBoundListReq>({
 
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.purchaseCount < 0) {
+    return 'danger-row'
+  }
+}
+
+const componentSummaryRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.status === false) {
     return 'danger-row'
   }
 }
@@ -343,31 +352,67 @@ const queryDateData = () => {
 
 /** po零件汇总 start */
 const queryComponentSummaryData = () => {
+  componentSummaryForm.fromDate = date.value[0]
+  componentSummaryForm.toDate = date.value[1]
+  fetchComponentSummaryData()
 }
 
 const componentSummaryHandleCurrentChange = (value: number) => {
   componentSummaryForm.pageNo = value
+  fetchComponentSummaryData()
 }
 const componentSummaryHandleSizeChange = (value: number) => {
   componentSummaryForm.pageNo = 1
   componentSummaryForm.pageSize = value
+  fetchComponentSummaryData()
 }
+
+const queryComponentData = async () =>{
+  componentSummaryForm.pageNo = 1
+  fetchComponentSummaryData()
+}
+
+const handlePoComponentExport = async () =>{
+  await downloadFilePD('/inbound/export/component', {
+    fromDate: componentSummaryDate.value[0],
+    toDate: componentSummaryDate.value[1],
+  })
+}
+
 /** po零件汇总 end */
 
 
 /** 供应商汇总 start */
 const querySupplierSummaryData = () => {
+  supplierSummaryForm.fromDate = date.value[0]
+  supplierSummaryForm.toDate = date.value[1]
+  fetchSupplierSummaryData()
 }
 
 const supplierSummaryHandleCurrentChange = (value: number) => {
   supplierSummaryForm.pageNo = value
+  fetchSupplierSummaryData()
 }
 const supplierSummaryHandleSizeChange = (value: number) => {
   supplierSummaryForm.pageNo = 1
   supplierSummaryForm.pageSize = value
+  fetchSupplierSummaryData()
 }
 
-const handleSupplierSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
+const querySuppliserData  = async()=>{
+  supplierSummaryForm.pageNo = 1
+  fetchSupplierSummaryData()
+}
+
+const handleSuppliserExport = async () =>{
+  await downloadFilePD('/inbound/export/supplier', {
+    fromDate: supplierSummaryDate.value[0],
+    toDate: supplierSummaryDate.value[1],
+  })
+}
+
+
+const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
 
   const sums: string[] = [];
 
@@ -378,7 +423,7 @@ const handleSupplierSummaryMethod = ({ columns, data }: { columns: any[], data: 
     }
 
     // 对特定字段执行求和
-    if (['preTaxPriceTotal', 'invoiceTaxPrice', 'diffPrice'].includes(column.property)) {
+    if (['invoicePrice', 'preTaxPrice', 'diffPrice'].includes(column.property)) {
       const total = data.reduce((sum, row) => {
         const value = Number(row[column.property]);
         return isNaN(value) ? sum : sum + value;
@@ -392,7 +437,6 @@ const handleSupplierSummaryMethod = ({ columns, data }: { columns: any[], data: 
 
   return sums;
 }
-
 /** 供应商汇总 end */
 
 
@@ -406,7 +450,7 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 1 || data.columnIndex === 3 || data.columnIndex === 4) {
+  if (data.columnIndex === 1 || data.columnIndex === 2 || data.columnIndex === 3 || data.columnIndex === 4) {
     return {
       textAlign: 'left',
     }
@@ -419,6 +463,15 @@ const handleTabClick = (pane: TabsPaneContext) => {
   if (pane.props.name != undefined) {
     const tabValue = Number(pane.props.name)
     activeName.value = tabValue
+    if (tabValue === 1){
+      fetchComponentSummaryData()
+
+    }else if (tabValue === 2){
+
+      fetchSupplierSummaryData()
+    }else{
+      fetchData()
+    }
     router.push({
       query: {
         tab: tabValue,
@@ -427,6 +480,18 @@ const handleTabClick = (pane: TabsPaneContext) => {
       },
     })
   }
+}
+
+const fetchSupplierSummaryData = async () => {
+  const { data } = await queryInboundSummaryList(supplierSummaryForm)
+  supplierSummaryTotal.value = data?.total!
+  supplierSummaryList.value = data?.list!
+}
+
+const fetchComponentSummaryData = async () => {
+  const { data } = await queryInboundSummaryComponentList(componentSummaryForm)
+  componentSummaryTotal.value = data?.total!
+  componentSummaryList.value = data?.list!
 }
 
 const fetchData = async () => {

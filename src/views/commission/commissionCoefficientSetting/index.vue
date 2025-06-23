@@ -17,7 +17,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           border :cell-style="cellStyle"
           class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
           stripe
@@ -91,7 +91,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           border :cell-style="cellStyle"
           class="noneHoverTable" :data="list2" :header-cell-style="{ textAlign: 'center' }"
           stripe
@@ -212,9 +212,9 @@
           <el-input v-model="form.price" />
         </el-form-item>
       </el-form>
-      <el-table 
+      <el-table
         border
-        class="noneHoverTable" :data="list3" 
+        class="noneHoverTable" :data="list3"
         stripe
         @cell-click="changeInput"
       >
@@ -275,7 +275,8 @@ const handleConfirmParamSetting = async () => {
         upperLimit: form.upperLimit,
         minConversionRate: Number(form.minConversionRate) / 100,
         compensationDay: form.compensationDay,
-        newDiscountRatio: Number(form.newDiscountRatio) / 100
+        newDiscountRatio: Number(form.newDiscountRatio) / 100,
+        price: form.price
       })
       if (data) {
         $baseMessage('提交成功！', 'success')
@@ -283,7 +284,7 @@ const handleConfirmParamSetting = async () => {
       }
     }
   })
-  
+
 }
 const showParamSetting = async () => {
   paramSetting.value = true
@@ -506,7 +507,7 @@ onBeforeMount(() => {
         .noneHoverTable {
           flex: 1;
 
-          
+
         }
       }
     }

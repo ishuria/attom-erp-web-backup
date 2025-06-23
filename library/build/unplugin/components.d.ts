@@ -136,6 +136,7 @@ declare module 'vue' {
     PortalDivider: typeof import('./../../../src/views/portal/vabAutoComponents/PortalDivider.vue')['default']
     PortalHeader: typeof import('./../../../src/views/portal/vabAutoComponents/PortalHeader.vue')['default']
     ProductStatisticsDetail: typeof import('./../../../src/views/purchase/vabAutoComponents/productStatisticsDetail.vue')['default']
+    ProductStatisticsTable: typeof import('./../../../src/views/purchase/vabAutoComponents/productStatisticsTable.vue')['default']
     ProgressCircularProgressBar: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCircularProgressBar.vue')['default']
     ProgressCustomColor: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCustomColor.vue')['default']
     ProgressCustomizedContent: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressCustomizedContent.vue')['default']

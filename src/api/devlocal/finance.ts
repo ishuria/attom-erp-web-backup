@@ -1,13 +1,14 @@
 import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
-import type {
+import {
   IBooleanRes,
   ICheckOutboundNotMatchInvoiceExport,
   IGetInBoundListRes,
   IGetOutBoundListReq,
   IGetOutBoundListRes,
   IGetOutboundInventoryCheckRes,
+  IGetInboundSummaryRes, IGetInboundSummaryComponentRes,
 } from '/@/type/finance/financeType'
 
 export function getOutBoundList(data: IGetOutBoundListReq): Promise<IGetOutBoundListRes> {
@@ -36,6 +37,22 @@ export function getInboundList(data: IGetOutBoundListReq): Promise<IGetInBoundLi
 export function checkOutboundNotMatchInvoiceExport(data: ICheckOutboundNotMatchInvoiceExport): Promise<IBooleanRes> {
   return request({
     url: `${BASE_API}/outbound/notMatch/invoiceExport/check`,
+    method: 'post',
+    data,
+  })
+}
+
+export function queryInboundSummaryList(data: IGetOutBoundListReq): Promise<IGetInboundSummaryRes> {
+  return request({
+    url: `${BASE_API}/inbound/summary/suppliser`,
+    method: 'post',
+    data,
+  })
+}
+
+export function queryInboundSummaryComponentList(data: IGetOutBoundListReq): Promise<IGetInboundSummaryComponentRes> {
+  return request({
+    url: `${BASE_API}/inbound/summary/component`,
     method: 'post',
     data,
   })
