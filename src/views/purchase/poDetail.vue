@@ -3318,7 +3318,9 @@ const fetchSkuComponent = async () => {
     if (data) {
       skuComponentList.value = data
       skuComponentList.value.forEach((item: any) => {
-        item.unitPrice = formattedPrice(item.unitPrice)
+        if (item.unitPrice) {
+          item.unitPrice = formattedPrice(item.unitPrice)
+        }
       })
     }
   } catch (error) {
