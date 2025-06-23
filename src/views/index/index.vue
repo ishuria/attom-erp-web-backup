@@ -74,7 +74,7 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-bar-card v-if="ableViewCard" background="white" :count-config="countConfig4"  percentage="10%" title="推进中的项目" url="/newProductDevelopment/newProductProgress">
+        <top-bar-card v-if="ableViewCard" background="white" :count-config="countConfig4" :month-diff="monthDiff" :year-diff="yearDiff" title="推进中的项目" url="/newProductDevelopment/newProductProgress">
           <template #chart>
             <in-progress-projects-bar :data="inProgressProjectsData" :total="countConfig4.endValue" />
           </template>
@@ -254,10 +254,14 @@ onBeforeMount(() => {
   })
 })
 const inProgressProjectsData = ref<IGetFrontPageProgressProjectsItem[]>([])
+const monthDiff = ref<number>(0)
+const yearDiff = ref<number>(0)
 const fetchInProgressProjectsData = async () => {
   const { data } = await getFrontPageProgressProjects()
   countConfig4.endValue = data.total
   inProgressProjectsData.value = data.list
+  monthDiff.value = data.monthDiff
+  yearDiff.value = data.yearDiff
 }
 onBeforeMount(() => {
   fetchInProgressProjectsData()

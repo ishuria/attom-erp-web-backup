@@ -23,7 +23,7 @@ const props = defineProps<{
 
 const option = reactive({
   grid: {
-    left: '40px',
+    left: '35px',
     top: '30px',
     right: '10px',
     bottom: '35px',
@@ -35,7 +35,7 @@ const option = reactive({
   xAxis: {
     type: 'category',
     data: props.data.map((item) => item.spendTime),
-    boundaryGap: false,
+  
     name: '已用时间',
     nameLocation: 'center',
     nameGap: 25,
@@ -44,6 +44,9 @@ const option = reactive({
       color: '#333',
       fontSize: 12,
     },
+    axisTick: {
+      alignWithLabel: true
+    }
   },
   yAxis: {
     type: 'value',
@@ -53,13 +56,11 @@ const option = reactive({
       fontSize: 12,
       formatter: (val: number) => `${val}个`,
     },
-    // interval: yAxisInterval,
     splitLine: {
       show: false,
     },
-    offset: 7,
     axisTick: { show: false },
-    axisLine: { show: true },
+    axisLine: { show: false },
   },
   series: [
     {
@@ -73,7 +74,7 @@ const option = reactive({
       },
     },
     {
-      barWidth: 18,
+      barWidth: 14,
       name: '非OEM',
       type: 'bar',
       stack: 'one',

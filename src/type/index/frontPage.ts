@@ -1,6 +1,8 @@
 export interface IGetFrontPageProgressProjectsRes {
   data: {
     total: number
+    monthDiff: number
+    yearDiff: number
     list: IGetFrontPageProgressProjectsItem[]
   }
 }

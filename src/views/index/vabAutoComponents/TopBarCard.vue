@@ -23,13 +23,15 @@
         <div class="bottom">
           <div>
             较上月
-            <vab-icon icon="arrow-up-line" />
-            <span>{{ percentage }}</span>
+            <vab-icon v-if="monthDiff >= 0" icon="arrow-up-line" />
+            <vab-icon v-else icon="arrow-down-line" />
+            <span :class="monthDiff >= 0 ? 'text-success' : 'text-danger'">{{ monthDiff }}%</span>
           </div>
           <div>
             较去年
-            <vab-icon icon="arrow-up-line" />
-            <span>{{ percentage }}</span>
+            <vab-icon v-if="yearDiff >= 0" icon="arrow-up-line" />
+              <vab-icon v-else icon="arrow-down-line" />
+            <span :class="yearDiff >= 0 ? 'text-success' : 'text-danger'">{{ yearDiff }}%</span>
           </div>
         </div>
       </el-col>
@@ -68,9 +70,13 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  percentage: {
-    type: String,
-    default: '10%',
+  monthDiff: {
+    type: Number,
+    default: 0,
+  },
+  yearDiff: {
+    type: Number,
+    default: 0,
   },
   countConfig: {
     type: Object,
@@ -100,7 +106,7 @@ const handleJumpTo = () => {
 
   :deep() {
     .el-card__body {
-      padding: 0 20px 0 0 !important;
+      padding: 0 10px 0 0 !important;
       .echarts {
         width: 100%;
         height: 160px;
@@ -134,15 +140,28 @@ const handleJumpTo = () => {
     .ri-arrow-up-line {
       width: 18px;
       height: 18px;
-      margin: 0 3px 0 2px;
+      margin: 0 3px 0 1px;
       color: var(--el-color-success);
       background: var(--el-color-success-light);
       border-radius: 50%;
       transform: scale(0.8);
     }
 
-    span {
+    .ri-arrow-down-line {
+      width: 18px;
+      height: 18px;
+      margin: 0 3px 0 1px;
+      color: var(--el-color-danger);
+      background: var(--el-color-danger-light);
+      border-radius: 50%;
+      transform: scale(0.8);
+    }
+
+    .text-success {
       color: var(--el-color-success);
+    }
+    .text-danger {
+      color: var(--el-color-danger);
     }
   }
 

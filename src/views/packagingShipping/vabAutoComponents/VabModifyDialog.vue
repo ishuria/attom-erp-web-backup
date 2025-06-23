@@ -113,6 +113,7 @@
     width="45%"
   >
     <el-table 
+      v-loading="inspectionLoading"
       border 
       :cell-class-name="cellClassName" class="noneHoveTable"  
       :data="inspectionList" 
@@ -407,15 +408,17 @@ const addFormRef = ref<FormInstance>()
 // 清点质检可见
 const inspectionVisible = ref<boolean>(false)
 const packingCountVisible = ref<boolean>(false)
+const inspectionLoading = ref<boolean>(false)
 // 展示清点质检
 const showInspection = async (row: ISkuDetailList) => {
+  inspectionLoading.value = true
   inspectionVisible.value = true
   const { data } = await getEncasementInspection({
     id: row.id!,
     sku: row.sku!
   })
   inspectionList.value = data
-  
+  inspectionLoading.value = false
 }
 // 清点质检的确认
 const confirmQualityCheck = async () => {
