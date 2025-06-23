@@ -69,6 +69,7 @@ export interface IUpdateCommissionSetting1Req {
   minConversionRate: number | null
   compensationDay: number | null
   newDiscountRatio: number | null
+  price?:string
 }
 export interface IGetCommissionTaskPictureListReq {
   keyWord: string
