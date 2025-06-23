@@ -613,7 +613,7 @@ const list: VabRouteRecord[] = [
         name: 'Other',
         component: Layout,
         meta: {
-            title: '其它',
+            title: '其他',
             icon: 'archive-line',
             guard: ['Admin'],
         },

@@ -19,7 +19,7 @@
             :close-on-click-modal="false"
             :close-on-press-escape="true"
             :modal-append-to-body="true"
-            title="AI智能搜索"
+            :title="translate('AI智能搜索')"
             width="600px"
             :z-index="9999"
         >
@@ -30,7 +30,7 @@
                         ref="searchInputRef"
                         v-model="searchKeyword"
                         class="main-search-input"
-                        placeholder="输入关键词搜索"
+                        :placeholder="translate('输入关键词搜索')"
                         @focus="handleFocus"
                         @input="handleSearch"
                         @keydown="handleKeydown"
@@ -51,8 +51,10 @@
                 <!-- 搜索历史 -->
                 <div v-if="!searchKeyword && searchHistory.length > 0" class="search-history">
                     <div class="history-header">
-                        <span class="history-title">搜索历史</span>
-                        <el-button class="clear-history-btn" size="small" type="text" @click="clearHistory">清空历史</el-button>
+                        <span class="history-title">{{ translate('搜索历史') }}</span>
+                        <el-button class="clear-history-btn" size="small" type="text" @click="clearHistory">
+                            {{ translate('清空历史') }}
+                        </el-button>
                     </div>
                     <div class="history-list">
                         <div v-for="(item, index) in searchHistory" :key="index" class="history-item" @click="selectHistory(item)">
@@ -69,7 +71,7 @@
 
                 <!-- 搜索建议 -->
                 <div v-if="searchKeyword && searchSuggestions.length > 0" class="search-suggestions">
-                    <div class="suggestions-title">搜索建议</div>
+                    <div class="suggestions-title">{{ translate('搜索建议') }}</div>
                     <div class="suggestions-list">
                         <div
                             v-for="(suggestion, index) in searchSuggestions"
@@ -90,7 +92,7 @@
                 <!-- 搜索结果 -->
                 <div v-if="searchKeyword && searchResults.length > 0" class="search-results">
                     <div class="results-header">
-                        <span class="results-title">搜索结果 ({{ searchResults.length }})</span>
+                        <span class="results-title">{{ translate('搜索结果') }} ({{ searchResults.length }})</span>
                     </div>
                     <div class="results-list">
                         <div
@@ -117,8 +119,8 @@
                     <el-icon class="no-results-icon">
                         <search />
                     </el-icon>
-                    <div class="no-results-text">未找到相关结果</div>
-                    <div class="no-results-tips">尝试使用其他关键词或检查拼写</div>
+                    <div class="no-results-text">{{ translate('未找到相关结果') }}</div>
+                    <div class="no-results-tips">{{ translate('尝试使用其他关键词或检查拼写') }}</div>
                 </div>
 
                 <!-- 搜索中提示 -->
@@ -126,20 +128,20 @@
                     <el-icon class="searching-icon" :class="{ rotating: isSearching }">
                         <loading />
                     </el-icon>
-                    <div class="searching-text">搜索中</div>
+                    <div class="searching-text">{{ translate('搜索中') }}</div>
                 </div>
             </div>
 
             <template #footer>
                 <div class="dialog-footer">
                     <div class="shortcut-tips">
-                        <span class="shortcut-item">Enter: 确认搜索</span>
-                        <span class="shortcut-item">Esc: 关闭弹框</span>
-                        <span class="shortcut-item">↑↓: 选择项目</span>
+                        <span class="shortcut-item">{{ translate('Enter: 确认搜索') }}</span>
+                        <span class="shortcut-item">{{ translate('Esc: 关闭弹框') }}</span>
+                        <span class="shortcut-item">{{ translate('↑↓: 选择项目') }}</span>
                     </div>
                     <div class="footer-buttons">
-                        <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button :disabled="!searchKeyword" type="primary" @click="confirmSearch">搜索</el-button>
+                        <el-button @click="dialogVisible = false">{{ translate('取消') }}</el-button>
+                        <el-button :disabled="!searchKeyword" type="primary" @click="confirmSearch">{{ translate('搜索') }}</el-button>
                     </div>
                 </div>
             </template>
@@ -171,7 +173,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    placeholder: 'AI智能搜索',
+    placeholder: translate('AI智能搜索'),
     showShortcut: true,
     maxHistory: 10,
 })
@@ -247,7 +249,7 @@ const generateSearchResults = (keyword: string): SearchResult[] => {
                 const searchText = `${title} ${path} ${route.meta.icon || ''}`.toLowerCase()
                 if (searchText.includes(keyword.toLowerCase())) {
                     results.push({
-                        title: isHidden ? `${title} (隐藏路由)` : title,
+                        title: isHidden ? `${title} (${translate('隐藏路由')})` : title,
                         path: fullPath,
                         icon: route.meta.icon || 'file-text-line',
                         route: fullPath,
@@ -371,13 +373,13 @@ const selectResult = (result: SearchResult) => {
                 addToHistory(result.title)
                 dialogVisible.value = false
                 searchKeyword.value = ''
-                $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                $baseMessage(`${translate('已在新标签页打开')} ${result.title}`, 'success', 'hey')
                 return
             }
 
             // 检查是否是隐藏路由
             if (result.meta && result.meta.isHidden) {
-                $baseMessage(`${result.title} 是隐藏路由，可能需要特殊权限`, 'warning', 'hey')
+                $baseMessage(`${result.title} ${translate('是隐藏路由，可能需要特殊权限')}`, 'warning', 'hey')
             }
 
             // 检查权限
@@ -390,13 +392,13 @@ const selectResult = (result: SearchResult) => {
             if (result.route.includes(':')) {
                 // 动态路由需要特殊处理，这里可以添加默认参数或提示用户
                 console.warn('动态路由需要参数:', result.route)
-                $baseMessage(`${result.title} 需要参数，请从菜单直接访问`, 'warning', 'hey')
+                $baseMessage(`${result.title} ${translate('需要参数，请从菜单直接访问')}`, 'warning', 'hey')
                 return
             }
 
             // 检查是否是动态新标签页路由
             if (result.meta && result.meta.isDynamic) {
-                $baseMessage(`${result.title} 是动态路由，将新开标签页`, 'info', 'hey')
+                $baseMessage(`${result.title} ${translate('是动态路由，将新开标签页')}`, 'info', 'hey')
             }
 
             // 获取路由名称
@@ -419,7 +421,7 @@ const selectResult = (result: SearchResult) => {
                         const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
                         const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
                         window.open(url, '_blank')
-                        $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                        $baseMessage(`${translate('已在新标签页打开')} ${result.title}`, 'success', 'hey')
                         addToHistory(result.title)
                         dialogVisible.value = false
                         searchKeyword.value = ''
@@ -438,7 +440,7 @@ const selectResult = (result: SearchResult) => {
                     const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
                     const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
                     window.open(url, '_blank')
-                    $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                    $baseMessage(`${translate('已在新标签页打开')} ${result.title}`, 'success', 'hey')
                     addToHistory(result.title)
                     dialogVisible.value = false
                     searchKeyword.value = ''
@@ -449,7 +451,7 @@ const selectResult = (result: SearchResult) => {
             addToHistory(result.title)
             dialogVisible.value = false
             searchKeyword.value = ''
-            $baseMessage(`已跳转到 ${result.title}`, 'success', 'hey')
+            $baseMessage(`${translate('已跳转到')} ${result.title}`, 'success', 'hey')
         } catch (error) {
             console.error('路由跳转失败:', error, result)
             // 最后的备选方案：使用window.open
@@ -457,13 +459,13 @@ const selectResult = (result: SearchResult) => {
                 const hashPath = result.route.startsWith('/') ? result.route.slice(1) : result.route
                 const url = `${globalThis.location.origin}${globalThis.location.pathname}#/${hashPath}`
                 window.open(url, '_blank')
-                $baseMessage(`已在新标签页打开 ${result.title}`, 'success', 'hey')
+                $baseMessage(`${translate('已在新标签页打开')} ${result.title}`, 'success', 'hey')
                 addToHistory(result.title)
                 dialogVisible.value = false
                 searchKeyword.value = ''
             } catch (finalError) {
                 console.error('所有跳转方式都失败:', finalError)
-                $baseMessage(`无法跳转到 ${result.title}，请检查路由配置`, 'error', 'hey')
+                $baseMessage(`${translate('无法跳转到')} ${result.title}，${translate('请检查路由配置')}`, 'error', 'hey')
             }
         }
     }
