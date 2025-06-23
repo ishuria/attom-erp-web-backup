@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetPurchaseStatisticsProductListRes, IGetPurchaseStatisticsSupplierListReq, IGetPurchaseStatisticsSupplierListRes } from '/@/type/purchase/statistics'
+import { IGetPurchaseStatisticsProductDetailListReq, IGetPurchaseStatisticsProductListRes, IGetPurchaseStatisticsSupplierListReq, IGetPurchaseStatisticsSupplierListRes } from '/@/type/purchase/statistics'
 
 /**
  * 采购统计-供应商
@@ -25,6 +25,19 @@ export function getPurchaseStatisticsSupplierList(data: IGetPurchaseStatisticsSu
 export function getPurchaseStatisticsProductList(data: IGetPurchaseStatisticsSupplierListReq): Promise<IGetPurchaseStatisticsProductListRes> {
   return request({
     url: `${BASE_API}/purchase/statistics/product/info`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 采购统计-产品明细
+ * @param data 
+ * @returns 
+ */
+export function getPurchaseStatisticsProductDetailList(data: IGetPurchaseStatisticsProductDetailListReq): Promise<IGetPurchaseStatisticsProductListRes> {
+  return request({
+    url: `${BASE_API}/purchase/statistics/product/detail`,
     method: 'post',
     data
   })

@@ -5,6 +5,12 @@ export interface IGetPurchaseStatisticsSupplierListReq {
   startDate: string
   endDate: string
 }
+export interface IGetPurchaseStatisticsProductDetailListReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  id: number
+}
 export interface IGetPurchaseStatisticsSupplierListRes {
   data: {
     total: number

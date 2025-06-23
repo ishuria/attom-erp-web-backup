@@ -17,12 +17,12 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table border stripe :data="list">
+        <el-table v-loading="listLoading" border stripe :data="list">
           <el-table-column prop="supplierName" label="供应商" />
           <el-table-column prop="totalPurchaseAmount" label="总采购金额(￥)" />
           <el-table-column label="操作" >
             <template #default="{ row }">
-              <el-link :underline="false" type="primary">产品明细</el-link>
+              <el-link :underline="false" type="primary" @click="showProductDetail(row)">产品明细</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -53,7 +53,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table border stripe :data="productList" >
+        <el-table v-loading="listLoading" border stripe :data="productList" >
           <el-table-column prop="amount" label="零件图片" width="105" >
             <template #default="{ row }">
               <el-image :src="row.componentImgUrl" style="width: 75px; height: 75px" @click="showImagePreview(row.componentImgUrl)">
@@ -63,7 +63,7 @@
           </el-table-column>
           <el-table-column prop="id" label="零件ID" />
           <el-table-column prop="componentName" label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" />
-          <el-table-column prop="componentPurchaseAmount" label="采购总额" />
+          <el-table-column prop="componentPurchaseAmount" min-width="120" label="零件采购总额(￥)" />
           <el-table-column prop="supplierName" label="供应商" :min-width="flexColumnWidth(productList, '供应商', 'supplierName')" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_supplierName" effect="dark" placement="top">
@@ -74,7 +74,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="totalPurchaseAmount" label="采购总额" >
+          <el-table-column prop="totalPurchaseAmount" label="采购总额(￥)" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_totalPurchaseAmount" effect="dark" placement="top">
                 <template #content>
@@ -139,6 +139,7 @@
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+    <product-statistics-detail v-model="detailVisible" :id="detailId" />
   </div>
 </template>
 
@@ -154,6 +155,8 @@ defineOptions({
   name: 'ProcurementStatistics',
 })
 
+const detailVisible = ref<boolean>(false)
+const detailId = ref<number>(0)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const imagePreviewClose = () => {
@@ -181,6 +184,7 @@ const productQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   startDate: '',
   endDate: ''
 })
+
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])
 const productList = ref<IGetPurchaseStatisticsProductItem[]>([])
 const total = ref<number>(0)
@@ -220,6 +224,12 @@ const handleTabClick = (tab: TabsPaneContext) => {
     queryProductData()
   }
 }
+
+const showProductDetail = (row: any) => {
+  detailId.value = row.id
+  detailVisible.value = true
+}
+
 const fetchData = async () => {
   listLoading.value = true
   queryForm.startDate = date.value[0]
