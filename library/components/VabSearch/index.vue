@@ -20,7 +20,7 @@
             :close-on-press-escape="true"
             :modal-append-to-body="true"
             title="AI智能搜索"
-            width="550px"
+            width="600px"
             :z-index="9999"
         >
             <div class="search-dialog-content">
