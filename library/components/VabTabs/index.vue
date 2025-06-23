@@ -489,14 +489,48 @@ onMounted(() => {
                     margin: 0 0 1px 0;
 
                     .el-tabs__item {
+                        position: relative;
                         height: var(--el-tab-item-height);
                         margin-right: 5px;
-                        border: 1px solid var(--el-border-color) !important;
+                        overflow: hidden;
+                        color: var(--el-color-primary);
+                        border: 1px solid var(--el-color-primary) !important;
                         border-radius: var(--el-border-radius-base) !important;
+                        transition:
+                            all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                            border 0s,
+                            color 0s,
+                            font-size 0s;
+
+                        &:hover {
+                            color: #fff; //不要用动态变量
+                            background: var(--el-color-primary);
+
+                            &::before {
+                                position: absolute;
+                                top: 0;
+                                left: -100%;
+                                width: 100%;
+                                height: 100%;
+                                content: '';
+                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                                animation: shimmer 0.6s ease-in-out;
+                            }
+                        }
 
                         &.is-active {
-                            color: var(--el-color-primary);
-                            background: var(--el-color-primary-light-9);
+                            color: #fff; //不要用动态变量
+                            background: var(--el-color-primary);
+                            border-color: var(--el-color-primary) !important;
+                        }
+
+                        @keyframes shimmer {
+                            0% {
+                                left: -100%;
+                            }
+                            100% {
+                                left: 100%;
+                            }
                         }
                     }
                 }
