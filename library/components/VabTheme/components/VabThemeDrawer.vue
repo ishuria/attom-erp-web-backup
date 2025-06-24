@@ -40,7 +40,7 @@
                 <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
                     <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
                 </el-form-item>
-                <el-form-item :label="translate('液态玻璃')">
+                <el-form-item v-if="theme.themeName === 'default'" :label="translate('液态玻璃')">
                     <el-switch v-model="theme.glassMode" @change="setCssVar" />
                 </el-form-item>
                 <el-form-item v-if="theme.layout !== 'horizontal'" :label="translate('菜单宽度')">
