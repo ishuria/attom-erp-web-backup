@@ -19,7 +19,7 @@
         <vab-dialog
             v-model="dialogVisible"
             :append-to-body="true"
-            class="search-dialog"
+            class="search-dialog search-glass-dialog"
             :close-on-click-modal="false"
             :close-on-press-escape="true"
             :modal-append-to-body="true"

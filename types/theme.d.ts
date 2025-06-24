@@ -169,4 +169,6 @@ declare interface ThemeType {
     rightToolsDrag: boolean
     // 是否显示VabBox组件
     showBox: boolean
+    // 是否开启液态玻璃效果
+    glassMode?: boolean
 }

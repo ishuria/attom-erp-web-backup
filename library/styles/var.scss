@@ -1,5 +1,6 @@
 @use './variables' as *;
 
+$glass-bg: rgba(255, 255, 255, 0.85);
 :root {
     //背景色
     --el-background-color: #f6f8f9;
@@ -152,4 +153,5 @@
     --el-container-height: calc(
         var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height)
     );
+    --vab-glass-bg: #{$glass-bg};
 }

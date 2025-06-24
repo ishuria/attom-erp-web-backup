@@ -64,4 +64,6 @@ export const themeConfig: ThemeType = {
     rightToolsDrag: false,
     //是否开启快捷盒子
     showBox: true,
+    // 是否开启液态玻璃效果
+    glassMode: true,
 }

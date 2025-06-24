@@ -1,5 +1,5 @@
 <template>
-    <el-dropdown class="vab-language" @command="handleCommand">
+    <el-dropdown class="vab-language" popper-class="vab-font-size-popper" @command="handleCommand">
         <vab-icon icon="font-size-2" />
         <template #dropdown>
             <el-dropdown-menu>

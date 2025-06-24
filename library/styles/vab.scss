@@ -1118,32 +1118,27 @@ html {
   *@date: 2025-06-24
   *@description: 开始尝试ios26液态玻璃效果
   */
-html:not(.dark) {
-    body {
-        &.vab-theme-default .vab-layout-header,
-        &.vab-theme-default .vab-theme-setting {
-            background: rgba(255, 255, 255, 0.55) !important;
-            border-bottom: 1px solid var(--el-border-color);
-            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            backdrop-filter: blur(16px) saturate(180%);
-        }
 
-        &.vab-theme-default .vab-tabs,
-        &.vab-theme-default .vab-nav,
-        &.vab-theme-default .vab-tabs-horizontal,
-        &.vab-theme-default .vab-tabs-horizontal .vab-main .vab-tabs {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            backdrop-filter: none !important;
-        }
+html:not(.dark) body.vab-theme-default.glass-mode {
+    .vab-layout-header,
+    .vab-theme-setting {
+        background: var(--vab-glass-bg) !important;
+        border-bottom: 1px solid var(--el-border-color);
+        box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
     }
-}
-
-html:not(.dark) body.vab-theme-default {
+    .vab-tabs,
+    .vab-nav,
+    .vab-tabs-horizontal,
+    .vab-tabs-horizontal .vab-main .vab-tabs {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
     .vab-avatar-popper {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -1156,7 +1151,7 @@ html:not(.dark) body.vab-theme-default {
         }
     }
     .vab-tabs .contextmenu.el-dropdown-menu {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -1169,7 +1164,7 @@ html:not(.dark) body.vab-theme-default {
         }
     }
     .vab-tabs-more-dropdown {
-        background: rgba(255, 255, 255, 0.55) !important;
+        background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
         -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -1181,10 +1176,63 @@ html:not(.dark) body.vab-theme-default {
             backdrop-filter: none !important;
         }
     }
-}
+    .vab-avatar-popper > .el-popper__arrow,
+    .vab-tabs-more-dropdown > .el-popper__arrow {
+        display: none !important;
+    }
 
-/* 隐藏液态玻璃下拉小三角 */
-.vab-avatar-popper > .el-popper__arrow,
-.vab-tabs-more-dropdown > .el-popper__arrow {
-    display: none !important;
+    // VabFontSize 和 VabLanguage 下拉液态玻璃效果
+    .vab-font-size-popper,
+    .vab-language-popper {
+        background: var(--vab-glass-bg) !important;
+        border: 1px solid var(--el-border-color);
+        box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
+
+        .el-dropdown-menu {
+            background: transparent !important;
+            box-shadow: none !important;
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+        }
+    }
+    // vab-color-picker 下拉液态玻璃效果
+    .vab-color-picker-popper {
+        background: var(--vab-glass-bg) !important;
+        border: 1px solid var(--el-border-color);
+        box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
+    }
+
+    // 主题配置抽屉和搜索弹窗液态玻璃效果
+    .vab-drawer,
+    .search-glass-dialog {
+        background: var(--vab-glass-bg) !important;
+        border: 1px solid var(--el-border-color);
+        box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
+
+        .el-drawer__header,
+        .el-drawer__footer,
+        .el-drawer__body {
+            background: transparent !important;
+        }
+    }
+
+    // VabNotice 下拉液态玻璃效果
+    .vab-notice-popper {
+        background: var(--vab-glass-bg) !important;
+        border: 1px solid var(--el-border-color);
+        box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
+        .el-tabs,
+        .el-scrollbar,
+        .el-empty {
+            background: transparent !important;
+        }
+    }
 }
