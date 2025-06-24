@@ -64,7 +64,7 @@
           <el-table-column prop="id" label="零件ID" />
           <el-table-column prop="componentName" label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" />
           <el-table-column prop="componentPurchaseAmount" min-width="120" label="零件采购总额(￥)" />
-          <el-table-column prop="supplierName" label="供应商" :min-width="flexColumnWidth(productList, '供应商', 'supplierName')" >
+          <el-table-column prop="supplierName" label="供应商" :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_supplierName" effect="dark" placement="top">
                 <template #content>
@@ -74,7 +74,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="totalPurchaseAmount" label="采购总额(￥)" >
+          <el-table-column prop="totalPurchaseAmount" label="采购总额(￥)" min-width="110" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_totalPurchaseAmount" effect="dark" placement="top">
                 <template #content>
@@ -84,7 +84,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="purchaseCount" label="采购总数" >
+          <el-table-column prop="purchaseCount" label="采购总数" min-width="100" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_purchaseCount" effect="dark" placement="top">
                 <template #content>
@@ -104,7 +104,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="sku" label="SKU" :min-width="flexColumnWidth(productList, 'SKU', 'sku')" >
+          <el-table-column prop="sku" label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
                 <template #content>
@@ -139,7 +139,7 @@
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
-    <product-statistics-detail v-model="detailVisible" :id="detailId" />
+    <product-statistics-detail v-model="detailVisible" :id="detailId" :start-date="date[0]" :end-date="date[1]" />
   </div>
 </template>
 
@@ -149,7 +149,7 @@ import { TabsPaneContext } from 'element-plus'
 import { getPurchaseStatisticsProductList, getPurchaseStatisticsSupplierList } from '/@/api/devlocal/purchaseStatistics'
 import { IGetPurchaseStatisticsProductItem, IGetPurchaseStatisticsSupplierItem, IGetPurchaseStatisticsSupplierListReq } from '/@/type/purchase/statistics'
 import { getThisYearStringTime } from '/@/utils/dateUtils'
-import { flexColumnWidth, processField } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProcurementStatistics',

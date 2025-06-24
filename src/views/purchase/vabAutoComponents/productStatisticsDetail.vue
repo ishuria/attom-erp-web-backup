@@ -69,6 +69,8 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
   id: number
+  startDate: string
+  endDate: string
 }>()
 const emit = defineEmits(['update:modelValue'])
 const visible = computed({
@@ -100,6 +102,8 @@ const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  startDate: props.startDate,
+  endDate: props.endDate,
 })
 const total = ref<number>(0)
 const list = ref<any[]>([])

@@ -47,7 +47,7 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" percentage="44%" title="OEM完成数" >
+        <top-card v-if="ableViewCard" background="white" percentage="44%" title="本月OEM完成数" >
           <template #count>
             <vab-count
               :decimals="countConfig2.decimals"

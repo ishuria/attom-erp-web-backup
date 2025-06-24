@@ -9,6 +9,8 @@ export interface IGetPurchaseStatisticsProductDetailListReq {
   keyWord: string
   pageNo: number
   pageSize: number
+  startDate: string
+  endDate: string
   id: number
 }
 export interface IGetPurchaseStatisticsSupplierListRes {
