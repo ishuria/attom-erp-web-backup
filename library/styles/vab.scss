@@ -56,39 +56,39 @@ html {
 
             .vue-shop-vite-box {
                 div:not(
-                        .el-drawer,
-                        .el-drawer *,
-                        .el-dialog,
-                        .el-dialog *,
-                        .el-message-box,
-                        .el-message-box *,
-                        .el-table,
-                        .el-table *,
-                        .el-carousel,
-                        .el-carousel *,
-                        .el-pagination,
-                        .el-pagination *,
-                        .el-slider,
-                        .el-slider *,
-                        .el-card,
-                        .el-card *,
-                        .el-menu,
-                        .el-menu *,
-                        .el-form,
-                        .el-form *,
-                        .el-row,
-                        .el-row *,
-                        .el-tree,
-                        .el-tree *,
-                        .split,
-                        .split *,
-                        .card-drag,
-                        .card-drag *,
-                        .global-animation-disabled *,
-                        .no-transition-container *,
-                        .vab-magnifier,
-                        .vab-magnifier *
-                    ) {
+                    .el-drawer,
+                    .el-drawer *,
+                    .el-dialog,
+                    .el-dialog *,
+                    .el-message-box,
+                    .el-message-box *,
+                    .el-table,
+                    .el-table *,
+                    .el-carousel,
+                    .el-carousel *,
+                    .el-pagination,
+                    .el-pagination *,
+                    .el-slider,
+                    .el-slider *,
+                    .el-card,
+                    .el-card *,
+                    .el-menu,
+                    .el-menu *,
+                    .el-form,
+                    .el-form *,
+                    .el-row,
+                    .el-row *,
+                    .el-tree,
+                    .el-tree *,
+                    .split,
+                    .split *,
+                    .card-drag,
+                    .card-drag *,
+                    .global-animation-disabled *,
+                    .no-transition-container *,
+                    .vab-magnifier,
+                    .vab-magnifier *
+                ) {
                     text-shadow: none;
                     transition: var(--el-transition);
                     -webkit-font-smoothing: antialiased;
@@ -1109,6 +1109,33 @@ html {
                 width: inherit;
                 height: inherit;
             }
+        }
+    }
+}
+
+/* 
+  *@author: 孙丹
+  *@date: 2025-06-24
+  *@description: 开始尝试ios26液态玻璃效果
+  */
+html:not(.dark) {
+    body {
+        &.vab-theme-default .vab-layout-header {
+            background: rgba(255, 255, 255, 0.55) !important;
+            border-bottom: 1px solid var(--el-border-color);
+            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            backdrop-filter: blur(16px) saturate(180%);
+        }
+
+        &.vab-theme-default .vab-tabs,
+        &.vab-theme-default .vab-nav,
+        &.vab-theme-default .vab-tabs-horizontal,
+        &.vab-theme-default .vab-tabs-horizontal .vab-main .vab-tabs {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
         }
     }
 }
