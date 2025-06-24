@@ -1,7 +1,11 @@
 <template>
     <div v-if="theme.showSearch" class="vab-search">
-        <!-- 搜索输入框 -->
-        <div class="search-input-wrapper" @click="openSearchDialog">
+        <!-- 手机端只显示搜索图标 -->
+        <div v-if="device === 'mobile'" class="search-icon-wrapper" @click="openSearchDialog">
+            <vab-icon icon="search-line" />
+        </div>
+        <!-- 电脑端显示搜索输入框 -->
+        <div v-else class="search-input-wrapper" @click="openSearchDialog">
             <el-input v-model="searchKeyword" class="search-input" :placeholder="placeholder" readonly @keydown.enter="openSearchDialog">
                 <template #prefix>
                     <el-icon class="search-icon">
@@ -151,6 +155,7 @@
 
 <script setup lang="ts">
 import { Clock, Close, Loading, Search } from '@element-plus/icons-vue'
+import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { $baseMessage } from '/@/hooks'
@@ -181,7 +186,7 @@ const props = withDefaults(defineProps<Props>(), {
 const router = useRouter()
 const settingsStore = useSettingsStore()
 const routesStore = useRoutesStore()
-const { theme } = storeToRefs(settingsStore)
+const { theme, device } = storeToRefs(settingsStore)
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 
 // 响应式数据
@@ -573,6 +578,27 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .vab-search {
     position: relative;
+
+    .search-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+        transition: none;
+        .vab-icon {
+            font-size: 22px;
+            color: var(--el-color-primary);
+        }
+        &:hover {
+            box-shadow: none;
+            transform: none;
+        }
+    }
 
     .search-input-wrapper {
         width: 120px;

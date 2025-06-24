@@ -1,7 +1,7 @@
 <template>
-    <el-popover class="box-item hidden-xs-only" placement="bottom-start" :width="350">
+    <el-popover class="box-item" placement="bottom-start" :width="350">
         <template #reference>
-            <vab-icon class="vab-box" icon="apps-2-ai-line" />
+            <vab-icon class="vab-box hidden-xs-only" icon="apps-2-ai-line" />
         </template>
 
         <div class="popover-content">
