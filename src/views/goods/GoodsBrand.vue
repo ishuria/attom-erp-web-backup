@@ -158,7 +158,7 @@ function submitForm() {
     formRef.value.validate(async (valid: boolean) => {
         if (!valid) return
         await doBrandEdit(form)
-        ElMessage.success(dialogMode.value === 'add' ? '添加成功' : '编辑成功')
+        $baseMessage(dialogMode.value === 'add' ? '添加成功' : '编辑成功', 'success', 'hey')
         dialogVisible.value = false
         fetchList()
     })
@@ -166,7 +166,7 @@ function submitForm() {
 
 async function deleteBrand(id: number) {
     await doBrandDelete({ id })
-    ElMessage.success('删除成功')
+    $baseMessage('删除成功', 'success', 'hey')
     // 删除后如果当前页没数据自动跳到上一页
     if (brandList.value.length === 1 && queryForm.pageNo > 1) {
         queryForm.pageNo--
