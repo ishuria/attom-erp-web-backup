@@ -6,8 +6,8 @@
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
                 <el-form :inline="true" :model="queryForm" @submit.prevent>
-                    <el-form-item>
-                        <el-input v-model="queryForm.name" clearable placeholder="品牌名称" @keyup.enter="handleSearch" />
+                    <el-form-item label="">
+                        <el-input v-model="queryForm.name" clearable placeholder="请输入品牌名称" @keyup.enter="handleSearch" />
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="handleSearch">搜索</el-button>

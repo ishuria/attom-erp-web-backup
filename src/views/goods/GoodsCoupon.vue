@@ -6,15 +6,8 @@
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
                 <el-form :inline="true" :model="queryForm" @submit.prevent>
-                    <el-form-item>
-                        <el-input v-model="queryForm.name" clearable placeholder="优惠券名称" @keyup.enter="handleSearch" />
-                    </el-form-item>
-                    <el-form-item>
-                        <el-select v-model="queryForm.status" clearable placeholder="状态" style="width: 120px">
-                            <el-option label="启用" value="启用" />
-                            <el-option label="停用" value="停用" />
-                            <el-option label="已过期" value="已过期" />
-                        </el-select>
+                    <el-form-item label="">
+                        <el-input v-model="queryForm.name" clearable placeholder="请输入优惠券名称" @keyup.enter="handleSearch" />
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
