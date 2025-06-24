@@ -5,9 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { graphic } from 'echarts/core'
 import { useSettingsStore } from '/@/store/modules/settings'
-import { lightenColor } from '/@/utils/lightenColor'
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
@@ -15,7 +13,7 @@ const { theme } = storeToRefs(settingsStore)
 const props = defineProps<{
   percentage: number
 }>()
-
+// const per = ref<number>(0)
 const option = reactive<any>({
   // grid: {
   //   left: '20px',
@@ -49,14 +47,14 @@ const option = reactive<any>({
       },
       data: [
         {
-          value: props.percentage,
+          value: 0,
           name: '考核完成数',
           itemStyle: {
-            color: '#0052d9', // 进度颜色
+            color: '#409EFF', // 进度颜色
           },
         },
         {
-          value: 100 - props.percentage,
+          value: 100,
           name: '',
           itemStyle: {
             color: '#e0e0e0', // 背景圆环颜色
@@ -68,17 +66,28 @@ const option = reactive<any>({
 })
 
 watch(
-  () => theme.value.color,
-  (newColor) => {
-    option.series[0].data[0].itemStyle = {
-      color: new graphic.LinearGradient(0, 0, 1, 0, [
-        { offset: 0, color: lightenColor(newColor, 20) },
-        { offset: 1, color: newColor },
-      ])
-    }
+  () => props.percentage,
+  (val) => {
+    option.series[0].data = [
+      {
+        value: val,
+        name: '考核完成数',
+        itemStyle: {
+          color: '#409EFF',
+        },
+      },
+      {
+        value: 100 - val,
+        name: '',
+        itemStyle: {
+          color: '#e0e0e0',
+        },
+      },
+    ];
   },
   { immediate: true }
 )
+
 </script>
 
 <style lang="scss" scoped>

@@ -70,7 +70,7 @@ const option = reactive({
       stack: 'one',
       data: props.data.map((item) => item.oem0Count),
       itemStyle: {
-        color: '#91cc75', 
+        color: '#67C23A', 
       },
     },
     {
@@ -80,7 +80,7 @@ const option = reactive({
       stack: 'one',
       data: props.data.map((item) => item.oem1Count),
       itemStyle: {
-        color: '#fac858', 
+        color: '#E6A23C', 
       },
     }
   ],

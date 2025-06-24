@@ -12,3 +12,47 @@ export interface IGetFrontPageProgressProjectsItem {
   oem0Count: number
   oem1Count: number
 }
+export interface IGetFrontPageAssessmentDataRes {
+  data: IGetFrontPageAssessmentData
+}
+export interface IGetFrontPageAssessmentData {
+  /**
+     * 总考核数
+     */
+  assessmentNumber: number;
+  /**
+   * 总考核完成数
+   */
+  assessmentNumberFinish: number;
+  /**
+   * OEM考核数
+   */
+  oem: number;
+  /**
+   * OEM完成数
+   */
+  oemFinish: number;
+
+  /**
+   * 较上月考核完成数
+   */
+  assessmentFinishMonthDiff: number;
+
+  /**
+   * 较去年考核完成数
+   */
+  assessmentFinishYearDiff: number;
+
+  /**
+   * 较上月OEM
+   */
+  oemFinishMonthDiff: number;
+
+  /**
+   * 较去年OEM
+   */
+  oemFinishYearDiff: number;
+
+  assessmentFinishPercent: number
+  oemFinishPercent: number
+}

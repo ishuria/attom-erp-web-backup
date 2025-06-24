@@ -20,56 +20,56 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" percentage="30%" title="本月考核完成数">
+        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig2Start.monthDiff" :year-diff="countConfig2Start.yearDiff" title="本月考核完成数">
           <template #count>
             <vab-count
-              :decimals="countConfig2.decimals"
-              :duration="countConfig2.duration"
-              :end-value="countConfig2.endValue"
-              :prefix="countConfig2.prefix"
-              :separator="countConfig2.separator"
-              :start-value="countConfig2.startValue"
-              :suffix="countConfig2.suffix"
+              :decimals="countConfig2Start.decimals"
+              :duration="countConfig2Start.duration"
+              :end-value="countConfig2Start.endValue"
+              :prefix="countConfig2Start.prefix"
+              :separator="countConfig2Start.separator"
+              :start-value="countConfig2Start.startValue"
+              :suffix="countConfig2Start.suffix"
             />
             <vab-count
-              :decimals="countConfig3.decimals"
-              :duration="countConfig3.duration"
-              :end-value="countConfig3.endValue"
-              :prefix="countConfig3.prefix"
-              :separator="countConfig3.separator"
-              :start-value="countConfig3.startValue"
-              :suffix="countConfig3.suffix"
+              :decimals="countConfig2End.decimals"
+              :duration="countConfig2End.duration"
+              :end-value="countConfig2End.endValue"
+              :prefix="countConfig2End.prefix"
+              :separator="countConfig2End.separator"
+              :start-value="countConfig2End.startValue"
+              :suffix="countConfig2End.suffix"
             />
           </template>
           <template #chart>
-            <assessment-pie :percentage="30" />
+            <assessment-pie :percentage="assessmentPercentage" />
           </template>
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" percentage="44%" title="本月OEM完成数" >
+        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig3Start.monthDiff" :year-diff="countConfig3Start.yearDiff" title="本月OEM完成数" >
           <template #count>
             <vab-count
-              :decimals="countConfig2.decimals"
-              :duration="countConfig2.duration"
-              :end-value="countConfig2.endValue"
-              :prefix="countConfig2.prefix"
-              :separator="countConfig2.separator"
-              :start-value="countConfig2.startValue"
-              :suffix="countConfig2.suffix"
+              :decimals="countConfig3Start.decimals"
+              :duration="countConfig3Start.duration"
+              :end-value="countConfig3Start.endValue"
+              :prefix="countConfig3Start.prefix"
+              :separator="countConfig3Start.separator"
+              :start-value="countConfig3Start.startValue"
+              :suffix="countConfig3Start.suffix"
             />
             <vab-count
-              :decimals="countConfig3.decimals"
-              :duration="countConfig3.duration"
-              :end-value="countConfig3.endValue"
-              :prefix="countConfig3.prefix"
-              :separator="countConfig3.separator"
-              :start-value="countConfig3.startValue"
-              :suffix="countConfig3.suffix"
+              :decimals="countConfig3End.decimals"
+              :duration="countConfig3End.duration"
+              :end-value="countConfig3End.endValue"
+              :prefix="countConfig3End.prefix"
+              :separator="countConfig3End.separator"
+              :start-value="countConfig3End.startValue"
+              :suffix="countConfig3End.suffix"
             />
           </template>
           <template #chart>
-            <assessment-pie :percentage="33" />
+            <assessment-pie :percentage="oemPercentage" />
           </template>
         </top-card>
       </el-col>
@@ -110,12 +110,12 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getFrontPageProgressProjects } from '~/src/api/devlocal/frontPage'
-import { IGetFrontPageProgressProjectsItem } from '~/src/type/index/frontPage'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
+import { getFrontPageAssessmentData, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
+import { IGetFrontPageProgressProjectsItem } from '/@/type/index/frontPage'
 
 defineOptions({
   name: 'Index',
@@ -208,19 +208,37 @@ const countConfig1 = reactive<any>({
   separator: ',',
   duration: 1000,
 })
-const countConfig2 = reactive<any>({
+const countConfig2Start = reactive<any>({
   startValue: 0,
-  endValue: 3,
-  decimals: 0,
+  endValue: 0,
+  decimals: 1,
   prefix: '',
   suffix: '/',
   separator: ',',
   duration: 1000,
 })
-const countConfig3 = reactive<any>({
+const countConfig2End = reactive<any>({
   startValue: 0,
-  endValue: 10,
-  decimals: 0,
+  endValue: 0,
+  decimals: 1,
+  prefix: '',
+  suffix: '',
+  separator: ',',
+  duration: 1000,
+})
+const countConfig3Start = reactive<any>({
+  startValue: 0,
+  endValue: 0,
+  decimals: 1,
+  prefix: '',
+  suffix: '/',
+  separator: ',',
+  duration: 1000,
+})
+const countConfig3End = reactive<any>({
+  startValue: 0,
+  endValue: 0,
+  decimals: 1,
   prefix: '',
   suffix: '',
   separator: ',',
@@ -263,7 +281,23 @@ const fetchInProgressProjectsData = async () => {
   monthDiff.value = data.monthDiff
   yearDiff.value = data.yearDiff
 }
+const assessmentPercentage = ref<number>(0)
+const oemPercentage = ref<number>(0)
+const fetchAssessmentData = async () => {
+  const { data } = await getFrontPageAssessmentData()
+  countConfig2Start.endValue = data.assessmentNumberFinish
+  countConfig2End.endValue = data.assessmentNumber
+  countConfig3Start.endValue = data.oemFinish
+  countConfig3End.endValue = data.oem
+  countConfig2Start.monthDiff = data.assessmentFinishMonthDiff
+  countConfig2Start.yearDiff = data.assessmentFinishYearDiff
+  countConfig3Start.monthDiff = data.oemFinishMonthDiff
+  countConfig3Start.yearDiff = data.oemFinishYearDiff
+  assessmentPercentage.value = data.assessmentFinishPercent
+  oemPercentage.value = data.oemFinishPercent
+}
 onBeforeMount(() => {
+  fetchAssessmentData()
   fetchInProgressProjectsData()
 })
 </script>
