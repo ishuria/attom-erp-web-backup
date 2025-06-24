@@ -1492,15 +1492,6 @@ const list: VabRouteRecord[] = [
                 },
             },
             {
-                path: 'goodsCategory',
-                name: 'GoodsCategory',
-                component: '/@/views/goods/GoodsCategory.vue',
-                meta: {
-                    title: '商品分类',
-                    icon: 'folder-line',
-                },
-            },
-            {
                 path: 'goodsStock',
                 name: 'GoodsStock',
                 component: '/@/views/goods/GoodsStock.vue',

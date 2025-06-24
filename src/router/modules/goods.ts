@@ -116,12 +116,6 @@ export const goodsRoutes = [
                 },
             },
             {
-                path: 'goodsCategory',
-                name: 'GoodsCategory',
-                component: () => import('/@/views/goods/GoodsCategory.vue'),
-                meta: { title: '商品分类', icon: 'apps-2-line' },
-            },
-            {
                 path: 'goodsBrand',
                 name: 'GoodsBrand',
                 component: () => import('/@/views/goods/GoodsBrand.vue'),
