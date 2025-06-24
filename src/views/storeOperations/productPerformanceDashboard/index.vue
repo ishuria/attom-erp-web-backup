@@ -1026,7 +1026,9 @@
               <span v-if="item.label === '父体ASIN'">
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
               </span>
-
+              <span v-if="item.label === '停产'">
+                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateASINStopStatus(row)" />
+              </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
                   <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
@@ -1680,6 +1682,7 @@ import {
   updateCurrencyASINAmazonOperation,
   updateCurrencyParentASINAmazonOperation,
   updateCurrencySKUAmazonOperation,
+  updateOperationASINDisContinuedStatus,
   updateOperationASINOperateTypeList,
   updateOperationSKUDisContinuedStatus,
   updateOperationSKUOperateTypeList,
@@ -2076,8 +2079,16 @@ const handleUpdateAsinOpeType = async (row: IGetOperationAsinList) => {
 }
 const handleUpdateSKUStopStatus = async (row: IGetOperationAmazonSKUList) => {
   await updateOperationSKUDisContinuedStatus({
-    id: row.id!,
+    skuId: row.skuId!,
     status: row.stopProductStatus!,
+    siteId: row.site
+  })
+}
+const handleUpdateASINStopStatus = async (row: IGetOperationAmazonSKUList) => {
+  await updateOperationASINDisContinuedStatus({
+    asin: row.asin!,
+    status: row.stopProductStatus!,
+    siteId: row.site
   })
 }
 watch(site, (val) => {

@@ -118,7 +118,7 @@ export function updateOperationASINOperateTypeList(data: { id: number, typeId: n
 /**
  * @description 产品表现-SKU停产状态修改
  */
-export function updateOperationSKUDisContinuedStatus(data: { id: number, status: number }): Promise<{ data: boolean }> {
+export function updateOperationSKUDisContinuedStatus(data: { skuId: number, siteId: number, status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/sku/discontinuedStatus/update`,
     method: 'post',
@@ -131,6 +131,13 @@ export function updateOperationSKUDisContinuedStatus(data: { id: number, status:
 export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGetOperationAmazonSKUListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/screening/list`,
+    method: 'post',
+    data
+  })
+}
+export function updateOperationASINDisContinuedStatus(data: { asin: string, siteId: number, status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/asin/discontinuedStatus/update`,
     method: 'post',
     data
   })

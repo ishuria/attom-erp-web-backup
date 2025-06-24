@@ -13,9 +13,9 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table v-loading="listLoading" :data="list" border stripe max-height="60vh" >
-      <el-table-column label="零件图片" prop="componentImgUrl" width="90">
+      <el-table-column label="零件图片" prop="componentImgUrl" width="91">
         <template #default="{ row }">
-          <el-image :src="row.componentImgUrl" @click="showImagePreview(row.componentImgUrl)">
+          <el-image :src="row.componentImgUrl" style="width: 65px; height: 65px; display: block" @click="showImagePreview(row.componentImgUrl)">
             <template #error><el-icon /></template>
           </el-image>
         </template>

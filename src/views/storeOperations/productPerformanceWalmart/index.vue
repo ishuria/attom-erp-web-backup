@@ -305,7 +305,7 @@ import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
-import { filterWalmartList, getCurrencyWalmartOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation, getWalmartCurrencyList, getWalmartSiteList, updateCurrencyWalmartOperation, updateOperationWalmartDisContinuedStatus, updateOperationWalmartOperateTypeList, updateRemarkWalmartOperation } from '/@/api/devlocal/productPerformance'
+import { filterWalmartList, getCurrencyWalmartOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation, getWalmartCurrencyList, getWalmartSiteList, updateCurrencyWalmartOperation, updateOperationSKUDisContinuedStatus, updateOperationWalmartOperateTypeList, updateRemarkWalmartOperation } from '/@/api/devlocal/productPerformance'
 import handleClipboard from '/@/utils/clipboard'
 import { getAmazonStars } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
@@ -335,9 +335,10 @@ const confirmUpdateRemark = async () => {
   }
 }
 const handleUpdateStopStatus = async (row: any) => {
-  await updateOperationWalmartDisContinuedStatus({
-    id: row.id!,
+  await updateOperationSKUDisContinuedStatus({
+    skuId: row.skuId!,
     status: row.stopProductStatus!,
+    siteId: row.site
   })
 }
 const changeCurrency = async () => {
