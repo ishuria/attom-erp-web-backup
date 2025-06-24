@@ -145,24 +145,6 @@ export const goodsRoutes = [
                 component: () => import('/@/views/goods/GoodsImportExport.vue'),
                 meta: { title: '商品导入导出', icon: 'download-2-line' },
             },
-            {
-                path: 'goodsGallery',
-                name: 'GoodsGallery',
-                component: () => import('/@/views/goods/GoodsGallery.vue'),
-                meta: { title: '商品图片库', icon: 'image-2-line' },
-            },
-            {
-                path: 'goodsAttribute',
-                name: 'GoodsAttribute',
-                component: () => import('/@/views/goods/GoodsAttribute.vue'),
-                meta: { title: '商品属性/规格', icon: 'slideshow-2-line' },
-            },
-            {
-                path: 'goodsRecycle',
-                name: 'GoodsRecycle',
-                component: () => import('/@/views/goods/GoodsRecycle.vue'),
-                meta: { title: '商品回收站', icon: 'delete-bin-line' },
-            },
         ],
     },
 ]
