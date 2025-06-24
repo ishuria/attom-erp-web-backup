@@ -1183,13 +1183,8 @@ html:not(.dark) body.vab-theme-default {
     }
 }
 
-/* 液态玻璃下拉小三角 */
+/* 隐藏液态玻璃下拉小三角 */
 .vab-avatar-popper > .el-popper__arrow,
-.vab-tabs-more-dropdown > .el-popper__arrow,
-.vab-tabs .contextmenu.el-dropdown-menu > .el-popper__arrow {
-    background: rgba(255, 255, 255, 0.55) !important;
-    border: 1px solid var(--el-border-color) !important;
-    box-shadow: 0 2px 8px 0 rgba(31, 38, 135, 0.08);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    backdrop-filter: blur(16px) saturate(180%);
+.vab-tabs-more-dropdown > .el-popper__arrow {
+    display: none !important;
 }
