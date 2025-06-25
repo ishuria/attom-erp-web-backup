@@ -76,6 +76,7 @@ const defaultTheme: ThemeType = {
     rightToolsDrag,
     showBox,
     glassMode: themeConfig.glassMode,
+    glassOpacity: themeConfig.glassOpacity,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
@@ -205,6 +206,8 @@ export const useSettingsStore = defineStore('settings', {
             else document.querySelectorAll('body')[0].classList.remove('color-weakness')
             //字体大小处理
             useCssVar('--el-font-size-base', el).value = this.theme.fontSize
+            // 液态玻璃透明度
+            document.documentElement.style.setProperty('--glass-opacity', String(this.theme.glassOpacity ?? 0.7))
         },
         toggleCollapse() {
             this.collapse = !this.collapse

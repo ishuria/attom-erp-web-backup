@@ -66,4 +66,5 @@ export const themeConfig: ThemeType = {
     showBox: true,
     // 是否开启液态玻璃效果
     glassMode: true,
+    glassOpacity: 0.7,
 }

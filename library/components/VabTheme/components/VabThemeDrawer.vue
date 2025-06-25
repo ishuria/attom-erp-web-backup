@@ -49,6 +49,17 @@
                 <el-form-item v-if="theme.themeName === 'default'" :label="translate('液态玻璃')">
                     <el-switch v-model="theme.glassMode" @change="setCssVar" />
                 </el-form-item>
+                <el-form-item v-if="theme.themeName === 'default' && theme.glassMode" :label="translate('液态玻璃透明度')">
+                    <el-slider
+                        v-model="theme.glassOpacity"
+                        :max="1"
+                        :min="0.55"
+                        :show-tooltip="true"
+                        :step="0.01"
+                        style="width: 120px"
+                        @change="setCssVar"
+                    />
+                </el-form-item>
                 <el-form-item v-if="theme.layout !== 'horizontal'" :label="translate('菜单宽度')">
                     <el-select v-model="theme.menuWidth" @change="updateMenuWidth">
                         <el-option v-for="item in menuWidthList" :key="item" :label="item" :value="item" />
