@@ -56,3 +56,24 @@ export interface IGetFrontPageAssessmentData {
   assessmentFinishPercent: number
   oemFinishPercent: number
 }
+
+export interface IGetFrontPageHistoryAssessmentRecordsReq {
+  pageNo: number
+  pageSize: number
+  keyWord: string
+}
+export interface IGetFrontPageHistoryAssessmentRecordsRes {
+  data: {
+    total: number
+    list: IGetFrontPageHistoryAssessmentRecordsItem[]
+  }
+}
+export interface IGetFrontPageHistoryAssessmentRecordsItem {
+  id: number
+  userName: string
+  month: string
+  assessmentFinish: number
+  assessmentNumber: number
+  oemFinish: number
+  oem: number
+}

@@ -20,7 +20,7 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig2Start.monthDiff" :year-diff="countConfig2Start.yearDiff" title="本月考核完成数">
+        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig2Start.monthDiff" :year-diff="countConfig2Start.yearDiff" title="本月考核完成数" @open-table="fetchHistoryAssessmentRecords">
           <template #count>
             <vab-count
               :decimals="countConfig2Start.decimals"
@@ -47,7 +47,7 @@
         </top-card>
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig3Start.monthDiff" :year-diff="countConfig3Start.yearDiff" title="本月OEM完成数" >
+        <top-card v-if="ableViewCard" background="white" :month-diff="countConfig3Start.monthDiff" :year-diff="countConfig3Start.yearDiff" title="本月OEM完成数"  @open-table="fetchHistoryAssessmentRecords">
           <template #count>
             <vab-count
               :decimals="countConfig3Start.decimals"
@@ -106,16 +106,20 @@
       </el-col>
     </el-row>
   </div>
+  <history-assessment-records 
+    v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
+    @query="queryData" @page-change="handleCurrentChange" @size-change="handleSizeChange"
+  />
 </template>
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
+import { getFrontPageAssessmentData, getFrontPageHistoryAssessmentRecords, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
-import { IGetFrontPageProgressProjectsItem } from '/@/type/index/frontPage'
+import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageProgressProjectsItem } from '/@/type/index/frontPage'
 
 defineOptions({
   name: 'Index',
@@ -295,6 +299,36 @@ const fetchAssessmentData = async () => {
   countConfig3Start.yearDiff = data.oemFinishYearDiff
   assessmentPercentage.value = data.assessmentFinishPercent
   oemPercentage.value = data.oemFinishPercent
+}
+const listLoading = ref<boolean>(false)
+const total = ref<number>(0)
+const list = ref<IGetFrontPageHistoryAssessmentRecordsItem[]>([])
+const queryForm = reactive<IGetFrontPageHistoryAssessmentRecordsReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const historyVisible = ref<boolean>(false)
+const fetchHistoryAssessmentRecords = async () => {
+  historyVisible.value = true
+  listLoading.value = true
+  const { data } = await getFrontPageHistoryAssessmentRecords(queryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchHistoryAssessmentRecords()
+}
+const handleCurrentChange = (val: number) => {
+  queryForm.pageNo = val
+  fetchHistoryAssessmentRecords()
+}
+const handleSizeChange = (val: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = val
+  fetchHistoryAssessmentRecords()
 }
 onBeforeMount(() => {
   fetchAssessmentData()

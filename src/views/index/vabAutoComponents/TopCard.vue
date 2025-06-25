@@ -103,9 +103,9 @@ const props = defineProps({
     },
   },
 })
-
-const handleJumpTo = () => {
-  router.push(props.url!)
+const emit = defineEmits(['open-table'])
+const handleJumpTo = async () => {
+  emit('open-table')
 }
 </script>
 

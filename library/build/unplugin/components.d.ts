@@ -116,6 +116,7 @@ declare module 'vue' {
     GoodsCard: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsCard.vue')['default']
     GoodsCommentEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsCommentEdit.vue')['default']
     GoodsManagementEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsManagementEdit.vue')['default']
+    HistoryAssessmentRecords: typeof import('./../../../src/views/index/vabAutoComponents/HistoryAssessmentRecords.vue')['default']
     IconList: typeof import('./../../../src/views/portal/vabAutoComponents/IconList.vue')['default']
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']
     ImageLazyLoad: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageLazyLoad.vue')['default']

@@ -487,14 +487,7 @@ onBeforeMount(async () => {
 
         .noneHoverTable {
           flex: 1;
-          .clear-padding {
-            padding-top: 0;
-            padding-bottom: 0;
-            .cell {
-              padding-right: 0;
-              padding-left: 0;
-            }
-          }
+         
         }
       }
     }
@@ -508,5 +501,13 @@ onBeforeMount(async () => {
   &:hover {
     color: #000;
   }
+}
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>

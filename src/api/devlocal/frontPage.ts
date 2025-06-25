@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetFrontPageAssessmentDataRes, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
+import { IGetFrontPageAssessmentDataRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
 
 
 /**
@@ -24,5 +24,18 @@ export function getFrontPageAssessmentData(): Promise<IGetFrontPageAssessmentDat
   return request({
     url: `${BASE_API}/front_page/assessment/data`,
     method: 'get',
+  })
+}
+
+/**
+ * 首页-历史考核记录
+ * @param data 
+ * @returns 
+ */
+export function getFrontPageHistoryAssessmentRecords(data: IGetFrontPageHistoryAssessmentRecordsReq): Promise<IGetFrontPageHistoryAssessmentRecordsRes> {
+  return request({
+    url: `${BASE_API}/front_page/history/assessment/records`,
+    method: 'post',
+    data
   })
 }
