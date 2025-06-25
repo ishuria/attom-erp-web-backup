@@ -171,7 +171,7 @@ interface ListType {
 const size = ref<string>('360px')
 
 // 移动端主题配置抽屉宽度
-const mobileSize = ref<string>('90vw')
+const mobileSize = ref<string>('85vw')
 
 const route = useRoute()
 const settingsStore = useSettingsStore()
@@ -400,6 +400,7 @@ onMounted(() => {
                             align-items: center;
                             justify-content: flex-end !important;
                             margin: 0 !important;
+                            background: transparent;
 
                             .el-radio-button {
                                 width: 40px;
@@ -408,8 +409,10 @@ onMounted(() => {
                                 margin: 10px 0px 5px 10px;
                                 cursor: pointer;
                                 background: transparent;
-                                border: 0;
+
+                                border-radius: var(--el-border-radius-base) !important;
                                 box-shadow: none;
+
                                 &:last-child {
                                     margin-right: 0 !important;
                                 }
@@ -434,6 +437,7 @@ onMounted(() => {
                                         padding: 0;
                                         margin: 0;
                                         border: 0;
+                                        border-radius: var(--el-border-radius-base) !important;
                                         box-shadow: none;
 
                                         .vab-icon {
@@ -441,8 +445,9 @@ onMounted(() => {
                                             height: inherit;
                                             padding: 0;
                                             margin: 0;
+                                            overflow: hidden;
                                             border: 1px solid var(--el-border-color);
-                                            border-radius: var(--el-border-radius-base);
+                                            border-radius: var(--el-border-radius-base) !important;
                                         }
                                     }
                                 }
@@ -507,7 +512,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     padding: 8px 0 4px 0;
-    margin-bottom: 4px;
+    margin-bottom: var(--el-margin);
     font-size: 14px;
     color: var(--el-color-warning);
     cursor: pointer;

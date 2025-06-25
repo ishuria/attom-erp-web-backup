@@ -1108,7 +1108,17 @@ html {
             .el-color-picker {
                 width: inherit;
                 height: inherit;
+                border-radius: var(--el-border-radius-base) !important;
             }
+        }
+
+        .el-select,
+        .el-scrollbar,
+        .el-popover,
+        .el-select-dropdown,
+        .el-scrollbar__wrap,
+        .vab-color-picker-popper {
+            border-radius: var(--el-border-radius-base) !important;
         }
     }
 }

@@ -56,8 +56,12 @@ const randomTheme = async () => {
             theme.value.color = _color
         }
 
-        if (themeName === 'default') theme.value.isFollow = isFollow
-        else theme.value.isFollow = false
+        if (themeName === 'default') {
+            theme.value.isFollow = isFollow
+            theme.value.glassMode = Math.random() > 0.5
+        } else {
+            theme.value.isFollow = false
+        }
 
         setCssVar()
         updateTheme()
