@@ -294,6 +294,7 @@
         "Esc: 关闭弹框": "Esc: Close Dialog",
         "↑↓: 选择项目": "↑↓: Select Item",
         "隐藏路由": "Hidden Route",
-        "液态玻璃": "Glassmorphism"
+        "液态玻璃": "Glassmorphism",
+        "点击可下拉查看更多主题配置项": "Click to scroll down for more theme settings"
     }
 }

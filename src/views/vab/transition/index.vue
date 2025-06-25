@@ -48,7 +48,7 @@ onDeactivated(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
 .transition-box {
     width: 200px;
     height: 100px;

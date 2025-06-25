@@ -1,6 +1,10 @@
 <template>
     <el-drawer v-model="drawerVisible" append-to-body class="vab-drawer" direction="rtl" :size="size" :title="translate('主题配置')">
-        <el-scrollbar height="calc(var(--vh, 1vh) * 100 - 120px)">
+        <el-scrollbar ref="themeScrollbar" height="calc(var(--vh, 1vh) * 100 - 125px)">
+            <div class="theme-scroll-tip" @click="scrollToBottom">
+                <vab-icon icon="arrow-down-line" />
+                <span>{{ translate('点击可下拉查看更多主题配置项') }}</span>
+            </div>
             <el-form ref="form" label-position="left" :model="theme">
                 <el-form-item
                     v-if="device !== 'mobile' && routeName !== 'SeparateLayout'"
@@ -204,6 +208,8 @@ const pageTransitionList = ref<ListType[]>([
     { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
 ])
 
+const themeScrollbar = ref<any>(null)
+
 const handleOpenTheme = () => {
     drawerVisible.value = true
 }
@@ -318,6 +324,14 @@ watch(
     },
     { immediate: true }
 )
+
+const scrollToBottom = () => {
+    const scrollbar = themeScrollbar.value
+    if (scrollbar && scrollbar.wrapRef) {
+        const wrap = scrollbar.wrapRef
+        wrap.scrollTo({ top: wrap.scrollHeight, behavior: 'smooth' })
+    }
+}
 
 onBeforeMount(() => {
     $sub('shop-vite-open-theme', () => {
@@ -486,5 +500,18 @@ onMounted(() => {
     justify-content: flex-end;
     width: 100%;
     margin: 0;
+}
+
+.theme-scroll-tip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 4px 0;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--el-color-warning);
+    cursor: pointer;
+    background: var(--el-color-warning-lighter);
+    border-radius: 0 0 var(--el-border-radius-base) var(--el-border-radius-base);
 }
 </style>

@@ -12,7 +12,7 @@
 const format = (percentage: any) => (percentage === 100 ? 'Full' : `${percentage}%`)
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .demo-progress .el-progress--line {
     width: 350px;
     margin-bottom: 15px;

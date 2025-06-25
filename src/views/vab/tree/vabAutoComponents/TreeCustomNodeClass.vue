@@ -81,9 +81,9 @@ const data: Tree[] = [
 ]
 </script>
 
-<style>
+<style lang="scss">
 .is-penultimate > .el-tree-node__content {
-    color: #626aef;
+    color: var(--el-color-primary);
 }
 
 .el-tree-node.is-expanded.is-penultimate > .el-tree-node__children {

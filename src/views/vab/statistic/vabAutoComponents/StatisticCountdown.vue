@@ -24,8 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { Calendar } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
 
 const value = ref<any>(Date.now() + 1000 * 60 * 60 * 7)
 const value1 = ref<any>(Date.now() + 1000 * 60 * 60 * 24 * 2)
@@ -36,7 +36,7 @@ function reset() {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .el-col {
     text-align: center;
 }

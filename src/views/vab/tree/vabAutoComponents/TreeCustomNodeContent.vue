@@ -143,7 +143,7 @@ const dataSource = ref<Tree[]>([
 ])
 </script>
 
-<style>
+<style lang="scss">
 .custom-tree-node {
     display: flex;
     flex: 1;
