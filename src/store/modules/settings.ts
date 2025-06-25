@@ -39,6 +39,7 @@ import {
     themeName,
     title,
 } from '/@/config'
+import { themeConfig } from '/@/config/theme.config'
 import { colorRgba, lightenColorChrome } from '/@/utils/lightenColor'
 import { getLocalStorage } from '/@/utils/localStorage'
 
@@ -74,10 +75,21 @@ const defaultTheme: ThemeType = {
     fontSize,
     rightToolsDrag,
     showBox,
+    glassMode: themeConfig.glassMode,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { persistenceTab = _persistenceTab } = getLocalStorage('persistenceTab')
+
+// 兼容 store 外部调用
+function setGlassModeClass(val: boolean) {
+    const body = document.body
+    if (val) {
+        body.classList.add('glass-mode')
+    } else {
+        body.classList.remove('glass-mode')
+    }
+}
 
 export const useSettingsStore = defineStore('settings', {
     state: (): SettingsModuleType => ({
@@ -129,6 +141,7 @@ export const useSettingsStore = defineStore('settings', {
                 }
             localStorage.removeItem('shop-vite-theme')
             this.updateTheme()
+            setGlassModeClass(!!this.theme.glassMode)
         },
         updateTheme() {
             document.querySelectorAll('body')[0].className = `vab-theme-${this.theme.themeName}`

@@ -7,13 +7,15 @@
                     class="vab-shop-layout-item"
                     :label="translate('布局')"
                 >
-                    <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
-                        <el-radio-button v-for="item in layoutList" :key="item" :label="item" :value="item">
-                            <template #default>
-                                <vab-icon :icon="item" is-custom-svg />
-                            </template>
-                        </el-radio-button>
-                    </el-radio-group>
+                    <div class="right-align-content">
+                        <el-radio-group v-model="theme.layout" class="vab-shop-layout-radio-group">
+                            <el-radio-button v-for="item in layoutList" :key="item" :label="item" :value="item">
+                                <template #default>
+                                    <vab-icon :icon="item" is-custom-svg />
+                                </template>
+                            </el-radio-button>
+                        </el-radio-group>
+                    </div>
                 </el-form-item>
                 <el-form-item :label="translate('主题')">
                     <el-radio-group v-model="theme.themeName" @change="_updateTheme">
@@ -161,6 +163,8 @@ interface ListType {
     label: string
 }
 
+const size = ref<string>('360px')
+
 const route = useRoute()
 const settingsStore = useSettingsStore()
 const routeName = ref<RouteRecordName | null | undefined>(route.name)
@@ -195,7 +199,6 @@ const pageTransitionList = ref<ListType[]>([
     { value: 'el-zoom-in-top', label: 'zoom-in-top' },
     { value: 'el-zoom-in-bottom', label: 'zoom-in-bottom' },
 ])
-const size = ref<string>('340px')
 
 const handleOpenTheme = () => {
     drawerVisible.value = true
@@ -377,7 +380,8 @@ onMounted(() => {
                         .vab-shop-layout-radio-group {
                             display: flex;
                             align-items: center;
-                            justify-content: flex-end;
+                            justify-content: flex-end !important;
+                            margin: 0 !important;
 
                             .el-radio-button {
                                 width: 40px;
@@ -388,14 +392,13 @@ onMounted(() => {
                                 background: transparent;
                                 border: 0;
                                 box-shadow: none;
+                                &:last-child {
+                                    margin-right: 0 !important;
+                                }
 
                                 &.is-disabled {
                                     cursor: not-allowed;
                                     opacity: 0.6;
-                                }
-
-                                &:last-child {
-                                    margin-right: 0;
                                 }
 
                                 .el-radio-button {
@@ -472,5 +475,12 @@ onMounted(() => {
         background: var(--el-color-white);
         border-top: 1px solid var(--el-border-color);
     }
+}
+
+.right-align-content {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0;
 }
 </style>

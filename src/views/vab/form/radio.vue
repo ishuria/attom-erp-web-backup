@@ -2,32 +2,32 @@
     <div class="radio-container no-background-container">
         <vab-card>
             <template #header>基础用法</template>
-            <el-radio v-model="radio" label="备选项1" value="1" />
-            <el-radio v-model="radio" label="备选项2" value="2" />
+            <el-radio v-model="radio" :value="'1'">备选项1</el-radio>
+            <el-radio v-model="radio" :value="'2'">备选项2</el-radio>
         </vab-card>
         <vab-card>
             <template #header>禁用状态</template>
-            <el-radio v-model="radio2" disabled label="禁用" value="1" />
-            <el-radio v-model="radio2" disabled label="选中且禁用" value="2" />
+            <el-radio v-model="radio2" disabled :value="'1'">禁用</el-radio>
+            <el-radio v-model="radio2" disabled :value="'2'">选中且禁用</el-radio>
         </vab-card>
         <vab-card>
             <template #header>单选框组</template>
             <el-radio-group v-model="radio3">
-                <el-radio label="备选项1" value="1" />
-                <el-radio label="备选项2" value="2" />
-                <el-radio label="备选项3" value="3" />
+                <el-radio :value="'1'">备选项1</el-radio>
+                <el-radio :value="'2'">备选项2</el-radio>
+                <el-radio :value="'3'">备选项3</el-radio>
             </el-radio-group>
         </vab-card>
         <vab-card>
             <template #header>按钮样式</template>
             <el-radio-group v-model="radio4">
-                <el-radio-button v-for="city in cities" :key="city" :label="city" :value="city" />
+                <el-radio-button v-for="city in cities" :key="city" :value="city">{{ city }}</el-radio-button>
             </el-radio-group>
         </vab-card>
         <vab-card>
             <template #header>带有边框</template>
-            <el-radio v-model="radio5" border label="备选项1" value="1" />
-            <el-radio v-model="radio5" border label="备选项2" value="2" />
+            <el-radio v-model="radio5" border :value="'1'">备选项1</el-radio>
+            <el-radio v-model="radio5" border :value="'2'">备选项2</el-radio>
         </vab-card>
     </div>
 </template>

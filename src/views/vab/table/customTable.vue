@@ -58,9 +58,9 @@
                     </el-button>
                     <el-popover :width="165">
                         <el-radio-group v-model="lineHeight">
-                            <el-radio-button label="large" value="large">大</el-radio-button>
-                            <el-radio-button label="default" value="default">中</el-radio-button>
-                            <el-radio-button label="small" value="small">小</el-radio-button>
+                            <el-radio-button :value="'large'">大</el-radio-button>
+                            <el-radio-button :value="'default'">中</el-radio-button>
+                            <el-radio-button :value="'small'">小</el-radio-button>
                         </el-radio-group>
                         <template #reference>
                             <el-button>

@@ -1,9 +1,14 @@
 <template>
-    <div v-if="'technology' != theme.themeName" class="vab-color-picker" style="margin-left: var(--el-margin)">
+    <div
+        v-if="'technology' != theme.themeName"
+        class="vab-color-picker"
+        style="margin-left: var(--el-margin); overflow: hidden; border-radius: var(--el-border-radius-base)"
+    >
         <el-color-picker
             v-model="theme.color"
             popper-class="vab-color-picker-popper"
             :predefine="predefineColors"
+            style="border-radius: var(--el-border-radius-base)"
             @active-change="handleChange"
         />
     </div>
@@ -52,6 +57,7 @@ onBeforeMount(() => {
 .vab-color-picker-popper {
     box-sizing: content-box !important;
     padding: calc(var(--el-padding) / 2);
+    border-radius: var(--el-border-radius-base);
 
     .el-color-dropdown__link-btn {
         display: none;
