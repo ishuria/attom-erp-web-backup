@@ -61,7 +61,6 @@
 
 <script lang="ts" setup>
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticUserBehavior',

@@ -99,11 +99,32 @@
                     </el-col>
                     <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
                         <div class="news-tit"><h2>互动留言</h2></div>
-                        <el-table :data="tableData" :height="395" style="border: 1px solid var(--el-border-color)">
-                            <el-table-column label="Date" prop="date" />
-                            <el-table-column label="Name" prop="name" />
-                            <el-table-column label="Address" prop="address" show-overflow-tooltip />
+                        <!-- 留言表单 -->
+                        <el-form inline :model="newMessage" style="margin-bottom: 12px" @submit.prevent="submitMessage">
+                            <el-form-item>
+                                <el-input v-model="newMessage.name" maxlength="12" placeholder="昵称" style="width: 120px" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-input v-model="newMessage.content" maxlength="60" placeholder="留言内容" style="width: 240px" />
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitMessage">留言</el-button>
+                            </el-form-item>
+                        </el-form>
+                        <!-- 留言列表 -->
+                        <el-table :data="pagedMessages" :height="260" style="margin-bottom: 8px; border: 1px solid var(--el-border-color)">
+                            <el-table-column label="昵称" prop="name" width="100" />
+                            <el-table-column label="留言" prop="content" />
+                            <el-table-column label="时间" prop="date" width="120" />
+                            <el-table-column label="点赞" width="80">
+                                <template #default="scope">
+                                    <el-button size="small" type="text" @click="likeMessage(scope.$index + (currentPage - 1) * pageSize)">
+                                        👍 {{ scope.row.likes }}
+                                    </el-button>
+                                </template>
+                            </el-table-column>
                         </el-table>
+                        <el-button v-if="messages.length > pagedMessages.length" style="width: 100%" @click="loadMore">加载更多</el-button>
                     </el-col>
                 </el-row>
                 <portal-divider active-menu="portal" style="margin-top: 12px" />
@@ -155,63 +176,34 @@ const openWindow = (url: string) => {
 }
 
 const date = ref<any>(new Date())
-const tableData = [
-    {
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-]
+
+// 留言数据
+const messages = ref<any[]>([])
+const pageSize = 5
+const currentPage = ref(1)
+const pagedMessages = computed(() => messages.value.slice(0, currentPage.value * pageSize))
+
+const newMessage = reactive({ name: '', content: '' })
+
+function submitMessage() {
+    if (!newMessage.name.trim() || !newMessage.content.trim()) return
+    messages.value.unshift({
+        name: newMessage.name,
+        content: newMessage.content,
+        date: new Date().toLocaleString().slice(5, 16),
+        likes: 0,
+    })
+    newMessage.name = ''
+    newMessage.content = ''
+}
+
+function likeMessage(idx: number) {
+    messages.value[idx].likes++
+}
+
+function loadMore() {
+    currentPage.value++
+}
 </script>
 
 <style lang="scss" scoped>

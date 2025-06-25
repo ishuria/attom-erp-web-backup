@@ -62,7 +62,6 @@
 
 <script lang="ts" setup>
 import { ArrowDown, ArrowUp, Money, ShoppingCart, TrendCharts } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticTrend',

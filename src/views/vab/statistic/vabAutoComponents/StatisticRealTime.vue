@@ -90,7 +90,6 @@
 
 <script lang="ts" setup>
 import { ArrowDown, ArrowUp, Money, Monitor, ShoppingCart, User } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticRealTime',
