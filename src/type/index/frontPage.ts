@@ -77,3 +77,33 @@ export interface IGetFrontPageHistoryAssessmentRecordsItem {
   oemFinish: number
   oem: number
 }
+export interface IGetFrontPageBonusRes {
+   /**
+     * 当月总提成
+     */
+    currentMonthBonus: number;
+
+    /**
+     * 较上月
+     */
+    bonusMonthDiff: number;
+
+    /**
+     * 较去年同月
+     */
+    bonusYearMonthDiff: number;
+
+    /**
+     * 按类型 饼图列表
+     */
+    commissionTypePieList: IPieItem[];
+
+    /**
+     * 按站点 饼图列表
+     */
+    commissionSitePieList: IPieItem[];
+}
+export interface IPieItem {
+  name: string
+  value: number
+}

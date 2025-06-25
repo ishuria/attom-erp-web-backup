@@ -23,6 +23,7 @@ declare module 'vue' {
     CarouselCard: typeof import('./../../../src/views/vab/carousel/vabAutoComponents/CarouselCard.vue')['default']
     CarouselIndicator: typeof import('./../../../src/views/vab/carousel/vabAutoComponents/CarouselIndicator.vue')['default']
     CarouselVertical: typeof import('./../../../src/views/vab/carousel/vabAutoComponents/CarouselVertical.vue')['default']
+    CommissionTypePie: typeof import('./../../../src/views/index/vabAutoComponents/CommissionTypePie.vue')['default']
     CommonProperty: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/CommonProperty.vue')['default']
     Control: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/Control.vue')['default']
     DataDialog: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/DataDialog.vue')['default']

@@ -3,9 +3,9 @@
     <el-row :gutter="20">
       <!-- 第一层 -->
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card background="white" :count-config="countConfig1"  percentage="10%" title="本月总提成" >
+        <top-card background="white" :count-config="countConfig1" :month-diff="countConfig1.monthDiff" :year-diff="countConfig1.yearDiff" title="本月总提成" @open-table="handleJumpTo" >
           <template #select>
-            <el-select v-model="type" size="small" >
+            <el-select v-model="type" size="small" @change="handleChangePieList" >
               <el-option 
                 v-for="item in selectOption"
                 :label="item.label"
@@ -15,7 +15,8 @@
             </el-select>
           </template>
           <template #chart>
-            <vab-commission-chart-pie :data="pieList" />
+            <vab-commission-chart-pie v-if="type === 0" :data="pieList" />
+            <commission-type-pie v-if="type === 1" :data="pieList" />
           </template>
         </top-card>
       </el-col>
@@ -85,7 +86,7 @@
         <!-- <pending2 /> -->
       </el-col>
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <version-information />
+        <!-- <version-information /> -->
       </el-col>
       <!-- 第三层 -->
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -105,26 +106,28 @@
         <rank title="上月新品提成排行(上线1年以内)" />
       </el-col>
     </el-row>
+     <history-assessment-records 
+      v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
+      @query="queryData" @page-change="handleCurrentChange" @size-change="handleSizeChange"
+    />
   </div>
-  <history-assessment-records 
-    v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
-    @query="queryData" @page-change="handleCurrentChange" @size-change="handleSizeChange"
-  />
+ 
 </template>
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageHistoryAssessmentRecords, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
-import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE } from '/@/const/role'
+import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
+import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
-import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageProgressProjectsItem } from '/@/type/index/frontPage'
+import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageProgressProjectsItem, IPieItem } from '/@/type/index/frontPage'
 
 defineOptions({
   name: 'Index',
 })
 
+const router = useRouter()
 const currentRoleCode = useAclStore().getRole[0];
 const ableViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE;
 const type = ref<number>(0)
@@ -132,80 +135,11 @@ const selectOption = [
   { label: '站点', value: 0 },
   { label: '类型', value: 1 }
 ]
-let pieList = [ 
-  {
-    name:"亚马逊US美国",
-    value: 3187.54
-  },
-  {
-    name:"亚马逊UK英国",
-    value: 17.15
-  },
-  {
-    name:"亚马逊DE德国",
-    value:136.93
-  },
-  {
-    name:"亚马逊CA加拿大",
-    value:0.00
-  },
-  {
-    name:"沃尔玛US美国",
-    value:0.00
-  },
-  {
-    name:"亚马逊MX墨西哥",
-    value:0.00
-  },
-  {
-    name:"亚马逊BR巴西",
-    value:0.00
-  },
-  {
-    name:"亚马逊IT意大利",
-    value:-13.20
-  },
-  {
-    name:"亚马逊FR法国",
-    value:-0.19
-  },
-  {
-    name:"亚马逊ES西班牙",
-    value:-0.05
-  },
-  {
-    name:"亚马逊NL荷兰",
-    value:0.00
-  },
-  {
-    name:"亚马逊SE瑞典",
-    value:0.00
-  },
-  {
-    name:"亚马逊TR土耳其",
-    value:0.00
-  },
-  {
-    name:"亚马逊PL波兰",
-    value:0.00
-  },
-  {
-    name:"亚马逊BE比利时",
-    value:6.93
-  },
-  {
-    name:"亚马逊JP日本",
-    value:0.00
-  },
-  {
-    name:"Tiktok美国",
-    value:0.00
-  }
-]
+const pieList = ref<any[]>([])
 
 const countConfig1 = reactive<any>({
   startValue: 0,
-  endValue: random(1, 50),
+  endValue: 0,
   decimals: 2,
   prefix: '￥',
   suffix: '',
@@ -257,24 +191,7 @@ const countConfig4 = reactive<any>({
   separator: ',',
   duration: 1000,
 })
-onBeforeMount(() => {
-  let i = 0
-  pieList = pieList.map((item: any, index: number) => {
-    const trueValue = item.value
-    const itemStyle = { color: colorList[index] }
-    if (item.value < 0) {
-      item.value = Math.abs(item.value)
-      itemStyle.color = redColorList[i]
-      i++
-    }
-    return {
-      name: item.name,
-      value: item.value,
-      trueValue,
-      itemStyle,
-    }
-  })
-})
+
 const inProgressProjectsData = ref<IGetFrontPageProgressProjectsItem[]>([])
 const monthDiff = ref<number>(0)
 const yearDiff = ref<number>(0)
@@ -330,9 +247,54 @@ const handleSizeChange = (val: number) => {
   queryForm.pageSize = val
   fetchHistoryAssessmentRecords()
 }
+const handleJumpTo = () => {
+  let url = ''
+  if (currentRoleCode === ROLE_GRAPHICDESIGNLEAD_CODE || currentRoleCode === ROLE_GRAPHICDESIGNER_CODE || currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE) {
+    url = "/commission/commissionArtDetails"
+  } else if (currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE || currentRoleCode === ROLE_SUPPLY_CHAIN_MANG_CODE) {
+    url = "/commission/commissionProductDetails"
+  } else if (currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE) {
+    url = "/commission/procurementCostReduction"
+  }
+  router.push(url)
+}
+const commissionSitePieList = ref<IPieItem[]>([])
+const commissionTypePieList = ref<IPieItem[]>([])
+const fetchTotalBonus = async () => {
+  const { data } = await getFrontPageBonus()
+  countConfig1.endValue = data.currentMonthBonus
+  countConfig1.monthDiff = data.bonusMonthDiff
+  countConfig1.yearDiff = data.bonusYearMonthDiff
+  commissionSitePieList.value = data.commissionSitePieList
+  commissionTypePieList.value = data.commissionTypePieList
+  handleChangePieList()
+}
+const handleChangePieList = () => {
+  if (type.value === 0) {
+    let i = 0
+    pieList.value = commissionSitePieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        item.value = Math.abs(item.value)
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: item.value,
+        trueValue,
+        itemStyle,
+      }
+    })
+  } else if (type.value === 1) {
+    pieList.value = commissionTypePieList.value
+  }
+}
 onBeforeMount(() => {
   fetchAssessmentData()
   fetchInProgressProjectsData()
+  fetchTotalBonus()
 })
 </script>
 

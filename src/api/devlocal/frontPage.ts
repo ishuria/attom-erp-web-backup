@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetFrontPageAssessmentDataRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
+import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
 
 
 /**
@@ -37,5 +37,16 @@ export function getFrontPageHistoryAssessmentRecords(data: IGetFrontPageHistoryA
     url: `${BASE_API}/front_page/history/assessment/records`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * 首页-总提成
+ * @returns 
+ */
+export function getFrontPageBonus(): Promise<{ data: IGetFrontPageBonusRes }> {
+  return request({
+    url: `${BASE_API}/front_page/bonus`,
+    method: 'get'
   })
 }
