@@ -614,73 +614,27 @@ onUnmounted(() => {
 
                 &:hover {
                     box-shadow: 0 8px 25px rgba(var(--el-color-primary-rgb), 0.4);
-                    transform: translateY(-2px);
                 }
 
                 &:focus-within {
                     box-shadow: 0 8px 25px rgba(var(--el-color-primary-rgb), 0.5);
-                    transform: translateY(-2px);
                 }
             }
 
             :deep(.el-input__inner) {
                 font-weight: 500;
-                color: var(--el-color-white);
+                color: #fff;
 
                 &::placeholder {
-                    color: rgba(255, 255, 255, 0.8);
+                    color: #fff;
                 }
             }
 
             .search-icon {
                 font-size: 16px;
-                color: var(--el-color-white);
+                color: #fff;
             }
         }
-    }
-}
-
-.search-dialog {
-    :deep(.el-dialog) {
-        z-index: 9999;
-        overflow: hidden;
-        border-radius: var(--el-border-radius-base);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-
-        .el-dialog__header {
-            padding: 20px 24px;
-            color: var(--el-color-white);
-            background: linear-gradient(135deg, var(--el-color-primary) 0%, var(--el-color-primary-light-3) 100%);
-
-            .el-dialog__title {
-                font-weight: 600;
-                color: var(--el-color-white);
-            }
-
-            .el-dialog__headerbtn {
-                .el-dialog__close {
-                    font-size: 18px;
-                    color: var(--el-color-white);
-
-                    &:hover {
-                        color: rgba(255, 255, 255, 0.8);
-                    }
-                }
-            }
-        }
-
-        .el-dialog__body {
-            padding: 0;
-        }
-
-        .el-dialog__footer {
-            padding: 16px 24px;
-            border-top: 1px solid var(--el-border-color-lighter);
-        }
-    }
-
-    :deep(.el-overlay) {
-        z-index: 9998;
     }
 }
 
@@ -707,24 +661,11 @@ onUnmounted(() => {
                 }
             }
 
-            :deep(.el-input__inner) {
-                height: 48px;
-                font-size: 16px;
-                font-weight: 500;
-                color: var(--el-text-color-primary);
-
-                &::placeholder {
-                    color: rgba(0, 0, 0, 0.3);
-                }
-            }
-
             .search-icon {
-                font-size: 18px;
                 color: var(--el-color-primary);
             }
 
             .clear-icon {
-                font-size: 16px;
                 color: var(--el-text-color-placeholder);
                 cursor: pointer;
                 transition: color 0.3s ease;
@@ -886,7 +827,7 @@ onUnmounted(() => {
                         height: 100%;
                         margin: auto !important;
                         font-size: 18px;
-                        color: var(--el-color-white);
+                        color: #fff;
                     }
                 }
 
