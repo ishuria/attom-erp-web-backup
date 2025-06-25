@@ -46,10 +46,13 @@
                 <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
                     <el-switch v-model="theme.isFollow" @change="updateIsFollow" />
                 </el-form-item>
-                <el-form-item v-if="theme.themeName === 'default'" :label="translate('液态玻璃')">
+                <el-form-item v-if="theme.themeName === 'default' && mode !== 'dark'" :label="translate('液态玻璃')">
                     <el-switch v-model="theme.glassMode" @change="setCssVar" />
                 </el-form-item>
-                <el-form-item v-if="theme.themeName === 'default' && theme.glassMode" :label="translate('液态玻璃透明度')">
+                <el-form-item
+                    v-if="theme.themeName === 'default' && theme.glassMode && mode !== 'dark'"
+                    :label="translate('液态玻璃透明度')"
+                >
                     <el-slider
                         v-model="theme.glassOpacity"
                         :max="1"
