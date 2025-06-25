@@ -163,7 +163,11 @@ interface ListType {
     label: string
 }
 
+// 电脑端主题配置抽屉宽度
 const size = ref<string>('360px')
+
+// 移动端主题配置抽屉宽度
+const mobileSize = ref<string>('90vw')
 
 const route = useRoute()
 const settingsStore = useSettingsStore()
@@ -332,7 +336,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-    if (device.value === 'mobile') size.value = '280px'
+    if (device.value === 'mobile') size.value = mobileSize.value
 })
 </script>
 
