@@ -6,13 +6,15 @@
             <vab-color-picker v-show="theme.showColorPicker" />
             <vab-dark v-show="theme.showDark" />
         </div>
-        <slot></slot>
+        <align-segmented v-model="alignType" />
+        <slot :align-type="alignType" />
         <vab-icon class="login-background" icon="background" is-custom-svg />
         <vab-footer />
     </div>
 </template>
 
 <script lang="ts" setup>
+import AlignSegmented from './AlignSegmented.vue'
 import { translate } from '/@/i18n'
 import { useBingStore } from '/@/store/modules/bing'
 import { useSettingsStore } from '/@/store/modules/settings'
@@ -23,10 +25,20 @@ defineOptions({
 
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
-const show = ref<boolean>(false)
+const show = ref<boolean>(true)
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
-const background = ref<string | undefined>('linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))')
+const background = ref<string | undefined>(
+    backgroundList.value[0]
+        ? `url(${backgroundList.value[0]})!important`
+        : 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+)
+const STORAGE_KEY = 'login-align-type'
+const getInitialAlignType = () => {
+    const saved = localStorage.getItem(STORAGE_KEY)
+    return saved || 'center'
+}
+const alignType = ref(getInitialAlignType())
 
 const handleShow = () => {
     if (show.value) background.value = `url(${backgroundList.value[0]})!important`
@@ -38,7 +50,10 @@ const handleShow = () => {
 .login-container {
     position: relative;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: calc(var(--vh, 1vh) * 100);
+    min-height: calc(var(--vh, 1vh) * 100);
 
     .login-right-tools {
         position: fixed;
@@ -72,6 +87,7 @@ const handleShow = () => {
         :deep() {
             .login-form {
                 width: 90vw !important;
+                padding: 4.5vh !important;
                 margin: auto !important;
 
                 .left-img {
@@ -96,6 +112,7 @@ const handleShow = () => {
         :deep() {
             .login-form {
                 width: 90vw !important;
+                padding: 4.5vh !important;
                 margin: auto !important;
 
                 .el-form--default {
@@ -120,17 +137,35 @@ const handleShow = () => {
             align-items: center;
             justify-content: space-between;
             width: 1000px;
-            padding: 4.5vh;
+            padding: 6.5vh 8.5vh 6.5vh 6.5vh;
             margin: auto;
             overflow: hidden;
-            background: var(--el-mask-color);
+            background: var(--vab-glass-bg);
             background-size: 100% 100%;
-            border: 1px solid var(--el-border-color);
             border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
             opacity: 0;
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            backdrop-filter: blur(24px) saturate(180%);
             transform: translateY(30px);
             transition: var(--el-transition);
             animation: identifier 0.3s ease-in-out 0.15s forwards;
+
+            &.align-left,
+            &.align-right {
+                height: 100vh;
+                margin: 0;
+                border-radius: 0;
+            }
+            &.align-center {
+                height: auto;
+                margin: 0 auto;
+                border-radius: 15px;
+            }
+            &.align-right {
+                margin-right: 0;
+                margin-left: auto;
+            }
 
             .left-img {
                 width: 50%;
@@ -202,6 +237,14 @@ const handleShow = () => {
                     border-radius: 3px;
                 }
             }
+        }
+
+        .align-segmented {
+            position: fixed;
+            top: calc(var(--el-margin) * 1.4);
+            left: 50%;
+            z-index: 10;
+            transform: translateX(-50%);
         }
 
         .vab-footer {
