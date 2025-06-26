@@ -57,8 +57,13 @@
         />
 
         <!-- 新增/编辑弹窗 -->
-        <el-dialog v-model="dialogVisible" :title="dialogMode === 'add' ? '添加优惠券' : '编辑优惠券'" width="500px">
-            <el-form ref="formRef" label-position="top" label-width="100px" :model="form" :rules="rules">
+        <vab-dialog
+            :model-value="dialogVisible"
+            :title="dialogMode === 'add' ? '添加优惠券' : '编辑优惠券'"
+            width="500px"
+            @update:model-value="(val) => (dialogVisible = val)"
+        >
+            <el-form ref="formRef" l label-width="100px" :model="form" :rules="rules">
                 <el-form-item label="优惠券名称" prop="name">
                     <el-input v-model="form.name" placeholder="请输入优惠券名称" />
                 </el-form-item>
@@ -103,10 +108,15 @@
                 <el-button @click="dialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="submitForm">确定</el-button>
             </template>
-        </el-dialog>
+        </vab-dialog>
 
         <!-- 领取记录弹窗 -->
-        <el-dialog v-model="recordDialogVisible" title="领取记录" width="800px">
+        <vab-dialog
+            :model-value="recordDialogVisible"
+            title="领取记录"
+            width="800px"
+            @update:model-value="(val) => (recordDialogVisible = val)"
+        >
             <el-table v-loading="recordLoading" border :data="recordList">
                 <el-table-column align="center" label="ID" prop="id" width="80" />
                 <el-table-column align="center" label="优惠券名称" min-width="120" prop="couponName" />
@@ -132,7 +142,7 @@
                 @current-change="handleRecordCurrentChange"
                 @size-change="handleRecordSizeChange"
             />
-        </el-dialog>
+        </vab-dialog>
     </div>
 </template>
 

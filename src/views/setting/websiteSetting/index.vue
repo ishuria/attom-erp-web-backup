@@ -3,7 +3,7 @@
         <el-row :gutter="20">
             <el-col :lg="12" :md="20" :sm="24" :xl="10" :xs="24">
                 <vab-card title="网站设置">
-                    <el-form ref="formRef" v-loading="loading" label-position="top" :model="form" :rules="formRules" @submit="submitForm">
+                    <el-form ref="formRef" v-loading="loading" label-width="100px" :model="form" :rules="formRules" @submit="submitForm">
                         <el-form-item label="网站名称" prop="siteName">
                             <el-input v-model="form.siteName" clearable placeholder="请输入网站名称" />
                         </el-form-item>

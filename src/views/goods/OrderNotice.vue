@@ -3,7 +3,7 @@
         <el-row :gutter="20">
             <el-col :lg="8" :md="18" :sm="24" :xl="8" :xs="24">
                 <vab-card v-if="speech.isSupported">
-                    <el-form label-position="top">
+                    <el-form l>
                         <el-form-item label="文本">
                             <el-input v-model="text" clearable :rows="4" type="textarea" />
                         </el-form-item>

@@ -65,8 +65,13 @@
         />
 
         <!-- 新增/编辑弹窗 -->
-        <el-dialog v-model="dialogVisible" :title="dialogMode === 'add' ? '添加库存' : '编辑库存'" width="500px">
-            <el-form ref="formRef" label-position="top" label-width="100px" :model="form" :rules="rules">
+        <vab-dialog
+            :model-value="dialogVisible"
+            :title="dialogMode === 'add' ? '添加库存' : '编辑库存'"
+            width="500px"
+            @update:model-value="(val) => (dialogVisible = val)"
+        >
+            <el-form ref="formRef" l label-width="100px" :model="form" :rules="rules">
                 <el-form-item label="商品名称" prop="goodsName">
                     <el-input v-model="form.goodsName" placeholder="请输入商品名称" />
                 </el-form-item>
@@ -117,7 +122,7 @@
                 <el-button @click="dialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="submitForm">确定</el-button>
             </template>
-        </el-dialog>
+        </vab-dialog>
     </div>
 </template>
 

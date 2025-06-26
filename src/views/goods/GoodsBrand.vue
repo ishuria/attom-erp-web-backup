@@ -61,8 +61,13 @@
             @size-change="handleSizeChange"
         />
 
-        <el-dialog v-model="dialogVisible" :title="dialogMode === 'add' ? '添加品牌' : '编辑品牌'" width="500px">
-            <el-form ref="formRef" label-position="top" label-width="100px" :model="form" :rules="rules">
+        <vab-dialog
+            :model-value="dialogVisible"
+            :title="dialogMode === 'add' ? '添加品牌' : '编辑品牌'"
+            width="500px"
+            @update:model-value="(val) => (dialogVisible = val)"
+        >
+            <el-form ref="formRef" l label-width="100px" :model="form" :rules="rules">
                 <el-form-item label="品牌名称" prop="name">
                     <el-input v-model="form.name" placeholder="请输入品牌名称" />
                 </el-form-item>
@@ -106,7 +111,7 @@
                 <el-button @click="dialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="submitForm">确定</el-button>
             </template>
-        </el-dialog>
+        </vab-dialog>
     </div>
 </template>
 
