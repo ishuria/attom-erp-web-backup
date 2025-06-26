@@ -47,8 +47,11 @@
       </el-col>
       <el-col :span="12">
         <template v-if="$slots.chart">
-        <slot name="chart"></slot>
-      </template>
+          <slot name="chart"></slot>
+        </template>
+        <template v-if="$slots.date">
+          <slot name="date"></slot>
+        </template>
       </el-col>
     </el-row>
   </vab-card>

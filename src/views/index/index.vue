@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <!-- 第一层 -->
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card background="white" :count-config="countConfig1" :month-diff="countConfig1.monthDiff" :year-diff="countConfig1.yearDiff" title="本月总提成" @open-table="handleJumpTo" >
+        <top-card v-if="ableViewCommissionCard" background="white" :count-config="countConfig1" :month-diff="countConfig1.monthDiff" :year-diff="countConfig1.yearDiff" title="本月总提成" @open-table="handleJumpTo" >
           <template #select>
             <el-select v-model="type" size="small" @change="handleChangePieList" >
               <el-option 
@@ -15,8 +15,11 @@
             </el-select>
           </template>
           <template #chart>
-            <vab-commission-chart-pie v-if="type === 0" :data="pieList" />
-            <commission-type-pie v-if="type === 1" :data="pieList" />
+            <vab-commission-chart-pie v-if="type === 0" :data="pieList" @click="handleJumpTo" />
+            <commission-type-pie v-if="type === 1" :data="pieList" @click="handleJumpTo" />
+          </template>
+          <template #date>
+            <div class="bottom-time">{{ date }}更新</div>
           </template>
         </top-card>
       </el-col>
@@ -116,10 +119,11 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
+import { getOperationUpdateDate } from '~/src/api/devlocal/productPerformance'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
-import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
+import { ROLE_ADMINBUYERLEAD_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageProgressProjectsItem, IPieItem } from '/@/type/index/frontPage'
 
@@ -129,7 +133,13 @@ defineOptions({
 
 const router = useRouter()
 const currentRoleCode = useAclStore().getRole[0];
-const ableViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE;
+const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE;
+const commissionRole = [
+  ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_ADMINBUYERLEAD_CODE,
+  ROLE_SUPPLY_CHAIN_MANG_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE
+]
+const ableViewCommissionCard = commissionRole.includes(currentRoleCode)
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -291,10 +301,19 @@ const handleChangePieList = () => {
     pieList.value = commissionTypePieList.value
   }
 }
+const date = ref('')
+// 更新日期
+const fetchUpdateDate = async () => {
+  const { data } = await getOperationUpdateDate({ type: 3 })
+  if (data) {
+    date.value = data.split(' ')[0]
+  }
+}
 onBeforeMount(() => {
   fetchAssessmentData()
   fetchInProgressProjectsData()
   fetchTotalBonus()
+  fetchUpdateDate()
 })
 </script>
 
@@ -322,6 +341,13 @@ onBeforeMount(() => {
           position: absolute;
           right: var(--el-margin);
           bottom: 15px;
+        } 
+        .bottom-time {
+          position: absolute;
+          right: -10px;
+          bottom: -15px;
+          font-size: 12px;
+          color: var(--el-text-color-secondary);
         }
       }
     }
