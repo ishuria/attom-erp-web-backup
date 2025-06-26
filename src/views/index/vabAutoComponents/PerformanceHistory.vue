@@ -27,9 +27,11 @@ const option = reactive<any>({
   },
   tooltip: {
     trigger: 'axis',
+    backgroundColor: '#eef6fd', // 背景透明
+    borderWidth: 0, // 去除默认边框
     formatter: (params: any[]) => {
       // tooltip标题
-      let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">${params[0].name}</div>`
+      let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 6px;">${params[0].name}</div>`
 
       // tooltip详情内容
       const itemHtmlStrArr = params.map((item) => {
@@ -46,6 +48,37 @@ const option = reactive<any>({
       // 最终html字符串
       const resHtmlStr = titleHtmlStr + contentHtmlStr
       return resHtmlStr
+    //       const itemHtmlStrArr = params.map((item) => {
+    //   const name = item.seriesName
+    //   const value = item.value
+    //   const unit = name === '退货率' || name === '退款率' ? '%' : ''
+    //   return `
+    //     <div style="
+    //       display: flex;
+    //       align-items: center;
+    //       justify-content: space-between;
+    //       background: #fff;
+    //       padding: 6px 10px;
+    //       margin-bottom: 6px;
+    //       border-radius: 8px;
+    //       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    //       font-size: 13px;
+    //     ">
+    //       <div style="display: flex; align-items: center;">
+    //         ${item.marker}
+    //         <span style="color: #333; margin-left: 6px;">${name}</span>
+    //       </div>
+    //       <span style="font-weight: bold; color: #333;">${value}${unit}</span>
+    //     </div>
+    //   `
+    // })
+
+    // return `
+    //   <div style="background: #eef6fd; padding: 10px; border-radius: 8px; max-width: 260px;">
+    //     ${titleHtmlStr}
+    //     ${itemHtmlStrArr.join('')}
+    //   </div>
+    // `
     }
   },
   grid: {
