@@ -121,21 +121,21 @@ html {
                 var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height)
             );
 
-            // .ri-contract-right-line.fold-unfold {
-            //     position: fixed;
-            //     bottom: var(--el-margin);
-            //     left: var(--el-margin);
-            //     z-index: var(--el-z-index);
-            //     display: flex;
-            //     align-items: center;
-            //     justify-content: center;
-            //     width: 50px;
-            //     height: 50px;
-            //     color: var(--el-color-white);
-            //     background: var(--el-color-primary);
-            //     border-radius: 50%;
-            //     box-shadow: 0 2px 12px 0 var(--el-color-primary);
-            // }
+            .ri-contract-right-line.fold-unfold {
+                position: fixed;
+                bottom: var(--el-margin);
+                left: var(--el-margin);
+                z-index: var(--el-z-index);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 50px;
+                color: var(--el-color-white);
+                background: var(--el-color-primary);
+                border-radius: 50%;
+                box-shadow: 0 2px 12px 0 var(--el-color-primary);
+            }
         }
 
         * {
@@ -1144,14 +1144,29 @@ html {
   *@description: 开始尝试ios26液态玻璃效果
   */
 
+@mixin glass-mode {
+    &::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        content: '';
+        backdrop-filter: blur(16px);
+    }
+}
+
 html:not(.dark) body.vab-theme-default.glass-mode {
     .vab-layout-header,
     .vab-theme-setting {
         background: var(--vab-glass-bg) !important;
         border-bottom: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+
+        @include glass-mode;
     }
     .vab-tabs,
     .vab-nav,
@@ -1166,8 +1181,10 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+        @include glass-mode;
+
         ul.el-dropdown-menu {
             background: transparent !important;
             box-shadow: none !important;
@@ -1179,8 +1196,10 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+        @include glass-mode;
+
         ul.el-dropdown-menu {
             background: transparent !important;
             box-shadow: none !important;
@@ -1192,8 +1211,11 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+
+        @include glass-mode;
+
         .el-dropdown-menu {
             background: transparent !important;
             box-shadow: none !important;
@@ -1212,8 +1234,10 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+
+        @include glass-mode;
 
         .el-dropdown-menu {
             background: transparent !important;
@@ -1227,8 +1251,10 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+
+        @include glass-mode;
     }
 
     // 主题配置抽屉和搜索弹窗液态玻璃效果
@@ -1237,8 +1263,14 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+
+        @include glass-mode;
+
+        // * {
+        //     color: var(--el-text-color-primary) !important;
+        // }
 
         .el-drawer__header,
         .el-drawer__footer,
@@ -1252,8 +1284,10 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
         box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
-        -webkit-backdrop-filter: blur(16px) saturate(180%);
-        backdrop-filter: blur(16px) saturate(180%);
+        // -webkit-backdrop-filter: blur(16px) saturate(180%);
+        // backdrop-filter: blur(16px) saturate(180%);
+        @include glass-mode;
+
         .el-tabs,
         .el-scrollbar,
         .el-empty {
