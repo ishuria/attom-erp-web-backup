@@ -101,10 +101,10 @@
                     </el-button>
                 </el-form-item>
                 <el-form-item label="价格" prop="price">
-                    <el-input-number v-model="form.price" :min="0" :precision="2" style="width: 100%" />
+                    <el-input-number v-model="form.price" :min="0" :precision="2" />
                 </el-form-item>
                 <el-form-item label="库存" prop="stock">
-                    <el-input-number v-model="form.stock" :min="0" :precision="0" style="width: 100%" />
+                    <el-input-number v-model="form.stock" :min="0" :precision="0" />
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-radio-group v-model="form.status">
@@ -113,7 +113,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="排序" prop="sort">
-                    <el-input-number v-model="form.sort" :min="0" :precision="0" style="width: 100%" />
+                    <el-input-number v-model="form.sort" :min="0" :precision="0" />
                 </el-form-item>
                 <el-form-item label="备注" prop="remark">
                     <el-input v-model="form.remark" placeholder="请输入备注信息" :rows="3" type="textarea" />
