@@ -1082,6 +1082,21 @@ html {
 
         .vab-icon {
             --el-font-size-big: var(--el-font-size-medium) !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 1em;
+            min-height: 1em;
+
+            &::before {
+                font-size: 0.8em;
+                content: '●';
+                opacity: 0.3;
+            }
+
+            &.loaded::before {
+                content: '';
+            }
         }
 
         .vab-grid {
