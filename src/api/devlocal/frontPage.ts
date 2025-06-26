@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
+import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPagePerformanceHistory, IGetFrontPagePerformanceHistoryReq, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
 
 
 /**
@@ -47,6 +47,28 @@ export function getFrontPageHistoryAssessmentRecords(data: IGetFrontPageHistoryA
 export function getFrontPageBonus(): Promise<{ data: IGetFrontPageBonusRes }> {
   return request({
     url: `${BASE_API}/front_page/bonus`,
+    method: 'get'
+  })
+}
+
+/**
+ * 首页-绩效历史
+ * @returns 
+ */
+export function getFrontPagePerformanceHistory(data: IGetFrontPagePerformanceHistoryReq): Promise<{ data: IGetFrontPagePerformanceHistory[] }> {
+  return request({
+    url: `${BASE_API}/front_page/performance/history`,
+    method: 'post',
+    data
+  })
+}
+/**
+ * 首页-绩效历史-人员列表
+ * @returns 
+ */
+export function getFrontPageProductManagerSelectOption(): Promise<{ data: { id: number, label: string }[] }> {
+  return request({
+    url: `${BASE_API}/front_page/product_manager/select_option`,
     method: 'get'
   })
 }

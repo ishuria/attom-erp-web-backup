@@ -107,3 +107,18 @@ export interface IPieItem {
   name: string
   value: number
 }
+export interface IGetFrontPagePerformanceHistoryReq {
+  userId: number
+  startMonth: string
+  endMonth: string
+}
+export interface IGetFrontPagePerformanceHistory {
+  month: string
+  jingPinCount: number
+  jingPuCount: number
+  puHuoCount: number
+  jingPuVineCount: number
+  developmentDesign: number
+  purchaseAmount: number
+  newProductCommission: number
+}

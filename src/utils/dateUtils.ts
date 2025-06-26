@@ -157,3 +157,21 @@ export function getThisYearStringTime(): [string, string] {
 
   return [formattedStart, formattedEnd];
 }
+
+/**
+ * 获取月份范围
+ */
+export function getLastYearStringMonth(): [string, string] {
+  const today = new Date()
+
+  const startOfMonth = new Date(today.getFullYear() - 1, today.getMonth())
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth())
+
+  const formatMonth = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') // 月份从0开始
+    return `${year}-${month}`
+  }
+
+  return [formatMonth(startOfMonth), formatMonth(endOfMonth)]
+}
