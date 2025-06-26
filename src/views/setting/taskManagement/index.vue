@@ -12,6 +12,9 @@
                     <el-form-item>
                         <el-button :icon="Search" type="primary" @click="queryData">查询</el-button>
                     </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+                    </el-form-item>
                 </el-form>
             </vab-query-form-top-panel>
         </vab-query-form>
@@ -52,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { getList } from '/@/api/taskManagement'
 import imageUrl from '/@/assets/task_image/task.png'
 
@@ -85,6 +88,13 @@ const handlePlay = (status: any) => {
 }
 const handleAdd = () => {
     $baseMessage('模拟添加成功', 'success', 'hey')
+}
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 onBeforeMount(() => {
     fetchData()

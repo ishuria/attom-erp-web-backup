@@ -13,6 +13,7 @@
                         <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">
                             查询
                         </el-button>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
                         <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
                             <span v-if="fold">展开</span>
                             <span v-else>合并</span>
@@ -90,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doRefund, getList } from '/@/api/trade'
 
@@ -149,6 +150,14 @@ const handleRefund = (row: any) => {
             await fetchData()
         })
     }
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 
 onActivated(() => {

@@ -2,22 +2,33 @@
     <div class="goods-brand-container auto-height-container">
         <vab-query-form>
             <vab-query-form-left-panel>
-                <el-button type="primary" @click="openDialog('add')">添加品牌</el-button>
+                <el-button :icon="Plus" type="primary" @click="openDialog('add')">添加</el-button>
+                <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
                 <el-form :inline="true" :model="queryForm" @submit.prevent>
-                    <el-form-item label="">
-                        <el-input v-model="queryForm.name" clearable placeholder="请输入品牌名称" @keyup.enter="handleSearch" />
+                    <el-form-item>
+                        <el-input v-model="queryForm.name" clearable placeholder="请输入品牌名称" />
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="handleSearch">搜索</el-button>
+                        <el-button :icon="Search" :loading="loading" native-type="submit" type="primary" @click="handleSearch">
+                            查询
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
                     </el-form-item>
                 </el-form>
             </vab-query-form-right-panel>
         </vab-query-form>
 
-        <el-table border :data="pagedList" style="width: 100%; margin-top: 16px">
-            <el-table-column align="center" label="ID" prop="id" width="80" />
+        <el-table ref="tableRef" v-loading="loading" border :data="pagedList" @selection-change="setSelectRows">
+            <el-table-column type="selection" width="38" />
+            <el-table-column align="center" label="序号" width="55">
+                <template #default="{ $index }">
+                    {{ $index + 1 }}
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="品牌名称" min-width="120" prop="name" />
             <el-table-column align="center" label="品牌Logo" prop="logo" width="120">
                 <template #default="{ row }">
@@ -25,18 +36,21 @@
                     <span v-else style="color: #ccc">无</span>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="品牌描述" min-width="180" prop="desc" />
+            <el-table-column align="center" label="品牌描述" min-width="180" prop="desc" show-overflow-tooltip />
             <el-table-column align="center" label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-tag :type="row.status === '启用' ? 'success' : 'info'">{{ row.status }}</el-tag>
+                    <el-tag effect="dark" :type="row.status === '启用' ? 'success' : 'info'">{{ row.status }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" type="actions" width="160">
+            <el-table-column align="center" label="操作" width="150">
                 <template #default="{ row }">
-                    <el-button size="small" text type="primary" @click="openDialog('edit', row)">编辑</el-button>
-                    <el-button size="small" text type="danger" @click="deleteBrand(row.id)">删除</el-button>
+                    <el-button text type="primary" @click="openDialog('edit', row)">编辑</el-button>
+                    <el-button text type="danger" @click="deleteBrand(row.id)">删除</el-button>
                 </template>
             </el-table-column>
+            <template #empty>
+                <el-empty class="vab-data-empty" description="暂无数据" />
+            </template>
         </el-table>
 
         <vab-pagination
@@ -97,7 +111,8 @@
 </template>
 
 <script setup lang="ts">
-import { Plus } from '@element-plus/icons-vue'
+import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { doBrandDelete, doBrandEdit, getBrandList } from '/@/api/goodsBrand'
@@ -110,6 +125,13 @@ interface Brand {
     status: string
 }
 
+defineOptions({
+    name: 'GoodsBrand',
+})
+
+const tableRef = ref<TableInstance>()
+const selectRows = ref<any>([])
+
 const queryForm = reactive({
     pageNo: 1,
     pageSize: 10,
@@ -120,6 +142,10 @@ const brandList = ref<Brand[]>([])
 const loading = ref(false)
 
 const pagedList = computed(() => brandList.value)
+
+onActivated(() => {
+    tableRef.value?.doLayout()
+})
 
 async function fetchList() {
     loading.value = true
@@ -141,6 +167,33 @@ const rules = {
     logo: [{ required: true, message: '请上传品牌Logo', trigger: 'change' }],
     desc: [{ required: true, message: '请输入品牌描述', trigger: 'blur' }],
     status: [{ required: true, message: '请选择状态', trigger: 'change' }],
+}
+
+const setSelectRows = (value: string) => {
+    selectRows.value = value
+}
+
+const handleSearch = () => {
+    queryForm.pageNo = 1
+    fetchList()
+}
+
+const handleDelete = () => {
+    if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
+        $baseConfirm('您确定要删除选中项吗', null, async () => {
+            try {
+                await doBrandDelete({ ids })
+                $baseMessage('删除成功', 'success', 'hey')
+                fetchList()
+            } catch (error) {
+                console.error('删除失败:', error)
+                $baseMessage('删除失败', 'error', 'hey')
+            }
+        })
+    } else {
+        $baseMessage('您未选中任何行', 'warning', 'hey')
+    }
 }
 
 function openDialog(mode: 'add' | 'edit', row?: Brand) {
@@ -165,14 +218,21 @@ function submitForm() {
 }
 
 async function deleteBrand(id: number) {
-    await doBrandDelete({ id })
-    $baseMessage('删除成功', 'success', 'hey')
-    // 删除后如果当前页没数据自动跳到上一页
-    if (brandList.value.length === 1 && queryForm.pageNo > 1) {
-        queryForm.pageNo--
-    } else {
-        fetchList()
-    }
+    $baseConfirm('您确定要删除当前项吗', null, async () => {
+        try {
+            await doBrandDelete({ id })
+            $baseMessage('删除成功', 'success', 'hey')
+            // 删除后如果当前页没数据自动跳到上一页
+            if (brandList.value.length === 1 && queryForm.pageNo > 1) {
+                queryForm.pageNo--
+            } else {
+                fetchList()
+            }
+        } catch (error) {
+            console.error('删除失败:', error)
+            $baseMessage('删除失败', 'error', 'hey')
+        }
+    })
 }
 
 function beforeUpload(file: File) {
@@ -200,30 +260,31 @@ function handleCurrentChange(val: number) {
     fetchList()
 }
 
-function handleSearch() {
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
     queryForm.pageNo = 1
     fetchList()
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .goods-brand-container {
-    padding: 24px;
-}
-.brand-logo-upload {
-    width: 100%;
-}
-.logo-preview {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 10px;
-}
-.logo-preview img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    border: 1px solid #eee;
-    border-radius: 6px;
+    .brand-logo-upload {
+        width: 100%;
+    }
+
+    .logo-preview {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+
+        img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+    }
 }
 </style>

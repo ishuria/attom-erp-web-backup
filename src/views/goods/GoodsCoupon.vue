@@ -10,7 +10,10 @@
                         <el-input v-model="queryForm.name" clearable placeholder="请输入优惠券名称" @keyup.enter="handleSearch" />
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="handleSearch">搜索</el-button>
+                        <el-button :icon="Search" type="primary" @click="handleSearch">查询</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
                     </el-form-item>
                 </el-form>
             </vab-query-form-right-panel>
@@ -134,6 +137,7 @@
 </template>
 
 <script setup lang="ts">
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsCouponDelete, doGoodsCouponEdit, doGoodsCouponSend, getGoodsCouponList, getGoodsCouponRecordList } from '/@/api/goodsCoupon'
 import { $baseMessage } from '/@/hooks'
@@ -186,6 +190,14 @@ function handleCurrentChange(val: number) {
 function handleSearch() {
     queryForm.pageNo = 1
     fetchList()
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    handleSearch()
 }
 
 // 弹窗表单

@@ -145,6 +145,12 @@ export const goodsRoutes = [
                 component: () => import('/@/views/goods/GoodsImportExport.vue'),
                 meta: { title: '商品导入导出', icon: 'download-2-line' },
             },
+            {
+                path: 'goodsSku',
+                name: 'GoodsSku',
+                component: () => import('/@/views/goods/GoodsSku.vue'),
+                meta: { title: 'SKU配置', icon: 'settings-3-line' },
+            },
         ],
     },
 ]

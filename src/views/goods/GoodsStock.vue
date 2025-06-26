@@ -2,44 +2,58 @@
     <div class="goods-stock-container auto-height-container">
         <vab-query-form>
             <vab-query-form-left-panel>
-                <el-button type="primary" @click="openDialog('add')">添加库存</el-button>
+                <el-button :icon="Plus" type="primary" @click="openDialog('add')">添加</el-button>
+                <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
                 <el-form :inline="true" :model="queryForm" @submit.prevent>
                     <el-form-item>
-                        <el-input v-model="queryForm.goodsName" clearable placeholder="商品名称" @keyup.enter="handleSearch" />
+                        <el-input v-model="queryForm.goodsName" clearable placeholder="商品名称" />
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="handleSearch">搜索</el-button>
+                        <el-button :icon="Search" :loading="loading" native-type="submit" type="primary" @click="handleSearch">
+                            查询
+                        </el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
                     </el-form-item>
                 </el-form>
             </vab-query-form-right-panel>
         </vab-query-form>
 
-        <el-table v-loading="loading" border :data="stockList" style="width: 100%; margin-top: 16px">
-            <el-table-column align="center" label="ID" prop="id" width="80" />
+        <el-table ref="tableRef" v-loading="loading" border :data="stockList" @selection-change="setSelectRows">
+            <el-table-column type="selection" width="38" />
+            <el-table-column align="center" label="序号" width="55">
+                <template #default="{ $index }">
+                    {{ $index + 1 }}
+                </template>
+            </el-table-column>
             <el-table-column align="center" label="商品名称" min-width="120" prop="goodsName" />
             <el-table-column align="center" label="商品编码" prop="goodsCode" width="120" />
             <el-table-column align="center" label="分类" prop="category" width="100" />
-            <el-table-column align="center" label="当前库存" prop="currentStock" width="100" />
+            <el-table-column align="center" label="当前库存" prop="currentStock" sortable width="100" />
             <el-table-column align="center" label="预警值" prop="minStock" width="100" />
             <el-table-column align="center" label="最大库存" prop="maxStock" width="100" />
             <el-table-column align="center" label="单位" prop="unit" width="80" />
             <el-table-column align="center" label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-tag :type="row.status === '正常' ? 'success' : row.status === '库存不足' ? 'danger' : 'warning'">
+                    <el-tag effect="dark" :type="row.status === '正常' ? 'success' : row.status === '库存不足' ? 'danger' : 'warning'">
                         {{ row.status }}
                     </el-tag>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="更新时间" min-width="160" prop="lastUpdateTime" />
             <el-table-column align="center" label="仓库" prop="warehouse" width="100" />
-            <el-table-column align="center" label="操作" width="160">
+            <el-table-column align="center" label="操作" width="150">
                 <template #default="{ row }">
-                    <el-button size="small" text type="primary" @click="openDialog('edit', row)">编辑</el-button>
-                    <el-button size="small" text type="danger" @click="deleteStock(row.id)">删除</el-button>
+                    <el-button text type="primary" @click="openDialog('edit', row)">编辑</el-button>
+                    <el-button text type="danger" @click="deleteStock(row.id)">删除</el-button>
                 </template>
             </el-table-column>
+            <template #empty>
+                <el-empty class="vab-data-empty" description="暂无数据" />
+            </template>
         </el-table>
 
         <vab-pagination
@@ -108,6 +122,8 @@
 </template>
 
 <script setup lang="ts">
+import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
+import type { TableInstance } from 'element-plus'
 import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsStockDelete, doGoodsStockEdit, getGoodsStockList } from '/@/api/goodsStock'
 
@@ -125,6 +141,13 @@ interface StockItem {
     warehouse: string
 }
 
+defineOptions({
+    name: 'GoodsStock',
+})
+
+const tableRef = ref<TableInstance>()
+const selectRows = ref<any>([])
+
 const queryForm = reactive({
     pageNo: 1,
     pageSize: 10,
@@ -134,6 +157,10 @@ const queryForm = reactive({
 const total = ref(0)
 const stockList = ref<StockItem[]>([])
 const loading = ref(false)
+
+onActivated(() => {
+    tableRef.value?.doLayout()
+})
 
 async function fetchList() {
     loading.value = true
@@ -145,6 +172,41 @@ async function fetchList() {
 
 watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
 
+const setSelectRows = (value: string) => {
+    selectRows.value = value
+}
+
+const handleSearch = () => {
+    queryForm.pageNo = 1
+    fetchList()
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    fetchList()
+}
+
+const handleDelete = () => {
+    if (selectRows.value.length > 0) {
+        const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
+        $baseConfirm('您确定要删除选中项吗', null, async () => {
+            try {
+                await doGoodsStockDelete({ ids })
+                $baseMessage('删除成功', 'success', 'hey')
+                fetchList()
+            } catch (error) {
+                console.error('删除失败:', error)
+                $baseMessage('删除失败', 'error', 'hey')
+            }
+        })
+    } else {
+        $baseMessage('您未选中任何行', 'warning', 'hey')
+    }
+}
+
 function handleSizeChange(val: number) {
     queryForm.pageNo = 1
     queryForm.pageSize = val
@@ -152,10 +214,6 @@ function handleSizeChange(val: number) {
 }
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
-    fetchList()
-}
-function handleSearch() {
-    queryForm.pageNo = 1
     fetchList()
 }
 
@@ -221,14 +279,16 @@ function submitForm() {
 }
 
 async function deleteStock(id: string) {
-    await doGoodsStockDelete({ id })
-    $baseMessage('删除成功', 'success', 'hey')
-    // 删除后如果当前页没数据自动跳到上一页
-    if (stockList.value.length === 1 && queryForm.pageNo > 1) {
-        queryForm.pageNo--
-    } else {
-        fetchList()
-    }
+    $baseConfirm('您确定要删除当前项吗', null, async () => {
+        try {
+            await doGoodsStockDelete({ id })
+            $baseMessage('删除成功', 'success', 'hey')
+            fetchList()
+        } catch (error) {
+            console.error('删除失败:', error)
+            $baseMessage('删除失败', 'error', 'hey')
+        }
+    })
 }
 </script>
 

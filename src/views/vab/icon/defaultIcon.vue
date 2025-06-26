@@ -24,6 +24,9 @@
                     <el-form-item>
                         <el-button :icon="Search" native-type="submit" type="primary" @click="queryData">查询</el-button>
                     </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+                    </el-form-item>
                 </el-form>
             </vab-query-form-right-panel>
         </vab-query-form>
@@ -141,6 +144,14 @@ const handleCopyIcon = (item: any) => {
 
 const randomHexColor = () => {
     return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])[0]
+}
+
+const resetQueryForm = () => {
+    (Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach(key => {
+        if (key !== 'pageNo' && key !== 'pageSize' && key !== 'colorful' && key !== 'num') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 
 onBeforeMount(() => {

@@ -12,6 +12,9 @@
                     <el-form-item>
                         <el-button :icon="Search" type="primary" @click="queryData">查询</el-button>
                     </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+                    </el-form-item>
                 </el-form>
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
@@ -78,7 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Download, Plus, Search } from '@element-plus/icons-vue'
+import { Download, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import { getList } from '../../../api/iotManagement'
 import imageUrl from '/@/assets/task_image/task.png'
 
@@ -117,6 +120,13 @@ const handleAdd = () => {
 }
 const handleExport = () => {
     $baseMessage('模拟导出成功', 'success', 'hey')
+}
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 onBeforeMount(() => {
     fetchData()

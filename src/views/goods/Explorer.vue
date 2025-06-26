@@ -34,6 +34,9 @@
                                         查询
                                     </el-button>
                                 </el-form-item>
+                                <el-form-item>
+                                    <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+                                </el-form-item>
                             </el-form>
                         </vab-query-form-top-panel>
                         <vab-query-form-left-panel :span="24">
@@ -78,7 +81,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Folder, Search, Upload } from '@element-plus/icons-vue'
+import { Delete, Folder, Refresh, Search, Upload } from '@element-plus/icons-vue'
 import { ElTree } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
 
@@ -225,6 +228,14 @@ const handleDelete = (row: any) => {
             $baseMessage('您未选中任何行', 'warning', 'hey')
         }
     }
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 
 onBeforeMount(() => {

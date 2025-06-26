@@ -44,6 +44,7 @@
                                     <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData">
                                         查询
                                     </el-button>
+                                    <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
                                     <el-button class="hidden-xs-only" text type="primary" @click="handleFold">
                                         <span v-if="fold">展开</span>
                                         <span v-else>合并</span>
@@ -123,7 +124,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { ElTree } from 'element-plus'
 import { doDelete, getList } from '/@/api/table'
@@ -347,6 +348,14 @@ const handleDetail = (row: any) => {
             })
         else $baseMessage('请选择一行进行详情页跳转', 'warning', 'hey')
     }
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 
 watch(

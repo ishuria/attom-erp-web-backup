@@ -9,6 +9,9 @@
                     <el-form-item>
                         <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
                     </el-form-item>
+                    <el-form-item>
+                        <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
+                    </el-form-item>
                 </el-form>
             </vab-query-form-right-panel>
         </vab-query-form>
@@ -63,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Refresh, Search } from '@element-plus/icons-vue'
 import { getList } from '/@/api/table'
 
 defineOptions({
@@ -113,6 +116,14 @@ const statusFilter = (status: string | number) => {
 const queryData = () => {
     queryForm.pageNo = 1
     fetchData()
+}
+
+const resetQueryForm = () => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+        if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+    })
+    queryForm.pageNo = 1
+    queryData()
 }
 
 onBeforeMount(() => {

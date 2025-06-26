@@ -1509,6 +1509,15 @@ const list: VabRouteRecord[] = [
                     icon: 'coupon-line',
                 },
             },
+            {
+                path: 'goodsSku',
+                name: 'GoodsSku',
+                component: '/@/views/goods/GoodsSku.vue',
+                meta: {
+                    title: 'SKU配置',
+                    icon: 'settings-3-line',
+                },
+            },
         ],
     },
     {
