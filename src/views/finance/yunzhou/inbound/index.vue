@@ -112,13 +112,12 @@
           border
           :data="componentSummaryList"
           class="noneHoverTable"
-          :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="componentSummaryRowClassName"
         >
-          <el-table-column label="供应商名称" min-width="130" prop="suppliser" />
-          <el-table-column label="PO" min-width="130" prop="po" />
-          <el-table-column label="Sku" min-width="130" prop="sku" />
-          <el-table-column label="零件名" min-width="130" prop="componentName" />
+          <el-table-column label="供应商名称" prop="suppliser" :min-width="flexColumnWidth(componentSummaryList, '供应商名称', 'suppliser')" />
+          <el-table-column label="PO" prop="po" :min-width="flexColumnWidth(componentSummaryList, 'PO', 'po')"/>
+          <el-table-column label="SKU" prop="sku" :min-width="flexColumnWidth(componentSummaryList, 'SKU', 'sku')" />
+          <el-table-column label="零件名" prop="componentName" :min-width="flexColumnWidth(componentSummaryList, '零件名', 'componentName')"/>
           <el-table-column label="已入库数量" min-width="130" prop="inboundCount" />
           <el-table-column label="PO零件总数" min-width="130" prop="purchaseCount" />
           <el-table-column label="零件单位" min-width="130" prop="unit" />
@@ -142,63 +141,65 @@
       </el-tab-pane>
       <el-tab-pane label="供应商汇总" :name="2">
 
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleSuppliserExport">入库汇总导出</el-button>
-            <span style="margin: 0 10px calc(var(--el-margin) / 2) 0">
-              <el-date-picker
-                v-model="supplierSummaryDate"
-                :clearable="false"
-                :editable="false"
-                end-placeholder="结束日期"
-                range-separator="至"
-                start-placeholder="开始日期"
-                type="daterange"
-                @change="querySupplierSummaryData"
-              />
-            </span>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="supplierSummaryForm" @submit.prevent>
-              <el-form-item>
-                <el-input
-                  v-model.trim="supplierSummaryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
+        <div style="max-width: 1200px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%;">
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <el-button type="primary" @click="handleSuppliserExport">入库汇总导出</el-button>
+              <span style="margin: 0 10px calc(var(--el-margin) / 2) 0">
+                <el-date-picker
+                  v-model="supplierSummaryDate"
+                  :clearable="false"
+                  :editable="false"
+                  end-placeholder="结束日期"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  type="daterange"
+                  @change="querySupplierSummaryData"
                 />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="querySuppliserData"/>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
+              </span>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel>
+              <el-form inline :model="supplierSummaryForm" @submit.prevent>
+                <el-form-item>
+                  <el-input
+                    v-model.trim="supplierSummaryForm.keyWord"
+                    clearable
+                    placeholder="请输入搜索关键词"
+                  />
+                </el-form-item>
+                <el-form-item>
+                  <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="querySuppliserData"/>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-right-panel>
+          </vab-query-form>
 
-        <el-table
-          border
-          :data="supplierSummaryList"
-          class="noneHoverTable"
-          :header-cell-style="{ textAlign: 'center' }"
-          :summary-method="handleSummaryMethod"
-          show-summary
-        >
-          <el-table-column label="供应商名称" min-width="130" prop="supplierName" />
-          <el-table-column label="PO未税价" min-width="130" prop="preTaxPrice" />
-          <el-table-column label="发票未税价" min-width="130" prop="invoicePrice" />
-          <el-table-column label="未匹配发票金额" min-width="130" prop="diffPrice" />
+          <el-table
+            border
+            :data="supplierSummaryList"
+            class="noneHoverTable"
+            :header-cell-style="{ textAlign: 'center' }"
+            :summary-method="handleSummaryMethod"
+            show-summary
+          >
+            <el-table-column label="供应商名称" prop="supplierName" :width="flexColumnWidth(supplierSummaryList, '供应商名称', 'supplierName', 90)" />
+            <el-table-column label="PO未税价" min-width="130" prop="preTaxPrice" />
+            <el-table-column label="发票未税价" min-width="130" prop="invoicePrice" />
+            <el-table-column label="未匹配发票金额" min-width="130" prop="diffPrice" />
 
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
+            <template #empty>
+              <el-empty class="vab-data-empty" />
+            </template>
+          </el-table>
 
-        <vab-pagination
-          :current-page="supplierSummaryForm.pageNo"
-          :page-size="supplierSummaryForm.pageSize"
-          :total="supplierSummaryTotal"
-          @current-change="supplierSummaryHandleCurrentChange"
-          @size-change="supplierSummaryHandleSizeChange"
-        />
+          <vab-pagination
+            :current-page="supplierSummaryForm.pageNo"
+            :page-size="supplierSummaryForm.pageSize"
+            :total="supplierSummaryTotal"
+            @current-change="supplierSummaryHandleCurrentChange"
+            @size-change="supplierSummaryHandleSizeChange"
+          />
+        </div>
 
       </el-tab-pane>
     </el-tabs>
@@ -265,11 +266,10 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
-import type { TableColumnCtx } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { downloadFilePD } from '~/src/api/devlocal/download'
-import { getInboundList,queryInboundSummaryList,queryInboundSummaryComponentList } from '/@/api/devlocal/finance'
-import type { IGetInBoundList, IGetOutBoundListReq,IGetInboundSummaryItem,IGetInboundSummaryComponentItem } from '/@/type/finance/financeType'
+import { getInboundList, queryInboundSummaryComponentList, queryInboundSummaryList } from '/@/api/devlocal/finance'
+import type { IGetInBoundList, IGetInboundSummaryComponentItem, IGetInboundSummaryItem, IGetOutBoundListReq } from '/@/type/finance/financeType'
 import { formatDate, getDefaultStringTime, getThisYearStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
