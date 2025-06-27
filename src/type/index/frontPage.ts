@@ -122,3 +122,7 @@ export interface IGetFrontPagePerformanceHistory {
   purchaseAmount: number
   newProductCommission: number
 }
+export interface IRankItem {
+  name: string
+  value: number
+}

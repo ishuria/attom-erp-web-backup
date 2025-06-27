@@ -31,7 +31,7 @@ const option = reactive<any>({
     borderWidth: 0,
     confine: true,
     formatter: (params: any[]) => {
-      let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
+      let titleHtmlStr = `<div style="font-size: 15px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
 
       // 需要聚合的 series 名称
       const groupedNames = ['精品', '精铺', '精铺Vine', '铺货']
@@ -101,7 +101,7 @@ const option = reactive<any>({
       })
 
       return `
-        <div style="padding: 0px; border-radius: 20px; width: 160px; box-shadow: 0">
+        <div style="padding: 0px; border-radius: 20px; width: 160px;">
           ${titleHtmlStr}
           ${otherHtmlArr.join('')}
           ${groupHtml}

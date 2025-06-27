@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPagePerformanceHistory, IGetFrontPagePerformanceHistoryReq, IGetFrontPageProgressProjectsRes } from '/@/type/index/frontPage'
+import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPagePerformanceHistory, IGetFrontPagePerformanceHistoryReq, IGetFrontPageProgressProjectsRes, IRankItem } from '/@/type/index/frontPage'
 
 
 /**
@@ -69,6 +69,26 @@ export function getFrontPagePerformanceHistory(data: IGetFrontPagePerformanceHis
 export function getFrontPageProductManagerSelectOption(): Promise<{ data: { id: number, label: string }[] }> {
   return request({
     url: `${BASE_API}/front_page/product_manager/select_option`,
+    method: 'get'
+  })
+}
+/**
+ * 首页-排行超额完成
+ * @returns 
+ */
+export function getFrontPageRankOverAchieved(): Promise<{ data: IRankItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/rank/overAchieved`,
+    method: 'get'
+  })
+}
+/**
+ * 首页-排行新品提成
+ * @returns 
+ */
+export function getFrontPageRankNewProductCommission(): Promise<{ data: IRankItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/rank/new_product_commission`,
     method: 'get'
   })
 }

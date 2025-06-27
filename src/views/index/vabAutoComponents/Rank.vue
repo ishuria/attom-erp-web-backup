@@ -9,14 +9,15 @@
 </template>
 
 <script lang="ts" setup>
-import { useSettingsStore } from '/@/store/modules/settings'
+import { IRankItem } from '/@/type/index/frontPage'
 
-defineProps<{
+const props = defineProps<{
   title: string
+  list: IRankItem[]
+  name: string
+  myName: string
 }>()
 
-const settingsStore = useSettingsStore()
-const { theme } = storeToRefs(settingsStore)
 const option = reactive<any>({
   tooltip: {
     trigger: 'axis',
@@ -55,20 +56,20 @@ const option = reactive<any>({
   ],
   series: [
     {
-      name: '累计消费',
+      name: props.name,
       type: 'bar',
       barWidth: 15,
       label: {
         show: true,
         position: 'right',
         fontSize: 12,
-        formatter: ({ data }: any) => {
-          return `${data}万元`
-        },
       },
       itemStyle: {
         borderRadius: 10,
         borderWidth: 2,
+          color: (params: any) => {
+          return params.name === props.myName ? '#67C23A' : '#409EFF'
+        },
       },
       data: [],
     },
@@ -76,10 +77,10 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
-  () => {
-    option.color = [theme.value.color]
-  },
-  { immediate: true }
+  () => props.list,
+  (newVal) => {
+    option.yAxis[0].data = newVal.map((item: IRankItem) => item.name)
+    option.series[0].data = newVal.map((item: IRankItem) => item.value)
+  }
 )
 </script>

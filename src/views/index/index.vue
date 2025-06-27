@@ -111,14 +111,14 @@
           </template>
         </performance-history>
       </el-col>
-      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月超额完成排行" />
+      <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank title="上月超额完成排行" :list="rank1List" name="超额完成数" :my-name="myName" />
       </el-col>
       <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月提成排行" />
+        <rank title="上月提成排行" :list="rank2List" name="提成" :my-name="myName" />
       </el-col>
-      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月新品提成排行(上线1年以内)" />
+      <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank title="上月新品提成排行(上线1年以内)" :list="rank3List" name="新品提成" :my-name="myName" />
       </el-col>
     </el-row>
      <history-assessment-records 
@@ -131,20 +131,22 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getOperationUpdateDate } from '~/src/api/devlocal/productPerformance'
-import { getLastYearStringMonth } from '~/src/utils/dateUtils'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects } from '/@/api/devlocal/frontPage'
+import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved } from '/@/api/devlocal/frontPage'
+import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
-import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPagePerformanceHistory, IGetFrontPageProgressProjectsItem, IPieItem } from '/@/type/index/frontPage'
+import { useUserStore } from '/@/store/modules/user'
+import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPagePerformanceHistory, IGetFrontPageProgressProjectsItem, IPieItem, IRankItem } from '/@/type/index/frontPage'
+import { getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
 })
 
 const router = useRouter()
+const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0];
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE;
 const commissionRole = [
@@ -338,6 +340,19 @@ const fetchData = async () => {
   const { data } = await getFrontPagePerformanceHistory({ userId: userId.value!, startMonth: selectDate.value[0], endMonth: selectDate.value[1] })
   historyList.value = data
 }
+
+const rank1List = ref<IRankItem[]>([])
+const rank2List = ref<IRankItem[]>([])
+const rank3List = ref<IRankItem[]>([])
+const fetchRankOverAchieved = async () => {
+  const { data } = await getFrontPageRankOverAchieved()
+  rank1List.value = data
+  
+}
+const fetchRankNewProductCommission = async () => {
+  const { data } = await getFrontPageRankNewProductCommission()
+  rank3List.value = data
+}
 onBeforeMount(() => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -347,8 +362,9 @@ onBeforeMount(() => {
     fetchAssessmentData()
     fetchInProgressProjectsData()
     fetchUserList()
+    fetchRankOverAchieved()
+    fetchRankNewProductCommission()
   }
-  
 })
 </script>
 
