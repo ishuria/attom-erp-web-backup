@@ -128,7 +128,7 @@
           :data="list"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
           :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center' }"
+          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
           stripe
           @cell-click="cellClick"
           @sort-change="sortChange"
@@ -760,7 +760,7 @@
           class="noneHoverTable"
           :data="asinList"
           :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center' }"
+          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
           @cell-click="cellClick"
           @sort-change="asinSortChange"
         >
@@ -1267,7 +1267,7 @@
           class="noneHoverTable"
           :data="pAsinList"
           :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center' }"
+          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
           @cell-click="cellClick"
           @sort-change="pAsinSortChange"
         >
@@ -2998,38 +2998,30 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '运营分类', '运营负责人', '开发人员'].includes(label)) {
     return {
       textAlign: 'left',
-      verticalAlign: 'top',
     }
-  } else if (label === '季节趋势' || label === '销量趋势(点击看明细)') {
-    return {
-
-      verticalAlign: 'middle',
-    }
-  }
+  } 
   else if (label === '运营备注') {
     return {
       textAlign: 'left',
       cursor: 'pointer',
-      verticalAlign: 'top',
     }
   } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
     return {
       textAlign: 'center',
       cursor: 'pointer',
-      verticalAlign: 'top',
     }
   } else switch (label) {
     case 'FBA差异': {
       if (data.row.differenceFba > 0) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+     
           color: 'var(--el-color-success)'
         }
       } else {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+      
           color: 'var(--el-color-danger)'
         }
       }
@@ -3039,19 +3031,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (monthNetProfitMargin >= 20) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+    
           color: 'var(--el-color-success)'
         }
       } else if (monthNetProfitMargin < 20 && monthNetProfitMargin > 0) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+         
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+    
           color: 'var(--el-color-danger)'
         }
       }
@@ -3060,13 +3052,13 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (data.row.monthNetProfit > 0) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+         
           color: 'var(--el-color-success)'
         }
       } else {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+         
           color: 'var(--el-color-danger)'
         }
       }
@@ -3076,19 +3068,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (monthAcos > 35) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+   
           color: 'var(--el-color-danger)'
         }
       } else if (monthAcos <= 35 && monthAcos > 30) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+          
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+        
           color: 'var(--el-color-success)'
         }
       }
@@ -3098,19 +3090,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (yearAcos > 35) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+        
           color: 'var(--el-color-danger)'
         }
       } else if (yearAcos <= 35 && yearAcos > 30) {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+         
           color: 'var(--el-color-warning)'
         }
       } else {
         return {
           textAlign: 'center',
-          verticalAlign: 'top',
+         
           color: 'var(--el-color-success)'
         }
       }
@@ -3118,7 +3110,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     default: {
       return {
         textAlign: 'center',
-        verticalAlign: 'top',
+        
       }
     }
   }
