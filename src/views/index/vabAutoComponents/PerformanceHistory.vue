@@ -27,58 +27,86 @@ const option = reactive<any>({
   },
   tooltip: {
     trigger: 'axis',
-    backgroundColor: '#eef6fd', // 背景透明
-    borderWidth: 0, // 去除默认边框
+    backgroundColor: 'rgba(238, 246, 253, 0.7)',
+    borderWidth: 0,
+    confine: true,
     formatter: (params: any[]) => {
-      // tooltip标题
-      let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 6px;">${params[0].name}</div>`
+      let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
 
-      // tooltip详情内容
-      const itemHtmlStrArr = params.map((item) => {
-        const name = item.seriesName
-        return `<div style="display: flex;align-items:center;">
-          ${item.marker}
-          <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px 0 2px;">${name}</div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${item.value}${name === '退货率' || name === '退款率' ? '%' : '' }</span>
-        </div>`
+      // 需要聚合的 series 名称
+      const groupedNames = ['精品', '精铺', '精铺Vine', '铺货']
+      let groupTotal = 0
+      let groupItems: any[] = []
+      let otherItems: any[] = []
+
+      params.forEach(item => {
+        if (groupedNames.includes(item.seriesName)) {
+          groupTotal += Number(item.value || 0)
+          groupItems.push(item)
+        } else {
+          otherItems.push(item)
+        }
       })
-      const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
-        ${itemHtmlStrArr.join('')}
-      </div>`
-      // 最终html字符串
-      const resHtmlStr = titleHtmlStr + contentHtmlStr
-      return resHtmlStr
-    //       const itemHtmlStrArr = params.map((item) => {
-    //   const name = item.seriesName
-    //   const value = item.value
-    //   const unit = name === '退货率' || name === '退款率' ? '%' : ''
-    //   return `
-    //     <div style="
-    //       display: flex;
-    //       align-items: center;
-    //       justify-content: space-between;
-    //       background: #fff;
-    //       padding: 6px 10px;
-    //       margin-bottom: 6px;
-    //       border-radius: 8px;
-    //       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    //       font-size: 13px;
-    //     ">
-    //       <div style="display: flex; align-items: center;">
-    //         ${item.marker}
-    //         <span style="color: #333; margin-left: 6px;">${name}</span>
-    //       </div>
-    //       <span style="font-weight: bold; color: #333;">${value}${unit}</span>
-    //     </div>
-    //   `
-    // })
 
-    // return `
-    //   <div style="background: #eef6fd; padding: 10px; border-radius: 8px; max-width: 260px;">
-    //     ${titleHtmlStr}
-    //     ${itemHtmlStrArr.join('')}
-    //   </div>
-    // `
+      const groupHtml = `
+        <div style="background: #fff; padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);">
+          <div style="display: flex; justify-content: space-between; color: #333; font-size: 13px">
+            <div style="display: flex; align-items: center;">
+              <span style="
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #21cbfe;
+                margin-right: 9px;
+                color: #333;
+              "></span>
+              <span>考核完成数</span>
+            </div>
+            <span style="font-weight: bold; color: #333;">${groupTotal}</span>
+          </div>
+          <div style="margin-top: 2px; padding-left: 10px;">
+            ${groupItems.map(item => `
+              <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 1px;">
+                <div style="display: flex; align-items: center;">${item.marker}<span style="margin-left: 5px;">${item.seriesName}</span></div>
+                <span>${item.value}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `
+
+      const otherHtmlArr = otherItems.map(item => {
+        const name = item.seriesName
+        const value = item.value
+        return `
+          <div style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 3px 8px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            font-size: 13px;
+          ">
+            <div style="display: flex; align-items: center;">
+              ${item.marker}
+              <span style="color: #333; margin-left: 6px;">${name}</span>
+            </div>
+            <span style="font-weight: bold; color: #333;">${value}</span>
+          </div>
+        `
+      })
+
+      return `
+        <div style="padding: 0px; border-radius: 20px; width: 160px; box-shadow: 0">
+          ${titleHtmlStr}
+          ${otherHtmlArr.join('')}
+          ${groupHtml}
+        </div>
+      `
     }
   },
   grid: {
