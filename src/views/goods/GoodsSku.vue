@@ -10,10 +10,10 @@
             <vab-query-form-right-panel>
                 <el-form inline :model="queryForm" @submit.prevent>
                     <el-form-item>
-                        <el-input v-model="queryForm.skuCode" clearable placeholder="请输入SKU编码" />
+                        <el-input v-model="queryForm.skuCode" clearable placeholder="请输入SKU编码" style="margin-right: 10px" />
                     </el-form-item>
                     <el-form-item>
-                        <el-input v-model="queryForm.skuName" clearable placeholder="请输入SKU名称" />
+                        <el-input v-model="queryForm.skuName" clearable placeholder="请输入SKU名称" style="margin-right: 10px" />
                     </el-form-item>
                     <el-form-item>
                         <el-select v-model="queryForm.status" clearable placeholder="状态">
