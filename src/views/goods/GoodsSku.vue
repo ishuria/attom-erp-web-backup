@@ -1178,27 +1178,27 @@ const handleSkuImageChange = (file: any, row: SkuCombination) => {
 }
 
 // 处理批量设置图片
-const handleBatchImageChange = (file: any) => {
-    if (!file) return
+// const handleBatchImageChange = (file: any) => {
+//     if (!file) return
 
-    // 检查文件类型
-    const isImage = file.raw.type.startsWith('image/')
-    if (!isImage) {
-        $baseMessage('请上传图片文件', 'error')
-        return
-    }
+//     // 检查文件类型
+//     const isImage = file.raw.type.startsWith('image/')
+//     if (!isImage) {
+//         $baseMessage('请上传图片文件', 'error')
+//         return
+//     }
 
-    // 读取文件并设置到所有SKU
-    const reader = new FileReader()
-    reader.addEventListener('load', () => {
-        const imageUrl = reader.result as string
-        skuTable.value.forEach((sku) => {
-            sku.image = imageUrl
-        })
-        $baseMessage('批量设置图片成功', 'success')
-    })
-    reader.readAsDataURL(file.raw)
-}
+//     // 读取文件并设置到所有SKU
+//     const reader = new FileReader()
+//     reader.addEventListener('load', () => {
+//         const imageUrl = reader.result as string
+//         skuTable.value.forEach((sku) => {
+//             sku.image = imageUrl
+//         })
+//         $baseMessage('批量设置图片成功', 'success')
+//     })
+//     reader.readAsDataURL(file.raw)
+// }
 
 // 处理图片加载失败
 const handleImageError = (event: Event, row: SkuCombination) => {
