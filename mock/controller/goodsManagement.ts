@@ -3,22 +3,29 @@ import { handleRandomImage } from '../utils/index.ts'
 
 const List = <any>[]
 const count = 50
+const categoryList = [
+    { id: '1', name: '食品饮料' },
+    { id: '2', name: '家用电器' },
+    { id: '3', name: '其他' },
+]
 for (let i = 0; i < count; i++) {
+    const category = categoryList[i % categoryList.length]
     List.push({
         uuid: '@uuid',
         id: '@id',
         title: '@ctitle(5, 10)',
         description: '@ctitle(10, 20)',
         name: '@ctitle(3, 6)',
-        'type|1': ['食品饮料', '家用电器', '其他'],
-        price: '￥' + '@integer(0,100)',
+        categoryId: category.id,
+        category: category.name,
+        price: '@integer(10,1000)',
         sales: '@integer(0,100)',
         stock: '@integer(0,100)',
-        'status|1': ['已上架', '已下架', '待上架'],
+        status: '@pick(["active","inactive","pending"])',
         datetime: '@datetime',
-        image: handleRandomImage(),
+        images: [handleRandomImage(), handleRandomImage()],
         link: 'https://www.baidu.com',
-        'isRecommend|1': [1, 0],
+        isRecommend: '@boolean',
     })
 }
 
@@ -170,6 +177,86 @@ export default [
                 code: 200,
                 msg: 'SKU删除成功',
             }
+        },
+    },
+    {
+        url: '/goodsManagement/doAdd',
+        method: 'post',
+        response({ body }: any) {
+            const newId = String(Date.now())
+            const category = categoryList.find((c) => c.id === body.categoryId) || categoryList[0]
+            const newGoods = {
+                ...body,
+                id: newId,
+                category: category.name,
+                images: body.images || [handleRandomImage()],
+                status: body.status || 'active',
+                isRecommend: !!body.isRecommend,
+                sales: 0,
+                stock: body.stock || 0,
+                price: body.price || 0,
+                datetime: new Date().toISOString(),
+            }
+            List.unshift(newGoods)
+            return { code: 200, msg: '商品新增成功', data: newGoods }
+        },
+    },
+    {
+        url: '/goodsManagement/getDetail',
+        method: 'get',
+        response({ query }: any) {
+            const item = List.find((g: any) => g.id === query.id)
+            if (item) {
+                return { code: 200, msg: 'success', data: item }
+            } else {
+                return { code: 404, msg: '未找到商品' }
+            }
+        },
+    },
+    {
+        url: '/goodsManagement/batchDelete',
+        method: 'post',
+        response({ body }: any) {
+            const { ids } = body
+            let count = 0
+            ids.forEach((id: string) => {
+                const idx = List.findIndex((g: any) => g.id === id)
+                if (idx !== -1) {
+                    List.splice(idx, 1)
+                    count++
+                }
+            })
+            return { code: 200, msg: `成功删除${count}个商品` }
+        },
+    },
+    {
+        url: '/goodsManagement/batchUpdateStatus',
+        method: 'post',
+        response({ body }: any) {
+            const { ids, status } = body
+            let count = 0
+            List.forEach((g: any) => {
+                if (ids.includes(g.id)) {
+                    g.status = status
+                    count++
+                }
+            })
+            return { code: 200, msg: `成功更新${count}个商品状态` }
+        },
+    },
+    {
+        url: '/goodsManagement/batchRecommend',
+        method: 'post',
+        response({ body }: any) {
+            const { ids, isRecommend } = body
+            let count = 0
+            List.forEach((g: any) => {
+                if (ids.includes(g.id)) {
+                    g.isRecommend = isRecommend
+                    count++
+                }
+            })
+            return { code: 200, msg: `成功设置${count}个商品推荐状态` }
         },
     },
 ] as MockMethod[]

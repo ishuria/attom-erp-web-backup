@@ -23,13 +23,13 @@
                     <vab-query-form>
                         <vab-query-form-top-panel>
                             <el-form inline :model="queryForm" @submit.prevent>
-                                <el-form-item label="标题">
+                                <el-form-item>
                                     <el-input v-model="queryForm.title" clearable placeholder="请输入标题" />
                                 </el-form-item>
-                                <el-form-item v-show="!fold" label="作者">
+                                <el-form-item v-show="!fold">
                                     <el-input v-model="queryForm.author" clearable placeholder="请输入作者" />
                                 </el-form-item>
-                                <el-form-item v-show="!fold" label="时间">
+                                <el-form-item v-show="!fold">
                                     <el-date-picker
                                         v-model="queryForm.datetime"
                                         format="YYYY/MM/DD HH:mm:ss"
@@ -37,7 +37,7 @@
                                         type="datetime"
                                     />
                                 </el-form-item>
-                                <el-form-item v-show="!fold" label="状态">
+                                <el-form-item v-show="!fold">
                                     <el-select v-model="queryForm.status" placeholder="请选择状态">
                                         <el-option label="success" value="published" />
                                         <el-option label="primary" value="draft" />

@@ -1,7 +1,7 @@
 <template>
     <vab-dialog v-model="dialogFormVisible" append-to-body :title="title" width="500px" @close="close">
         <el-form ref="formRef" label-width="80px" :model="form" :rules="rules">
-            <el-form-item label="标题" prop="title">
+            <el-form-item prop="title">
                 <el-input v-model.trim="form.title" clearable />
             </el-form-item>
             <el-form-item label="作者" prop="author">

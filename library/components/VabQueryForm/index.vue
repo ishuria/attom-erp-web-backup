@@ -24,7 +24,8 @@ defineOptions({
         align-items: center;
     }
 
-    > .el-button {
+    > .el-button,
+    .el-dropdown {
         margin: 0 10px calc(var(--el-margin) / 2) 0 !important;
     }
 }
@@ -48,13 +49,19 @@ defineOptions({
             }
         }
 
+        .el-form-item__content:not(:has(+ .el-form-item__label)) {
+            .el-input,
+            .el-select {
+                margin-left: calc(var(--el-margin) / 2);
+            }
+        }
+
         .top-panel {
             @include panel;
         }
 
         .bottom-panel {
             @include panel;
-            border-top: 1px solid #dcdfe6;
         }
 
         .left-panel {
