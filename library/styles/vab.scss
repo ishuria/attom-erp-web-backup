@@ -818,11 +818,14 @@ html {
                 width: 20px;
                 height: 20px;
                 padding: 0;
-                border-radius: 0;
             }
 
             &__color {
                 border: 0;
+            }
+
+            &__color-inner {
+                border-radius: var(--el-border-radius-small) !important;
             }
         }
 
