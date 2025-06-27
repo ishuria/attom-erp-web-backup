@@ -120,7 +120,7 @@ export interface IGetFrontPagePerformanceHistory {
   jingPuVineCount: number
   developmentDesign: number
   purchaseAmount: number
-  newProductCommission: number
+  newProductOneYearCommission: number
 }
 export interface IRankItem {
   name: string

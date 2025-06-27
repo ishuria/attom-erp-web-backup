@@ -160,7 +160,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#FF6B6B' }, // 珊瑚红
+      itemStyle: { color: '#4D96FF' }, 
     },
     {
       name: '精铺',
@@ -187,7 +187,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#4D96FF' }, // 天蓝
+      itemStyle: { color: '#FF6B6B' }, 
     },
     {
       name: '提成',
@@ -240,7 +240,7 @@ watch(
     option.series[2].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.jingPuVineCount)
     option.series[3].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.puHuoCount)
     option.series[4].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.developmentDesign)
-    option.series[5].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.newProductCommission)
+    option.series[5].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.newProductOneYearCommission)
     option.series[6].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.purchaseAmount)
   }
 )
