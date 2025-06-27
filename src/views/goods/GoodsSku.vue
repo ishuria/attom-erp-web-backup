@@ -1,19 +1,24 @@
 <template>
     <div class="goods-sku-container auto-height-container">
         <vab-query-form>
-            <vab-query-form-left-panel>
+            <vab-query-form-left-panel :span="10">
                 <el-button :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
                 <el-button :icon="Delete" type="danger" @click="handleDelete">删除</el-button>
                 <el-button :icon="Upload" type="primary" @click="handleImportSku">导入</el-button>
                 <el-button :icon="Download" type="success" @click="handleExportSku">导出</el-button>
             </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
+            <vab-query-form-right-panel :span="14">
                 <el-form inline :model="queryForm" @submit.prevent>
                     <el-form-item>
                         <el-input v-model="queryForm.skuCode" clearable placeholder="请输入SKU编码" style="margin-right: 10px" />
                     </el-form-item>
                     <el-form-item>
                         <el-input v-model="queryForm.skuName" clearable placeholder="请输入SKU名称" style="margin-right: 10px" />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-select v-model="queryForm.category" clearable placeholder="商品分类" style="margin-right: 10px">
+                            <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
+                        </el-select>
                     </el-form-item>
                     <el-form-item>
                         <el-select v-model="queryForm.status" clearable placeholder="状态">
@@ -65,6 +70,11 @@
             <el-table-column align="center" label="序号" width="55">
                 <template #default="{ $index }">
                     {{ $index + 1 }}
+                </template>
+            </el-table-column>
+            <el-table-column align="center" label="商品分类" min-width="120" prop="category">
+                <template #default="{ row }">
+                    {{ row.category || '-' }}
                 </template>
             </el-table-column>
             <el-table-column align="center" label="SKU编码" min-width="120" prop="skuCode" />
@@ -125,6 +135,11 @@
                 <!-- 左侧基本信息 -->
                 <div class="left-column">
                     <el-form ref="formRef" class="sku-form" label-width="100px" :model="form" :rules="rules">
+                        <el-form-item label="商品分类" prop="category">
+                            <el-select v-model="form.category" clearable placeholder="请选择商品分类">
+                                <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            </el-select>
+                        </el-form-item>
                         <el-form-item label="SKU编码" prop="skuCode">
                             <el-input v-model="form.skuCode" placeholder="请输入SKU编码" />
                         </el-form-item>
@@ -419,6 +434,7 @@ interface SkuItem {
     createdAt?: string
     updatedAt?: string
     multiSpecs?: Array<SkuSpecDetail> // 存储多规格数据
+    category: string
 }
 
 // 定义规格详情接口
@@ -462,6 +478,7 @@ const queryForm = reactive({
     skuCode: '',
     skuName: '',
     status: '',
+    category: '',
 })
 
 // 导入导出相关
@@ -492,8 +509,9 @@ const form = reactive<SkuItem & { specs?: string[] }>({
     status: 'active',
     sort: 0,
     remark: '',
-    image: '', // 添加图片字段
-    specs: [], // 添加specs属性用于临时存储规格值
+    image: '',
+    specs: [],
+    category: '',
 })
 
 // 表单验证规则
@@ -711,6 +729,7 @@ const fetchSkuList = async () => {
             pageSize: pagination.pageSize,
             skuName: queryForm.skuName,
             status: queryForm.status,
+            category: queryForm.category,
         })
         tableData.value = response.data.list
         pagination.total = response.data.total
@@ -850,6 +869,7 @@ const resetForm = () => {
         remark: '',
         image: '', // 仅用于多规格SKU
         specs: [],
+        category: '',
     })
 
     // 清空规格列表和SKU表格
@@ -1040,6 +1060,7 @@ const handleSubmit = async () => {
                             sort: submitData.sort,
                             remark: submitData.remark,
                             image: item.image || submitData.image || '', // 添加图片字段
+                            category: submitData.category,
                         }
 
                         specifications.push(skuData)
@@ -1311,6 +1332,13 @@ const handleSingleImageChange = (file: any) => {
         })
     }
 }
+
+// 商品分类mock数据
+const categoryOptions = [
+    { label: '食品饮料', value: '食品饮料' },
+    { label: '家用电器', value: '家用电器' },
+    { label: '其他', value: '其他' },
+]
 </script>
 
 <style lang="scss" scoped>
