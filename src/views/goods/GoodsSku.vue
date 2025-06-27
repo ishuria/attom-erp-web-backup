@@ -706,15 +706,14 @@ onActivated(() => {
 const fetchSkuList = async () => {
     loading.value = true
     try {
-        const params = {
+        const response = await getSkuList({
             pageNo: pagination.pageNo,
             pageSize: pagination.pageSize,
             skuName: queryForm.skuName,
             status: queryForm.status,
-        }
-        const { data } = await getSkuList(params)
-        tableData.value = data.list
-        pagination.total = data.total
+        })
+        tableData.value = response.data.list
+        pagination.total = response.data.total
     } catch (error) {
         console.error('获取SKU列表失败:', error)
         $baseMessage('获取SKU列表失败', 'error', 'hey')
@@ -810,8 +809,8 @@ const handleDelete = (row?: any) => {
     if (row?.id) {
         $baseConfirm('您确定要删除当前项吗', null, async () => {
             try {
-                const response = await deleteSku({ id: row.id })
-                $baseMessage(response.data.msg, 'success', 'hey')
+                const response: any = await deleteSku({ id: row.id })
+                $baseMessage(response.msg, 'success', 'hey')
                 fetchSkuList()
             } catch (error) {
                 console.error('删除失败:', error)
@@ -823,8 +822,8 @@ const handleDelete = (row?: any) => {
             const ids = selectRows.value.map((item: { id: any }) => item.id).join(',')
             $baseConfirm('您确定要删除选中项吗', null, async () => {
                 try {
-                    const response = await deleteSku({ ids })
-                    $baseMessage(response.data.msg, 'success', 'hey')
+                    const response: any = await deleteSku({ ids })
+                    $baseMessage(response.msg, 'success', 'hey')
                     fetchSkuList()
                 } catch (error) {
                     console.error('删除失败:', error)
@@ -1069,26 +1068,14 @@ const handleSubmit = async () => {
                 if (dialogType.value === 'edit') {
                     // 编辑模式
                     const response: any = await editSku(submitData)
-                    console.log('编辑返回数据:', response)
-                    // API响应可能直接返回或包含在data属性中
-                    if (response) {
-                        if (typeof response === 'object' && response.msg) {
-                            message = response.msg
-                        } else if (response.data && response.data.msg) {
-                            message = response.data.msg
-                        }
+                    if (response && typeof response === 'object' && response.data && response.data.msg) {
+                        message = response.data.msg
                     }
                 } else {
                     // 新增模式
                     const response: any = await addSku(submitData)
-                    console.log('新增返回数据:', response)
-                    // API响应可能直接返回或包含在data属性中
-                    if (response) {
-                        if (typeof response === 'object' && response.msg) {
-                            message = response.msg
-                        } else if (response.data && response.data.msg) {
-                            message = response.data.msg
-                        }
+                    if (response && typeof response === 'object' && response.data && response.data.msg) {
+                        message = response.data.msg
                     }
                 }
 
