@@ -6,7 +6,6 @@ import type { RouteRecordName, RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import { authentication, base, disableRouterWarning, isHashRouterMode } from '/@/config'
 import { setupPermissions } from '/@/router/permissions'
-import Layout from '/@vab/layouts/index.vue'
 
 export const constantRoutes: VabRouteRecord[] = [
   {
@@ -62,28 +61,28 @@ export const constantRoutes: VabRouteRecord[] = [
 ]
 
 export const asyncRoutes: VabRouteRecord[] = [
-  {
-    path: '/',
-    name: 'Root',
-    component: Layout,
-    meta: {
-      title: '首页',
-      icon: 'home-2-line',
-    },
-     children: [
-      {
-        path: 'index',
-        name: 'Index',
-        component: () => import('/@/views/index/index.vue'),
-        meta: {
-          title: '首页',
-          icon: 'home-2-line',
-          noClosable: true,
-          noKeepAlive: true,
-        },
-       },
-     ]
-  },
+  // {
+  //   path: '/',
+  //   name: 'Root',
+  //   component: Layout,
+  //   meta: {
+  //     title: '首页',
+  //     icon: 'home-2-line',
+  //   },
+  //    children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Index',
+  //       component: () => import('/@/views/index/index.vue'),
+  //       meta: {
+  //         title: '首页',
+  //         icon: 'home-2-line',
+  //         noClosable: true,
+  //         noKeepAlive: true,
+  //       },
+  //      },
+  //    ]
+  // },
   // {
   //   path: '/newProductDevelopment',
   //   name: 'NewProductDevelopment',
