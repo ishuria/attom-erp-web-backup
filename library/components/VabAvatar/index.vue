@@ -28,11 +28,16 @@
             </div>
             <el-divider />
             <ul class="el-dropdown-menu">
+                <li class="el-dropdown-menu__item" @click="handleCommand('friendlyTip')">
+                    <vab-icon icon="information-line" />
+                    <span>温馨提示</span>
+                </li>
                 <li class="el-dropdown-menu__item" @click="handleCommand('changeLog')">
                     <vab-icon icon="file-word-line" />
                     <span>{{ translate('更新日志') }}</span>
                     <el-tag effect="dark" size="small" type="danger">99+</el-tag>
                 </li>
+
                 <li class="el-dropdown-menu__item" @click="handleCommand('dataScreen')">
                     <vab-icon icon="bar-chart-box-ai-line" />
                     <span>{{ translate('数据大屏') }}</span>
@@ -45,6 +50,7 @@
                     <vab-icon icon="book-2-line" />
                     <span>{{ translate('文档') }}</span>
                 </li>
+
                 <li class="el-dropdown-menu__item" @click="handleCommand('logout')">
                     <vab-icon icon="logout-circle-r-line" />
                     <span>{{ translate('退出登录') }}</span>
@@ -111,6 +117,11 @@ const handleCommand = async (command: any) => {
             $baseAlert(
                 '已购买用户请前往群公告中获取，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
             )
+            visible.value = false
+            break
+        }
+        case 'friendlyTip': {
+            await router.push('/friendlyTip')
             visible.value = false
             break
         }

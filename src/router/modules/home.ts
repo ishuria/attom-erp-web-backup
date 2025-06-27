@@ -119,6 +119,16 @@ export const homeRoutes = [
                     guard: ['Admin'],
                 },
             },
+            {
+                path: 'friendlyTip',
+                name: 'FriendlyTip',
+                component: () => import('/@/views/index/FriendlyTip.vue'),
+                meta: {
+                    title: '温馨提示',
+                    icon: 'information-line',
+                    hidden: true,
+                },
+            },
         ],
     },
 ]

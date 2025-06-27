@@ -119,6 +119,16 @@ const list: VabRouteRecord[] = [
                     guard: ['Admin'],
                 },
             },
+            {
+                path: 'friendlyTip',
+                name: 'FriendlyTip',
+                component: () => '/@/views/index/FriendlyTip.vue',
+                meta: {
+                    title: '温馨提示',
+                    icon: 'information-line',
+                    hidden: true,
+                },
+            },
         ],
     },
     {
