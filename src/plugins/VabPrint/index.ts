@@ -1,9 +1,28 @@
-const Print: any = function (this: any, dom: any, options: any) {
+interface PrintOptions {
+    noPrint?: string
+    pageSize?: string
+    orientation?: string
+    margin?: string
+    title?: string
+    footer?: string
+    customStyle?: string
+    beforePrint?: () => void
+    afterPrint?: () => void
+    onError?: (error: any) => void
+}
+
+const Print: any = function (this: any, dom: any, options: PrintOptions = {}) {
     if (!(this instanceof Print)) return new Print(dom, options)
 
     this.options = this.extend(
         {
             noPrint: '.no-print',
+            pageSize: 'A4',
+            orientation: 'portrait',
+            margin: '10mm',
+            title: '',
+            footer: '',
+            customStyle: '',
         },
         options
     )
@@ -23,11 +42,25 @@ const Print: any = function (this: any, dom: any, options: any) {
 
     this.init()
 }
+
 Print.prototype = {
     init() {
-        const content = this.getStyle() + this.getHtml()
-        this.writeIframe(content)
+        try {
+            if (this.options.beforePrint) {
+                this.options.beforePrint()
+            }
+
+            const content = this.getStyle() + this.getHtml()
+            this.writeIframe(content)
+        } catch (error) {
+            if (this.options.onError) {
+                this.options.onError(error)
+            } else {
+                console.error('打印初始化失败:', error)
+            }
+        }
     },
+
     extend(obj: { [x: string]: any }, obj2: { [x: string]: any }) {
         for (const k in obj2) {
             obj[k] = obj2[k]
@@ -41,8 +74,31 @@ Print.prototype = {
         for (const style of styles) {
             str += style.outerHTML
         }
+
+        // 基础打印样式
         str += `<style>${this.options.noPrint ? this.options.noPrint : '.no-print'}{display:none;}</style>`
         str += '<style>html,body{background-color:#fff;}</style>'
+
+        // 页面设置样式
+        str += `<style>
+            @page {
+                size: ${this.options.pageSize} ${this.options.orientation};
+                margin: ${this.options.margin};
+            }
+            @media print {
+                body { margin: 0; padding: 0; }
+                .print-container { background: white !important; }
+                .el-card { box-shadow: none !important; border: none !important; }
+                .el-button { display: none !important; }
+                .image-overlay { display: none !important; }
+            }
+        </style>`
+
+        // 自定义样式
+        if (this.options.customStyle) {
+            str += `<style>${this.options.customStyle}</style>`
+        }
+
         return str
     },
 
@@ -51,6 +107,7 @@ Print.prototype = {
         const textareas = document.querySelectorAll('textarea')
         const selects = document.querySelectorAll('select')
 
+        // 处理表单元素
         for (const input of inputs) {
             if (input.type == 'checkbox' || input.type == 'radio') {
                 if (input.checked) {
@@ -81,7 +138,20 @@ Print.prototype = {
             }
         }
 
-        return this.dom.outerHTML
+        let html = this.dom.outerHTML
+
+        // 添加标题和页脚
+        if (this.options.title || this.options.footer) {
+            html = `
+                <div class="print-wrapper">
+                    ${this.options.title ? `<div class="print-title">${this.options.title}</div>` : ''}
+                    <div class="print-content">${html}</div>
+                    ${this.options.footer ? `<div class="print-footer">${this.options.footer}</div>` : ''}
+                </div>
+            `
+        }
+
+        return html
     },
 
     writeIframe(content: string) {
@@ -117,11 +187,20 @@ Print.prototype = {
                     frameWindow.print()
                 }
                 frameWindow.close()
+
+                if (this.options.afterPrint) {
+                    this.options.afterPrint()
+                }
             }, 10)
         } catch (error) {
-            console.log('err', error)
+            if (this.options.onError) {
+                this.options.onError(error)
+            } else {
+                console.error('打印执行失败:', error)
+            }
         }
     },
+
     isDOM:
         typeof HTMLElement === 'object'
             ? function (obj: any) {
@@ -132,4 +211,14 @@ Print.prototype = {
               },
 }
 
+// 创建便捷的打印函数
+const createPrint = (options: PrintOptions = {}) => {
+    return (dom: any) => {
+        return new Print(dom, options)
+    }
+}
+
+// 导出默认打印函数和便捷函数
 export default Print
+export { createPrint }
+export type { PrintOptions }
