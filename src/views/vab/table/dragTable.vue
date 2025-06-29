@@ -1,5 +1,5 @@
 <template>
-    <div class="drag-table-container auto-height-container">
+    <div class="drag-table-container auto-height-container" style="display: flex; flex-direction: column; height: 100%">
         <vab-query-form>
             <vab-query-form-top-panel>
                 <el-form inline :model="queryForm" @submit.prevent>
@@ -44,73 +44,76 @@
                 <el-button class="hidden-xs-only" type="primary" @click="handleDetailStayTable">后台打开详情</el-button>
             </vab-query-form-left-panel>
         </vab-query-form>
-        <vab-draggable v-model="list" :animation="600" target="tbody">
-            <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
-                <el-table-column type="selection" width="38" />
-                <el-table-column align="center" label="序号" width="55">
-                    <template #default="{ $index }">
-                        {{ $index + 1 }}
+
+        <div class="table-scroll-wrapper" style="flex: 1; min-height: 0; overflow: auto">
+            <vab-draggable v-model="list" :animation="600" target="tbody">
+                <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+                    <el-table-column type="selection" width="38" />
+                    <el-table-column align="center" label="序号" width="55">
+                        <template #default="{ $index }">
+                            {{ $index + 1 }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="标题" min-width="200" prop="title" />
+                    <el-table-column align="center" label="作者" prop="author" />
+                    <el-table-column align="center" label="评级" min-width="200">
+                        <template #default="{ row }">
+                            <el-rate v-model="row.rate" disabled />
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="数量" min-width="100" prop="count" sortable />
+                    <el-table-column align="center" label="开关" prop="switch">
+                        <template #default="{ row }">
+                            <el-switch v-model="row.switch" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="状态" min-width="100">
+                        <template #default="{ row }">
+                            <el-tag effect="dark" :type="statusFilter(row.status)">
+                                {{ row.status }}
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
+                    <el-table-column align="center" :fixed="fixed" label="操作" :width="!foldOperation ? 215 : 120">
+                        <template #header>
+                            <el-checkbox v-model="foldOperation" label="折叠操作列" true-value="right" />
+                        </template>
+                        <template #default="{ row }">
+                            <div v-if="!foldOperation">
+                                <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
+                                <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
+                                <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
+                            </div>
+                            <el-dropdown v-else>
+                                <el-button text type="primary">
+                                    操作
+                                    <el-icon class="el-icon--right">
+                                        <arrow-down />
+                                    </el-icon>
+                                </el-button>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item @click="handleDetail(row)">
+                                            <el-link type="primary" :underline="false">详情</el-link>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item @click="handleEdit(row)">
+                                            <el-link type="primary" :underline="false">编辑</el-link>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item @click="handleDelete(row)">
+                                            <el-link type="danger" :underline="false">删除</el-link>
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </template>
+                    </el-table-column>
+                    <template #empty>
+                        <el-empty class="vab-data-empty" description="暂无数据" />
                     </template>
-                </el-table-column>
-                <el-table-column align="center" label="标题" min-width="200" prop="title" />
-                <el-table-column align="center" label="作者" prop="author" />
-                <el-table-column align="center" label="评级" min-width="200">
-                    <template #default="{ row }">
-                        <el-rate v-model="row.rate" disabled />
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="数量" min-width="100" prop="count" sortable />
-                <el-table-column align="center" label="开关" prop="switch">
-                    <template #default="{ row }">
-                        <el-switch v-model="row.switch" />
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="状态" min-width="100">
-                    <template #default="{ row }">
-                        <el-tag effect="dark" :type="statusFilter(row.status)">
-                            {{ row.status }}
-                        </el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column align="center" label="时间" min-width="160" prop="datetime" />
-                <el-table-column align="center" :fixed="fixed" label="操作" :width="!foldOperation ? 215 : 120">
-                    <template #header>
-                        <el-checkbox v-model="foldOperation" label="折叠操作列" true-value="right" />
-                    </template>
-                    <template #default="{ row }">
-                        <div v-if="!foldOperation">
-                            <el-button text type="primary" @click="handleDetail(row)">详情</el-button>
-                            <el-button text type="primary" @click="handleEdit(row)">编辑</el-button>
-                            <el-button text type="danger" @click="handleDelete(row)">删除</el-button>
-                        </div>
-                        <el-dropdown v-else>
-                            <el-button text type="primary">
-                                操作
-                                <el-icon class="el-icon--right">
-                                    <arrow-down />
-                                </el-icon>
-                            </el-button>
-                            <template #dropdown>
-                                <el-dropdown-menu>
-                                    <el-dropdown-item @click="handleDetail(row)">
-                                        <el-link type="primary" :underline="false">详情</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click="handleEdit(row)">
-                                        <el-link type="primary" :underline="false">编辑</el-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item @click="handleDelete(row)">
-                                        <el-link type="danger" :underline="false">删除</el-link>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </template>
-                        </el-dropdown>
-                    </template>
-                </el-table-column>
-                <template #empty>
-                    <el-empty class="vab-data-empty" description="暂无数据" />
-                </template>
-            </el-table>
-        </vab-draggable>
+                </el-table>
+            </vab-draggable>
+        </div>
 
         <vab-pagination
             :current-page="queryForm.pageNo"
