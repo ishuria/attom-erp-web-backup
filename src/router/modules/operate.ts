@@ -139,6 +139,16 @@ export const operateRoutes = [
                 },
             },
             {
+                path: 'script',
+                name: 'Script',
+                component: () => import('/@/views/operate/script/index.vue'),
+                meta: {
+                    title: 'script',
+                    guard: ['Admin'],
+                    icon: 'code-s-slash-line',
+                },
+            },
+            {
                 path: 'dynamicSegment',
                 name: 'DynamicSegment',
                 meta: {

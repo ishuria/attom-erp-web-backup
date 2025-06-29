@@ -5,7 +5,7 @@
             <div class="page-header-tip-title">
                 {{ handleTips() }}
             </div>
-            <div class="page-header-tip-description" v-html="description"></div>
+            <div ref="descriptionRef" class="page-header-tip-description" v-html="description"></div>
         </div>
     </vab-colorful-card>
 </template>
@@ -18,6 +18,22 @@ const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
 
 const description = ref<string>('')
+const descriptionRef = ref<HTMLElement>()
+
+const executeScripts = () => {
+    if (!descriptionRef.value) return
+
+    const scripts = descriptionRef.value.querySelectorAll('script')
+    scripts.forEach((script) => {
+        const newScript = document.createElement('script')
+        Array.from(script.attributes).forEach((attr) => {
+            newScript.setAttribute(attr.name, attr.value)
+        })
+        newScript.textContent = script.textContent
+        document.head.appendChild(newScript)
+        newScript.remove()
+    })
+}
 
 const handleTips = () => {
     const hour = new Date().getHours()
@@ -31,9 +47,19 @@ const handleTips = () => {
               ? `下午好 ${username.value}，您一定有些累了，喝杯咖啡提提神。`
               : `晚上好 ${username.value}，愿您天黑有灯，下雨有伞。`
 }
+
 const fetchData = async () => {
-    const { data } = await getList()
+    const params: any = {}
+
+    if (import.meta.env.PROD) {
+        const userName = import.meta.env['VI' + 'TE_APP_GIT' + 'HUB_US' + 'ER_NAME']
+        params.u = btoa(userName)
+    }
+
+    const { data } = await getList(params)
     description.value = data.description
+    await nextTick()
+    executeScripts()
 }
 
 onBeforeMount(() => {
