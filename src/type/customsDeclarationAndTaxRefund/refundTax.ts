@@ -149,6 +149,7 @@ export interface IGetTaxRefundListQuery {
   toDate: string
   orderByField: string
   orderDirection: string
+  searchFields: string
 }
 export interface IGetTaxRefundInvoiceListQuery {
   keyWord: string

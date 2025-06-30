@@ -33,7 +33,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-select placeholder="请选择搜索字段">
+                <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段" >
                   <el-option 
                     v-for="item in searchOptions"
                     :label="item.label"
@@ -202,7 +202,7 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-select placeholder="请选择搜索字段">
+                <el-select  v-model="queryForm.searchFields" placeholder="请选择搜索字段">
                   <el-option 
                     v-for="item in searchOptions"
                     :label="item.label"
@@ -428,7 +428,7 @@ import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } f
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
-import { getProductAllSupplier } from '~/src/api/devlocal/productInformation'
+import { getProductAllSupplier } from '/@/api/devlocal/productInformation'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
@@ -579,7 +579,8 @@ const queryForm = reactive<IGetTaxRefundListQuery>({
   fromDate: date.value[0],
   toDate: date.value[1],
   orderByField: 'shipmentDate',
-  orderDirection: 'desc'
+  orderDirection: 'desc',
+  searchFields: 'shipmentId'
 })
 const queryDateData = () => {
   queryForm.fromDate = date.value[0]
