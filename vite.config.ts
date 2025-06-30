@@ -101,7 +101,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             },
             preprocessorOptions: {
                 scss: {
-                    api: 'modern-compiler',
+                    //api: 'modern-compiler',
                 },
             },
             devSourcemap: true,

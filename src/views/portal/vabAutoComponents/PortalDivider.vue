@@ -6,6 +6,10 @@
         <el-divider direction="vertical" />
         <vab-link :class="activeMenu === 'partner' ? 'active' : ''" to="/partner">合作伙伴</vab-link>
         <el-divider direction="vertical" />
+        <vab-link :class="activeMenu === 'study-path' ? 'active' : ''" to="/study-path">学习路线</vab-link>
+        <el-divider direction="vertical" />
+        <vab-link :class="activeMenu === 'courses' ? 'active' : ''" to="/courses">精品课程</vab-link>
+        <el-divider direction="vertical" />
         <vab-link to="/index">后台管理</vab-link>
     </div>
 </template>

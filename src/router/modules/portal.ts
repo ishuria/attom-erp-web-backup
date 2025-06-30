@@ -31,6 +31,28 @@ export const portalRoutes = [
         },
     },
     {
+        path: '/study-path',
+        name: 'StudyPath',
+        component: () => import('/@/views/portal/StudyPath.vue'),
+        meta: {
+            title: '学习路线',
+            hidden: true,
+            icon: 'road-map-line',
+            target: '_blank' as const,
+        },
+    },
+    {
+        path: '/courses',
+        name: 'Courses',
+        component: () => import('/@/views/portal/Courses.vue'),
+        meta: {
+            title: '精品课程',
+            hidden: true,
+            icon: 'book-open-line',
+            target: '_blank' as const,
+        },
+    },
+    {
         path: '//vuejs-core.cn/authorization/shop-vite.html',
         name: 'ExternalLink',
         meta: {

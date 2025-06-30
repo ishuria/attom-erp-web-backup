@@ -99,7 +99,6 @@
                     </el-col>
                     <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
                         <div class="news-tit"><h2>互动留言</h2></div>
-                        <!-- 留言表单 -->
                         <el-form inline :model="newMessage" style="margin-bottom: 12px" @submit.prevent="submitMessage">
                             <el-form-item>
                                 <el-input v-model="newMessage.name" maxlength="12" placeholder="昵称" style="width: 120px" />
@@ -111,7 +110,6 @@
                                 <el-button type="primary" @click="submitMessage">留言</el-button>
                             </el-form-item>
                         </el-form>
-                        <!-- 留言列表 -->
                         <el-table :data="pagedMessages" :height="260" style="margin-bottom: 8px; border: 1px solid var(--el-border-color)">
                             <el-table-column label="昵称" prop="name" width="100" />
                             <el-table-column label="留言" prop="content" />

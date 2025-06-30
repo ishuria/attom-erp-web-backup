@@ -46,7 +46,6 @@ const props = defineProps({
     },
 })
 
-// const el = ref<any>(null)
 const activeName = ref<any>(props.activeMenu)
 const tabsList = reactive<any>([
     {
@@ -60,6 +59,14 @@ const tabsList = reactive<any>([
     {
         label: '合作伙伴',
         name: 'partner',
+    },
+    {
+        label: '学习路线',
+        name: 'study-path',
+    },
+    {
+        label: '精品课程',
+        name: 'courses',
     },
     {
         label: '后台管理',
@@ -77,9 +84,6 @@ const handleCommand = (command: string | number | object) => {
 onMounted(() => {
     document.querySelectorAll('html')[0].className = ''
     document.querySelectorAll('body')[0].className = ''
-
-    // if (activeName.value == 'partner') useCssVar('--el-color-primary', el).value = '#13ce66'
-    // else useCssVar('--el-color-primary', el).value = '#4e88f3'
 })
 </script>
 
