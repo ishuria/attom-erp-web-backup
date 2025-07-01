@@ -83,7 +83,7 @@
         "@types/nprogress": "^0.2.3",
         "@types/qs": "^6.14.0",
         "@vite-pwa/assets-generator": "^1.0.0",
-        "@vitejs/plugin-basic-ssl": "^2.0.0",
+        "@vitejs/plugin-basic-ssl": "^2.1.0",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vitejs/plugin-vue-jsx": "5.0.0",
         "@vue/compiler-sfc": "^3.5.17",
@@ -119,7 +119,7 @@
         "vite-plugin-svg-icons": "^2.0.1",
         "vite-plugin-unplugin": "^1.8.0",
         "vite-plugin-vitebar": "^0.0.8",
-        "vue-tsc": "^2.2.10"
+        "vue-tsc": "^3.0.0"
     },
     "gitHooks": {
         "pre-commit": "lint-staged"
