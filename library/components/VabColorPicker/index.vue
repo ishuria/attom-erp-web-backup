@@ -52,8 +52,6 @@ onBeforeMount(() => {
 <style lang="scss">
 .vab-color-picker {
     margin-left: var(--el-margin);
-    overflow: hidden;
-    border-radius: var(--el-border-radius-small) !important;
 }
 
 .vab-color-picker-popper {

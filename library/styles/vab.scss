@@ -814,15 +814,20 @@ html {
 
         /* el-color-picker */
         .el-color-picker {
+            width: inherit;
+            height: inherit;
+
             &__trigger {
-                width: 20px;
-                height: 20px;
                 padding: 0;
-                border: 0;
             }
 
             &__color {
+                width: 20px;
+                height: 20px;
                 border: 0;
+                &-inner {
+                    border-radius: var(--el-border-radius-small) !important;
+                }
             }
         }
 
@@ -1116,14 +1121,6 @@ html {
                 margin: calc(var(--el-margin) / 2);
                 background-color: var(--el-color-primary);
                 border-radius: var(--el-border-radius-base);
-            }
-        }
-
-        .vab-color-picker {
-            .el-color-picker {
-                width: inherit;
-                height: inherit;
-                border-radius: var(--el-border-radius-base) !important;
             }
         }
 
