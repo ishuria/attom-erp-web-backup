@@ -40,10 +40,10 @@ const palette = ['#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0
         display: flex;
         align-items: center;
         justify-content: center;
-        width: var(--el-margin);
-        height: var(--el-margin);
+        width: 20px;
+        height: 20px;
         cursor: pointer;
-        border-radius: var(--el-border-radius-base);
+        border-radius: var(--el-border-radius-small);
         transition: transform 0.1s;
         &:hover {
             transform: scale(1.1);
