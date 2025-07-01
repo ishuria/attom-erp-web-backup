@@ -99,14 +99,20 @@
                     </el-col>
                     <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
                         <div class="news-tit"><h2>互动留言</h2></div>
-                        <el-form inline :model="newMessage" style="margin-bottom: 12px" @submit.prevent="submitMessage">
+                        <el-form inline :model="newMessage" @submit.prevent="submitMessage">
                             <el-form-item>
-                                <el-input v-model="newMessage.name" maxlength="12" placeholder="昵称" style="width: 120px" />
-                            </el-form-item>
-                            <el-form-item>
-                                <el-input v-model="newMessage.content" maxlength="60" placeholder="留言内容" style="width: 240px" />
-                            </el-form-item>
-                            <el-form-item>
+                                <el-input
+                                    v-model="newMessage.name"
+                                    maxlength="12"
+                                    placeholder="昵称"
+                                    style="width: 120px; margin-right: 10px"
+                                />
+                                <el-input
+                                    v-model="newMessage.content"
+                                    maxlength="60"
+                                    placeholder="留言内容"
+                                    style="width: 240px; margin-right: 10px"
+                                />
                                 <el-button type="primary" @click="submitMessage">留言</el-button>
                             </el-form-item>
                         </el-form>
