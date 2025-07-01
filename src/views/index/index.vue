@@ -15,7 +15,7 @@
             </el-select>
           </template>
           <template #chart>
-            <vab-commission-chart-pie v-if="type === 0" :data="pieList" @click="handleJumpTo" />
+            <commission-site-pie v-if="type === 0" :data="pieList" @click="handleJumpTo" />
             <commission-type-pie v-if="type === 1" :data="pieList" @click="handleJumpTo" />
           </template>
           <template #date>
