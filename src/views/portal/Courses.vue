@@ -47,7 +47,7 @@
 
                     <div class="course-list">
                         <el-row v-if="courseList.length > 0" :gutter="20">
-                            <el-col v-for="course in courseList" :key="course.id" :lg="12" :md="24" :sm="24" :xl="6" :xs="24">
+                            <el-col v-for="course in courseList" :key="course.id" :lg="8" :md="24" :sm="24" :xl="6" :xs="24">
                                 <div class="course-card" @click="viewCourseDetail(course)">
                                     <div class="course-cover">
                                         <el-image class="cover-image" :src="course.coverImage" />
