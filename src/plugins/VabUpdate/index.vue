@@ -59,6 +59,7 @@ const save = async () => {
         buttonText.value = translate('更新完成')
         offlineReady.value = false
         needRefresh.value = false
+        $clearPWACache()
         setTimeout(() => {
             show.value = false
             location.reload()

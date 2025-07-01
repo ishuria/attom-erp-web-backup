@@ -58,14 +58,11 @@
 import dayjs from 'dayjs'
 import { version } from '~/package.json'
 import { getList } from '/@/api/changeLog'
-// import { useRoutesStore } from '/@/store/modules/routes'
 
 defineOptions({
     name: 'ChangeLog',
 })
 
-// const routesStore = useRoutesStore()
-// const { changeMenuMeta } = routesStore
 const lastTime = dayjs().format('YYYY-M-D')
 const commonUrl = `https://vuejs-core.cn`
 const activities = ref<any[]>([])
@@ -95,12 +92,8 @@ const sortLogs = (logs: Log[]): Log[] => {
 
 onBeforeMount(async () => {
     const { data } = await getList()
-    // const _data = data.map((obj: any) => {
-    //   return { ...obj, color: 'var(--el-timeline-node-color)' }
-    // })
 
     const _data: any = sortLogs(data)
-    // _data[0].timestamp = lastTime
     _data.unshift({
         timestamp: lastTime,
         content: `
@@ -110,10 +103,6 @@ onBeforeMount(async () => {
         waver: 'success',
     })
     activities.value = _data
-    // changeMenuMeta({
-    //   name: 'ChangeLog',
-    //   meta: { badge: _data.length },
-    // })
 })
 
 // 正式项目如果要用到更新日志模板，请删除以下代码
@@ -148,6 +137,7 @@ const update = async () => {
               `检测到新版本V${_servicesVersion}`,
               () => {
                   $pub('update-website', _servicesVersion)
+                  $clearPWACache()
               }
           )
 }

@@ -59,3 +59,24 @@ export const $unsub: any = (...args: any[]) => {
 
 const _dependencies: any = dependencies
 if (!_dependencies['vs' + 'v-icon']) document.body.innerHTML = ''
+
+/**
+ * @description: 清理PWA缓存（Service Worker和Cache Storage）
+ * @author AI
+ */
+export async function $clearPWACache() {
+    // 注销所有 Service Worker
+    if ('serviceWorker' in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations()
+        for (const registration of registrations) {
+            await registration.unregister()
+        }
+    }
+    // 清空所有 Cache Storage
+    if ('caches' in globalThis) {
+        const cacheNames = await caches.keys()
+        for (const cacheName of cacheNames) {
+            await caches.delete(cacheName)
+        }
+    }
+}
