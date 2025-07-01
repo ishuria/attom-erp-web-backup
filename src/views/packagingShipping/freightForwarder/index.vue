@@ -97,6 +97,11 @@
             <span>{{ row.costName }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="结算对象" min-width="130">
+          <template #default="{ row }">
+            <el-select />
+          </template>
+        </el-table-column>
         <el-table-column label="货代账单费用名" min-width="180" prop="billCostName">
           <template #default="{ row }">
             <div class="none">

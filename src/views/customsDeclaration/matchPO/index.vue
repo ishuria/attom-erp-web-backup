@@ -200,6 +200,11 @@
         @close="closeFirstLegFreight"
       >
         <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"/>
+        <el-table-column label="结算对象" min-width="120">
+          <template #default="{ row }">
+            <el-select />
+          </template>
+        </el-table-column>
         <el-table-column label="数量" min-width="70" prop="count">
           <template #default="{ row }">
             <div class="none">
@@ -208,7 +213,7 @@
             <span>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="单价" min-width="70" prop="unitPrice">
+        <el-table-column label="单价" :width="flexColumnWidth(costList, '单价', 'unitPrice')" prop="unitPrice">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.unitPrice"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -942,7 +947,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
         ])
         return
       }
-      case 5: {
+      case 6: {
         sums[index] = h('div', { style: { fontWeight: '600' } }, [
           'RMB',
         ])
@@ -1037,36 +1042,36 @@ const tableRowClassName = ({
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   switch (data.columnIndex) {
     case 0: 
-    case 12: 
-    case 14: {
+    case 13: 
+    case 15: {
       return {
         textAlign: 'left',
         cursor: 'not-allowed'
       }
     }
-    case 3: {
+    case 4: {
       return {
         fontWeight: '600',
         textAlign: 'left',
         cursor: 'not-allowed'
       }
     }
-    case 8: 
-    case 10: {
+    case 9: 
+    case 11: {
       return {
         textAlign: 'center',
         cursor: 'not-allowed'
       }
     }
-    case 6: {
+    case 7: {
       return {
         fontWeight: '600',
         textAlign: 'center'
       }
     }
-    case 1:
     case 2:
-    case 4: {
+    case 3:
+    case 5: {
       return {
         textAlign: 'left',
         cursor: 'pointer'
