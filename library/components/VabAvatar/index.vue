@@ -42,15 +42,6 @@
                     <vab-icon icon="bar-chart-box-ai-line" />
                     <span>{{ translate('数据大屏') }}</span>
                 </li>
-                <li class="el-dropdown-menu__item" @click="handleCommand('portal')">
-                    <vab-icon icon="building-line" />
-                    <span>{{ translate('门户') }}</span>
-                </li>
-                <li class="el-dropdown-menu__item" @click="handleCommand('book')">
-                    <vab-icon icon="book-2-line" />
-                    <span>{{ translate('文档') }}</span>
-                </li>
-
                 <li class="el-dropdown-menu__item" @click="handleCommand('logout')">
                     <vab-icon icon="logout-circle-r-line" />
                     <span>{{ translate('退出登录') }}</span>
@@ -86,45 +77,26 @@ const handleHide = () => {
 }
 
 const handleCommand = async (command: any) => {
-    switch (command) {
-        case 'logout': {
-            await logout()
-            await router.push(toLoginRoute(route.fullPath))
-            visible.value = false
-            break
-        }
-        case 'personalCenter': {
-            await router.push('/setting/personalCenter')
-            visible.value = false
-            break
-        }
-        case 'changeLog': {
-            await router.push('/changeLog')
-            visible.value = false
-            break
-        }
-        case 'portal': {
-            await window.open('#/portal')
-            visible.value = false
-            break
-        }
-        case 'dataScreen': {
-            await window.open('#/dataScreen')
-            visible.value = false
-            break
-        }
-        case 'book': {
-            $baseAlert(
-                '已购买用户请前往群公告中获取，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
-            )
-            visible.value = false
-            break
-        }
-        case 'friendlyTip': {
-            await router.push('/friendlyTip')
-            visible.value = false
-            break
-        }
+    if (command === 'logout') {
+        await logout()
+        await router.push(toLoginRoute(route.fullPath))
+        visible.value = false
+        return
+    }
+    if (command === 'dataScreen') {
+        await window.open('#/dataScreen')
+        visible.value = false
+        return
+    }
+    // 统一处理其余命令
+    const routeMap: Record<string, string> = {
+        personalCenter: '/setting/personalCenter',
+        changeLog: '/changeLog',
+        friendlyTip: '/friendlyTip',
+    }
+    if (routeMap[command]) {
+        await router.push(routeMap[command])
+        visible.value = false
     }
 }
 </script>

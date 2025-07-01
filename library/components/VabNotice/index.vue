@@ -11,7 +11,7 @@
                             <ul v-if="badge">
                                 <li v-for="(item, index) in notices" :key="index">
                                     <div v-if="item.icon" class="notice-list-left">
-                                        <vab-icon :icon="item.icon" />
+                                        <vab-icon :icon="item.icon" :style="{ backgroundColor: item.bgColor, color: item.color }" />
                                     </div>
                                     <el-avatar v-else :size="45" :src="item.image" />
                                     <div class="notice-list-right">
@@ -30,7 +30,7 @@
                             <ul v-if="badge">
                                 <li v-for="(item, index) in notices" :key="index">
                                     <div v-if="item.icon" class="notice-list-left">
-                                        <vab-icon :icon="item.icon" />
+                                        <vab-icon :icon="item.icon" :style="{ backgroundColor: item.bgColor, color: item.color }" />
                                     </div>
                                     <el-avatar v-else :size="45" :src="item.image" />
                                     <div class="notice-list-right">
@@ -69,10 +69,66 @@ const activeName = ref<string>('notice')
 const notices = ref<Array<any>>([])
 const badge = ref<any>(undefined)
 
+// 随机颜色库（与VabBox保持一致）
+const colors = [
+    {
+        bgColor: 'var(--el-color-primary-light-9)',
+        color: 'var(--el-color-primary)',
+    },
+    {
+        bgColor: 'var(--el-color-danger-light-9)',
+        color: 'var(--el-color-danger)',
+    },
+    {
+        bgColor: 'var(--el-color-warning-light-9)',
+        color: 'var(--el-color-warning)',
+    },
+    {
+        bgColor: 'var(--el-color-success-light-9)',
+        color: 'var(--el-color-success)',
+    },
+    { bgColor: 'var(--el-color-info-light-9)', color: 'var(--el-color-info)' },
+    {
+        bgColor: '#F2ECFE',
+        color: '#8545F7',
+    },
+    {
+        bgColor: '#E7F8F6',
+        color: '#18BBAA',
+    },
+]
+
+// 洗牌算法 - 打乱数组顺序
+const shuffle = (arr: any) => {
+    const array = [...arr]
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
+}
+
+// 为通知项分配随机颜色
+const assignRandomColors = (noticesList: any[]) => {
+    const shuffledColors = shuffle(colors)
+    noticesList.forEach((notice: any, index: any) => {
+        if (notice.icon) {
+            const colorObj = shuffledColors[index % shuffledColors.length]
+            notice.bgColor = colorObj.bgColor
+            notice.color = colorObj.color
+        }
+    })
+}
+
 const fetchData = async () => {
     const { data } = await getList()
     notices.value = data.list
     badge.value = data.total === 0 ? undefined : data.total
+
+    // 为通知项分配随机颜色
+    if (notices.value.length > 0) {
+        assignRandomColors(notices.value)
+    }
 }
 
 const handleClick = () => {
@@ -111,14 +167,15 @@ onBeforeMount(() => {
 
             > .notice-list-left {
                 i {
-                    display: inline-block;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
                     width: 45px;
                     height: 45px;
                     font-size: 20px;
-                    line-height: 45px;
-                    color: var(--el-color-primary);
-                    background: var(--el-color-primary-light-9);
                     border-radius: var(--el-border-radius-base);
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    transition: all 0.3s ease;
                 }
             }
 

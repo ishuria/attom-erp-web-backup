@@ -1,5 +1,5 @@
 <template>
-    <el-popover class="box-item" placement="bottom-start" :width="350">
+    <el-popover v-model:visible="visible" class="box-item" placement="bottom-start" :width="350">
         <template #reference>
             <vab-icon class="vab-box hidden-xs-only" icon="apps-2-ai-line" />
         </template>
@@ -19,18 +19,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useRouter } from 'vue-router'
 import { translate } from '/@/i18n'
-import { useUserStore } from '/@/store/modules/user'
-import { toLoginRoute } from '/@/utils/routes'
-
-const route = useRoute()
-const router = useRouter()
-const userStore = useUserStore()
-const { logout } = userStore
 
 defineOptions({
     name: 'VabBox',
 })
+
+const router = useRouter()
+const visible = ref<boolean>(false)
 
 // 随机颜色库（可自定义）
 const colors = [
@@ -45,7 +42,11 @@ const colors = [
 
 // 卡片数据（含 description）
 const cards = ref<any>([
-    { title: '主题配置', description: '将主题配置', icon: 't-shirt-line' },
+    {
+        title: '主题配置',
+        description: '将主题配置',
+        icon: 't-shirt-line',
+    },
 
     {
         title: '数据大屏',
@@ -72,13 +73,18 @@ const cards = ref<any>([
         link: '/operate/guide',
     },
     {
+        title: '门户',
+        description: '进入门户',
+        icon: 'home-4-line',
+        link: '/portal',
+    },
+    {
         title: '购买链接',
         description: '前往购买正版',
         icon: 'shopping-bag-3-line',
         link: 'https://vuejs-core.cn/authorization/shop-vite.html',
     },
     { title: '帮助文档', description: '获取使用帮助', icon: 'question-line' },
-    { title: '退出登录', description: '安全退出系统', icon: 'logout-box-r-line' },
 ])
 
 // 洗牌算法 - 打乱数组顺序
@@ -111,34 +117,40 @@ const handleCardClick = (card: any) => {
     switch (title) {
         case '主题配置': {
             $pub('shop-vite-open-theme')
+            visible.value = false
             break
         }
         case '角色权限':
         case '页面引导': {
             if (link) router.push(link)
+            visible.value = false
             break
         }
         case '工作台': {
             window.open('#/workbench')
+            visible.value = false
             break
         }
         case '数据大屏': {
             window.open('#/dataScreen')
+            visible.value = false
             break
         }
         case '购买链接': {
             if (link) window.open(link)
+            visible.value = false
             break
         }
         case '帮助文档': {
             $baseAlert(
                 '已购买用户请联系客服获取文档，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
             )
+            visible.value = false
             break
         }
-        case '退出登录': {
-            logout()
-            router.push(toLoginRoute(route.fullPath))
+        case '门户': {
+            if (link) window.open(link, '_blank')
+            visible.value = false
             break
         }
     }
