@@ -39,12 +39,26 @@ const colors = [
     { bgColor: 'var(--el-color-warning-light-9)', color: 'var(--el-color-warning)' },
     { bgColor: 'var(--el-color-success-light-9)', color: 'var(--el-color-success)' },
     { bgColor: 'var(--el-color-info-light-9)', color: 'var(--el-color-info)' },
-    { bgColor: 'var(--el-color-primary-light-9)', color: 'var(--el-color-primary)' },
+    { bgColor: '#F2ECFE', color: '#8545F7' },
+    { bgColor: '#E7F8F6', color: '#18BBAA' },
 ]
 
 // 卡片数据（含 description）
 const cards = ref<any>([
     { title: '主题配置', description: '将主题配置', icon: 't-shirt-line' },
+
+    {
+        title: '数据大屏',
+        description: '展示大屏效果',
+        icon: 'bar-chart-box-ai-line',
+        link: '/dataScreen',
+    },
+    {
+        title: '工作台',
+        description: '进入工作台',
+        icon: 'artboard-line',
+        link: '/workbench',
+    },
     {
         title: '角色权限',
         description: '切换用户权限',
@@ -58,10 +72,10 @@ const cards = ref<any>([
         link: '/operate/guide',
     },
     {
-        title: '数据大屏',
-        description: '展示大屏效果',
-        icon: 'bar-chart-box-ai-line',
-        link: '/dataScreen',
+        title: '购买链接',
+        description: '前往购买正版',
+        icon: 'shopping-bag-3-line',
+        link: 'https://vuejs-core.cn/authorization/shop-vite.html',
     },
     { title: '帮助文档', description: '获取使用帮助', icon: 'question-line' },
     { title: '退出登录', description: '安全退出系统', icon: 'logout-box-r-line' },
@@ -79,10 +93,11 @@ const shuffle = (arr: any) => {
 
 // 分配不重复颜色（若卡片数 ≤ 颜色种类）
 const assignRandomColors = () => {
-    const shuffledColors = shuffle(colors).slice(0, cards.value.length)
+    const shuffledColors = shuffle(colors)
     cards.value.forEach((card: any, index: any) => {
-        card.bgColor = shuffledColors[index].bgColor
-        card.color = shuffledColors[index].color
+        const colorObj = shuffledColors[index % shuffledColors.length] // 防止越界
+        card.bgColor = colorObj.bgColor
+        card.color = colorObj.color
     })
 }
 
@@ -98,16 +113,21 @@ const handleCardClick = (card: any) => {
             $pub('shop-vite-open-theme')
             break
         }
-        case '角色权限': {
-            router.push(link)
+        case '角色权限':
+        case '页面引导': {
+            if (link) router.push(link)
             break
         }
-        case '页面引导': {
-            router.push(link)
+        case '工作台': {
+            window.open('#/workbench')
             break
         }
         case '数据大屏': {
             window.open('#/dataScreen')
+            break
+        }
+        case '购买链接': {
+            if (link) window.open(link)
             break
         }
         case '帮助文档': {
