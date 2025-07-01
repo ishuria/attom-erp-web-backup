@@ -120,6 +120,9 @@ onBeforeMount(() => {
         display: inline-block;
     }
 
+    &.ri-sun-line {
+        font-size: var(--el-font-size-medium);
+    }
     &.ri-sun-line:hover {
         transform: rotate(90deg);
     }
