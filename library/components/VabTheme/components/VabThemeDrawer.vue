@@ -295,8 +295,7 @@ const setDefaultTheme = () => {
     setTimeout(() => {
         loading.close()
         $baseMessage('切换成功', 'success', 'hey')
-        //@ts-ignore
-        if (device.value === 'mobile') location.reload(true)
+        if (device.value === 'mobile') location.reload()
     }, 1000)
 }
 
@@ -304,7 +303,7 @@ const handleSaveTheme = () => {
     saveTheme()
     drawerVisible.value = false
     //@ts-ignore
-    //if (device.value === 'mobile') location.reload(true)
+    //if (device.value === 'mobile') location.reload()
 }
 
 const handleQuickColor = (color: string) => {

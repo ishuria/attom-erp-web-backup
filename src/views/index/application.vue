@@ -338,8 +338,7 @@ const handleAutoInstall = () => {
 
 const refreshPage = () => {
     showManualInstructions.value = false
-    // @ts-ignore
-    location.reload(true)
+    location.reload()
 }
 
 // 生命周期

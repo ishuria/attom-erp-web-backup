@@ -162,8 +162,7 @@ const handleOpen = () => {
 const handleChangeRole = async () => {
     $baseLoading('正在切换账号请稍后...')
     await localStorage.setItem(tokenTableName, `${form.account}-token-${uuid()}-${Date.now()}`)
-    //@ts-ignore
-    await location.reload(true)
+    await location.reload()
 }
 
 const handleRefreshToken = async () => {

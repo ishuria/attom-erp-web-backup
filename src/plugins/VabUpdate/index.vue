@@ -8,12 +8,12 @@
         <h3>版本更新：</h3>
         <p>
             {{ title }}
-            V{{ _version }}
+            V{{ version }}
         </p>
         <p>更新时间：{{ lastTime }}</p>
         <template #footer>
             <el-button :loading="loading" type="primary" @click="save">
-                {{ button }}
+                {{ buttonText }}
             </el-button>
         </template>
     </vab-dialog>
@@ -22,8 +22,9 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
-import { version } from '~/package.json'
+import { version as packageVersion } from '~/package.json'
 import { translate } from '/@/i18n'
+
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
@@ -31,26 +32,27 @@ defineOptions({
 })
 
 const { getTitle: title } = useSettingsStore()
-const button = ref<string>(translate('立即升级'))
+const buttonText = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
-const _version = ref<string>(version)
+const version = ref<string>(packageVersion)
 const show = ref<boolean>(false)
-const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW()
+const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
+    immediate: true,
+})
 const lastTime = dayjs().format('YYYY-MM-DD')
 
 const save = async () => {
-    button.value = translate('正在更新')
+    buttonText.value = translate('正在更新')
     loading.value = true
     await updateServiceWorker()
     setTimeout(() => {
         loading.value = false
-        button.value = translate('更新完成')
+        buttonText.value = translate('更新完成')
         offlineReady.value = false
         needRefresh.value = false
         setTimeout(() => {
             show.value = false
-            //@ts-ignore
-            location.reload(true)
+            location.reload()
         }, 1000 * 3)
     }, 1000 * 7)
 }
@@ -58,7 +60,6 @@ const save = async () => {
 const handleShow = () => {
     if (offlineReady.value || needRefresh.value) {
         show.value = true
-        save()
     }
 }
 
@@ -69,9 +70,9 @@ onMounted(() => {
 })
 
 watch(
-    offlineReady || needRefresh,
-    () => {
-        handleShow()
+    () => offlineReady.value || needRefresh.value,
+    (val) => {
+        if (val) handleShow()
     },
     {
         immediate: true,
@@ -80,7 +81,7 @@ watch(
 
 onBeforeMount(() => {
     $sub('update-website', (servicesVersion: string) => {
-        if (servicesVersion) _version.value = servicesVersion
+        if (servicesVersion) version.value = servicesVersion
         offlineReady.value = true
         needRefresh.value = true
         handleShow()

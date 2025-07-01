@@ -92,8 +92,7 @@ const buy = () => {
 const removeLocalStorage = () => {
     localStorage.clear()
     updateCaughtTabs(false)
-    //@ts-ignore
-    location.reload(true)
+    location.reload()
 }
 
 const resetTheme = () => {
