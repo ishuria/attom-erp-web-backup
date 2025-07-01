@@ -11,6 +11,7 @@
             V{{ version }}
         </p>
         <p>更新时间：{{ lastTime }}</p>
+        <p v-if="!offlineReady && !needRefresh" style="margin-top: 16px; color: #999">当前已是最新版本</p>
         <template #footer>
             <el-button :loading="loading" type="primary" @click="save">
                 {{ buttonText }}
@@ -20,6 +21,7 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios'
 import dayjs from 'dayjs'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { version as packageVersion } from '~/package.json'
@@ -42,6 +44,13 @@ const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
 const lastTime = dayjs().format('YYYY-MM-DD')
 
 const save = async () => {
+    if (!offlineReady.value && !needRefresh.value) {
+        show.value = false
+        setTimeout(() => {
+            location.reload()
+        }, 300) // 先关闭弹窗再刷新
+        return
+    }
     buttonText.value = translate('正在更新')
     loading.value = true
     await updateServiceWorker()
@@ -72,6 +81,11 @@ onMounted(() => {
 watch(
     () => offlineReady.value || needRefresh.value,
     (val) => {
+        if (val) {
+            buttonText.value = translate('立即升级')
+        } else {
+            buttonText.value = translate('关闭')
+        }
         if (val) handleShow()
     },
     {
@@ -87,6 +101,22 @@ onBeforeMount(() => {
         handleShow()
     })
 })
+
+const fetchData = async () => {
+    try {
+        const {
+            data: { version: remoteVersion },
+        } = await axios({
+            url: `./vue-shop-vite-version.json?t=${Date.now()}`,
+            method: 'get',
+        })
+        return remoteVersion
+    } catch {
+        return version
+    }
+}
+
+defineExpose({ save, show, fetchData })
 </script>
 
 <style lang="scss" scoped>

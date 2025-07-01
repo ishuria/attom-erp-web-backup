@@ -46,6 +46,12 @@
                         </p>
                     </a>
                 </div>
+                <div class="vab-show-hide-box" @click="checkUpdate">
+                    <a>
+                        <vab-icon icon="upload-cloud-2-line" />
+                        <p>{{ translate('检查更新') }}</p>
+                    </a>
+                </div>
             </section>
         </el-collapse-transition>
 
@@ -63,10 +69,12 @@
                 </p>
             </a>
         </div>
+        <vab-update ref="vabUpdateRef" />
     </div>
 </template>
 
 <script lang="ts" setup>
+import { version as localVersion } from '~/package.json'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 
@@ -80,6 +88,7 @@ const { saveTheme, updateTheme, setCssVar, updateCaughtTabs } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
+const vabUpdateRef = ref()
 
 const handleOpenTheme = () => {
     $pub('shop-vite-open-theme')
@@ -163,6 +172,20 @@ const randomTheme = async () => {
             $baseMessage('切换成功', 'success', 'hey')
         }, 1000)
     }, 100)
+}
+
+const checkUpdate = async () => {
+    if (vabUpdateRef.value) {
+        const remoteVersion = await vabUpdateRef.value.fetchData?.()
+        if (remoteVersion && remoteVersion !== localVersion) {
+            vabUpdateRef.value.show = true
+            $pub('update-website', remoteVersion)
+        } else {
+            vabUpdateRef.value.show = true
+        }
+    } else {
+        $pub('update-website', '')
+    }
 }
 
 watch(
