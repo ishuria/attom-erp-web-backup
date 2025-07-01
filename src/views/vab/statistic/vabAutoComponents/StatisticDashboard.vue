@@ -1,123 +1,30 @@
 <template>
     <div class="statistic-dashboard">
         <!-- 顶部KPI指标 -->
-        <el-row class="mb-20" :gutter="20">
-            <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-                <div class="kpi-card primary">
+        <el-row class="mb-20 kpi-row">
+            <el-col v-for="item in kpiList" :key="item.key" class="kpi-col">
+                <div class="kpi-card" :class="item.color">
                     <div class="kpi-icon">
                         <el-icon :size="32">
-                            <trend-charts />
+                            <component :is="item.icon" />
                         </el-icon>
                     </div>
                     <div class="kpi-content">
                         <div class="kpi-value">
-                            <vab-count :end-value="kpiData.revenue" :start-value="0" />
+                            <vab-count :end-value="(kpiData as any)[item.valueField]" :start-value="0" />
                         </div>
-                        <div class="kpi-label">总收入</div>
-                        <div class="kpi-trend up">
+                        <div class="kpi-label">{{ item.label }}</div>
+                        <div class="kpi-trend" :class="item.trendType">
                             <el-icon :size="14">
-                                <arrow-up />
+                                <component :is="item.trendIcon" />
                             </el-icon>
-                            <span>+{{ kpiData.revenueGrowth }}%</span>
+                            <span>{{ item.trendPrefix }}{{ (kpiData as any)[item.trendField] }}{{ item.trendSuffix }}</span>
                         </div>
                     </div>
                     <div class="kpi-chart">
                         <div class="mini-chart">
                             <div
-                                v-for="(point, index) in kpiData.revenueChart"
-                                :key="index"
-                                class="chart-bar"
-                                :style="{ height: point + '%' }"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-                <div class="kpi-card success">
-                    <div class="kpi-icon">
-                        <el-icon :size="32">
-                            <shopping-bag />
-                        </el-icon>
-                    </div>
-                    <div class="kpi-content">
-                        <div class="kpi-value">
-                            <vab-count :end-value="kpiData.orders" :start-value="0" />
-                        </div>
-                        <div class="kpi-label">总订单</div>
-                        <div class="kpi-trend up">
-                            <el-icon :size="14">
-                                <arrow-up />
-                            </el-icon>
-                            <span>+{{ kpiData.ordersGrowth }}%</span>
-                        </div>
-                    </div>
-                    <div class="kpi-chart">
-                        <div class="mini-chart">
-                            <div
-                                v-for="(point, index) in kpiData.ordersChart"
-                                :key="index"
-                                class="chart-bar"
-                                :style="{ height: point + '%' }"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-                <div class="kpi-card warning">
-                    <div class="kpi-icon">
-                        <el-icon :size="32">
-                            <user />
-                        </el-icon>
-                    </div>
-                    <div class="kpi-content">
-                        <div class="kpi-value">
-                            <vab-count :end-value="kpiData.users" :start-value="0" />
-                        </div>
-                        <div class="kpi-label">活跃用户</div>
-                        <div class="kpi-trend down">
-                            <el-icon :size="14">
-                                <arrow-down />
-                            </el-icon>
-                            <span>-{{ kpiData.usersDecline }}%</span>
-                        </div>
-                    </div>
-                    <div class="kpi-chart">
-                        <div class="mini-chart">
-                            <div
-                                v-for="(point, index) in kpiData.usersChart"
-                                :key="index"
-                                class="chart-bar"
-                                :style="{ height: point + '%' }"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
-                <div class="kpi-card danger">
-                    <div class="kpi-icon">
-                        <el-icon :size="32">
-                            <monitor />
-                        </el-icon>
-                    </div>
-                    <div class="kpi-content">
-                        <div class="kpi-value">
-                            <vab-count :end-value="kpiData.views" :start-value="0" />
-                        </div>
-                        <div class="kpi-label">页面访问</div>
-                        <div class="kpi-trend up">
-                            <el-icon :size="14">
-                                <arrow-up />
-                            </el-icon>
-                            <span>+{{ kpiData.viewsGrowth }}%</span>
-                        </div>
-                    </div>
-                    <div class="kpi-chart">
-                        <div class="mini-chart">
-                            <div
-                                v-for="(point, index) in kpiData.viewsChart"
+                                v-for="(point, index) in (kpiData as any)[item.chartField]"
                                 :key="index"
                                 class="chart-bar"
                                 :style="{ height: point + '%' }"
@@ -127,98 +34,11 @@
                 </div>
             </el-col>
         </el-row>
-
-        <!-- 中间图表区域 -->
-        <!--
-        <el-row :gutter="20" class="mb-20">
-            <el-col :lg="16" :md="24" :sm="24" :xl="16" :xs="24">
-                <vab-card>
-                    <template #header>
-                        <div class="chart-header">
-                            <span>销售趋势</span>
-                            <div class="chart-controls">
-                                <el-radio-group v-model="chartPeriod" size="small">
-                                    <el-radio-button label="week">周</el-radio-button>
-                                    <el-radio-button label="month">月</el-radio-button>
-                                    <el-radio-button label="quarter">季</el-radio-button>
-                                    <el-radio-button label="year">年</el-radio-button>
-                                </el-radio-group>
-                            </div>
-                        </div>
-                    </template>
-                    <div class="chart-container">
-                        <div class="chart-stats">
-                            <div class="chart-stat-item">
-                                <div class="stat-number">{{ formatNumber(salesTrend.total) }}</div>
-                                <div class="stat-label">总销售额</div>
-                            </div>
-                            <div class="chart-stat-item">
-                                <div class="stat-number">{{ salesTrend.avg }}</div>
-                                <div class="stat-label">平均日销</div>
-                            </div>
-                            <div class="chart-stat-item">
-                                <div class="stat-number">{{ salesTrend.peak }}</div>
-                                <div class="stat-label">峰值日销</div>
-                            </div>
-                        </div>
-                        <div class="chart-placeholder">
-                            <div class="placeholder-text">图表区域 - 可集成 ECharts 或其他图表库</div>
-                            <div class="placeholder-desc">这里可以展示销售趋势的折线图、柱状图等</div>
-                        </div>
-                    </div>
-                </vab-card>
-            </el-col>
-            <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-                <vab-card>
-                    <template #header>实时监控</template>
-                    <div class="monitor-panel">
-                        <div class="monitor-item">
-                            <div class="monitor-header">
-                                <span>系统状态</span>
-                                <el-tag type="success" size="small">正常</el-tag>
-                            </div>
-                            <div class="monitor-metrics">
-                                <div class="metric-item">
-                                    <span class="metric-label">CPU使用率</span>
-                                    <el-progress :percentage="systemStatus.cpu" :color="getProgressColor(systemStatus.cpu)" />
-                                </div>
-                                <div class="metric-item">
-                                    <span class="metric-label">内存使用率</span>
-                                    <el-progress :percentage="systemStatus.memory" :color="getProgressColor(systemStatus.memory)" />
-                                </div>
-                                <div class="metric-item">
-                                    <span class="metric-label">磁盘使用率</span>
-                                    <el-progress :percentage="systemStatus.disk" :color="getProgressColor(systemStatus.disk)" />
-                                </div>
-                                <div class="metric-item">
-                                    <span class="metric-label">网络延迟</span>
-                                    <span class="metric-value">{{ systemStatus.network }}ms</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="monitor-item">
-                            <div class="monitor-header">
-                                <span>在线用户</span>
-                                <el-tag type="info" size="small">{{ onlineUsers.length }}</el-tag>
-                            </div>
-                            <div class="online-users">
-                                <div v-for="user in onlineUsers.slice(0, 5)" :key="user.id" class="user-item">
-                                    <el-avatar :size="24" :src="user.avatar" />
-                                    <span class="user-name">{{ user.name }}</span>
-                                    <span class="user-status" :class="user.status">{{ user.statusText }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </vab-card>
-            </el-col>
-        </el-row>
-        -->
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, ArrowUp, Monitor, ShoppingBag, TrendCharts, User } from '@element-plus/icons-vue'
+import { ArrowDown, ArrowUp, Coin, Money, Monitor, ShoppingBag, User } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 
 // KPI数据
@@ -235,13 +55,115 @@ const kpiData = ref({
     views: 12543,
     viewsGrowth: 12.5,
     viewsChart: [89, 67, 78, 45, 67, 89, 78],
+    newUsers: 512,
+    newUsersGrowth: 6.3,
+    newUsersChart: [55, 60, 58, 62, 65, 70, 68],
 })
+
+const kpiList = [
+    {
+        key: 'revenue',
+        label: '总收入',
+        icon: Money,
+        color: 'primary',
+        valueField: 'revenue',
+        trendField: 'revenueGrowth',
+        trendType: 'up',
+        chartField: 'revenueChart',
+        trendIcon: ArrowUp,
+        trendPrefix: '+',
+        trendSuffix: '%',
+    },
+    {
+        key: 'orders',
+        label: '总订单',
+        icon: ShoppingBag,
+        color: 'success',
+        valueField: 'orders',
+        trendField: 'ordersGrowth',
+        trendType: 'up',
+        chartField: 'ordersChart',
+        trendIcon: ArrowUp,
+        trendPrefix: '+',
+        trendSuffix: '%',
+    },
+    {
+        key: 'users',
+        label: '活跃用户',
+        icon: User,
+        color: 'warning',
+        valueField: 'users',
+        trendField: 'usersDecline',
+        trendType: 'down',
+        chartField: 'usersChart',
+        trendIcon: ArrowDown,
+        trendPrefix: '-',
+        trendSuffix: '%',
+    },
+    {
+        key: 'volume',
+        label: '成交量',
+        icon: Coin,
+        color: 'purple',
+        valueField: 'newUsers',
+        trendField: 'newUsersGrowth',
+        trendType: 'up',
+        chartField: 'newUsersChart',
+        trendIcon: ArrowUp,
+        trendPrefix: '+',
+        trendSuffix: '%',
+    },
+    {
+        key: 'views',
+        label: '页面访问',
+        icon: Monitor,
+        color: 'danger',
+        valueField: 'views',
+        trendField: 'viewsGrowth',
+        trendType: 'up',
+        chartField: 'viewsChart',
+        trendIcon: ArrowUp,
+        trendPrefix: '+',
+        trendSuffix: '%',
+    },
+]
 </script>
 
 <style lang="scss" scoped>
 .statistic-dashboard {
     .mb-20 {
         margin-bottom: 20px;
+    }
+    .kpi-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+    .kpi-col {
+        box-sizing: border-box;
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+    @media (max-width: 1200px) {
+        .kpi-col {
+            flex: 0 0 33.3333%;
+            max-width: 33.3333%;
+        }
+    }
+    @media (max-width: 900px) {
+        .kpi-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+    @media (max-width: 600px) {
+        .kpi-col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
     }
 
     // KPI卡片
@@ -297,6 +219,15 @@ const kpiData = ref({
             color: white;
             background: var(--el-color-info);
 
+            .kpi-icon {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+            }
+        }
+
+        &.purple {
+            color: white;
+            background: #a259ec;
             .kpi-icon {
                 background: rgba(255, 255, 255, 0.15);
                 backdrop-filter: blur(10px);

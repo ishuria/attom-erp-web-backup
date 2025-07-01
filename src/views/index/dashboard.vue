@@ -1,6 +1,7 @@
 <template>
     <div class="dashboard-container no-background-container">
-        <el-row :gutter="20">
+        <statistic-dashboard class="dashboard-statistic" />
+        <el-row :gutter="20" style="margin-top: calc(0px - var(--el-margin))">
             <el-col :lg="3" :md="12" :sm="24" :xl="3" :xs="24">
                 <vab-card class="dashboard-user">
                     <vab-icon icon="lllustration/Scenes03" is-custom-svg />
@@ -81,6 +82,17 @@ const countConfig2 = {
             [class*='-echart'] {
                 width: 100%;
                 height: 170px;
+            }
+        }
+
+        .dashboard-statistic {
+            .kpi-card {
+                margin-bottom: var(--el-margin);
+                border-radius: var(--el-border-radius-base);
+
+                &:hover {
+                    transform: none;
+                }
             }
         }
     }
