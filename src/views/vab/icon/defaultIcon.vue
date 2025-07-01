@@ -11,7 +11,7 @@
                     <el-form-item>
                         <el-button :disabled="!queryForm.colorful" :icon="Refresh" @click="fetchData">随机颜色</el-button>
                     </el-form-item>
-                    <el-form-item label="文字大小（px）">
+                    <el-form-item label="图标大小（px）">
                         <el-slider v-model="queryForm.num" :max="40" :min="28" />
                     </el-form-item>
                 </el-form>
@@ -47,11 +47,6 @@
                                     color: queryForm.colorful ? item.color : 'var(--el-color-grey)',
                                     fontSize: queryForm.num + 'px',
                                     transition: 'var(--el-transition)',
-                                    // 'background-image': queryForm.colorful
-                                    //   ? 'linear-gradient(120deg, ' + item.color + ' 50%, ' + colorRgba(item.color, 0.3) + ')'
-                                    //   : '',
-                                    // 'background-clip': queryForm.colorful ? 'text' : '',
-                                    // '-webkit-text-fill-color': queryForm.colorful ? 'transparent' : '',
                                 }"
                             />
                         </vab-card>
@@ -103,7 +98,7 @@ const queryForm = reactive<QueryFormType>({
     pageNo: 1,
     pageSize: 72,
     title: '',
-    colorful: true,
+    colorful: false,
     num: 28,
 })
 
@@ -147,7 +142,7 @@ const randomHexColor = () => {
 }
 
 const resetQueryForm = () => {
-    (Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach(key => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
         if (key !== 'pageNo' && key !== 'pageSize' && key !== 'colorful' && key !== 'num') queryForm[key] = '' as never
     })
     queryForm.pageNo = 1
