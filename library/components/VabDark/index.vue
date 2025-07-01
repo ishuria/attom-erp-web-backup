@@ -1,21 +1,17 @@
 <template>
-    <el-switch
+    <vab-icon
         v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
-        v-model="mode"
-        :active-icon="Moon"
-        active-value="dark"
         class="vab-dark"
-        :inactive-icon="Sunny"
-        inactive-value="light"
-        inline-prompt
+        :icon="mode === 'dark' ? 'moon-line' : 'sun-line'"
         @click="_toggleDark($event)"
     />
 </template>
 
 <script lang="ts" setup>
-// @ts-nocheck
-
-import { Moon, Sunny } from '@element-plus/icons-vue'
+import { useDark, useToggle } from '@vueuse/core'
+import { storeToRefs } from 'pinia'
+import { onBeforeMount } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
@@ -64,8 +60,8 @@ const handleUseDark = () => {
     return useDark()
 }
 
-const handleGetScheme = () => {
-    return localStorage.getItem('vueuse-color-scheme')
+const handleGetScheme = (): string => {
+    return localStorage.getItem('vueuse-color-scheme') || 'light'
 }
 
 const handleSetScheme = (value: string) => {
@@ -115,6 +111,22 @@ onBeforeMount(() => {
 }
 
 .vab-dark {
+    position: relative;
     margin-left: var(--el-margin);
+    cursor: pointer;
+    transition: var(--el-transition);
+
+    i {
+        display: inline-block;
+    }
+
+    &.ri-sun-line:hover {
+        transform: rotate(90deg);
+    }
+
+    &.ri-moon-line:hover {
+        filter: drop-shadow(0 0 8px #ffd700) drop-shadow(0 0 16px #fffbe6);
+        transform: scale(1.2);
+    }
 }
 </style>
