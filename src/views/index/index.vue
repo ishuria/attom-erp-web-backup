@@ -96,7 +96,7 @@
         <!-- <recommendation2 /> -->
       </el-col>
       <!-- 第四层 -->
-      <el-col v-if="ableViewCard" :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
         <performance-history :list="historyList" >
           <template #select>
             <el-select v-model="userId" placeholder="人员" style="max-width: 5em;" @change="fetchData">
@@ -111,13 +111,13 @@
           </template>
         </performance-history>
       </el-col>
-      <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank title="上月超额完成排行" :list="rank1List" name="超额完成数" :my-name="myName" />
       </el-col>
-      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <!-- <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank title="上月提成排行" :list="rank2List" name="提成" :my-name="myName" />
-      </el-col>
-      <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      </el-col> -->
+      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank title="上月新品提成排行(上线1年以内)" :list="rank3List" name="新品提成" :my-name="myName" />
       </el-col>
     </el-row>
@@ -135,7 +135,7 @@ import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved } from '/@/api/devlocal/frontPage'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
-import { ROLE_ADMINBUYERLEAD_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
+import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPagePerformanceHistory, IGetFrontPageProgressProjectsItem, IPieItem, IRankItem } from '/@/type/index/frontPage'
@@ -148,7 +148,8 @@ defineOptions({
 const router = useRouter()
 const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0];
-const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE;
+const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
+const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const commissionRole = [
   ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_INDUSTRIAL_DESIGN_CODE,
   ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_ADMINBUYERLEAD_CODE,
@@ -332,7 +333,7 @@ const fetchUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption()
   userList.value = data
   if (userList.value.length > 0) {
-    userId.value = userList.value[0].id
+    userId.value = userList.value.find((item) => item.label === myName)?.id
   }
   fetchData()
 }
@@ -361,6 +362,8 @@ onBeforeMount(() => {
   if (ableViewCard) {
     fetchAssessmentData()
     fetchInProgressProjectsData()
+  }
+  if (ableBossViewCard) {
     fetchUserList()
     fetchRankOverAchieved()
     fetchRankNewProductCommission()
