@@ -824,10 +824,6 @@ html {
             &__color {
                 border: 0;
             }
-
-            &__color-inner {
-                border-radius: var(--el-border-radius-small) !important;
-            }
         }
 
         /* svg */
@@ -1180,6 +1176,9 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         border: none !important;
         box-shadow: none !important;
         backdrop-filter: none !important;
+    }
+    .vab-nav {
+        border-bottom: 1px solid transparent;
     }
     .vab-avatar-popper {
         background: var(--vab-glass-bg) !important;

@@ -51,11 +51,9 @@ html.dark > body[class*='vab-theme-'] {
     }
 
     .vab-column-bar {
-        margin-left: -1px !important;
-        border-right: 1px solid var(--el-border-color) !important;
-
         .el-tabs {
             border-right: 1px solid var(--el-border-color) !important;
+            border-left: 0 !important;
 
             .el-tabs__nav {
                 background: var(--el-color-white) !important;
@@ -102,6 +100,7 @@ html.dark > body[class*='vab-theme-'] {
         }
 
         .title {
+            left: calc(var(--el-left-menu-width-min) + 1px) !important;
             width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 2px);
         }
     }
