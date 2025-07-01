@@ -72,7 +72,7 @@
       :before-close="handlerOtherSkuCloseDialog" 
       class="moldDialog"
       title="零件复制到其他SKU"
-      width="800"
+      width="1005"
     >
       <el-divider style="margin-top: 0;"/>
       <div class="transfer-container">
@@ -96,9 +96,8 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
-import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList, updateProductAlreadyComponent } from '/@/api/devlocal/productInformation'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList } from '/@/api/devlocal/productInformation'
+import { focusAndSelectInput } from '/@/utils/nodeUtils'
 defineOptions({
   name: 'SharedComponents',
 })
@@ -297,6 +296,9 @@ onBeforeMount(() => {
   display: flex;
   align-items: center; /* 垂直居中，如果需要 */
   justify-content: center; /* 水平居中 */
+  :deep(.el-transfer-panel) {
+    width: 400px;
+  }
 }
 /* 取消没有条纹的行的悬停背景色 */
 :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
