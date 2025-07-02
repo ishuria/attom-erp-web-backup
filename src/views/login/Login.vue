@@ -188,7 +188,7 @@ onBeforeRouteLeave((to, from, next) => {
     display: inline-block;
     height: 32px;
     margin-top: var(--el-margin);
-    margin-right: 4.5vh;
+    margin-right: 8.5vh;
     line-height: 32px;
 
     :deep() {
