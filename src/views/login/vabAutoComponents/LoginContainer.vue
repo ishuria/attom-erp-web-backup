@@ -2,6 +2,9 @@
     <div class="login-container" :style="{ background: background, backgroundSize: '100%' }">
         <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
             <el-checkbox v-model="show" @change="handleShow">{{ translate('必应壁纸') }}</el-checkbox>
+            <el-button :disabled="!show || backgroundList.length <= 1" size="small" style="margin: 0 10px 0 10px" @click="changeWallpaper">
+                更换壁纸
+            </el-button>
             <vab-language v-show="theme.showLanguage" />
             <vab-color-picker v-show="theme.showColorPicker" />
             <vab-dark v-show="theme.showDark" />
@@ -28,6 +31,7 @@ const { theme } = storeToRefs(settingsStore)
 const show = ref<boolean>(true)
 const bingStore = useBingStore()
 const { backgroundList } = storeToRefs(bingStore)
+const currentIndex = ref(0)
 const background = ref<string | undefined>(
     backgroundList.value[0]
         ? `url(${backgroundList.value[0]})!important`
@@ -40,9 +44,35 @@ const getInitialAlignType = () => {
 }
 const alignType = ref(getInitialAlignType())
 
+onMounted(() => {
+    bingStore.setBackgroundList()
+})
+
+watch(
+    backgroundList,
+    (newList) => {
+        if (show.value && newList[0]) {
+            currentIndex.value = 0
+            background.value = `url(${newList[0]})!important`
+        }
+    },
+    { immediate: true }
+)
+
 const handleShow = () => {
-    if (show.value) background.value = `url(${backgroundList.value[0]})!important`
-    else background.value = 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+    if (show.value && backgroundList.value[0]) {
+        currentIndex.value = 0
+        background.value = `url(${backgroundList.value[0]})!important`
+    } else {
+        background.value = 'linear-gradient(to top, var(--el-color-primary), var(--el-color-primary-light-3))'
+    }
+}
+
+const changeWallpaper = () => {
+    if (backgroundList.value.length > 1) {
+        currentIndex.value = (currentIndex.value + 1) % backgroundList.value.length
+        background.value = `url(${backgroundList.value[currentIndex.value]})!important`
+    }
 }
 </script>
 
