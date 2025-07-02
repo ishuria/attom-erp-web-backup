@@ -86,6 +86,7 @@ watch(
         top: var(--el-nav-height) !important;
         z-index: calc(var(--el-z-index) + 3);
         padding-top: 0 !important;
+        border-radius: 0 !important;
 
         .el-scrollbar__view {
             margin-top: calc(0px - var(--el-nav-height) + var(--el-margin) / 2) !important;
@@ -102,6 +103,10 @@ watch(
                 margin-left: var(--el-left-menu-width-min) !important;
                 border-bottom: 1px solid var(--el-border-color) !important;
             }
+        }
+
+        .vab-side-bar {
+            z-index: calc(var(--el-z-index) + 5) !important;
         }
     }
 
