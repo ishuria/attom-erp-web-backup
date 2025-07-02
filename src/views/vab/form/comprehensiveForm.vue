@@ -184,13 +184,6 @@ onBeforeMount(() => {
 
     :deep() {
         .el-form-item__content {
-            .el-rate {
-                display: inline-block;
-                font-size: 0;
-                line-height: 1;
-                vertical-align: middle;
-            }
-
             .el-transfer__buttons {
                 padding: 10px 10px 0 10px;
             }

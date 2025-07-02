@@ -7,14 +7,21 @@
             <el-checkbox v-model="checked1" disabled>备选项1</el-checkbox>
             <el-checkbox v-model="checked2" disabled>备选项2</el-checkbox>
         </vab-card>
-        <vab-card title="多选框组">
-            <el-checkbox-group v-model="checkList">
-                <el-checkbox label="复选框 A" value="复选框 A" />
-                <el-checkbox label="复选框 B" value="复选框 B" />
-                <el-checkbox label="复选框 C" value="复选框 C" />
-                <el-checkbox disabled label="禁用" value="禁用" />
-                <el-checkbox disabled label="选中且禁用" value="选中且禁用" />
-            </el-checkbox-group>
+        <vab-card title="多选框组（支持右键）">
+            <div @contextmenu="onContextMenu($event)">
+                <el-checkbox-group v-model="checkList">
+                    <el-checkbox label="复选框 A" value="复选框 A" />
+                    <el-checkbox label="复选框 B" value="复选框 B" />
+                    <el-checkbox label="复选框 C" value="复选框 C" />
+                    <el-checkbox disabled label="禁用" value="禁用" />
+                    <el-checkbox disabled label="选中且禁用" value="选中且禁用" />
+                </el-checkbox-group>
+                <vab-context-menu v-model:show="show" :options="options">
+                    <vab-context-menu-item label="全选" @click="selectAll" />
+                    <vab-context-menu-item label="反选" @click="toggleSelect" />
+                    <vab-context-menu-item label="清空" @click="clearSelect" />
+                </vab-context-menu>
+            </div>
         </vab-card>
         <vab-card title="可选项目数量的限制">
             <el-checkbox-group v-model="checkedCities" :max="2" :min="1">
@@ -34,6 +41,8 @@
 </template>
 
 <script lang="ts" setup>
+import { VabContextMenu, VabContextMenuItem } from '/@/plugins/VabContextMenu'
+
 defineOptions({
     name: 'Checkbox',
 })
@@ -47,4 +56,23 @@ const cities = ref<any>(['上海', '北京', '广州', '深圳'])
 const checkboxGroup1 = ref<any>(['上海'])
 const checked3 = ref<boolean>(true)
 const checked4 = ref<boolean>(false)
+const show = ref(false)
+const options = reactive<any>({ minWidth: 160, x: 0, y: 0 })
+const allOptions = ['复选框 A', '复选框 B', '复选框 C', '选中且禁用']
+
+const onContextMenu = (e: MouseEvent) => {
+    e.preventDefault()
+    options.x = e.x
+    options.y = e.y
+    show.value = true
+}
+const selectAll = () => {
+    checkList.value = [...allOptions]
+}
+const toggleSelect = () => {
+    checkList.value = allOptions.filter((opt) => !checkList.value.includes(opt))
+}
+const clearSelect = () => {
+    checkList.value = []
+}
 </script>
