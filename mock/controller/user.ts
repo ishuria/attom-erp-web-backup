@@ -12,9 +12,9 @@ const username2role: { [key: string]: string[] } = {
     test: ['Admin', 'Editor'],
 }
 const role2permission: { [key: string]: string[] } = {
-    Admin: ['read:system', 'write:system', 'delete:system'],
-    Editor: ['read:system', 'write:system'],
-    Test: ['read:system'],
+    Admin: ['read:Index', 'write:Index', 'delete:Index'],
+    Editor: ['read:Index', 'write:Index'],
+    Test: ['read:Index'],
 }
 
 export default [

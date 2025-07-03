@@ -54,44 +54,44 @@
             <!--  注意其中:后面的单词为你要控制页面权限的页面name，这样可以区分到具体页面 -->
             <el-form-item label="RBAC 权限点控制">
                 <el-space wrap>
-                    <el-button v-permissions="{ permission: ['read:system'] }" type="primary">拥有["read:system"]的按钮</el-button>
-                    <el-button v-permissions="{ permission: ['read:system'], mode: 'except' }" type="danger">
-                        未拥有["'read:system'"]的按钮
+                    <el-button v-permissions="{ permission: ['read:Index'] }" type="primary">拥有["read:Index"]的按钮</el-button>
+                    <el-button v-permissions="{ permission: ['read:Index'], mode: 'except' }" type="danger">
+                        未拥有["'read:Index'"]的按钮
                     </el-button>
-                    <el-button v-permissions="{ permission: ['write:system'] }" type="primary">拥有["write:system"]的按钮</el-button>
-                    <el-button v-permissions="{ permission: ['write:system'], mode: 'except' }" type="danger">
-                        未拥有["write:system"]的按钮
+                    <el-button v-permissions="{ permission: ['write:Index'] }" type="primary">拥有["write:Index"]的按钮</el-button>
+                    <el-button v-permissions="{ permission: ['write:Index'], mode: 'except' }" type="danger">
+                        未拥有["write:Index"]的按钮
                     </el-button>
-                    <el-button v-permissions="{ permission: ['delete:system'] }" type="primary">拥有["delete:system"]的按钮</el-button>
-                    <el-button v-permissions="{ permission: ['delete:system'], mode: 'except' }" type="danger">
-                        未拥有["delete:system"]的按钮
+                    <el-button v-permissions="{ permission: ['delete:Index'] }" type="primary">拥有["delete:Index"]的按钮</el-button>
+                    <el-button v-permissions="{ permission: ['delete:Index'], mode: 'except' }" type="danger">
+                        未拥有["delete:Index"]的按钮
                     </el-button>
                 </el-space>
             </el-form-item>
             <el-form-item label="RBAC 角色&权限点控制">
                 <el-space wrap>
-                    <el-button v-permissions="{ role: ['Admin'], permission: ['delete:system'] }" type="primary">
-                        拥有["Admin"]或["delete:system"]的按钮
+                    <el-button v-permissions="{ role: ['Admin'], permission: ['delete:Index'] }" type="primary">
+                        拥有["Admin"]或["delete:Index"]的按钮
                     </el-button>
                     <el-button
                         v-permissions="{
                             role: ['Editor'],
-                            permission: ['read:system'],
+                            permission: ['read:Index'],
                             mode: 'allOf',
                         }"
                         type="primary"
                     >
-                        拥有["Editor"]和["read:system"]的按钮
+                        拥有["Editor"]和["read:Index"]的按钮
                     </el-button>
                     <el-button
                         v-permissions="{
                             role: ['Admin'],
-                            permission: ['delete:system'],
+                            permission: ['delete:Index'],
                             mode: 'except',
                         }"
                         type="danger"
                     >
-                        未拥有["Admin"]和["delete:system"]的按钮
+                        未拥有["Admin"]和["delete:Index"]的按钮
                     </el-button>
                 </el-space>
             </el-form-item>
