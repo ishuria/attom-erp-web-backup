@@ -72,7 +72,7 @@
       :before-close="handlerOtherSkuCloseDialog" 
       class="moldDialog"
       title="零件复制到其他SKU"
-      width="1005"
+      width="1525"
     >
       <el-divider style="margin-top: 0;"/>
       <div class="transfer-container">
@@ -296,8 +296,13 @@ onBeforeMount(() => {
   display: flex;
   align-items: center; /* 垂直居中，如果需要 */
   justify-content: center; /* 水平居中 */
-  :deep(.el-transfer-panel) {
-    width: 400px;
+  :deep() {
+    .el-transfer-panel {
+      width: 660px;
+      &__body {
+        height: 500px;
+      }
+    }
   }
 }
 /* 取消没有条纹的行的悬停背景色 */
