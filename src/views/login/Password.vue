@@ -3,7 +3,9 @@
         <div class="align-segmented hidden-xs-only">
             <el-radio-group v-model="alignType" size="large">
                 <el-radio-button label="left">{{ translate('居左') }}</el-radio-button>
-                <el-radio-button label="center">{{ translate('居中') }}</el-radio-button>
+                <el-radio-button label="center">
+                    {{ translate('居中') }}
+                </el-radio-button>
                 <el-radio-button label="right">{{ translate('居右') }}</el-radio-button>
             </el-radio-group>
         </div>

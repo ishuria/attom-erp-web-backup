@@ -78,7 +78,9 @@
                         >
                             <div class="log-item">
                                 <div class="log-header">
-                                    <el-tag size="small" :type="getLogTagType(item.level) as any">{{ item.level.toUpperCase() }}</el-tag>
+                                    <el-tag size="small" :type="getLogTagType(item.level) as any">
+                                        {{ item.level.toUpperCase() }}
+                                    </el-tag>
                                     <span class="log-module">{{ item.module }}</span>
                                 </div>
                                 <div class="log-message">{{ item.message }}</div>
@@ -157,7 +159,9 @@
                                         <div class="content-title">{{ item.title }}</div>
                                         <div class="content-body">{{ item.content }}</div>
                                         <div class="content-footer">
-                                            <el-tag size="small" :type="item.tagType">{{ item.tag }}</el-tag>
+                                            <el-tag size="small" :type="item.tagType">
+                                                {{ item.tag }}
+                                            </el-tag>
                                             <span class="time-ago">{{ item.timeAgo }}</span>
                                         </div>
                                     </div>

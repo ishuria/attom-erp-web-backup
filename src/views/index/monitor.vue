@@ -50,7 +50,10 @@
             </el-col>
             <el-col :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
                 <vab-card
-                    :body-style="{ padding: '0', height: 'calc(var(--el-container-height) - 207px)' }"
+                    :body-style="{
+                        padding: '0',
+                        height: 'calc(var(--el-container-height) - 207px)',
+                    }"
                     style="height: calc(var(--el-container-height) - 150px)"
                 >
                     <template #header>

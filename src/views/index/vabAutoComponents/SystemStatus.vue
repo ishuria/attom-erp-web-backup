@@ -126,7 +126,10 @@
                     v-for="service in services"
                     :key="service.name"
                     class="service-item"
-                    :class="{ 'service-error': service.status === 'error', 'service-warning': service.status === 'warning' }"
+                    :class="{
+                        'service-error': service.status === 'error',
+                        'service-warning': service.status === 'warning',
+                    }"
                 >
                     <div class="service-icon">
                         <el-icon size="12">

@@ -231,7 +231,9 @@
                                     <el-tag size="small" type="danger">需要关注</el-tag>
                                 </div>
                                 <div class="prediction-content">
-                                    <div class="prediction-value">{{ predictionData.stockWarning }}</div>
+                                    <div class="prediction-value">
+                                        {{ predictionData.stockWarning }}
+                                    </div>
                                     <div class="prediction-label">库存不足商品数</div>
                                     <div class="prediction-confidence">
                                         <span>建议补货: {{ predictionData.stockRecommend }}件</span>

@@ -21,7 +21,9 @@
         <vab-card>
             <template #header>按钮样式</template>
             <el-radio-group v-model="radio4">
-                <el-radio-button v-for="city in cities" :key="city" :value="city">{{ city }}</el-radio-button>
+                <el-radio-button v-for="city in cities" :key="city" :value="city">
+                    {{ city }}
+                </el-radio-button>
             </el-radio-group>
         </vab-card>
         <vab-card>
@@ -45,13 +47,17 @@
         <vab-card>
             <template #header>动态生成选项</template>
             <el-radio-group v-model="radio8">
-                <el-radio v-for="item in dynamicOptions" :key="item.value" :value="item.value">{{ item.label }}</el-radio>
+                <el-radio v-for="item in dynamicOptions" :key="item.value" :value="item.value">
+                    {{ item.label }}
+                </el-radio>
             </el-radio-group>
         </vab-card>
         <vab-card>
             <template #header>按钮样式禁用项</template>
             <el-radio-group v-model="radio9">
-                <el-radio-button v-for="city in cities" :key="city" :disabled="city === '广州'" :value="city">{{ city }}</el-radio-button>
+                <el-radio-button v-for="city in cities" :key="city" :disabled="city === '广州'" :value="city">
+                    {{ city }}
+                </el-radio-button>
             </el-radio-group>
         </vab-card>
         <vab-card>

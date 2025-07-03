@@ -261,7 +261,10 @@ export const useSettingsStore = defineStore('settings', {
                     return item
                 })
                 if (!found) {
-                    newArr.push({ routeName: routeNameToCheck, scrollTop: newScrollTopValue })
+                    newArr.push({
+                        routeName: routeNameToCheck,
+                        scrollTop: newScrollTopValue,
+                    })
                 }
                 return newArr
             }

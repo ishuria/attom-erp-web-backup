@@ -39,7 +39,9 @@
             <el-table-column align="center" label="品牌描述" min-width="180" prop="desc" show-overflow-tooltip />
             <el-table-column align="center" label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-tag effect="dark" :type="row.status === '启用' ? 'success' : 'info'">{{ row.status }}</el-tag>
+                    <el-tag effect="dark" :type="row.status === '启用' ? 'success' : 'info'">
+                        {{ row.status }}
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="操作" width="150">
@@ -154,17 +156,29 @@ onActivated(() => {
 
 async function fetchList() {
     loading.value = true
-    const { data } = await getBrandList({ pageNo: queryForm.pageNo, pageSize: queryForm.pageSize, name: queryForm.name })
+    const { data } = await getBrandList({
+        pageNo: queryForm.pageNo,
+        pageSize: queryForm.pageSize,
+        name: queryForm.name,
+    })
     brandList.value = data.list
     total.value = data.total
     loading.value = false
 }
 
-watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
+watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, {
+    immediate: true,
+})
 
 const dialogVisible = ref(false)
 const dialogMode = ref<'add' | 'edit'>('add')
-const form = reactive<Brand>({ id: 0, name: '', logo: '', desc: '', status: '启用' })
+const form = reactive<Brand>({
+    id: 0,
+    name: '',
+    logo: '',
+    desc: '',
+    status: '启用',
+})
 const formRef = ref()
 
 const rules = {

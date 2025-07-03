@@ -35,7 +35,9 @@
             </el-table-column>
             <el-table-column align="center" label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-tag :type="row.status === '启用' ? 'success' : row.status === '停用' ? 'info' : 'danger'">{{ row.status }}</el-tag>
+                    <el-tag :type="row.status === '启用' ? 'success' : row.status === '停用' ? 'info' : 'danger'">
+                        {{ row.status }}
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="操作" width="260">
@@ -186,7 +188,9 @@ async function fetchList() {
     loading.value = false
 }
 
-watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
+watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, {
+    immediate: true,
+})
 
 function handleSizeChange(val: number) {
     queryForm.pageNo = 1

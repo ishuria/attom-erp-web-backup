@@ -95,7 +95,9 @@
             </li>
             <li
                 class="el-dropdown-menu__item"
-                :class="{ 'is-disabled': !hoverRoute || visitedRoutes.indexOf(hoverRoute) === -1 }"
+                :class="{
+                    'is-disabled': !hoverRoute || visitedRoutes.indexOf(hoverRoute) === -1,
+                }"
                 @click="closeLeftTabs"
             >
                 <vab-icon icon="arrow-left-line" />

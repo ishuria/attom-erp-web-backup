@@ -63,7 +63,14 @@ const formData = reactive({
     agree: false,
 })
 const rules = reactive({
-    agree: [{ type: 'boolean' as const, enum: [true], message: '请同意协议', trigger: 'change' }],
+    agree: [
+        {
+            type: 'boolean' as const,
+            enum: [true],
+            message: '请同意协议',
+            trigger: 'change',
+        },
+    ],
 })
 
 const handleChange = (val: string | number | boolean) => {

@@ -53,7 +53,10 @@ const noMore = ref(false)
 const fetchData = async (reset = false) => {
     if (loading.value || noMore.value) return
     loading.value = true
-    const { data } = await getList({ pageNo: pageNo.value, pageSize: pageSize.value })
+    const { data } = await getList({
+        pageNo: pageNo.value,
+        pageSize: pageSize.value,
+    })
     if (reset) {
         list.value = data.list
     } else {

@@ -47,7 +47,9 @@
             <div class="info-section">
                 <div class="app-info-card">
                     <div class="card-header">
-                        <el-icon color="var(--el-color-primary)" size="20"><info-filled /></el-icon>
+                        <el-icon color="var(--el-color-primary)" size="20">
+                            <info-filled />
+                        </el-icon>
                         <span>应用特性</span>
                     </div>
 
@@ -109,7 +111,9 @@
             <div class="manual-section">
                 <div class="manual-card">
                     <div class="card-header">
-                        <el-icon color="var(--el-color-primary)" size="20"><question-filled /></el-icon>
+                        <el-icon color="var(--el-color-primary)" size="20">
+                            <question-filled />
+                        </el-icon>
                         <span>手动安装指南</span>
                     </div>
 

@@ -317,7 +317,9 @@
                                                         :src="row.image"
                                                         @error="handleImageError($event, row)"
                                                     />
-                                                    <el-icon v-else class="sku-upload-icon"><plus /></el-icon>
+                                                    <el-icon v-else class="sku-upload-icon">
+                                                        <plus />
+                                                    </el-icon>
                                                 </el-upload>
                                             </template>
                                         </el-table-column>
@@ -363,7 +365,9 @@
                                             <el-dropdown @command="handleBatchCommand">
                                                 <el-button type="primary">
                                                     更多批量操作
-                                                    <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                                                    <el-icon class="el-icon--right">
+                                                        <arrow-down />
+                                                    </el-icon>
                                                 </el-button>
                                                 <template #dropdown>
                                                     <el-dropdown-menu>
@@ -1053,7 +1057,10 @@ const handleSubmit = async () => {
                         const skuData = {
                             skuCode: `${submitData.skuCode}_${item.specs.join('_')}`, // 自动生成不同的SKU编码
                             skuName: submitData.skuName,
-                            specifications: Object.entries(specObj).map(([key, value]) => ({ key, value })),
+                            specifications: Object.entries(specObj).map(([key, value]) => ({
+                                key,
+                                value,
+                            })),
                             price: item.price,
                             stock: item.stock,
                             status: submitData.status,

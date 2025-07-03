@@ -30,7 +30,9 @@
     >
         <template #header>
             <slot name="header">
-                <div class="el-dialog__title" @dblclick="setFullscreen">{{ props.title }}</div>
+                <div class="el-dialog__title" @dblclick="setFullscreen">
+                    {{ props.title }}
+                </div>
             </slot>
             <button v-if="props.showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
                 <el-icon class="el-dialog__close">

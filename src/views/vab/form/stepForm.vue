@@ -16,7 +16,12 @@
                             <h3>填写步骤</h3>
                             <div class="progress-info">
                                 <span class="progress-text">完成进度</span>
-                                <span class="progress-percent" :class="{ completed: Math.min(active, steps.length) === steps.length }">
+                                <span
+                                    class="progress-percent"
+                                    :class="{
+                                        completed: Math.min(active, steps.length) === steps.length,
+                                    }"
+                                >
                                     {{ Math.round((Math.min(active, steps.length) / steps.length) * 100) }}%
                                 </span>
                             </div>
@@ -35,7 +40,9 @@
                                 @click="handleStepClick(index)"
                             >
                                 <div class="step-icon">
-                                    <el-icon v-if="active > index || active === steps.length"><check /></el-icon>
+                                    <el-icon v-if="active > index || active === steps.length">
+                                        <check />
+                                    </el-icon>
                                     <span v-else>{{ index + 1 }}</span>
                                 </div>
                                 <div class="step-content">
@@ -43,8 +50,12 @@
                                     <div class="step-description">{{ step.description }}</div>
                                 </div>
                                 <div class="step-status">
-                                    <el-icon v-if="active > index || active === steps.length" class="completed-icon"><check /></el-icon>
-                                    <el-icon v-else-if="active === index" class="current-icon"><loading /></el-icon>
+                                    <el-icon v-if="active > index || active === steps.length" class="completed-icon">
+                                        <check />
+                                    </el-icon>
+                                    <el-icon v-else-if="active === index" class="current-icon">
+                                        <loading />
+                                    </el-icon>
                                 </div>
                             </div>
                         </div>

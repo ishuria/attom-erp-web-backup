@@ -7,7 +7,10 @@
         <!-- params动态路由时，如果没有匹配到任何面包屑，则显示当前路由参数 -->
         <template v-if="breadcrumbList.length === 0 && route.params.id">
             <el-breadcrumb-item :to="{ path: '' }">
-                <span>{{ route.matched[route.matched.length - 1]?.meta?.title }} id= {{ route.params.id }}</span>
+                <span>
+                    {{ route.matched[route.matched.length - 1]?.meta?.title }} id=
+                    {{ route.params.id }}
+                </span>
             </el-breadcrumb-item>
         </template>
     </el-breadcrumb>

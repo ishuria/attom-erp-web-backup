@@ -152,7 +152,12 @@ const uploadHeaders = {
 const formRules = reactive<any>({
     siteName: [
         { required: true, message: '请输入网站名称', trigger: 'blur' },
-        { min: 2, max: 50, message: '网站名称长度在 2 到 50 个字符', trigger: 'blur' },
+        {
+            min: 2,
+            max: 50,
+            message: '网站名称长度在 2 到 50 个字符',
+            trigger: 'blur',
+        },
     ],
     siteUrl: [
         { required: true, message: '请输入网站地址', trigger: 'blur' },
@@ -164,15 +169,30 @@ const formRules = reactive<any>({
     ],
     description: [
         { required: true, message: '请输入网站描述', trigger: 'blur' },
-        { min: 10, max: 200, message: '网站描述长度在 10 到 200 个字符', trigger: 'blur' },
+        {
+            min: 10,
+            max: 200,
+            message: '网站描述长度在 10 到 200 个字符',
+            trigger: 'blur',
+        },
     ],
     metaKeywords: [
         { required: true, message: '请输入META关键词', trigger: 'blur' },
-        { min: 2, max: 100, message: 'META关键词长度在 2 到 100 个字符', trigger: 'blur' },
+        {
+            min: 2,
+            max: 100,
+            message: 'META关键词长度在 2 到 100 个字符',
+            trigger: 'blur',
+        },
     ],
     metaDesc: [
         { required: true, message: '请输入META描述', trigger: 'blur' },
-        { min: 10, max: 300, message: 'META描述长度在 10 到 300 个字符', trigger: 'blur' },
+        {
+            min: 10,
+            max: 300,
+            message: 'META描述长度在 10 到 300 个字符',
+            trigger: 'blur',
+        },
     ],
     copyright: [{ required: true, message: '请输入版权信息', trigger: 'blur' }],
     contactEmail: [

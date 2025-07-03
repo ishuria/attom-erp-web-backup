@@ -5,7 +5,9 @@
                 <el-icon size="20">
                     <component :is="item.icon" v-if="item && typeof item === 'object' && item.icon" />
                 </el-icon>
-                <div v-if="item && typeof item === 'object' && item.label">{{ item && item.label }}</div>
+                <div v-if="item && typeof item === 'object' && item.label">
+                    {{ item && item.label }}
+                </div>
             </div>
         </template>
     </el-segmented>

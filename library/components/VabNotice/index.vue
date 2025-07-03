@@ -11,7 +11,13 @@
                             <ul v-if="badge">
                                 <li v-for="(item, index) in notices" :key="index">
                                     <div v-if="item.icon" class="notice-list-left">
-                                        <vab-icon :icon="item.icon" :style="{ backgroundColor: item.bgColor, color: item.color }" />
+                                        <vab-icon
+                                            :icon="item.icon"
+                                            :style="{
+                                                backgroundColor: item.bgColor,
+                                                color: item.color,
+                                            }"
+                                        />
                                     </div>
                                     <el-avatar v-else :size="45" :src="item.image" />
                                     <div class="notice-list-right">
@@ -30,7 +36,13 @@
                             <ul v-if="badge">
                                 <li v-for="(item, index) in notices" :key="index">
                                     <div v-if="item.icon" class="notice-list-left">
-                                        <vab-icon :icon="item.icon" :style="{ backgroundColor: item.bgColor, color: item.color }" />
+                                        <vab-icon
+                                            :icon="item.icon"
+                                            :style="{
+                                                backgroundColor: item.bgColor,
+                                                color: item.color,
+                                            }"
+                                        />
                                     </div>
                                     <el-avatar v-else :size="45" :src="item.image" />
                                     <div class="notice-list-right">

@@ -31,10 +31,22 @@ const visible = ref<boolean>(false)
 
 // 随机颜色库（可自定义）
 const colors = [
-    { bgColor: 'var(--el-color-primary-light-9)', color: 'var(--el-color-primary)' },
-    { bgColor: 'var(--el-color-danger-light-9)', color: 'var(--el-color-danger)' },
-    { bgColor: 'var(--el-color-warning-light-9)', color: 'var(--el-color-warning)' },
-    { bgColor: 'var(--el-color-success-light-9)', color: 'var(--el-color-success)' },
+    {
+        bgColor: 'var(--el-color-primary-light-9)',
+        color: 'var(--el-color-primary)',
+    },
+    {
+        bgColor: 'var(--el-color-danger-light-9)',
+        color: 'var(--el-color-danger)',
+    },
+    {
+        bgColor: 'var(--el-color-warning-light-9)',
+        color: 'var(--el-color-warning)',
+    },
+    {
+        bgColor: 'var(--el-color-success-light-9)',
+        color: 'var(--el-color-success)',
+    },
     { bgColor: 'var(--el-color-info-light-9)', color: 'var(--el-color-info)' },
     { bgColor: '#F2ECFE', color: '#8545F7' },
     { bgColor: '#E7F8F6', color: '#18BBAA' },

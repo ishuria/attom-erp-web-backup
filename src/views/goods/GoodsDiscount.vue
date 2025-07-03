@@ -159,7 +159,9 @@ async function fetchList() {
     loading.value = false
 }
 
-watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
+watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, {
+    immediate: true,
+})
 
 function handleSizeChange(val: number) {
     queryForm.pageNo = 1

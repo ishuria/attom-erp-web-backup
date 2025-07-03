@@ -1,7 +1,9 @@
 /**
  * @description 导出cli配置，以下所有配置修改需要重启项目
  */
-export const cliConfig: { [key: string]: string | number | boolean | Array<string> } = {
+export const cliConfig: {
+    [key: string]: string | number | boolean | Array<string>
+} = {
     // hash模式时在不确定二级目录名称的情况下建议使用""或"./"来代表相对路径
     // history模式默认使用"/"或"/二级目录/"，只有hash时base可以为空，如果您配置了history模式那么此项不可为空！
     base: '',

@@ -175,7 +175,9 @@ async function fetchList() {
     loading.value = false
 }
 
-watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
+watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, {
+    immediate: true,
+})
 
 const setSelectRows = (value: string) => {
     selectRows.value = value

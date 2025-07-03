@@ -32,7 +32,9 @@
             <el-table-column align="center" label="库存" min-width="100" prop="stock" />
             <el-table-column align="center" label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <el-tag :type="row.status === '上架' ? 'success' : row.status === '下架' ? 'info' : 'warning'">{{ row.status }}</el-tag>
+                    <el-tag :type="row.status === '上架' ? 'success' : row.status === '下架' ? 'info' : 'warning'">
+                        {{ row.status }}
+                    </el-tag>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" />
@@ -76,7 +78,9 @@ async function fetchList() {
     }
 }
 
-watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, { immediate: true })
+watch([() => queryForm.pageNo, () => queryForm.pageSize], fetchList, {
+    immediate: true,
+})
 
 function handleSearch() {
     queryForm.pageNo = 1

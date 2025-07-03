@@ -143,7 +143,7 @@ const fetchData = async () => {
 }
 
 const resetQueryForm = () => {
-    (Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach(key => {
+    ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
         if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
     })
     queryForm.pageNo = 1

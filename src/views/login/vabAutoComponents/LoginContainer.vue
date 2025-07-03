@@ -1,7 +1,9 @@
 <template>
     <div class="login-container" :style="{ background: background, backgroundSize: '100%' }">
         <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
-            <el-checkbox v-model="show" @change="handleShow">{{ translate('必应壁纸') }}</el-checkbox>
+            <el-checkbox v-model="show" @change="handleShow">
+                {{ translate('必应壁纸') }}
+            </el-checkbox>
             <el-button :disabled="!show || backgroundList.length <= 1" size="small" style="margin: 0 10px 0 10px" @click="changeWallpaper">
                 更换壁纸
             </el-button>

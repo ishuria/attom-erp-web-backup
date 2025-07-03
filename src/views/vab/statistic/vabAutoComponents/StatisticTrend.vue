@@ -27,7 +27,9 @@
                     </el-icon>
                 </div>
                 <div class="stat-content">
-                    <div class="stat-value">{{ formatNumber(trendData.totalOrders) }}</div>
+                    <div class="stat-value">
+                        {{ formatNumber(trendData.totalOrders) }}
+                    </div>
                     <div class="stat-label">总订单数</div>
                     <div class="stat-trend up">
                         <el-icon :size="12">

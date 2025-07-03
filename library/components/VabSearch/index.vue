@@ -112,7 +112,9 @@
                             </div>
                             <div class="result-content">
                                 <div class="result-title" v-html="highlightText(result.title)"></div>
-                                <div v-if="result.path" class="result-path">{{ result.path }}</div>
+                                <div v-if="result.path" class="result-path">
+                                    {{ result.path }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -124,7 +126,9 @@
                         <search />
                     </el-icon>
                     <div class="no-results-text">{{ translate('未找到相关结果') }}</div>
-                    <div class="no-results-tips">{{ translate('尝试使用其他关键词或检查拼写') }}</div>
+                    <div class="no-results-tips">
+                        {{ translate('尝试使用其他关键词或检查拼写') }}
+                    </div>
                 </div>
 
                 <!-- 搜索中提示 -->
@@ -139,13 +143,19 @@
             <template #footer>
                 <div class="dialog-footer">
                     <div class="shortcut-tips">
-                        <span class="shortcut-item">{{ translate('Enter: 确认搜索') }}</span>
+                        <span class="shortcut-item">
+                            {{ translate('Enter: 确认搜索') }}
+                        </span>
                         <span class="shortcut-item">{{ translate('Esc: 关闭弹框') }}</span>
                         <span class="shortcut-item">{{ translate('↑↓: 选择项目') }}</span>
                     </div>
                     <div class="footer-buttons">
-                        <el-button @click="dialogVisible = false">{{ translate('取消') }}</el-button>
-                        <el-button :disabled="!searchKeyword" type="primary" @click="confirmSearch">{{ translate('搜索') }}</el-button>
+                        <el-button @click="dialogVisible = false">
+                            {{ translate('取消') }}
+                        </el-button>
+                        <el-button :disabled="!searchKeyword" type="primary" @click="confirmSearch">
+                            {{ translate('搜索') }}
+                        </el-button>
                     </div>
                 </div>
             </template>

@@ -53,7 +53,9 @@
                             <div class="solution-box">
                                 <div class="solution-box-item">
                                     <div class="solution-box-title">{{ item.title }}</div>
-                                    <div class="solution-box-description">{{ item.description }}</div>
+                                    <div class="solution-box-description">
+                                        {{ item.description }}
+                                    </div>
                                 </div>
                                 <vab-icon :icon="item.icon" is-custom-svg />
                             </div>

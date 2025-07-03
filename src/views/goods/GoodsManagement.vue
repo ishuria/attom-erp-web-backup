@@ -93,7 +93,9 @@
             </el-table-column>
             <el-table-column align="center" label="是否推荐" min-width="100" prop="isRecommend">
                 <template #default="{ row }">
-                    <el-icon v-if="row.isRecommend"><star-filled style="color: #f7ba2a" /></el-icon>
+                    <el-icon v-if="row.isRecommend">
+                        <star-filled style="color: #f7ba2a" />
+                    </el-icon>
                     <el-icon v-else><star /></el-icon>
                 </template>
             </el-table-column>

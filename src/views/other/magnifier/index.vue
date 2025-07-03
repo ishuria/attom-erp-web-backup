@@ -80,7 +80,9 @@
                                 <div class="switch-group">
                                     <div class="switch-label">
                                         <span class="label-text">放大镜类型</span>
-                                        <span class="label-desc">{{ type === 'circle' ? '圆形放大镜' : '方形放大镜' }}</span>
+                                        <span class="label-desc">
+                                            {{ type === 'circle' ? '圆形放大镜' : '方形放大镜' }}
+                                        </span>
                                     </div>
                                     <div class="switch-controls">
                                         <el-radio-group v-model="type" @change="changeType">
@@ -94,7 +96,9 @@
                                 <div class="switch-group">
                                     <div class="switch-label">
                                         <span class="label-text">放大方式</span>
-                                        <span class="label-desc">{{ showType ? '外部放大显示' : '内部放大显示' }}</span>
+                                        <span class="label-desc">
+                                            {{ showType ? '外部放大显示' : '内部放大显示' }}
+                                        </span>
                                     </div>
                                     <div class="switch-controls">
                                         <el-radio-group v-model="showType" @change="changeShowType">
@@ -108,7 +112,9 @@
                                 <div class="switch-group">
                                     <div class="switch-label">
                                         <span class="label-text">淘宝模式</span>
-                                        <span class="label-desc">{{ taobao ? '启用淘宝风格放大镜' : '标准放大镜模式' }}</span>
+                                        <span class="label-desc">
+                                            {{ taobao ? '启用淘宝风格放大镜' : '标准放大镜模式' }}
+                                        </span>
                                     </div>
                                     <div class="switch-controls">
                                         <el-switch v-model="taobao" @change="changeToTaobao" />
