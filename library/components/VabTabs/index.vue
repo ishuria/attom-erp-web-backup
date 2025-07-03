@@ -10,7 +10,7 @@
             >
                 <el-tab-pane v-for="item in visitedRoutes" :key="item.path" :closable="!isNoClosable(item as any)" :name="item.path">
                     <template #label>
-                        <span class="vab-tabs-title" @contextmenu.prevent="openMenu(item)">
+                        <span class="vab-tabs-title">
                             <template v-if="theme.showTabsIcon">
                                 <vab-icon
                                     v-if="item.meta && item.meta.icon"
@@ -26,6 +26,7 @@
                                 {{ translate((item.meta.title ?? '') as string) }}
                             </span>
                         </span>
+                        <span class="tab-context-catcher" @contextmenu.prevent="openMenu(item)"></span>
                     </template>
                 </el-tab-pane>
             </el-tabs>
@@ -49,6 +50,25 @@
                         <vab-icon icon="refresh-line" />
                         <span>
                             {{ translate('刷新') }}
+                        </span>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                        :disabled="tabActive === '/index' && isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)"
+                        @click="toggleTabFixedDropdown"
+                    >
+                        <vab-icon
+                            :icon="
+                                isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)
+                                    ? 'lock-unlock-line'
+                                    : 'lock-line'
+                            "
+                        />
+                        <span>
+                            {{
+                                isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)
+                                    ? translate('取消固定')
+                                    : translate('开启固定')
+                            }}
                         </span>
                     </el-dropdown-item>
                     <el-dropdown-item command="closeOthersTabs">
@@ -88,6 +108,16 @@
             <li class="el-dropdown-menu__item" @click="refresh">
                 <vab-icon icon="refresh-line" />
                 <span>{{ translate('刷新') }}</span>
+            </li>
+            <li
+                class="el-dropdown-menu__item"
+                :class="{ 'is-disabled': hoverRoute?.path === '/index' && hoverRoute?.meta?.noClosable }"
+                @click="toggleTabFixed"
+            >
+                <vab-icon :icon="hoverRoute?.meta?.noClosable ? 'lock-unlock-line' : 'lock-line'" />
+                <span>
+                    {{ hoverRoute?.meta?.noClosable ? translate('取消固定') : translate('开启固定') }}
+                </span>
             </li>
             <li class="el-dropdown-menu__item" :class="{ 'is-disabled': visitedRoutes.length === 1 }" @click="closeOthersTabs">
                 <vab-icon icon="close-line" />
@@ -180,6 +210,7 @@ const {
     delAllVisitedRoutes,
     handleCaughtRoutes,
     updateVisitedRoutes,
+    changeTabsMeta,
 } = tabsStore
 const tabActive = ref<string>('')
 const active = ref<boolean>(false)
@@ -190,7 +221,7 @@ const left = ref<any>(0)
 const tabsSettingRef = ref<any>(null)
 
 const isActive = (path: any) => path === handleActivePath(route, true)
-const isNoClosable = (tag: VisitedRoute) => tag.meta && tag.meta.noClosable
+const isNoClosable = (tag: any) => tag && tag.meta && tag.meta.noClosable
 
 const handleTabClick: any = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
@@ -326,6 +357,7 @@ const toLastTab = async () => {
 const { x, y } = useMouse()
 
 const openMenu = (item: any) => {
+    console.log('openMenu', item)
     left.value = x.value
     top.value = y.value
     hoverRoute.value = item
@@ -388,11 +420,26 @@ onBeforeMount(() => {
     window.addEventListener('beforeunload', handleCaughtRoutes)
 })
 
-onMounted(() => {
-    nextTick(() => {
-        handleTabDrag()
+const toggleTabFixed = () => {
+    if (!hoverRoute.value) return
+    // 首页不允许取消固定
+    if (hoverRoute.value.path === '/index' && hoverRoute.value.meta.noClosable) return
+    changeTabsMeta({
+        name: hoverRoute.value.name,
+        meta: { noClosable: !hoverRoute.value.meta.noClosable },
     })
-})
+    closeMenu()
+}
+
+const toggleTabFixedDropdown = () => {
+    const current = visitedRoutes.value.find((item: any) => item.path === tabActive.value)
+    if (!current || !current.meta) return
+    if (current.path === '/index' && current.meta.noClosable) return
+    changeTabsMeta({
+        name: current.name,
+        meta: { noClosable: !current.meta.noClosable },
+    })
+}
 </script>
 
 <style lang="scss">
@@ -746,5 +793,25 @@ onMounted(() => {
             }
         }
     }
+}
+
+.tab-context-catcher {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: transparent;
+}
+
+:deep(.el-tabs__item) {
+    position: relative;
+}
+
+:deep(.el-tabs__item .is-icon-close) {
+    position: relative;
+    z-index: 3;
 }
 </style>

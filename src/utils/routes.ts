@@ -1,5 +1,6 @@
 import { stringify } from 'qs'
 import { recordRoute } from '/@/config'
+import { useTabsStore } from '/@/store/modules/tabs'
 import { hasPermission } from '/@/utils/permission'
 import { isExternal } from '/@/utils/validate'
 
@@ -80,13 +81,19 @@ export const handleTabs = (tag: VabRoute) => {
     if (!parentIcon) parentIcon = 'menu-line'
     const path = handleActivePath(tag, true)
     if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
+        const tabsStore = useTabsStore && useTabsStore()
+        let existedMeta = null
+        if (tabsStore && tabsStore.visitedRoutes) {
+            const existed = tabsStore.visitedRoutes.find((r: any) => r.path === path)
+            if (existed) existedMeta = existed.meta
+        }
         return {
             path,
             query: tag.query,
             params: tag.params,
             name: tag.name,
             parentIcon,
-            meta: { ...tag.meta },
+            meta: existedMeta ? { ...tag.meta, ...existedMeta } : { ...tag.meta },
         }
     }
 }
