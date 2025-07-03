@@ -20,15 +20,17 @@ import type { UploadProps, UploadUserFile } from 'element-plus'
 const fileList = ref<UploadUserFile[]>([])
 
 const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => {
-    ElMessage.warning(`限制为3个文件，您选择了${files.length}个文件，加起来总共$${files.length + uploadFiles.length}个文件`)
+    $baseMessage(`限制为3个文件，您选择了${files.length}个文件，加起来总共${files.length + uploadFiles.length}个文件`, 'warning', 'hey')
 }
 
 const beforeRemove: UploadProps['beforeRemove'] = (uploadFile) => {
-    return ElMessageBox.confirm(`是否取消上传 ${uploadFile.name} ？`, {
-        draggable: true,
-    }).then(
-        () => true,
-        () => false
-    )
+    return new Promise((resolve) => {
+        $baseConfirm(
+            `是否取消上传 ${uploadFile.name} ？`,
+            '确认删除',
+            () => resolve(true),
+            () => resolve(false)
+        )
+    })
 }
 </script>
