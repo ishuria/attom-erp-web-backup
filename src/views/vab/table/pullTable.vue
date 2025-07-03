@@ -114,7 +114,9 @@
                 </el-table-column>
             </el-table>
             <div v-if="listLoading && !noMore" class="table-bottom-loading">
-                <el-icon class="loading-spin"><loading /></el-icon>
+                <el-icon class="loading-spin">
+                    <loading />
+                </el-icon>
                 加载中...
             </div>
             <div v-if="noMore" class="table-bottom-no-more">没有更多了</div>
@@ -316,14 +318,17 @@ onBeforeMount(() => {
     display: flex;
     flex-direction: column;
     height: 100%;
+
     .vab-query-form {
         flex-shrink: 0;
     }
+
     .table-scroll-wrapper {
         flex: 1 1 0%;
         min-height: 0;
         overflow: auto;
     }
+
     .table-loading {
         display: flex;
         gap: 8px;
@@ -334,6 +339,7 @@ onBeforeMount(() => {
         color: #409eff;
         text-align: center;
     }
+
     .table-bottom-loading {
         display: flex;
         gap: 8px;
@@ -345,10 +351,12 @@ onBeforeMount(() => {
         text-align: center;
         background: #fff;
     }
+
     .loading-spin {
         font-size: 20px;
         animation: spin 1s linear infinite;
     }
+
     .table-bottom-no-more {
         padding: 12px 0;
         font-size: 14px;
@@ -357,6 +365,7 @@ onBeforeMount(() => {
         background: #fff;
     }
 }
+
 @keyframes spin {
     100% {
         transform: rotate(360deg);

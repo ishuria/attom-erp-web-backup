@@ -92,9 +92,9 @@
     --el-color-info-lighter: #{$vab-color-info-lighter};
     --el-color-info-dark-2: #{$vab-color-info};
     /**
-    * @description: 全局字体大小
-    * @author sundan
-  */
+       * @description: 全局字体大小
+       * @author sundan
+    */
     --el-font-size-base: 14px;
     --el-font-size-small: calc(var(--el-font-size-base) - 1px);
     --el-font-size-extra-small: calc(var(--el-font-size-base) - 2px);

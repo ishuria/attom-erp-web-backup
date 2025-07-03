@@ -126,7 +126,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { nextTick, reactive, ref, watch } from 'vue'
@@ -219,6 +219,7 @@ function handleSizeChange(val: number) {
     queryForm.pageSize = val
     fetchList()
 }
+
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
     fetchList()

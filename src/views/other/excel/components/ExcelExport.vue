@@ -4,7 +4,7 @@
     </el-button>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import type { ButtonType } from 'element-plus'
 import FileSaver from 'file-saver'
 import * as XLSX from 'xlsx'

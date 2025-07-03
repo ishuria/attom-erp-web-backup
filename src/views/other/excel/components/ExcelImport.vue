@@ -8,7 +8,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 /* stylelint-disable-next-line CssSyntaxError */
 import type { UploadFile } from 'element-plus'
 import * as XLSX from 'xlsx'

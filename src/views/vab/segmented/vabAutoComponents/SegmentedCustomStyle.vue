@@ -21,7 +21,7 @@ const value3 = ref<string>('周一')
 const options = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .custom-style .el-segmented {
     --el-border-radius-base: 99px;
 }

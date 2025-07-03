@@ -147,6 +147,7 @@ interface VisitedRoute {
         isCustomSvg?: boolean
     }
     parentIcon?: string
+
     [key: string]: any
 }
 

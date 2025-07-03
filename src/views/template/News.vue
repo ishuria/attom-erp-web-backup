@@ -92,23 +92,28 @@ onBeforeMount(() => {
         position: relative;
         height: 320px;
         cursor: pointer;
+
         .image-group {
             height: 200px;
             overflow: hidden;
+
             .image {
                 width: 100%;
                 height: 200px;
                 transition: all ease-in-out 0.3s !important;
+
                 &:hover {
                     transform: scale(1.1);
                 }
             }
         }
+
         .full-box {
             position: absolute;
             bottom: var(--el-margin);
             color: var(--el-color-white);
         }
+
         .logo {
             display: flex;
             align-items: center;
@@ -116,14 +121,17 @@ onBeforeMount(() => {
             text-overflow: ellipsis;
             word-break: break-all;
             white-space: nowrap;
+
             .user {
                 margin-left: 5px;
             }
+
             [class*='ri-'] {
                 margin-right: 3px;
                 margin-left: 5px;
             }
         }
+
         .title {
             margin: 10px 15px;
             overflow: hidden;

@@ -134,12 +134,14 @@ const kpiList = [
     .mb-20 {
         margin-bottom: 20px;
     }
+
     .kpi-row {
         display: flex;
         flex-wrap: wrap;
         margin-right: -10px;
         margin-left: -10px;
     }
+
     .kpi-col {
         box-sizing: border-box;
         flex: 0 0 20%;
@@ -147,6 +149,7 @@ const kpiList = [
         padding-right: 10px;
         padding-left: 10px;
     }
+
     @media (max-width: 1200px) {
         .kpi-col {
             flex: 0 0 33.3333%;
@@ -228,6 +231,7 @@ const kpiList = [
         &.purple {
             color: white;
             background: #a259ec;
+
             .kpi-icon {
                 background: rgba(255, 255, 255, 0.15);
                 backdrop-filter: blur(10px);

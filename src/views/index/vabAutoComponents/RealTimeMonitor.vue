@@ -445,30 +445,37 @@ onUnmounted(() => {
                 top: 10%;
                 left: 10%;
             }
+
             &:nth-child(2) {
                 top: 20%;
                 left: 80%;
             }
+
             &:nth-child(3) {
                 top: 40%;
                 left: 20%;
             }
+
             &:nth-child(4) {
                 top: 60%;
                 left: 70%;
             }
+
             &:nth-child(5) {
                 top: 80%;
                 left: 30%;
             }
+
             &:nth-child(6) {
                 top: 30%;
                 left: 60%;
             }
+
             &:nth-child(7) {
                 top: 70%;
                 left: 40%;
             }
+
             &:nth-child(8) {
                 top: 50%;
                 left: 90%;

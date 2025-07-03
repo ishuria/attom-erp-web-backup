@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search, Refresh } from '@element-plus/icons-vue'
+import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, getList } from '/@/api/userManagement'
 

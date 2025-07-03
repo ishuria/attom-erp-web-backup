@@ -10,7 +10,9 @@
                         </el-icon>
                     </div>
                     <div class="prompt-close" @click="dismissAutoInstall">
-                        <el-icon size="16"><close /></el-icon>
+                        <el-icon size="16">
+                            <close />
+                        </el-icon>
                     </div>
                 </div>
 
@@ -56,7 +58,9 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-icon">
-                                <el-icon color="white" size="20"><monitor /></el-icon>
+                                <el-icon color="white" size="20">
+                                    <monitor />
+                                </el-icon>
                             </div>
                             <div class="info-text">
                                 <h4>跨平台支持</h4>
@@ -66,7 +70,9 @@
 
                         <div class="info-item">
                             <div class="info-icon">
-                                <el-icon color="white" size="20"><document /></el-icon>
+                                <el-icon color="white" size="20">
+                                    <document />
+                                </el-icon>
                             </div>
                             <div class="info-text">
                                 <h4>离线使用</h4>
@@ -76,7 +82,9 @@
 
                         <div class="info-item">
                             <div class="info-icon">
-                                <el-icon color="white" size="20"><setting /></el-icon>
+                                <el-icon color="white" size="20">
+                                    <setting />
+                                </el-icon>
                             </div>
                             <div class="info-text">
                                 <h4>自动更新</h4>
@@ -86,7 +94,9 @@
 
                         <div class="info-item">
                             <div class="info-icon">
-                                <el-icon color="white" size="20"><lock /></el-icon>
+                                <el-icon color="white" size="20">
+                                    <lock />
+                                </el-icon>
                             </div>
                             <div class="info-text">
                                 <h4>安全可靠</h4>
@@ -96,7 +106,9 @@
 
                         <div class="info-item">
                             <div class="info-icon">
-                                <el-icon color="white" size="20"><check /></el-icon>
+                                <el-icon color="white" size="20">
+                                    <check />
+                                </el-icon>
                             </div>
                             <div class="info-text">
                                 <h4>原生体验</h4>
@@ -120,7 +132,9 @@
                     <div class="manual-content">
                         <div class="manual-item">
                             <div class="manual-icon pc-icon">
-                                <el-icon color="white" size="24"><monitor /></el-icon>
+                                <el-icon color="white" size="24">
+                                    <monitor />
+                                </el-icon>
                             </div>
                             <div class="manual-text">
                                 <h4>PC端安装</h4>
@@ -138,7 +152,9 @@
 
                         <div class="manual-item">
                             <div class="manual-icon mobile-icon">
-                                <el-icon color="white" size="24"><iphone /></el-icon>
+                                <el-icon color="white" size="24">
+                                    <iphone />
+                                </el-icon>
                             </div>
                             <div class="manual-text">
                                 <h4>手机端安装</h4>

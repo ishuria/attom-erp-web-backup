@@ -39,7 +39,9 @@
 
                             <el-input v-model="searchKeyword" clearable placeholder="搜索课程" @input="handleSearch">
                                 <template #prefix>
-                                    <el-icon><search /></el-icon>
+                                    <el-icon>
+                                        <search />
+                                    </el-icon>
                                 </template>
                             </el-input>
                         </div>

@@ -243,6 +243,7 @@ export const useSettingsStore = defineStore('settings', {
         },
         updateScrollTop(scrollTop: number, routeName: any) {
             const originalArray = [...JSON.parse(localStorage.getItem('scrollTop') || '[]')]
+
             interface Item {
                 routeName: string
                 scrollTop: number
@@ -268,7 +269,9 @@ export const useSettingsStore = defineStore('settings', {
                 }
                 return newArr
             }
+
             const modifiedArray = updateArray(originalArray, routeName, scrollTop)
+
             function removeItemsWithZeroScrollTop(arr: Item[]): Item[] {
                 return arr.filter((item) => item.scrollTop !== 0)
             }

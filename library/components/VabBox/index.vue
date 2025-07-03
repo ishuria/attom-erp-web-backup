@@ -234,6 +234,7 @@ const handleCardClick = (card: any) => {
 .vab-box:hover {
     animation: boxShake 0.5s;
 }
+
 @keyframes boxShake {
     0%,
     100% {

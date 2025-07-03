@@ -830,6 +830,7 @@ html {
                 width: 20px;
                 height: 20px;
                 border: 0;
+
                 &-inner {
                     border-radius: var(--el-border-radius-small) !important;
                 }
@@ -1043,6 +1044,7 @@ html {
             .el-icon {
                 color: inherit;
             }
+
             svg,
             path {
                 fill: inherit;
@@ -1140,7 +1142,7 @@ html {
     }
 }
 
-/* 
+/*
   *@author: 孙丹
   *@date: 2025-06-24
   *@description: 开始尝试ios26液态玻璃效果
@@ -1170,6 +1172,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
 
         @include glass-mode;
     }
+
     .vab-tabs,
     .vab-nav,
     .vab-tabs-horizontal,
@@ -1179,9 +1182,11 @@ html:not(.dark) body.vab-theme-default.glass-mode {
         box-shadow: none !important;
         backdrop-filter: none !important;
     }
+
     .vab-nav {
         border-bottom: 1px solid transparent;
     }
+
     .vab-avatar-popper {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
@@ -1197,6 +1202,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
             backdrop-filter: none !important;
         }
     }
+
     .vab-tabs .contextmenu.el-dropdown-menu {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
@@ -1212,6 +1218,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
             backdrop-filter: none !important;
         }
     }
+
     .vab-tabs-more-dropdown {
         background: var(--vab-glass-bg) !important;
         border: 1px solid var(--el-border-color);
@@ -1228,6 +1235,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
             backdrop-filter: none !important;
         }
     }
+
     .vab-avatar-popper > .el-popper__arrow,
     .vab-tabs-more-dropdown > .el-popper__arrow {
         display: none !important;
@@ -1251,6 +1259,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
             backdrop-filter: none !important;
         }
     }
+
     // vab-color-picker 下拉液态玻璃效果
     .vab-color-picker-popper {
         background: var(--vab-glass-bg) !important;

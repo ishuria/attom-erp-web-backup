@@ -208,31 +208,38 @@ onDeactivated(() => {
 
     .notice-timeline {
         padding: 0;
+
         :deep(.el-timeline-item__tail) {
             border-left: 2px solid #101f58 !important;
         }
+
         :deep(.el-timeline-item__node) {
             background: #01ffff !important;
             border: 2px solid #01ffff !important;
             box-shadow: 0 0 8px #01ffff44;
         }
+
         :deep(.el-timeline-item__wrapper) {
             color: #64c5d9;
         }
+
         :deep(.el-timeline-item__timestamp) {
             font-size: 13px;
             color: #fff;
             opacity: 0.6;
         }
+
         :deep(.el-timeline-item__content) {
             padding: 2px 0 2px 0;
             border-radius: 3px;
             transition: background 0.2s;
         }
+
         :deep(.el-timeline-item__content:hover) {
             background: rgba(1, 255, 255, 0.06);
         }
     }
+
     .notice-timeline-title {
         font-weight: 500;
         color: #01ffff;

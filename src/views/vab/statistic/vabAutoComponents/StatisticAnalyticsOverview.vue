@@ -156,47 +156,57 @@ const repurchaseColors = [
         align-items: center;
         justify-content: space-between;
         margin-bottom: 8px;
+
         .card-title {
             font-size: 16px;
             font-weight: 500;
             color: var(--el-text-color-primary);
         }
     }
+
     .card-value {
         margin-bottom: 8px;
         font-size: 24px;
         font-weight: 600;
         color: var(--el-text-color-primary);
     }
+
     .card-trend {
         display: flex;
         align-items: center;
         margin-bottom: 8px;
         font-size: 12px;
         font-weight: 500;
+
         &.up {
             color: var(--el-color-success);
         }
+
         &.down {
             color: var(--el-color-danger);
         }
+
         .el-icon {
             margin-right: 4px;
         }
     }
+
     .card-chart {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         min-width: 80px;
+
         .el-progress {
             margin: 0;
         }
+
         .sparkline {
             display: flex;
             align-items: end;
             width: 60px;
             height: 24px;
+
             .sparkline-point {
                 flex: 1;
                 min-width: 2px;

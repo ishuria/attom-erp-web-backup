@@ -85,6 +85,7 @@ const getChannelColor = (performance: number) => {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
+
         .channel-item {
             flex: 1 1 220px;
             min-width: 220px;
@@ -92,28 +93,35 @@ const getChannelColor = (performance: number) => {
             background: var(--el-bg-color-overlay);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
             .channel-info {
                 margin-bottom: 12px;
+
                 .channel-name {
                     font-size: 16px;
                     font-weight: 600;
                     color: var(--el-text-color-primary);
                 }
+
                 .channel-desc {
                     font-size: 12px;
                     color: var(--el-text-color-regular);
                 }
             }
+
             .channel-stats {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 12px;
+
                 .stat-item {
                     text-align: center;
+
                     .stat-label {
                         font-size: 12px;
                         color: var(--el-text-color-regular);
                     }
+
                     .stat-value {
                         font-size: 14px;
                         font-weight: 600;
@@ -121,10 +129,12 @@ const getChannelColor = (performance: number) => {
                     }
                 }
             }
+
             .channel-trend {
                 display: flex;
                 gap: 8px;
                 align-items: center;
+
                 .trend-text {
                     font-size: 12px;
                     color: var(--el-text-color-info);

@@ -188,23 +188,28 @@ onUnmounted(() => {
     width: 100%;
     padding: 10px;
 }
+
 .drawer-footer {
     display: flex;
     justify-content: flex-end;
     margin-top: -1px;
 }
+
 .goods-upload-container {
     width: 100%;
 }
+
 .goods-upload-container .el-upload {
     width: 100%;
 }
+
 .goods-preview-list {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 10px;
 }
+
 .goods-preview-img {
     max-width: 120px;
     max-height: 80px;

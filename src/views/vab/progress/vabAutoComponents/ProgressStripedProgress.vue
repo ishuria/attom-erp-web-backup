@@ -31,7 +31,7 @@ const decrease = () => {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .demo-progress .el-progress--line {
     width: 350px;
     margin-bottom: 15px;

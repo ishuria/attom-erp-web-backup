@@ -9,6 +9,7 @@
 interface NodeData {
     id: string
     type: string
+
     [key: string]: any
 }
 

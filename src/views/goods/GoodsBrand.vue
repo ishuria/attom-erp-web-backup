@@ -85,7 +85,9 @@
                         :on-change="handleLogoChange"
                         :show-file-list="false"
                     >
-                        <el-icon class="el-icon--upload"><plus /></el-icon>
+                        <el-icon class="el-icon--upload">
+                            <plus />
+                        </el-icon>
                         <div class="el-upload__text">
                             将Logo拖拽至此处或
                             <em>点击上传</em>
@@ -117,7 +119,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
@@ -274,6 +276,7 @@ function handleSizeChange(val: number) {
     queryForm.pageSize = val
     fetchList()
 }
+
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
     fetchList()

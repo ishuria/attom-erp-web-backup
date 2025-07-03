@@ -219,16 +219,16 @@ const printImage = async () => {
             pageSize: printSettings.pageSize,
             orientation: printSettings.orientation,
             customStyle: `
-                img { 
-                    width: 100%; 
-                    max-width: 100%; 
-                    height: auto; 
-                    display: block; 
-                    margin: 0 auto; 
+                img {
+                    width: 100%;
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 0 auto;
                 }
-                .print-container { 
-                    text-align: center; 
-                    padding: 20px; 
+                .print-container {
+                    text-align: center;
+                    padding: 20px;
                 }
             `,
             beforePrint: () => {

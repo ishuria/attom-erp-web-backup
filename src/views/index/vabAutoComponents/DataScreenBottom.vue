@@ -148,12 +148,15 @@ onBeforeUnmount(() => {
     > .el-col:nth-child(1) .data-screen-bottom-icon {
         animation-delay: 0s;
     }
+
     > .el-col:nth-child(2) .data-screen-bottom-icon {
         animation-delay: 0.1s;
     }
+
     > .el-col:nth-child(3) .data-screen-bottom-icon {
         animation-delay: 0.2s;
     }
+
     > .el-col:nth-child(4) .data-screen-bottom-icon {
         animation-delay: 0.3s;
     }
@@ -162,12 +165,15 @@ onBeforeUnmount(() => {
     > .el-col:nth-child(1) .data-screen-bottom-icon :deep(.el-image__inner) {
         animation-delay: 0.1s;
     }
+
     > .el-col:nth-child(2) .data-screen-bottom-icon :deep(.el-image__inner) {
         animation-delay: 0.2s;
     }
+
     > .el-col:nth-child(3) .data-screen-bottom-icon :deep(.el-image__inner) {
         animation-delay: 0.3s;
     }
+
     > .el-col:nth-child(4) .data-screen-bottom-icon :deep(.el-image__inner) {
         animation-delay: 0.4s;
     }

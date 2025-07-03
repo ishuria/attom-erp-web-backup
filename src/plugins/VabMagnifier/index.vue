@@ -34,7 +34,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 defineOptions({
     name: 'VabMagnifier',
 })
@@ -63,8 +63,11 @@ interface Props {
 
 interface Emits {
     (e: 'mousemove', event: any): void
+
     (e: 'mouseleave', event: any): void
+
     (e: 'mouseenter', event: any): void
+
     (e: 'created', img: any, imgInfo: any): void
 }
 

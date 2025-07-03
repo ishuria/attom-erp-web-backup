@@ -163,7 +163,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Clock, Close, Loading, Search } from '@element-plus/icons-vue'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
@@ -600,10 +600,12 @@ onUnmounted(() => {
         border-radius: 0;
         box-shadow: none;
         transition: none;
+
         .vab-icon {
             font-size: 22px;
             color: var(--el-color-primary);
         }
+
         &:hover {
             box-shadow: none;
             transform: none;

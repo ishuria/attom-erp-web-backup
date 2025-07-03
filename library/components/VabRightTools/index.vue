@@ -84,6 +84,7 @@ watch(
     :deep(.ri-t-shirt-line):hover {
         animation: tshirtShake 0.5s;
     }
+
     @keyframes tshirtShake {
         0%,
         100% {
@@ -107,6 +108,7 @@ watch(
     :deep(.vab-color-picker):hover .el-color-picker__trigger {
         animation: paletteShake 0.5s;
     }
+
     @keyframes paletteShake {
         0%,
         100% {
@@ -121,6 +123,7 @@ watch(
     :deep(.ri-font-size-2):hover {
         animation: fontSizePulse 0.5s;
     }
+
     @keyframes fontSizePulse {
         0%,
         100% {
@@ -135,6 +138,7 @@ watch(
     :deep(.vab-lock):hover i {
         animation: lockShake 0.5s;
     }
+
     @keyframes lockShake {
         0%,
         100% {
@@ -158,6 +162,7 @@ watch(
     :deep(.ri-notification-2-line):hover {
         animation: bellSwing 0.5s;
     }
+
     @keyframes bellSwing {
         0%,
         100% {
@@ -181,6 +186,7 @@ watch(
     :deep(.vab-language):hover i {
         animation: langScale 0.4s;
     }
+
     @keyframes langScale {
         0%,
         100% {
@@ -195,6 +201,7 @@ watch(
     :deep(.vab-fullscreen):hover {
         animation: zoomInOut 0.5s;
     }
+
     @keyframes zoomInOut {
         0%,
         100% {
@@ -209,6 +216,7 @@ watch(
     :deep(.ri-refresh-line):hover {
         animation: refreshSpin 0.7s linear;
     }
+
     @keyframes refreshSpin {
         0% {
             transform: rotate(0);

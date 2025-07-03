@@ -120,7 +120,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsDiscountDelete, doGoodsDiscountEdit, getGoodsDiscountList } from '/@/api/goodsDiscount'
@@ -168,10 +168,12 @@ function handleSizeChange(val: number) {
     queryForm.pageSize = val
     fetchList()
 }
+
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
     fetchList()
 }
+
 function handleSearch() {
     queryForm.pageNo = 1
     fetchList()

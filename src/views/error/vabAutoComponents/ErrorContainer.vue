@@ -82,6 +82,7 @@ defineProps({
                     transform 0.3s cubic-bezier(0.23, 1.5, 0.32, 1),
                     filter 0.3s;
             }
+
             &:hover .error-svg {
                 filter: drop-shadow(0 0 16px var(--el-color-primary));
                 transform: scale(1.08) rotate(4deg);

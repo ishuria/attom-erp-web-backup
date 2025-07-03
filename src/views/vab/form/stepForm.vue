@@ -63,11 +63,15 @@
                         <!-- 步骤提示 -->
                         <div class="step-tips">
                             <div class="tip-item">
-                                <el-icon><info-filled /></el-icon>
+                                <el-icon>
+                                    <info-filled />
+                                </el-icon>
                                 <span>每个步骤都需要完成才能继续</span>
                             </div>
                             <div class="tip-item">
-                                <el-icon><clock /></el-icon>
+                                <el-icon>
+                                    <clock />
+                                </el-icon>
                                 <span>预计完成时间：3-5分钟</span>
                             </div>
                         </div>

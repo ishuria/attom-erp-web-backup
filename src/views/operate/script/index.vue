@@ -41,7 +41,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { nextTick, onMounted, ref, watch } from 'vue'
 
 const content = ref<string>('')

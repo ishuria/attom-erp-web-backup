@@ -148,7 +148,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsCouponDelete, doGoodsCouponEdit, doGoodsCouponSend, getGoodsCouponList, getGoodsCouponRecordList } from '/@/api/goodsCoupon'
@@ -197,10 +197,12 @@ function handleSizeChange(val: number) {
     queryForm.pageSize = val
     fetchList()
 }
+
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
     fetchList()
 }
+
 function handleSearch() {
     queryForm.pageNo = 1
     fetchList()
@@ -327,6 +329,7 @@ function handleRecordSizeChange(val: number) {
     recordQuery.pageSize = val
     fetchRecordList()
 }
+
 function handleRecordCurrentChange(val: number) {
     recordQuery.pageNo = val
     fetchRecordList()

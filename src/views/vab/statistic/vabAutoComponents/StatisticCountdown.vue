@@ -36,7 +36,7 @@ function reset() {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .el-col {
     text-align: center;
 }

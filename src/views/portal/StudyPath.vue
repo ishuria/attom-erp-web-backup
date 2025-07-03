@@ -117,8 +117,12 @@
                             :title="step.title"
                         >
                             <template #icon>
-                                <el-icon v-if="step.completed"><check /></el-icon>
-                                <el-icon v-else><clock /></el-icon>
+                                <el-icon v-if="step.completed">
+                                    <check />
+                                </el-icon>
+                                <el-icon v-else>
+                                    <clock />
+                                </el-icon>
                             </template>
                         </el-step>
                     </el-steps>

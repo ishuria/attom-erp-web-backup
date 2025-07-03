@@ -7,7 +7,9 @@
                 <el-dropdown>
                     <el-button type="primary">
                         批量操作
-                        <el-icon class="el-icon--right"><arrow-down /></el-icon>
+                        <el-icon class="el-icon--right">
+                            <arrow-down />
+                        </el-icon>
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
@@ -96,7 +98,9 @@
                     <el-icon v-if="row.isRecommend">
                         <star-filled style="color: #f7ba2a" />
                     </el-icon>
-                    <el-icon v-else><star /></el-icon>
+                    <el-icon v-else>
+                        <star />
+                    </el-icon>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="时间" min-width="160" prop="datetime" />

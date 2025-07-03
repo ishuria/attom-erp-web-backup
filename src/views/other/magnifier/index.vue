@@ -53,10 +53,14 @@
                                     <span class="control-label">放大倍数</span>
                                     <div class="control-buttons">
                                         <el-button :disabled="scale >= 5" size="small" type="primary" @click="addScale">
-                                            <el-icon><plus /></el-icon>
+                                            <el-icon>
+                                                <plus />
+                                            </el-icon>
                                         </el-button>
                                         <el-button :disabled="scale <= 0.5" size="small" type="warning" @click="subScale">
-                                            <el-icon><minus /></el-icon>
+                                            <el-icon>
+                                                <minus />
+                                            </el-icon>
                                         </el-button>
                                     </div>
                                 </div>
@@ -65,10 +69,14 @@
                                     <span class="control-label">放大镜宽度</span>
                                     <div class="control-buttons">
                                         <el-button :disabled="width >= 300" size="small" type="primary" @click="addSelectorWidth">
-                                            <el-icon><plus /></el-icon>
+                                            <el-icon>
+                                                <plus />
+                                            </el-icon>
                                         </el-button>
                                         <el-button :disabled="width <= 50" size="small" type="warning" @click="subSelectorWidth">
-                                            <el-icon><minus /></el-icon>
+                                            <el-icon>
+                                                <minus />
+                                            </el-icon>
                                         </el-button>
                                     </div>
                                 </div>

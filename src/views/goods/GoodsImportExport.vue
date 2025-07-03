@@ -50,7 +50,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Refresh, Search } from '@element-plus/icons-vue'
 import { reactive, ref, watch } from 'vue'
 import { exportGoods, getGoodsList, importGoods } from '/@/api/goodsImportExport'
@@ -86,11 +86,13 @@ function handleSearch() {
     queryForm.pageNo = 1
     fetchList()
 }
+
 function handleSizeChange(val: number) {
     queryForm.pageNo = 1
     queryForm.pageSize = val
     fetchList()
 }
+
 function handleCurrentChange(val: number) {
     queryForm.pageNo = val
     fetchList()
@@ -144,11 +146,13 @@ const resetQueryForm = () => {
     background: #fff;
     border-radius: 8px;
 }
+
 .import-export-btns {
     display: flex;
     gap: 12px;
     align-items: center;
 }
+
 .import-export-btns .el-upload {
     vertical-align: top;
 }

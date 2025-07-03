@@ -40,7 +40,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ElCard } from 'element-plus'
 </script>
 
@@ -54,6 +54,7 @@ import { ElCard } from 'element-plus'
 .disclaimer-title {
     color: #a66a00;
 }
+
 .disclaimer-list {
     padding: 18px 28px 0 28px;
     margin: 0;
@@ -63,6 +64,7 @@ import { ElCard } from 'element-plus'
     list-style: decimal inside;
     background: none;
 }
+
 .disclaimer-list li {
     padding-left: 0;
     margin-bottom: 8px;
@@ -70,6 +72,7 @@ import { ElCard } from 'element-plus'
     border: none;
     border-radius: 0;
 }
+
 .disclaimer-footer {
     padding: 18px 28px 18px 28px;
     font-size: 15px;

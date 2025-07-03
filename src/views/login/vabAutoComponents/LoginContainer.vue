@@ -189,11 +189,13 @@ const changeWallpaper = () => {
                 margin: 0;
                 border-radius: 0;
             }
+
             &.align-center {
                 height: auto;
                 margin: 0 auto;
                 border-radius: 15px;
             }
+
             &.align-right {
                 margin-right: 0;
                 margin-left: auto;

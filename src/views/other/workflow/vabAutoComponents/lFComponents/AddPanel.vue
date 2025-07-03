@@ -23,6 +23,7 @@ interface NodeData {
     id: string
     x: number
     y: number
+
     [key: string]: any
 }
 

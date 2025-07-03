@@ -82,7 +82,9 @@
             <el-table-column align="center" label="图片" width="80">
                 <template #default="{ row }">
                     <el-image v-if="row.image" class="table-image" fit="cover" :preview-src-list="[row.image]" :src="row.image" />
-                    <el-icon v-else><picture-filled /></el-icon>
+                    <el-icon v-else>
+                        <picture-filled />
+                    </el-icon>
                 </template>
             </el-table-column>
             <el-table-column align="center" label="规格" min-width="200">
@@ -165,7 +167,9 @@
                                             @error="(event) => (form.image = '')"
                                         />
                                         <div v-else class="sku-upload-placeholder">
-                                            <el-icon class="sku-upload-icon"><plus /></el-icon>
+                                            <el-icon class="sku-upload-icon">
+                                                <plus />
+                                            </el-icon>
                                             <div class="upload-text">点击上传</div>
                                         </div>
                                     </el-upload>

@@ -29,6 +29,7 @@ interface FormData {
 interface NodeData {
     id: string
     properties?: FormData
+
     [key: string]: any
 }
 

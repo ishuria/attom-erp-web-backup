@@ -92,6 +92,7 @@ watch(
             margin-top: calc(0px - var(--el-nav-height) + var(--el-margin) / 2) !important;
         }
     }
+
     .comprehensive-tabs {
         width: calc(100vw - var(--el-left-menu-width) - 635px) !important;
     }
@@ -135,6 +136,7 @@ watch(
             .el-tabs__item {
                 padding: 0 15px;
             }
+
             .el-tabs__nav-next,
             .el-tabs__nav-prev {
                 display: flex;

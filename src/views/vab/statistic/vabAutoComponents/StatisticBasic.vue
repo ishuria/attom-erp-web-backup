@@ -35,7 +35,7 @@
 import { ChatLineRound, Male } from '@element-plus/icons-vue'
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .el-col {
     text-align: center;
 }
