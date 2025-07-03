@@ -418,6 +418,7 @@ export interface IUpdateShipmentLeg {
   estimateRate: string
   actualRate: string
   cost: string
+  settlementObject?: number
 }
 
 export interface IUpdateBgShipmentLeg {

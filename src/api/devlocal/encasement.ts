@@ -690,3 +690,14 @@ export const updateEncasementRemark = (params: { id: number, remarks: string }) 
     params
   })
 }
+
+/**
+ * 查询结算对象
+ * @returns 
+ */
+export const getSettlementObjectList = (): Promise<{ data: { id: number, label: string }[] }> => {
+  return request({
+    url: `${BASE_API}/settlement/object/select_option`,
+    method: 'get',
+  })
+}

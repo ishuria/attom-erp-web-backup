@@ -513,6 +513,7 @@ export interface IUpdateCostFreightForwarderReq {
    * 清关合并 0不合并 1合并
    */
   qgStatus?: number;
+  settlementObject?: number
 }
 
 export interface IAddChannelFreightForwarderReq {
@@ -700,6 +701,7 @@ export interface IGetForwarderCostList {
    * 货代类型id
    */
   typeId: number;
+  settlementObject: number
 }
 
 export interface IGetForwarderListReq {

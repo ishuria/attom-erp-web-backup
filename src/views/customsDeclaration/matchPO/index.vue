@@ -202,7 +202,14 @@
         <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"/>
         <el-table-column label="结算对象" min-width="120">
           <template #default="{ row }">
-            <el-select />
+            <el-select v-model="row.settlementObject" @change="handleUpdateSettlementObject(row)" >
+              <el-option 
+                v-for="item in settlementObjectList"
+                :label="item.label"
+                :value="item.id"
+                :key="item.id"
+              />
+            </el-select>
           </template>
         </el-table-column>
         <el-table-column label="数量" min-width="70" prop="count">
@@ -412,7 +419,7 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
-import { getChannelList } from '/@/api/devlocal/encasement'
+import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -850,6 +857,12 @@ const showFirstLegFreight = async (row: any) => {
   const { data } = await getShipmentLegCurrencyList()
   currencyList.value = data
   await fetchCostData(row.id)
+  fetchSettlementObjectData()
+}
+const settlementObjectList = ref<{ id: number, label: string }[]>([])
+const fetchSettlementObjectData = async () => {
+  const { data } = await getSettlementObjectList()
+  settlementObjectList.value = data
 }
 // 关闭头程运费
 const closeFirstLegFreight = () => {
@@ -932,6 +945,22 @@ const clickCancel = async (event: Event, value: any) => {
     } catch {
       Object.assign(value, copyRow)
     }
+  }
+}
+const handleUpdateSettlementObject = async (row: any) => {
+  try {
+    await updateShipmentLeg({
+      id: row.id,
+      count: row.count,
+      unitPrice: row.unitPrice,
+      estimateRate: row.estimateExchangeRate,
+      actualRate: row.actualExchangeRate,
+      cost: row.actualCost,
+      settlementObject: row.settlementObject
+    })
+ 
+  } catch {
+    $baseMessage('更新失败！', 'error')
   }
 }
 // 头程运费：合计的方法
@@ -1038,6 +1067,7 @@ const tableRowClassName = ({
   if (row.lockStatus === 0 && row.status === 1) {
     return 'warning-row'
   }
+  return ''
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   switch (data.columnIndex) {

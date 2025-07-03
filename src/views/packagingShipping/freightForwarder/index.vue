@@ -99,7 +99,14 @@
         </el-table-column>
         <el-table-column label="结算对象" min-width="130">
           <template #default="{ row }">
-            <el-select />
+            <el-select v-model="row.settlementObject" @change="modifyFeeNameSetting(row)">
+              <el-option 
+                v-for="item in settlementObjectList"
+                :label="item.label"
+                :key="item.id"
+                :value="item.id"
+              />
+            </el-select>
           </template>
         </el-table-column>
         <el-table-column label="货代账单费用名" min-width="180" prop="billCostName">
@@ -485,7 +492,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
-import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getChannelList, getChannelSiteList, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateChannelSiteList, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
+import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getChannelList, getChannelSiteList, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getSettlementObjectList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateChannelSiteList, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
 import type { IAddForwarder, IGetChannelSiteList, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -577,6 +584,12 @@ const showFeeNameSetting = async () => {
   selectId.value = selectList.value[0].id
   fetchFeeNameSetting()
   fetchSelectList()
+  fetchSettlementObjectData()
+}
+const settlementObjectList = ref<{ id: number, label: string }[]>([])
+const fetchSettlementObjectData = async () => {
+  const { data } = await getSettlementObjectList()
+  settlementObjectList.value = data
 }
 const fetchFeeNameSetting = async () => {
   const { data: res } = await getForwarderCostList({
@@ -809,7 +822,8 @@ const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
       billCostName: row.billCostName,
       bgStatus: row.bgStatus,
       qgStatus: row.qgStatus,
-      costShowStatus: row.costShowStatus
+      costShowStatus: row.costShowStatus,
+      settlementObject: row.settlementObject
     })
   } catch (error) {
     console.error(error)
