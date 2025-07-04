@@ -240,6 +240,9 @@
           <el-form-item label="当前价格(m3)" prop="currentPriceVolume">
             <el-input v-model="addNewChannelForm.currentPriceVolume" clearable />
           </el-form-item>
+          <el-form-item label="入仓费价格(m3)" prop="warehouseFeePrice">
+            <el-input v-model="addNewChannelForm.warehouseFeePrice" clearable />
+          </el-form-item>
           <el-form-item label="体积系数" prop="volumeFactor">
             <el-input v-model="addNewChannelForm.volumeFactor" clearable />
           </el-form-item>
@@ -362,6 +365,9 @@
           </el-form-item>
           <el-form-item label="当前价格(m3)" prop="currentPriceVolume">
             <el-input v-model="updateForm.currentPriceVolume" clearable />
+          </el-form-item>
+          <el-form-item label="入仓费价格(m3)" prop="warehouseFeePrice">
+            <el-input v-model="updateForm.warehouseFeePrice" clearable />
           </el-form-item>
           <el-form-item label="体积系数" prop="volumeFactor">
             <el-input v-model="updateForm.volumeFactor" clearable />
@@ -877,7 +883,7 @@ const changeInputForwarderList = async (row: any, column: any, cell: HTMLTableCe
 const feeNameSettingCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   if (data.columnIndex === 0 && data.row.status === 0) {
     return {
-      color: '#bbb',
+      color: '#999',
       cursor: 'not-allowed',
       textAlign: 'center'
     }
