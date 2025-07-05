@@ -190,6 +190,8 @@
         "数据概况": "Data Profiling",
         "数字自增长": "Count",
         "刷新": "Refresh",
+        "刷新当前": "Refresh Current",
+        "刷新全部": "Refresh All",
         "水印": "Watermark",
         "搜索": "Search",
         "随机换肤": "Random",

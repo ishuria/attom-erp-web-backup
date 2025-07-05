@@ -1,6 +1,8 @@
 <template>
     <el-dropdown class="vab-language" popper-class="vab-language-popper" @command="handleCommand">
-        <vab-icon icon="translate-2" />
+        <span class="language-trigger">
+            <vab-icon icon="translate-2" />
+        </span>
         <template #dropdown>
             <el-dropdown-menu>
                 <el-dropdown-item command="zh">中文简体</el-dropdown-item>
@@ -31,3 +33,14 @@ const handleCommand = (language: string) => {
     if (route.path === '/login' || route.path === '/register') location.reload()
 }
 </script>
+
+<style lang="scss" scoped>
+.vab-language {
+    .language-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+}
+</style>
