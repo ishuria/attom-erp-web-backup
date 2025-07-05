@@ -28,10 +28,6 @@
             </div>
             <el-divider />
             <ul class="el-dropdown-menu">
-                <li class="el-dropdown-menu__item" @click="handleCommand('friendlyTip')">
-                    <vab-icon icon="information-line" />
-                    <span>温馨提示</span>
-                </li>
                 <li class="el-dropdown-menu__item" @click="handleCommand('changeLog')">
                     <vab-icon icon="file-word-line" />
                     <span>{{ translate('更新日志') }}</span>
@@ -92,7 +88,6 @@ const handleCommand = async (command: any) => {
     const routeMap: Record<string, string> = {
         personalCenter: '/setting/personalCenter',
         changeLog: '/changeLog',
-        friendlyTip: '/friendlyTip',
     }
     if (routeMap[command]) {
         await router.push(routeMap[command])

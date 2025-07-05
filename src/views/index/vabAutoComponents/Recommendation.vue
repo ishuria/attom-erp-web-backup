@@ -72,9 +72,9 @@ const iconList = ref<iconListType[]>([
     },
     {
         icon: 'emotion-unhappy-line',
-        title: '违规查询',
-        tips: '违规查询快捷入口',
-        link: '',
+        title: '温馨提示',
+        tips: '温馨提示快捷入口',
+        link: '/friendlyTip',
     },
     {
         icon: 'apps-2-line',
