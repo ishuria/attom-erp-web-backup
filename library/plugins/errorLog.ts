@@ -1,5 +1,5 @@
 import type { App } from 'vue'
-import { errorLog } from '/@/config'
+import { errorFilter, errorLog } from '/@/config'
 import pinia from '/@/store'
 import { useErrorLogStore } from '/@/store/modules/errorLog'
 import { isArray } from '/@/utils/validate'
@@ -10,6 +10,9 @@ export const needErrorLog = () => {
 }
 
 export const addErrorLog = (err: Error | any) => {
+    const errorFilterArray = isArray(errorFilter) ? [...errorFilter] : [errorFilter]
+    const shouldFilter = errorFilterArray.some((filter) => err.message && err.message.includes(filter))
+    if (shouldFilter) return
     // 区分请求错误和其他错误
     if (!err.isRequest) {
         console.error('Vue Shop Vite 错误拦截:', {

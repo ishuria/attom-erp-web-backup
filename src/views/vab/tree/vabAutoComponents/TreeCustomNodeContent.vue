@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import type Node from 'element-plus/es/components/tree/src/model/node'
+import type { RenderContentFunction } from 'element-plus'
 
 interface Tree {
     id: number
@@ -44,50 +44,43 @@ const append = (data: Tree) => {
     dataSource.value = [...dataSource.value]
 }
 
-const remove = (node: Node, data: Tree) => {
+const remove = (node: any, data: Tree) => {
     const parent = node.parent
-    const children: Tree[] = parent.data.children || parent.data
+    if (!parent) return
+
+    const children: Tree[] = (parent.data as Tree).children || [parent.data as Tree]
     const index = children.findIndex((d) => d.id === data.id)
     children.splice(index, 1)
     dataSource.value = [...dataSource.value]
 }
 
-const renderContent = (
-    h: any,
-    {
-        node,
-        data,
-    }: {
-        node: Node
-        data: Tree
-        store: Node['store']
-    }
-) => {
+const renderContent: RenderContentFunction = (h, context) => {
+    const { node, data } = context
     return h(
         'span',
         {
             class: 'custom-tree-node',
         },
-        h('span', null, node.label),
-        h(
-            'span',
-            null,
-            h(
-                'a',
-                {
-                    onClick: () => append(data),
-                },
-                '添加 '
-            ),
-            h(
-                'a',
-                {
-                    style: 'margin-left: 8px',
-                    onClick: () => remove(node, data),
-                },
-                '删除'
-            )
-        )
+        [
+            h('span', null, node.label),
+            h('span', null, [
+                h(
+                    'a',
+                    {
+                        onClick: () => append(data as Tree),
+                    },
+                    '添加 '
+                ),
+                h(
+                    'a',
+                    {
+                        style: 'margin-left: 8px',
+                        onClick: () => remove(node, data as Tree),
+                    },
+                    '删除'
+                ),
+            ]),
+        ]
     )
 }
 

@@ -32,6 +32,7 @@ export const {
     debounce,
     defaultOpeneds,
     errorLog,
+    errorFilter,
     exclude,
     fixedHeader,
     foldSidebar,
