@@ -55,8 +55,9 @@
                     </el-dropdown-item>
                     <el-dropdown-item
                         :disabled="
-                            tabActive === '/index' &&
-                            isNoClosable(visitedRoutes.find((item: VisitedRoute) => item.path === tabActive) as VisitedRoute)
+                            (tabActive === '/index' &&
+                                isNoClosable(visitedRoutes.find((item: VisitedRoute) => item.path === tabActive) as VisitedRoute)) ||
+                            false
                         "
                         @click="toggleTabFixedDropdown"
                     >
@@ -169,6 +170,16 @@ interface VisitedRoute {
     parentIcon?: string
 
     [key: string]: any
+}
+
+// 定义VabRoute类型
+type VabRoute = RouteLocationNormalizedLoaded & {
+    meta?: {
+        title?: string
+        noClosable?: boolean
+        icon?: string
+        isCustomSvg?: boolean
+    }
 }
 
 defineOptions({
@@ -294,9 +305,10 @@ const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
  * @param rawPath 原生路径
  * @returns {Promise<void>}
  */
-const handleTabRemove = async (rawPath: string) => {
-    await delVisitedRoute(rawPath)
-    if (isActive(rawPath)) await toLastTab()
+const handleTabRemove = async (rawPath: string | number) => {
+    const path = String(rawPath)
+    await delVisitedRoute(path)
+    if (isActive(path)) await toLastTab()
 }
 
 /**
