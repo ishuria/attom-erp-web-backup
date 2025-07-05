@@ -13,18 +13,21 @@
                         <span class="vab-tabs-title">
                             <template v-if="theme.showTabsIcon">
                                 <vab-icon
-                                    v-if="item.meta && item.meta.icon"
-                                    :icon="item.meta.icon"
-                                    :is-custom-svg="item.meta.isCustomSvg"
+                                    v-if="refreshingTabs.has((item as VisitedRoute).path)"
+                                    class="refreshing-icon"
+                                    icon="refresh-line"
                                 />
-                                <vab-icon v-else :icon="(item as any).parentIcon ?? 'menu-line'" />
+                                <vab-icon
+                                    v-else-if="(item as VisitedRoute).meta && (item as VisitedRoute).meta.icon"
+                                    :icon="(item as VisitedRoute).meta.icon"
+                                    :is-custom-svg="(item as VisitedRoute).meta.isCustomSvg"
+                                />
+                                <vab-icon v-else :icon="(item as VisitedRoute).parentIcon ?? 'menu-line'" />
                             </template>
-                            <span v-if="!isNoClosable(item as any)" @dblclick="handleTabRemove(item.path)">
-                                {{ translate((item.meta.title ?? '') as string) }}
+                            <span v-if="!isNoClosable(item as VisitedRoute)" @dblclick="handleTabRemove((item as VisitedRoute).path)">
+                                {{ translate(((item as VisitedRoute).meta.title ?? '') as string) }}
                             </span>
-                            <span v-else>
-                                {{ translate((item.meta.title ?? '') as string) }}
-                            </span>
+                            <span v-else>{{ translate(((item as VisitedRoute).meta.title ?? '') as string) }}</span>
                         </span>
                         <span class="tab-context-catcher" @contextmenu.prevent="openMenu(item)"></span>
                     </template>
@@ -48,24 +51,25 @@
                 <el-dropdown-menu class="tabs-more">
                     <el-dropdown-item command="refresh">
                         <vab-icon icon="refresh-line" />
-                        <span>
-                            {{ translate('刷新') }}
-                        </span>
+                        <span>{{ translate('刷新') }}</span>
                     </el-dropdown-item>
                     <el-dropdown-item
-                        :disabled="tabActive === '/index' && isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)"
+                        :disabled="
+                            tabActive === '/index' &&
+                            isNoClosable(visitedRoutes.find((item: VisitedRoute) => item.path === tabActive) as VisitedRoute)
+                        "
                         @click="toggleTabFixedDropdown"
                     >
                         <vab-icon
                             :icon="
-                                isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)
+                                isNoClosable(visitedRoutes.find((item: VisitedRoute) => item.path === tabActive) as VisitedRoute)
                                     ? 'lock-unlock-line'
                                     : 'lock-line'
                             "
                         />
                         <span>
                             {{
-                                isNoClosable(visitedRoutes.find((item) => item.path === tabActive) as any)
+                                isNoClosable(visitedRoutes.find((item: VisitedRoute) => item.path === tabActive) as VisitedRoute)
                                     ? translate('取消固定')
                                     : translate('开启固定')
                             }}
@@ -73,33 +77,23 @@
                     </el-dropdown-item>
                     <el-dropdown-item command="closeOthersTabs">
                         <vab-icon icon="close-line" />
-                        <span>
-                            {{ translate('关闭其他') }}
-                        </span>
+                        <span>{{ translate('关闭其他') }}</span>
                     </el-dropdown-item>
                     <el-dropdown-item command="closeLeftTabs">
                         <vab-icon icon="arrow-left-line" />
-                        <span>
-                            {{ translate('关闭左侧') }}
-                        </span>
+                        <span>{{ translate('关闭左侧') }}</span>
                     </el-dropdown-item>
                     <el-dropdown-item command="closeRightTabs">
                         <vab-icon icon="arrow-right-line" />
-                        <span>
-                            {{ translate('关闭右侧') }}
-                        </span>
+                        <span>{{ translate('关闭右侧') }}</span>
                     </el-dropdown-item>
                     <el-dropdown-item command="closeAllTabs">
                         <vab-icon icon="close-line" />
-                        <span>
-                            {{ translate('关闭全部') }}
-                        </span>
+                        <span>{{ translate('关闭全部') }}</span>
                     </el-dropdown-item>
                     <el-dropdown-item command="setting">
                         <vab-icon icon="settings-5-line" />
-                        <span>
-                            {{ translate('标签设置') }}
-                        </span>
+                        <span>{{ translate('标签设置') }}</span>
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </template>
@@ -115,9 +109,7 @@
                 @click="toggleTabFixed"
             >
                 <vab-icon :icon="hoverRoute?.meta?.noClosable ? 'lock-unlock-line' : 'lock-line'" />
-                <span>
-                    {{ hoverRoute?.meta?.noClosable ? translate('取消固定') : translate('开启固定') }}
-                </span>
+                <span>{{ hoverRoute?.meta?.noClosable ? translate('取消固定') : translate('开启固定') }}</span>
             </li>
             <li class="el-dropdown-menu__item" :class="{ 'is-disabled': visitedRoutes.length === 1 }" @click="closeOthersTabs">
                 <vab-icon icon="close-line" />
@@ -125,9 +117,7 @@
             </li>
             <li
                 class="el-dropdown-menu__item"
-                :class="{
-                    'is-disabled': !hoverRoute || visitedRoutes.indexOf(hoverRoute) === -1,
-                }"
+                :class="{ 'is-disabled': !hoverRoute || visitedRoutes.indexOf(hoverRoute) === -1 }"
                 @click="closeLeftTabs"
             >
                 <vab-icon icon="arrow-left-line" />
@@ -216,28 +206,29 @@ const tabActive = ref<string>('')
 const active = ref<boolean>(false)
 const hoverRoute = ref<VisitedRoute | null>(null)
 const visible = ref<boolean>(false)
-const top = ref<any>(0)
-const left = ref<any>(0)
-const tabsSettingRef = ref<any>(null)
+const top = ref<number>(0)
+const left = ref<number>(0)
+const tabsSettingRef = ref<{ handleOpenSetting: () => void } | null>(null)
 
-const isActive = (path: any) => path === handleActivePath(route, true)
-const isNoClosable = (tag: any) => tag && tag.meta && tag.meta.noClosable
+// 添加刷新图标状态管理
+const refreshingTabs = ref<Set<string>>(new Set())
 
-const handleTabClick: any = (tab: any) => {
+const isActive = (path: string) => path === handleActivePath(route, true)
+const isNoClosable = (tag: VisitedRoute | null | undefined) => tag && tag.meta && tag.meta.noClosable
+
+const handleTabClick = (tab: any) => {
     if (!isActive(tab.name)) router.push(visitedRoutes.value[tab.index])
 }
-const handleVisibleChange = (value: boolean) => {
-    active.value = value
-}
+const handleVisibleChange = (value: boolean) => (active.value = value)
 
 const initNoCLosableTabs = (routes: any[]) => {
     routes.forEach((_route: { meta: { noClosable: any }; children: any }) => {
-        if (_route.meta && _route.meta.noClosable) addTabs(_route)
+        if (_route.meta && _route.meta.noClosable) addTabs(_route as any)
         if (_route.children) initNoCLosableTabs(_route.children)
     })
 }
 
-const handleCommand = (command: any) => {
+const handleCommand = (command: string) => {
     switch (command) {
         case 'refresh': {
             refresh()
@@ -260,7 +251,8 @@ const handleCommand = (command: any) => {
             break
         }
         case 'setting': {
-            tabsSettingRef.value.handleOpenSetting()
+            tabsSettingRef.value?.handleOpenSetting()
+            break
         }
     }
 }
@@ -269,10 +261,17 @@ const handleCommand = (command: any) => {
  * 刷新当前标签页
  */
 const refresh = async () => {
+    let path = ''
     if (hoverRoute.value) {
         await router.push(hoverRoute.value)
         await $pub('reload-router-view', hoverRoute.value.name)
-    } else await $pub('reload-router-view')
+        path = hoverRoute.value.path
+    } else {
+        await $pub('reload-router-view')
+        path = handleActivePath(route, true)
+    }
+    // 统一触发tab刷新动画
+    $pub('refresh-current-tab', path)
     await $pub('refresh-rotate')
     await closeMenu()
 }
@@ -295,7 +294,7 @@ const addTabs = async (tag: VabRoute | RouteLocationNormalizedLoaded) => {
  * @param rawPath 原生路径
  * @returns {Promise<void>}
  */
-const handleTabRemove: any = async (rawPath: string) => {
+const handleTabRemove = async (rawPath: string) => {
     await delVisitedRoute(rawPath)
     if (isActive(rawPath)) await toLastTab()
 }
@@ -308,7 +307,9 @@ const closeOthersTabs = async () => {
     if (hoverRoute.value) {
         await router.push(hoverRoute.value)
         await delOthersVisitedRoutes(hoverRoute.value.path)
-    } else await delOthersVisitedRoutes(handleActivePath(route, true))
+    } else {
+        await delOthersVisitedRoutes(handleActivePath(route, true))
+    }
     await closeMenu()
 }
 /**
@@ -319,7 +320,9 @@ const closeLeftTabs = async () => {
     if (hoverRoute.value) {
         await router.push(hoverRoute.value)
         await delLeftVisitedRoutes(hoverRoute.value.path)
-    } else await delLeftVisitedRoutes(handleActivePath(route, true))
+    } else {
+        await delLeftVisitedRoutes(handleActivePath(route, true))
+    }
     await closeMenu()
 }
 
@@ -331,7 +334,9 @@ const closeRightTabs = async () => {
     if (hoverRoute.value) {
         await router.push(hoverRoute.value)
         await delRightVisitedRoutes(hoverRoute.value.path)
-    } else await delRightVisitedRoutes(handleActivePath(route, true))
+    } else {
+        await delRightVisitedRoutes(handleActivePath(route, true))
+    }
     await closeMenu()
 }
 
@@ -349,19 +354,18 @@ const closeAllTabs = async () => {
  * 跳转最后一个标签页
  */
 const toLastTab = async () => {
-    const latestView = visitedRoutes.value.findLast((item) => item.path !== handleActivePath(route, true))
+    const latestView = visitedRoutes.value.findLast((item: VisitedRoute) => item.path !== handleActivePath(route, true))
     if (latestView) await router.push(latestView)
     else await router.push('/')
 }
 
 const { x, y } = useMouse()
 
-const openMenu = (item: any) => {
+const openMenu = (item: VisitedRoute) => {
     console.log('openMenu', item)
     left.value = x.value
     top.value = y.value
     hoverRoute.value = item
-    if (hoverRoute.value) hoverRoute.value.path = item.path
     visible.value = true
 }
 
@@ -370,22 +374,27 @@ const closeMenu = () => {
     hoverRoute.value = null
 }
 
-let sortable: any
+let sortable: Sortable | null = null
 const handleTabDrag = () => {
-    if (theme.value.tabDrag && device.value != 'mobile') {
+    if (theme.value.tabDrag && device.value !== 'mobile') {
         const navElement = document.querySelector('.el-tabs__nav.is-top') as HTMLElement
-        if (navElement)
+        if (navElement) {
             sortable = new Sortable(navElement, {
                 animation: 150,
                 easing: 'cubic-bezier(1, 0, 0, 1)',
                 draggable: '.el-tabs__item.is-top.is-closable',
                 filter: '.el-tabs__active-bar.is-top',
                 onEnd(e: any) {
-                    const routes = moveElement([...visitedRoutes.value], parseInt(e.oldIndex) - 1, parseInt(e.newIndex) - 1)
+                    const routes = moveElement(
+                        [...visitedRoutes.value],
+                        parseInt(e.oldIndex) - 1,
+                        parseInt(e.newIndex) - 1
+                    ) as VisitedRoute[]
                     updateVisitedRoutes(routes)
                     _visitedRoutes.value = routes
                 },
             })
+        }
     }
 }
 
@@ -400,24 +409,36 @@ watch(
         initNoCLosableTabs(routes.value)
         addTabs(route)
     },
-    {
-        immediate: true,
-    }
+    { immediate: true }
 )
 
 watch(
     theme.value,
     () => {
         if (theme.value.tabDrag) handleTabDrag()
-        else sortable && sortable.destroy()
+        else sortable?.destroy()
     },
-    {
-        immediate: true,
-    }
+    { immediate: true }
 )
 
 onBeforeMount(() => {
     window.addEventListener('beforeunload', handleCaughtRoutes)
+
+    // 监听刷新当前tab事件，接收path参数
+    $sub('refresh-current-tab', (path?: string) => {
+        // 如果没有传递path参数，使用当前激活的标签页路径
+        const targetPath = path || handleActivePath(route, true)
+        if (targetPath) {
+            refreshingTabs.value.add(targetPath)
+            setTimeout(() => refreshingTabs.value.delete(targetPath), 2000)
+        }
+    })
+
+    // 监听刷新全部tabs事件
+    $sub('refresh-all-tabs', () => {
+        visitedRoutes.value.forEach((tab: VisitedRoute) => refreshingTabs.value.add(tab.path))
+        setTimeout(() => refreshingTabs.value.clear(), 2000)
+    })
 })
 
 const toggleTabFixed = () => {
@@ -432,8 +453,8 @@ const toggleTabFixed = () => {
 }
 
 const toggleTabFixedDropdown = () => {
-    const current = visitedRoutes.value.find((item: any) => item.path === tabActive.value)
-    if (!current || !current.meta) return
+    const current = visitedRoutes.value.find((item: VisitedRoute) => item.path === tabActive.value)
+    if (!current?.meta) return
     if (current.path === '/index' && current.meta.noClosable) return
     changeTabsMeta({
         name: current.name,
@@ -791,6 +812,19 @@ const toggleTabFixedDropdown = () => {
                     transition: transform 0.3s ease-out 0.3s;
                 }
             }
+        }
+    }
+
+    .refreshing-icon {
+        animation: refreshing 1s linear infinite;
+    }
+
+    @keyframes refreshing {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
         }
     }
 }

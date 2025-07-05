@@ -31,11 +31,14 @@ const rotate = () => {
 const handleCommand = (command: string) => {
     switch (command) {
         case 'refreshCurrent': {
+            // 发送刷新当前标签页事件，让VabTabs组件自己处理路径
+            $pub('refresh-current-tab')
             $pub('reload-router-view')
             rotate()
             break
         }
         case 'refreshAll': {
+            $pub('refresh-all-tabs')
             $pub('reload-all')
             rotate()
             break
