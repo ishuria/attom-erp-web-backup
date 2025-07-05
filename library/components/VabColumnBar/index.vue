@@ -499,7 +499,6 @@ onBeforeUnmount(() => {
 
 .tab-text {
     display: block;
-    margin-top: 4px;
     opacity: 1;
     transform: translateY(0);
     transition: all 0.3s ease-in-out;
