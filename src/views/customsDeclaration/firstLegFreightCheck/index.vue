@@ -84,7 +84,8 @@
       <el-upload
         class="upload-demo"
         drag
-    
+        :auto-upload="false"
+        v-model:file-list="fileList"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
@@ -93,7 +94,7 @@
       </el-upload>
       <template #footer>
         <div style="text-align: center;">
-          <el-button type="success">上传</el-button>
+          <el-button type="success" @click="uploadExcelFile">上传</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -105,6 +106,7 @@
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { TabsPaneContext } from 'element-plus'
+import { uploadFreightCheckFile } from '~/src/api/devlocal/freightCheck'
 defineOptions({
   name: 'FirstLegFreightCheck'
 })
@@ -122,7 +124,21 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20
 })
-
+const fileList = ref<any>([])
+const uploadExcelFile = async () => {
+  let uploadForm = new FormData()
+  fileList.value.forEach((item: any) => {
+    uploadForm.append('file', item.raw)
+  })
+  if (fileList.value.length === 0) {
+    $baseMessage('请先上传文件！', 'warning', 'hey')
+    return
+  }
+  const { data } = await uploadFreightCheckFile(uploadForm)
+  if (data === true) {
+    $baseMessage('上传文件成功！', 'success', 'hey')
+  }
+}
 const showErrorAllowRange = () => {
   allowRangeVisible.value = true
 

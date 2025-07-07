@@ -514,6 +514,7 @@ export interface IUpdateCostFreightForwarderReq {
    */
   qgStatus?: number;
   settlementObject?: number
+  error?: number
 }
 
 export interface IAddChannelFreightForwarderReq {

@@ -58,7 +58,7 @@
             <div class="none">
               <el-input v-model="row.error" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)"/>  
             </div>
-            <span>{{ row.error }}</span>
+            <span>{{ row.error ? row.error + '%' : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="货代账单费用名" min-width="130" prop="billCostName">
@@ -158,6 +158,7 @@ const clickCancel = async (event: any, row: any) => {
       id: row.id,
       costName: row.costName,
       billCostName: row.billCostName,
+      error: row.error
     })
   }
 }
