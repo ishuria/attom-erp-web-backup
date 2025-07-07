@@ -211,7 +211,6 @@ import {
     UserFilled,
     Wallet,
 } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticDataCard',

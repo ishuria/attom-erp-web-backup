@@ -131,9 +131,13 @@ onMounted(() => {
                         useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, {
                             id: 'fold-unfold-useStyleTag',
                         })
+                        useStyleTag(`.toggle-tab-text-btn {display: none;}`, {
+                            id: 'toggle-tab-text-btn-useStyleTag',
+                        })
                     } else {
                         if (device.value !== 'mobile') openSideBar()
                         useStyleTag('', { id: 'fold-unfold-useStyleTag' })
+                        useStyleTag('', { id: 'toggle-tab-text-btn-useStyleTag' })
                     }
                 },
                 {

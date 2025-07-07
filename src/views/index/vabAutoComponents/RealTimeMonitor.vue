@@ -60,7 +60,6 @@
 
 <script lang="ts" setup>
 import { ArrowDown, ArrowUp, Connection, DataLine, Monitor, Warning } from '@element-plus/icons-vue'
-import { onMounted, onUnmounted, ref } from 'vue'
 
 defineOptions({
     name: 'RealTimeMonitor',

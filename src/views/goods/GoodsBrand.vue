@@ -123,7 +123,6 @@
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { doBrandDelete, doBrandEdit, getBrandList } from '/@/api/goodsBrand'
 
 interface Brand {

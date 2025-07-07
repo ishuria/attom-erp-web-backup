@@ -47,8 +47,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-
 interface FormData {
     name: string
     region: string

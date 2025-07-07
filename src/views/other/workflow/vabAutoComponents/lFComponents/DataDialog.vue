@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
 import VabJsonViewer from 'vue-json-viewer'
 
 interface GraphData {

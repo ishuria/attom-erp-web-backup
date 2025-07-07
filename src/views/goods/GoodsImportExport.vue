@@ -52,7 +52,6 @@
 
 <script lang="ts" setup>
 import { Refresh, Search } from '@element-plus/icons-vue'
-import { reactive, ref, watch } from 'vue'
 import { exportGoods, getGoodsList, importGoods } from '/@/api/goodsImportExport'
 
 const queryForm = reactive({

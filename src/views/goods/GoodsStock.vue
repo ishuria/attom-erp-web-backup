@@ -129,7 +129,6 @@
 <script lang="ts" setup>
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsStockDelete, doGoodsStockEdit, getGoodsStockList } from '/@/api/goodsStock'
 
 interface StockItem {

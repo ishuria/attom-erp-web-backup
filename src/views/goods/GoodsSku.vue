@@ -415,9 +415,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Download, PictureFilled, Plus, Refresh, Search, Upload } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { addSku, deleteSku, editSku, getSkuList } from '/@/api/goodsSku'
-import { $baseConfirm, $baseMessage } from '/@/hooks'
 
 // 定义SKU接口
 interface SkuItem {

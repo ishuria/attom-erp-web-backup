@@ -62,7 +62,6 @@
 
 <script lang="ts" setup>
 import { ArrowUp, Money, ShoppingCart, User } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticPrediction',

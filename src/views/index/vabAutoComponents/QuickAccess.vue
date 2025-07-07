@@ -46,7 +46,6 @@
 
 <script lang="ts" setup>
 import { Bell, DataAnalysis, Document, Download, Edit, Plus, Setting, User } from '@element-plus/icons-vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
 
 defineOptions({
     name: 'QuickAccess',

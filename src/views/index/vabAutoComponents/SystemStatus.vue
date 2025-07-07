@@ -151,7 +151,6 @@
 
 <script lang="ts" setup>
 import { CircleCheck, CircleClose, Connection, Cpu, DataLine, Folder, Monitor, Timer, User, Warning } from '@element-plus/icons-vue'
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
 
 defineOptions({
     name: 'SystemStatus',

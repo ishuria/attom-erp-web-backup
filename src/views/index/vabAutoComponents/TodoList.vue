@@ -145,7 +145,6 @@
 
 <script lang="ts" setup>
 import { Check, Delete, Edit, Plus } from '@element-plus/icons-vue'
-import { computed, onMounted, reactive, ref } from 'vue'
 
 defineOptions({
     name: 'TodoList',

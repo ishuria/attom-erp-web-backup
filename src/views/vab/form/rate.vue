@@ -36,7 +36,6 @@
 
 <script lang="ts" setup>
 import { ChatDotRound, ChatLineRound, ChatRound } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'Rate',

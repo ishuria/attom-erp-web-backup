@@ -32,7 +32,6 @@
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
-import { ref } from 'vue'
 import router from '~/src/router'
 
 defineOptions({

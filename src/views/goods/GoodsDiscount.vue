@@ -122,9 +122,7 @@
 
 <script lang="ts" setup>
 import { Refresh, Search } from '@element-plus/icons-vue'
-import { nextTick, reactive, ref, watch } from 'vue'
 import { doGoodsDiscountDelete, doGoodsDiscountEdit, getGoodsDiscountList } from '/@/api/goodsDiscount'
-import { $baseMessage } from '/@/hooks'
 
 interface DiscountItem {
     id?: string

@@ -42,8 +42,6 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, watch } from 'vue'
-
 const content = ref<string>('')
 const contentRef = ref<HTMLElement>()
 const consoleRef = ref<HTMLElement>()

@@ -1,30 +1,123 @@
 <template>
     <div class="statistic-dashboard">
         <!-- 顶部KPI指标 -->
-        <el-row class="mb-20 kpi-row">
-            <el-col v-for="item in kpiList" :key="item.key" class="kpi-col">
-                <div class="kpi-card" :class="item.color">
+        <el-row class="mb-20 kpi-row" :gutter="20">
+            <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+                <div class="kpi-card primary">
                     <div class="kpi-icon">
                         <el-icon :size="32">
-                            <component :is="item.icon" />
+                            <component :is="kpiList[0].icon" />
                         </el-icon>
                     </div>
                     <div class="kpi-content">
                         <div class="kpi-value">
-                            <vab-count :end-value="(kpiData as any)[item.valueField]" :start-value="0" />
+                            <vab-count :end-value="kpiData.revenue" :start-value="0" />
                         </div>
-                        <div class="kpi-label">{{ item.label }}</div>
-                        <div class="kpi-trend" :class="item.trendType">
+                        <div class="kpi-label">{{ kpiList[0].label }}</div>
+                        <div class="kpi-trend up">
                             <el-icon :size="14">
-                                <component :is="item.trendIcon" />
+                                <component :is="kpiList[0].trendIcon" />
                             </el-icon>
-                            <span>{{ item.trendPrefix }}{{ (kpiData as any)[item.trendField] }}{{ item.trendSuffix }}</span>
+                            <span>+{{ kpiData.revenueGrowth }}%</span>
                         </div>
                     </div>
                     <div class="kpi-chart">
                         <div class="mini-chart">
                             <div
-                                v-for="(point, index) in (kpiData as any)[item.chartField]"
+                                v-for="(point, index) in kpiData.revenueChart"
+                                :key="index"
+                                class="chart-bar"
+                                :style="{ height: point + '%' }"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+                <div class="kpi-card success">
+                    <div class="kpi-icon">
+                        <el-icon :size="32">
+                            <component :is="kpiList[1].icon" />
+                        </el-icon>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-value">
+                            <vab-count :end-value="kpiData.orders" :start-value="0" />
+                        </div>
+                        <div class="kpi-label">{{ kpiList[1].label }}</div>
+                        <div class="kpi-trend up">
+                            <el-icon :size="14">
+                                <component :is="kpiList[1].trendIcon" />
+                            </el-icon>
+                            <span>+{{ kpiData.ordersGrowth }}%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-chart">
+                        <div class="mini-chart">
+                            <div
+                                v-for="(point, index) in kpiData.ordersChart"
+                                :key="index"
+                                class="chart-bar"
+                                :style="{ height: point + '%' }"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+                <div class="kpi-card warning">
+                    <div class="kpi-icon">
+                        <el-icon :size="32">
+                            <component :is="kpiList[2].icon" />
+                        </el-icon>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-value">
+                            <vab-count :end-value="kpiData.users" :start-value="0" />
+                        </div>
+                        <div class="kpi-label">{{ kpiList[2].label }}</div>
+                        <div class="kpi-trend down">
+                            <el-icon :size="14">
+                                <component :is="kpiList[2].trendIcon" />
+                            </el-icon>
+                            <span>-{{ kpiData.usersDecline }}%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-chart">
+                        <div class="mini-chart">
+                            <div
+                                v-for="(point, index) in kpiData.usersChart"
+                                :key="index"
+                                class="chart-bar"
+                                :style="{ height: point + '%' }"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :lg="6" :md="12" :sm="12" :xl="6" :xs="24">
+                <div class="kpi-card purple">
+                    <div class="kpi-icon">
+                        <el-icon :size="32">
+                            <component :is="kpiList[3].icon" />
+                        </el-icon>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-value">
+                            <vab-count :end-value="kpiData.newUsers" :start-value="0" />
+                        </div>
+                        <div class="kpi-label">{{ kpiList[3].label }}</div>
+                        <div class="kpi-trend up">
+                            <el-icon :size="14">
+                                <component :is="kpiList[3].trendIcon" />
+                            </el-icon>
+                            <span>+{{ kpiData.newUsersGrowth }}%</span>
+                        </div>
+                    </div>
+                    <div class="kpi-chart">
+                        <div class="mini-chart">
+                            <div
+                                v-for="(point, index) in kpiData.newUsersChart"
                                 :key="index"
                                 class="chart-bar"
                                 :style="{ height: point + '%' }"
@@ -38,8 +131,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, ArrowUp, Coin, Money, Monitor, ShoppingBag, User } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ArrowDown, ArrowUp, Coin, Money, ShoppingBag, User } from '@element-plus/icons-vue'
 
 // KPI数据
 const kpiData = ref({
@@ -109,19 +201,6 @@ const kpiList = [
         trendField: 'newUsersGrowth',
         trendType: 'up',
         chartField: 'newUsersChart',
-        trendIcon: ArrowUp,
-        trendPrefix: '+',
-        trendSuffix: '%',
-    },
-    {
-        key: 'views',
-        label: '页面访问',
-        icon: Monitor,
-        color: 'danger',
-        valueField: 'views',
-        trendField: 'viewsGrowth',
-        trendType: 'up',
-        chartField: 'viewsChart',
         trendIcon: ArrowUp,
         trendPrefix: '+',
         trendSuffix: '%',

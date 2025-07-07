@@ -109,7 +109,6 @@
 
 <script lang="ts" setup>
 import { ChatDotRound, Download, Money, Monitor, Share, ShoppingCart, Star, User } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticMini',

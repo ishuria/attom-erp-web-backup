@@ -253,7 +253,6 @@
 <script lang="ts" setup>
 import { Check, Close, Document, Download, InfoFilled, Iphone, Lock, Monitor, QuestionFilled, Setting } from '@element-plus/icons-vue'
 import { ElButton, ElDialog, ElIcon, ElMessage } from 'element-plus'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 defineOptions({
     name: 'Application',

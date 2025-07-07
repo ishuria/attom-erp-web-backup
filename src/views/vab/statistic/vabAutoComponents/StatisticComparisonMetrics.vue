@@ -50,7 +50,6 @@
 
 <script lang="ts" setup>
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import { ref } from 'vue'
 
 defineOptions({
     name: 'StatisticComparisonMetrics',

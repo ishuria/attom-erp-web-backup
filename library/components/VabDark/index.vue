@@ -8,10 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useDark, useToggle } from '@vueuse/core'
-import { storeToRefs } from 'pinia'
-import { onBeforeMount } from 'vue'
-import { useRoute } from 'vue-router'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({

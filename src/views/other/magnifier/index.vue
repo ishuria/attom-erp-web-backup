@@ -176,7 +176,6 @@
 
 <script lang="ts" setup>
 import { Minus, Plus } from '@element-plus/icons-vue'
-import { onBeforeMount, onUnmounted, ref } from 'vue'
 import landscape from '/@/assets/common_images/landscape.jpg'
 
 defineOptions({
