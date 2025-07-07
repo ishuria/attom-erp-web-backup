@@ -297,7 +297,9 @@ const generateSearchResults = (keyword: string): SearchResult[] => {
 const openSearchDialog = () => {
     dialogVisible.value = true
     nextTick(() => {
-        searchInputRef.value?.focus()
+        setTimeout(() => {
+            searchInputRef.value?.focus?.()
+        }, 100)
     })
 }
 
