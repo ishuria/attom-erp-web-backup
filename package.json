@@ -1,6 +1,6 @@
 {
     "name": "shop-vite",
-    "version": "28.1.0",
+    "version": "28.2.0",
     "private": true,
     "author": "github.com/zxwk1998",
     "scripts": {
@@ -95,7 +95,7 @@
         "eslint-define-config": "^2.1.0",
         "eslint-plugin-unicorn": "^56.0.1",
         "lint-staged": "^16.1.2",
-        "oxlint": "^1.5.0",
+        "oxlint": "^1.6.0",
         "picocolors": "^1.1.1",
         "plop": "^4.0.1",
         "postcss": "^8.5.6",
