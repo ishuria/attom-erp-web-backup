@@ -32,8 +32,8 @@
             </el-form-item>
             <el-form-item label="特殊资源">
                 <el-radio-group v-model="form.resource">
-                    <el-radio label="线上品牌商赞助" value="线上品牌商赞助" />
-                    <el-radio label="线下场地免费" value="线下场地免费" />
+                    <el-radio value="线上品牌商赞助">线上品牌商赞助</el-radio>
+                    <el-radio value="线下场地免费">线下场地免费</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="活动形式">

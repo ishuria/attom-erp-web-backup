@@ -11,9 +11,9 @@
                 <vab-query-form>
                     <vab-query-form-left-panel>
                         <el-radio-group v-model="labelPosition">
-                            <el-radio-button label="left" value="left">左对齐</el-radio-button>
-                            <el-radio-button label="right" value="right">右对齐</el-radio-button>
-                            <el-radio-button label="top" value="top">顶部对齐</el-radio-button>
+                            <el-radio-button value="left">左对齐</el-radio-button>
+                            <el-radio-button value="right">右对齐</el-radio-button>
+                            <el-radio-button value="top">顶部对齐</el-radio-button>
                         </el-radio-group>
                     </vab-query-form-left-panel>
                 </vab-query-form>
@@ -43,8 +43,8 @@
                     </el-form-item>
                     <el-form-item label="特殊资源" prop="resource">
                         <el-radio-group v-model="form.resource">
-                            <el-radio label="线上品牌商赞助" value="线上品牌商赞助" />
-                            <el-radio label="线下场地免费" value="线下场地免费" />
+                            <el-radio value="线上品牌商赞助">线上品牌商赞助</el-radio>
+                            <el-radio value="线下场地免费">线下场地免费</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="活动形式" prop="description">

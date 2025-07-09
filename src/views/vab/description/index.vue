@@ -2,9 +2,9 @@
     <div class="description-container no-background-container">
         <vab-card>
             <el-radio-group v-model="size">
-                <el-radio label="large" value="large">默认</el-radio>
-                <el-radio label="default" value="default">中等</el-radio>
-                <el-radio label="small" value="small">小</el-radio>
+                <el-radio value="large">默认</el-radio>
+                <el-radio value="default">中等</el-radio>
+                <el-radio value="small">小</el-radio>
             </el-radio-group>
             <el-descriptions border :column="3" :size="size" title="带边框">
                 <template #extra>

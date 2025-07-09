@@ -1,9 +1,9 @@
 <template>
     <el-radio-group v-model="direction">
-        <el-radio label="ltr" value="ltr">从左到右</el-radio>
-        <el-radio label="rtl" value="rtl">从右到右</el-radio>
-        <el-radio label="ttb" value="ttb">从上到下</el-radio>
-        <el-radio label="btt" value="btt">从下到上</el-radio>
+        <el-radio value="ltr">从左到右</el-radio>
+        <el-radio value="rtl">从右到右</el-radio>
+        <el-radio value="ttb">从上到下</el-radio>
+        <el-radio value="btt">从下到上</el-radio>
     </el-radio-group>
     <br />
     <br />
@@ -17,8 +17,8 @@
         <template #header>按时段设置标题</template>
         <template #default>
             <div>
-                <el-radio v-model="radio1" label="Option 1">选项1</el-radio>
-                <el-radio v-model="radio1" label="Option 2">选项2</el-radio>
+                <el-radio v-model="radio1" value="Option 1">选项1</el-radio>
+                <el-radio v-model="radio1" value="Option 2">选项2</el-radio>
             </div>
         </template>
         <template #footer>
