@@ -15,9 +15,9 @@
             <el-button :disabled="!show || backgroundList.length <= 1" size="small" style="margin: 0 10px 0 10px" @click="changeWallpaper">
                 更换壁纸
             </el-button>
+            <vab-dark v-show="theme.showDark" />
             <vab-language v-show="theme.showLanguage" />
             <vab-color-picker v-show="theme.showColorPicker" />
-            <vab-dark v-show="theme.showDark" />
         </div>
         <align-segmented v-model="alignType" />
         <slot :align-type="alignType" />
