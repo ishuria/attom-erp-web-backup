@@ -20,7 +20,9 @@
             <vab-color-picker v-show="theme.showColorPicker" />
         </div>
         <align-segmented v-model="alignType" />
-        <slot :align-type="alignType" />
+        <transition mode="out-in" name="login-fade">
+            <slot :key="alignType" :align-type="alignType" />
+        </transition>
         <vab-icon class="login-background" icon="background" is-custom-svg />
         <vab-footer />
     </div>
@@ -176,8 +178,8 @@ const changeWallpaper = () => {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 1000px;
-            padding: 6.5vh 8.5vh 6.5vh 6.5vh;
+            width: 1050px;
+            padding: 6.5vh 9vh 6.5vh 6.5vh;
             margin: auto;
             overflow: hidden;
             background: var(--vab-glass-bg);
@@ -294,6 +296,7 @@ const changeWallpaper = () => {
             right: 0;
             bottom: 0;
             left: 0;
+            z-index: 999;
             background: transparent;
             border: 0;
         }
@@ -309,5 +312,21 @@ const changeWallpaper = () => {
         height: 35vh;
         pointer-events: none;
     }
+}
+.login-fade-enter-active,
+.login-fade-leave-active {
+    transition:
+        opacity 0.3s,
+        transform 0.3s;
+}
+.login-fade-enter-from,
+.login-fade-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+}
+.login-fade-enter-to,
+.login-fade-leave-from {
+    opacity: 1;
+    transform: scale(1);
 }
 </style>
