@@ -7,7 +7,7 @@
             <el-button type="primary" @click="startCheckVisible = true">开始核对</el-button>
             <el-button type="primary">核对记录导出</el-button>
             <el-button type="success">核对完成</el-button>
-            <el-button type="danger">取消核对</el-button>
+            <el-button type="danger" @click="deleteCheck">取消核对</el-button>
             <el-button type="success">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
           </vab-query-form-left-panel>
@@ -22,7 +22,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="0" />
+        <check-freight-table :tab="0" :list="list" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -47,7 +47,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="1" />
+        <check-freight-table :tab="1" :list="list" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -69,7 +69,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="2" />
+        <check-freight-table :tab="2" :list="list" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -94,7 +94,7 @@
       </el-upload>
       <template #footer>
         <div style="text-align: center;">
-          <el-button type="success" @click="uploadExcelFile">上传</el-button>
+          <el-button type="success" @click="uploadExcelFile" :loading="uploadLoading">上传</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -106,7 +106,8 @@
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { TabsPaneContext } from 'element-plus'
-import { uploadFreightCheckFile } from '~/src/api/devlocal/freightCheck'
+import { deleteFreightCheck, getFreightCheckList, uploadFreightCheckFile } from '~/src/api/devlocal/freightCheck'
+import { IFreightCheckItem } from '~/src/type/freightCheck/freightCheckType'
 defineOptions({
   name: 'FirstLegFreightCheck'
 })
@@ -122,9 +123,22 @@ const total = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
+  status: 0
 })
+const list = ref<IFreightCheckItem[]>([])
 const fileList = ref<any>([])
+const uploadLoading = ref<boolean>(false)
+
+const deleteCheck = async () => {
+  $baseConfirm("确定要取消核对吗？", null, async () => {
+    const { data } = await deleteFreightCheck()
+    if (data) {
+      $baseMessage('取消核对成功！', 'success', 'hey')
+      fetchData()
+    }
+  })
+}
 const uploadExcelFile = async () => {
   let uploadForm = new FormData()
   fileList.value.forEach((item: any) => {
@@ -134,9 +148,13 @@ const uploadExcelFile = async () => {
     $baseMessage('请先上传文件！', 'warning', 'hey')
     return
   }
+  uploadLoading.value = true
   const { data } = await uploadFreightCheckFile(uploadForm)
   if (data === true) {
+    uploadLoading.value = false
     $baseMessage('上传文件成功！', 'success', 'hey')
+    startCheckVisible.value = false
+    await fetchData()
   }
 }
 const showErrorAllowRange = () => {
@@ -145,21 +163,33 @@ const showErrorAllowRange = () => {
 }
 const handleCurrentChange = (val: number) => {
   queryForm.pageNo = val
-  // fetchData()
+  fetchData()
 }
 const handleSizeChange = (val: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = val
-  // fetchData()
+  fetchData()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  // fetchData()
+  fetchData()
 }
 
 const handleTabClick = (tab: TabsPaneContext) => {
- 
+  activeName.value = Number(tab.props.name)
+  queryForm.status = Number(tab.props.name)
+  queryData()
 }
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getFreightCheckList(queryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
 
