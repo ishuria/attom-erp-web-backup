@@ -39,3 +39,26 @@ export function deleteFreightCheck(): Promise<{ data: boolean }> {
     method: 'get'
   })
 }
+/**
+ * 更新人工备注
+ * @param data 
+ * @returns 
+ */
+export function updateManualRemarks(data: { remarks: string, id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/freight/check/update/manual_remarks`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 发送邮件
+ * @returns 
+ */
+export function sendFreightCheckEmail(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/freight/check/send/email`,
+    method: 'get'
+  })
+}

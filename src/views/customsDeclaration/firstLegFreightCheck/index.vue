@@ -6,7 +6,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="startCheckVisible = true">开始核对</el-button>
             <el-button type="primary">核对记录导出</el-button>
-            <el-button type="success">核对完成</el-button>
+            <el-button type="success" @click="handleCheckComplete">核对完成</el-button>
             <el-button type="danger" @click="deleteCheck">取消核对</el-button>
             <el-button type="success">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
@@ -105,9 +105,10 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { TabsPaneContext } from 'element-plus'
-import { deleteFreightCheck, getFreightCheckList, uploadFreightCheckFile } from '~/src/api/devlocal/freightCheck'
-import { IFreightCheckItem } from '~/src/type/freightCheck/freightCheckType'
+import { ElMessageBox, TabsPaneContext } from 'element-plus'
+import { deleteFreightCheck, getFreightCheckList, sendFreightCheckEmail, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
+import { IFreightCheckItem } from '/@/type/freightCheck/freightCheckType'
+
 defineOptions({
   name: 'FirstLegFreightCheck'
 })
@@ -130,6 +131,21 @@ const list = ref<IFreightCheckItem[]>([])
 const fileList = ref<any>([])
 const uploadLoading = ref<boolean>(false)
 
+// 核对完成
+const handleCheckComplete = async () => {
+  await sendFreightCheckEmail()
+  ElMessageBox.confirm(
+    '已提交给上级进行审核！',
+    '系统提示',
+    {
+      confirmButtonText: '确定',
+      showCancelButton: false,
+      showClose: false,
+      type: 'success',
+      // customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+    }
+  )
+}
 const deleteCheck = async () => {
   $baseConfirm("确定要取消核对吗？", null, async () => {
     const { data } = await deleteFreightCheck()

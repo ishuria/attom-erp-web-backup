@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-content">
     
-    <el-table border stripe :header-cell-style="headerCellStyle" :data="list">
+    <el-table border stripe :header-cell-style="headerCellStyle" :data="list" @cell-click="changeInput">
       <el-table-column v-if="tab === 1" type="selection" />
       <el-table-column label="基本信息">
         <el-table-column label="SHIPMENT ID" prop="shipmentId" :width="flexColumnWidth(list, 'SHIPMENT ID', 'shipmentId')"></el-table-column>
@@ -44,20 +44,35 @@
           </template>
         </el-table-column>
         <el-table-column label="系统自检" prop="systemSelfTest" min-width="100"></el-table-column>
-        <el-table-column label="人工检查问题备注" prop="manualRemarks" min-width="100"></el-table-column>
+        <el-table-column label="人工检查问题备注" prop="manualRemarks" min-width="100">
+          <template #default="{ row }">
+              <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ row.manualRemarks }}</div>
+              </template>
+              <el-text style="vertical-align: middle" truncated>{{ row.manualRemarks }}</el-text>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="操作"></el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-       
+    <vab-remark-dialog
+      v-model="remarkVisible"
+      title="修改人工检查问题备注"
+      :remark="remark"
+      @update:remark="handleUpdateRemark"
+    />
   </div>
 
 </template>
 
 <script lang="ts" setup>
 import { CSSProperties } from 'vue'
+import { updateManualRemarks } from '/@/api/devlocal/freightCheck'
 import { IFreightCheckItem } from '/@/type/freightCheck/freightCheckType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -70,6 +85,24 @@ const props = defineProps<{
   list: IFreightCheckItem[]
 }>()
 
+const remarkVisible = ref<boolean>(false)
+const remark = ref<string>('')
+let _row: IFreightCheckItem
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '人工检查问题备注') {
+    remarkVisible.value = true
+    remark.value = row.manualRemarks
+    _row = row
+  }
+}
+const handleUpdateRemark = async (val: string) => {
+  const { data } = await updateManualRemarks({ id: _row.id, remarks: val })
+  if (data) {
+    _row.manualRemarks = val
+    remarkVisible.value = false
+    $baseMessage("修改人工检查备注成功！", 'success')
+  }
+}
 const headerCellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   const label = data.column.label
   const rowIndex = data.rowIndex
