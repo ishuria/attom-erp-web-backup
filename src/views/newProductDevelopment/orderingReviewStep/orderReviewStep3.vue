@@ -48,6 +48,12 @@
                 @change="handleUpdate(scope)"
               />
             </template>
+            <template v-if="scope.row['column0'] === 'vineFlag'">
+              <el-checkbox
+                v-model="scope.row[prop]"
+                class="center-input"
+                @change="handleUpdate(scope)"/>
+            </template>
             <!-- <template v-if="scope.row['column0'] === 'packagingSize'">
                 {{ scope.row[prop] }} cm
             </template> -->
@@ -62,7 +68,7 @@
             </template> -->
             <template
               v-if="scope.row['column0'] !== 'variantImg' && scope.row['column0'] !== 'vineSite'
-              && scope.row['column0']!== 'vineCount'
+              && scope.row['column0']!== 'vineCount' && scope.row['column0']!== 'vineFlag'
               // && scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
               // && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0']!== 'amazonCaOrderQuantity'
               // && scope.row['column0'] !== 'amazonJpOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
@@ -124,6 +130,7 @@ const labelMap: Record<string, string> = {
   sku: 'SKU',
   vineSite: 'Vine站点',
   vineCount: 'Vine数量',
+  vineFlag: '需另建Vine链接',
   finalSellingPrice: '售价',
   grossMarginRate: '毛利率',
   packagingSize: '包装尺寸(cm)',
@@ -159,6 +166,7 @@ const buildParams = (idx: number): IUpdateReviewStepNo3Vine => {
     orderEntryId: n.orderEntryId,
     vineSite: n.vineSite,
     vineCount: n.vineCount,
+    vineFlag: n.vineFlag,
   }
   return params
 }
@@ -208,6 +216,7 @@ const fetchData = async () => {
       sku: item.sku,
       vineSite: item.vineSite,
       vineCount: item.vineCount,
+      vineFlag: item.vineFlag,
       finalSellingPrice: item.finalSellingPrice,
       grossMarginRate: item.grossMarginRate,
       packagingSize: item.packagingSize,
@@ -230,6 +239,7 @@ const validate = (): boolean => {
   for (let i = 1; i <= variantSize.value; i++) {
     let value1 = variantList.value[4][i]
     let value2 = variantList.value[5][i]
+    let value3 = variantList.value[6][i] // vineFlag
     // 如果一个有值一个没值，说明填写不完整 0是可以的 ‘’ null undefined是不行的
     if ((value1 != null && value2 == null) || (value1 == null && value2 != null)) {
       return false

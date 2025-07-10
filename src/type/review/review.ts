@@ -97,6 +97,7 @@ export interface IReviewCommonItem {
    */
   walmartUsOrderQuantity?: number
   vineSite?: string
+  vineFlag?: number
   vineCount?: number
   /**
    * 实际产品总成本
@@ -402,4 +403,5 @@ export interface IUpdateReviewStepNo3Vine {
   orderEntryId: number
   vineSite?: number
   vineCount?: number
+  vineFlag?: number
 }
