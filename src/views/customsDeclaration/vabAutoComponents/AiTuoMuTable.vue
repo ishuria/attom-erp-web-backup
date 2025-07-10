@@ -93,7 +93,7 @@
       <el-table-column label="订单号" prop="orderNo" min-width="" />
       <el-table-column label="供应商" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser')" />
       <el-table-column label="发货日期" prop="shipmentDate" min-width="115" />
-      <el-table-column label="合同编号" prop="" min-width="100" />
+      <el-table-column label="合同编号" prop="contractNumber" min-width="100" />
       <el-table-column label="报关品名" prop="customsDeclarationName" min-width="100" />
       <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100" />
@@ -106,7 +106,7 @@
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" min-width="100" />
       <el-table-column label="发票号码" prop="invoiceNumber" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" />
-      <el-table-column label="开票数量" prop="invoiceDate" min-width="100" />
+      <el-table-column label="开票数量" prop="invoiceCount" min-width="100" />
       <el-table-column label="发票单位" prop="invoiceUnit" min-width="100" />
       <el-table-column label="发票金额" prop="includingTaxPrice" min-width="100" />
       <el-table-column align="center" v-if="showActions" label="操作" width="120">

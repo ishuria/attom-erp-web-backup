@@ -60,6 +60,8 @@ export interface IAiTuoMuItem {
   poPurchaseDate?: Date
   /**合同号 */
   contractNumber?: string
+  /** 发票数量 */
+  invoiceCount?: number
 }
 
 export interface IAiTuoMuListReq {
