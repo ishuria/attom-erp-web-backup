@@ -62,3 +62,27 @@ export function sendFreightCheckEmail(): Promise<{ data: boolean }> {
     method: 'get'
   })
 }
+
+/**
+ * 审批通过
+ * @returns 
+ */
+export function approvedFreightCheck(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/freight/check/approval/passed`,
+    method: 'get'
+  })
+}
+
+/**
+ * 更新为已付款
+ * @param data 
+ * @returns 
+ */
+export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/freight/check/update/paid`,
+    method: 'post',
+    data
+  })
+}

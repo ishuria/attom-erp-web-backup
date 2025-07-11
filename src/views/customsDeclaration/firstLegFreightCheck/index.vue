@@ -4,11 +4,11 @@
       <el-tab-pane label="待核对" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="startCheckVisible = true">开始核对</el-button>
-            <el-button type="primary">核对记录导出</el-button>
-            <el-button type="success" @click="handleCheckComplete">核对完成</el-button>
-            <el-button type="danger" @click="deleteCheck">取消核对</el-button>
-            <el-button type="success">审批通过</el-button>
+            <el-button type="primary" :disabled="startCheckDisabled" @click="startCheckVisible = true">开始核对</el-button>
+            <el-button type="primary" :disabled="finishCheckDisabled" @click="exportRecord" :loading="exportLoading">核对记录导出</el-button>
+            <el-button type="success" :disabled="finishCheckDisabled" @click="handleCheckComplete">核对完成</el-button>
+            <el-button type="danger" :disabled="finishCheckDisabled" @click="deleteCheck">取消核对</el-button>
+            <el-button type="success" :disabled="finishCheckDisabled" @click="handleApproved">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -22,7 +22,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="0" :list="list" />
+        <check-freight-table :tab="0" :list="list" :loading="listLoading" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -34,7 +34,7 @@
       <el-tab-pane label="待付款" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary">已付款</el-button>
+            <el-button type="primary" @click="handleUpdatePaid">已付款</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -47,7 +47,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="1" :list="list" />
+        <check-freight-table ref="freightTableRef" :tab="1" :list="list" :loading="listLoading" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -69,7 +69,7 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="2" :list="list" />
+        <check-freight-table :tab="2" :list="list" :loading="listLoading"/>
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -106,7 +106,8 @@
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, TabsPaneContext } from 'element-plus'
-import { deleteFreightCheck, getFreightCheckList, sendFreightCheckEmail, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
+import { downloadFileN } from '/@/api/devlocal/download'
+import { approvedFreightCheck, deleteFreightCheck, getFreightCheckList, sendFreightCheckEmail, updateFreightCheckPaid, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
 import { IFreightCheckItem } from '/@/type/freightCheck/freightCheckType'
 
 defineOptions({
@@ -115,9 +116,11 @@ defineOptions({
 
 // 开始核对
 const startCheckVisible = ref<boolean>(false)
+const startCheckDisabled = ref<boolean>(false)
+const finishCheckDisabled = ref<boolean>(false)
 // 误差允许范围
 const allowRangeVisible = ref<boolean>(false)
-
+const freightTableRef = ref()
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
@@ -130,7 +133,38 @@ const queryForm = reactive<any>({
 const list = ref<IFreightCheckItem[]>([])
 const fileList = ref<any>([])
 const uploadLoading = ref<boolean>(false)
-
+const exportLoading = ref<boolean>(false)
+const exportRecord = async () => {
+  exportLoading.value = true
+  const res = await downloadFileN("/freight/check/record/export")
+  if (res) {
+    exportLoading.value = false
+  }
+}
+const handleUpdatePaid = async () => {
+  const selectedRows = freightTableRef.value?.getSelectedRows?.();
+  // console.log(selectedRows)
+  if (!selectedRows || selectedRows.length === 0) {
+    $baseMessage("请先选择需要设置为已付款的项", 'warning')
+    return;
+  }
+  const ids = selectedRows.map((item: IFreightCheckItem) => item.id)
+  const { data } = await updateFreightCheckPaid(ids)
+  if (data) {
+    $baseMessage("头程运费已付款成功！", 'success')
+    fetchData()
+  }
+}
+// 审批通过
+const handleApproved = async () => {
+  $baseConfirm("确定要审批通过吗？", null, async () => {
+    const { data } = await approvedFreightCheck()
+    if (data) {
+      $baseMessage("头程运费核对审批通过成功！", 'success')
+      fetchData()
+    }
+  })
+}
 // 核对完成
 const handleCheckComplete = async () => {
   await sendFreightCheckEmail()
@@ -152,6 +186,9 @@ const deleteCheck = async () => {
     if (data) {
       $baseMessage('取消核对成功！', 'success', 'hey')
       fetchData()
+      // 取消核对后 可以开始核对 核对完成禁止
+      startCheckDisabled.value = false
+      finishCheckDisabled.value = true
     }
   })
 }
@@ -170,6 +207,8 @@ const uploadExcelFile = async () => {
     uploadLoading.value = false
     $baseMessage('上传文件成功！', 'success', 'hey')
     startCheckVisible.value = false
+    startCheckDisabled.value = true // 上传后 开始核对禁止掉
+    finishCheckDisabled.value = false // 上传后 可以核对完成
     await fetchData()
   }
 }
@@ -202,6 +241,13 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   listLoading.value = false
+  if (list.value.length === 0) { // 如果获取数据是空 可以开始核对 否则 无法核对
+    startCheckDisabled.value = false
+    finishCheckDisabled.value = true
+  } else {
+    startCheckDisabled.value = true
+    finishCheckDisabled.value = false
+  }
 }
 onBeforeMount(() => {
   fetchData()
