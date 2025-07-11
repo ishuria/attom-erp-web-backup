@@ -105,6 +105,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    appendToBody: {
+        type: Boolean,
+        default: true,
+    },
 })
 const emit = defineEmits(['update:modelValue'])
 
