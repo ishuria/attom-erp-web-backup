@@ -809,6 +809,16 @@ const clickCancel = async (event: any, row: any) => {
   if (JSON.stringify(row) === JSON.stringify(copyRow)) return 
 
   if (event.type === 'blur') {
+    const costNames = feeNameSettingData.value.map((item) => {
+      if (item.id != row.id) {
+        return item.costName
+      }
+    })
+    if (costNames.includes(row.costName)) {
+      $baseMessage('费用名重复，请重新输入！', 'error')
+      row.costName = ''
+      return
+    }
     // 执行失去焦点处理逻辑, 发送更新请求
     await updateCostFreightForwarder({
       id: row.id,

@@ -453,9 +453,16 @@ const showAddFee = async () => {
 const handleAddFee = async () => {
   addFeeFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
+      // 先判断是否费用名重复
+      const costNames = costList.value.map((item: any) => item.costName)
+      const costName = costNameList.value.find((item: any) => item.id === addFeeForm.costNameId)?.label!
+      if (costNames.includes(costName)) {
+        $baseMessage('费用名重复，请重新选择！', 'error')
+        return
+      }
       const { data } = await addShipmentCost({
         shipId: _shipId.value!,
-        costName: costNameList.value.find((item: any) => item.id === addFeeForm.costNameId)?.label!
+        costName
       })
       if (data) {
         $baseMessage('添加费用成功！', 'success')
