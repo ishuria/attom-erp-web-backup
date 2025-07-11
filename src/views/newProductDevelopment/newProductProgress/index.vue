@@ -86,6 +86,21 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="MOQ" prop="moq" width="80">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input
+                  v-model="row.moq"
+                  type="text"
+                  @blur="clickCancel($event, row)"
+                  @keyup.enter="clickCancel($event, row)"
+                />
+              </div>
+              <span >
+                {{ row.moq }}
+              </span>
+            </template>
+          </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" width="120">
             <template #default="{ row }">
               <div class="none">
@@ -282,6 +297,7 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="MOQ" prop="moq" width="80" />
           <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
             <template #default="{ row }">
               <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales+'px', 'text-align': 'right' }" >
