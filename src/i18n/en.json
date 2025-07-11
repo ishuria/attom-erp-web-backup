@@ -297,11 +297,15 @@
         "↑↓: 选择项目": "↑↓: Select Item",
         "隐藏路由": "Hidden Route",
         "液态玻璃": "Glassmorphism",
-        "点击可下拉查看更多主题配置项": "Click to scroll down for more theme settings",
+        "点击可下拉查看更多主题配置项": "Click to see more theme settings",
+        "多列布局": "Double",
+        "多色图标": "Colorful Icon",
+        "DeepSeek AI": "DeepSeek AI Assistant",
         "液态玻璃透明度": "Glass Opacity",
         "SKU配置": "SKU Configuration",
         "检查更新": "Update",
         "取消固定": "Unpin",
-        "开启固定": "Pin"
+        "开启固定": "Pin",
+        "deepSeek": "DeepSeek-R1 Local Model"
     }
 }

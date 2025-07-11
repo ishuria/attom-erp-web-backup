@@ -141,6 +141,9 @@
                 <el-form-item :label="translate('快捷盒子')">
                     <el-switch v-model="theme.showBox" />
                 </el-form-item>
+                <el-form-item :label="translate('DeepSeek AI')">
+                    <el-switch v-model="theme.showDeepSeek" />
+                </el-form-item>
                 <el-form-item :label="translate('右侧浮窗')">
                     <el-switch v-model="theme.showThemeSetting" />
                 </el-form-item>

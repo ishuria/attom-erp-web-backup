@@ -171,8 +171,8 @@ declare interface ThemeType {
     showBox: boolean
     // 是否开启液态玻璃效果
     glassMode?: boolean
-    /**
-     * 液态玻璃透明度
-     */
+    // 液态玻璃透明度
     glassOpacity?: number
+    // 是否显示DeepSeek-R1组件
+    showDeepSeek?: boolean
 }

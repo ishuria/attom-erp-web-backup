@@ -21,6 +21,7 @@ import {
     showBox,
     showColorPicker,
     showDark,
+    showDeepSeek,
     showFontSize,
     showFooter,
     showFullScreen,
@@ -75,6 +76,7 @@ const defaultTheme: ThemeType = {
     fontSize,
     rightToolsDrag,
     showBox,
+    showDeepSeek,
     glassMode: themeConfig.glassMode,
     glassOpacity: themeConfig.glassOpacity,
 }
