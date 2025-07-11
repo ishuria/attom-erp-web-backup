@@ -1,8 +1,6 @@
 <template>
     <div class="vab-deep-seek">
         <vab-icon class="vab-deep-seek-icon" icon="deepSeek" is-custom-svg @click="openChatDialog" />
-
-        <!-- 聊天弹窗 -->
         <vab-dialog
             v-model="dialogVisible"
             class="deep-seek-dialog"
@@ -12,7 +10,6 @@
             width="800px"
         >
             <div class="deep-seek-content">
-                <!-- 聊天界面 - QQ风格 -->
                 <div class="deep-seek-chat qq-style">
                     <div ref="chatHistoryRef" class="chat-history">
                         <template v-if="chatHistory.length === 0">
@@ -84,7 +81,6 @@
             </template>
         </vab-dialog>
 
-        <!-- 设置抽屉 -->
         <el-drawer
             v-model="settingsVisible"
             append-to-body
@@ -144,43 +140,33 @@ defineOptions({
     name: 'VabDeepSeek',
 })
 
-// 获取主题配置
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
 
-// 本地存储键名
 const STORAGE_KEY = 'vab-deepseek-settings'
 
-// 对话框状态
 const dialogVisible = ref(false)
 const settingsVisible = ref(false)
 const isFirstOpen = ref(true)
 
-// 基本设置
 const apiUrl = ref('')
 const apiKey = ref('')
 const modelStatus = ref('未连接')
 
-// 高级设置
 const modelName = ref('deepseek-r1')
 const temperature = ref(0.7)
 const maxTokens = ref(2000)
 const streamOutput = ref(true)
 
-// 聊天相关
 const userInput = ref('')
 const loading = ref(false)
 const chatHistory = ref<Array<{ role: 'user' | 'assistant'; content: string; loading?: boolean; isError?: boolean }>>([])
 const chatHistoryRef = ref<HTMLElement | null>(null)
 
-// 头像设置
 const userAvatar = ref(getRandomAvatar())
-// DeepSeek logo作为AI头像
 const aiAvatar = ref('https://www.deepseek.com/favicon.ico')
 
-// 打开聊天对话框
 const openChatDialog = () => {
-    // 检查是否启用了DeepSeek组件
     if (!theme.value.showDeepSeek) {
         $baseMessage('请先在主题设置中启用DeepSeek AI助手', 'warning', 'hey')
         return
@@ -188,7 +174,6 @@ const openChatDialog = () => {
 
     dialogVisible.value = true
 
-    // 第一次打开时，显示欢迎消息
     if (isFirstOpen.value && chatHistory.value.length === 0) {
         isFirstOpen.value = false
         chatHistory.value.push({
@@ -202,12 +187,10 @@ const openChatDialog = () => {
     })
 }
 
-// 打开设置面板
 const openSettings = () => {
     settingsVisible.value = true
 }
 
-// 保存设置到本地存储
 const saveSettings = () => {
     const settings = {
         apiUrl: apiUrl.value,
@@ -227,7 +210,6 @@ const saveSettings = () => {
     }
 }
 
-// 从本地存储加载设置
 const loadSettings = () => {
     try {
         const savedSettings = localStorage.getItem(STORAGE_KEY)
@@ -245,14 +227,11 @@ const loadSettings = () => {
     }
 }
 
-// 生成随机头像URL
 function getRandomAvatar(isAI = false) {
-    // 使用DiceBear API生成随机头像
     const styles = ['adventurer', 'avataaars', 'bottts', 'identicon', 'micah', 'personas']
     const style = styles[Math.floor(Math.random() * styles.length)]
     const seed = Math.random().toString(36).substring(2, 10)
 
-    // 为AI和用户使用不同的风格
     if (isAI) {
         return `/public/favicon-vab.ico`
     }
@@ -260,16 +239,12 @@ function getRandomAvatar(isAI = false) {
     return `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`
 }
 
-// 更换头像
 function changeAvatars() {
     userAvatar.value = getRandomAvatar()
-    // AI头像不变，始终使用DeepSeek logo
     $baseMessage('头像已更新', 'success', 'hey')
 }
 
-// 连接测试
 const testConnection = async () => {
-    // 检查API地址和密钥是否已配置
     if (!apiUrl.value.trim()) {
         $baseMessage('请先配置API地址', 'warning', 'hey')
         return
@@ -281,7 +256,6 @@ const testConnection = async () => {
     }
 
     try {
-        // 这里可以添加实际的API连接测试逻辑
         const response = await fetch(`${apiUrl.value}/health`, {
             method: 'GET',
             headers: {
@@ -303,33 +277,26 @@ const testConnection = async () => {
     }
 }
 
-// 发送消息
 const sendMessage = async () => {
     if (!userInput.value.trim() || loading.value) return
 
-    // 先添加用户消息到聊天框
     const userMessage = userInput.value
     chatHistory.value.push({ role: 'user', content: userMessage })
 
-    // 清空输入框并滚动到底部
     userInput.value = ''
     scrollToBottom()
 
-    // 添加助手消息占位
     chatHistory.value.push({ role: 'assistant', content: '', loading: true })
     loading.value = true
     scrollToBottom()
 
     try {
-        // 检查API地址和密钥是否已配置
         if (!apiUrl.value.trim()) {
-            // 自动打开设置抽屉
             settingsVisible.value = true
             throw new Error('请先在设置中配置API地址')
         }
 
         if (!apiKey.value.trim()) {
-            // 自动打开设置抽屉
             settingsVisible.value = true
             throw new Error('请先在设置中配置API密钥')
         }
@@ -340,7 +307,6 @@ const sendMessage = async () => {
             await handleNormalResponse()
         }
     } catch (error: any) {
-        // 更新助手消息为错误信息，而不是移除它
         const lastMsg = chatHistory.value.at(-1)
         if (lastMsg) {
             lastMsg.content = `${error.message || '未知错误'}`
@@ -353,7 +319,6 @@ const sendMessage = async () => {
     }
 }
 
-// 处理普通响应
 const handleNormalResponse = async () => {
     const response = await fetch(`${apiUrl.value}/v1/chat/completions`, {
         method: 'POST',
@@ -381,7 +346,6 @@ const handleNormalResponse = async () => {
     }
 
     const data = await response.json()
-    // 更新最后一条消息
     const lastMsg = chatHistory.value.at(-1)
     if (lastMsg) {
         lastMsg.content = data.choices[0].message.content
@@ -389,7 +353,6 @@ const handleNormalResponse = async () => {
     }
 }
 
-// 处理流式响应
 const handleStreamResponse = async () => {
     const response = await fetch(`${apiUrl.value}/v1/chat/completions`, {
         method: 'POST',
@@ -422,7 +385,6 @@ const handleStreamResponse = async () => {
     const decoder = new TextDecoder()
     let content = ''
 
-    // 模拟打字机效果（用于测试）
     if (process.env.NODE_ENV === 'development') {
         const testResponse = '这是一个测试回复，用于演示打字机效果。大语言模型可以用于各种任务，比如回答问题、生成文本、翻译语言等。'
         const lastMsg = chatHistory.value.at(-1)
@@ -439,7 +401,6 @@ const handleStreamResponse = async () => {
         }
     }
 
-    // 真实流式处理
     try {
         while (true) {
             const { done, value } = await reader.read()
@@ -488,10 +449,8 @@ const getCurrentTime = () => {
     return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 }
 
-// 格式化消息（支持Markdown）
 const formatMessage = (text: string) => {
     if (!text) return ''
-    // 如果是错误消息，不进行Markdown解析
     if (chatHistory.value.find((msg) => msg.content === text && msg.isError)) {
         return `<span class="error-message">${text}</span>`
     }
@@ -499,7 +458,6 @@ const formatMessage = (text: string) => {
     return DOMPurify.sanitize(html)
 }
 
-// 清空聊天
 const clearChat = () => {
     ElMessageBox.confirm('确定要清空所有对话记录吗？', '提示', {
         confirmButtonText: '确定',
@@ -512,7 +470,6 @@ const clearChat = () => {
         .catch(() => {})
 }
 
-// 处理回车键
 const handleEnterKey = (e: Event) => {
     const keyboardEvent = e as KeyboardEvent
     if (keyboardEvent.ctrlKey || keyboardEvent.metaKey) {
@@ -520,7 +477,6 @@ const handleEnterKey = (e: Event) => {
     }
 }
 
-// 滚动到底部
 const scrollToBottom = () => {
     nextTick(() => {
         if (chatHistoryRef.value) {
@@ -529,7 +485,6 @@ const scrollToBottom = () => {
     })
 }
 
-// 监听聊天历史变化，自动滚动
 watch(
     chatHistory,
     () => {
@@ -538,9 +493,7 @@ watch(
     { deep: true }
 )
 
-// 挂载时初始化
 onMounted(() => {
-    // 加载保存的设置
     loadSettings()
     scrollToBottom()
 })

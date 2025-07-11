@@ -1,8 +1,8 @@
 <template>
     <div class="vab-right-tools">
-        <vab-search v-show="!isHorizontal" />
+        <vab-search v-show="!isHorizontal" class="hidden-xs-only" />
         <vab-color-picker v-show="theme.showColorPicker" />
-        <vab-deep-seek v-show="theme.showDeepSeek" />
+        <vab-deep-seek v-show="theme.showDeepSeek" class="hidden-xs-only" />
         <vab-dark v-show="theme.showDark" :style="!isHorizontal ? '' : { marginLeft: 'var(--el-margin)' }" />
         <vab-theme v-show="theme.showTheme && routeName !== 'SeparateLayout'" />
         <vab-error-log class="hidden-xs-only" />
