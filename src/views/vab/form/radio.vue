@@ -7,8 +7,8 @@
         </vab-card>
         <vab-card>
             <template #header>禁用状态</template>
-            <el-radio v-model="radio2" disabled :value="'1'">禁用</el-radio>
-            <el-radio v-model="radio2" disabled :value="'2'">选中且禁用</el-radio>
+            <el-radio v-model="radio2" disabled :value="'1'">选中且禁用</el-radio>
+            <el-radio v-model="radio2" disabled :value="'2'">禁用</el-radio>
         </vab-card>
         <vab-card>
             <template #header>单选框组</template>
