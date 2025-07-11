@@ -594,7 +594,7 @@ const columns = ref<any>([
     label: '库龄',
     prop: 'storageAge',
     checked: true,
-    minWidth: 130,
+    minWidth: 150,
   },
   {
     label: '剩余库存',
@@ -994,18 +994,18 @@ const fetchData = async () => {
       <div class="storage-list">
         <div class="storage-item">
           <span class="value1">181-270</span>
-          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">271-360</span>
-          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">361+</span>
-          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})` : 0}</span>
         </div>
       </div>
     `
@@ -1085,7 +1085,7 @@ onBeforeMount(async () => {
   display: grid;
   .storage-item {
     display: grid;
-    grid-template-columns: 65px 35px 60px; /* 设定固定列宽 */
+    grid-template-columns: 70px 35px 60px; /* 设定固定列宽 */
     text-align: left;
 
     .value2 {

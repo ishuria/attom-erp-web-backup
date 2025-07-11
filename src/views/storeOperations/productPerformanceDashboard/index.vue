@@ -344,9 +344,9 @@
                     </template>
                   </el-tooltip>
                 </span>
-                <span v-if="item.label === '剩余可售'">
+                <span v-if="item.label === '可售'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">剩余<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">可售 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
                     </template>
@@ -811,9 +811,9 @@
                 <br />
                 点击
               </span>
-              <span v-if="item.label === '剩余可售'">
+              <span v-if="item.label === '可售'">
                   <el-tooltip content="" effect="dark" placement="top">
-                    <div class="questionIcon">剩余<br />可售 <el-icon><question-filled /></el-icon> </div>
+                    <div class="questionIcon">可售 <el-icon><question-filled /></el-icon> </div>
                     <template #content>
                       <div class="custom-tooltip" >SKU对应ASIN的总FBA库存数的可售天数</div>
                     </template>
@@ -2156,7 +2156,7 @@ const label2 = [
   '月退货%',
   '月退款%',
 ]
-const label3 = ['上新', '剩余可售', '可售总', '断货']
+const label3 = ['上新', '可售', '可售总', '断货']
 const label4 = ['今广', '半年有货率', '月广%',]
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
@@ -2186,7 +2186,7 @@ const label2Map = new Map([
 ])
 const label3Map = new Map([
   ['上新', 'newArrivalDay'],
-  ['剩余可售', 'esAvailableSaleDay'],
+  ['可售', 'esAvailableSaleDay'],
   ['可售总', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
@@ -3194,18 +3194,18 @@ const fetchData = async () => {
       <div class="storage-list">
         <div class="storage-item">
           <span class="value1">181-270</span>
-          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">271-360</span>
-          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">361+</span>
-          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})` : 0}</span>
         </div>
       </div>
     `
@@ -3233,18 +3233,18 @@ const fetchAsinData = async () => {
       <div class="storage-list">
         <div class="storage-item">
           <span class="value1">181-270</span>
-          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">271-360</span>
-          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})` : 0}</span>
         </div>
         <div class="storage-item">
           <span class="value1">361+</span>
-          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : ''}</span>
-          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value})` : ''}</span>
+          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
+          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})` : 0}</span>
         </div>
       </div>
     `
@@ -3491,7 +3491,7 @@ onBeforeMount(() => {
 
     .storage-item {
       display: grid;
-      grid-template-columns: 65px 35px 60px; /* 设定固定列宽 */
+      grid-template-columns: 70px 35px 60px; /* 设定固定列宽 */
       text-align: left;
     }
 
