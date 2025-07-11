@@ -25,15 +25,6 @@
                     <el-button type="danger" @click="open12">错误</el-button>
                 </vab-card>
             </el-col>
-            <el-col :span="24">
-                <vab-card>
-                    <template #header>
-                        更新提示
-                        <el-tag class="card-header-tag" type="danger">New</el-tag>
-                    </template>
-                    <el-button type="primary" @click="open14">更新提示</el-button>
-                </vab-card>
-            </el-col>
             <el-col :lg="6" :md="12" :sm="24" :xl="6" :xs="24">
                 <vab-card title="成功提示">
                     <el-result icon="success" sub-title="请根据提示进行操作" title="成功提示">
@@ -151,8 +142,5 @@ const open12 = () => {
 }
 const open13 = (value: string) => {
     $baseAlert(`这是一条${value}弹框`)
-}
-const open14 = () => {
-    $pub('update-website')
 }
 </script>

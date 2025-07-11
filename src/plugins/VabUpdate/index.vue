@@ -21,7 +21,6 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios'
 import dayjs from 'dayjs'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import { version as packageVersion } from '~/package.json'
@@ -79,7 +78,7 @@ const save = async () => {
         isUpdating.value = false
         hasShownDialog.value = false // 更新完成后重置，防止重复弹窗
         location.reload()
-    }, 1000 * 10)
+    }, 1000 * 5)
 }
 
 const handleShow = () => {
@@ -97,7 +96,7 @@ const handleShow = () => {
 // })
 
 watch(
-    () => offlineReady.value || needRefresh.value,
+    () => needRefresh.value,
     (val) => {
         // 只有未在更新过程中才改变按钮文本
         if (!isUpdating.value) {
@@ -110,9 +109,6 @@ watch(
         }
         // 只有当值为 true 且没有显示过弹窗时，才调用 handleShow
         if (val && !hasShownDialog.value) handleShow()
-    },
-    {
-        immediate: true,
     }
 )
 
@@ -150,21 +146,7 @@ const resetDialogState = () => {
     show.value = false
 }
 
-const fetchData = async () => {
-    try {
-        const {
-            data: { version: remoteVersion },
-        } = await axios({
-            url: `./vue-shop-vite-version.json?t=${Date.now()}`,
-            method: 'get',
-        })
-        return remoteVersion || packageVersion
-    } catch {
-        return packageVersion
-    }
-}
-
-defineExpose({ save, show, fetchData, resetDialogState })
+defineExpose({ save, show, resetDialogState })
 </script>
 
 <style lang="scss" scoped>

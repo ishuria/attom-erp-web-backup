@@ -74,6 +74,7 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios'
 import { version as localVersion } from '~/package.json'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
@@ -178,13 +179,21 @@ const checkUpdate = async () => {
     if (vabUpdateRef.value) {
         // 先重置弹窗状态，确保可以显示
         vabUpdateRef.value.resetDialogState?.()
-        const remoteVersion = await vabUpdateRef.value.fetchData?.()
-
+        // 远程获取版本号
+        let remoteVersion = ''
+        try {
+            const { data } = await axios({
+                url: `./vue-shop-vite-version.json?t=${Date.now()}`,
+                method: 'get',
+            })
+            remoteVersion = data.version || ''
+        } catch {
+            remoteVersion = ''
+        }
         // 版本比较：将版本号拆分为数字数组进行比较
         const isNewer = (v1: string, v2: string) => {
             const v1Parts = v1.split('.').map(Number)
             const v2Parts = v2.split('.').map(Number)
-
             for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
                 const v1Part = v1Parts[i] || 0
                 const v2Part = v2Parts[i] || 0
@@ -193,17 +202,13 @@ const checkUpdate = async () => {
             }
             return false // 相等的情况返回false
         }
-
         // 只有当远程版本大于本地版本时才显示更新弹窗
         if (remoteVersion && isNewer(remoteVersion, localVersion)) {
             $pub('update-website', remoteVersion)
             // 不需要在这里设置show=true，由update-website事件处理
         } else {
-            // 如果是最新版本，只显示提示消息，不显示弹窗
             $baseMessage('当前已是最新版本', 'success', 'hey')
         }
-    } else {
-        $pub('update-website', '')
     }
 }
 
