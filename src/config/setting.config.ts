@@ -42,7 +42,7 @@ export const settingConfig: {
     // 在哪些环境下显示高亮错误 ['development', 'production']
     errorLog: 'development',
     // 错误过滤配置，这些错误不会被记录到错误日志中
-    errorFilter: ['scheduleRender'],
+    errorFilter: ['indexOf'],
     // 是否开启登录拦截
     loginInterception: true,
     // 是否开启登录RSA加密

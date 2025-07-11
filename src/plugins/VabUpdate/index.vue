@@ -49,6 +49,7 @@ const lastTime = dayjs().format('YYYY-MM-DD')
 const save = async () => {
     if (!offlineReady.value && !needRefresh.value) {
         show.value = false
+        hasShownDialog.value = false // 关闭弹窗时重置，防止重复弹窗
         setTimeout(() => {
             location.reload()
         }, 300) // 先关闭弹窗再刷新
@@ -76,6 +77,7 @@ const save = async () => {
 
         // 重置状态并刷新页面
         isUpdating.value = false
+        hasShownDialog.value = false // 更新完成后重置，防止重复弹窗
         location.reload()
     }, 1000 * 10)
 }
@@ -88,11 +90,11 @@ const handleShow = () => {
     }
 }
 
-onMounted(() => {
-    setTimeout(() => {
-        handleShow()
-    }, 1000 * 3)
-})
+// onMounted(() => {
+//     setTimeout(() => {
+//         handleShow()
+//     }, 1000 * 3)
+// })
 
 watch(
     () => offlineReady.value || needRefresh.value,
@@ -103,6 +105,7 @@ watch(
                 buttonText.value = translate('立即升级')
             } else {
                 buttonText.value = translate('关闭')
+                hasShownDialog.value = false // 状态变为关闭时重置，防止重复弹窗
             }
         }
         // 只有当值为 true 且没有显示过弹窗时，才调用 handleShow

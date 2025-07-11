@@ -1,6 +1,6 @@
 {
     "name": "shop-vite",
-    "version": "29.4.5",
+    "version": "29.5.6",
     "private": true,
     "author": "github.com/zxwk1998",
     "scripts": {
@@ -48,7 +48,7 @@
         "disable-devtool": "^0.3.8",
         "dompurify": "^3.2.6",
         "echarts": "^5.6.0",
-        "element-plus": "^2.10.3",
+        "element-plus": "^2.10.4",
         "file-saver": "^2.0.5",
         "jsencrypt": "^3.3.2",
         "lodash-es": "^4.17.21",

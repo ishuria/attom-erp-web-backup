@@ -386,17 +386,6 @@ const closeMenu = () => {
 }
 
 // 设置 Sortable 全局选项，避免多实例冲突
-try {
-    document.addEventListener(
-        'touchmove',
-        (evt) => {
-            evt.preventDefault()
-        },
-        { passive: false }
-    )
-} catch (error) {
-    console.warn('无法设置 touchmove 事件', error)
-}
 
 let sortable: Sortable | null = null
 
