@@ -793,24 +793,36 @@ const toggleTabFixedDropdown = () => {
         }
 
         &-rect {
-            height: var(--el-tags-height);
+            height: var(--el-tab-item-height);
 
             :deep() {
                 .el-tabs__header {
-                    margin: -1px 0 0 0;
-
                     .el-tabs__item {
-                        height: var(--el-tabs-height);
+                        height: var(--el-tab-item-height);
+                        margin-right: 5px;
+                        border: 1px solid var(--el-border-color) !important;
+                        border-radius: var(--el-border-radius-base) !important;
+
+                        &:hover {
+                            color: var(--el-color-primary);
+                            background: var(--el-color-primary-light-9);
+
+                            &::before {
+                                position: absolute;
+                                top: 0;
+                                left: -100%;
+                                width: 100%;
+                                height: 100%;
+                                content: '';
+                                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+                                animation: shimmer 0.6s ease-in-out;
+                            }
+                        }
 
                         &.is-active {
+                            color: var(--el-color-primary);
                             background: var(--el-color-primary-light-9);
                         }
-                    }
-
-                    .el-tabs__nav-prev,
-                    .el-tabs__nav-next {
-                        height: var(--el-tabs-height);
-                        line-height: var(--el-tabs-height);
                     }
                 }
             }
