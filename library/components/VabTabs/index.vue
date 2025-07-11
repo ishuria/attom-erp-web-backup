@@ -186,7 +186,7 @@ defineOptions({
     name: 'VabTabs',
 })
 
-defineProps({
+const props = defineProps({
     layout: {
         type: String,
         default: '',
@@ -374,7 +374,6 @@ const toLastTab = async () => {
 const { x, y } = useMouse()
 
 const openMenu = (item: VisitedRoute) => {
-    console.log('openMenu', item)
     left.value = x.value
     top.value = y.value
     hoverRoute.value = item
@@ -386,28 +385,87 @@ const closeMenu = () => {
     hoverRoute.value = null
 }
 
+// 设置 Sortable 全局选项，避免多实例冲突
+try {
+    document.addEventListener(
+        'touchmove',
+        (evt) => {
+            evt.preventDefault()
+        },
+        { passive: false }
+    )
+} catch (error) {
+    console.warn('无法设置 touchmove 事件', error)
+}
+
 let sortable: Sortable | null = null
+
+const sortableId = ref(Date.now().toString())
+
 const handleTabDrag = () => {
-    if (theme.value.tabDrag && device.value !== 'mobile') {
+    nextTick(() => {
+        if (!theme.value.tabDrag || device.value === 'mobile') {
+            if (sortable) {
+                try {
+                    sortable.destroy()
+                } catch (error) {
+                    console.warn('销毁拖拽实例出错:', error)
+                } finally {
+                    sortable = null
+                }
+            }
+            return
+        }
+
         const navElement = document.querySelector('.el-tabs__nav.is-top') as HTMLElement
-        if (navElement) {
-            sortable = new Sortable(navElement, {
-                animation: 150,
-                easing: 'cubic-bezier(1, 0, 0, 1)',
-                draggable: '.el-tabs__item.is-top.is-closable',
-                filter: '.el-tabs__active-bar.is-top',
-                onEnd(e: any) {
+        if (!navElement) return
+
+        if (sortable) {
+            try {
+                sortable.destroy()
+            } catch (error) {
+                console.warn('销毁拖拽实例出错:', error)
+            } finally {
+                sortable = null
+            }
+        }
+
+        sortableId.value = Date.now().toString()
+        const currentId = sortableId.value
+
+        sortable = new Sortable(navElement, {
+            animation: 300,
+            easing: 'cubic-bezier(0.42, 0, 0.58, 1)',
+            draggable: '.el-tabs__item.is-top.is-closable',
+            filter: '.el-tabs__active-bar.is-top',
+            preventOnFilter: true,
+            dataIdAttr: `data-sortable-id-${currentId}`,
+            onStart() {
+                navElement.dataset.activeSort = currentId
+            },
+            onEnd(e: any) {
+                try {
+                    if (navElement.dataset.activeSort !== currentId) return
+                    delete navElement.dataset.activeSort
+
+                    if (!e || typeof e.oldIndex !== 'number' || typeof e.newIndex !== 'number') return
+                    if (e.oldIndex === e.newIndex) return
+
                     const routes = moveElement(
                         [...visitedRoutes.value],
                         parseInt(e.oldIndex) - 1,
                         parseInt(e.newIndex) - 1
                     ) as VisitedRoute[]
+
+                    // 更新路由数据
                     updateVisitedRoutes(routes)
-                    _visitedRoutes.value = routes
-                },
-            })
-        }
-    }
+                    _visitedRoutes.value = [...routes]
+                } catch (error) {
+                    console.error('处理拖拽结束事件时出错:', error)
+                }
+            },
+        })
+    })
 }
 
 watchEffect(() => {
@@ -424,14 +482,39 @@ watch(
     { immediate: true }
 )
 
+// 监听主题变化和布局变化时重新初始化拖拽
 watch(
-    theme.value,
+    [() => theme.value, () => props.layout],
     () => {
-        if (theme.value.tabDrag) handleTabDrag()
-        else sortable?.destroy()
+        handleTabDrag()
     },
-    { immediate: true }
+    { immediate: true, deep: true }
 )
+
+// 监听标签变化时，确保拖拽功能仍然可用
+watch([() => visitedRoutes.value.length, () => tabActive.value], () => {
+    nextTick(() => {
+        handleTabDrag()
+    })
+})
+
+// 组件挂载后初始化拖拽
+onMounted(() => {
+    handleTabDrag()
+})
+
+// 组件销毁前清理拖拽实例
+onBeforeUnmount(() => {
+    if (sortable) {
+        try {
+            sortable.destroy()
+        } catch (error) {
+            console.warn('组件卸载时清理拖拽实例出错:', error)
+        } finally {
+            sortable = null
+        }
+    }
+})
 
 onBeforeMount(() => {
     window.addEventListener('beforeunload', handleCaughtRoutes)
