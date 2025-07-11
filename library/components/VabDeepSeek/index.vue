@@ -125,7 +125,7 @@
             </div>
             <template #footer>
                 <div class="drawer-footer">
-                    <el-button type="success" @click="testConnection">连接测试</el-button>
+                    <el-button @click="testConnection">连接测试</el-button>
                     <el-button type="primary" @click="saveSettings">保存设置</el-button>
                 </div>
             </template>
@@ -866,8 +866,6 @@ onMounted(() => {
 }
 
 .settings-content {
-    padding: 20px;
-
     .slider-with-tooltip {
         width: 100%;
     }
