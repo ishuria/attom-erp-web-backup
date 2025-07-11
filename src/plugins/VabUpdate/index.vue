@@ -34,10 +34,13 @@ defineOptions({
 })
 
 const { getTitle: title } = useSettingsStore()
+// 添加isUpdating状态变量在组件作用域内
 const buttonText = ref<string>(translate('立即升级'))
 const loading = ref<boolean>(false)
 const version = ref<string>(packageVersion)
 const show = ref<boolean>(false)
+const hasShownDialog = ref<boolean>(false) // 添加标记，用于防止重复弹窗
+const isUpdating = ref<boolean>(false) // 添加更新中状态标志
 const { offlineReady, needRefresh, updateServiceWorker } = useRegisterSW({
     immediate: true,
 })
@@ -51,25 +54,37 @@ const save = async () => {
         }, 300) // 先关闭弹窗再刷新
         return
     }
+
+    // 设置更新标志，防止watch回调重置按钮文本
+    isUpdating.value = true
+
     buttonText.value = translate('正在更新')
     loading.value = true
+
+    // 执行更新操作
     await updateServiceWorker()
+    // 清理缓存
+    $clearPWACache()
+
     setTimeout(() => {
         loading.value = false
         buttonText.value = translate('更新完成')
+
+        // 更新完成后再关闭更新状态
         offlineReady.value = false
         needRefresh.value = false
-        $clearPWACache()
-        setTimeout(() => {
-            show.value = false
-            location.reload()
-        }, 1000 * 3)
-    }, 1000 * 7)
+
+        // 重置状态并刷新页面
+        isUpdating.value = false
+        location.reload()
+    }, 1000 * 10)
 }
 
 const handleShow = () => {
-    if (offlineReady.value || needRefresh.value) {
+    // 只有当需要更新且没有显示过弹窗时，才显示弹窗
+    if ((offlineReady.value || needRefresh.value) && !hasShownDialog.value) {
         show.value = true
+        hasShownDialog.value = true // 设置标记，表示已经显示过弹窗
     }
 }
 
@@ -82,12 +97,16 @@ onMounted(() => {
 watch(
     () => offlineReady.value || needRefresh.value,
     (val) => {
-        if (val) {
-            buttonText.value = translate('立即升级')
-        } else {
-            buttonText.value = translate('关闭')
+        // 只有未在更新过程中才改变按钮文本
+        if (!isUpdating.value) {
+            if (val) {
+                buttonText.value = translate('立即升级')
+            } else {
+                buttonText.value = translate('关闭')
+            }
         }
-        if (val) handleShow()
+        // 只有当值为 true 且没有显示过弹窗时，才调用 handleShow
+        if (val && !hasShownDialog.value) handleShow()
     },
     {
         immediate: true,
@@ -96,12 +115,37 @@ watch(
 
 onBeforeMount(() => {
     $sub('update-website', (servicesVersion: string) => {
-        if (servicesVersion) version.value = servicesVersion
-        offlineReady.value = true
-        needRefresh.value = true
-        handleShow()
+        // 版本比较函数
+        const isNewer = (v1: string, v2: string) => {
+            const v1Parts = v1.split('.').map(Number)
+            const v2Parts = v2.split('.').map(Number)
+
+            for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+                const v1Part = v1Parts[i] || 0
+                const v2Part = v2Parts[i] || 0
+                if (v1Part > v2Part) return true
+                if (v1Part < v2Part) return false
+            }
+            return false // 相等的情况返回false
+        }
+
+        if (servicesVersion) {
+            version.value = servicesVersion
+            // 只有当服务器版本大于本地版本时，才设置更新状态
+            if (isNewer(servicesVersion, packageVersion)) {
+                offlineReady.value = true
+                needRefresh.value = true
+                handleShow()
+            }
+        }
     })
 })
+
+// 重置弹窗显示状态的方法
+const resetDialogState = () => {
+    hasShownDialog.value = false
+    show.value = false
+}
 
 const fetchData = async () => {
     try {
@@ -111,13 +155,13 @@ const fetchData = async () => {
             url: `./vue-shop-vite-version.json?t=${Date.now()}`,
             method: 'get',
         })
-        return remoteVersion
+        return remoteVersion || packageVersion
     } catch {
-        return version
+        return packageVersion
     }
 }
 
-defineExpose({ save, show, fetchData })
+defineExpose({ save, show, fetchData, resetDialogState })
 </script>
 
 <style lang="scss" scoped>

@@ -176,12 +176,31 @@ const randomTheme = async () => {
 
 const checkUpdate = async () => {
     if (vabUpdateRef.value) {
+        // 先重置弹窗状态，确保可以显示
+        vabUpdateRef.value.resetDialogState?.()
         const remoteVersion = await vabUpdateRef.value.fetchData?.()
-        if (remoteVersion && remoteVersion !== localVersion) {
-            vabUpdateRef.value.show = true
+
+        // 版本比较：将版本号拆分为数字数组进行比较
+        const isNewer = (v1: string, v2: string) => {
+            const v1Parts = v1.split('.').map(Number)
+            const v2Parts = v2.split('.').map(Number)
+
+            for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+                const v1Part = v1Parts[i] || 0
+                const v2Part = v2Parts[i] || 0
+                if (v1Part > v2Part) return true
+                if (v1Part < v2Part) return false
+            }
+            return false // 相等的情况返回false
+        }
+
+        // 只有当远程版本大于本地版本时才显示更新弹窗
+        if (remoteVersion && isNewer(remoteVersion, localVersion)) {
             $pub('update-website', remoteVersion)
+            // 不需要在这里设置show=true，由update-website事件处理
         } else {
-            vabUpdateRef.value.show = true
+            // 如果是最新版本，只显示提示消息，不显示弹窗
+            $baseMessage('当前已是最新版本', 'success', 'hey')
         }
     } else {
         $pub('update-website', '')
