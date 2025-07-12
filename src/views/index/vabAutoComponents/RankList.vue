@@ -13,8 +13,8 @@
                     </div>
                 </div>
                 <div class="medal-list-item-right">
-                    <div class="item-title">把青春华章写在祖国大地上</div>
-                    <div class="item-type">type</div>
+                    <div class="item-title">{{ item.title }}</div>
+                    <div class="item-type">{{ item.type }}</div>
                 </div>
             </div>
         </div>
@@ -26,22 +26,32 @@ const iconList = ref<any>([
     {
         icon: 'apple-line',
         color: 'var(--el-color-primary)',
+        title: '把青春华章写在祖国大地上',
+        type: '热门',
     },
     {
         icon: 'qq-line',
         color: 'var(--el-color-success)',
+        title: '科技创新引领未来发展',
+        type: '推荐',
     },
     {
         icon: 'wechat-line',
         color: 'var(--el-color-warning)',
+        title: '数字化转型助力企业升级',
+        type: '精选',
     },
     {
         icon: 'twitter-line',
         color: 'var(--el-color-danger)',
+        title: '人工智能改变生活方式',
+        type: '热门',
     },
     {
         icon: 'twitch-line',
         color: '#ffc069',
+        title: '可持续发展理念深入人心',
+        type: '推荐',
     },
 ])
 </script>
@@ -123,7 +133,7 @@ const iconList = ref<any>([
             .item-type {
                 display: inline-block;
                 padding: 0 8px;
-                font-size: 14px;
+                font-size: var(--el-font-size-extra-small);
                 line-height: 20px;
                 color: var(--el-color-white);
                 background: var(--el-color-warning);
