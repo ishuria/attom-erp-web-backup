@@ -207,7 +207,9 @@ const checkUpdate = async () => {
             $pub('update-website', remoteVersion)
             // 不需要在这里设置show=true，由update-website事件处理
         } else {
-            $baseMessage('当前已是最新版本', 'success', 'hey')
+            $baseMessage('当前已是最新版本', 'success', 'hey', () => {
+                location.reload()
+            })
         }
     }
 }
