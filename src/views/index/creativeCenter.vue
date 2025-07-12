@@ -14,12 +14,9 @@
                                 </el-statistic>
                                 <div class="statistic-footer">
                                     <div v-for="(footer, index) in stat.footer" :key="index" class="footer-item">
-                                        <span>{{ footer.label }}</span>
+                                        {{ footer.label }}
                                         <span :class="footer.color">
                                             {{ footer.value }}
-                                            <el-icon>
-                                                <component :is="footer.icon" />
-                                            </el-icon>
                                         </span>
                                     </div>
                                 </div>
@@ -113,7 +110,6 @@ const statistics = [
                 label: '比昨天',
                 value: '24%',
                 color: 'red',
-                icon: 'CaretTop',
             },
         ],
     },
@@ -126,7 +122,6 @@ const statistics = [
                 label: '环比',
                 value: '12%',
                 color: 'green',
-                icon: 'CaretBottom',
             },
         ],
     },
@@ -139,13 +134,6 @@ const statistics = [
                 label: '比昨天',
                 value: '16%',
                 color: 'red',
-                icon: 'CaretTop',
-            },
-            {
-                label: '',
-                value: '',
-                color: '',
-                icon: 'ArrowRight',
             },
         ],
     },
@@ -253,39 +241,56 @@ const handelImage = () => {
     }
 
     .statistic-card {
+        position: relative;
         height: 100%;
-        padding: var(--el-padding);
-        background-color: var(--el-bg-color-overlay);
-        border-radius: 4px;
+        padding: 24px;
+        overflow: hidden;
+        background: linear-gradient(135deg, var(--el-bg-color-overlay) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border-radius: 12px;
 
         :deep() {
             .el-statistic__head {
-                margin-bottom: var(--el-margin);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 16px;
+                font-weight: 500;
+                text-align: center;
 
                 [class*='ri'] {
+                    padding: 8px;
                     margin-top: -1.5px;
-                    margin-right: 3px;
+                    margin-right: 0;
+                    margin-bottom: 8px;
+                    font-size: 18px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 8px;
                 }
 
                 .ri-user-heart-line {
                     color: var(--el-color-danger);
+                    background: rgba(245, 108, 108, 0.1);
                 }
 
                 .ri-contacts-book-2-line {
                     color: var(--el-color-primary);
+                    background: rgba(64, 158, 255, 0.1);
                 }
 
                 .ri-money-cny-circle-line {
                     color: var(--el-color-warning);
+                    background: rgba(230, 162, 60, 0.1);
                 }
             }
 
-            .el-statistic__head,
             .el-statistic__content {
                 display: flex;
-                flex-wrap: wrap;
                 align-items: center;
                 justify-content: center;
+                font-size: var(--el-font-size-large);
+                font-weight: 600;
+                color: var(--el-text-color-primary);
             }
         }
 
@@ -294,7 +299,7 @@ const handelImage = () => {
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            margin-top: var(--el-margin);
+            margin-top: 16px;
             font-size: var(--el-font-size-extra-small);
             color: var(--el-text-color-regular);
 
@@ -302,11 +307,15 @@ const handelImage = () => {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                padding: 4px 8px;
+                margin: 0 4px;
 
                 span:last-child {
                     display: inline-flex;
                     align-items: center;
-                    margin-left: 4px;
+                    margin-left: 6px;
+                    font-size: 13px;
+                    font-weight: 600;
                 }
             }
 
