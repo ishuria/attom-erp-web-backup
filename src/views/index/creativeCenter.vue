@@ -80,7 +80,7 @@
                                         <el-row :gutter="20">
                                             <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
                                                 <el-image :src="handelImage()" />
-                                                <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                                                <p>绝佳的 vue3 + vite7 前端框架</p>
                                             </el-col>
                                             <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
                                                 <h3>6999</h3>
@@ -106,7 +106,7 @@
                                         <el-row :gutter="20">
                                             <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
                                                 <el-image :src="handelImage()" />
-                                                <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                                                <p>绝佳的 vue3 + vite7 前端框架</p>
                                             </el-col>
                                             <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
                                                 <h3>1999</h3>
@@ -132,7 +132,7 @@
                                         <el-row :gutter="20">
                                             <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
                                                 <el-image :src="handelImage()" />
-                                                <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                                                <p>绝佳的 vue3 + vite7 前端框架</p>
                                             </el-col>
                                             <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
                                                 <h3>1999</h3>
@@ -158,7 +158,7 @@
                                         <el-row :gutter="20">
                                             <el-col class="item-content-wrap" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
                                                 <el-image :src="handelImage()" />
-                                                <p>绝佳的 vue3 + vite4 + element-plus 前端框架</p>
+                                                <p>绝佳的 vue3 + vite7 前端框架</p>
                                             </el-col>
                                             <el-col :lg="3" :md="6" :sm="6" :xl="3" :xs="6">
                                                 <h3>1999</h3>
