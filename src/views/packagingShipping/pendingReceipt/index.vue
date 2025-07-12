@@ -509,7 +509,6 @@ import {
   signComponent,
   signMoreRecord,
   updateProductDate,
-  updateRecordCount,
   updateRecordOrder,
   updateSignLog
 } from '/@/api/devlocal/packagingShipping'
@@ -610,8 +609,11 @@ const signFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
 // 展示签收弹窗
 const showSignDialog = (row: any) => {
+  console.log(row)
   signVisible.value = true
   copyRow.value = row
+  // 默认初始化签收数量为零件采购数量
+  signForm.signCount = Number(row.purchaseCount - row.signCount)
 }
 // 关闭签收弹窗
 const closeSignDialog = () => {
