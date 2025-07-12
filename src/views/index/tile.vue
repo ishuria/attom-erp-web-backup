@@ -7,13 +7,16 @@
                         :body-style="{
                             height: '222px',
                         }"
+                        class="main-portal-card"
                     >
                         <vab-link target="_blank" to="/portal">
-                            <div class="tile-title">
-                                <vab-icon icon="building-line" />
-                                <span>门户</span>
+                            <div class="portal-content">
+                                <div class="portal-description">
+                                    <p>企业级应用门户</p>
+                                    <p>统一入口，便捷管理</p>
+                                </div>
+                                <vab-icon class="tile-svg" icon="lllustration/Scenes02" is-custom-svg />
                             </div>
-                            <vab-icon class="tile-svg" icon="lllustration/Scenes02" is-custom-svg />
                         </vab-link>
                     </vab-card>
                 </el-col>
@@ -193,6 +196,49 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
         }
     }
 
+    // 响应式CSS变量设置
+    // 大屏幕 (1920px+)
+    @media (min-width: 1920px) {
+        --tile-svg-height: 200px;
+        --tile-svg-right: -40px;
+    }
+
+    // 大屏幕 (1440px - 1919px)
+    @media (max-width: 1919px) and (min-width: 1440px) {
+        --tile-svg-height: 180px;
+        --tile-svg-right: -30px;
+    }
+
+    // 中等屏幕 (1200px - 1439px)
+    @media (max-width: 1439px) and (min-width: 1200px) {
+        --tile-svg-height: 160px;
+        --tile-svg-right: -25px;
+    }
+
+    // 小屏幕 (992px - 1199px)
+    @media (max-width: 1199px) and (min-width: 992px) {
+        --tile-svg-height: 140px;
+        --tile-svg-right: -20px;
+    }
+
+    // 平板 (769px - 991px)
+    @media (max-width: 991px) and (min-width: 769px) {
+        --tile-svg-height: 120px;
+        --tile-svg-right: -15px;
+    }
+
+    // 手机横屏 (481px - 768px)
+    @media (max-width: 768px) and (min-width: 481px) {
+        --tile-svg-height: 100px;
+        --tile-svg-right: -10px;
+    }
+
+    // 手机竖屏 (480px以下)
+    @media (max-width: 480px) {
+        --tile-svg-height: 0px;
+        --tile-svg-right: 0px;
+    }
+
     .tile-box {
         position: relative;
 
@@ -202,25 +248,53 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
             }
         }
 
-        //  padding: var(--el-padding) var(--el-padding) 0 var(--el-padding);
-        // background: var(--el-color-white);
-        // border: 1px solid var(--el-border-color);
-        // border-radius: var(--el-border-radius-base);
-
-        .tile-title {
-            font-size: var(--el-font-size-large);
-
-            span {
-                margin-left: 3px;
+        .main-portal-card {
+            .portal-content {
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 100%;
             }
-        }
 
-        .tile-svg {
-            position: absolute;
-            right: -40px;
-            bottom: 10px;
-            width: auto;
-            height: 200px;
+            .portal-description {
+                z-index: 2;
+                flex: 1;
+
+                p {
+                    margin: 0;
+                    margin-bottom: 8px;
+                    font-size: var(--el-font-size-base);
+                    line-height: 1.6;
+                    color: var(--el-color-grey);
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+
+            .tile-svg {
+                position: absolute;
+                top: 50%;
+                right: var(--tile-svg-right, -30px);
+                z-index: 1;
+                width: auto;
+                height: var(--tile-svg-height, 180px);
+                opacity: 1;
+                transform: translateY(-50%);
+                transition: all 0.3s ease;
+            }
+
+            &:hover {
+                .portal-description p {
+                    color: var(--el-color-primary);
+                }
+
+                .tile-svg {
+                    opacity: 0.9;
+                    transform: translateY(-50%) scale(1.05);
+                }
+            }
         }
 
         a {
@@ -229,7 +303,7 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
             display: block;
             width: 100%;
             height: 100%;
-            padding: var(--el-padding);
+            padding: 20px 25px;
             color: var(--el-color-grey);
         }
 
@@ -293,10 +367,6 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
                     }
 
                     &:hover {
-                        .tile-title {
-                            color: var(--el-color-primary);
-                        }
-
                         .icon-panel-title {
                             color: var(--el-color-primary);
 
@@ -309,6 +379,37 @@ $breakpoints: (480px 100%, 768px 100%, 960px 100%, 1280px 90%, 1440px 80%, 1680p
                             transform: translate3d(50%, 50%, 0) scale3d(15, 15, 15);
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// 响应式优化 - 补充样式
+@media (max-width: 768px) and (min-width: 481px) {
+    .tile-container {
+        .tile-box {
+            .main-portal-card {
+                .portal-description {
+                    p {
+                        font-size: var(--el-font-size-small);
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .tile-container {
+        .tile-box {
+            .main-portal-card {
+                .tile-svg {
+                    display: none;
+                }
+
+                .portal-description {
+                    text-align: center;
                 }
             }
         }
