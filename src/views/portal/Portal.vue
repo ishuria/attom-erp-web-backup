@@ -12,65 +12,42 @@
                                 background-color="#39364d"
                                 text-color="var(--el-color-white)"
                             >
-                                <el-menu-item index="1" @click="openWindow('https://vuejs-core.cn/admin-pro')">
-                                    <template #title>Vue Admin Pro：企业级中后台前端框架</template>
-                                </el-menu-item>
-                                <el-menu-item index="2" @click="openWindow('https://vuejs-core.cn/admin-plus')">
-                                    <template #title>Vue Admin Plus：企业级中后台前端框架</template>
-                                </el-menu-item>
-                                <el-menu-item index="3" @click="openWindow('https://vuejs-core.cn/shop-vite')">
-                                    <template #title>Vue Shop Vite：全新一代前端模板</template>
+                                <el-menu-item
+                                    v-for="item in portalData.menuItems"
+                                    :key="item.index"
+                                    :index="item.index"
+                                    @click="openWindow(item.url)"
+                                >
+                                    <template #title>{{ item.title }}</template>
                                 </el-menu-item>
                             </el-menu>
                         </div>
                     </el-col>
                     <el-col :span="18">
                         <el-carousel arrow="always" height="420px" :interval="3000" @change="handleChange">
-                            <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-pro')" />
-                            <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-plus')" />
-                            <el-carousel-item @click="openWindow('https://vuejs-core.cn/shop-vite')" />
+                            <el-carousel-item v-for="item in portalData.carouselItems" :key="item.url" @click="openWindow(item.url)" />
                         </el-carousel>
                     </el-col>
                     <el-col :span="24">
                         <div style="background-color: #f5f7fa">
                             <div class="description-box">
                                 <el-row>
-                                    <el-col :span="6">
+                                    <el-col v-for="(item, index) in portalData.descriptionItems" :key="index" :span="6">
                                         <div class="show-box">
-                                            <div style="float: left">
+                                            <div v-if="item.type === 'title'" style="float: left">
                                                 <h1>
-                                                    <span class="clip">Vue Shop Vite</span>
+                                                    <span class="clip">{{ item.title }}</span>
                                                 </h1>
-                                                <p class="text">全新一代的前端模板</p>
+                                                <p class="text">{{ item.subtitle }}</p>
+                                            </div>
+                                            <div v-else>
+                                                <div class="system-class-icon" :style="{ background: item.backgroundColor }">
+                                                    <vab-icon :icon="item.icon" />
+                                                </div>
+                                                <div class="describe">{{ item.title }}</div>
                                             </div>
                                         </div>
-                                        <vab-divider direction="vertical" />
-                                    </el-col>
-                                    <el-col :span="6">
-                                        <div class="show-box">
-                                            <div class="system-class-icon" style="background: #20c2dc">
-                                                <vab-icon icon="bubble-chart-line" />
-                                            </div>
-                                            <div class="describe">高效 Efficient</div>
-                                        </div>
-                                        <vab-divider direction="vertical" />
-                                    </el-col>
-                                    <el-col :span="6">
-                                        <div class="show-box">
-                                            <div class="system-class-icon" style="background: #f7753f">
-                                                <vab-icon icon="medal-fill" />
-                                            </div>
-                                            <div class="describe">专业 Major</div>
-                                        </div>
-                                        <vab-divider direction="vertical" />
-                                    </el-col>
-                                    <el-col :span="6">
-                                        <div class="show-box">
-                                            <div class="system-class-icon" style="background: #6a59f4">
-                                                <vab-icon icon="seedling-fill" />
-                                            </div>
-                                            <div class="describe">美观 Beautiful</div>
-                                        </div>
+                                        <vab-divider v-if="index < portalData.descriptionItems.length - 1" direction="vertical" />
                                     </el-col>
                                 </el-row>
                             </div>
@@ -80,25 +57,31 @@
             </main>
             <main>
                 <el-carousel arrow="always" class="hidden-sm-and-up" height="200px" :interval="3000" style="margin-top: 70px">
-                    <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-pro')" />
-                    <el-carousel-item @click="openWindow('https://vuejs-core.cn/admin-plus')" />
-                    <el-carousel-item @click="openWindow('https://vuejs-core.cn/shop-vite')" />
+                    <el-carousel-item v-for="item in portalData.carouselItems" :key="item.url" @click="openWindow(item.url)" />
                 </el-carousel>
                 <el-row :gutter="20">
                     <el-col :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
-                        <div class="news-tit"><h2>今日要闻</h2></div>
+                        <div class="news-tit">
+                            <h2>{{ portalData.newsTitles[0] }}</h2>
+                        </div>
                         <el-image class="news-img" :src="banner_1" />
                     </el-col>
                     <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
-                        <div class="news-tit"><h2>动态资讯</h2></div>
+                        <div class="news-tit">
+                            <h2>{{ portalData.newsTitles[1] }}</h2>
+                        </div>
                         <icon-list />
                     </el-col>
                     <el-col :lg="8" :md="8" :sm="24" :xl="8" :xs="24">
-                        <div class="news-tit"><h2>工作日程</h2></div>
+                        <div class="news-tit">
+                            <h2>{{ portalData.newsTitles[2] }}</h2>
+                        </div>
                         <el-calendar v-model="date" style="border: 1px solid var(--el-border-color)" />
                     </el-col>
                     <el-col :lg="16" :md="16" :sm="24" :xl="16" :xs="24">
-                        <div class="news-tit"><h2>互动留言</h2></div>
+                        <div class="news-tit">
+                            <h2>{{ portalData.newsTitles[3] }}</h2>
+                        </div>
                         <el-form inline :model="newMessage" @submit.prevent="submitMessage">
                             <el-form-item>
                                 <el-input
@@ -151,25 +134,92 @@ defineOptions({
     name: 'Portal',
 })
 
+// 所有数据集中管理
+const portalData = reactive({
+    // 菜单数据
+    menuItems: [
+        {
+            index: '1',
+            title: 'Vue Admin Pro：企业级中后台前端框架',
+            url: 'https://vuejs-core.cn/admin-pro',
+        },
+        {
+            index: '2',
+            title: 'Vue Admin Plus：企业级中后台前端框架',
+            url: 'https://vuejs-core.cn/admin-plus',
+        },
+        {
+            index: '3',
+            title: 'Vue Shop Vite：全新一代前端模板',
+            url: 'https://vuejs-core.cn/shop-vite',
+        },
+    ],
+
+    // 轮播图数据
+    carouselItems: [
+        {
+            url: 'https://vuejs-core.cn/admin-pro',
+            background: carousel_2,
+        },
+        {
+            url: 'https://vuejs-core.cn/admin-plus',
+            background: carousel_1,
+        },
+        {
+            url: 'https://vuejs-core.cn/shop-vite',
+            background: carousel_3,
+        },
+    ],
+
+    // 描述信息数据
+    descriptionItems: [
+        {
+            title: 'Vue Shop Vite',
+            subtitle: '全新一代的前端模板',
+            type: 'title',
+        },
+        {
+            icon: 'bubble-chart-line',
+            title: '高效 Efficient',
+            backgroundColor: '#20c2dc',
+        },
+        {
+            icon: 'medal-fill',
+            title: '专业 Major',
+            backgroundColor: '#f7753f',
+        },
+        {
+            icon: 'seedling-fill',
+            title: '美观 Beautiful',
+            backgroundColor: '#6a59f4',
+        },
+    ],
+
+    // 新闻标题数据
+    newsTitles: ['今日要闻', '动态资讯', '工作日程', '互动留言'],
+
+    // 分页配置
+    pageSize: 5,
+})
+
 const background = ref<string>('')
 
 const handleChange = (value: any) => {
     switch (value) {
         case 0: {
-            background.value = `url('${carousel_1}')`
+            background.value = `url('${portalData.carouselItems[0].background}')`
             break
         }
         case 1: {
-            background.value = `url('${carousel_2}')`
+            background.value = `url('${portalData.carouselItems[1].background}')`
             break
         }
         case 2: {
-            background.value = `url('${carousel_3}')`
+            background.value = `url('${portalData.carouselItems[2].background}')`
             break
         }
-
         default: {
-            background.value = `url('${carousel_1}')`
+            background.value = `url('${portalData.carouselItems[0].background}')`
             break
         }
     }
@@ -183,9 +233,8 @@ const date = ref<any>(new Date())
 
 // 留言数据
 const messages = ref<any[]>([])
-const pageSize = 5
 const currentPage = ref(1)
-const pagedMessages = computed(() => messages.value.slice(0, currentPage.value * pageSize))
+const pagedMessages = computed(() => messages.value.slice(0, currentPage.value * portalData.pageSize))
 
 const newMessage = reactive({ name: '', content: '' })
 
@@ -237,7 +286,7 @@ function loadMore() {
         top: 0;
         width: 100%;
         height: 180px;
-        background: url('/@/assets/portal_images/carousel_1.jpg');
+        background: url('/@/assets/portal_images/carousel_2.jpg');
         opacity: 0.5;
         filter: blur(100px);
     }
@@ -372,12 +421,12 @@ function loadMore() {
 
 :deep() {
     .el-carousel__item:nth-of-type(1) {
-        background: url('/@/assets/portal_images/carousel_1.jpg');
+        background: url('/@/assets/portal_images/carousel_2.jpg');
         background-size: cover;
     }
 
     .el-carousel__item:nth-of-type(2) {
-        background: url('/@/assets/portal_images/carousel_2.jpg');
+        background: url('/@/assets/portal_images/carousel_1.jpg');
         background-size: cover;
     }
 
