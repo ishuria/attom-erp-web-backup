@@ -105,7 +105,11 @@
                             <el-table-column label="时间" prop="date" width="120" />
                             <el-table-column label="点赞" width="80">
                                 <template #default="scope">
-                                    <el-button size="small" type="text" @click="likeMessage(scope.$index + (currentPage - 1) * pageSize)">
+                                    <el-button
+                                        size="small"
+                                        type="text"
+                                        @click="likeMessage(scope.$index + (currentPage - 1) * portalData.pageSize)"
+                                    >
                                         👍 {{ scope.row.likes }}
                                     </el-button>
                                 </template>
