@@ -1,5 +1,5 @@
 <template>
-    <vab-app />
+  <vab-app />
 </template>
 
 <script lang="ts" setup>
@@ -8,7 +8,7 @@ import { disableDebugger } from '/@/config'
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
-    name: 'App',
+  name: 'App',
 })
 
 const settingsStore = useSettingsStore()
@@ -17,45 +17,45 @@ const route = useRoute()
 
 // 使用防抖优化resize事件处理
 const resizeContainer = useDebounceFn(() => {
-    const vh = window.innerHeight * 0.01
-    const el = ref<HTMLElement | null>(null)
-    useCssVar('--vh', el).value = `${vh}px`
+  const vh = window.innerHeight * 0.01
+  const el = ref<HTMLElement | null>(null)
+  useCssVar('--vh', el).value = `${vh}px`
 }, 100)
 
 onBeforeMount(() => {
-    updateTheme()
-    /**
-     * @description: 修复ios、android等移动端浏览器100vh兼容问题
-     * @author sundan
-     */
-    resizeContainer()
+  updateTheme()
+  /**
+   * @description: 修复ios、android等移动端浏览器100vh兼容问题
+   * @author sundan
+   */
+  resizeContainer()
 })
 
 onMounted(() => {
-    // 添加事件监听器
-    globalThis.addEventListener('orientationchange', resizeContainer)
-    globalThis.addEventListener('resize', resizeContainer)
+  // 添加事件监听器
+  globalThis.addEventListener('orientationchange', resizeContainer)
+  globalThis.addEventListener('resize', resizeContainer)
 
-    // 是否允许生产环境进行代码调试，请前往config/cli.config.ts文件配置
-    setTimeout(() => {
-        if (
-            !location.hostname.includes('127') &&
-            !location.hostname.includes('localhost') &&
-            (location.hostname.includes('vuejs-core') || disableDebugger) &&
-            route.query &&
-            route.query.debugger !== 'auto'
-        ) {
-            DisableDevtool({
-                url: 'https://vuejs-core.cn/debugger',
-                timeOutUrl: 'https://vuejs-core.cn/debugger',
-            })
-        }
-    }, 1000)
+  // 是否允许生产环境进行代码调试，请前往config/cli.config.ts文件配置
+  setTimeout(() => {
+    if (
+      !location.hostname.includes('127') &&
+      !location.hostname.includes('localhost') &&
+      (location.hostname.includes('vuejs-core') || disableDebugger) &&
+      route.query &&
+      route.query.debugger !== 'auto'
+    ) {
+      DisableDevtool({
+        url: 'https://vuejs-core.cn/debugger',
+        timeOutUrl: 'https://vuejs-core.cn/debugger',
+      })
+    }
+  }, 1000)
 })
 
 onUnmounted(() => {
-    // 清理事件监听器
-    globalThis.removeEventListener('orientationchange', resizeContainer)
-    globalThis.removeEventListener('resize', resizeContainer)
+  // 清理事件监听器
+  globalThis.removeEventListener('orientationchange', resizeContainer)
+  globalThis.removeEventListener('resize', resizeContainer)
 })
 </script>

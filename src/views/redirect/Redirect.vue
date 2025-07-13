@@ -1,15 +1,15 @@
 <template>
-    <div class="redirect-container"></div>
+  <div class="redirect-container"></div>
 </template>
 
 <script lang="ts" setup>
 defineOptions({
-    name: 'Redirect',
+  name: 'Redirect',
 })
 
 onBeforeMount(() => {
-    setTimeout(() => {
-        history.back()
-    }, 500)
+  setTimeout(() => {
+    history.back()
+  }, 500)
 })
 </script>

@@ -10,19 +10,19 @@ import { isExternal } from '/@/utils/validate'
  * @returns {*}
  */
 export const convertRouter = (asyncRoutes: VabRouteRecord[]) => {
-    const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
-    return asyncRoutes.map((route: VabRouteRecord) => {
-        if (route.component)
-            if (route.component === 'Layout') route.component = () => import('/@vab/layouts/index.vue')
-            else {
-                const index = route.component.indexOf('views')
-                const path = index > 0 ? route.component.slice(index) : `${route.component}`
-                route.component = routeAllPathToCompMap[`../${path}`]
-            }
-        if (route.children && route.children.length > 0) route.children = convertRouter(route.children)
-        if (route.children && route.children.length === 0) delete route.children
-        return route
-    })
+  const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`)
+  return asyncRoutes.map((route: VabRouteRecord) => {
+    if (route.component)
+      if (route.component === 'Layout') route.component = () => import('/@vab/layouts/index.vue')
+      else {
+        const index = route.component.indexOf('views')
+        const path = index > 0 ? route.component.slice(index) : `${route.component}`
+        route.component = routeAllPathToCompMap[`../${path}`]
+      }
+    if (route.children && route.children.length > 0) route.children = convertRouter(route.children)
+    if (route.children && route.children.length === 0) delete route.children
+    return route
+  })
 }
 
 /**
@@ -33,23 +33,23 @@ export const convertRouter = (asyncRoutes: VabRouteRecord[]) => {
  * @returns {[]}
  */
 export const filterRoutes = (routes: VabRouteRecord[], rolesControl: boolean, baseUrl = '/') => {
-    return routes
-        .filter((route: VabRouteRecord) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
-        .map((route: VabRouteRecord) => {
-            route = { ...route }
-            if (route.path !== '*' && !isExternal(route.path)) {
-                if (baseUrl.slice(-1) === '/') route.path = baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
-                else route.path = baseUrl + (route.path[0] === '/' ? route.path : `/${route.path}`)
-            }
-            if (route.children && route.children.length > 0) {
-                route.children = filterRoutes(route.children, rolesControl, route.path)
-                if (route.children.length > 0) {
-                    route.childrenPathList = route.children.flatMap((item: VabRouteRecord) => item.childrenPathList)
-                    if (!route.redirect) route.redirect = route.children[0].redirect ? route.children[0].redirect : route.children[0].path
-                }
-            } else route.childrenPathList = [route.path]
-            return route
-        })
+  return routes
+    .filter((route: VabRouteRecord) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
+    .map((route: VabRouteRecord) => {
+      route = { ...route }
+      if (route.path !== '*' && !isExternal(route.path)) {
+        if (baseUrl.slice(-1) === '/') route.path = baseUrl + (route.path[0] === '/' ? route.path.slice(1) : route.path)
+        else route.path = baseUrl + (route.path[0] === '/' ? route.path : `/${route.path}`)
+      }
+      if (route.children && route.children.length > 0) {
+        route.children = filterRoutes(route.children, rolesControl, route.path)
+        if (route.children.length > 0) {
+          route.childrenPathList = route.children.flatMap((item: VabRouteRecord) => item.childrenPathList)
+          if (!route.redirect) route.redirect = route.children[0].redirect ? route.children[0].redirect : route.children[0].path
+        }
+      } else route.childrenPathList = [route.path]
+      return route
+    })
 }
 
 /**
@@ -65,9 +65,9 @@ export const filterRoutes = (routes: VabRouteRecord[], rolesControl: boolean, ba
  * @returns {*} matched
  */
 export const handleMatched = (routes: VabRouteRecord[], path: string): VabRouteRecord[] => {
-    return routes
-        .filter((route) => route.childrenPathList.indexOf(path) + 1)
-        .flatMap((route) => (route.children ? [route, ...handleMatched(route.children, path)] : [route]))
+  return routes
+    .filter((route) => route.childrenPathList.indexOf(path) + 1)
+    .flatMap((route) => (route.children ? [route, ...handleMatched(route.children, path)] : [route]))
 }
 
 /**
@@ -75,27 +75,27 @@ export const handleMatched = (routes: VabRouteRecord[], path: string): VabRouteR
  * @param tag route页信息
  */
 export const handleTabs = (tag: VabRoute) => {
-    let parentIcon = null
-    if (tag.matched)
-        for (let i = tag.matched.length - 2; i >= 0; i--) if (!parentIcon && tag.matched[i].meta.icon) parentIcon = tag.matched[i].meta.icon
-    if (!parentIcon) parentIcon = 'menu-line'
-    const path = handleActivePath(tag, true)
-    if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
-        const tabsStore = useTabsStore && useTabsStore()
-        let existedMeta = null
-        if (tabsStore && tabsStore.visitedRoutes) {
-            const existed = tabsStore.visitedRoutes.find((r: any) => r.path === path)
-            if (existed) existedMeta = existed.meta
-        }
-        return {
-            path,
-            query: tag.query,
-            params: tag.params,
-            name: tag.name,
-            parentIcon,
-            meta: existedMeta ? { ...tag.meta, ...existedMeta } : { ...tag.meta },
-        }
+  let parentIcon = null
+  if (tag.matched)
+    for (let i = tag.matched.length - 2; i >= 0; i--) if (!parentIcon && tag.matched[i].meta.icon) parentIcon = tag.matched[i].meta.icon
+  if (!parentIcon) parentIcon = 'menu-line'
+  const path = handleActivePath(tag, true)
+  if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
+    const tabsStore = useTabsStore && useTabsStore()
+    let existedMeta = null
+    if (tabsStore && tabsStore.visitedRoutes) {
+      const existed = tabsStore.visitedRoutes.find((r: any) => r.path === path)
+      if (existed) existedMeta = existed.meta
     }
+    return {
+      path,
+      query: tag.query,
+      params: tag.params,
+      name: tag.name,
+      parentIcon,
+      meta: existedMeta ? { ...tag.meta, ...existedMeta } : { ...tag.meta },
+    }
+  }
 }
 
 /**
@@ -105,12 +105,12 @@ export const handleTabs = (tag: VabRoute) => {
  * @returns {string|*}
  */
 export const handleActivePath = (route: VabRoute, isTab = false) => {
-    const { meta, path, matched, query }: any = route
-    const rawPath = matched ? matched.at(-1).path : path
-    const fullPath = query && Object.keys(query).length > 0 ? `${path}?${stringify(query)}` : path
-    if (isTab) return meta.dynamicNewTab ? fullPath : rawPath
-    if (meta.activeMenu) return meta.activeMenu
-    return fullPath
+  const { meta, path, matched, query }: any = route
+  const rawPath = matched ? matched.at(-1).path : path
+  const fullPath = query && Object.keys(query).length > 0 ? `${path}?${stringify(query)}` : path
+  if (isTab) return meta.dynamicNewTab ? fullPath : rawPath
+  if (meta.activeMenu) return meta.activeMenu
+  return fullPath
 }
 
 /**
@@ -118,13 +118,13 @@ export const handleActivePath = (route: VabRoute, isTab = false) => {
  * @param currentPath 当前页面地址
  */
 export const toLoginRoute = (currentPath: string) => {
-    if (recordRoute && currentPath !== '/')
-        return {
-            path: '/login',
-            query: { redirect: currentPath },
-            replace: true,
-        }
-    else return { path: '/login', replace: true }
+  if (recordRoute && currentPath !== '/')
+    return {
+      path: '/login',
+      query: { redirect: currentPath },
+      replace: true,
+    }
+  else return { path: '/login', replace: true }
 }
 
 /**
@@ -133,10 +133,10 @@ export const toLoginRoute = (currentPath: string) => {
  * @returns {*} Name数组
  */
 export const getNames = (routes: VabRouteRecord[]): string[] => {
-    return routes.flatMap((route: VabRouteRecord) => {
-        const names = []
-        if (route.name) names.push(route.name)
-        if (route.children) names.push(...getNames(route.children))
-        return names
-    })
+  return routes.flatMap((route: VabRouteRecord) => {
+    const names = []
+    if (route.name) names.push(route.name)
+    if (route.children) names.push(...getNames(route.children))
+    return names
+  })
 }

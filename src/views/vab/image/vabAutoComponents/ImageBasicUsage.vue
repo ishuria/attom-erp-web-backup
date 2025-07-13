@@ -1,10 +1,10 @@
 <template>
-    <div class="demo-image">
-        <div v-for="fit in fits" :key="fit" class="block">
-            <span class="demonstration">{{ fit }}</span>
-            <el-image :fit="fit" :src="url" />
-        </div>
+  <div class="demo-image">
+    <div v-for="fit in fits" :key="fit" class="block">
+      <span class="demonstration">{{ fit }}</span>
+      <el-image :fit="fit" :src="url" />
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -16,39 +16,39 @@ const url = ref<string>('https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c2
 
 <style lang="scss" scoped>
 :deep() {
-    .el-image {
-        width: 100px;
-        height: 100px;
-    }
+  .el-image {
+    width: 100px;
+    height: 100px;
+  }
 
-    @media (max-width: 768px) {
-        .el-image {
-            width: 50px;
-            height: 50px;
-        }
+  @media (max-width: 768px) {
+    .el-image {
+      width: 50px;
+      height: 50px;
     }
+  }
 }
 
 .demo-image {
-    .block {
-        box-sizing: border-box;
-        display: inline-block;
-        width: 20%;
-        padding: 30px 0;
-        vertical-align: top;
-        text-align: center;
-        border-right: solid 1px var(--el-border-color);
+  .block {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 20%;
+    padding: 30px 0;
+    vertical-align: top;
+    text-align: center;
+    border-right: solid 1px var(--el-border-color);
 
-        &:last-child {
-            border-right: none;
-        }
+    &:last-child {
+      border-right: none;
     }
+  }
 
-    .demonstration {
-        display: block;
-        margin-bottom: 20px;
-        font-size: 14px;
-        color: var(--el-text-color-secondary);
-    }
+  .demonstration {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+  }
 }
 </style>

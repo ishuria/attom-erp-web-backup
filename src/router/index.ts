@@ -9,104 +9,104 @@ import { asyncRoutes } from '/@/router/modules'
 import { setupPermissions } from '/@/router/permissions'
 
 export const constantRoutes: VabRouteRecord[] = [
-    {
-        path: '/login',
-        name: 'Login',
-        component: () => import('/@/views/login/Login.vue'),
-        meta: {
-            hidden: true,
-        },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('/@/views/login/Login.vue'),
+    meta: {
+      hidden: true,
     },
-    {
-        path: '/register',
-        name: 'Register',
-        component: () => import('/@/views/login/Register.vue'),
-        meta: {
-            hidden: true,
-        },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('/@/views/login/Register.vue'),
+    meta: {
+      hidden: true,
     },
-    {
-        path: '/password',
-        name: 'Password',
-        component: () => import('/@/views/login/Password.vue'),
-        meta: {
-            hidden: true,
-        },
+  },
+  {
+    path: '/password',
+    name: 'Password',
+    component: () => import('/@/views/login/Password.vue'),
+    meta: {
+      hidden: true,
     },
-    {
-        path: '/redirect',
-        name: 'Redirect',
-        component: () => import('/@/views/redirect/Redirect.vue'),
-        meta: {
-            hidden: true,
-        },
+  },
+  {
+    path: '/redirect',
+    name: 'Redirect',
+    component: () => import('/@/views/redirect/Redirect.vue'),
+    meta: {
+      hidden: true,
     },
-    {
-        path: '/403',
-        name: '403',
-        component: () => import('/@/views/error/403.vue'),
-        meta: {
-            hidden: true,
-        },
+  },
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('/@/views/error/403.vue'),
+    meta: {
+      hidden: true,
     },
-    {
-        path: '/404',
-        name: '404',
-        component: () => import('/@/views/error/404.vue'),
-        meta: {
-            hidden: true,
-        },
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('/@/views/error/404.vue'),
+    meta: {
+      hidden: true,
     },
+  },
 ]
 
 const router = createRouter({
-    history: isHashRouterMode ? createWebHashHistory(base) : createWebHistory(base),
-    routes: constantRoutes as RouteRecordRaw[],
+  history: isHashRouterMode ? createWebHashHistory(base) : createWebHistory(base),
+  routes: constantRoutes as RouteRecordRaw[],
 })
 
 const fatteningRoutes = (routes: VabRouteRecord[]): VabRouteRecord[] => {
-    return routes.flatMap((route) => {
-        return route.children ? fatteningRoutes(route.children) : route
-    })
+  return routes.flatMap((route) => {
+    return route.children ? fatteningRoutes(route.children) : route
+  })
 }
 
 const addRouter = (routes: VabRouteRecord[]) => {
-    routes.forEach((route: VabRouteRecord) => {
-        if (!router.hasRoute(route.name)) router.addRoute(route as RouteRecordRaw)
-        if (route.children) addRouter(route.children)
-    })
+  routes.forEach((route: VabRouteRecord) => {
+    if (!router.hasRoute(route.name)) router.addRoute(route as RouteRecordRaw)
+    if (route.children) addRouter(route.children)
+  })
 }
 
 export const resetRouter = (routes: VabRouteRecord[] = constantRoutes) => {
-    routes.map((route: VabRouteRecord) => {
-        if (route.children) route.children = fatteningRoutes(route.children)
-    })
-    router.getRoutes().forEach((route) => {
-        if (route.name) {
-            const routeName: RouteRecordName = route.name
-            router.hasRoute(routeName) && router.removeRoute(routeName)
-        }
-    })
-    addRouter(routes)
+  routes.map((route: VabRouteRecord) => {
+    if (route.children) route.children = fatteningRoutes(route.children)
+  })
+  router.getRoutes().forEach((route) => {
+    if (route.name) {
+      const routeName: RouteRecordName = route.name
+      router.hasRoute(routeName) && router.removeRoute(routeName)
+    }
+  })
+  addRouter(routes)
 }
 
 export const setupRouter = (app: App<Element>) => {
-    /*
-     * @description: 控制台禁止出现[Vue Router warn]: No match found for location with path "/index"报黄
-     * @tips: 未经全面测试，请谨慎使用！如遇问题请前往config/cli.config.ts配置disableRouterWarning:false
-     * @author: @sundan
-     */
-    if (disableRouterWarning)
-        router.addRoute({
-            path: '/:pathMatch(.*)*',
-            component: () => {},
-        })
+  /*
+   * @description: 控制台禁止出现[Vue Router warn]: No match found for location with path "/index"报黄
+   * @tips: 未经全面测试，请谨慎使用！如遇问题请前往config/cli.config.ts配置disableRouterWarning:false
+   * @author: @sundan
+   */
+  if (disableRouterWarning)
+    router.addRoute({
+      path: '/:pathMatch(.*)*',
+      component: () => {},
+    })
 
-    if (authentication === 'intelligence') addRouter(asyncRoutes)
-    setupPermissions(router)
-    app.use(router)
+  if (authentication === 'intelligence') addRouter(asyncRoutes)
+  setupPermissions(router)
+  app.use(router)
 
-    return router
+  return router
 }
 
 export default router

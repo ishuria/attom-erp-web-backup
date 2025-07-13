@@ -1,5 +1,5 @@
 <template>
-    <error-container :btn="btn" :headline="headline" icon="500" :info="info" :oops="oops" />
+  <error-container :btn="btn" :headline="headline" icon="500" :info="info" :oops="oops" />
 </template>
 
 <script lang="ts" setup>

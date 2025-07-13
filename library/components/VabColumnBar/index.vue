@@ -1,67 +1,67 @@
 /* stylelint-disable scss/operator-no-newline-after */
 <template>
-    <el-scrollbar
-        class="vab-column-bar"
-        :class="{
-            'is-collapse': collapse,
-            ['vab-column-bar-' + theme.columnStyle]: true,
-        }"
-    >
-        <vab-logo style="z-index: 999" />
-        <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
-            <template v-for="(item, index) in routes" :key="index + item.name">
-                <el-tab-pane :name="item.name">
-                    <template #label>
-                        <div
-                            class="vab-column-grid"
-                            :class="{
-                                ['vab-column-grid-' + theme.columnStyle]: true,
-                                'hide-text': (theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && !showCardText,
-                            }"
-                            :title="translate(item.meta.title)"
-                        >
-                            <div>
-                                <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-                                <span
-                                    v-if="translate(item.meta.title).length < 4"
-                                    v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
-                                    class="tab-text"
-                                >
-                                    {{ translate(item.meta.title) }}
-                                </span>
-                                <span
-                                    v-else
-                                    v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
-                                    class="tab-text small-text"
-                                >
-                                    {{ translate(item.meta.title) }}
-                                </span>
-                            </div>
-                        </div>
-                    </template>
-                </el-tab-pane>
-            </template>
-        </el-tabs>
-
-        <el-menu
-            ref="menuRef"
-            background-color="var(--el-menu-background-color-second)"
-            :default-active="activeMenu.data"
-            :default-openeds="defaultOpeneds"
-            mode="vertical"
-            :unique-opened="uniqueOpened"
-        >
-            <vab-menu v-for="item in partialRoutes" :key="item.path" :item="item" />
-        </el-menu>
-        <template v-if="(theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && theme.layout === 'column'">
-            <div class="toggle-tab-text-btn" :title="showCardText ? '隐藏文字' : '显示文字'" @click="showCardText = !showCardText">
-                <vab-icon :icon="showCardText ? 'eye-off-line' : 'eye-line'" />
+  <el-scrollbar
+    class="vab-column-bar"
+    :class="{
+      'is-collapse': collapse,
+      ['vab-column-bar-' + theme.columnStyle]: true,
+    }"
+  >
+    <vab-logo style="z-index: 999" />
+    <el-tabs v-model="tab.data" tab-position="left" @tab-click="handleTabClick">
+      <template v-for="(item, index) in routes" :key="index + item.name">
+        <el-tab-pane :name="item.name">
+          <template #label>
+            <div
+              class="vab-column-grid"
+              :class="{
+                ['vab-column-grid-' + theme.columnStyle]: true,
+                'hide-text': (theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && !showCardText,
+              }"
+              :title="translate(item.meta.title)"
+            >
+              <div>
+                <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
+                <span
+                  v-if="translate(item.meta.title).length < 4"
+                  v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
+                  class="tab-text"
+                >
+                  {{ translate(item.meta.title) }}
+                </span>
+                <span
+                  v-else
+                  v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
+                  class="tab-text small-text"
+                >
+                  {{ translate(item.meta.title) }}
+                </span>
+              </div>
             </div>
-        </template>
-        <div class="float-fold">
-            <vab-fold fold="contract-left-line" unfold="contract-right-line" />
-        </div>
-    </el-scrollbar>
+          </template>
+        </el-tab-pane>
+      </template>
+    </el-tabs>
+
+    <el-menu
+      ref="menuRef"
+      background-color="var(--el-menu-background-color-second)"
+      :default-active="activeMenu.data"
+      :default-openeds="defaultOpeneds"
+      mode="vertical"
+      :unique-opened="uniqueOpened"
+    >
+      <vab-menu v-for="item in partialRoutes" :key="item.path" :item="item" />
+    </el-menu>
+    <template v-if="(theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && theme.layout === 'column'">
+      <div class="toggle-tab-text-btn" :title="showCardText ? '隐藏文字' : '显示文字'" @click="showCardText = !showCardText">
+        <vab-icon :icon="showCardText ? 'eye-off-line' : 'eye-line'" />
+      </div>
+    </template>
+    <div class="float-fold">
+      <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+    </div>
+  </el-scrollbar>
 </template>
 
 <script lang="ts" setup>
@@ -72,7 +72,7 @@ import { useSettingsStore } from '/@/store/modules/settings'
 import { isExternal } from '/@/utils/validate'
 
 defineOptions({
-    name: 'VabColumnBar',
+  name: 'VabColumnBar',
 })
 
 const route = useRoute()
@@ -82,441 +82,441 @@ const { collapse, device, theme } = storeToRefs(settingsStore)
 const { foldSideBar, openSideBar } = settingsStore
 const routesStore = useRoutesStore()
 const {
-    getTab: tab,
-    getTabMenu: tabMenu,
-    getActiveMenu: activeMenu,
-    getRoutes: routes,
-    getPartialRoutes: partialRoutes,
+  getTab: tab,
+  getTabMenu: tabMenu,
+  getActiveMenu: activeMenu,
+  getRoutes: routes,
+  getPartialRoutes: partialRoutes,
 } = storeToRefs(routesStore)
 const menuRef = ref<any>(null)
 let timer: ReturnType<typeof setInterval>
 const showCardText = ref(true)
 
 const setDefaultOpeneds = () => {
-    timer = setTimeout(() => {
-        defaultOpeneds.forEach((item: string) => {
-            try {
-                menuRef.value.open(item)
-            } catch {
-                /* empty */
-            }
-        })
-    }, 0)
+  timer = setTimeout(() => {
+    defaultOpeneds.forEach((item: string) => {
+      try {
+        menuRef.value.open(item)
+      } catch {
+        /* empty */
+      }
+    })
+  }, 0)
 }
 
 const handleTabClick = () => {
-    nextTick(() => {
-        const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
-        if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
-            openPath(
-                isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
-                '_blank'
-            )
-            router.push('/redirect')
-        } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+  nextTick(() => {
+    const openPath = (path: any, target: string) => (target === '_blank' ? window.open(path) : (location.href = path))
+    if (isExternal(tabMenu.value.path) || tabMenu.value.meta.target === '_blank') {
+      openPath(
+        isExternal(tabMenu.value.path) ? tabMenu.value.path : isHashRouterMode ? `#${tabMenu.value.path}` : tabMenu.value.path,
+        '_blank'
+      )
+      router.push('/redirect')
+    } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
 
-        setDefaultOpeneds()
-    })
+    setDefaultOpeneds()
+  })
 }
 
 onMounted(() => {
-    nextTick(() => {
-        setDefaultOpeneds()
-        if (theme.value.layout === 'column')
-            watch(
-                route,
-                () => {
-                    if (route.meta.noColumn && theme.value.layout === 'column') {
-                        if (device.value !== 'mobile') foldSideBar()
-                        useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, {
-                            id: 'fold-unfold-useStyleTag',
-                        })
-                        useStyleTag(`.toggle-tab-text-btn {display: none;}`, {
-                            id: 'toggle-tab-text-btn-useStyleTag',
-                        })
-                    } else {
-                        if (device.value !== 'mobile') openSideBar()
-                        useStyleTag('', { id: 'fold-unfold-useStyleTag' })
-                        useStyleTag('', { id: 'toggle-tab-text-btn-useStyleTag' })
-                    }
-                },
-                {
-                    immediate: true,
-                }
-            )
-    })
+  nextTick(() => {
+    setDefaultOpeneds()
+    if (theme.value.layout === 'column')
+      watch(
+        route,
+        () => {
+          if (route.meta.noColumn && theme.value.layout === 'column') {
+            if (device.value !== 'mobile') foldSideBar()
+            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, {
+              id: 'fold-unfold-useStyleTag',
+            })
+            useStyleTag(`.toggle-tab-text-btn {display: none;}`, {
+              id: 'toggle-tab-text-btn-useStyleTag',
+            })
+          } else {
+            if (device.value !== 'mobile') openSideBar()
+            useStyleTag('', { id: 'fold-unfold-useStyleTag' })
+            useStyleTag('', { id: 'toggle-tab-text-btn-useStyleTag' })
+          }
+        },
+        {
+          immediate: true,
+        }
+      )
+  })
 })
 
 onBeforeUnmount(() => {
-    if (timer) clearTimeout(timer)
+  if (timer) clearTimeout(timer)
 })
 </script>
 
 <style lang="scss" scoped>
 @mixin active {
-    &:hover {
-        color: var(--el-color-primary);
-        background-color: var(--el-color-primary-light-9);
+  &:hover {
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
 
-        i,
-        svg {
-            color: var(--el-color-primary);
-        }
+    i,
+    svg {
+      color: var(--el-color-primary);
     }
+  }
 
-    &.is-active {
-        color: var(--el-color-primary);
-        background-color: var(--el-color-primary-light-9);
-    }
+  &.is-active {
+    color: var(--el-color-primary);
+    background-color: var(--el-color-primary-light-9);
+  }
 }
 
 .vab-column-bar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--el-left-menu-width);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--el-left-menu-width);
+  overflow: hidden;
+  background: var(--el-color-white);
+  border-right: 1px solid var(--el-border-color);
+
+  &-vertical,
+  &-card,
+  &-arrow {
+    :deep() {
+      .el-tabs + .el-menu {
+        left: var(--el-left-menu-width-min);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
+        border: 0;
+      }
+    }
+  }
+
+  // 当有按钮时，调整高度
+  &-card,
+  &-vertical {
+    :deep() {
+      .el-tabs__nav-wrap.is-left {
+        .el-tabs__nav-scroll {
+          height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
+        }
+      }
+
+      .el-tabs__nav {
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
+      }
+    }
+  }
+
+  &-horizontal,
+  &-semicircle {
+    .float-fold {
+      left: 26.5px;
+    }
+
+    :deep() {
+      .vab-logo-column {
+        .logo {
+          width: calc(var(--el-left-menu-width-min) * 1.4) !important;
+        }
+
+        .title {
+          left: calc(var(--el-left-menu-width-min) * 1.4) !important;
+          width: calc(var(--el-left-menu-width) - calc(var(--el-left-menu-width-min) * 1.4) - 1px);
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) * 1.4);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4);
+        border: 0;
+      }
+    }
+  }
+
+  &-card {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          padding: 5px !important;
+
+          .vab-column-grid {
+            width: calc(var(--el-left-menu-width-min) - 12px) !important;
+            height: calc(var(--el-left-menu-width-min) - 10px) !important;
+            margin-left: 2px;
+            border-radius: var(--el-border-radius-base);
+
+            &:hover {
+              background: var(--el-color-primary);
+            }
+          }
+
+          &.is-active {
+            background: transparent !important;
+
+            .vab-column-grid {
+              background: var(--el-color-primary);
+            }
+          }
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) + 10px);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
+      }
+
+      .el-sub-menu .el-sub-menu__title,
+      .el-menu-item {
+        min-width: 180px;
+        margin-bottom: 5px;
+        border-radius: var(--el-border-radius-base);
+      }
+    }
+  }
+
+  &-arrow {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            background: transparent !important;
+
+            .vab-column-grid {
+              background: transparent !important;
+
+              &:after {
+                position: absolute;
+                right: -1px;
+                width: 0;
+                height: 0;
+                overflow: hidden;
+                content: '';
+                border-color: transparent var(--el-color-white) transparent transparent;
+                border-style: solid dashed dashed;
+                border-width: 8px;
+              }
+            }
+          }
+        }
+      }
+
+      .el-tabs + .el-menu {
+        left: calc(var(--el-left-menu-width-min) + 10px);
+        width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
+      }
+
+      .el-sub-menu .el-sub-menu__title,
+      .el-menu-item {
+        min-width: 180px;
+        margin-bottom: 5px;
+        border-radius: var(--el-border-radius-base);
+      }
+    }
+  }
+
+  &-semicircle {
+    :deep() {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            border-top-left-radius: 99px;
+            border-bottom-left-radius: 99px;
+          }
+        }
+      }
+    }
+  }
+
+  .vab-column-grid {
+    display: flex;
+    align-items: center;
+    width: var(--el-left-menu-width-min);
     overflow: hidden;
-    background: var(--el-color-white);
-    border-right: 1px solid var(--el-border-color);
+    text-overflow: ellipsis;
+    text-align: center;
+    word-break: break-all;
+    white-space: nowrap;
 
     &-vertical,
     &-card,
     &-arrow {
-        :deep() {
-            .el-tabs + .el-menu {
-                left: var(--el-left-menu-width-min);
-                width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
-                border: 0;
-            }
+      justify-content: center;
+      height: var(--el-left-menu-width-min);
+
+      > div {
+        svg,
+        [class*='ri-'] {
+          display: block;
+          height: 20px;
+          font-size: var(--el-font-size-base);
+          transition: all 0.3s ease-in-out;
         }
+      }
     }
 
-    // 当有按钮时，调整高度
-    &-card,
-    &-vertical {
-        :deep() {
-            .el-tabs__nav-wrap.is-left {
-                .el-tabs__nav-scroll {
-                    height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
-                }
-            }
-
-            .el-tabs__nav {
-                height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
-            }
+    // 当不显示文字时，图标变大
+    &.hide-text {
+      > div {
+        svg,
+        [class*='ri-'] {
+          height: 24px !important;
+          font-size: var(--el-font-size-extra-large) !important;
         }
+      }
     }
 
     &-horizontal,
     &-semicircle {
-        .float-fold {
-            left: 26.5px;
-        }
+      justify-content: left;
+      width: calc(var(--el-left-menu-width-min) * 1.4);
+      height: calc(var(--el-left-menu-width-min) / 1.4);
+      padding-left: var(--el-padding);
 
-        :deep() {
-            .vab-logo-column {
-                .logo {
-                    width: calc(var(--el-left-menu-width-min) * 1.4) !important;
-                }
+      svg,
+      [class*='ri-'] {
+        margin-right: 3px;
+      }
+    }
+  }
 
-                .title {
-                    left: calc(var(--el-left-menu-width-min) * 1.4) !important;
-                    width: calc(var(--el-left-menu-width) - calc(var(--el-left-menu-width-min) * 1.4) - 1px);
-                }
-            }
-
-            .el-tabs + .el-menu {
-                left: calc(var(--el-left-menu-width-min) * 1.4);
-                width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) * 1.4);
-                border: 0;
-            }
-        }
+  :deep() {
+    * {
+      transition: var(--el-transition);
     }
 
-    &-card {
-        :deep() {
-            .el-tabs {
-                .el-tabs__item {
-                    padding: 5px !important;
-
-                    .vab-column-grid {
-                        width: calc(var(--el-left-menu-width-min) - 12px) !important;
-                        height: calc(var(--el-left-menu-width-min) - 10px) !important;
-                        margin-left: 2px;
-                        border-radius: var(--el-border-radius-base);
-
-                        &:hover {
-                            background: var(--el-color-primary);
-                        }
-                    }
-
-                    &.is-active {
-                        background: transparent !important;
-
-                        .vab-column-grid {
-                            background: var(--el-color-primary);
-                        }
-                    }
-                }
-            }
-
-            .el-tabs + .el-menu {
-                left: calc(var(--el-left-menu-width-min) + 10px);
-                width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
-            }
-
-            .el-sub-menu .el-sub-menu__title,
-            .el-menu-item {
-                min-width: 180px;
-                margin-bottom: 5px;
-                border-radius: var(--el-border-radius-base);
-            }
-        }
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
     }
 
-    &-arrow {
-        :deep() {
-            .el-tabs {
-                .el-tabs__item {
-                    &.is-active {
-                        background: transparent !important;
+    .el-tabs {
+      position: fixed;
+      z-index: 9999;
+      height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
 
-                        .vab-column-grid {
-                            background: transparent !important;
+      .el-tabs__header.is-left {
+        margin-right: 0 !important;
 
-                            &:after {
-                                position: absolute;
-                                right: -1px;
-                                width: 0;
-                                height: 0;
-                                overflow: hidden;
-                                content: '';
-                                border-color: transparent var(--el-color-white) transparent transparent;
-                                border-style: solid dashed dashed;
-                                border-width: 8px;
-                            }
-                        }
-                    }
-                }
+        .el-tabs__nav-wrap.is-left {
+          margin-right: 0 !important;
+          background: var(--el-menu-background-color);
+
+          .el-tabs__nav-scroll {
+            height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
+            overflow-y: auto;
+
+            &::-webkit-scrollbar {
+              width: 0;
+              height: 0;
             }
-
-            .el-tabs + .el-menu {
-                left: calc(var(--el-left-menu-width-min) + 10px);
-                width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min) - 20px);
-            }
-
-            .el-sub-menu .el-sub-menu__title,
-            .el-menu-item {
-                min-width: 180px;
-                margin-bottom: 5px;
-                border-radius: var(--el-border-radius-base);
-            }
+          }
         }
+      }
+
+      .el-tabs__nav {
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
+        background: var(--el-menu-background-color);
+      }
+
+      .el-tabs__item {
+        height: auto;
+        padding: 0;
+        color: var(--el-color-white);
+
+        &.is-active {
+          margin-right: -1px;
+          background: var(--el-color-primary);
+
+          > .vab-column-grid {
+            margin-right: 1px;
+          }
+        }
+      }
     }
 
-    &-semicircle {
-        :deep() {
-            .el-tabs {
-                .el-tabs__item {
-                    &.is-active {
-                        border-top-left-radius: 99px;
-                        border-bottom-left-radius: 99px;
-                    }
-                }
-            }
-        }
+    .el-tabs__active-bar.is-left,
+    .el-tabs--left .el-tabs__nav-wrap.is-left::after {
+      display: none;
     }
 
-    .vab-column-grid {
-        display: flex;
-        align-items: center;
-        width: var(--el-left-menu-width-min);
+    .el-menu {
+      margin-top: 10px;
+      border: 0;
+
+      .el-menu-item,
+      .el-sub-menu__title {
+        height: var(--el-menu-item-height);
         overflow: hidden;
         text-overflow: ellipsis;
-        text-align: center;
-        word-break: break-all;
+        line-height: var(--el-menu-item-height);
         white-space: nowrap;
 
-        &-vertical,
-        &-card,
-        &-arrow {
-            justify-content: center;
-            height: var(--el-left-menu-width-min);
-
-            > div {
-                svg,
-                [class*='ri-'] {
-                    display: block;
-                    height: 20px;
-                    font-size: var(--el-font-size-base);
-                    transition: all 0.3s ease-in-out;
-                }
-            }
-        }
-
-        // 当不显示文字时，图标变大
-        &.hide-text {
-            > div {
-                svg,
-                [class*='ri-'] {
-                    height: 24px !important;
-                    font-size: var(--el-font-size-extra-large) !important;
-                }
-            }
-        }
-
-        &-horizontal,
-        &-semicircle {
-            justify-content: left;
-            width: calc(var(--el-left-menu-width-min) * 1.4);
-            height: calc(var(--el-left-menu-width-min) / 1.4);
-            padding-left: var(--el-padding);
-
-            svg,
-            [class*='ri-'] {
-                margin-right: 3px;
-            }
-        }
+        @include active;
+      }
     }
+  }
 
+  &.is-collapse {
     :deep() {
-        * {
-            transition: var(--el-transition);
-        }
-
-        .el-scrollbar__wrap {
-            overflow-x: hidden;
-        }
-
-        .el-tabs {
-            position: fixed;
-            z-index: 9999;
-            height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height));
-
-            .el-tabs__header.is-left {
-                margin-right: 0 !important;
-
-                .el-tabs__nav-wrap.is-left {
-                    margin-right: 0 !important;
-                    background: var(--el-menu-background-color);
-
-                    .el-tabs__nav-scroll {
-                        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
-                        overflow-y: auto;
-
-                        &::-webkit-scrollbar {
-                            width: 0;
-                            height: 0;
-                        }
-                    }
-                }
-            }
-
-            .el-tabs__nav {
-                height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2);
-                background: var(--el-menu-background-color);
-            }
-
-            .el-tabs__item {
-                height: auto;
-                padding: 0;
-                color: var(--el-color-white);
-
-                &.is-active {
-                    margin-right: -1px;
-                    background: var(--el-color-primary);
-
-                    > .vab-column-grid {
-                        margin-right: 1px;
-                    }
-                }
-            }
-        }
-
-        .el-tabs__active-bar.is-left,
-        .el-tabs--left .el-tabs__nav-wrap.is-left::after {
-            display: none;
-        }
-
-        .el-menu {
-            margin-top: 10px;
-            border: 0;
-
-            .el-menu-item,
-            .el-sub-menu__title {
-                height: var(--el-menu-item-height);
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-height: var(--el-menu-item-height);
-                white-space: nowrap;
-
-                @include active;
-            }
-        }
+      width: 0;
     }
-
-    &.is-collapse {
-        :deep() {
-            width: 0;
-        }
-    }
+  }
 }
 
 .float-fold {
-    position: fixed;
-    bottom: 13px;
-    left: 14px;
-    z-index: 9999;
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    text-align: center;
-    background: var(--el-color-primary);
-    border-radius: var(--el-border-radius-base);
+  position: fixed;
+  bottom: 13px;
+  left: 14px;
+  z-index: 9999;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  background: var(--el-color-primary);
+  border-radius: var(--el-border-radius-base);
 
-    :deep() {
-        .fold-unfold,
-        .ri-building-line {
-            font-size: var(--el-font-size-extra-large);
-            color: var(--el-color-white);
-            cursor: pointer;
-        }
+  :deep() {
+    .fold-unfold,
+    .ri-building-line {
+      font-size: var(--el-font-size-extra-large);
+      color: var(--el-color-white);
+      cursor: pointer;
     }
+  }
 }
 
 .toggle-tab-text-btn {
-    position: fixed;
-    bottom: 60px;
-    left: 14px;
-    z-index: 10000;
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    color: var(--el-color-white);
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-    background: var(--el-color-primary);
-    border-radius: var(--el-border-radius-base);
+  position: fixed;
+  bottom: 60px;
+  left: 14px;
+  z-index: 10000;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  color: var(--el-color-white);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  background: var(--el-color-primary);
+  border-radius: var(--el-border-radius-base);
 }
 
 .tab-text {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.3s ease-in-out;
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
 
-    &.small-text {
-        font-size: var(--el-font-size-extra-small);
-        zoom: 0.88;
-    }
+  &.small-text {
+    font-size: var(--el-font-size-extra-small);
+    zoom: 0.88;
+  }
 }
 
 // 当文字隐藏时的样式
 .vab-column-grid.hide-text .tab-text {
-    margin-top: 0;
-    opacity: 0;
-    transform: translateY(-10px);
+  margin-top: 0;
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

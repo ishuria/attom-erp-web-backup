@@ -6,11 +6,11 @@ import request from '/@/utils/request'
  * @returns
  */
 export function getSkuList(params: any) {
-    return request({
-        url: '/goodsSku/getList',
-        method: 'get',
-        params,
-    })
+  return request({
+    url: '/goodsSku/getList',
+    method: 'get',
+    params,
+  })
 }
 
 /**
@@ -19,11 +19,11 @@ export function getSkuList(params: any) {
  * @returns
  */
 export function addSku(data: any) {
-    return request({
-        url: '/goodsSku/doAdd',
-        method: 'post',
-        data,
-    })
+  return request({
+    url: '/goodsSku/doAdd',
+    method: 'post',
+    data,
+  })
 }
 
 /**
@@ -32,11 +32,11 @@ export function addSku(data: any) {
  * @returns
  */
 export function editSku(data: any) {
-    return request({
-        url: '/goodsSku/doEdit',
-        method: 'post',
-        data,
-    })
+  return request({
+    url: '/goodsSku/doEdit',
+    method: 'post',
+    data,
+  })
 }
 
 /**
@@ -45,9 +45,9 @@ export function editSku(data: any) {
  * @returns
  */
 export function deleteSku(data: any) {
-    return request({
-        url: '/goodsSku/doDelete',
-        method: 'post',
-        data,
-    })
+  return request({
+    url: '/goodsSku/doDelete',
+    method: 'post',
+    data,
+  })
 }

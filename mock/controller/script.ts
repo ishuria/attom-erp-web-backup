@@ -1,15 +1,15 @@
 import type { MockMethod } from 'vite-plugin-mock'
 
 export default [
-    {
-        url: '/script/getList',
-        method: 'get',
-        response: () => {
-            return {
-                code: 200,
-                msg: 'success',
-                data: {
-                    description: `
+  {
+    url: '/script/getList',
+    method: 'get',
+    response: () => {
+      return {
+        code: 200,
+        msg: 'success',
+        data: {
+          description: `
                         <div style="padding: 20px; background: var(--el-fill-color-lighter); border-radius: 8px; margin: 10px 0; border: 1px solid var(--el-border-color-light);">
                             <h3 style="color: var(--el-text-color-primary); margin: 0 0 15px 0; font-size: 18px;">测试 Script 标签执行</h3>
                             <p style="color: var(--el-text-color-regular); margin: 0 0 20px 0; line-height: 1.6;">这是一个测试页面，用于验证 script 标签是否能正常执行。点击下方按钮测试交互功能。</p>
@@ -77,8 +77,8 @@ export default [
                             </script>
                         </div>
                     `,
-                },
-            }
         },
+      }
     },
+  },
 ] as MockMethod[]

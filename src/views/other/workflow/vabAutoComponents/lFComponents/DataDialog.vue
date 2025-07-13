@@ -1,19 +1,19 @@
 <template>
-    <div>
-        <vab-json-viewer copyable :expand-depth="5" sort :value="data" />
-    </div>
+  <div>
+    <vab-json-viewer copyable :expand-depth="5" sort :value="data" />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import VabJsonViewer from 'vue-json-viewer'
 
 interface GraphData {
-    edges: any[]
-    nodes: any[]
+  edges: any[]
+  nodes: any[]
 }
 
 interface Props {
-    graphData: GraphData
+  graphData: GraphData
 }
 
 const props = defineProps<Props>()
@@ -21,13 +21,13 @@ const props = defineProps<Props>()
 const data = ref<any[]>([])
 
 onMounted(() => {
-    data.value = JSON.parse(
-        JSON.stringify([
-            {
-                edges: props.graphData.edges,
-                nodes: props.graphData.nodes,
-            },
-        ])
-    )
+  data.value = JSON.parse(
+    JSON.stringify([
+      {
+        edges: props.graphData.edges,
+        nodes: props.graphData.nodes,
+      },
+    ])
+  )
 })
 </script>

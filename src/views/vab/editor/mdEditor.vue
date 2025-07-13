@@ -1,7 +1,7 @@
 <template>
-    <div class="md-editor-container no-background-container">
-        <v-md-editor v-model="markdownContent" />
-    </div>
+  <div class="md-editor-container no-background-container">
+    <v-md-editor v-model="markdownContent" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -11,7 +11,7 @@ import githubTheme from '@kangc/v-md-editor/lib/theme/github'
 import '@kangc/v-md-editor/lib/theme/style/github.css'
 
 defineOptions({
-    name: 'MdEditor',
+  name: 'MdEditor',
 })
 
 const markdownContent = ref<any>(`<div align="center">
@@ -46,84 +46,84 @@ VMdEditor.use(githubTheme)
 
 <style lang="scss" scoped>
 .md-editor-container {
-    :deep() {
-        .v-md-editor {
-            min-height: calc(var(--el-container-height));
-            background: var(--el-color-white);
-            border: 1px solid var(--el-border-color);
-            border-radius: var(--el-border-radius-base);
-            box-shadow: none;
-            transition: var(--el-transition);
+  :deep() {
+    .v-md-editor {
+      min-height: calc(var(--el-container-height));
+      background: var(--el-color-white);
+      border: 1px solid var(--el-border-color);
+      border-radius: var(--el-border-radius-base);
+      box-shadow: none;
+      transition: var(--el-transition);
 
-            &__left-area {
-                min-height: calc(var(--el-container-height));
-            }
+      &__left-area {
+        min-height: calc(var(--el-container-height));
+      }
 
-            &--fullscreen {
-                z-index: 9999;
-                border-radius: 0;
-            }
+      &--fullscreen {
+        z-index: 9999;
+        border-radius: 0;
+      }
 
-            &__toolbar {
-                border-bottom: 1px solid var(--el-border-color);
+      &__toolbar {
+        border-bottom: 1px solid var(--el-border-color);
 
-                &-divider:before {
-                    border-left: 1px solid var(--el-border-color);
-                }
-
-                &-item {
-                    color: var(--el-color-grey);
-
-                    &--active,
-                    &:hover {
-                        color: var(--el-color-primary);
-                        background: var(--el-color-primary-light-9);
-                    }
-                }
-            }
-
-            &__editor-wrapper {
-                border-right: 1px solid var(--el-border-color);
-            }
-
-            .v-md-textarea-editor pre,
-            .v-md-textarea-editor textarea {
-                color: var(--el-color-grey);
-                background-color: var(--el-color-white);
-            }
-
-            .github-markdown-body h1,
-            .github-markdown-body h2 {
-                border-bottom: 1px solid var(--el-border-color);
-            }
+        &-divider:before {
+          border-left: 1px solid var(--el-border-color);
         }
 
-        @media (max-width: 768px) {
-            .v-md-editor {
-                &__toolbar-right,
-                &__toolbar-divider {
-                    display: none;
-                }
+        &-item {
+          color: var(--el-color-grey);
 
-                &__main {
-                    flex-direction: column !important;
-                    overflow-y: auto;
-                }
-
-                &__preview-wrapper {
-                    border-top: 1px solid var(--el-border-color);
-                }
-
-                &__editor-wrapper,
-                &__preview-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    height: auto;
-                    min-height: calc(var(--vh, 1vh) * 100);
-                    overflow: hidden;
-                }
-            }
+          &--active,
+          &:hover {
+            color: var(--el-color-primary);
+            background: var(--el-color-primary-light-9);
+          }
         }
+      }
+
+      &__editor-wrapper {
+        border-right: 1px solid var(--el-border-color);
+      }
+
+      .v-md-textarea-editor pre,
+      .v-md-textarea-editor textarea {
+        color: var(--el-color-grey);
+        background-color: var(--el-color-white);
+      }
+
+      .github-markdown-body h1,
+      .github-markdown-body h2 {
+        border-bottom: 1px solid var(--el-border-color);
+      }
     }
+
+    @media (max-width: 768px) {
+      .v-md-editor {
+        &__toolbar-right,
+        &__toolbar-divider {
+          display: none;
+        }
+
+        &__main {
+          flex-direction: column !important;
+          overflow-y: auto;
+        }
+
+        &__preview-wrapper {
+          border-top: 1px solid var(--el-border-color);
+        }
+
+        &__editor-wrapper,
+        &__preview-wrapper {
+          display: flex;
+          flex-direction: column;
+          height: auto;
+          min-height: calc(var(--vh, 1vh) * 100);
+          overflow: hidden;
+        }
+      }
+    }
+  }
 }
 </style>

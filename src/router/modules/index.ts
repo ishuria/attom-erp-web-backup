@@ -12,25 +12,25 @@ import { vabRoutes } from './vab'
 
 // 导出所有模块路由
 export const asyncRoutes = [
-    ...homeRoutes,
-    ...vabRoutes,
-    ...otherRoutes,
-    ...operateRoutes,
-    ...templateRoutes,
-    ...settingRoutes,
-    ...noColumnRoutes,
-    ...goodsRoutes,
-    ...chatRoutes,
-    ...portalRoutes,
-    {
-        path: '/:pathMatch(.*)*',
-        redirect: '/404',
-        name: 'NotFound',
-        meta: {
-            title: '404',
-            hidden: true,
-        },
+  ...homeRoutes,
+  ...vabRoutes,
+  ...otherRoutes,
+  ...operateRoutes,
+  ...templateRoutes,
+  ...settingRoutes,
+  ...noColumnRoutes,
+  ...goodsRoutes,
+  ...chatRoutes,
+  ...portalRoutes,
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/404',
+    name: 'NotFound',
+    meta: {
+      title: '404',
+      hidden: true,
     },
+  },
 ]
 
 // 单独导出各个模块路由，方便按需使用

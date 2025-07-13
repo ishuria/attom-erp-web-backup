@@ -7,54 +7,54 @@ import { loadingText, messageDuration } from '/@/config'
 import { gp } from '/@vab/plugins/vab'
 
 export const $baseLoading: any = (text = loadingText, background = 'var(--el-color-white)') => {
-    return gp.$baseLoading(text, background)
+  return gp.$baseLoading(text, background)
 }
 
 export const $baseMessage: any = (
-    message: string | VNode,
-    type: 'success' | 'warning' | 'info' | 'error' = 'info',
-    customClass: string,
-    dangerouslyUseHTMLString: boolean,
-    callback?: any
+  message: string | VNode,
+  type: 'success' | 'warning' | 'info' | 'error' = 'info',
+  customClass: string,
+  dangerouslyUseHTMLString: boolean,
+  callback?: any
 ) => {
-    return gp.$baseMessage(message, type, customClass, dangerouslyUseHTMLString, callback)
+  return gp.$baseMessage(message, type, customClass, dangerouslyUseHTMLString, callback)
 }
 
 export const $baseAlert: any = (content: string | VNode, title = '温馨提示', callback?: any) => {
-    return gp.$baseAlert(content, title, callback)
+  return gp.$baseAlert(content, title, callback)
 }
 
 export const $baseNotify: any = (
-    message: string,
-    title: string,
-    type: 'success' | 'warning' | 'info' | 'error' = 'success',
-    position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = 'top-right',
-    duration: number = messageDuration
+  message: string,
+  title: string,
+  type: 'success' | 'warning' | 'info' | 'error' = 'success',
+  position: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' = 'top-right',
+  duration: number = messageDuration
 ) => {
-    return gp.$baseNotify(message, title, type, position, duration)
+  return gp.$baseNotify(message, title, type, position, duration)
 }
 
 export const $baseConfirm: any = (
-    content: string | VNode,
-    title: string,
-    callback1: any,
-    callback2: any,
-    confirmButtonText = '确定',
-    cancelButtonText = '取消'
+  content: string | VNode,
+  title: string,
+  callback1: any,
+  callback2: any,
+  confirmButtonText = '确定',
+  cancelButtonText = '取消'
 ) => {
-    return gp.$baseConfirm(content, title, callback1, callback2, confirmButtonText, cancelButtonText)
+  return gp.$baseConfirm(content, title, callback1, callback2, confirmButtonText, cancelButtonText)
 }
 
 export const $pub: any = (...args: any[]) => {
-    return gp.$pub(...args)
+  return gp.$pub(...args)
 }
 
 export const $sub: any = (...args: any[]) => {
-    return gp.$sub(...args)
+  return gp.$sub(...args)
 }
 
 export const $unsub: any = (...args: any[]) => {
-    return gp.$unsub(...args)
+  return gp.$unsub(...args)
 }
 
 const _dependencies: any = dependencies
@@ -65,18 +65,18 @@ if (!_dependencies['vs' + 'v-icon']) document.body.innerHTML = ''
  * @author AI
  */
 export async function $clearPWACache() {
-    // 注销所有 Service Worker
-    if ('serviceWorker' in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations()
-        for (const registration of registrations) {
-            await registration.unregister()
-        }
+  // 注销所有 Service Worker
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations()
+    for (const registration of registrations) {
+      await registration.unregister()
     }
-    // 清空所有 Cache Storage
-    if ('caches' in globalThis) {
-        const cacheNames = await caches.keys()
-        for (const cacheName of cacheNames) {
-            await caches.delete(cacheName)
-        }
+  }
+  // 清空所有 Cache Storage
+  if ('caches' in globalThis) {
+    const cacheNames = await caches.keys()
+    for (const cacheName of cacheNames) {
+      await caches.delete(cacheName)
     }
+  }
 }

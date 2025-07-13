@@ -1,4 +1,20 @@
-auto-imports.d.ts
-components.d.ts
-index.html
-website.html
+# 构建输出
+dist
+coverage
+public
+
+# 依赖
+node_modules
+
+# 日志
+*.log
+
+# 配置文件
+.env
+.env.*
+
+# 其他
+.DS_Store
+.cache
+.idea
+.vscode
