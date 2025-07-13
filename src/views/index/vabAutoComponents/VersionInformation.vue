@@ -2,7 +2,7 @@
   <vab-card class="version-information">
     <template #header>
       <vab-icon icon="information-line" />
-      信息
+      依赖信息
 
       <el-tag class="card-header-tag">
         <span class="hidden-xs-only">当前版本：V{{ version }}</span>
@@ -12,41 +12,13 @@
     <el-scrollbar>
       <table class="table">
         <tbody>
-          <tr>
-            <td>vite</td>
-            <td>
-              <span>{{ devDependencies['vite'] }}</span>
-            </td>
-            <td>typescript</td>
-            <td>
-              <span>{{ devDependencies['typescript'] }}</span>
-            </td>
-            <td>vue</td>
-            <td>
-              <span>{{ dependencies['vue'] }}</span>
-            </td>
-            <td>pinia</td>
-            <td>
-              <span>{{ dependencies['pinia'] }}</span>
-            </td>
-          </tr>
-          <tr>
-            <td>vue-router</td>
-            <td>
-              <span>{{ dependencies['vue-router'] }}</span>
-            </td>
-            <td>element-plus</td>
-            <td>
-              <span>{{ dependencies['element-plus'] }}</span>
-            </td>
-            <td>vueuse</td>
-            <td>
-              <span>{{ dependencies['@vueuse/core'] }}</span>
-            </td>
-            <td>axios</td>
-            <td>
-              <span>{{ dependencies['axios'] }}</span>
-            </td>
+          <tr v-for="(row, index) in dependencyRows" :key="index">
+            <template v-for="(item, idx) in row" :key="idx">
+              <td>{{ item.name }}</td>
+              <td>
+                <span>{{ item.version }}</span>
+              </td>
+            </template>
           </tr>
         </tbody>
       </table>
@@ -71,9 +43,25 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { dependencies, devDependencies, version } from '~/package.json'
 
 const updateTime = import.meta.env.VITE_APP_UPDATE_TIME
+
+const dependencyRows = ref([
+  [
+    { name: 'vite', version: devDependencies['vite'] },
+    { name: 'vue', version: dependencies['vue'] },
+    { name: 'element-plus', version: dependencies['element-plus'] },
+    { name: 'typescript', version: devDependencies['typescript'] },
+  ],
+  [
+    { name: 'eslint', version: devDependencies['eslint'] },
+    { name: 'vue-router', version: dependencies['vue-router'] },
+    { name: 'pinia', version: dependencies['pinia'] },
+    { name: 'vueuse', version: dependencies['@vueuse/core'] },
+  ],
+])
 </script>
 
 <style lang="scss" scoped>
