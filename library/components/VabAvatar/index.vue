@@ -28,23 +28,6 @@
       </div>
       <el-divider />
       <ul class="el-dropdown-menu">
-        <li class="el-dropdown-menu__item" @click="handleCommand('changeLog')">
-          <vab-icon icon="file-word-line" />
-          <span>{{ translate('更新日志') }}</span>
-          <el-tag effect="dark" size="small" type="danger">99+</el-tag>
-        </li>
-        <li class="el-dropdown-menu__item" @click="handleCommand('dataScreen')">
-          <vab-icon icon="database-2-line" />
-          <span>{{ translate('数据大屏') }}</span>
-        </li>
-        <li class="el-dropdown-menu__item" @click="handleCommand('portal')">
-          <vab-icon icon="building-line" />
-          <span>{{ translate('门户') }}</span>
-        </li>
-        <li class="el-dropdown-menu__item" @click="handleCommand('book')">
-          <vab-icon icon="book-2-line" />
-          <span>{{ translate('文档') }}</span>
-        </li>
         <li class="el-dropdown-menu__item" @click="handleCommand('logout')">
           <vab-icon icon="logout-circle-r-line" />
           <span>{{ translate('退出登录') }}</span>

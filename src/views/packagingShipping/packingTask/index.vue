@@ -56,11 +56,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite" />
           <el-table-column label="已签收天数" min-width="110" prop="signDay">
             <template #default="{ row }">
               <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">
@@ -236,11 +232,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -407,11 +399,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -578,11 +566,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -749,11 +733,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite"/>
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -919,11 +899,7 @@
           </el-table-column>
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite">
-            <template #default="{ row }">
-              {{ siteMap[row.sendSite as siteValue] }}
-            </template>
-          </el-table-column>
+          <el-table-column label="站点" min-width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -1474,8 +1450,7 @@ import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import { formatDate } from '~/src/utils/dateUtils'
-import type { siteValue } from '../constantOption'
-import { siteMap, sizeOption } from '../constantOption'
+import { sizeOption } from '../constantOption'
 import {
   addQualityCheck,
   checkGoOffWork,
