@@ -434,7 +434,8 @@
                       <template #content>
                         <div class="custom-tooltip">可以做outlet deal</div>
                       </template>
-                      <vab-icon icon="discount-percent-fill" class="icon-green" />
+                      <!-- <vab-icon icon="discount-percent-fill" class="icon-green" /> -->
+                      <img src="../../../icon/outlet.png" style="width: 22px; height: 22px; margin-top: -2px;"/>
                     </el-tooltip>
                     
                     <el-tooltip v-if="isOutOfStock(row)" effect="dark" placement="top">
@@ -447,13 +448,15 @@
                       <template #content>
                         <div class="custom-tooltip">有低量配送费</div>
                       </template>
-                      <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;">
+                      <!-- <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;"> -->
+                      <vab-icon icon="home-6-line" class="icon-red" />
                     </el-tooltip>
                     <el-tooltip v-if="isWareHousing(row)"  effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">低量仓储费预警</div>
                       </template>
-                      <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;">
+                      <vab-icon icon="home-6-line" class="icon-yellow" />
+                      <!-- <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;"> -->
                     </el-tooltip>
                     <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
                       <template #content>
