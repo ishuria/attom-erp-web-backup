@@ -1226,7 +1226,7 @@
         <el-table
           border
           :cell-class-name="payHistoryCellClass"
-          :cell-style="paymentHistoryCellStyle"
+          :cell-style="{ textAlign: 'center' }"
           class="payRecord"
           :data="paymentProgressList"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -1234,9 +1234,9 @@
         >
           <el-table-column label="付款日期" min-width="180" prop="createTime" />
           <el-table-column label="付款金额" min-width="130" prop="payPrice">
-            <template #default="{ row }">
+            <!-- <template #default="{ row }">
               <el-input v-model="row.payPrice" class="input-center" :disabled="delDisabled" @change="handleUpdatePrice(row)" />
-            </template>
+            </template> -->
           </el-table-column>
           <el-table-column label="付款百分比" min-width="130" prop="percentage">
             <template #default="{ row }">{{ row.percentage }}%</template>
@@ -1261,11 +1261,11 @@
             </template>
           </el-table-column>
           <el-table-column label="操作人" min-width="130" prop="createUser" />
-          <el-table-column v-if="!delDisabled" label="操作" min-width="100" prop="operate">
+          <!-- <el-table-column v-if="!delDisabled" label="操作" min-width="100" prop="operate">
             <template #default="{ row, $index }">
               <el-button text type="danger" @click="handleDelPayRecord(row, $index)">删除</el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>

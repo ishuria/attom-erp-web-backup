@@ -529,6 +529,7 @@ const tableRowClassName = ({
   if (row.id === currentRowId.value) {
     return 'warning-row'
   }
+  return ''
 }
 const operationSelect = () => {
   const role = aclStore.getRole[0]
