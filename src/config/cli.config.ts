@@ -26,7 +26,7 @@ export const cliConfig: {
   // 启用/禁用 gzip 压缩大小报告
   reportCompressedSize: false,
   // 混淆器 boolean | 'terser' | 'esbuild'
-  minify: 'esbuild',
+  minify: 'terser',
   // 打包后的文件是否开启hash
   outputHash: true,
   // 开发环境是否启用mock
@@ -34,7 +34,7 @@ export const cliConfig: {
   // 生产环境是否启用mock
   prodEnabled: true,
   // 开启代码压缩 boolean | 'gzip' | 'brotli'
-  compress: false,
+  compress: 'gzip',
   // 需要缓存到node_modules/.vite的模块
   include: [],
   // 不需要缓存到node_modules/.vite的模块
