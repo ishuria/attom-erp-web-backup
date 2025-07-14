@@ -47,3 +47,16 @@ export function downloadFileN(url:string) {
     responseType: 'blob', // 确保响应类型为二进制流
   })
 }
+
+export function downloadFilePDH(url:string, data:any) {
+
+  return request({
+    method: 'POST',
+    url: `${BASE_API}${url}`,
+    data,
+    responseType: 'blob', // 确保响应类型为二进制流
+    headers: {
+      'Content-Type': 'multipart/form-data', // 设置正确的Content-Type
+    },
+  })
+}

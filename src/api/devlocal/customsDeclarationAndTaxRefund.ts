@@ -863,4 +863,18 @@ export const updatePurchaseComponentHs = (data: IUpdatePurchaseComponentHs): Pro
   })
 }
 
+/**
+ * 匹配报关-上传入仓单PDF
+ * @param data 
+ * @returns 
+ */
+export function uploadWarehouseReceiptPDF(data: FormData): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/upload/warehouse/receipt/pdf`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
 

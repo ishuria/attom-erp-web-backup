@@ -4,6 +4,7 @@
       <vab-query-form-left-panel>
         <el-button :loading="declarationLoading" type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
         <el-button :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
+        <el-button type="primary" @click="uploadPDFVisible = true">入仓单生成</el-button>
         <el-button type="primary" @click="sentButNotReportedVisible = true">已发未报</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -408,17 +409,36 @@
         <el-button type="primary" @click="handleAddFee">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 入仓单上传 -->
+    <vab-dialog v-model="uploadPDFVisible" title="入仓单上传" width="25%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :auto-upload="false"
+        v-model:file-list="fileList"
+      >
+        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+        <div class="el-upload__text">
+          将文件拖拽至此处或 <em>点击上传</em>
+        </div>
+      </el-upload>
+      <template #footer>
+        <div style="text-align: center;">
+          <el-button type="success" @click="uploadPDF" :loading="uploadLoading">上传</el-button>
+        </div>
+      </template>
+    </vab-dialog>
     <sent-but-not-reported v-model="sentButNotReportedVisible" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
-import { downloadFileP } from '/@/api/devlocal/download'
+import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import handleClipboard from '/@/utils/clipboard'
@@ -428,6 +448,28 @@ import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/
 defineOptions({
   name: 'MatchPO'
 })
+
+const uploadPDFVisible = ref<boolean>(false)
+const fileList = ref<any[]>([])
+const uploadLoading = ref<boolean>(false)
+const uploadPDF = async () => {
+  let uploadForm = new FormData()
+  fileList.value.forEach((item: any) => {
+    uploadForm.append('file', item.raw)
+  })
+  if (fileList.value.length === 0) {
+    $baseMessage('请先上传文件！', 'warning', 'hey')
+    return
+  }
+  uploadLoading.value = true
+  const res = await downloadFilePDH("/upload/warehouse/receipt/pdf", uploadForm)
+  if (res) {
+    uploadLoading.value = false
+    $baseMessage('上传文件成功！', 'success', 'hey')
+
+    // await fetchData()
+  }
+}
 
 const sentButNotReportedVisible = ref<boolean>(false)
 const addFeeFormRef = ref<FormInstance>()
