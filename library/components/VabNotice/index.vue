@@ -101,11 +101,11 @@ const colors = [
   },
   { bgColor: 'var(--el-color-info-light-9)', color: 'var(--el-color-info)' },
   {
-    bgColor: '#F2ECFE',
+    bgColor: 'rgba(133, 69, 247, 0.1)',
     color: '#8545F7',
   },
   {
-    bgColor: '#E7F8F6',
+    bgColor: 'rgba(24, 187, 170, 0.1)',
     color: '#18BBAA',
   },
 ]
