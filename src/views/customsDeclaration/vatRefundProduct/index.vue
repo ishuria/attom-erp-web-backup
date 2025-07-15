@@ -72,11 +72,12 @@
           :summary-method="handleSummaryMethod"
         >
           <el-table-column label="selection" width="60" fixed="left" type="selection" />
-          <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
+          <el-table-column label="发货日期" fixed="left" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
             <template #header>
               报关单<br />出口日期
@@ -85,7 +86,6 @@
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关品名" sortable="custom" prop="customsDeclarationName" :min-width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)" />
       
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
@@ -241,11 +241,12 @@
           :summary-method="handleSummaryMethod"
         >
           <el-table-column label="selection" width="60" fixed="left" type="selection" />
-          <el-table-column label="发货日期" sortable="custom" min-width="120" prop="shipmentDate">
+          <el-table-column label="发货日期" fixed="left" sortable="custom" min-width="120" prop="shipmentDate">
             <template #default="{ row }">
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
+          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
             <template #header>
               报关单<br />出口日期
@@ -254,7 +255,6 @@
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关品名" sortable="custom" min-width="120" prop="customsDeclarationName" />
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
           <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />

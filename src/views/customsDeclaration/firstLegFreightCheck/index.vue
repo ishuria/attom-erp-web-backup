@@ -210,6 +210,8 @@ const uploadExcelFile = async () => {
     startCheckDisabled.value = true // 上传后 开始核对禁止掉
     finishCheckDisabled.value = false // 上传后 可以核对完成
     await fetchData()
+  } else {
+    uploadLoading.value = false
   }
 }
 const showErrorAllowRange = () => {

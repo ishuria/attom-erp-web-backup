@@ -268,7 +268,7 @@
         </el-table-column>
         <el-table-column label="差额" min-width="90" prop="difference">
           <template #default="{ row }">
-            <span :style="{ color: row.difference >= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
+            <span :style="{ color: row.difference < 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
           </template>
         </el-table-column>
         <el-table-column label="已付" min-width="90" prop="payStatus">
