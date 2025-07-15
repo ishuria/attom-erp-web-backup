@@ -1306,29 +1306,21 @@
         <el-form-item label="金额" prop="price">
           <el-input v-model="refundForm.price" clearable @input="handleComputeRefundPercent" />
         </el-form-item>
-        <el-form-item label="凭证上传" prop="refundVoucher">
-          <el-upload
-            class="form-upload"
-            :class="{ hide: refundForm.hide }"
-            :file-list="refundForm.imageList"
-            :http-request="uploadImage"
-            list-type="picture-card"
-          >
-            <el-icon><plus /></el-icon>
-            <template #file="{ file }">
-              <div>
-                <img alt="" class="el-upload-list__item-thumbnail" :src="file.url" />
-                <span class="el-upload-list__item-actions">
-                  <span class="el-upload-list__item-preview" @click="handlePreview(file)">
-                    <el-icon><zoom-in /></el-icon>
-                  </span>
-                  <span class="el-upload-list__item-delete" @click="handleRefundVoucherRemove">
-                    <el-icon><delete /></el-icon>
-                  </span>
-                </span>
+        <el-form-item label="凭证上传" prop="refundVoucher"> 
+            <div class="image-cell">
+              <!-- 有图片时显示 -->
+              <div v-if="refundForm.refundVoucher" class="image-preview">
+                <img alt="" :src="refundForm.refundVoucher" />
+                <div class="image-actions">
+                  <el-icon @click="handlePreview(refundForm.refundVoucher)"><zoom-in /></el-icon>
+                  <el-icon @click="handleRefundVoucherRemove"><delete /></el-icon>
+                </div>
               </div>
-            </template>
-          </el-upload>
+              <!-- 无图片时显示 -->
+              <div v-else class="upload-placeholder" @click="imageUploadVisible = true">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1450,12 +1442,13 @@
         <el-button :loading="reduceCostLoading" type="primary" @click="confirmReductionCost">确定</el-button>
       </template>
     </vab-dialog>
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
-import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, type UploadFile, dayjs } from 'element-plus'
+import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, dayjs } from 'element-plus'
 import { debounce } from 'lodash'
 import { ref } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -1491,6 +1484,7 @@ defineOptions({
   name: 'Po',
 })
 
+const imageUploadVisible = ref<boolean>(false)
 const disabledDate = (time: Date) => {
   const date = dayjs(time)
   const now = dayjs()
@@ -1937,20 +1931,24 @@ const handleComputeRefundPercent = (value: string) => {
 /**
  * 上传图片
  */
-async function uploadImage(params: any) {
-  refundForm.hide = true
-  refundForm.refundVoucher = params.file
+async function uploadImage(file: File) {
+   const fileUrl = URL.createObjectURL(file)
+  
+  // 保存文件对象用于后续上传
+  refundForm.refundVoucher = fileUrl
+  
+  // 如果需要保存原始文件对象用于后续处理，可以添加一个新属性
+  refundForm.refundVoucherFile = file
+  imageUploadVisible.value = false
 }
 // 退款凭证图片预览事件
-const handlePreview = (file: UploadFile) => {
+const handlePreview = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
-  imagePreviewList.value.push(file.url!)
+  imagePreviewList.value.push(url)
 }
 // 删除退款凭证
 const handleRefundVoucherRemove = () => {
-  refundForm.imageList = []
-  refundForm.hide = false
   refundForm.refundVoucher = null
 }
 // 关闭退款弹窗
@@ -1968,7 +1966,7 @@ const handleConfirmRefund = async () => {
         let formData = new FormData()
         formData.append('unitPrice', refundForm.price)
         formData.append('percentage', refundForm.percent)
-        formData.append('file', refundForm.refundVoucher)
+        formData.append('file', refundForm.refundVoucherFile)
         formData.append('componentIds', `${selectedCompArray.value[0].componentId}`)
         formData.append('poIds', selectedCompArray.value[0].id)
         const { data } = await updateComponentRefund(formData)
@@ -2888,5 +2886,77 @@ onUnmounted(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+// 图片样式
+.image-cell {
+  width: 130px;
+  height: 130px;
+  
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+    
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+      
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+        
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+    
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
+      opacity: 1;  // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+    
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+    
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
 }
 </style>

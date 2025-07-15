@@ -253,7 +253,7 @@
         <el-table-column label="实际总费用" min-width="110" prop="actualCost">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.actualCost"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.actualCost"  @blur="clickCostCancel($event, row)" @keyup.enter="clickCostCancel($event, row)" />
             </div>
             <span>{{ row.actualCost }}</span>
           </template>
@@ -991,6 +991,35 @@ const clickCancel = async (event: Event, value: any) => {
         actualRate: value.actualExchangeRate,
         cost: value.actualCost
       })
+    } catch {
+      Object.assign(value, copyRow)
+    }
+  }
+}
+const clickCostCancel = async (event: Event, value: any) => {
+  const rootElement = getRootElement(event.target, ".cell");
+
+  if (rootElement) {
+    const t1 = rootElement.children[0];
+    const t2 = rootElement.children[1];
+
+    if (t1) t1.classList.add("none");
+    if (t2) t2.classList.remove("none");
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    try {
+      await updateShipmentLeg({
+        id: value.id,
+        count: value.count,
+        unitPrice: value.unitPrice,
+        estimateRate: value.estimateExchangeRate,
+        actualRate: value.actualExchangeRate,
+        cost: value.actualCost
+      })
+      fetchCostData(_shipId.value!)
     } catch {
       Object.assign(value, copyRow)
     }
