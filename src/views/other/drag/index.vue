@@ -2,20 +2,9 @@
   <div class="card-drag-container no-transition-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="warning" @click="sort">重置</el-button>
+        <el-button :icon="Refresh" @click="sort">重置</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <vab-draggable v-model="iconList" :animation="600" target=".el-row">
-      <el-row :gutter="20">
-        <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
-          <vab-card class="icon-panel">
-            <vab-icon :icon="item.icon" :style="{ color: item.color }" />
-            <p>按住拖拽</p>
-          </vab-card>
-        </el-col>
-      </el-row>
-    </vab-draggable>
-
     <vab-draggable v-model="iconList" :animation="600" target=".el-row">
       <el-row :gutter="20">
         <el-col v-for="item in iconList" :key="item.icon" :lg="3" :md="3" :sm="6" :xl="3" :xs="12">
@@ -30,6 +19,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Refresh } from '@element-plus/icons-vue'
 import { shuffle } from 'lodash-es'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getIconList } from '/@/api/icon'
@@ -39,6 +29,7 @@ defineOptions({
 })
 
 const iconList = ref<any>([])
+const originalList = ref<any>([])
 
 const randomHexColor = () => {
   return shuffle(['#1890FF', '#36CBCB', '#4ECB73', '#FBD437', '#F2637B', '#975FE5'])[0]
@@ -47,18 +38,20 @@ const randomHexColor = () => {
 const fetchData = async () => {
   const { data } = await getIconList({
     pageNo: 1,
-    pageSize: 89,
+    pageSize: 91,
   })
-  iconList.value = data.list
+  const list = data.list
     .filter((icon: any) => icon.includes('-fill'))
     .map((icon: any, index: any) => {
       return { icon, color: randomHexColor(), order: index + 1 }
     })
+
+  iconList.value = list
+  originalList.value = [...list]
 }
 
 const sort = () => {
-  //iconList.value = iconList.value.sort((a: any, b: any) => a.order - b.order)
-  fetchData()
+  iconList.value.sort((a: any, b: any) => a.order - b.order)
 }
 
 onBeforeMount(() => {
@@ -93,23 +86,5 @@ onBeforeMount(() => {
       margin-top: 10px;
     }
   }
-}
-</style>
-
-<style>
-.fade-move,
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: scaleY(0.01) translate(30px, 0);
-}
-
-.fade-leave-active {
-  position: absolute;
 }
 </style>
