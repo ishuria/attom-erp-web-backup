@@ -65,6 +65,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       outDir,
       reportCompressedSize,
       rollupOptions: {
+        treeshake: false,
         onwarn: () => {
           return
         },
