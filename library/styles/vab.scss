@@ -255,12 +255,6 @@ html {
       }
     }
 
-    a + a,
-    a + .el-button,
-    .el-button + a {
-      margin-left: 10px;
-    }
-
     /* 毛玻璃遮罩(影响性能，默认关闭) */
     .el-overlay,
     .el-image-viewer__mask {
