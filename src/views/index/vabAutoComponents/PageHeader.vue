@@ -1,6 +1,6 @@
 <template>
   <vab-colorful-card class="page-header" :style="style">
-    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" />
+    <el-avatar class="page-header-avatar hidden-xs-only" :src="avatar" @click="goToPersonalCenter" @error="handleAvatarError" />
     <div class="page-header-tip">
       <div class="page-header-tip-title">
         {{ handleTips() }}
@@ -14,11 +14,20 @@
 import { getList } from '/@/api/description'
 import { useUserStore } from '/@/store/modules/user'
 
+const router = useRouter()
 const userStore = useUserStore()
 const { avatar, username } = storeToRefs(userStore)
 
 const description = ref<string>('')
 const descriptionRef = ref<HTMLElement>()
+
+const handleAvatarError = () => {
+  console.warn('头像加载失败')
+}
+
+const goToPersonalCenter = () => {
+  router.push('/setting/personalCenter')
+}
 
 const executeScripts = () => {
   if (!descriptionRef.value) return
@@ -89,7 +98,14 @@ const style = {
     height: 80px;
     padding: var(--el-padding);
     margin-right: var(--el-margin);
+    cursor: pointer;
+    background-color: var(--el-color-primary-light-9) !important;
     border-radius: 50%;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.85;
+    }
   }
 
   &-tip {
@@ -106,6 +122,15 @@ const style = {
     &-description {
       min-height: 25px;
       line-height: 25px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header {
+    &-tip {
+      width: 100%;
+      min-width: 100%;
     }
   }
 }
