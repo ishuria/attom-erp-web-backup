@@ -823,21 +823,21 @@ const fetchData = async () => {
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
     item.storageAge = `
-      <div class="storage-list">
+       <div class="storage-list">
         <div class="storage-item">
           <span class="value1">181-270</span>
           <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
-          <span class="value3">${item.inventoryAgeLevel1Days ? `($${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})` : 0}</span>
+          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})</span>
         </div>
         <div class="storage-item">
           <span class="value1">271-360</span>
           <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
-          <span class="value3">${item.inventoryAgeLevel2Days ? `($${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})` : 0}</span>
+          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})</span>
         </div>
         <div class="storage-item">
           <span class="value1">361+</span>
           <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
-          <span class="value3">${item.inventoryAgeLevel3Days ? `($${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})` : 0}</span>
+          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})</span>
         </div>
       </div>
     `
