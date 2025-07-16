@@ -465,9 +465,14 @@ const uploadPDF = async () => {
   const res = await downloadFilePDH("/upload/warehouse/receipt/pdf", uploadForm)
   if (res) {
     uploadLoading.value = false
-    $baseMessage('上传文件成功！', 'success', 'hey')
-
-    // await fetchData()
+    // console.log(res)
+    if (res.type === 'application/json') {
+        const text = await res.text(); // 把 blob 转成文本
+        const json = JSON.parse(text);      // 解析成 JSON 对象
+        $baseMessage(json?.msg, 'error')
+    } else {
+      $baseMessage('上传文件成功！', 'success', 'hey')
+    }
   }
 }
 
