@@ -1172,14 +1172,14 @@ html:not(.dark) body.vab-theme-default.glass-mode {
   .vab-tabs-horizontal,
   .vab-tabs-horizontal .vab-main .vab-tabs {
     background: transparent !important;
-    border: none !important;
+    // border: none !important;
     box-shadow: none !important;
     backdrop-filter: none !important;
   }
 
-  .vab-nav {
-    border-bottom: 1px solid transparent;
-  }
+  // .vab-nav {
+  //   border-bottom: 1px solid transparent;
+  // }
 
   .vab-avatar-popper {
     background: var(--vab-glass-bg) !important;

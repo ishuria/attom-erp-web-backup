@@ -622,7 +622,7 @@ const toggleTabFixedDropdown = () => {
   &-content {
     width: 100%;
 
-    &-card {
+    &-glass {
       height: var(--el-tab-item-height);
 
       :deep() {
@@ -771,7 +771,7 @@ const toggleTabFixedDropdown = () => {
       }
     }
 
-    &-rect {
+    &-card {
       height: var(--el-tab-item-height);
 
       :deep() {
@@ -802,6 +802,34 @@ const toggleTabFixedDropdown = () => {
               color: var(--el-color-primary);
               background: var(--el-color-primary-light-9);
             }
+          }
+        }
+      }
+    }
+
+    &-rect {
+      height: var(--el-tabs-height);
+
+      :deep() {
+        .el-tabs__header {
+          height: var(--el-tabs-height);
+          margin: -1px 0 0 0;
+          .el-tabs__nav {
+            height: var(--el-tabs-height);
+
+            .el-tabs__item {
+              height: var(--el-tabs-height);
+
+              &.is-active {
+                background: var(--el-color-primary-light-9);
+              }
+            }
+          }
+
+          .el-tabs__nav-prev,
+          .el-tabs__nav-next {
+            height: var(--el-tabs-height);
+            line-height: var(--el-tabs-height);
           }
         }
       }

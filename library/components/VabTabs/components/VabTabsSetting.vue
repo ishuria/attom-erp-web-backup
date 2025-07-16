@@ -38,6 +38,7 @@ const tabsBarStyleList = ref<any>([
   { label: '灵动', value: 'smart' },
   { label: '圆滑', value: 'smooth' },
   { label: '矩形', value: 'rect' },
+  { label: '玻璃', value: 'glass' },
 ])
 
 const handleOpenSetting = () => {

@@ -79,6 +79,10 @@ declare type TabsBarStyle =
    * 矩形风格
    */
   | 'rect'
+  /**
+   * 玻璃风格
+   */
+  | 'glass'
 
 declare type pageTransitionStyle =
   /**

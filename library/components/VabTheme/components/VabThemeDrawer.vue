@@ -185,6 +185,7 @@ const tabsBarStyleList = ref<ListType[]>([
   { value: 'smart', label: '灵动' },
   { value: 'smooth', label: '圆滑' },
   { value: 'rect', label: '矩形' },
+  { value: 'glass', label: '玻璃' },
 ])
 const menuWidthList = ref<string[]>(['266px', '277px', '288px', '299px'])
 const themeNameList = ref<ListType[]>([
