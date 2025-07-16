@@ -47,9 +47,18 @@ const colors = [
     bgColor: 'var(--el-color-success-light-9)',
     color: 'var(--el-color-success)',
   },
-  { bgColor: 'var(--el-color-info-light-9)', color: 'var(--el-color-info)' },
-  { bgColor: '#F2ECFE', color: '#8545F7' },
-  { bgColor: '#E7F8F6', color: '#18BBAA' },
+  {
+    bgColor: 'var(--el-color-info-light-9)',
+    color: 'var(--el-color-info)',
+  },
+  {
+    bgColor: 'rgba(133, 69, 247, 0.1)',
+    color: '#8545F7',
+  },
+  {
+    bgColor: 'rgba(24, 187, 170, 0.1)',
+    color: '#18BBAA',
+  },
 ]
 
 // 卡片数据（含 description）

@@ -1,7 +1,12 @@
 <template>
   <div v-if="'technology' != theme.themeName" class="vab-color-picker">
-    <el-color-picker v-model="theme.color" popper-class="vab-color-picker-popper" :predefine="predefineColors"
-      style="border-radius: var(--el-border-radius-base)" @active-change="handleChange" />
+    <el-color-picker
+      v-model="theme.color"
+      popper-class="vab-color-picker-popper"
+      :predefine="predefineColors"
+      style="border-radius: var(--el-border-radius-base)"
+      @active-change="handleChange"
+    />
   </div>
 </template>
 
@@ -13,10 +18,7 @@ defineOptions({
   name: 'VabColorPicker',
 })
 
-const predefineColors = ref<any>([
-  _color,
-  '#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'
-])
+const predefineColors = ref<any>([_color, '#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'])
 const settingsStore = useSettingsStore()
 const { updateTheme, saveTheme } = settingsStore
 const { theme } = storeToRefs(settingsStore)

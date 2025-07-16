@@ -132,9 +132,7 @@ const randomTheme = async () => {
       device.value === 'desktop'
         ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall', 'double'])
         : 'vertical'
-    const _color = shuffle(theme.value.color, [
-      '#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'
-    ])
+    const _color = shuffle(theme.value.color, ['#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'])
     const isFollow = shuffle(theme.value.isFollow, [true, false])
 
     theme.value.themeName = themeName

@@ -189,7 +189,6 @@ const themeNameList = ref<ListType[]>([
   { value: 'default', label: '默认' },
   { value: 'plain', label: '简洁' },
   { value: 'technology', label: '科技' },
-  // { value: 'gold', label: '黑金' },
 ])
 const columnStyleList = ref<ListType[]>([
   { value: 'vertical', label: '纵向' },
