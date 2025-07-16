@@ -1,5 +1,5 @@
 <template>
-  <div v-if="theme.showThemeSetting" class="vab-theme-setting">
+  <div v-show="theme.showThemeSetting" class="vab-theme-setting">
     <el-collapse-transition>
       <section v-show="show">
         <div v-show="routeName !== 'SeparateLayout'" @click="randomTheme">
@@ -133,16 +133,7 @@ const randomTheme = async () => {
         ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall', 'double'])
         : 'vertical'
     const _color = shuffle(theme.value.color, [
-      '#1e90ff',
-      '#4e88f3',
-      '#0052d9',
-      '#3fb884',
-      '#16baa9',
-      '#07c160',
-      '#009688',
-      '#6954f0',
-      '#7b40f2',
-      '#f01414',
+      '#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'
     ])
     const isFollow = shuffle(theme.value.isFollow, [true, false])
 
@@ -174,6 +165,8 @@ const randomTheme = async () => {
     }, 1000)
   }, 100)
 }
+
+$sub('shop-vite-random-theme', randomTheme)
 
 const checkUpdate = async () => {
   if (vabUpdateRef.value) {
