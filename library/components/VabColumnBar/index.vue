@@ -493,7 +493,7 @@ onBeforeUnmount(() => {
   width: 34px;
   height: 34px;
   line-height: 34px;
-  color: var(--el-color-white);
+  color: #fff;
   text-align: center;
   cursor: pointer;
   user-select: none;

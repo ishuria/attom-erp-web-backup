@@ -22,10 +22,7 @@
             <el-radio-button v-for="item in themeNameList" :key="item.value" :label="translate(item.label)" :value="item.value" />
           </el-radio-group>
         </el-form-item>
-        <el-form-item
-          v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
-          :label="translate('暗黑模式')"
-        >
+        <el-form-item v-if="route.path !== '/goods/posterDesign'" :label="translate('暗黑模式')">
           <vab-dark />
         </el-form-item>
         <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
@@ -96,7 +93,7 @@
         <el-form-item v-if="theme.layout !== 'comprehensive'" :label="translate('头部固定')">
           <el-switch v-model="theme.fixedHeader" />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('暗黑组件')">
+        <el-form-item :label="translate('暗黑组件')">
           <el-switch v-model="theme.showDark" />
         </el-form-item>
         <el-form-item :label="translate('字体')">
@@ -192,6 +189,7 @@ const themeNameList = ref<ListType[]>([
   { value: 'default', label: '默认' },
   { value: 'plain', label: '简洁' },
   { value: 'technology', label: '科技' },
+  // { value: 'gold', label: '黑金' },
 ])
 const columnStyleList = ref<ListType[]>([
   { value: 'vertical', label: '纵向' },

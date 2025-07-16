@@ -1,6 +1,6 @@
 <template>
   <vab-icon
-    v-if="'technology' != theme.themeName && 'plain' != theme.themeName && route.path !== '/goods/posterDesign'"
+    v-if="route.path !== '/goods/posterDesign'"
     class="vab-dark"
     :icon="mode === 'dark' ? 'moon-line' : 'sun-line'"
     @click="_toggleDark($event)"
@@ -18,6 +18,7 @@ const route = useRoute()
 const settingsStore = useSettingsStore()
 const { theme, mode } = storeToRefs(settingsStore)
 const { updateMode } = settingsStore
+const originalBodyClass = ref('')
 
 const _toggleDark = async (event: MouseEvent) => {
   if (typeof document.startViewTransition === 'function') {
@@ -31,6 +32,19 @@ const _toggleDark = async (event: MouseEvent) => {
       root.classList.remove(isDark ? 'dark' : 'light')
       root.classList.add(isDark ? 'light' : 'dark')
       handleSetScheme(isDark ? 'light' : 'dark')
+
+      // 处理 body 类
+      const body = document.body
+      if (isDark) {
+        // 从暗黑切换到日间模式，恢复原来的 class
+        if (originalBodyClass.value) {
+          body.className = originalBodyClass.value
+        }
+      } else {
+        // 从日间切换到暗黑模式，保存原来的 class 并设置为 vab-theme-default
+        originalBodyClass.value = body.className
+        body.className = 'vab-theme-default'
+      }
     })
     await transition.ready.then(() => {
       const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`]
@@ -39,7 +53,7 @@ const _toggleDark = async (event: MouseEvent) => {
           clipPath: isDark ? [...clipPath].reverse() : clipPath,
         },
         {
-          duration: 500,
+          duration: 600,
           easing: 'ease-in',
           pseudoElement: isDark ? '::view-transition-old(root)' : '::view-transition-new(root)',
         }
@@ -48,6 +62,20 @@ const _toggleDark = async (event: MouseEvent) => {
   } else {
     const toggleDark = useToggle(handleUseDark())
     await toggleDark()
+
+    // 处理没有过渡效果时的 body 类
+    const body = document.body
+    const isDark = document.documentElement.classList.contains('dark')
+    if (isDark) {
+      // 切换到暗黑模式
+      originalBodyClass.value = body.className
+      body.className = 'vab-theme-default'
+    } else {
+      // 切换到日间模式
+      if (originalBodyClass.value) {
+        body.className = originalBodyClass.value
+      }
+    }
   }
   await updateMode(localStorage.getItem('vueuse-color-scheme'))
 }
@@ -72,12 +100,22 @@ onBeforeMount(() => {
       handleSetScheme('light')
       handleUseDark()
       mode.value = 'light'
+      // 恢复 body 的原始 class
+      if (originalBodyClass.value) {
+        document.body.className = originalBodyClass.value
+      }
     }
   })
 
   handleUseDark()
   if (handleGetScheme() === 'auto') handleSetScheme('light')
   mode.value = handleGetScheme()
+
+  // 初始化时处理 body 的 class
+  if (handleGetScheme() === 'dark') {
+    originalBodyClass.value = document.body.className
+    document.body.className = 'vab-theme-default'
+  }
 })
 </script>
 
