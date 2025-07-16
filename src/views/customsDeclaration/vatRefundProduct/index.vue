@@ -77,7 +77,7 @@
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="合同编号" fixed="left" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
             <template #header>
               报关单<br />出口日期
@@ -246,7 +246,7 @@
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="合同编号" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
+          <el-table-column label="合同编号" fixed="left" sortable="custom" prop="contractNumber" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" />
           <el-table-column label="报关单出口日期" sortable="custom" min-width="120" prop="exportDate">
             <template #header>
               报关单<br />出口日期
