@@ -30,10 +30,14 @@
       >
         <el-table-column label="姓名" min-width="100" prop="userName" />
         <el-table-column label="月份" min-width="100" prop="month" />
-        <el-table-column label="总考核完成数" min-width="120" prop="assessmentNumberFinish" />
-        <el-table-column label="总考核数" min-width="100" prop="assessmentNumber" />
-        <el-table-column label="OEM完成数" min-width="110" prop="oemFinish" />
-        <el-table-column label="OEM考核数" min-width="110" prop="oem" />
+        <el-table-column label="实际总完成数" min-width="120" prop="assessmentNumberFinish" />
+        <el-table-column label="实际总考核数" min-width="120" prop="assessmentNumber" />
+        <el-table-column label="实际OEM完成数" min-width="130" prop="oemFinish" />
+        <el-table-column label="实际OEM考核数" min-width="130" prop="oem" />
+        <el-table-column label="原始总考核数" min-width="120" prop="originalAssessmentNumber" />
+        <el-table-column label="原始OEM考核数" min-width="130" prop="originalOem" />
+        <el-table-column label="原始总完成数" min-width="120" prop="originalAssessmentNumberFinish" />
+        <el-table-column label="原始OEM完成数" min-width="130" prop="originalOemFinish" />
       </el-table>
       <vab-pagination
         :current-page="queryForm.pageNo"

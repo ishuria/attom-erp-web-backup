@@ -49,15 +49,15 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite" />
-          <el-table-column label="已签收天数" min-width="110" prop="signDay">
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite" />
+          <el-table-column label="已签收天数" width="110" prop="signDay">
             <template #default="{ row }">
               <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">
                 {{ row.signDay }}天
@@ -93,7 +93,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -101,6 +101,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -115,15 +120,16 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+  
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -225,14 +231,14 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? formatDate(new Date(row.sendDate)) : ''  }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite" />
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -262,7 +268,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -270,6 +276,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -284,15 +295,16 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+       
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -392,14 +404,14 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite" />
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -429,7 +441,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -437,6 +449,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -451,15 +468,16 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+    
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -559,14 +577,14 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite" />
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -596,7 +614,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -604,6 +622,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -618,15 +641,15 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -726,14 +749,14 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite"/>
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite"/>
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -763,7 +786,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -771,6 +794,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -785,15 +813,16 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+       
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -892,14 +921,14 @@
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" min-width="115" prop="sendDate">
+          <el-table-column label="发货日期" width="115" prop="sendDate">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="100" prop="po" />
-          <el-table-column label="订单总数" min-width="115" prop="totalOrderQuantity" />
-          <el-table-column label="站点" min-width="145" prop="sendSite" />
+          <el-table-column label="PO" width="100" prop="po" />
+          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
+          <el-table-column label="站点" width="145" prop="sendSite" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -929,7 +958,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" min-width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
             <template #default="{ row }">
               <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
             </template>
@@ -937,6 +966,11 @@
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
           <el-table-column label="推荐数量" prop="recommendCount" width="100" />
           <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -951,15 +985,15 @@
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" /> -->
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
-              <span class="overflow-text" v-html="row.packageRemarkList"></span>
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" min-width="100" prop="productManager" />
+          <el-table-column label="产品经理" width="100" prop="productManager" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -1483,7 +1517,7 @@ import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTask',
@@ -2572,5 +2606,21 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.custom-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+.multi-line-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 显示2行 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-height: 1.5;
+  max-height: 3em; /* 2行文字的大致高度 */
+}
+.custom-tooltip {
+  max-width: 400px; 
+  font-size: 16px;
+  white-space: pre-wrap; 
 }
 </style>

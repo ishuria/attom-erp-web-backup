@@ -112,7 +112,7 @@
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
           <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
-          <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
+          <el-table-column label="供应商税号" prop="suppliserTaxNumber" :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')" />
           <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">
@@ -278,7 +278,7 @@
           <el-table-column label="利润率" min-width="100" prop="profitMargin" />
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
           <el-table-column label="供应商" sortable="custom" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" />
-          <el-table-column label="供应商税号" min-width="130" prop="suppliserTaxNumber" />
+          <el-table-column label="供应商税号" prop="suppliserTaxNumber" :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')" />
           <el-table-column label="PO" sortable="custom" min-width="100" prop="po" />
           <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
             <template #default="{ row }">

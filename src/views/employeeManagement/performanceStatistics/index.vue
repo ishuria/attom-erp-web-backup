@@ -171,7 +171,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
-                <el-button type="primary">参数设定</el-button>
+                <el-button type="primary" @click="parameterSettingsVisible = true">参数设定</el-button>
                 <el-button type="primary">考核数结账</el-button>
               </el-form-item>
             </el-form>
@@ -466,7 +466,7 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 考核数设定 -->
-    <vab-dialog v-model="settingVisible" :draggable="false" title="产品经理考核设定和追踪" top="10vh">
+    <vab-dialog v-model="settingVisible" :draggable="false" title="产品经理考核设定和追踪" top="10vh" width="60%">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="settingQueryForm" @submit.prevent>
@@ -498,8 +498,8 @@
       >
         <el-table-column label="姓名" min-width="100" prop="userName" />
         <el-table-column label="月份" min-width="100" prop="month" />
-        <el-table-column label="实际总完成数" min-width="120" prop="assessmentNumberFinish" />
-        <el-table-column label="实际总考核数" min-width="100" prop="assessmentNumber">
+        <el-table-column label="实际总完成数" min-width="130" prop="assessmentNumberFinish" />
+        <el-table-column label="实际总考核数" min-width="130" prop="assessmentNumber">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.assessmentNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -507,8 +507,8 @@
             <span>{{ row.assessmentNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="实际OEM完成数" min-width="110" prop="oemFinish" />
-        <el-table-column label="实际OEM考核数" min-width="110" prop="oem">
+        <el-table-column label="实际OEM完成数" min-width="140" prop="oemFinish" />
+        <el-table-column label="实际OEM考核数" min-width="140" prop="oem">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.oem" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -516,11 +516,11 @@
             <span>{{ row.oem }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="原始总考核数" min-width="110" prop="" />
-        <el-table-column label="原始OEM考核数" min-width="110" prop="" />
-        <el-table-column label="原始总完成数" min-width="110" prop="" />
-        <el-table-column label="原始OEM完成数" min-width="110" prop="" />
-        <el-table-column label="考核未达标" min-width="110" prop="status">
+        <el-table-column label="原始总考核数" min-width="120" prop="" />
+        <el-table-column label="原始OEM考核数" min-width="140" prop="" />
+        <el-table-column label="原始总完成数" min-width="120" prop="" />
+        <el-table-column label="原始OEM完成数" min-width="140" prop="" />
+        <el-table-column label="考核未达标" min-width="120" prop="status">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
           </template>
@@ -538,6 +538,31 @@
         @current-change="handleSettingCurrentChange"
         @size-change="handleSettingSizeChange"
       />
+    </vab-dialog>
+    <!-- 明细-->
+    <vab-dialog>
+      <el-table>
+        <el-table-column label="创建人" />
+        <el-table-column label="月份" />
+        <el-table-column label="姓名" />
+        <el-table-column label="类型" />
+        <el-table-column label="调整数量" />
+        <el-table-column label="OEM" />
+        <el-table-column label="备注" />
+        <el-table-column label="操作" />
+      </el-table>
+    </vab-dialog>
+    <!-- 参数设定 -->
+    <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="20%">
+      <el-form :model="parameterSettingsForm"  >
+        <el-form-item label="最大超额完成数" prop="month">
+          <el-input v-model="parameterSettingsForm.count" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button>取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </template>
     </vab-dialog>
   </div>
 </template>
@@ -565,6 +590,11 @@ defineOptions({
   name: 'PerformanceStatistics',
 })
 
+// 参数设定
+const parameterSettingsVisible = ref<boolean>(false)
+const parameterSettingsForm = reactive<any>({
+
+})
 const activeName = ref<number>(0)
 /* ============================== 考勤明细变量 ============================== */
 const listLoading = ref<boolean>(false)
