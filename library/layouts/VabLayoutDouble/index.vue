@@ -2,7 +2,7 @@
   <div
     class="vab-layout-double"
     :class="{
-      fixed: fixedHeader,
+      isFixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
   >

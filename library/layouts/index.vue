@@ -123,11 +123,11 @@ watch(
       }
     }
 
-    &.fixed {
+    &.isFixed {
       padding-top: calc(var(--el-nav-height) + var(--el-tabs-height));
     }
 
-    &.fixed.no-tabs-bar {
+    &.isFixed.no-tabs-bar {
       padding-top: var(--el-nav-height);
     }
   }

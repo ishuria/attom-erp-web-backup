@@ -2,7 +2,7 @@
   <div
     class="vab-layout-vertical"
     :class="{
-      fixed: fixedHeader,
+      isFixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
   >
