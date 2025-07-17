@@ -33,8 +33,8 @@ export const cliConfig: {
   localEnabled: true,
   // 生产环境是否启用mock
   prodEnabled: true,
-  // 开启代码压缩 boolean | 'gzip' | 'brotli'
-  compress: 'gzip',
+  // 开启代码压缩 false | 'gzip' | 'brotli'
+  compress: false,
   // 需要缓存到node_modules/.vite的模块
   include: [],
   // 不需要缓存到node_modules/.vite的模块

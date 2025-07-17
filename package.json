@@ -1,6 +1,6 @@
 {
   "name": "shop-vite",
-  "version": "29.6.0",
+  "version": "29.7.0",
   "private": true,
   "author": "github.com/zxwk1998",
   "scripts": {
@@ -52,7 +52,7 @@
     "file-saver": "^2.0.5",
     "jsencrypt": "^3.3.2",
     "lodash-es": "^4.17.21",
-    "marked": "^16.0.0",
+    "marked": "^16.1.0",
     "mitt": "^3.0.1",
     "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
@@ -131,7 +131,7 @@
     "vite-plugin-unplugin": "^1.8.0",
     "vite-plugin-vitebar": "^0.0.8",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.0.2"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
