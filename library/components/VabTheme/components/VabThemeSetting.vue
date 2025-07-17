@@ -69,7 +69,7 @@
         </p>
       </a>
     </div>
-    <vab-update ref="vabUpdateRef" />
+    <vab-update v-if="pwa" ref="vabUpdateRef" />
   </div>
 </template>
 
@@ -78,6 +78,8 @@ import axios from 'axios'
 import { version as localVersion } from '~/package.json'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
+
+import { pwa } from '/@/config'
 
 defineOptions({
   name: 'VabThemeSetting',
