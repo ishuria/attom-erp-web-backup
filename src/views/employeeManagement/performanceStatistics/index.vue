@@ -172,6 +172,7 @@
               <el-form-item>
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
                 <el-button type="primary" @click="parameterSettingsVisible = true">参数设定</el-button>
+                <el-button type="primary" @click="adjustDetailVisible = true">调整明细</el-button>
                 <el-button type="primary">考核数结账</el-button>
               </el-form-item>
             </el-form>
@@ -539,22 +540,11 @@
         @size-change="handleSettingSizeChange"
       />
     </vab-dialog>
-    <!-- 明细-->
-    <vab-dialog>
-      <el-table>
-        <el-table-column label="创建人" />
-        <el-table-column label="月份" />
-        <el-table-column label="姓名" />
-        <el-table-column label="类型" />
-        <el-table-column label="调整数量" />
-        <el-table-column label="OEM" />
-        <el-table-column label="备注" />
-        <el-table-column label="操作" />
-      </el-table>
-    </vab-dialog>
+    <!-- 调整明细-->
+    <adjust-detail-dialog v-model="adjustDetailVisible" />
     <!-- 参数设定 -->
     <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="20%">
-      <el-form :model="parameterSettingsForm"  >
+      <el-form :model="parameterSettingsForm" style="margin-left: 0; margin-right: 0;" >
         <el-form-item label="最大超额完成数" prop="month">
           <el-input v-model="parameterSettingsForm.count" clearable />
         </el-form-item>
@@ -590,6 +580,8 @@ defineOptions({
   name: 'PerformanceStatistics',
 })
 
+// 调整明细
+const adjustDetailVisible = ref<boolean>(false)
 // 参数设定
 const parameterSettingsVisible = ref<boolean>(false)
 const parameterSettingsForm = reactive<any>({

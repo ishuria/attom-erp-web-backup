@@ -1,0 +1,217 @@
+<template>
+  <div>
+    <vab-dialog v-model="visible" title="调整明细">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="showAdd">新增</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryData"
+                @keyup.enter="queryData"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table stripe border :data="list" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
+        <el-table-column label="月份" prop="month" />
+        <el-table-column label="被调整人" prop="userName" />
+        <el-table-column label="类型" prop="type" >
+          <template #default="{ row }">
+            {{ row.type === 0 ? '考核数' : '完成数' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="调整数量" prop="adjustQuantity" />
+        <el-table-column label="OEM" >
+          <template #default="{ row }">
+            <el-checkbox v-model="row.oem" :false-value="0" :true-value="1" disabled />
+          </template>
+        </el-table-column>
+        <el-table-column label="父体" prop="parent" />
+        <el-table-column label="备注" prop="remark" />
+        <el-table-column label="来源" prop="source" />
+        <el-table-column label="操作" >
+          <template #default="{ row }">
+            <el-link :underline="false" type="danger" @click="deleteDetail(row)">删除</el-link>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" style="min-height: 200px" />
+        </template>
+      </el-table>
+      <vab-pagination 
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+    </vab-dialog>
+    <!-- 新增 -->
+    <vab-dialog v-model="addVisible" title="新增" width="20%" @close="closeAdd">
+      <el-form :model="addForm" :rules="addRules" ref="addFormRef" style="margin-left: 0; margin-right: 0;" label-width="auto">
+        <el-form-item label="月份" prop="month">
+          <el-date-picker v-model="addForm.month" type="month" value-format="YYYY-MM" placeholder="请选择月份" />
+        </el-form-item>
+        <el-form-item label="被调整人" prop="userId">
+          <el-select v-model="addForm.userId" placeholder="请选择被调整人" >
+            <el-option v-for="item in productManagerList" :label="item.label" :value="item.id" :key="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="addForm.type" placeholder="请选择类型">
+            <el-option v-for="item in typeOption" :label="item.label" :value="item.value" :key="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="调整数量" prop="adjustQuantity">
+          <el-input v-model.trim="addForm.adjustQuantity" placeholder="请输入调整数量" />
+        </el-form-item> 
+        <el-form-item label="OEM" prop="oem">
+          <el-checkbox v-model="addForm.oem" :false-value="0" :true-value="1" />
+        </el-form-item>
+        <el-form-item label="父体" prop="parent">
+          <el-input v-model="addForm.parent" placeholder="请输入父体" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input type="textarea" :rows="2" v-model="addForm.remark" placeholder="请输入备注" :autosize="{ minRows: 2, maxRows: 4 }">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="submitAddForm">新增</el-button>
+      </template>
+    </vab-dialog>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import { FormInstance } from 'element-plus'
+import { addAdjustDetail, deleteAdjustDetail, getAdjustDetail, getProductManager } from '/@/api/devlocal/performanceStatistics'
+import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
+
+defineOptions({
+  name: 'AdjustDetailDialog'
+})
+
+const props = defineProps<{
+  modelValue: boolean
+}>()
+const emit = defineEmits(['update:modelValue'])
+const visible = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  }
+})
+watch(() => props.modelValue, (val) => {
+  if (val) {
+    fetchData()
+  }
+})
+const addFormRef = ref<FormInstance>()
+const addVisible = ref<boolean>(false)
+const addForm = reactive({
+  month: '',
+  userId: undefined,
+  type: 0,
+  adjustQuantity: undefined,
+  oem: 0,
+  parent: '',
+  remark: ''
+})
+const addRules = reactive<any>({
+  month: [{ required: true, message: '请选择月份', trigger: 'change' }],
+  userId: [{ required: true, message: '请选择被调整人', trigger: 'change' }],
+  type: [{ required: true, message: '请选择类型', trigger: 'change' }],
+  adjustQuantity: [{ required: true, message: '请输入调整数量', trigger: 'blur' }],
+})
+const typeOption = [
+  { label: '考核数', value: 0 },
+  { label: '完成数', value: 1 }
+]
+const queryForm = reactive<IGetAdjustDetailReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20
+})
+const listLoading = ref<boolean>(false)
+const total = ref<number>(0)
+const list = ref<IGetAdjustDetail[]>([])
+const productManagerList = ref<{ id: number, label: string }[]>([])
+const showAdd = async () => {
+  addVisible.value = true
+  const { data } = await getProductManager()
+  productManagerList.value = data
+}
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getAdjustDetail(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
+}
+const queryData = async () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const handleCurrentChange = (val: number) => {
+  queryForm.pageNo = val
+  fetchData()
+}
+const handleSizeChange = (val: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = val
+  fetchData()
+}
+const submitAddForm = async () => {
+  addFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      const { data } = await addAdjustDetail({
+        month: addForm.month,
+        userId: addForm.userId!,
+        type: addForm.type,
+        adjustQuantity: addForm.adjustQuantity!,
+        oem: addForm.oem,
+        parent: addForm.parent,
+        remark: addForm.remark
+      })
+      if (data) {
+        $baseMessage("新增成功！", 'success')
+        closeAdd()
+        queryData()
+      }
+    }
+  })
+}
+const closeAdd = () => {
+  addVisible.value = false
+  addFormRef.value?.resetFields()
+}
+const deleteDetail = async (row: IGetAdjustDetail) => {
+  const { data } = await deleteAdjustDetail({
+    id: row.id
+  })
+  if (data) {
+    $baseMessage("删除成功！", 'success')
+    queryData()
+  }
+}
+</script> 
+
+<style lang="scss" scoped>
+.el-checkbox {
+  transform: scale(1.2);
+}
+</style>

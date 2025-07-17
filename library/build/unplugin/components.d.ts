@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ActiveUsersBar: typeof import('./../../../src/views/index/vabAutoComponents/ActiveUsersBar.vue')['default']
     AddPanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/AddPanel.vue')['default']
+    AdjustDetailDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/AdjustDetailDialog.vue')['default']
     AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
     AiTuoMuInvoiceMatch: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceMatch.vue')['default']
     AiTuoMuTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuTable.vue')['default']

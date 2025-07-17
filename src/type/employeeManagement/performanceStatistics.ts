@@ -243,3 +243,36 @@ export interface IGetUserAttendanceList {
   // 总奖金
   totalBonus?: number
 }
+
+export interface IAddAdjustDetailReq {
+  month: string
+  userId: number
+  type: number
+  adjustQuantity: number
+  oem?: number
+  parent?: string
+  source?: string
+  remark?: string
+}
+export interface IGetAdjustDetailReq {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetAdjustDetailRes {
+  data: {
+    list: IGetAdjustDetail[]
+    total: number
+  }
+}
+export interface IGetAdjustDetail {
+  id: number
+  month: string
+  userId: number
+  type: number
+  adjustQuantity: number
+  oem?: number
+  parent?: string
+  source?: string
+  userName: string
+}

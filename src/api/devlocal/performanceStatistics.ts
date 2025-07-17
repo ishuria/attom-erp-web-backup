@@ -3,6 +3,9 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  IAddAdjustDetailReq,
+  IGetAdjustDetailReq,
+  IGetAdjustDetailRes,
   IGetAssessmentListReq,
   IGetAssessmentListRes,
   IGetProductManagerAssessmentListReq,
@@ -55,5 +58,55 @@ export function getUserAttendanceList(data: IGetAssessmentListReq): Promise<IGet
     url: `${BASE_API}/user/attendance/list`,
     method: 'post',
     data
+  })
+}
+
+/**
+ * 调整明细-新增
+ * @param data
+ * @returns 
+ */
+export function addAdjustDetail(data: IAddAdjustDetailReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/performance/add/adjust/detail`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 调整明细-查询
+ * @param data
+ * @returns 
+ */
+export function getAdjustDetail(data: IGetAdjustDetailReq): Promise<IGetAdjustDetailRes> {
+  return request({
+    url: `${BASE_API}/performance/adjust/detail/list`,
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 调整明细-删除
+ * @param params
+ * @returns 
+ */
+export function deleteAdjustDetail(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/performance/adjust/detail/delete`,
+    method: 'post',
+    params
+  })
+}
+
+/**
+ * 查询产品经理列表
+ * @returns 
+ */
+export function getProductManager(): Promise<{ data: { id: number, label: string}[] }> {
+  return request({
+    url: `${BASE_API}/product/manager/user/list`,
+    method: 'get'
   })
 }

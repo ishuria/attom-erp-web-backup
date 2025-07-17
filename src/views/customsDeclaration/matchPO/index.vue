@@ -268,7 +268,7 @@
         </el-table-column>
         <el-table-column label="差额" min-width="90" prop="difference">
           <template #default="{ row }">
-            <span :style="{ color: row.difference < 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference}%` }}</span>
+            <span :style="{ color: row.difference < 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.difference == null ? '' : `${row.difference * 100}%` }}</span>
           </template>
         </el-table-column>
         <el-table-column label="已付" min-width="90" prop="payStatus">
@@ -1059,13 +1059,35 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
         ])
         return
       }
-      case 6: {
+      // case 6: {
+      //   sums[index] = h('div', { style: { fontWeight: '600' } }, [
+      //     'RMB',
+      //   ])
+      //   return
+      // }
+      case 7: {
+        const values = data.map((item) => {
+          // 计算每一行的合计值：实际总费用 * 实际汇率
+          const estimateCost = Number(item['actualCost'])
+          const estimateExchangeRate = Number(item['actualExchangeRate'])
+          return estimateCost * estimateExchangeRate
+        })
+
+        // 计算所有值的合计
         sums[index] = h('div', { style: { fontWeight: '600' } }, [
-          'RMB',
+          `${values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (Number.isNaN(value)) {
+              return prev
+            } else {
+              return prev + curr // 累加有效的数值
+            }
+          }, 0).toFixed(2)}`,
         ])
-        return
+      
+        break;
       }
-      case 3: {
+       case 4: {
         const values = data.map((item) => {
           // 计算每一行的合计值：预估总费用 * 暂估汇率
           const estimateCost = Number(item['estimateCost'])
@@ -1085,7 +1107,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
           }, 0).toFixed(2)}`,
         ])
       
-      break;
+        break;
       }
       default: {
         sums[index] = '' // 如果不是 'estimateCost' 或 'estimateExchangeRate' 列，设置为空
