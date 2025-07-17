@@ -171,6 +171,8 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
+                <el-button type="primary">参数设定</el-button>
+                <el-button type="primary">考核数结账</el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -496,8 +498,8 @@
       >
         <el-table-column label="姓名" min-width="100" prop="userName" />
         <el-table-column label="月份" min-width="100" prop="month" />
-        <el-table-column label="总考核完成数" min-width="120" prop="assessmentNumberFinish" />
-        <el-table-column label="总考核数" min-width="100" prop="assessmentNumber">
+        <el-table-column label="实际总完成数" min-width="120" prop="assessmentNumberFinish" />
+        <el-table-column label="实际总考核数" min-width="100" prop="assessmentNumber">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.assessmentNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -505,8 +507,8 @@
             <span>{{ row.assessmentNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="OEM完成数" min-width="110" prop="oemFinish" />
-        <el-table-column label="OEM考核数" min-width="110" prop="oem">
+        <el-table-column label="实际OEM完成数" min-width="110" prop="oemFinish" />
+        <el-table-column label="实际OEM考核数" min-width="110" prop="oem">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.oem" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -514,9 +516,18 @@
             <span>{{ row.oem }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="原始总考核数" min-width="110" prop="" />
+        <el-table-column label="原始OEM考核数" min-width="110" prop="" />
+        <el-table-column label="原始总完成数" min-width="110" prop="" />
+        <el-table-column label="原始OEM完成数" min-width="110" prop="" />
         <el-table-column label="考核未达标" min-width="110" prop="status">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="130">
+          <template #default="{ row }">
+            <el-link :underline="false" type="primary">查看调整明细</el-link>
           </template>
         </el-table-column>
       </el-table>
