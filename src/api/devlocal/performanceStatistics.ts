@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IAddAdjustDetailReq,
+  ICheckoutReq,
   IGetAdjustDetail,
   IGetAdjustDetailReq,
   IGetAdjustDetailRes,
@@ -87,6 +88,18 @@ export function getAdjustDetail(data: IGetAdjustDetailReq): Promise<IGetAdjustDe
     data
   })
 }
+/**
+ * 查询当月 人员 对应调整明细
+ * @param params 
+ * @returns 
+ */
+export function getAdjustDetailByUser(params: { userId: number, month: string }): Promise<{ data: IGetAdjustDetail[] }> {
+  return request({
+    url: `${BASE_API}/performance/adjust/detail/by_user`,
+    method: 'get',
+    params
+  })
+}
 
 /**
  * 调整明细-删除
@@ -109,5 +122,40 @@ export function getProductManager(): Promise<{ data: { id: number, label: string
   return request({
     url: `${BASE_API}/product/manager/user/list`,
     method: 'get'
+  })
+}
+
+/**
+ * 最大超额完成数-查询
+ * @returns 
+ */ 
+export function getMaximumOverfulfillment(): Promise<{ data: string }> {
+  return request({
+    url: `${BASE_API}/get/maximum/overfulfillment`,
+    method: 'get'
+  })
+}
+/**
+ * 最大超额完成数-修改
+ * @param data 
+ * @returns 
+ */
+export function updateMaximumOverfulfillment(params: { number: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/update/maximum/overfulfillment`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 考核数结账
+ * @param data 
+ * @returns 
+ */
+export function checkoutAssessmentNumber(data: ICheckoutReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/assessment/number/checkout`,
+    method: 'post',
+    data
   })
 }

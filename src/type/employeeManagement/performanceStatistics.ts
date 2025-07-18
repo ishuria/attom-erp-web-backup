@@ -20,6 +20,7 @@ export interface IGetProductManagerAssessmentList {
   oem?: number
   oemFinish?: number
   status?: number
+  userId: number
 }
 
 export interface IUpdateProductManagerAssessmentReq {
@@ -275,4 +276,12 @@ export interface IGetAdjustDetail {
   parent?: string
   source?: string
   userName: string
+}
+
+export interface ICheckoutReq {
+  userIdList: number[]
+
+  startMonth: string
+
+  endMonth: string
 }

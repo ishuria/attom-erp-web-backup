@@ -171,7 +171,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
-                <el-button type="primary" @click="parameterSettingsVisible = true">参数设定</el-button>
+                <el-button type="primary" @click="showParameterSettings">参数设定</el-button>
                 <el-button type="primary" @click="adjustDetailVisible = true">调整明细</el-button>
                 <el-button type="primary" @click="showCheckout">考核数结账</el-button>
               </el-form-item>
@@ -528,7 +528,7 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="{ row }">
-            <el-link :underline="false" type="primary">查看调整明细</el-link>
+            <el-link :underline="false" type="primary" @click="showViewDetail(row)">查看调整明细</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -542,23 +542,46 @@
     </vab-dialog>
     <!-- 调整明细-->
     <adjust-detail-dialog v-model="adjustDetailVisible" @query-data="fetchAssessmentData" />
+    <!-- 对应月份 对应人员调整明细 -->
+    <vab-dialog v-model="viewDetailVisible" title="调整明细">
+         <el-table stripe border :data="detailList" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
+        <el-table-column label="月份" prop="month" />
+        <el-table-column label="被调整人" prop="userName" />
+        <el-table-column label="类型" prop="type" >
+          <template #default="{ row }">
+            {{ row.type === 0 ? '考核数' : '完成数' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="调整数量" prop="adjustQuantity" />
+        <el-table-column label="OEM" >
+          <template #default="{ row }">
+            <el-checkbox v-model="row.oem" :false-value="0" :true-value="1" disabled />
+          </template>
+        </el-table-column>
+        <el-table-column label="父体" prop="parent" />
+        <el-table-column label="备注" prop="remark" />
+        <el-table-column label="来源" prop="source" />
+        <template #empty>
+          <el-empty class="vab-data-empty" style="min-height: 200px" />
+        </template>
+      </el-table>
+    </vab-dialog>
     <!-- 参数设定 -->
-    <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="20%">
-      <el-form :model="parameterSettingsForm" style="margin-left: 0; margin-right: 0;" >
-        <el-form-item label="最大超额完成数" prop="month">
+    <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="16%">
+      <el-form ref="parameterSettingsFormRef" :model="parameterSettingsForm" :rules="parameterSettingsRules" style="margin-left: 0; margin-right: 0;" >
+        <el-form-item label="最大超额完成数" prop="count">
           <el-input v-model="parameterSettingsForm.count" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button>取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="updateParameterSettings">修改</el-button>
       </template>
     </vab-dialog>
     <!-- 考核数结账 -->
-    <vab-dialog title="考核数结账" v-model="checkoutVisible" width="20%">
+    <vab-dialog title="考核数结账" v-model="checkoutVisible" width="20%" @close="closeCheckout">
       <el-form label-position="top">
         <el-form-item label="请选择结账人员">
-          <el-select v-model="userIdList" multiple>
+          <el-select v-model="userIdList" multiple placeholder="请选择结账人员">
             <el-option
               v-for="item in productManagerList"
               :key="item.id"
@@ -578,16 +601,22 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
+import { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
+  checkoutAssessmentNumber,
+  getAdjustDetailByUser,
   getAssessmentList,
+  getMaximumOverfulfillment,
   getProductManager,
   getProductManagerAssessmentList,
   getUserAttendanceList,
+  updateMaximumOverfulfillment,
   updateProductManagerAssessment,
 } from '/@/api/devlocal/performanceStatistics'
 import type {
+  IGetAdjustDetail,
   IGetAssessmentList,
   IGetAssessmentListReq,
   IGetProductManagerAssessmentList,
@@ -599,6 +628,17 @@ defineOptions({
   name: 'PerformanceStatistics',
 })
 
+// 对应调整明细
+const viewDetailVisible = ref<boolean>(false)
+const detailList = ref<IGetAdjustDetail[]>([])
+const showViewDetail = async (row: IGetProductManagerAssessmentList) => {
+  const { data } = await getAdjustDetailByUser({
+    userId: row.userId,
+    month: row.month!,
+  })
+  detailList.value = data
+  viewDetailVisible.value = true
+}
 // 考核数结账
 const checkoutVisible = ref<boolean>(false)
 const productManagerList = ref<{ id: number, label: string }[]>([])
@@ -607,12 +647,24 @@ const showCheckout = async () => {
   productManagerList.value = data
   checkoutVisible.value = true
 }
+const closeCheckout = () => {
+  userIdList.value = []
+  checkoutVisible.value = false
+}
 const handleCheckout = async () => {
   if (userIdList.value.length === 0) {
     $baseMessage("您未选择任何人员进行结账！", 'warning')
     return
   }
-
+  const { data } = await checkoutAssessmentNumber({
+    userIdList: userIdList.value,
+    startMonth: date.value[0],
+    endMonth: date.value[1],
+  })
+  if (data) {
+    $baseMessage("考核数结账成功且发送邮件成功！", 'success')
+    checkoutVisible.value = false
+  }
 }
 const userIdList = ref<number[]>([])
 // 调整明细
@@ -620,8 +672,30 @@ const adjustDetailVisible = ref<boolean>(false)
 // 参数设定
 const parameterSettingsVisible = ref<boolean>(false)
 const parameterSettingsForm = reactive<any>({
-
+  count: undefined,
 })
+const parameterSettingsFormRef = ref<FormInstance>()
+const parameterSettingsRules = reactive<any>({
+  count: [{ required: true, message: '请输入最大超额完成数', trigger: 'blur' }],
+})
+const showParameterSettings = async () => {
+  const { data } = await getMaximumOverfulfillment()
+  parameterSettingsForm.count = data
+  parameterSettingsVisible.value = true
+}
+const updateParameterSettings = async () => {
+  parameterSettingsFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      const { data } = await updateMaximumOverfulfillment({
+        number: parameterSettingsForm.count,
+      })
+      if (data) {
+        $baseMessage("修改成功！", 'success')
+        parameterSettingsVisible.value = false
+      }
+    }
+  })
+}
 const activeName = ref<number>(0)
 /* ============================== 考勤明细变量 ============================== */
 const listLoading = ref<boolean>(false)
@@ -931,5 +1005,18 @@ onBeforeMount(() => {
 }
 .negative-color {
   color: var(--el-color-danger);
+}
+.el-checkbox {
+  transform: scale(1.2);
+}
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
 }
 </style>
