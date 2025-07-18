@@ -173,7 +173,7 @@
                 <el-button type="primary" @click="showSetting">考核数设定</el-button>
                 <el-button type="primary" @click="parameterSettingsVisible = true">参数设定</el-button>
                 <el-button type="primary" @click="adjustDetailVisible = true">调整明细</el-button>
-                <el-button type="primary">考核数结账</el-button>
+                <el-button type="primary" @click="showCheckout">考核数结账</el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -501,26 +501,26 @@
         <el-table-column label="月份" min-width="100" prop="month" />
         <el-table-column label="实际总完成数" min-width="130" prop="assessmentNumberFinish" />
         <el-table-column label="实际总考核数" min-width="130" prop="assessmentNumber">
-          <template #default="{ row }">
+          <!-- <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.assessmentNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.assessmentNumber }}</span>
-          </template>
+          </template> -->
         </el-table-column>
         <el-table-column label="实际OEM完成数" min-width="140" prop="oemFinish" />
         <el-table-column label="实际OEM考核数" min-width="140" prop="oem">
-          <template #default="{ row }">
+          <!-- <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.oem" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.oem }}</span>
-          </template>
+          </template> -->
         </el-table-column>
-        <el-table-column label="原始总考核数" min-width="120" prop="" />
-        <el-table-column label="原始OEM考核数" min-width="140" prop="" />
-        <el-table-column label="原始总完成数" min-width="120" prop="" />
-        <el-table-column label="原始OEM完成数" min-width="140" prop="" />
+        <el-table-column label="原始总考核数" min-width="120" prop="originalAssessmentNumber" />
+        <el-table-column label="原始OEM考核数" min-width="140" prop="originalOem" />
+        <el-table-column label="原始总完成数" min-width="120" prop="originalAssessmentNumberFinish" />
+        <el-table-column label="原始OEM完成数" min-width="140" prop="originalOemFinish" />
         <el-table-column label="考核未达标" min-width="120" prop="status">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
@@ -541,7 +541,7 @@
       />
     </vab-dialog>
     <!-- 调整明细-->
-    <adjust-detail-dialog v-model="adjustDetailVisible" />
+    <adjust-detail-dialog v-model="adjustDetailVisible" @query-data="fetchAssessmentData" />
     <!-- 参数设定 -->
     <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="20%">
       <el-form :model="parameterSettingsForm" style="margin-left: 0; margin-right: 0;" >
@@ -554,6 +554,24 @@
         <el-button type="primary">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 考核数结账 -->
+    <vab-dialog title="考核数结账" v-model="checkoutVisible" width="20%">
+      <el-form label-position="top">
+        <el-form-item label="请选择结账人员">
+          <el-select v-model="userIdList" multiple>
+            <el-option
+              v-for="item in productManagerList"
+              :key="item.id"
+              :label="item.label"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="handleCheckout">结账</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -564,6 +582,7 @@ import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import {
   getAssessmentList,
+  getProductManager,
   getProductManagerAssessmentList,
   getUserAttendanceList,
   updateProductManagerAssessment,
@@ -580,6 +599,22 @@ defineOptions({
   name: 'PerformanceStatistics',
 })
 
+// 考核数结账
+const checkoutVisible = ref<boolean>(false)
+const productManagerList = ref<{ id: number, label: string }[]>([])
+const showCheckout = async () => {
+  const { data } = await getProductManager()
+  productManagerList.value = data
+  checkoutVisible.value = true
+}
+const handleCheckout = async () => {
+  if (userIdList.value.length === 0) {
+    $baseMessage("您未选择任何人员进行结账！", 'warning')
+    return
+  }
+
+}
+const userIdList = ref<number[]>([])
 // 调整明细
 const adjustDetailVisible = ref<boolean>(false)
 // 参数设定
@@ -761,18 +796,18 @@ const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
   return totalBonus.toFixed(2)
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 0 || index === 1 || index === 2 || index === 4) {
-    return {
-      textAlign: 'center',
-      cursor: 'not-allowed',
-    }
-  } else if (index === 3 || index === 5) {
-    return {
-      textAlign: 'center',
-      cursor: 'pointer',
-    }
-  }
+  // const index = data.columnIndex
+  // if (index === 0 || index === 1 || index === 2 || index === 4) {
+  //   return {
+  //     textAlign: 'center',
+  //     cursor: 'not-allowed',
+  //   }
+  // } else if (index === 3 || index === 5) {
+  //   return {
+  //     textAlign: 'center',
+  //     cursor: 'pointer',
+  //   }
+  // }
   return {
     textAlign: 'center',
   }

@@ -106,7 +106,7 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
 }>()
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'query-data'])
 const visible = computed({
   get() {
     return props.modelValue
@@ -191,6 +191,7 @@ const submitAddForm = async () => {
         $baseMessage("新增成功！", 'success')
         closeAdd()
         queryData()
+        emit('query-data')
       }
     }
   })
@@ -200,12 +201,11 @@ const closeAdd = () => {
   addFormRef.value?.resetFields()
 }
 const deleteDetail = async (row: IGetAdjustDetail) => {
-  const { data } = await deleteAdjustDetail({
-    id: row.id
-  })
+  const { data } = await deleteAdjustDetail(row)
   if (data) {
     $baseMessage("删除成功！", 'success')
     queryData()
+    emit('query-data')
   }
 }
 </script> 
@@ -213,5 +213,16 @@ const deleteDetail = async (row: IGetAdjustDetail) => {
 <style lang="scss" scoped>
 .el-checkbox {
   transform: scale(1.2);
+}
+
+// 选中且被禁用的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner) {
+  background: var(--el-checkbox-checked-bg-color);
+  border-color: var(--el-checkbox-checked-input-border-color);
+}
+
+// 选中后中间的 “✔” 的样式
+:deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
+  border-color: #fff;
 }
 </style>

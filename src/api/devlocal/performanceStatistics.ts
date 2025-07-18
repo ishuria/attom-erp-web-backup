@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IAddAdjustDetailReq,
+  IGetAdjustDetail,
   IGetAdjustDetailReq,
   IGetAdjustDetailRes,
   IGetAssessmentListReq,
@@ -92,11 +93,11 @@ export function getAdjustDetail(data: IGetAdjustDetailReq): Promise<IGetAdjustDe
  * @param params
  * @returns 
  */
-export function deleteAdjustDetail(params: { id: number }): Promise<{ data: boolean }> {
+export function deleteAdjustDetail(data: IGetAdjustDetail): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/performance/adjust/detail/delete`,
     method: 'post',
-    params
+    data
   })
 }
 
