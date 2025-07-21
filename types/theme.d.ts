@@ -28,7 +28,7 @@ declare type LayoutName =
    */
   | 'double'
 
-declare type ThemeName = 'default' | 'plain' | 'technology'
+declare type ThemeName = 'default' | 'plain' | 'technology' | 'gold'
 
 declare type Background =
   /**
