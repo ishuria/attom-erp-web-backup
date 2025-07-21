@@ -426,6 +426,7 @@ const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: 
       cursor: 'pointer'
     }
   } 
+  return {}
 }
 const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4) {
@@ -453,7 +454,7 @@ const objectSpanMethod = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 11 && columnIndex !== 12) {
+  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 13) {
     const id = row.id;
     // 默认不跨行
     let rowspan = 1;
