@@ -21,19 +21,7 @@ export const settingConfig: {
   // 路由模式，是否为hash模式
   isHashRouterMode: true,
   // 不经过token校验的路由，白名单路由建议配置到与login页面同级，如果需要放行带传参的页面，请使用query传参，配置时只配置path即可
-  routesWhiteList: [
-    '/login',
-    '/register',
-    '/password',
-    '/404',
-    '/403',
-    '/redirect',
-    '/portal',
-    '/product',
-    '/courses',
-    '/dataScreen',
-    '/workbench',
-  ],
+  routesWhiteList: ['/login', '/register', '/password', '/404', '/403', '/redirect'],
   // 加载时显示文字
   loadingText: '正在加载中...',
   // token名称
@@ -69,7 +57,6 @@ export const settingConfig: {
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
   defaultOpeneds: [
-    '/',
     '/vab',
     '/vab/icon',
     '/vab/table',
@@ -80,9 +67,6 @@ export const settingConfig: {
     '/operate/menu1/menu11/menu111',
     '/other',
     '/other/iframe',
-    '/template',
-    '/goods',
-    '/chat',
   ],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],

@@ -29,7 +29,7 @@ export const themeConfig: ThemeType = {
   //是否开启标签拖拽（影响性能建议关闭）
   tabDrag: true,
   //是否开启语言选择组件
-  showLanguage: true,
+  showLanguage: false,
   //是否开启刷新组件
   showRefresh: true,
   //是否开启搜索组件
@@ -63,11 +63,11 @@ export const themeConfig: ThemeType = {
   // 顶部右侧图标是否允许拖拽（影响性能建议关闭）
   rightToolsDrag: false,
   //是否开启快捷盒子
-  showBox: true,
+  showBox: false,
   // 是否开启液态玻璃效果
-  glassMode: true,
+  glassMode: false,
   // 液态玻璃透明度
   glassOpacity: 0.85,
   // 是否显示DeepSeek组件
-  showDeepSeek: true,
+  showDeepSeek: false,
 }

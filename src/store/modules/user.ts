@@ -1,11 +1,12 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
+import { data } from 'autoprefixer'
 import { useAclStore } from './acl'
 import { useSettingsStore } from './settings'
 import { useTabsStore } from './tabs'
 import { getUserInfo, login, logout } from '/@/api/devlocal/userLogin'
-import { storage,tokenName } from '/@/config'
+import { storage, tokenName } from '/@/config'
 import { getToken, removeToken, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
 import { gp } from '/@vab/plugins/vab'

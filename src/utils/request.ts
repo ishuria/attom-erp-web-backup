@@ -46,7 +46,7 @@ const CODE_MESSAGE: Record<number, string> = {
 const requestConfig = (config: any): any => {
   const userStore = useUserStore()
   const { token } = userStore
-
+  debugger
   // 规范写法 不可随意自定义
   if (token && config.headers) {
     config.headers['Authorization'] = `Bearer ${token}`
@@ -58,8 +58,8 @@ const requestConfig = (config: any): any => {
     if (config.url && debounce.some((item: string) => config.url.includes(item))) {
       loadingInstance = gp.$baseLoading()
     }
-    return config
   }
+  return config
 }
 
 /**
@@ -105,6 +105,7 @@ const tryRefreshToken = async (config: any): Promise<any> => {
  * @returns {Promise<any>}
  */
 const handleData = async (response: any): Promise<any> => {
+  console.log(response)
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
 

@@ -1,5 +1,5 @@
 <template>
-  <login-container v-slot="{ alignType }">
+  <login-container>
     <div class="login-form" :class="`align-${alignType}`">
       <img alt="" class="left-img" :src="leftImg" />
       <el-form ref="formRef" label-position="left" :model="form" :rules="rules" @submit.prevent>
@@ -77,6 +77,7 @@ import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { useUserStore } from '/@/store/modules/user'
 import { isPassword } from '/@/utils/validate'
+const alignType = ref('center')
 
 defineOptions({
   name: 'Login',
