@@ -1267,8 +1267,7 @@ html:not(.dark) body.vab-theme-default.glass-mode {
 
   // 主题配置抽屉和搜索弹窗液态玻璃效果
   .vab-drawer,
-  .vab-update,
-  .search-glass-dialog {
+  .vab-update {
     background: var(--vab-glass-bg) !important;
     border: 1px solid var(--el-border-color);
     box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
