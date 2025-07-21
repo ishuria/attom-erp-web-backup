@@ -169,6 +169,11 @@ const randomTheme = async () => {
 $sub('shop-vite-random-theme', randomTheme)
 
 const checkUpdate = async () => {
+  // 新增：判断当前地址是否包含vuejs-core.cn
+  if (!window.location.href.includes('vuejs-core.cn')) {
+    $baseMessage('非官方演示地址项目无法使用检查更新功能，请前往 Vue Shop Vite 官方演示地址查看最新版本', 'warning', 'hey')
+    return
+  }
   if (vabUpdateRef.value) {
     // 先重置弹窗状态，确保可以显示
     vabUpdateRef.value.resetDialogState?.()
