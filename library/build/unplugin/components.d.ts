@@ -13,6 +13,7 @@ declare module 'vue' {
     AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
     AiTuoMuInvoiceMatch: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceMatch.vue')['default']
     AiTuoMuTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuTable.vue')['default']
+    AssessmentNumberAdjust: typeof import('./../../../src/views/index/vabAutoComponents/AssessmentNumberAdjust.vue')['default']
     AssessmentPie: typeof import('./../../../src/views/index/vabAutoComponents/AssessmentPie.vue')['default']
     Authorization: typeof import('./../../../src/views/index/vabAutoComponents/Authorization.vue')['default']
     AwardGrid: typeof import('./../../../src/views/other/award/vabAutoComponents/AwardGrid.vue')['default']
@@ -98,6 +99,7 @@ declare module 'vue' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElSkeletonItem: typeof import('element-plus/es')['ElSkeletonItem']
+    ElSlider: typeof import('element-plus/es')['ElSlider']
     ElSpace: typeof import('element-plus/es')['ElSpace']
     ElStatistic: typeof import('element-plus/es')['ElStatistic']
     ElStep: typeof import('element-plus/es')['ElStep']
@@ -134,6 +136,9 @@ declare module 'vue' {
     LoginContainer: typeof import('./../../../src/views/login/vabAutoComponents/LoginContainer.vue')['default']
     MenuEdit: typeof import('./../../../src/views/system/menu/vabAutoComponents/MenuEdit.vue')['default']
     MenuManagementEdit: typeof import('./../../../src/views/setting/menuManagement/vabAutoComponents/MenuManagementEdit.vue')['default']
+    MonthlyAssessmentNegative: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyAssessmentNegative.vue')['default']
+    MonthlyAssessmentTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyAssessmentTable.vue')['default']
+    MonthlyProductProfitTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyProductProfitTable.vue')['default']
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     Pending: typeof import('./../../../src/views/index/vabAutoComponents/Pending.vue')['default']
@@ -315,7 +320,6 @@ declare module 'vue' {
     VabUpload: typeof import('./../../../src/plugins/VabUpload/index.vue')['default']
     VabViewNewInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewNewInspectionReport.vue')['default']
     VabViewPackingInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewPackingInspectionReport.vue')['default']
-    VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
     WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']
   }
   export interface ComponentCustomProperties {

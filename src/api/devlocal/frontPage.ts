@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import { IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPagePerformanceHistory, IGetFrontPagePerformanceHistoryReq, IGetFrontPageProgressProjectsRes, IRankItem } from '/@/type/index/frontPage'
+import { IAssessAdjustRes, IGetFrontPageAssessmentDataRes, IGetFrontPageBonusRes, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageHistoryAssessmentRecordsRes, IGetFrontPageMonthlyAssessment, IGetFrontPagePerformanceHistory, IGetFrontPagePerformanceHistoryReq, IGetFrontPageProductProfitRes, IGetFrontPageProgressProjectsRes, IRankItem } from '/@/type/index/frontPage'
 
 
 /**
@@ -89,6 +89,49 @@ export function getFrontPageRankOverAchieved(): Promise<{ data: IRankItem[] }> {
 export function getFrontPageRankNewProductCommission(): Promise<{ data: IRankItem[] }> {
   return request({
     url: `${BASE_API}/front_page/rank/new_product_commission`,
+    method: 'get'
+  })
+}
+
+/**
+ * 首页-考核数调整查询
+ * @returns 
+ */
+export function getMonthlyAndNextMonthAssess(): Promise<{ data: IAssessAdjustRes }> {
+  return request({
+    url: `${BASE_API}/assessment/number/adjust/list`,
+    method: 'get'
+  })
+}
+/**
+ * 首页-考核数调整提交
+ * @param params 
+ * @returns 
+ */
+export function submitAssess(params: { number: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/assessment/number/adjust/submit`,
+    method: 'post',
+    params
+  })
+}
+/**
+ * 首页-当月产品利润分
+ * @returns 
+ */
+export function getMonthlyProductProfit(): Promise<{ data: IGetFrontPageProductProfitRes[] }> {
+  return request({
+    url: `${BASE_API}/front_page/monthly/product/profit`,
+    method: 'get'
+  })
+}
+/**
+ * 首页-当月考核数 减免/加回
+ * @returns 
+ */
+export function getMonthlyAssessment(): Promise<{ data: { listAdd: IGetFrontPageMonthlyAssessment[], listSub: IGetFrontPageMonthlyAssessment[] } }> {
+  return request({
+    url: `${BASE_API}/front_page/monthly/assessment`,
     method: 'get'
   })
 }

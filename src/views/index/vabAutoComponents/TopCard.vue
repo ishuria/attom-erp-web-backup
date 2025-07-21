@@ -125,6 +125,13 @@ const handleJumpTo = async () => {
       width: 60px;
       float: right;
     }
+    .el-button {
+      transform: translateX(5px);
+      margin-top: -2px;
+      min-width: 30px;
+      width: 60px;
+      float: right;
+    }
   }
 
   p {

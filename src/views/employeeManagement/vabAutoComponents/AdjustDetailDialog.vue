@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="调整明细">
+    <vab-dialog v-model="visible" title="调整明细" width="43%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAdd">新增</el-button>
@@ -22,16 +22,16 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table stripe border :data="list" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
-        <el-table-column label="月份" prop="month" />
-        <el-table-column label="被调整人" prop="userName" />
-        <el-table-column label="类型" prop="type" >
+      <el-table stripe border :data="list" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }" max-height="800">
+        <el-table-column label="月份" prop="month" width="100" />
+        <el-table-column label="被调整人" prop="userName" width="100" />
+        <el-table-column label="类型" prop="type" width="100" >
           <template #default="{ row }">
             {{ row.type === 0 ? '考核数' : '完成数' }}
           </template>
         </el-table-column>
-        <el-table-column label="调整数量" prop="adjustQuantity" />
-        <el-table-column label="OEM" >
+        <el-table-column label="调整数量" prop="adjustQuantity" width="100" />
+        <el-table-column label="OEM" width="100">
           <template #default="{ row }">
             <el-checkbox v-model="row.oem" :false-value="0" :true-value="1" disabled />
           </template>
@@ -39,7 +39,7 @@
         <el-table-column label="父体" prop="parent" />
         <el-table-column label="备注" prop="remark" />
         <el-table-column label="来源" prop="source" />
-        <el-table-column label="操作" >
+        <el-table-column label="操作" width="100">
           <template #default="{ row }">
             <el-link :underline="false" type="danger" @click="deleteDetail(row)">删除</el-link>
           </template>
