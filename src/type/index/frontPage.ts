@@ -126,3 +126,28 @@ export interface IRankItem {
   name: string
   value: number
 }
+
+export interface IAssessAdjustRes {
+  monthlyCompletion: number
+  monthlyAssess: number
+  nextMonthCompletion: number
+  nextMonthAssess: number
+}
+
+export interface IGetFrontPageProductProfitRes {
+  id: number
+  userName: string
+  number: number
+  totalNumber: number
+  imageUrl?: string
+  parentASIN?: string
+  productTotalScore?: number
+}
+
+export interface IGetFrontPageMonthlyAssessment {
+  id: number
+  userName: string
+  number: number
+  totalNumber: number
+  remark: string
+}

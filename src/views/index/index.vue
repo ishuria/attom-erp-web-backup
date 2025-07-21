@@ -25,6 +25,9 @@
       </el-col>
       <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <top-card background="white" :month-diff="countConfig2Start.monthDiff" :year-diff="countConfig2Start.yearDiff" title="本月考核完成数" @open-table="fetchHistoryAssessmentRecords">
+           <template #select>
+            <el-button type="primary" size="small" @click="assessmentAdjustVisible = true">考核调整</el-button>
+          </template>
           <template #count>
             <vab-count
               :decimals="countConfig2Start.decimals"
@@ -84,12 +87,17 @@
           </template>
         </top-bar-card>
       </el-col>
+       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24"></el-col>
       <!-- 第二层 -->
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <!-- <pending2 /> -->
+        <monthly-product-profit-table :list="profitList" />
       </el-col>
-      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <!-- <version-information /> -->
+      <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+        <monthly-assessment-table title="当月考核数减免" :list="listSub" />
+      </el-col>
+      <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+        <monthly-assessment-table title="当月考核数加回" :list="listAdd" />
       </el-col>
       <!-- 第三层 -->
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -121,9 +129,14 @@
         <rank title="上月新品提成排行(上线1年以内)" :list="rank3List" name="新品提成" :my-name="myName" />
       </el-col>
     </el-row>
-     <history-assessment-records 
+    <history-assessment-records 
       v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
       @query="queryData" @page-change="handleCurrentChange" @size-change="handleSizeChange"
+    />
+    <!-- 考核数调整 -->
+    <assessment-number-adjust
+      v-model="assessmentAdjustVisible"
+      @update:frontPage="fetchAssessmentData"
     />
   </div>
  
@@ -133,21 +146,23 @@
 import { random } from 'lodash-es'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved } from '/@/api/devlocal/frontPage'
+import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved, getMonthlyAssessment, getMonthlyProductProfit } from '/@/api/devlocal/frontPage'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
-import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPagePerformanceHistory, IGetFrontPageProgressProjectsItem, IPieItem, IRankItem } from '/@/type/index/frontPage'
+import { IGetFrontPageHistoryAssessmentRecordsItem, IGetFrontPageHistoryAssessmentRecordsReq, IGetFrontPageMonthlyAssessment, IGetFrontPagePerformanceHistory, IGetFrontPageProductProfitRes, IGetFrontPageProgressProjectsItem, IPieItem, IRankItem } from '/@/type/index/frontPage'
 import { getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
 })
 
+const assessmentAdjustVisible = ref<boolean>(false)
 const router = useRouter()
 const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0];
+const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const commissionRole = [
@@ -354,6 +369,20 @@ const fetchRankNewProductCommission = async () => {
   const { data } = await getFrontPageRankNewProductCommission()
   rank3List.value = data
 }
+// 获取当月产品利润分
+const profitList = ref<IGetFrontPageProductProfitRes[]>([])
+const fetchMonthlyProductProfit = async () => {
+  const { data } = await getMonthlyProductProfit()
+  profitList.value = data
+}
+// 获取当月考核数
+const listAdd = ref<IGetFrontPageMonthlyAssessment[]>([])
+const listSub = ref<IGetFrontPageMonthlyAssessment[]>([])
+const fetchMonthlyAssessment = async () => {
+  const { data } = await getMonthlyAssessment()
+  listAdd.value = data.listAdd
+  listSub.value = data.listSub
+}
 onBeforeMount(() => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -367,6 +396,10 @@ onBeforeMount(() => {
     fetchUserList()
     fetchRankOverAchieved()
     fetchRankNewProductCommission()
+  }
+  if (ableProductManagerViewCard) {
+    fetchMonthlyProductProfit()
+    fetchMonthlyAssessment()
   }
 })
 </script>
