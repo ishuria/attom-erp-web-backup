@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="调整明细" width="43%">
+    <vab-dialog v-model="visible" title="调整明细" width="43%" top="5%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAdd">新增</el-button>
@@ -25,7 +25,14 @@
       <el-table stripe border :data="list" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }" max-height="800">
         <el-table-column label="月份" prop="month" width="100" />
         <el-table-column label="被调整人" prop="userName" width="100" />
-        <el-table-column label="类型" prop="type" width="100" >
+        <el-table-column label="类型" prop="type" width="110" 
+          column-key="type"
+          :filters="[
+            { text: '考核数', value: '0' },
+            { text: '完成数', value: '1' },
+          ]"
+          :filter-method="filterHandler"
+        >
           <template #default="{ row }">
             {{ row.type === 0 ? '考核数' : '完成数' }}
           </template>
@@ -95,7 +102,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import { FormInstance, TableColumnCtx } from 'element-plus'
 import { addAdjustDetail, deleteAdjustDetail, getAdjustDetail, getProductManager } from '/@/api/devlocal/performanceStatistics'
 import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
 
@@ -150,6 +157,16 @@ const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetAdjustDetail[]>([])
 const productManagerList = ref<{ id: number, label: string }[]>([])
+          
+          
+const filterHandler = (
+  value: string,
+  row: IGetAdjustDetail,
+  column: TableColumnCtx<IGetAdjustDetail>
+) => {
+  const property = column['property']
+  return row[property] === Number(value)
+}
 const showAdd = async () => {
   addVisible.value = true
   const { data } = await getProductManager()
