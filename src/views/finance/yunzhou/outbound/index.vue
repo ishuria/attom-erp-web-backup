@@ -8,7 +8,6 @@
         <el-date-picker
           v-model="date"
           :clearable="false"
-          :editable="false"
           end-placeholder="结束日期"
           start-placeholder="开始日期"
           style="max-width: 20em; margin: 0 10px calc(var(--el-margin) / 2) 0"
@@ -39,7 +38,7 @@
       :cell-style="cellStyle"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      :row-class-name="tableRowClassName"
+      row-class-name="tableRowClassName"
       stripe
     >
       <el-table-column label="报关单出库日期" min-width="130" prop="outboundDate">
@@ -310,12 +309,13 @@ const showSummary = async () => {
 //     }
 //   })
 // }
-
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.redStatus === 1) {
     return 'danger-row'
   }
-}
+  return ""
+};
+
 
 // 导出
 const handleExport = async () => {
