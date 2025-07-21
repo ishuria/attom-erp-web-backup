@@ -1524,7 +1524,7 @@ const list: VabRouteRecord[] = [
         name: 'GoodsSku',
         component: '/@/views/goods/GoodsSku.vue',
         meta: {
-          title: 'SKU配置',
+          title: 'SKU 配置',
           icon: 'settings-3-line',
         },
       },

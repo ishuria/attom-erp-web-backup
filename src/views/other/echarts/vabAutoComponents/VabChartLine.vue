@@ -49,7 +49,7 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
+  () => theme.value.color,
   () => {
     option.color = [theme.value.color]
   },

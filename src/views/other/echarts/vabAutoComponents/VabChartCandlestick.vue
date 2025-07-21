@@ -57,7 +57,7 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
+  () => theme.value.color,
   () => {
     option.series.itemStyle.color = theme.value.color
     option.series.itemStyle.borderColor = theme.value.color

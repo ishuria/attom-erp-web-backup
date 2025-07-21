@@ -56,11 +56,11 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
-  () => {
+  () => theme.value.color,
+  (newColor) => {
     option.series.itemStyle.color = new graphic.LinearGradient(0, 0, 1, 0, [
-      { offset: 0, color: lightenColor(theme.value.color, 20) },
-      { offset: 1, color: theme.value.color },
+      { offset: 0, color: lightenColor(newColor, 20) },
+      { offset: 1, color: newColor },
     ])
   },
   { immediate: true }

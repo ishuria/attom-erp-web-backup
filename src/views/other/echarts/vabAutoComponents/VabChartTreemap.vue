@@ -57,7 +57,7 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
+  () => theme.value.color,
   () => {
     setTimeout(() => {
       option.color = [theme.value.color]

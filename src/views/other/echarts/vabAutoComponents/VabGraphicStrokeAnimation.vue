@@ -72,7 +72,7 @@ const option = reactive<any>({
 })
 
 watch(
-  theme.value,
+  () => theme.value.color,
   () => {
     setTimeout(() => {
       option.graphic.elements[0].style.stroke = theme.value.color

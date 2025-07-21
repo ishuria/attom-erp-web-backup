@@ -25,10 +25,10 @@
         <el-form-item v-if="route.path !== '/goods/posterDesign'" :label="translate('暗黑模式')">
           <vab-dark />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName" :label="translate('配色')">
+        <el-form-item v-if="!['technology', 'gold'].includes(theme.themeName)" :label="translate('配色')">
           <vab-color-picker />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName" :label="translate('快捷配色')">
+        <el-form-item v-if="!['technology', 'gold'].includes(theme.themeName)" :label="translate('快捷配色')">
           <vab-quick-color :model-value="theme.color" @select="handleQuickColor" />
         </el-form-item>
         <el-form-item v-if="'default' === theme.themeName && mode !== 'dark'" :label="translate('菜单背景跟随配色')">
@@ -87,7 +87,7 @@
         <el-form-item :label="translate('圆角')">
           <el-input-number v-model="theme.radius" :max="26" :min="3" @change="handleRadius" />
         </el-form-item>
-        <el-form-item v-if="'technology' != theme.themeName && 'plain' != theme.themeName" :label="translate('色弱')">
+        <el-form-item v-if="!['technology', 'gold', 'plain'].includes(theme.themeName)" :label="translate('色弱')">
           <el-switch v-model="theme.colorWeakness" @change="handleColorWeakness" />
         </el-form-item>
         <el-form-item v-if="theme.layout !== 'comprehensive'" :label="translate('头部固定')">
@@ -189,6 +189,7 @@ const themeNameList = ref<ListType[]>([
   { value: 'default', label: '默认' },
   { value: 'plain', label: '简洁' },
   { value: 'technology', label: '科技' },
+  // { value: 'gold', label: '黑金' },
 ])
 const columnStyleList = ref<ListType[]>([
   { value: 'vertical', label: '纵向' },
@@ -252,7 +253,8 @@ const handlePersistenceTab = (value: string | number | boolean) => {
 
 const _updateTheme = (value: string | number | boolean = '') => {
   if (value == 'default') $pub('shop-vite-reset-dark')
-  if (theme.value.themeName == 'technology') $pub('shop-vite-reset-color')
+  if (['technology'].includes(theme.value.themeName)) $pub('shop-vite-reset-color')
+  if (['gold'].includes(theme.value.themeName)) $pub('shop-vite-reset-color', '#DDBD62')
 
   const loading = $baseLoading()
   setTimeout(() => {
@@ -274,6 +276,7 @@ const setDefaultTheme = () => {
   setTimeout(() => {
     resetTheme()
     $pub('shop-vite-reset-dark')
+    $pub('shop-vite-reset-color')
   }, 500)
 
   setTimeout(() => {

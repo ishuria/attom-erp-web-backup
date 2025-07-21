@@ -1,5 +1,5 @@
 <template>
-  <div v-if="'technology' != theme.themeName" class="vab-color-picker">
+  <div v-if="!['technology', 'gold'].includes(theme.themeName)" class="vab-color-picker">
     <el-color-picker
       v-model="theme.color"
       popper-class="vab-color-picker-popper"
@@ -31,8 +31,8 @@ const handleChange = (value: any) => {
 
 onBeforeMount(() => {
   // 还原默认
-  $sub('shop-vite-reset-color', () => {
-    handleChange(_color)
+  $sub('shop-vite-reset-color', (color = _color) => {
+    handleChange(color)
   })
 })
 </script>
