@@ -53,6 +53,12 @@ html > body.vab-theme-technology {
   color: var(--el-color-grey) !important;
   background-color: var(--el-color-white) !important;
 
+  .card {
+    &:hover {
+      background-color: var(--el-color-primary-light-9);
+    }
+  }
+
   .vab-side-bar {
     border-right: 1px solid var(--el-border-color) !important;
   }
@@ -292,5 +298,9 @@ html > body.vab-theme-technology {
 
   .vab-blockquote {
     background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .el-radio__input.is-disabled.is-checked .el-radio__inner::after {
+    background-color: #040d32;
   }
 }

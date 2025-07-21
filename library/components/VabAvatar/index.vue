@@ -28,6 +28,16 @@
       </div>
       <el-divider />
       <ul class="el-dropdown-menu">
+        <li class="el-dropdown-menu__item" @click="handleCommand('changeLog')">
+          <vab-icon icon="file-word-line" />
+          <span>{{ translate('更新日志') }}</span>
+          <el-tag effect="dark" size="small" type="danger">99+</el-tag>
+        </li>
+
+        <li class="el-dropdown-menu__item" @click="handleCommand('dataScreen')">
+          <vab-icon icon="bar-chart-box-ai-line" />
+          <span>{{ translate('数据大屏') }}</span>
+        </li>
         <li class="el-dropdown-menu__item" @click="handleCommand('logout')">
           <vab-icon icon="logout-circle-r-line" />
           <span>{{ translate('退出登录') }}</span>
@@ -63,40 +73,25 @@ const handleHide = () => {
 }
 
 const handleCommand = async (command: any) => {
-  switch (command) {
-    case 'logout': {
-      await logout()
-      await router.push(toLoginRoute(route.fullPath))
-      visible.value = false
-      break
-    }
-    case 'personalCenter': {
-      await router.push('/setting/personalCenter')
-      visible.value = false
-      break
-    }
-    case 'changeLog': {
-      await router.push('/changeLog')
-      visible.value = false
-      break
-    }
-    case 'portal': {
-      await window.open('#/portal')
-      visible.value = false
-      break
-    }
-    case 'dataScreen': {
-      await window.open('#/dataScreen')
-      visible.value = false
-      break
-    }
-    case 'book': {
-      $baseAlert(
-        '已购买用户请前往群公告中获取，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
-      )
-      visible.value = false
-      break
-    }
+  if (command === 'logout') {
+    await logout()
+    await router.push(toLoginRoute(route.fullPath))
+    visible.value = false
+    return
+  }
+  if (command === 'dataScreen') {
+    await window.open('#/dataScreen')
+    visible.value = false
+    return
+  }
+  // 统一处理其余命令
+  const routeMap: Record<string, string> = {
+    personalCenter: '/setting/personalCenter',
+    changeLog: '/changeLog',
+  }
+  if (routeMap[command]) {
+    await router.push(routeMap[command])
+    visible.value = false
   }
 }
 </script>
@@ -148,6 +143,7 @@ const handleCommand = async (command: any) => {
   }
 }
 </style>
+
 <style lang="scss">
 .vab-avatar-popper {
   padding: 0 !important;

@@ -49,11 +49,7 @@ export const useRoutesStore = defineStore('routes', {
     getRoutes: (state) => state.routes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getAllRoutes: (state) => state.allRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
     getBreadcrumbRoutes: (state) => state.breadcrumbRoutes.filter((_route) => _route.meta && _route.meta.hidden !== true),
-    getPartialRoutes: (state) =>
-      state.tab.data
-        ? state.routes.find((route) => route.name === state.tab.data) &&
-          state.routes.find((route) => route.name === state.tab.data).children
-        : [],
+    getPartialRoutes: (state) => (state.tab.data ? (state.routes.find((route) => route.name === state.tab.data)?.children ?? []) : []),
   },
   actions: {
     /**
@@ -63,7 +59,7 @@ export const useRoutesStore = defineStore('routes', {
      */
     async setRoutes(mode = 'none') {
       // 默认前端路由
-      let routes = [...asyncRoutes]
+      let routes: VabRouteRecord[] = [...asyncRoutes]
       // 设置游客路由关闭路由拦截(不需要可以删除)
       const control = mode === 'visit' ? false : rolesControl
       // 设置后端路由(不需要可以删除)

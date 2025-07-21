@@ -1,3 +1,4 @@
+/* stylelint-disable scss/operator-no-newline-after */
 @use './variables' as *;
 
 :root {
@@ -89,11 +90,20 @@
   --el-color-info: #{$vab-color-info};
   --el-color-info-light: #{$vab-color-info-light};
   --el-color-info-lighter: #{$vab-color-info-lighter};
-  --el-color-info-dark-2: #{$vab-color-info};
+  --el-color-info-light-1: #{$vab-color-info-light-1};
+  --el-color-info-light-2: #{$vab-color-info-light-2};
+  --el-color-info-light-3: #{$vab-color-info-light-3};
+  --el-color-info-light-4: #{$vab-color-info-light-4};
+  --el-color-info-light-5: #{$vab-color-info-light-5};
+  --el-color-info-light-6: #{$vab-color-info-light-6};
+  --el-color-info-light-7: #{$vab-color-info-light-7};
+  --el-color-info-light-8: #{$vab-color-info-light-8};
+  --el-color-info-light-9: #{$vab-color-info-light-9};
+
   /**
-    * @description: 全局字体大小
-    * @author sundan
-  */
+       * @description: 全局字体大小
+       * @author sundan
+    */
   --el-font-size-base: 14px;
   --el-font-size-small: calc(var(--el-font-size-base) - 1px);
   --el-font-size-extra-small: calc(var(--el-font-size-base) - 2px);
@@ -147,8 +157,11 @@
   --el-input-height: 32px;
   //圆角
   --el-border-radius-base: 5px;
+  //小圆角
+  --el-border-radius-small: calc(var(--el-border-radius-base) - 2px);
   //容器高度
   --el-container-height: calc(
     var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height)
   );
+  --vab-glass-bg: rgba(255, 255, 255, var(--glass-opacity, 0.7));
 }

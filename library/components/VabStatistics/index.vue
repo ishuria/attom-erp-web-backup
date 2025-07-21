@@ -23,7 +23,6 @@ onBeforeMount(() => {
       c[a] =
         c[a] ||
         function () {
-          // eslint-disable-next-line prefer-rest-params
           ;(c[a].q = c[a].q || []).push(arguments)
         }
       t = l.createElement(r)

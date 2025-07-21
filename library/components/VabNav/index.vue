@@ -3,6 +3,7 @@
     <div class="left-panel">
       <vab-logo v-if="layout === 'comprehensive'" class="hidden-sm-and-down" />
       <vab-fold fold="contract-left-line" unfold="contract-right-line" />
+      <vab-box v-if="theme.showBox" />
       <el-tabs
         v-if="layout === 'comprehensive'"
         v-model="tab.data"
@@ -14,7 +15,7 @@
           <el-tab-pane :name="item.name">
             <template #label>
               <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-              {{ translate(item.meta.title) }}
+              {{ translate(typeof item.meta.title === 'string' ? item.meta.title : '') }}
             </template>
           </el-tab-pane>
         </template>
@@ -54,10 +55,15 @@ const { theme } = storeToRefs(settingsStore)
 
 const handleTabClick = () => {
   nextTick(() => {
-    if (isExternal(tabMenu.value.path)) {
-      window.open(tabMenu.value.path)
+    if (!tabMenu.value) return
+    const path = (tabMenu.value as any).path
+    if (path && isExternal(path)) {
+      window.open(path)
       router.push('/redirect')
-    } else if (openFirstMenu) router.push(tabMenu.value.redirect || tabMenu.value)
+    } else if (openFirstMenu) {
+      const redirect = (tabMenu.value as any).redirect
+      router.push(redirect || tabMenu.value)
+    }
   })
 }
 
@@ -80,11 +86,13 @@ watch(
     top: var(--el-nav-height) !important;
     z-index: calc(var(--el-z-index) + 3);
     padding-top: 0 !important;
+    border-radius: 0 !important;
 
     .el-scrollbar__view {
       margin-top: calc(0px - var(--el-nav-height) + var(--el-margin) / 2) !important;
     }
   }
+
   .comprehensive-tabs {
     width: calc(100vw - var(--el-left-menu-width) - 635px) !important;
   }
@@ -96,6 +104,10 @@ watch(
         margin-left: var(--el-left-menu-width-min) !important;
         border-bottom: 1px solid var(--el-border-color) !important;
       }
+    }
+
+    .vab-side-bar {
+      z-index: calc(var(--el-z-index) + 5) !important;
     }
   }
 
@@ -124,6 +136,7 @@ watch(
       .el-tabs__item {
         padding: 0 15px;
       }
+
       .el-tabs__nav-next,
       .el-tabs__nav-prev {
         display: flex;
@@ -134,6 +147,7 @@ watch(
   }
 }
 </style>
+
 <style lang="scss" scoped>
 .vab-nav {
   position: relative;

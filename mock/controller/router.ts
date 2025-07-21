@@ -1,5 +1,5 @@
 // import type { MockMethod } from 'vite-plugin-mock'
-
+//
 // const Layout = 'Layout'
 // const list: VabRouteRecord[] = [
 //   {
@@ -79,22 +79,22 @@
 //         component: '/@/views/index/dataScreen.vue',
 //         meta: {
 //           title: '数据大屏',
-//           icon: 'database-2-line',
+//           icon: 'bar-chart-box-ai-line',
 //           target: '_blank',
 //           badge: 'Hot',
 //           guard: ['Admin'],
 //         },
 //       },
-//       // {
-//       //   path: 'workbench',
-//       //   name: 'Workbench',
-//       //   component:('/@/views/index/workbench.vue'),
-//       //   meta: {
-//       //     title: '工作台',
-//       //     icon: 'artboard-line',
-//       //     target: '_blank',
-//       //   },
-//       // },
+//       {
+//         path: 'workbench',
+//         name: 'Workbench',
+//         component: '/@/views/index/workbench.vue',
+//         meta: {
+//           title: '工作台',
+//           icon: 'artboard-line',
+//           target: '_blank',
+//         },
+//       },
 //       {
 //         path: 'application',
 //         name: 'Application',
@@ -117,6 +117,16 @@
 //           noKeepAlive: true,
 //           badge: '99+',
 //           guard: ['Admin'],
+//         },
+//       },
+//       {
+//         path: 'friendlyTip',
+//         name: 'FriendlyTip',
+//         component: () => '/@/views/index/FriendlyTip.vue',
+//         meta: {
+//           title: '温馨提示',
+//           icon: 'information-line',
+//           hidden: true,
 //         },
 //       },
 //     ],
@@ -189,6 +199,14 @@
 //             },
 //           },
 //           {
+//             path: 'narrowTable',
+//             name: 'NarrowTable',
+//             component: '/@/views/vab/table/narrowTable.vue',
+//             meta: {
+//               title: '极窄表格',
+//             },
+//           },
+//           {
 //             path: 'columnTable',
 //             name: 'ColumnTable',
 //             component: '/@/views/vab/table/columnTable.vue',
@@ -223,6 +241,14 @@
 //             },
 //           },
 //           {
+//             path: 'dragTable',
+//             name: 'DragTable',
+//             component: '/@/views/vab/table/dragTable.vue',
+//             meta: {
+//               title: '拖拽表格',
+//             },
+//           },
+//           {
 //             path: 'splitTable',
 //             name: 'SplitTable',
 //             component: '/@/views/vab/table/splitTable.vue',
@@ -247,6 +273,15 @@
 //               title: '详情页',
 //               activeMenu: '/vab/table/defaultTable',
 //               dynamicNewTab: true, //详情页根据id传参不同可打开多个
+//             },
+//           },
+//           {
+//             path: 'pullTable',
+//             name: 'PullTable',
+//             component: '/@/views/vab/table/pullTable.vue',
+//             meta: {
+//               title: '下拉表格',
+//               badge: 'Hot',
 //             },
 //           },
 //         ],
@@ -612,6 +647,16 @@
 //           title: '甘特图',
 //           guard: ['Admin'],
 //           icon: 'organization-chart',
+//         },
+//       },
+//       {
+//         path: 'excel',
+//         name: 'Excel',
+//         component: '/@/views/other/excel/index.vue',
+//         meta: {
+//           title: 'Excel',
+//           guard: ['Admin'],
+//           icon: 'file-excel-2-line',
 //         },
 //       },
 //       {
@@ -1068,13 +1113,22 @@
 //     },
 //     children: [
 //       {
+//         path: 'grid',
+//         name: 'Grid',
+//         component: '/@/views/template/Grid.vue',
+//         meta: {
+//           title: '自适应布局',
+//           icon: 'layout-grid-2-line',
+//           badge: 'New',
+//         },
+//       },
+//       {
 //         path: 'news',
 //         name: 'News',
 //         component: '/@/views/template/News.vue',
 //         meta: {
 //           title: '新闻',
 //           icon: 'newspaper-line',
-//           badge: 'New',
 //         },
 //       },
 //       {
@@ -1447,6 +1501,33 @@
 //           badge: 'New',
 //         },
 //       },
+//       {
+//         path: 'goodsStock',
+//         name: 'GoodsStock',
+//         component: '/@/views/goods/GoodsStock.vue',
+//         meta: {
+//           title: '商品库存',
+//           icon: 'archive-line',
+//         },
+//       },
+//       {
+//         path: 'goodsCoupon',
+//         name: 'GoodsCoupon',
+//         component: '/@/views/goods/GoodsCoupon.vue',
+//         meta: {
+//           title: '商品优惠券',
+//           icon: 'coupon-line',
+//         },
+//       },
+//       {
+//         path: 'goodsSku',
+//         name: 'GoodsSku',
+//         component: '/@/views/goods/GoodsSku.vue',
+//         meta: {
+//           title: 'SKU 配置',
+//           icon: 'settings-3-line',
+//         },
+//       },
 //     ],
 //   },
 //   {
@@ -1462,7 +1543,7 @@
 //       {
 //         path: 'chatGPT',
 //         name: 'ChatGPT',
-//         component: '/@/views/chatGPT/ChatGPT.vue',
+//         component: () => '/@/views/GPT/ChatGPT.vue',
 //         meta: {
 //           title: 'ChatGPT',
 //           icon: 'openai-line',
@@ -1472,73 +1553,10 @@
 //       {
 //         path: 'speechSynthesis',
 //         name: 'SpeechSynthesis',
-//         component: '/@/views/chatGPT/SpeechSynthesis.vue',
+//         component: () => '/@/views/GPT/SpeechSynthesis.vue',
 //         meta: {
 //           title: '语音合成',
 //           icon: 'customer-service-line',
-//         },
-//       },
-//       {
-//         path: '//bard.google.com/chat',
-//         name: 'Bard',
-//         meta: {
-//           title: 'Bard',
-//           target: '_blank',
-//           icon: 'bard-line',
-//         },
-//       },
-//       {
-//         path: '//copilot.microsoft.com',
-//         name: 'Copilot',
-//         meta: {
-//           title: 'Copilot',
-//           target: '_blank',
-//           icon: 'copilot-line',
-//         },
-//       },
-//       {
-//         path: '//claude.ai/chat',
-//         name: 'Claude',
-//         meta: {
-//           title: 'Claude',
-//           target: '_blank',
-//           icon: 'brain-line',
-//         },
-//       },
-//       {
-//         path: '//yiyan.baidu.com',
-//         name: 'Yiyan',
-//         meta: {
-//           title: '文心一言',
-//           target: '_blank',
-//           icon: 'baidu-line',
-//         },
-//       },
-//       {
-//         path: '//xinghuo.xfyun.cn/desk',
-//         name: 'Xinghuo',
-//         meta: {
-//           title: '讯飞星火',
-//           target: '_blank',
-//           icon: 'fire-line',
-//         },
-//       },
-//       {
-//         path: '//qianwen.aliyun.com/chat',
-//         name: 'Qianwen',
-//         meta: {
-//           title: '通义千问',
-//           target: '_blank',
-//           icon: 'taobao-line',
-//         },
-//       },
-//       {
-//         path: '//www.doubao.com/chat/',
-//         name: 'Doubao',
-//         meta: {
-//           title: '豆包',
-//           target: '_blank',
-//           icon: 'tiktok-line',
 //         },
 //       },
 //     ],
@@ -1592,7 +1610,7 @@
 //     },
 //   },
 // ]
-
+//
 // export default [
 //   {
 //     url: '/router/getList',

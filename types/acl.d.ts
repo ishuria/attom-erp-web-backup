@@ -18,7 +18,7 @@ declare interface GuardType {
    *   oneOf: 满足以上角色和权限任一个，通过验证
    *   except: 取反，不包含以上角色和权限，通过验证
    */
-  mode?: 'allOf' | 'oneOf' | 'except'
+  mode?: 'allOf' | 'oneOf' | 'except' | string
 }
 
 declare interface CanType extends Omit<GuardType, 'role' | 'permission'> {

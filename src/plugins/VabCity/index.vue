@@ -20,9 +20,13 @@
         <el-scrollbar ref="scrollbarRef" always height="300px">
           <div ref="listRef">
             <div v-for="item in cityListByProvince" :key="item.p.n">
-              <vab-divider :class="'el-city-' + item.p.l" content-position="left">{{ item.p.n }}</vab-divider>
+              <vab-divider :class="'el-city-' + item.p.l" content-position="left">
+                {{ item.p.n }}
+              </vab-divider>
               <el-space wrap>
-                <el-button v-for="city in item.c" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
+                <el-button v-for="city in item.c" :key="city.n" text @click="handleChangeValue(city.c)">
+                  {{ city.n }}
+                </el-button>
               </el-space>
             </div>
           </div>
@@ -42,7 +46,9 @@
               </vab-divider>
               <div>
                 <el-space wrap>
-                  <el-button v-for="city in item" :key="city.n" text @click="handleChangeValue(city.c)">{{ city.n }}</el-button>
+                  <el-button v-for="city in item" :key="city.n" text @click="handleChangeValue(city.c)">
+                    {{ city.n }}
+                  </el-button>
                 </el-space>
               </div>
             </div>

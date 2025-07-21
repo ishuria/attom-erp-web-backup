@@ -6,7 +6,7 @@ export const createPwa = (nodeEnv: string, pwaDev: boolean) => {
     registerType: 'autoUpdate', // promp弹窗提示手动更新、autoUpdate自动更新，建议使用自动更新
     workbox: {
       cleanupOutdatedCaches: true,
-      maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+      maximumFileSizeToCacheInBytes: 16 * 1024 * 1024, // 增加到 16MB
     },
     devOptions: {
       enabled: pwaDev,

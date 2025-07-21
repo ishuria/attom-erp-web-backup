@@ -8,8 +8,22 @@ declare interface BingModuleType {
   backgroundList: string[]
 }
 
+declare interface ErrorLogItem {
+  err: Error | Record<string, unknown>
+  url: string
+  timestamp?: string
+}
+
 declare interface ErrorLogModuleType {
-  errorLogs: any[]
+  errorLogs: ErrorLogItem[]
+}
+
+declare interface RouteItem {
+  path: string
+  name: string
+  meta: Record<string, unknown>
+  component?: unknown
+  children?: RouteItem[]
 }
 
 declare interface RoutesModuleType {
@@ -38,12 +52,12 @@ declare interface SettingsModuleType {
   persistenceTab: boolean
   theme: ThemeType
   title: string
-  scrollTop: []
+  scrollTop: unknown[]
 }
 
 declare interface TabsModuleType {
-  caughtRoutes: []
-  visitedRoutes: any[]
+  caughtRoutes: unknown[]
+  visitedRoutes: RouteItem[]
 }
 
 declare interface UserModuleType {

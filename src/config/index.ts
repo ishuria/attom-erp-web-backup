@@ -32,6 +32,7 @@ export const {
   debounce,
   defaultOpeneds,
   errorLog,
+  errorFilter,
   exclude,
   fixedHeader,
   foldSidebar,
@@ -100,4 +101,6 @@ export const {
   uniqueOpened,
   columnDrag,
   rightToolsDrag,
+  showBox,
+  showDeepSeek,
 } = config

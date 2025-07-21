@@ -1,3 +1,4 @@
+/* stylelint-disable scss/operator-no-newline-after */
 /**
  * @description 全局样式
  */
@@ -8,6 +9,7 @@
 @use './dark' as *;
 @use './plain' as *;
 @use './technology' as *;
+// @use './gold' as *;
 @use 'vsv-icon/dist/style.css' as *;
 @use './var' as *;
 
@@ -28,6 +30,9 @@
 }
 
 html {
+  text-shadow: none;
+  -webkit-font-smoothing: antialiased;
+
   body {
     position: relative;
     box-sizing: border-box;
@@ -77,39 +82,39 @@ html {
 
       .vue-shop-vite-box {
         div:not(
-            .el-drawer,
-            .el-drawer *,
-            .el-dialog,
-            .el-dialog *,
-            .el-message-box,
-            .el-message-box *,
-            .el-table,
-            .el-table *,
-            .el-carousel,
-            .el-carousel *,
-            .el-pagination,
-            .el-pagination *,
-            .el-slider,
-            .el-slider *,
-            .el-card,
-            .el-card *,
-            .el-menu,
-            .el-menu *,
-            .el-form,
-            .el-form *,
-            .el-row,
-            .el-row *,
-            .el-tree,
-            .el-tree *,
-            .split,
-            .split *,
-            .card-drag,
-            .card-drag *,
-            .global-animation-disabled *,
-            .no-transition-container *,
-            .vab-magnifier,
-            .vab-magnifier *
-          ) {
+          .el-drawer,
+          .el-drawer *,
+          .el-dialog,
+          .el-dialog *,
+          .el-message-box,
+          .el-message-box *,
+          .el-table,
+          .el-table *,
+          .el-carousel,
+          .el-carousel *,
+          .el-pagination,
+          .el-pagination *,
+          .el-slider,
+          .el-slider *,
+          .el-card,
+          .el-card *,
+          .el-menu,
+          .el-menu *,
+          .el-form,
+          .el-form *,
+          .el-row,
+          .el-row *,
+          .el-tree,
+          .el-tree *,
+          .split,
+          .split *,
+          .card-drag,
+          .card-drag *,
+          .global-animation-disabled *,
+          .no-transition-container *,
+          .vab-magnifier,
+          .vab-magnifier *
+        ) {
           text-shadow: none;
           transition: var(--el-transition);
           -webkit-font-smoothing: antialiased;
@@ -161,7 +166,7 @@ html {
 
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', system-ui, sans-serif;
       outline: none !important;
       -webkit-tap-highlight-color: transparent;
       -webkit-font-smoothing: antialiased;
@@ -194,9 +199,13 @@ html {
       transition: var(--el-transition);
 
       &-active {
-        transition: var(--el-transition);
         transform: rotateZ(180deg);
+        transition: var(--el-transition);
       }
+    }
+
+    .el-input-number {
+      width: 120px;
     }
 
     /* vab-query-form表单查询 */
@@ -269,12 +278,6 @@ html {
       &__wrapper {
         font-size: var(--el-font-size-small);
       }
-    }
-
-    a + a,
-    a + .el-button,
-    .el-button + a {
-      margin-left: 10px;
     }
 
     /* 毛玻璃遮罩(影响性能，默认关闭) */
@@ -460,6 +463,14 @@ html {
             margin-left: 0;
           }
         }
+      }
+    }
+
+    /* 极窄表格 */
+    .vab-narrow-table {
+      .el-table__cell {
+        //0.5px是最窄，需要调就往上加数字，别超过4px，要不太丑
+        padding: 0.5px 0;
       }
     }
 
@@ -827,15 +838,21 @@ html {
 
     /* el-color-picker */
     .el-color-picker {
+      width: inherit;
+      height: inherit;
+
       &__trigger {
-        width: 20px;
-        height: 20px;
         padding: 0;
-        border-radius: 0;
       }
 
       &__color {
+        width: 20px;
+        height: 20px;
         border: 0;
+
+        &-inner {
+          border-radius: var(--el-border-radius-small) !important;
+        }
       }
     }
 
@@ -1046,6 +1063,7 @@ html {
       .el-icon {
         color: inherit;
       }
+
       svg,
       path {
         fill: inherit;
@@ -1095,6 +1113,218 @@ html {
 
     .vab-icon {
       --el-font-size-big: var(--el-font-size-medium) !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1em;
+      min-height: 1em;
+
+      &::before {
+        font-size: 0.8em;
+        content: '●';
+        opacity: 0.3;
+      }
+
+      &.loaded::before {
+        content: '';
+      }
+    }
+
+    .vab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+      &-auto-fill {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+
+      &-auto-fit {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      &-item {
+        height: 200px;
+        margin: calc(var(--el-margin) / 2);
+        background-color: var(--el-color-primary);
+        border-radius: var(--el-border-radius-base);
+      }
+    }
+
+    .el-select,
+    .el-scrollbar,
+    .el-popover,
+    .el-select-dropdown,
+    .el-scrollbar__wrap,
+    .vab-color-picker-popper {
+      border-radius: var(--el-border-radius-base) !important;
+    }
+  }
+}
+
+/*
+  *@author: 孙丹
+  *@date: 2025-06-24
+  *@description: 开始尝试ios26液态玻璃效果
+  */
+
+@mixin glass-mode {
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    content: '';
+    backdrop-filter: blur(16px);
+  }
+}
+
+html:not(.dark) body.vab-theme-default.glass-mode {
+  .vab-layout-header,
+  .vab-theme-setting {
+    background: var(--vab-glass-bg) !important;
+    border-bottom: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+
+    @include glass-mode;
+  }
+
+  .vab-tabs,
+  .vab-nav,
+  .vab-tabs-horizontal,
+  .vab-tabs-horizontal .vab-main .vab-tabs {
+    background: transparent !important;
+    // border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  // .vab-nav {
+  //   border-bottom: 1px solid transparent;
+  // }
+
+  .vab-avatar-popper {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+    @include glass-mode;
+
+    ul.el-dropdown-menu {
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  .vab-tabs .contextmenu.el-dropdown-menu {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+    @include glass-mode;
+
+    ul.el-dropdown-menu {
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  .vab-tabs-more-dropdown {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+
+    @include glass-mode;
+
+    .el-dropdown-menu {
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  .vab-avatar-popper > .el-popper__arrow,
+  .vab-tabs-more-dropdown > .el-popper__arrow {
+    display: none !important;
+  }
+
+  // VabFontSize 和 VabLanguage 下拉液态玻璃效果
+  .vab-font-size-popper,
+  .vab-language-popper {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+
+    @include glass-mode;
+
+    .el-dropdown-menu {
+      background: transparent !important;
+      box-shadow: none !important;
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+  }
+
+  // vab-color-picker 下拉液态玻璃效果
+  .vab-color-picker-popper {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+
+    @include glass-mode;
+  }
+
+  // 主题配置抽屉和搜索弹窗液态玻璃效果
+  .vab-drawer,
+  .vab-update {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+
+    @include glass-mode;
+
+    // * {
+    //     color: var(--el-text-color-primary) !important;
+    // }
+
+    .el-drawer__header,
+    .el-drawer__footer,
+    .el-drawer__body {
+      background: transparent !important;
+    }
+  }
+
+  // VabNotice 下拉液态玻璃效果
+  .vab-notice-popper {
+    background: var(--vab-glass-bg) !important;
+    border: 1px solid var(--el-border-color);
+    box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.08);
+    // -webkit-backdrop-filter: blur(16px) saturate(180%);
+    // backdrop-filter: blur(16px) saturate(180%);
+    @include glass-mode;
+
+    .el-tabs,
+    .el-scrollbar,
+    .el-empty {
+      background: transparent !important;
     }
   }
 }

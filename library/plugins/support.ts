@@ -6,7 +6,7 @@ import { useSettingsStore } from '/@/store/modules/settings'
 export default {
   install: () => {
     const { title } = useSettingsStore(pinia)
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     if (!!globalThis.ActiveXObject || 'ActiveXObject' in globalThis) {
       ElMessageBox({

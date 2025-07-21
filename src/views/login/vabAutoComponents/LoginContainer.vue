@@ -1,5 +1,13 @@
 <template>
-  <div class="login-container" :style="{ background: background, backgroundSize: '100%' }">
+  <div
+    class="login-container"
+    :style="{
+      background: background,
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'cover',
+    }"
+  >
     <div v-show="theme.showLanguage || theme.showColorPicker || theme.showDark" class="login-right-tools">
       <el-checkbox v-model="show" @change="handleShow">{{ translate('必应壁纸') }}</el-checkbox>
       <vab-language v-show="theme.showLanguage" />
@@ -169,7 +177,7 @@ const handleShow = () => {
           &:first-child {
             margin-top: -10px;
           }
-          
+
 
           &__error {
             position: absolute;

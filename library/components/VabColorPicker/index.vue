@@ -1,9 +1,10 @@
 <template>
-  <div v-if="'technology' != theme.themeName" class="vab-color-picker" style="margin-left: var(--el-margin)">
+  <div v-if="!['technology', 'gold'].includes(theme.themeName)" class="vab-color-picker">
     <el-color-picker
       v-model="theme.color"
       popper-class="vab-color-picker-popper"
       :predefine="predefineColors"
+      style="border-radius: var(--el-border-radius-base)"
       @active-change="handleChange"
     />
   </div>
@@ -17,19 +18,7 @@ defineOptions({
   name: 'VabColorPicker',
 })
 
-const predefineColors = ref<any>([
-  _color,
-  '#1e90ff',
-  '#4e6ef2',
-  '#0052d9',
-  '#3fb884',
-  '#16baa9',
-  '#07c160',
-  '#009688',
-  '#6954f0',
-  '#7b40f2',
-  '#f01414',
-])
+const predefineColors = ref<any>([_color, '#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'])
 const settingsStore = useSettingsStore()
 const { updateTheme, saveTheme } = settingsStore
 const { theme } = storeToRefs(settingsStore)
@@ -42,16 +31,21 @@ const handleChange = (value: any) => {
 
 onBeforeMount(() => {
   // 还原默认
-  $sub('shop-vite-reset-color', () => {
-    handleChange(_color)
+  $sub('shop-vite-reset-color', (color = _color) => {
+    handleChange(color)
   })
 })
 </script>
 
 <style lang="scss">
+.vab-color-picker {
+  margin-left: var(--el-margin);
+}
+
 .vab-color-picker-popper {
   box-sizing: content-box !important;
   padding: calc(var(--el-padding) / 2);
+  border-radius: var(--el-border-radius-base);
 
   .el-color-dropdown__link-btn {
     display: none;

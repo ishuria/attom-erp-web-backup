@@ -4,13 +4,13 @@
 //   {
 //     id: '@id',
 //     role: 'admin',
-//     btnRolesCheckedList: ['read:system', 'write:system', 'delete:system'],
+//     btnRolesCheckedList: ['read:Index', 'write:Index', 'delete:Index'],
 //     menuCheckedList: ['/', '/vab', '/other', '/operate', '/template', '/noColumn', '/setting', '/goods', '/chat', '/portal'],
 //   },
 //   {
 //     id: '@id',
 //     role: 'editor',
-//     btnRolesCheckedList: ['read:system', 'write:system'],
+//     btnRolesCheckedList: ['read:Index', 'write:Index'],
 //     menuCheckedList: ['/', '/vab', '/other', '/noColumn', '/setting'],
 //   },
 // ]

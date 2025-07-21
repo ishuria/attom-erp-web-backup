@@ -1,9 +1,20 @@
+/**
+ * @description 引入UnoCSS(项目实际并未使用，仅为有需求的用户提供)
+ * @author sundan
+ * @version 1.0.0
+ */
+// import('virtual:uno.css')
+
 import { createHead } from '@vueuse/head'
 // import ElementPlus from 'element-plus'
+import { validateAppSecurity } from 'core-security'
 import 'virtual:svg-icons-register'
+
 import { VabIcon } from 'vsv-icon'
 import type { App } from 'vue'
 import './styles/vab.scss'
+
+validateAppSecurity()
 
 export const setupVab = (app: App<Element>) => {
   // app.use(ElementPlus)

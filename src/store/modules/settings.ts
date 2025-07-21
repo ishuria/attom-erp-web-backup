@@ -18,8 +18,10 @@ import {
   pageTransition,
   radius,
   rightToolsDrag,
+  showBox,
   showColorPicker,
   showDark,
+  showDeepSeek,
   showFontSize,
   showFooter,
   showFullScreen,
@@ -38,6 +40,7 @@ import {
   themeName,
   title,
 } from '/@/config'
+import { themeConfig } from '/@/config/theme.config'
 import { colorRgba, lightenColorChrome } from '/@/utils/lightenColor'
 import { getLocalStorage } from '/@/utils/localStorage'
 
@@ -72,10 +75,24 @@ const defaultTheme: ThemeType = {
   tabDrag,
   fontSize,
   rightToolsDrag,
+  showBox,
+  showDeepSeek,
+  glassMode: themeConfig.glassMode,
+  glassOpacity: themeConfig.glassOpacity,
 }
 
 const { collapse = foldSidebar } = getLocalStorage('collapse')
 const { persistenceTab = _persistenceTab } = getLocalStorage('persistenceTab')
+
+// 兼容 store 外部调用
+function setGlassModeClass(val: boolean) {
+  const body = document.body
+  if (val) {
+    body.classList.add('glass-mode')
+  } else {
+    body.classList.remove('glass-mode')
+  }
+}
 
 export const useSettingsStore = defineStore('settings', {
   state: (): SettingsModuleType => ({
@@ -127,6 +144,7 @@ export const useSettingsStore = defineStore('settings', {
         }
       localStorage.removeItem('shop-vite-theme')
       this.updateTheme()
+      setGlassModeClass(!!this.theme.glassMode)
     },
     updateTheme() {
       document.querySelectorAll('body')[0].className = `vab-theme-${this.theme.themeName}`
@@ -189,6 +207,8 @@ export const useSettingsStore = defineStore('settings', {
       else document.querySelectorAll('body')[0].classList.remove('color-weakness')
       //字体大小处理
       useCssVar('--el-font-size-base', el).value = this.theme.fontSize
+      // 液态玻璃透明度
+      document.documentElement.style.setProperty('--glass-opacity', String(this.theme.glassOpacity ?? 0.7))
     },
     toggleCollapse() {
       this.collapse = !this.collapse
@@ -224,6 +244,7 @@ export const useSettingsStore = defineStore('settings', {
     },
     updateScrollTop(scrollTop: number, routeName: any) {
       const originalArray = [...JSON.parse(localStorage.getItem('scrollTop') || '[]')]
+
       interface Item {
         routeName: string
         scrollTop: number
@@ -242,11 +263,16 @@ export const useSettingsStore = defineStore('settings', {
           return item
         })
         if (!found) {
-          newArr.push({ routeName: routeNameToCheck, scrollTop: newScrollTopValue })
+          newArr.push({
+            routeName: routeNameToCheck,
+            scrollTop: newScrollTopValue,
+          })
         }
         return newArr
       }
+
       const modifiedArray = updateArray(originalArray, routeName, scrollTop)
+
       function removeItemsWithZeroScrollTop(arr: Item[]): Item[] {
         return arr.filter((item) => item.scrollTop !== 0)
       }

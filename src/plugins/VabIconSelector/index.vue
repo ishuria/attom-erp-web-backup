@@ -1,18 +1,12 @@
 <template>
-  <el-row :gutter="20">
+  <el-row :gutter="10">
     <el-col :span="24">
-      <vab-query-form>
-        <vab-query-form-top-panel>
-          <el-form inline @submit.prevent>
-            <el-form-item>
-              <el-input v-model="queryForm.title" clearable />
-            </el-form-item>
-            <el-form-item>
-              <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
-            </el-form-item>
-          </el-form>
-        </vab-query-form-top-panel>
-      </vab-query-form>
+      <el-form inline @submit.prevent>
+        <el-form-item>
+          <el-input v-model="queryForm.title" clearable />
+          <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
+        </el-form-item>
+      </el-form>
     </el-col>
     <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
       <vab-card @click="handleIcon(item)">
@@ -88,11 +82,21 @@ onBeforeMount(() => {
 .icon-selector-popper {
   width: 302px !important;
 
-  .vab-query-form {
+  .el-form {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
     margin-top: calc(var(--el-margin) / 2);
+    white-space: nowrap;
 
     .el-input {
       width: 220px;
+      margin-right: 10px;
+    }
+
+    .el-form-item {
+      flex-shrink: 0;
     }
   }
 

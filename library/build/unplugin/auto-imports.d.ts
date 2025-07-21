@@ -12,10 +12,12 @@ declare global {
   const $baseLoading: typeof import('../../../src/hooks/index')['$baseLoading']
   const $baseMessage: typeof import('../../../src/hooks/index')['$baseMessage']
   const $baseNotify: typeof import('../../../src/hooks/index')['$baseNotify']
+  const $clearPWACache: typeof import('../../../src/hooks/index')['$clearPWACache']
   const $pub: typeof import('../../../src/hooks/index')['$pub']
   const $sub: typeof import('../../../src/hooks/index')['$sub']
   const $unsub: typeof import('../../../src/hooks/index')['$unsub']
   const EffectScope: typeof import('vue')['EffectScope']
+  const ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -320,6 +322,6 @@ declare global {
 // for type re-export
 declare global {
   // @ts-ignore
-  export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
+  export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
 }

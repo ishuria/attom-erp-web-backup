@@ -45,3 +45,7 @@ public/video
 # 去除前端官方的文件夹
 /.github
 /.vscode
+
+
+changeLog.json
+gold.scss

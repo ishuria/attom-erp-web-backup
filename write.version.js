@@ -5,7 +5,7 @@
 const fs = require('node:fs').promises
 const path = require('node:path')
 const AdmZip = require('adm-zip')
-const package = require('./package.json')
+const packageJson = require('./package.json')
 const dayjs = require('dayjs')
 
 const publicVersionFilePath = path.join('./public', 'vue-shop-vite-version.json')
@@ -13,7 +13,7 @@ const distVersionFilePath = path.join('./dist', 'vue-shop-vite-version.json')
 const zipFilePath = path.join('./dist', 'dist.zip')
 
 const data = {
-  version: package.version,
+  version: packageJson.version,
 }
 
 async function writeVersionFile(filePath) {

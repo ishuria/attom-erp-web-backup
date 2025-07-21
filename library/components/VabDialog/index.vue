@@ -30,7 +30,9 @@
   >
     <template #header>
       <slot name="header">
-        <div class="el-dialog__title" @dblclick="setFullscreen">{{ props.title }}</div>
+        <div class="el-dialog__title" @dblclick="setFullscreen">
+          {{ props.title }}
+        </div>
       </slot>
       <button v-if="props.showClose" class="el-dialog__headerbtn" type="button" @click="closeDialog">
         <el-icon class="el-dialog__close">
@@ -100,6 +102,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  appendToBody: {
+    type: Boolean,
+    default: true,
+  },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -116,7 +122,7 @@ const setFullscreen = () => {
 }
 
 watch(
-  props,
+  () => props.fullscreen,
   () => {
     isFullscreen.value = props.fullscreen
   },

@@ -23,8 +23,12 @@ declare type LayoutName =
    * 瀑布布局
    */
   | 'fall'
+  /**
+   * 多列布局
+   */
+  | 'double'
 
-declare type ThemeName = 'default' | 'plain' | 'technology'
+declare type ThemeName = 'default' | 'plain' | 'technology' | 'gold'
 
 declare type Background =
   /**
@@ -75,6 +79,10 @@ declare type TabsBarStyle =
    * 矩形风格
    */
   | 'rect'
+  /**
+   * 玻璃风格
+   */
+  | 'glass'
 
 declare type pageTransitionStyle =
   /**
@@ -163,4 +171,12 @@ declare interface ThemeType {
   fontSize: string
   // 顶部右侧图标是否允许拖拽
   rightToolsDrag: boolean
+  // 是否显示VabBox组件
+  showBox: boolean
+  // 是否开启液态玻璃效果
+  glassMode?: boolean
+  // 液态玻璃透明度
+  glassOpacity?: number
+  // 是否显示DeepSeek-R1组件
+  showDeepSeek?: boolean
 }

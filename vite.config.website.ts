@@ -65,6 +65,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       outDir,
       reportCompressedSize,
       rollupOptions: {
+        treeshake: false,
         onwarn: () => {
           return
         },
@@ -83,6 +84,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       minify,
       sourcemap: false,
+      target: 'es2015',
     },
     css: {
       postcss: {
@@ -100,7 +102,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       preprocessorOptions: {
         scss: {
-          api: 'modern-compiler', // 修复警告: Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+          //api: 'modern-compiler', // 修复警告: Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
           // sassOptions: { outputStyle: 'expanded' },
         },
       },
@@ -110,6 +112,19 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     define: {
       // 如果您必须使用华为组件库且打包报错，请放开该行，放开注释后会将您的环境变量暴露给华为组件库
       // 'process.env': { ...process.env },
+    },
+    // 为生产环境添加预加载指令，提高初次访问速度
+    experimental: {
+      renderBuiltUrl(filename, { hostType }) {
+        // 为JS和CSS资源添加preload，提高资源加载优先级
+        if (hostType === 'js' && filename.endsWith('.js')) {
+          return { relative: true, preload: true }
+        }
+        if (hostType === 'css' && filename.endsWith('.css')) {
+          return { relative: true, preload: true }
+        }
+        return { relative: true }
+      },
     },
   }
 })

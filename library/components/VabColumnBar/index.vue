@@ -1,3 +1,4 @@
+/* stylelint-disable scss/operator-no-newline-after */
 <template>
   <el-scrollbar
     class="vab-column-bar"
@@ -15,15 +16,24 @@
               class="vab-column-grid"
               :class="{
                 ['vab-column-grid-' + theme.columnStyle]: true,
+                'hide-text': (theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && !showCardText,
               }"
               :title="translate(item.meta.title)"
             >
               <div>
                 <vab-icon v-if="item.meta.icon" :icon="item.meta.icon" :is-custom-svg="item.meta.isCustomSvg" />
-                <span v-if="translate(item.meta.title).length < 4">
+                <span
+                  v-if="translate(item.meta.title).length < 4"
+                  v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
+                  class="tab-text"
+                >
                   {{ translate(item.meta.title) }}
                 </span>
-                <span v-else style="font-size: var(--el-font-size-extra-small); zoom: 0.88">
+                <span
+                  v-else
+                  v-show="(theme.columnStyle !== 'card' && theme.columnStyle !== 'vertical') || showCardText"
+                  class="tab-text small-text"
+                >
                   {{ translate(item.meta.title) }}
                 </span>
               </div>
@@ -43,6 +53,11 @@
     >
       <vab-menu v-for="item in partialRoutes" :key="item.path" :item="item" />
     </el-menu>
+    <template v-if="(theme.columnStyle === 'card' || theme.columnStyle === 'vertical') && theme.layout === 'column'">
+      <div class="toggle-tab-text-btn" :title="showCardText ? '隐藏文字' : '显示文字'" @click="showCardText = !showCardText">
+        <vab-icon :icon="showCardText ? 'eye-off-line' : 'eye-line'" />
+      </div>
+    </template>
     <div class="float-fold">
       <vab-fold fold="contract-left-line" unfold="contract-right-line" />
     </div>
@@ -75,6 +90,7 @@ const {
 } = storeToRefs(routesStore)
 const menuRef = ref<any>(null)
 let timer: ReturnType<typeof setInterval>
+const showCardText = ref(true)
 
 const setDefaultOpeneds = () => {
   timer = setTimeout(() => {
@@ -112,10 +128,16 @@ onMounted(() => {
         () => {
           if (route.meta.noColumn && theme.value.layout === 'column') {
             if (device.value !== 'mobile') foldSideBar()
-            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, { id: 'fold-unfold-useStyleTag' })
+            useStyleTag(`.left-panel .fold-unfold, .float-fold {display: none;}`, {
+              id: 'fold-unfold-useStyleTag',
+            })
+            useStyleTag(`.toggle-tab-text-btn {display: none;}`, {
+              id: 'toggle-tab-text-btn-useStyleTag',
+            })
           } else {
             if (device.value !== 'mobile') openSideBar()
             useStyleTag('', { id: 'fold-unfold-useStyleTag' })
+            useStyleTag('', { id: 'toggle-tab-text-btn-useStyleTag' })
           }
         },
         {
@@ -166,6 +188,22 @@ onBeforeUnmount(() => {
         left: var(--el-left-menu-width-min);
         width: calc(var(--el-left-menu-width) - var(--el-left-menu-width-min));
         border: 0;
+      }
+    }
+  }
+
+  // 当有按钮时，调整高度
+  &-card,
+  &-vertical {
+    :deep() {
+      .el-tabs__nav-wrap.is-left {
+        .el-tabs__nav-scroll {
+          height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
+        }
+      }
+
+      .el-tabs__nav {
+        height: calc(var(--vh, 1vh) * 100 - var(--el-logo-height) * 2 - 44px) !important;
       }
     }
   }
@@ -295,8 +333,8 @@ onBeforeUnmount(() => {
     align-items: center;
     width: var(--el-left-menu-width-min);
     overflow: hidden;
-    text-align: center;
     text-overflow: ellipsis;
+    text-align: center;
     word-break: break-all;
     white-space: nowrap;
 
@@ -311,6 +349,19 @@ onBeforeUnmount(() => {
         [class*='ri-'] {
           display: block;
           height: 20px;
+          font-size: var(--el-font-size-base);
+          transition: all 0.3s ease-in-out;
+        }
+      }
+    }
+
+    // 当不显示文字时，图标变大
+    &.hide-text {
+      > div {
+        svg,
+        [class*='ri-'] {
+          height: 24px !important;
+          font-size: var(--el-font-size-extra-large) !important;
         }
       }
     }
@@ -396,8 +447,8 @@ onBeforeUnmount(() => {
       .el-sub-menu__title {
         height: var(--el-menu-item-height);
         overflow: hidden;
-        line-height: var(--el-menu-item-height);
         text-overflow: ellipsis;
+        line-height: var(--el-menu-item-height);
         white-space: nowrap;
 
         @include active;
@@ -432,5 +483,39 @@ onBeforeUnmount(() => {
       cursor: pointer;
     }
   }
+}
+
+.toggle-tab-text-btn {
+  position: fixed;
+  bottom: 60px;
+  left: 14px;
+  z-index: 10000;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  background: var(--el-color-primary);
+  border-radius: var(--el-border-radius-base);
+}
+
+.tab-text {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+
+  &.small-text {
+    font-size: var(--el-font-size-extra-small);
+    zoom: 0.88;
+  }
+}
+
+// 当文字隐藏时的样式
+.vab-column-grid.hide-text .tab-text {
+  margin-top: 0;
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

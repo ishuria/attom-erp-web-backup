@@ -1,5 +1,5 @@
 <template>
-  <div v-if="theme.showThemeSetting" class="vab-theme-setting">
+  <div v-show="theme.showThemeSetting" class="vab-theme-setting">
     <el-collapse-transition>
       <section v-show="show">
         <div v-show="routeName !== 'SeparateLayout'" @click="randomTheme">
@@ -46,6 +46,12 @@
             </p>
           </a>
         </div>
+        <div class="vab-show-hide-box" @click="checkUpdate">
+          <a>
+            <vab-icon icon="upload-cloud-2-line" />
+            <p>{{ translate('检查更新') }}</p>
+          </a>
+        </div>
       </section>
     </el-collapse-transition>
 
@@ -63,12 +69,17 @@
         </p>
       </a>
     </div>
+    <vab-update v-if="pwa" ref="vabUpdateRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios'
+import { version as localVersion } from '~/package.json'
 import { translate } from '/@/i18n'
 import { useSettingsStore } from '/@/store/modules/settings'
+
+import { pwa } from '/@/config'
 
 defineOptions({
   name: 'VabThemeSetting',
@@ -80,6 +91,7 @@ const { saveTheme, updateTheme, setCssVar, updateCaughtTabs } = settingsStore
 const show = ref<boolean>(true)
 const route = useRoute()
 const routeName = ref<any>(route.name)
+const vabUpdateRef = ref()
 
 const handleOpenTheme = () => {
   $pub('shop-vite-open-theme')
@@ -92,8 +104,7 @@ const buy = () => {
 const removeLocalStorage = () => {
   localStorage.clear()
   updateCaughtTabs(false)
-  //@ts-ignore
-  location.reload(true)
+  location.reload()
 }
 
 const resetTheme = () => {
@@ -117,22 +128,13 @@ const randomTheme = async () => {
   setTimeout(() => {
     const themeName = shuffle(theme.value.themeName, ['default', 'plain', 'technology'])
     const columnStyle = shuffle(theme.value.columnStyle, ['vertical', 'horizontal', 'card', 'arrow', 'semicircle'])
-    const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect'])
+    const tabsBarStyle = shuffle(theme.value.tabsBarStyle, ['card', 'smart', 'smooth', 'rect', 'glass'])
     const showTabsIcon = shuffle(theme.value.showTabsIcon, [true, false])
     const layout =
-      device.value === 'desktop' ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall']) : 'vertical'
-    const _color = shuffle(theme.value.color, [
-      '#1e90ff',
-      '#4e88f3',
-      '#0052d9',
-      '#3fb884',
-      '#16baa9',
-      '#07c160',
-      '#009688',
-      '#6954f0',
-      '#7b40f2',
-      '#f01414',
-    ])
+      device.value === 'desktop'
+        ? shuffle(theme.value.layout, ['horizontal', 'vertical', 'column', 'comprehensive', 'fall', 'double'])
+        : 'vertical'
+    const _color = shuffle(theme.value.color, ['#1e90ff', '#4e6ef2', '#3fb884', '#16baa9', '#009688', '#6954f0', '#f01414'])
     const isFollow = shuffle(theme.value.isFollow, [true, false])
 
     theme.value.themeName = themeName
@@ -147,8 +149,12 @@ const randomTheme = async () => {
       theme.value.color = _color
     }
 
-    if (themeName === 'default') theme.value.isFollow = isFollow
-    else theme.value.isFollow = false
+    if (themeName === 'default') {
+      theme.value.isFollow = isFollow
+      theme.value.glassMode = Math.random() > 0.5
+    } else {
+      theme.value.isFollow = false
+    }
 
     setCssVar()
     updateTheme()
@@ -158,6 +164,52 @@ const randomTheme = async () => {
       $baseMessage('切换成功', 'success', 'hey')
     }, 1000)
   }, 100)
+}
+
+$sub('shop-vite-random-theme', randomTheme)
+
+const checkUpdate = async () => {
+  // 新增：判断当前地址是否包含vuejs-core.cn
+  if (!window.location.href.includes('vuejs-core.cn')) {
+    $baseMessage('非官方演示地址项目无法使用检查更新功能，请前往 Vue Shop Vite 官方演示地址查看最新版本', 'warning', 'hey')
+    return
+  }
+  if (vabUpdateRef.value) {
+    // 先重置弹窗状态，确保可以显示
+    vabUpdateRef.value.resetDialogState?.()
+    // 远程获取版本号
+    let remoteVersion = ''
+    try {
+      const { data } = await axios({
+        url: `./vue-shop-vite-version.json?t=${Date.now()}`,
+        method: 'get',
+      })
+      remoteVersion = data.version || ''
+    } catch {
+      remoteVersion = ''
+    }
+    // 版本比较：将版本号拆分为数字数组进行比较
+    const isNewer = (v1: string, v2: string) => {
+      const v1Parts = v1.split('.').map(Number)
+      const v2Parts = v2.split('.').map(Number)
+      for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+        const v1Part = v1Parts[i] || 0
+        const v2Part = v2Parts[i] || 0
+        if (v1Part > v2Part) return true
+        if (v1Part < v2Part) return false
+      }
+      return false // 相等的情况返回false
+    }
+    // 只有当远程版本大于本地版本时才显示更新弹窗
+    if (remoteVersion && isNewer(remoteVersion, localVersion)) {
+      $pub('update-website', remoteVersion)
+      // 不需要在这里设置show=true，由update-website事件处理
+    } else {
+      $baseMessage('当前已是最新版本', 'success', 'hey', () => {
+        location.reload()
+      })
+    }
+  }
 }
 
 watch(
@@ -264,9 +316,9 @@ watch(
         padding: 0;
         margin: 0;
         overflow: hidden;
+        text-overflow: ellipsis;
         font-size: var(--el-font-size-extra-small);
         line-height: 25px;
-        text-overflow: ellipsis;
         white-space: nowrap;
       }
     }

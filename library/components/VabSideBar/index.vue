@@ -139,8 +139,8 @@ const handleRoutes = computed(() =>
       height: var(--el-menu-item-height);
       margin: 0 10px 5px 10px;
       overflow: hidden;
-      line-height: var(--el-menu-item-height);
       text-overflow: ellipsis;
+      line-height: var(--el-menu-item-height);
       white-space: nowrap;
       border-radius: var(--el-border-radius-base);
       @include active;

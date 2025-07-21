@@ -14,6 +14,7 @@
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData">查询</el-button>
+            <el-button :icon="Refresh" @click="resetQueryForm">重置</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -53,7 +54,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search } from '@element-plus/icons-vue'
+import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, doDeleteList, getAllList } from '/@/api/devlocal/role'
 import type { IRole,IRoleQuery} from '/@/type/role/roleType'
@@ -128,6 +129,14 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   listLoading.value = false
+}
+
+const resetQueryForm = () => {
+  ;(Object.keys(queryForm) as (keyof typeof queryForm)[]).forEach((key) => {
+    if (key !== 'pageNo' && key !== 'pageSize') queryForm[key] = '' as never
+  })
+  queryForm.pageNo = 1
+  queryData()
 }
 
 onActivated(() => {

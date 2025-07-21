@@ -33,7 +33,7 @@ export const useTabsStore = defineStore('tabs', {
       this.visitedRoutes = this.visitedRoutes.filter((route) => route.path !== path)
     },
     /**
-     * @description 删除当前标签页以外其它全部标签页
+     * @description 删除当前标签页以外其他全部标签页
      * @param {*} path
      * @returns
      */

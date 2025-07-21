@@ -35,6 +35,7 @@ export const createVitePlugin = (env: Record<string, string>) => {
     createMock(localEnabled, prodEnabled),
     createSvgIcons(),
     createBanner()
+    // ,createUnoCSSPlugin() // 如需开启UnoCSS，请取消注释
   )
   if (compress) vitePlugins.push(createCompress(compress))
   if (pwa) vitePlugins.push(createPwa(nodeEnv, pwaDev))

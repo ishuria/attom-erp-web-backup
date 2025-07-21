@@ -4,9 +4,8 @@
 import { useAclStore } from './acl'
 import { useSettingsStore } from './settings'
 import { useTabsStore } from './tabs'
-// import { getUserInfo, login, logout } from '/@/api/user'
 import { getUserInfo, login, logout } from '/@/api/devlocal/userLogin'
-import { tokenName } from '/@/config'
+import { storage,tokenName } from '/@/config'
 import { getToken, removeToken, setToken } from '/@/utils/token'
 import { isArray, isString } from '/@/utils/validate'
 import { gp } from '/@vab/plugins/vab'
@@ -81,6 +80,8 @@ export const useUserStore = defineStore('user', {
         data: { [tokenName]: token },
       } = await login(userInfo)
       this.afterLogin(token, tokenName)
+      // 登录成功后立即获取用户信息
+      await this.getUserInfo()
     },
     /**
      * @description 获取用户信息接口 这个接口非常非常重要，如果没有明确底层前逻辑禁止修改此方法，错误的修改可能造成整个框架无法正常使用
@@ -124,8 +125,6 @@ export const useUserStore = defineStore('user', {
     async logout() {
       await logout()
       await this.resetAll()
-      //@ts-ignore
-      await location.reload(true)
     },
     /**
      * @description 重置token、roles、permission、router、tabsBar等
@@ -133,14 +132,28 @@ export const useUserStore = defineStore('user', {
     async resetAll() {
       const aclStore = useAclStore()
       const tabsStore = useTabsStore()
-      await removeToken()
+
+      // 清除token
+      await removeToken(storage)
       this.setToken('')
-      this.setUsername('游客')
-      this.setAvatar('./static/svg/avatar.svg')
+
+      // 清空权限和角色
       await aclStore.setPermission([])
       await aclStore.setFull(false)
       await aclStore.setRole([])
+
+      // 清除tabs
       await tabsStore.delAllVisitedRoutes()
+
+      // 清除localStorage中的相关缓存
+      if (storage === 'localStorage') {
+        // 只移除用户相关数据，不影响主题等设置
+        localStorage.removeItem('caughtRoutes')
+      }
+
+      // 重置用户信息
+      this.setUsername('游客')
+      this.setAvatar('./static/svg/avatar.svg')
     },
   },
 })

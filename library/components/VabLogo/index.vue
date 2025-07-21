@@ -42,8 +42,8 @@ const { theme, logo } = storeToRefs(settingsStore)
   display: inline-block;
   width: 32px;
   height: 32px;
-  color: var(--el-title-color);
   vertical-align: middle;
+  color: var(--el-title-color);
   fill: currentColor;
 }
 
@@ -51,12 +51,12 @@ const { theme, logo } = storeToRefs(settingsStore)
   display: inline-block;
   // margin-left: 5px;
   overflow: hidden;
+  text-overflow: ellipsis;
   font-size: var(--el-font-size-extra-large);
   line-height: 55px;
-  color: var(--el-title-color);
-  text-overflow: ellipsis;
-  white-space: nowrap;
   vertical-align: middle;
+  color: var(--el-title-color);
+  white-space: nowrap;
 }
 
 .vab-logo {
@@ -76,6 +76,7 @@ const { theme, logo } = storeToRefs(settingsStore)
   }
 
   &-vertical,
+  &-double,
   &-column,
   &-comprehensive,
   &-fall {

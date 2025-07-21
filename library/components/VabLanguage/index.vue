@@ -1,6 +1,8 @@
 <template>
-  <el-dropdown class="vab-language" @command="handleCommand">
-    <vab-icon icon="translate-2" />
+  <el-dropdown class="vab-language" popper-class="vab-language-popper" @command="handleCommand">
+    <span class="language-trigger">
+      <vab-icon icon="translate-2" />
+    </span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="zh">中文简体</el-dropdown-item>
@@ -28,6 +30,17 @@ const handleCommand = (language: string) => {
   locale.value = language
   document.title = getPageTitle(route.meta.title)
   //@ts-ignore
-  if (route.path === '/login' || route.path === '/register') location.reload(true)
+  if (route.path === '/login' || route.path === '/register') location.reload()
 }
 </script>
+
+<style lang="scss" scoped>
+.vab-language {
+  .language-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}
+</style>

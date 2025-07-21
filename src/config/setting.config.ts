@@ -21,7 +21,19 @@ export const settingConfig: {
   // 路由模式，是否为hash模式
   isHashRouterMode: true,
   // 不经过token校验的路由，白名单路由建议配置到与login页面同级，如果需要放行带传参的页面，请使用query传参，配置时只配置path即可
-  routesWhiteList: ['/login', '/register', '/password', '/404', '/403', '/redirect', '/portal', '/product'],
+  routesWhiteList: [
+    '/login',
+    '/register',
+    '/password',
+    '/404',
+    '/403',
+    '/redirect',
+    '/portal',
+    '/product',
+    '/courses',
+    '/dataScreen',
+    '/workbench',
+  ],
   // 加载时显示文字
   loadingText: '正在加载中...',
   // token名称
@@ -41,6 +53,8 @@ export const settingConfig: {
   messageDuration: 3000,
   // 在哪些环境下显示高亮错误 ['development', 'production']
   errorLog: 'development',
+  // 错误过滤配置，这些错误不会被记录到错误日志中
+  errorFilter: ['indexOf'],
   // 是否开启登录拦截
   loginInterception: true,
   // 是否开启登录RSA加密
@@ -55,13 +69,20 @@ export const settingConfig: {
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
   defaultOpeneds: [
+    '/',
+    '/vab',
     '/vab/icon',
     '/vab/table',
     '/vab/editor',
     '/vab/form',
+    '/operate',
     '/operate/dynamicSegment',
     '/operate/menu1/menu11/menu111',
+    '/other',
     '/other/iframe',
+    '/template',
+    '/goods',
+    '/chat',
   ],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],

@@ -71,26 +71,42 @@ defineProps({
       flex-basis: 65%;
       height: 300px;
       opacity: 0;
-      transform: translateX(-60px);
-      animation: identifier 0.5s ease-in-out 0.2s forwards;
+      transform: translateX(-60px) scale(0.8) rotate(-8deg);
+      animation: error-bounce-in 0.8s cubic-bezier(0.23, 1.5, 0.32, 1) 0.15s forwards;
+      will-change: transform, opacity;
 
       .error-svg {
         width: 100%;
         height: 100%;
+        transition:
+          transform 0.3s cubic-bezier(0.23, 1.5, 0.32, 1),
+          filter 0.3s;
+      }
+
+      &:hover .error-svg {
+        filter: drop-shadow(0 0 16px var(--el-color-primary));
+        transform: scale(1.08) rotate(4deg);
       }
     }
 
     .bullshit {
       flex-basis: 35%;
+      padding: 32px 24px 24px 24px;
+      border-radius: 12px;
       opacity: 0;
-      transform: translateY(50px);
-      animation: slideUp 0.5s ease-in-out 0.2s forwards;
+      transform: translateY(24px);
+      animation: headline-fade-up 0.6s cubic-bezier(0.23, 1.5, 0.32, 1) 0.7s forwards;
+      will-change: transform, opacity;
 
       &-oops {
         margin-bottom: var(--el-margin);
-        font-size: calc(var(--el-font-size-extra-large) + 6px);
+        font-size: calc(var(--el-font-size-extra-large) + 8px);
         font-weight: bold;
         color: var(--el-color-primary);
+        letter-spacing: 2px;
+        opacity: 1;
+        transform: none;
+        animation: none;
       }
 
       &-headline {
@@ -98,28 +114,85 @@ defineProps({
         font-size: var(--el-font-size-large);
         font-weight: bold;
         color: var(--el-color-grey);
+        opacity: 1;
+        transform: none;
+        animation: none;
       }
 
       &-info {
         margin-bottom: 30px;
         font-size: var(--el-font-size-extra-small);
         color: var(--el-color-grey);
-      }
-
-      @keyframes identifier {
-        100% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-
-      @keyframes slideUp {
-        100% {
-          opacity: 1;
-          transform: translateY(20px);
-        }
+        opacity: 1;
+        transform: none;
+        animation: none;
       }
     }
+  }
+}
+
+@keyframes error-bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-60px) scale(0.8) rotate(-8deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(10px) scale(1.05) rotate(6deg);
+  }
+  80% {
+    transform: translateX(-4px) scale(0.98) rotate(-2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1) rotate(0);
+  }
+}
+
+@keyframes error-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(60px) scale(0.95);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.03);
+  }
+  80% {
+    transform: translateY(4px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes oops-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  80% {
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes headline-fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

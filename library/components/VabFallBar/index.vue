@@ -23,10 +23,6 @@
       <template #level3="{ slotScope }">
         <a v-for="(level3, index) in slotScope" :key="index" :href="level3.url" @click="handleLink(level3)">
           - {{ translate(level3.meta.title) }}
-          <el-tag v-if="level3.meta && level3.meta.badge" effect="dark" size="small" :type="level3.meta.badgeType || 'danger'">
-            {{ level3.meta.badge }}
-          </el-tag>
-          <vab-dot v-if="level3.meta && level3.meta.dot" :type="typeof level3.meta.dot === 'string' ? level3.meta.dot : 'danger'" />
         </a>
       </template>
     </fall-menu>
@@ -141,7 +137,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
       --ti-fall-menu-slot-text-color: var(--el-color-white);
       --ti-common-font-size-base: var(--el-font-size-base);
       --ti-fall-menu-title-font-size: var(--el-font-size-base);
-      --ti-fall-menu-box-width: 560px;
+      --ti-fall-menu-box-width: 530px;
 
       &__nav {
         height: calc(var(--vh, 1vh) * 100);
@@ -165,8 +161,8 @@ useEventListener('mousemove', (e: MouseEvent) => {
         min-width: 100%;
 
         li {
-          display: block;
           float: none;
+          display: block;
           width: 100%;
 
           a {
@@ -200,6 +196,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
         left: calc(var(--el-left-menu-width) - 2px);
         min-width: var(--ti-fall-menu-box-width);
         padding: var(--el-padding);
+        padding-bottom: 0 !important;
         overflow-y: auto;
         border: 0;
         border-left: 3px solid var(--el-background-color);
@@ -215,8 +212,15 @@ useEventListener('mousemove', (e: MouseEvent) => {
 
         .sublist {
           li {
+            padding: 0;
+
             h3.mcate-item-hd {
+              padding-top: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-weight: normal;
               color: var(--ti-fall-menu-box-title-text-color);
+              white-space: nowrap;
 
               [class*='ri-'] + span {
                 padding-left: 3px;
@@ -298,7 +302,7 @@ useEventListener('mousemove', (e: MouseEvent) => {
       .sublist {
         li {
           h3.mcate-item-hd {
-            color: var(--ti-fall-menu-box-title-text-color);
+            color: #fff !important;
           }
 
           p.mcate-item-bd {

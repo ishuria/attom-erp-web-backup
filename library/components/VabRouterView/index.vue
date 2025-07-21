@@ -68,5 +68,22 @@ onBeforeMount(() => {
       if (theme.value.showProgressBar) VabProgress.done()
     }, 200)
   })
+
+  // 刷新全部页面
+  $sub('reload-all', () => {
+    if (theme.value.showProgressBar) VabProgress.start()
+    const cacheActivePath = routerKey.value
+    routerKey.value = null
+    // 清空所有缓存
+    keepAliveNameList.value = []
+    nextTick(() => {
+      routerKey.value = cacheActivePath
+      // 重新加载当前页面
+      updateKeepAliveNameList()
+    })
+    setTimeout(() => {
+      if (theme.value.showProgressBar) VabProgress.done()
+    }, 200)
+  })
 })
 </script>
