@@ -73,13 +73,13 @@ const cards = ref<any>([
     title: '数据大屏',
     description: '展示大屏效果',
     icon: 'bar-chart-box-ai-line',
-    link: '/dataScreen',
+    link: 'https://vuejs-core.cn/shop-vite/#/dataScreen',
   },
   {
     title: '工作台',
     description: '进入工作台',
     icon: 'artboard-line',
-    link: '/workbench',
+    link: 'https://vuejs-core.cn/shop-vite/#/workbench',
   },
   {
     title: '角色权限',
@@ -97,7 +97,7 @@ const cards = ref<any>([
     title: '门户',
     description: '进入门户',
     icon: 'home-4-line',
-    link: '/portal',
+    link: 'https://vuejs-core.cn/shop-vite/#/portal',
   },
   {
     title: '购买链接',
@@ -135,46 +135,20 @@ onMounted(() => {
 // 点击事件处理
 const handleCardClick = (card: any) => {
   const { title, link } = card
-  switch (title) {
-    case '主题配置': {
-      $pub('shop-vite-open-theme')
-      visible.value = false
-      break
-    }
-    case '角色权限':
-    case '页面引导': {
-      if (link) router.push(link)
-      visible.value = false
-      break
-    }
-    case '工作台': {
-      window.open('#/workbench')
-      visible.value = false
-      break
-    }
-    case '数据大屏': {
-      window.open('#/dataScreen')
-      visible.value = false
-      break
-    }
-    case '购买链接': {
-      if (link) window.open(link)
-      visible.value = false
-      break
-    }
-    case '帮助文档': {
-      $baseAlert(
-        '已购买用户请联系客服获取文档，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
-      )
-      visible.value = false
-      break
-    }
-    case '门户': {
-      if (link) window.open(link, '_blank')
-      visible.value = false
-      break
+  if (title === '主题配置') {
+    $pub('shop-vite-open-theme')
+  } else if (title === '帮助文档') {
+    $baseAlert(
+      '已购买用户请联系客服获取文档，购买地址：<a target="_blank" href="https://vuejs-core.cn/authorization/shop-vite.html">https://vuejs-core.cn/authorization/shop-vite.html</a>'
+    )
+  } else if (link) {
+    if (link.startsWith('/')) {
+      router.push(link)
+    } else {
+      window.open(link)
     }
   }
+  visible.value = false
 }
 </script>
 
