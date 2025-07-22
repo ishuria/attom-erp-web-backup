@@ -109,9 +109,9 @@ const handleData = async (response: any): Promise<any> => {
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
 
-  const { config, data, status, statusText } = response
+  const { config, data, status, statusText, headers } = response
 
-  downloadDeal(response['content-type'], data, response)
+  downloadDeal(headers['content-type'], data, headers)
   // 若data.code存在，覆盖默认code
   let code = data && data[statusName] ? data[statusName] : status
   // 若code属于操作正常code，则status修改为200
@@ -186,6 +186,7 @@ const handleData = async (response: any): Promise<any> => {
  * @param defaultFileName 默认下载文件名
  */
 const downloadDeal = (type: string, data: any, headers: any, defaultFileName = 'download') => {
+  debugger
   switch (type) {
     case 'application/vnd.ms-excel':
     case 'text/csv':
