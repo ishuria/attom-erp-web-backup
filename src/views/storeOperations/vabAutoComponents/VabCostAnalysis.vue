@@ -295,6 +295,11 @@
           <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="关税" min-width="100" prop="tariffPrice">
+        <template #default="{ row }">
+          <span>{{ row.tariffPrice != null ? '￥' + row.tariffPrice : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
         <template #default="{ row }">
           <div class="none">
@@ -323,13 +328,13 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleReverseCalc(row.id)">
-                  <el-link type="primary" :underline="false">逆算</el-link>
+                  <el-link type="primary" underline='never'>逆算</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCopy(row.id)">
-                  <el-link type="primary" :underline="false" >复制</el-link>
+                  <el-link type="primary" underline='never' >复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleDelete(row.id, $index)">
-                  <el-link type="danger" :underline="false" >删除</el-link>
+                  <el-link type="danger" underline='never'>删除</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>

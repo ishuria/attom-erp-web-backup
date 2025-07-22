@@ -55,11 +55,11 @@
               <el-form-item>
                 <el-date-picker
                   v-model="selectDateRange"
+                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
                   end-placeholder="结束日期"
                   range-separator="至"
                   start-placeholder="开始日期"
                   type="daterange"
-                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
               
                 />
               </el-form-item>

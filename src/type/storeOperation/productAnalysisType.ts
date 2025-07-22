@@ -93,6 +93,14 @@ export interface IGetOperationAmazonCostList {
    */
   tariff?: number
   /**
+   * 关税价格
+   */
+  tariffPrice?: string
+  /**
+   * 币种符号
+   */
+  symbol?: string
+  /**
    * 体积系数
    */
   volumeCoefficient?: number

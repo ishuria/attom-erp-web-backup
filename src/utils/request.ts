@@ -105,7 +105,6 @@ const tryRefreshToken = async (config: any): Promise<any> => {
  * @returns {Promise<any>}
  */
 const handleData = async (response: any): Promise<any> => {
-  console.log(response)
   const { resetAll } = useUserStore()
   if (loadingInstance) loadingInstance.close()
 
@@ -186,7 +185,6 @@ const handleData = async (response: any): Promise<any> => {
  * @param defaultFileName 默认下载文件名
  */
 const downloadDeal = (type: string, data: any, headers: any, defaultFileName = 'download') => {
-  // debugger
   switch (type) {
     case 'application/vnd.ms-excel':
     case 'text/csv':
