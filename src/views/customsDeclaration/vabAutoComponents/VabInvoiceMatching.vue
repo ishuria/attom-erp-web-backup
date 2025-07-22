@@ -158,8 +158,24 @@
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link :loading="matchListLoading" type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
-          <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>
+          <div style="display: flex;">
+            <el-button
+              :disabled="matchLoading === row.id"
+              link
+              type="primary"
+              @click="showMatch(row)" 
+            >
+            匹配
+          </el-button>
+            <el-button
+              :disabled="cleanLoading === row.id"
+              link
+              type="danger"
+              @click="handleCleanInvoice(row)"
+            >
+            清空
+          </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -251,7 +267,7 @@
     <template #footer>
       <div style="text-align: center">
         <el-button @click="matchVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确定</el-button>
+        <el-button :loading="matchInvoiceLoading" type="primary" @click="handleConfirm">确定</el-button>
       </div>
     </template>
   </vab-dialog>
@@ -305,6 +321,7 @@ const showPdf = (path: string) => {
   pdfLoading.value = false
 }
 const dflag = ref<boolean>(false)
+const matchInvoiceLoading = ref<boolean>(false)
 const props = defineProps<{
   invoiceMatchingVisible: boolean
 }>()
@@ -373,6 +390,7 @@ const handleFinishUpload = async () => {
 }
 // 发票匹配清空
 const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
+  cleanLoading.value = row.id!
   $baseConfirm('确定要清空吗？', null, async () => {
     const { data } = await cleanTaxRefundInvoice({
       detailId: row.detailId!,
@@ -381,6 +399,9 @@ const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
       $baseMessage('清空成功！', 'success')
       fetchData()
     }
+    cleanLoading.value = null // 结束 loading
+  }, () => {
+    cleanLoading.value = null // 取消时也结束 loading
   })
 }
 // 删除发票
@@ -453,24 +474,30 @@ const handleMatchSizeChange = (value: number) => {
 }
 
 const handleConfirm = async () => {
+  matchInvoiceLoading.value = true
   if (matchStatus.value === -1){
     $baseMessage('请选择匹配项','warning')
     return
   }
+  try {
+    // 勾选匹配的value
+    const matchedItem = matchList.value.find(
+      (item: IGetTaxRefundInvoiceMatchList) => item.uniqId === matchStatus.value
+    )
 
-  // 勾选匹配的value
-  const matchedItem = matchList.value.find(
-    (item: IGetTaxRefundInvoiceMatchList) => item.uniqId === matchStatus.value
-  );
-
-  const { data } = await submitTaxRefundInvoiceMatch({
-    id: matchedItem!.id,
-    detailId: matchQueryForm.detailId,
-  })
-  if (data) {
-    $baseMessage('提交成功！', 'success')
-    matchVisible.value = false
-    await fetchData()
+    const { data } = await submitTaxRefundInvoiceMatch({
+      id: matchedItem!.id,
+      detailId: matchQueryForm.detailId,
+    })
+    if (data) {
+      $baseMessage('提交成功！', 'success')
+      matchVisible.value = false
+      await fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    matchInvoiceLoading.value = false
   }
 }
 const handleSubmitConfirm = async () => {
@@ -501,8 +528,10 @@ const _includingTaxPrice = ref<number>(0)
 let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
+  matchLoading.value = row.id! // 开始 loading
   if (row.matchContractNumber) {
     $baseMessage("请先清空再进行匹配！", 'warning')
+    matchLoading.value = null
     return
   }
   matchQueryForm.detailId = row.detailId!
@@ -522,6 +551,7 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   } else {
     matchVisible.value = false
   }
+  matchLoading.value = null // 结束 loading
 }
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
@@ -612,6 +642,64 @@ const handleSizeChange = (value: number) => {
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
+
+  const {
+    invoiceCount,
+    customsDeclarationCount,
+    invoiceUnit,
+    customsDeclarationUnit,
+    includingTaxPrice,
+    taxInclusiveCost
+  } = data.row
+
+  // 只有当报关数量、报关单位、po零件含税价都不为空时才生效
+  const canCompare =
+    customsDeclarationCount !== undefined && customsDeclarationCount !== null && customsDeclarationCount !== '' &&
+    customsDeclarationUnit !== undefined && customsDeclarationUnit !== null && customsDeclarationUnit !== '' &&
+    taxInclusiveCost !== undefined && taxInclusiveCost !== null && taxInclusiveCost !== ''
+
+
+  if (canCompare) {
+
+  // 比较发票数量和报关数量
+  if (label === '发票数量' || label === '报关数量') {
+      if (data.row.invoiceCount !== data.row.customsDeclarationCount) {
+        return {
+          backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+
+    // 比较发票单位和报关单位
+    if (label === '发票单位' || label === '报关单位') {
+      if (data.row.invoiceUnit !== data.row.customsDeclarationUnit) {
+        return {
+          backgroundColor: 'rgba(142, 161, 231, 0.5)',
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+
+    // 比较发票含税金额和零件po含税价
+    if (label === '发票含税金额' || label === '零件PO含税价') {
+      if (data.row.includingTaxPrice !== data.row.taxInclusiveCost) {
+        return {
+          backgroundColor: 'rgba(172, 142, 253, 0.5)',
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+  }
   switch (label) {
     case '购方名称':
     case '发票代码':
@@ -720,6 +808,8 @@ const fetchData = async () => {
   list.value = data?.list!
   listLoading.value = false
 }
+const cleanLoading = ref<number | null>(null) // 存储当前 loading 的行 id
+const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
 </script>
 
 <style lang="scss" scoped>
