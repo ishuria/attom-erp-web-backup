@@ -46,7 +46,7 @@ const CODE_MESSAGE: Record<number, string> = {
 const requestConfig = (config: any): any => {
   const userStore = useUserStore()
   const { token } = userStore
-  debugger
+
   // 规范写法 不可随意自定义
   if (token && config.headers) {
     config.headers['Authorization'] = `Bearer ${token}`
