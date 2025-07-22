@@ -50,7 +50,7 @@ import type {
   IUpdateLostGoodsStatus,
   IUpdateSafeDaysFreightForwarder,
   IUpdateShipmentFBA,
-  IUpdateShipmentFbaDate
+  IUpdateShipmentFbaDate,
 } from '/@/type/packagingShipping/shippedType'
 
 /**
@@ -90,7 +90,7 @@ export const getEncasementSku = (params: IGetEncasementSkuReq): Promise<IGetEnca
   return request({
     url: `${BASE_API}/encasement/getSku`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -100,7 +100,7 @@ export const submitEncasementSku = (data: ISubmitEncasementSkuReq): Promise<IBoo
   return request({
     url: `${BASE_API}/encasement/sku/submit`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -110,7 +110,7 @@ export const updateEncasement = (data: IUpdateEncasementReq): Promise<IBooleanRe
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -120,7 +120,7 @@ export const addDetailEncasement = (data: IAddDetailEncasementReq): Promise<IBoo
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/add/detail`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -130,7 +130,7 @@ export const getEncasementUpdate = (params: IEncasementId): Promise<IGetEncaseme
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/get`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -140,7 +140,7 @@ export const getEncasementInspection = (params: IGetEncasementInspectionReq): Pr
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/inspection`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -150,7 +150,7 @@ export const delEncasementInspection = (params: IEncasementDetailId): Promise<IB
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/detail/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -160,7 +160,7 @@ export const delEncasement = (params: IEncasementId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -170,7 +170,7 @@ export const updateEncasementShipmentDate = (data: IUpdateEncasementShipmentDate
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/shipmentDate/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -180,7 +180,7 @@ export const splitEncasement = (params: ISplitEncasementReq): Promise<IBooleanRe
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/split`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -190,7 +190,7 @@ export const reduceEncasementCount = (params: IEncasementId): Promise<IBooleanRe
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/count/reduce`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -200,7 +200,7 @@ export const plusEncasementCount = (params: IEncasementId): Promise<IBooleanRes>
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/count/plus`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -219,7 +219,7 @@ export const doLockEncasement = (params: IEncasementIds): Promise<IBooleanRes> =
   return request({
     url: `${BASE_API}/encasement/shipping/doLock`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -229,7 +229,7 @@ export const generateTemplateFile1 = (data: IGenerateTemplateFile1Req): Promise<
   return request({
     url: `${BASE_API}/encasement/generate/templateFile1`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -240,7 +240,7 @@ export const uploadGenerateTemplateFile2 = (data: FormData): Promise<IStringRes>
     url: `${BASE_API}/encasement/generate/templateFile2/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 /**
@@ -250,7 +250,7 @@ export const generateTemplateFile3 = (params: IEncasementIds): Promise<IStringRe
   return request({
     url: `${BASE_API}/encasement/generate/templateFile3`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -260,7 +260,7 @@ export const confirmEncasementShipments = (data: IConfirmEncasementShipmentsReq)
   return request({
     url: `${BASE_API}/encasement/shipments`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -270,7 +270,7 @@ export const generateWalmartShipment = (params: IEncasementIds): Promise<IString
   return request({
     url: `${BASE_API}/encasement/generate/walmart/templateFile1`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -280,7 +280,7 @@ export const finishWalmartShipment = (data: IFinishWalmartShipmentReq): Promise<
   return request({
     url: `${BASE_API}/encasement/shipments/walmart`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -291,7 +291,7 @@ export const uploadEncasementFile = (data: FormData): Promise<IStringRes> => {
     url: `${BASE_API}/encasement/file/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 
@@ -302,7 +302,7 @@ export const insertPdf = (params: IFileName) => {
   return request({
     url: `${BASE_API}/encasement/pdf/insertPage`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -312,7 +312,7 @@ export const splitEncasementCsv = (data: ISplitEncasementCsv): Promise<IBooleanR
   return request({
     url: `${BASE_API}/encasement/csv/split`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -331,7 +331,7 @@ export const getShippedEncasementList = (data: IGetEncasementListReq): Promise<I
   return request({
     url: `${BASE_API}/shipment/encasement/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -360,7 +360,7 @@ export const addFreightForwarderType = (params: IAddFreightForwarderType): Promi
   return request({
     url: `${BASE_API}/freight/forwarder/type/add`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -370,7 +370,7 @@ export const updateFreightForwarderType = (data: IUpdateFreightForwarderType): P
   return request({
     url: `${BASE_API}/freight/forwarder/type/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -380,7 +380,7 @@ export const addCostFreightForwarder = (params: ITypeId): Promise<IBooleanRes> =
   return request({
     url: `${BASE_API}/freight/forwarder/add/cost`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -390,7 +390,7 @@ export const delCostFreightForwarder = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/freight/forwarder/cost/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -400,7 +400,19 @@ export const updateCostFreightForwarder = (data: IUpdateCostFreightForwarderReq)
   return request({
     url: `${BASE_API}/freight/forwarder/cost/update`,
     method: 'post',
-    data
+    data,
+  })
+}
+/**
+ * 费用 修改误差
+ * @param params id: number; costName: string; error: number
+ * @returns boolean
+ */
+export const updateCostError = (params: { id: number; costName: string; error: number }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarding/cost/error/update`,
+    method: 'post',
+    params,
   })
 }
 /**
@@ -410,7 +422,7 @@ export const addChannelFreightForwarder = (data: IAddChannelFreightForwarderReq)
   return request({
     url: `${BASE_API}/freight/forwarder/channel/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -420,7 +432,7 @@ export const updateChannelFreightForwarder = (data: IAddChannelFreightForwarderR
   return request({
     url: `${BASE_API}/freight/forwarder/channel/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -430,7 +442,7 @@ export const copyChannelFreightForwarder = (data: any): Promise<IBooleanRes> => 
   return request({
     url: `${BASE_API}/freight/forwarder/channel/copy`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -440,7 +452,7 @@ export const updateSafeDaysFreightForwarder = (params: IUpdateSafeDaysFreightFor
   return request({
     url: `${BASE_API}/freight/forwarder/channel/safeDays/update`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -450,7 +462,7 @@ export const safeDaysChannelFreightForwarder = (params: IId): Promise<IBooleanRe
   return request({
     url: `${BASE_API}/freight/forwarder/channel/safeDays`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -460,7 +472,7 @@ export const getForwarderCostList = (params: IId): Promise<IGetForwarderCostList
   return request({
     url: `${BASE_API}/freight/forwarder/cost/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -470,7 +482,7 @@ export const getForwarderList = (params: IGetForwarderListReq): Promise<IGetForw
   return request({
     url: `${BASE_API}/freight/forwarder/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -480,7 +492,7 @@ export const getUpdateForwarderList = (params: IId) => {
   return request({
     url: `${BASE_API}/freight/forwarder/get`,
     method: 'get',
-    params
+    params,
   })
 }
 
@@ -491,7 +503,7 @@ export const getShipmentArrivedList = (data: IGetShipmentArrivedListReq): Promis
   return request({
     url: `${BASE_API}/shipment/arrived/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -501,7 +513,7 @@ export const updateLostGoodsStatus = (params: IUpdateLostGoodsStatus): Promise<I
   return request({
     url: `${BASE_API}/shipment/lostGoods/status`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -511,19 +523,19 @@ export const getShipmentFbaList = (params: IGetShipmentFbaListReq): Promise<IGet
   return request({
     url: `${BASE_API}/shipment/fba/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * 已发批次 修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const updateShipmentFBA = (data: IUpdateShipmentFBA): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/shipment/fba/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -533,7 +545,7 @@ export const updateShipmentFbaDate = (params: IUpdateShipmentFbaDate): Promise<I
   return request({
     url: `${BASE_API}/shipment/fba/date/update`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -543,7 +555,7 @@ export const getShipmentFbaDetailList = (params: IGetShipmentFbaDetailListReq): 
   return request({
     url: `${BASE_API}/shipment/fba/detail/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -553,7 +565,7 @@ export const filterShipmentFbaList = (data: IFilterShipmentFbaList): Promise<IGe
   return request({
     url: `${BASE_API}/shipment/fba/filter/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -563,14 +575,14 @@ export const printEncasement = (data: IPrintEncasementReq): Promise<IPrintEncase
   return request({
     url: `${BASE_API}/encasement/print`,
     method: 'post',
-    data
+    data,
   })
 }
 export const printEncasementSuccess = (data: any) => {
   return request({
-    url: "https://192.168.6.19:6789/api/v2/print",
+    url: 'https://192.168.6.19:6789/api/v2/print',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -581,14 +593,14 @@ export const printBarcodeEncasement = (data: { code: string }): Promise<IPrintBa
   return request({
     url: `${BASE_API}/encasement/print/barcode`,
     method: 'post',
-    data
+    data,
   })
 }
 export const printBarcodeEncasementSuccess = (data: any) => {
   return request({
-    url: "https://192.168.6.19:6789/api/v2/print",
+    url: 'https://192.168.6.19:6789/api/v2/print',
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -596,11 +608,11 @@ export const printBarcodeEncasementSuccess = (data: any) => {
  * @param data
  * @returns
  */
-export const checkEncasementShipment = (data: { encasementIds: string }): Promise<{ data: { siteId: number, siteName: string }}> => {
+export const checkEncasementShipment = (data: { encasementIds: string }): Promise<{ data: { siteId: number; siteName: string } }> => {
   return request({
     url: `${BASE_API}/encasement/shipment/check`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -609,11 +621,11 @@ export const checkEncasementShipment = (data: { encasementIds: string }): Promis
  * @param data
  * @returns
  */
-export const updateEncasementDetailCount = (data: { encasementDetailId: number, count: number }): Promise<{ data: boolean }> => {
+export const updateEncasementDetailCount = (data: { encasementDetailId: number; count: number }): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/awaiting/shipment/encasement/detail/update/count`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -632,7 +644,7 @@ export const updateEncasementUserPrinter = (params: { printer: string }): Promis
   return request({
     url: `${BASE_API}/encasement/user/printer/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -650,11 +662,11 @@ export const getChannelSiteList = (): Promise<{ data: IGetChannelSiteList[] }> =
  * @param data
  * @returns
  */
-export const updateChannelSiteList = (data: { id: number, channelId: number}): Promise<{ data: boolean}> => {
+export const updateChannelSiteList = (data: { id: number; channelId: number }): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/channel/update/site`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -679,23 +691,23 @@ export const updateEncasementError = (params: { error: number }) => {
   return request({
     url: `${BASE_API}/encasement/error/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
-export const updateEncasementRemark = (params: { id: number, remarks: string }) => {
+export const updateEncasementRemark = (params: { id: number; remarks: string }) => {
   return request({
     url: `${BASE_API}/encasement/remark/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
 /**
  * 查询结算对象
- * @returns 
+ * @returns
  */
-export const getSettlementObjectList = (): Promise<{ data: { id: number, label: string }[] }> => {
+export const getSettlementObjectList = (): Promise<{ data: { id: number; label: string }[] }> => {
   return request({
     url: `${BASE_API}/settlement/object/select_option`,
     method: 'get',

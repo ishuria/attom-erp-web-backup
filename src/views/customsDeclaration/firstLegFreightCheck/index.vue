@@ -4,25 +4,25 @@
       <el-tab-pane label="待核对" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" :disabled="startCheckDisabled" @click="startCheckVisible = true">开始核对</el-button>
-            <el-button type="primary" :disabled="finishCheckDisabled" @click="exportRecord" :loading="exportLoading">核对记录导出</el-button>
-            <el-button type="success" :disabled="finishCheckDisabled" @click="handleCheckComplete">核对完成</el-button>
-            <el-button type="danger" :disabled="finishCheckDisabled" @click="deleteCheck">取消核对</el-button>
-            <el-button type="success" :disabled="finishCheckDisabled" @click="handleApproved">审批通过</el-button>
+            <el-button :disabled="startCheckDisabled" type="primary" @click="startCheckVisible = true">开始核对</el-button>
+            <el-button :disabled="finishCheckDisabled" :loading="exportLoading" type="primary" @click="exportRecord">核对记录导出</el-button>
+            <el-button :disabled="finishCheckDisabled" type="success" @click="handleCheckComplete">核对完成</el-button>
+            <el-button :disabled="finishCheckDisabled" type="danger" @click="deleteCheck">取消核对</el-button>
+            <el-button :disabled="finishCheckDisabled" type="success" @click="handleApproved">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="0" :list="list" :loading="listLoading" />
+        <check-freight-table :list="list" :loading="listLoading" :tab="0" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -39,15 +39,15 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table ref="freightTableRef" :tab="1" :list="list" :loading="listLoading" />
+        <check-freight-table ref="freightTableRef" :list="list" :loading="listLoading" :tab="1" />
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -61,15 +61,15 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :loading="listLoading" :icon="Search" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :tab="2" :list="list" :loading="listLoading"/>
+        <check-freight-table :list="list" :loading="listLoading" :tab="2"/>
         <vab-pagination 
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -82,10 +82,10 @@
     <!-- 开始核对 -->
     <vab-dialog v-model="startCheckVisible" title="开始核对" width="25%">
       <el-upload
+        v-model:file-list="fileList"
+        :auto-upload="false"
         class="upload-demo"
         drag
-        :auto-upload="false"
-        v-model:file-list="fileList"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
@@ -94,12 +94,12 @@
       </el-upload>
       <template #footer>
         <div style="text-align: center;">
-          <el-button type="success" @click="uploadExcelFile" :loading="uploadLoading">上传</el-button>
+          <el-button :loading="uploadLoading" type="success" @click="uploadExcelFile">上传</el-button>
         </div>
       </template>
     </vab-dialog>
     <!-- 误差允许范围 -->
-    <error-allow-range-dialog v-model="allowRangeVisible" />
+    <error-allow-range-dialog v-model="allowRangeVisible" @update:data="fetchData" />
   </div>
 </template>
 

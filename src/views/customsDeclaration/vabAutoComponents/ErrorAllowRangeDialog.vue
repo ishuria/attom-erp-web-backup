@@ -2,10 +2,10 @@
   <div>
     <vab-dialog
       v-model="visible"
+      class="custom-dialog"
       title="误差允许范围"
       top="4%"
       width="40%"
-      class="custom-dialog"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -46,8 +46,8 @@
             <el-select v-model="row.settlementObject" @change="modifyFeeNameSetting(row)">
               <el-option 
                 v-for="item in settlementObjectList"
-                :label="item.label"
                 :key="item.id"
+                :label="item.label"
                 :value="item.id"
               />
             </el-select>
@@ -56,7 +56,7 @@
         <el-table-column label="误差允许范围" min-width="130">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.error" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)"/>  
+              <el-input v-model="row.error" @blur="clickErrorCancel($event, row)" @keypress.enter="clickErrorCancel($event, row)"/>  
             </div>
             <span>{{ row.error ? row.error + '%' : '' }}</span>
           </template>
@@ -76,7 +76,7 @@
 
 <script lang="ts" setup>
 import { CSSProperties } from 'vue'
-import { getForwarderCostList, getFreightForwarderSelect, getSettlementObjectList, updateCostFreightForwarder } from '/@/api/devlocal/encasement'
+import { getForwarderCostList, getFreightForwarderSelect, getSettlementObjectList, updateCostError, updateCostFreightForwarder } from '/@/api/devlocal/encasement'
 import { IGetForwarderCostList } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -87,7 +87,7 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
 }>()
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:data'])
 const visible = computed({
   get() {
     return props.modelValue
@@ -170,6 +170,27 @@ const clickCancel = async (event: any, row: any) => {
       billCostName: row.billCostName,
       error: row.error
     })
+  }
+}
+const clickErrorCancel = async (event: any, row: any) => {
+  const t1 = getRootElement(event["srcElement"],".cell").children[0]
+  if (t1){
+    t1.classList.add("none")
+  }
+  const t2 = getRootElement(event["srcElement"],".cell").children[1]
+  if (t2){
+    t2.classList.remove("none")
+  }
+  if (JSON.stringify(row) === JSON.stringify(copyRow)) return 
+
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑, 发送更新请求
+    await updateCostError({
+      id: row.id,
+      costName: row.costName,
+      error: row.error
+    })
+    emit('update:data')
   }
 }
 const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
