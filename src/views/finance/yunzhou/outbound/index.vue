@@ -34,8 +34,8 @@
     </vab-query-form>
     <el-table
       border
-      class="noneHoveTable"
       :cell-style="cellStyle"
+      class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
       row-class-name="tableRowClassName"

@@ -2,57 +2,64 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabChange">
       <el-tab-pane label="未匹配" :name="0">
-        <AiTuoMuTable
-          :showButtons="true"
-          :showActions="false"
+        <i-tuo-mu-table
           :list="list"
           :loading="listLoading"
           :query-form="queryForm"
+          :showActions="false"
+          :showButtons="true"
           :total="total"
           @export="atmExportVisible = true"
           @import="importVisible = true"
           @match="checkMatch"
-          @query="queryData"
-          @page-change="handleCurrentChange"
-          @size-change="handleSizeChange"
           @obtain-id-list="handleAiTuoMuTableData"
+          @page-change="handleCurrentChange"
+          @query="queryData"
+          @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="已匹配" :name="1">
-        <AiTuoMuTable
-          :showButtons="false"
-          :showActions="true"
+        <ai-tuo-mu-table
+        
           :list="list"
           :loading="listLoading"
+          
           :query-form="queryForm"
+          :showActions="true"
+          :showButtons="false"
           :total="total"
-          @query="queryData"
-          @page-change="handleCurrentChange"
-          @size-change="handleSizeChange"
           @delete-match="deleteMatch"
+          @page-change="handleCurrentChange"
+          @query="queryData"
+          @size-change="handleSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
     <!-- 发票导入 -->
-    <AiTuoMuInvoiceImport from="import" :invoice-matching-visible="importVisible" @update-invoice-matching-visible="updateImportVisible" />
+    <ai-tuo-mu-invoice-import from="import" :invoice-matching-visible="importVisible" @update-invoice-matching-visible="updateImportVisible" />
     <!-- 发票匹配 -->
-    <AiTuoMuInvoiceImport
+    <ai-tuo-mu-invoice-import
       from="match"
-      :invoice-matching-visible="matchVisible"
-      @update-invoice-matching-visible="updateMatchVisible"
       :idList="selectChildIdList"
-      @refresh="queryData"
+      :invoice-matching-visible="matchVisible"
+       @refresh="queryData"
+      @update-invoice-matching-visible="updateMatchVisible"
     />
     <!-- 催票文件导出 -->
-    <vab-dialog title="催票文件导出" v-model="atmExportVisible" width="20%">
+    <vab-dialog  v-model="atmExportVisible" title="催票文件导出" width="20%">
       <el-form label-position="top">
         <el-form-item label="发货日期">
-          <el-date-picker v-model="date" type="daterange" :disabled-date="(time: Date) => time.getTime() > Date.now()" :clearable="false" />
+          <el-date-picker 
+           v-model="date" 
+           :clearable="false" 
+           :disabled-date="(time: Date) => time.getTime() > Date.now()"  
+           type="daterange" 
+        />
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="atmExportVisible = false">取消</el-button>
-        <el-button type="primary" :loading="exportLoading" @click="handleExportATM">导出</el-button>
+        <el-button :loading="exportLoading" type="primary" @click="handleExportATM">导出</el-button>
       </template>
     </vab-dialog>
   </div>

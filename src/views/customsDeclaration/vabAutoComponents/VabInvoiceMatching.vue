@@ -612,6 +612,64 @@ const handleSizeChange = (value: number) => {
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
+
+  const {
+    invoiceCount,
+    customsDeclarationCount,
+    invoiceUnit,
+    customsDeclarationUnit,
+    includingTaxPrice,
+    taxInclusiveCost
+  } = data.row
+
+  // 只有当报关数量、报关单位、po零件含税价都不为空时才生效
+  const canCompare =
+    customsDeclarationCount !== undefined && customsDeclarationCount !== null && customsDeclarationCount !== '' &&
+    customsDeclarationUnit !== undefined && customsDeclarationUnit !== null && customsDeclarationUnit !== '' &&
+    taxInclusiveCost !== undefined && taxInclusiveCost !== null && taxInclusiveCost !== ''
+
+
+  if (canCompare) {
+
+  // 比较发票数量和报关数量
+  if (label === '发票数量' || label === '报关数量') {
+      if (data.row.invoiceCount !== data.row.customsDeclarationCount) {
+        return {
+          backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+
+    // 比较发票单位和报关单位
+    if (label === '发票单位' || label === '报关单位') {
+      if (data.row.invoiceUnit !== data.row.customsDeclarationUnit) {
+        return {
+          backgroundColor: 'rgba(142, 161, 231, 0.5)',
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+
+    // 比较发票含税金额和零件po含税价
+    if (label === '发票含税金额' || label === '零件PO含税价') {
+      if (data.row.includingTaxPrice !== data.row.taxInclusiveCost) {
+        return {
+          backgroundColor: 'rgba(172, 142, 253, 0.5)',
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+  }
   switch (label) {
     case '购方名称':
     case '发票代码':
