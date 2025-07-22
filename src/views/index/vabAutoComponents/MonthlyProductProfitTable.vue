@@ -5,7 +5,7 @@
       当前产品利润分
     </template>
     
-    <el-table :data="list" border :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :span-method="objectSpanMethod">
+    <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" :span-method="objectSpanMethod">
       <el-table-column label="人员" prop="userName" width="100" />
       <el-table-column label="总利润分" prop="totalNumber" width="100" />
       <el-table-column label="利润分" prop="number" width="100" />

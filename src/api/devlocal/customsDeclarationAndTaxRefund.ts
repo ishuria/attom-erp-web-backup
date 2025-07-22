@@ -13,7 +13,7 @@ import type {
   IGetPurchaseComponentHsInfo,
   IUpdateHSListReq,
   IUpdateHTSListReq,
-  IUpdatePurchaseComponentHs
+  IUpdatePurchaseComponentHs,
 } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import type {
   IBooleanRes,
@@ -42,7 +42,7 @@ import type {
   IUpdateShipmentLeg,
   IUpdateShipmentLegCurrency,
   IUpdateShipmentLegPay,
-  IUpdateShipmentPay
+  IUpdateShipmentPay,
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type {
   ICleanTaxRefundInvoice,
@@ -63,7 +63,7 @@ import type {
   IUpdateTaxRefundBatchFreightFee,
   IUpdateTaxRefundBatchRemark,
   IUpdateTaxRefundInvoice,
-  IUpdateTaxRefundInvoiceDetail
+  IUpdateTaxRefundInvoiceDetail,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 
 /**
@@ -73,7 +73,7 @@ export const getMatchPoList = (data: IGetMatchPoListReq): Promise<IGetMatchPoLis
   return request({
     url: `${BASE_API}/shipment/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -83,7 +83,7 @@ export const getCheckMatchList = (data: IGetMatchPoListReq): Promise<IGetCheckMa
   return request({
     url: `${BASE_API}/shipment/detail/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -93,7 +93,7 @@ export const getMatchPackageList = (data: IGetMatchPackageListReq): Promise<IGet
   return request({
     url: `${BASE_API}/shipment/match/packageList`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -103,7 +103,7 @@ export const updateMatchSkuActualCount = (data: IUpdateMatchSkuCount): Promise<I
   return request({
     url: `${BASE_API}/shipment/match/mUpdate`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -113,7 +113,7 @@ export const updateMatchComponentActualCount = (data: IUpdateMatchComponentActua
   return request({
     url: `${BASE_API}/shipment/match/component/actual/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -123,7 +123,7 @@ export const updateMatchComponentCustomCount = (data: IUpdateMatchComponentActua
   return request({
     url: `${BASE_API}/shipment/match/component/customDeclaration/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -133,7 +133,7 @@ export const insertAllMatchComponent = (data: IInsertAllMatchComponent): Promise
   return request({
     url: `${BASE_API}/shipment/match/component/insertAll`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -143,7 +143,7 @@ export const clearMatchComponent = (data: IClearMatchComponent): Promise<IBoolea
   return request({
     url: `${BASE_API}/shipment/match/component/clear`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -153,7 +153,7 @@ export const clearAllMatchComponent = (data: IClearAllMatchComponent): Promise<I
   return request({
     url: `${BASE_API}/shipment/match/component/clear/all`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -163,7 +163,7 @@ export const getMatchSentList = (params: IGetMatchPoListReq): Promise<IGetMatchS
   return request({
     url: `${BASE_API}/shipment/match/ybwf/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -173,7 +173,7 @@ export const archiveMatchSentList = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/ybwf/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -183,7 +183,7 @@ export const submitMatchSentList = (data: ISubmitMatchSentList): Promise<{ data:
   return request({
     url: `${BASE_API}/shipment/match/ybwf/submit`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -191,11 +191,11 @@ export const submitMatchSentList = (data: ISubmitMatchSentList): Promise<{ data:
  * @param data id: number, remark: string
  * @returns boolean
  */
-export const updateShipmentYfwbRemark = (data: { id: number, remark: string }): Promise<{ data: boolean }> => {
+export const updateShipmentYfwbRemark = (data: { id: number; remark: string }): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/shipment/yfwb/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -207,7 +207,7 @@ export const getShipmentYfwbAggregationList = (data: IGetMatchPoListReq): Promis
   return request({
     url: `${BASE_API}/shipment/yfwb/aggregation/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -215,11 +215,13 @@ export const getShipmentYfwbAggregationList = (data: IGetMatchPoListReq): Promis
  * @param data IGetMatchPoListReq
  * @returns IGetYfwbAggregationListRes
  */
-export const archiveShipmentYfwbAggregation = (data: { poId: number, poComponentId: number, sku: string }[]): Promise<{ data: boolean }> => {
+export const archiveShipmentYfwbAggregation = (
+  data: { poId: number; poComponentId: number; sku: string }[]
+): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/shipment/yfwb/aggregation/batch/archiving`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -229,7 +231,7 @@ export const clearMatchShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/clear`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -239,7 +241,7 @@ export const clearAllMatchShipment = (params: IIds): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/clear/all`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -249,7 +251,7 @@ export const delMatchShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -259,7 +261,7 @@ export const lockMatchShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/lock`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -269,7 +271,7 @@ export const clearUnlockMatchShipment = (params: IClearUnlockMatchShipment): Pro
   return request({
     url: `${BASE_API}/shipment/match/clearUnlock`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -279,7 +281,7 @@ export const submitMatchShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/match/submit`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -289,7 +291,7 @@ export const updateMatchQuality = (data: IUpdateMatchQuality): Promise<IBooleanR
   return request({
     url: `${BASE_API}/shipment/match/quality/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -299,7 +301,7 @@ export const archivePackageShipment = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/package/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -309,7 +311,7 @@ export const cancelArchivePackageShipment = (params: IId): Promise<IBooleanRes> 
   return request({
     url: `${BASE_API}/shipment/package/cancel/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -319,7 +321,7 @@ export const updateShipment = (data: IUpdateShipment): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -329,7 +331,7 @@ export const updateShipmentFreightFee = (params: IUpdateShipmentFreightFee): Pro
   return request({
     url: `${BASE_API}/shipment/update/freightFee`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -339,7 +341,7 @@ export const updateShipmentPay = (params: IUpdateShipmentPay): Promise<IBooleanR
   return request({
     url: `${BASE_API}/shipment/update/pay`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -349,7 +351,7 @@ export const getShipmentCostList = (params: IShipId) => {
   return request({
     url: `${BASE_API}/shipment/cost/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -359,17 +361,17 @@ export const cancelShipmentEncasement = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/cancel/encasement`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * @description 头程运费-添加费用
  */
-export const addShipmentCost = (params: { shipId: number, costName: string }): Promise<IBooleanRes> => {
+export const addShipmentCost = (params: { shipId: number; costName: string }): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/cost/add`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -379,7 +381,7 @@ export const generateCustomsDeclaration = (params: IIds) => {
   return request({
     url: `${BASE_API}/shipment/generate/customs/declaration`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -389,7 +391,7 @@ export const generateTaxRefund = (params: IIds) => {
   return request({
     url: `${BASE_API}/shipment/generate/taxRefund`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -408,7 +410,7 @@ export const updateShipmentLegPay = (params: IUpdateShipmentLegPay): Promise<IBo
   return request({
     url: `${BASE_API}/shipment/leg/pay`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -418,7 +420,7 @@ export const updateShipmentLegCurrency = (params: IUpdateShipmentLegCurrency): P
   return request({
     url: `${BASE_API}/shipment/leg/currency`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -428,7 +430,7 @@ export const delShipmentLeg = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/leg/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -439,7 +441,7 @@ export const updateShipmentLeg = (data: IUpdateShipmentLeg): Promise<IBooleanRes
   return request({
     url: `${BASE_API}/shipment/leg/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -449,7 +451,7 @@ export const updateBgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBool
   return request({
     url: `${BASE_API}/shipment/leg/bg`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -459,7 +461,7 @@ export const updateQgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBool
   return request({
     url: `${BASE_API}/shipment/leg/qg`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -470,7 +472,7 @@ export const archiveTaxRefund = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -481,7 +483,7 @@ export const cancelArchiveTaxRefund = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/cancel/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -492,7 +494,7 @@ export const archiveOutbound = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/outbound/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -502,7 +504,7 @@ export const cancelArchiveOutbound = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/outbound/cancel`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -513,7 +515,7 @@ export const getTaxRefundBatchList = (params: IGetTaxRefundBatchListQuery): Prom
   return request({
     url: `${BASE_API}/taxRefund/batch/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -523,7 +525,7 @@ export const updateTaxRefundBatchDate = (params: IUpdateTaxRefundBatchDate): Pro
   return request({
     url: `${BASE_API}/taxRefund/batch/update/date`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -533,7 +535,7 @@ export const updateTaxRefundBatchRemark = (params: IUpdateTaxRefundBatchRemark):
   return request({
     url: `${BASE_API}/taxRefund/batch/remark`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -543,7 +545,7 @@ export const updateTaxRefundBatchStatus = (params: IId): Promise<IBooleanRes> =>
   return request({
     url: `${BASE_API}/taxRefund/batch/status`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -553,7 +555,7 @@ export const updateTaxRefundBatchFreightFee = (params: IUpdateTaxRefundBatchFrei
   return request({
     url: `${BASE_API}/taxRefund/batch/freightFee`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -563,19 +565,19 @@ export const getTaxRefundBatchDetail = (params: IGetTaxRefundBatchDetailQuery): 
   return request({
     url: `${BASE_API}/taxRefund/batch/detail`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * 退税批次中的出库归档
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const archiveTaxRefundBatchOutbound = (data: { contractNumber: string }): Promise<{ data: string }> => {
   return request({
     url: `${BASE_API}/taxRefund/batch/outbound/archive`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -585,7 +587,7 @@ export const getTaxRefundList = (data: IGetTaxRefundListQuery): Promise<IGetTaxR
   return request({
     url: `${BASE_API}/taxRefund/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -596,7 +598,7 @@ export const uploadTaxRefund = (data: FormData) => {
     url: `${BASE_API}/taxRefund/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 /**
@@ -606,7 +608,7 @@ export const finishTaxRefundInvoice = (data: string[]): Promise<IFinishTaxRefund
   return request({
     url: `${BASE_API}/taxRefund/invoice/finish`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -616,7 +618,7 @@ export const getTaxRefundInvoiceList = (data: IGetTaxRefundInvoiceListQuery): Pr
   return request({
     url: `${BASE_API}/taxRefund/invoice/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -626,7 +628,7 @@ export const cleanTaxRefundInvoice = (params: ICleanTaxRefundInvoice): Promise<I
   return request({
     url: `${BASE_API}/taxRefund/invoice/clean`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -636,7 +638,7 @@ export const deleteTaxRefundInvoice = (params: IId): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -646,7 +648,7 @@ export const getTaxRefundInvoiceMatch = (data: IGetTaxRefundInvoiceMatchQuery): 
   return request({
     url: `${BASE_API}/taxRefund/invoice/match`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -656,7 +658,7 @@ export const updateTaxRefundInvoice = (data: IUpdateTaxRefundInvoice): Promise<I
   return request({
     url: `${BASE_API}/taxRefund/invoice/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -666,7 +668,7 @@ export const updateTaxRefundInvoiceDetail = (data: IUpdateTaxRefundInvoiceDetail
   return request({
     url: `${BASE_API}/taxRefund/invoice/detail/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -676,7 +678,7 @@ export const submitTaxRefundInvoiceMatch = (data: ISubmitTaxRefundInvoiceMatch):
   return request({
     url: `${BASE_API}/taxRefund/invoice/match/submit`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -686,7 +688,7 @@ export const submitConfirmTaxRefundInvoiceMatch = (data: number[]): Promise<IBoo
   return request({
     url: `${BASE_API}/taxRefund/invoice/match/submitConfirm`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -696,7 +698,7 @@ export const deleteTaxRefundMatch = (data: ISubmitTaxRefundInvoiceMatch): Promis
   return request({
     url: `${BASE_API}/taxRefund/delete/match`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -706,10 +708,9 @@ export const getTaxRefundProfitMargin = (data: IGetTaxRefundProfitMarginQuery): 
   return request({
     url: `${BASE_API}/taxRefund/profit/margin`,
     method: 'post',
-    data
+    data,
   })
 }
-
 
 /**
  * @description Hs列表
@@ -718,7 +719,7 @@ export const getHSList = (params: IGetHSListReq): Promise<IGetHSListRes> => {
   return request({
     url: `${BASE_API}/hs/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -728,7 +729,7 @@ export const updateHSList = (data: IUpdateHSListReq): Promise<{ data: boolean }>
   return request({
     url: `${BASE_API}/hs/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -738,7 +739,7 @@ export const delHSList = (params: { id: number }): Promise<{ data: boolean }> =>
   return request({
     url: `${BASE_API}/hs/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -748,7 +749,7 @@ export const addHSList = (data: IAddHSListReq): Promise<{ data: boolean }> => {
   return request({
     url: `${BASE_API}/hs/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -758,7 +759,7 @@ export const getHTSList = (data: IGetHTSListReq): Promise<IGetHTSListRes> => {
   return request({
     url: `${BASE_API}/hts/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -768,7 +769,7 @@ export const delHTSList = (params: { id: number }): Promise<{ data: boolean }> =
   return request({
     url: `${BASE_API}/hts/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -778,7 +779,7 @@ export const addHTSList = (data: IAddHTSListReq): Promise<{ data: boolean }> => 
   return request({
     url: `${BASE_API}/hts/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -788,7 +789,7 @@ export const updateHTSList = (data: IUpdateHTSListReq): Promise<{ data: boolean 
   return request({
     url: `${BASE_API}/hts/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -799,38 +800,38 @@ export const getHtsSkuList = (data: IGetHtsSkuListReq): Promise<IGetHtsSkuListRe
   return request({
     url: `${BASE_API}/hts/sku/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 获取费用名
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export const getCostNameListByChannelId = (params: { channelId: number }): Promise<{ data: { id: number, label: string }[] }> => {
+export const getCostNameListByChannelId = (params: { channelId: number }): Promise<{ data: { id: number; label: string }[] }> => {
   return request({
     url: `${BASE_API}/freight/forwarder/costName/list`,
     method: 'get',
-    params
+    params,
   })
 }
 
 /**
  * 退税管理 发票匹配导出 前置接口
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
-export const checkTaxRefundInvoiceExport = (data: { fromDate: string, toDate: string }): Promise<IBooleanRes> => {
+export const checkTaxRefundInvoiceExport = (data: { fromDate: string; toDate: string }): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/match/invoice/export/check`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 退税批次 出口发票生成 前置接口
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export const checkTaxRefundBatchAiTuoMuExport = (params: { ids: string }): Promise<IBooleanRes> => {
   return request({
@@ -842,8 +843,8 @@ export const checkTaxRefundBatchAiTuoMuExport = (params: { ids: string }): Promi
 
 /**
  * po零件hs信息查询
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const getPurchaseComponentHsInfo = (params: { id: number }): Promise<{ data: IGetPurchaseComponentHsInfo }> => {
   return request({
@@ -865,8 +866,8 @@ export const updatePurchaseComponentHs = (data: IUpdatePurchaseComponentHs): Pro
 
 /**
  * 匹配报关-上传入仓单PDF
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function uploadWarehouseReceiptPDF(data: FormData): Promise<{ data: boolean }> {
   return request({
@@ -876,5 +877,3 @@ export function uploadWarehouseReceiptPDF(data: FormData): Promise<{ data: boole
     data,
   })
 }
-
-

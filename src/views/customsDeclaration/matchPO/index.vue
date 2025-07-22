@@ -216,7 +216,7 @@
         <el-table-column label="数量" min-width="70" prop="count">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.count"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.count"  @blur="clickCostCancel($event, row)" @keyup.enter="clickCostCancel($event, row)" />
             </div>
             <span>{{ row.count }}</span>
           </template>
@@ -224,7 +224,7 @@
         <el-table-column label="单价" prop="unitPrice" :width="flexColumnWidth(costList, '单价', 'unitPrice')">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.unitPrice"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model="row.unitPrice"  @blur="clickCostCancel($event, row)" @keyup.enter="clickCostCancel($event, row)" />
             </div>
             <span>{{ row.unitPrice }}</span>
           </template>
