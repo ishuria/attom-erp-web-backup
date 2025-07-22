@@ -236,6 +236,11 @@
             <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="关税" prop="tariffPrice" width="85">
+          <template #default="{ row }">
+            <span>{{ row.tariffPrice != null && row.tariffPrice !== '' ? row.symbol + row.tariffPrice : '' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="平台佣金" prop="platformCommission" width="90">
           <template #default="{ row }">
             <span>{{ row.platformCommission ? row.symbol + row.platformCommission.toFixed(2) : '' }}</span>
@@ -519,7 +524,7 @@ const handlerAddRowCost = async () => {
   const { data } = await addEstimatedCostAccounting(formdata)
   if (data) {
     // 获取汇率
-    const { data } = await getExchangeRate({ currency: siteReflectCurrencyAndExchangeRate.get(newData.site)! })
+    const { data } = await getExchangeRate({ currency: siteReflectCurrencyAndExchangeRate.get(newData.site!) })
     newData.foreignExchange = data
 
     $baseMessage('产品成本核算添加成功！', 'success', 'hey')

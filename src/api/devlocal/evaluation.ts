@@ -2,7 +2,6 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-
 import type {
   EstimatedCostAccountingProductRelease,
   ICostAccounting,
@@ -10,9 +9,8 @@ import type {
   IEvaluationKeyWordTrendReq,
   IEvaluationQueryReq,
   IEvaluationScore,
-  IEvaluationSharePersonReq
+  IEvaluationSharePersonReq,
 } from '/@/type/evaluation/evaluationType'
-
 
 export function getList(params?: IEvaluationQueryReq) {
   return request({
@@ -60,7 +58,6 @@ export function getEvaluationScoreDetail(params?: IEstimatedCostAccountingQueryR
   })
 }
 
-
 export function getEvaluationShareInfo(params?: IEstimatedCostAccountingQueryReq) {
   return request({
     url: `${BASE_API}/evaluation/share`,
@@ -68,8 +65,6 @@ export function getEvaluationShareInfo(params?: IEstimatedCostAccountingQueryReq
     params,
   })
 }
-
-
 
 export function doAddEvaluation(data?: any) {
   return request({
@@ -144,7 +139,7 @@ export function updateEstimatedCostAccounting(data?: any) {
 /**
  * @description 新款评估头程渠道更新
  */
-export function updateEstimatedCostAccountingFirstMileChannel(data?: { id: number, channelId: number }): Promise<{ data: boolean }> {
+export function updateEstimatedCostAccountingFirstMileChannel(data?: { id: number; channelId?: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/estimatedCostAccounting/firstMileChannel/update`,
     method: 'post',
@@ -185,7 +180,7 @@ export function evaluationCostDeleteImg(params: { id: number }): Promise<{ data:
   return request({
     url: `${BASE_API}/evaluation/cost/delete/img`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -206,7 +201,7 @@ export function deleteEstimatedCostAccounting(data?: any) {
 /**
  * 复制
  * @param data 传递的参数
- * @returns Promise 
+ * @returns Promise
  */
 export function copyEstimatedCostAccounting(data?: any) {
   return request({
@@ -217,12 +212,10 @@ export function copyEstimatedCostAccounting(data?: any) {
   })
 }
 
-
-
 /**
  * 修改排序
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updateEstimatedCostAccountingSort(data?: string[]) {
   return request({
@@ -245,11 +238,9 @@ export function getExchangeRate(params?: any) {
   })
 }
 
-
-
 /**
  * 发布到新品进度管理
- * @param params 
+ * @param params
  * @returns Promise
  */
 export function addEstimatedCostAccountingProductRelease(data?: EstimatedCostAccountingProductRelease) {
@@ -264,7 +255,7 @@ export function addEstimatedCostAccountingProductRelease(data?: EstimatedCostAcc
 /**
  * @description 成本核算-获取所有销售站点的数据
  */
-export function getSalesSiteList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getSalesSiteList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/sales/site/list`,
     method: 'get',
@@ -278,6 +269,6 @@ export function reverseCalculateEstimatedCostAccounting(params: { id: number }):
   return request({
     url: `${BASE_API}/estimatedCostAccounting/reverse/calculation`,
     method: 'post',
-    params
+    params,
   })
 }
