@@ -1,4 +1,4 @@
-import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from "/@/type/purchase/po"
+import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 
 /**
  * 新品进度成零件
@@ -95,6 +95,10 @@ export interface IProgressSample {
   volumeCoefficient?: string
   // 关税
   tariff?: string
+  // 关税金额
+  tariffPrice?: string
+  // 币种符号
+  symbol?: string
   // 平台佣金
   platformCommission?: string
   // 仓储费
@@ -437,13 +441,12 @@ export interface ITrialCalculationSave {
   progressId?: number
 }
 
-
 export interface IUpdateProgressLogReq {
-   // 产品推进日志
-   progressLog?: string
-   // 进度id
-   progressId?: number
+  // 产品推进日志
+  progressLog?: string
 
+  // 进度id
+  progressId?: number
 }
 // 拿样清单成本试算-修改产品描述
 export interface IupdateTrialcalculationProductdesc {

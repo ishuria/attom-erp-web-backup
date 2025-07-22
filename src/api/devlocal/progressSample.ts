@@ -52,7 +52,7 @@ import type {
   IgetTrialCalculationProductDesc,
   IupdateProgressPriceInfo,
   IupdateProgressProductdesc,
-  IupdateTrialcalculationProductdesc
+  IupdateTrialcalculationProductdesc,
 } from '/@/type/progress/sampleAndComponentType'
 import type { IBooleanResp } from '/@/type/purchase/po'
 
@@ -141,7 +141,7 @@ export function componentDeleteImage(params: { id: number }): Promise<{ data: bo
   return request({
     url: `${BASE_API}/progress/delete/trial/img`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -172,11 +172,11 @@ export function getSampleList(params?: ISampleQueryReq): Promise<ISampleQueryRes
 /**
  * @description 样品追踪 修改备注
  */
-export function updateSampleTrackRemark(data: { id: number, remark: string }): Promise<{ data: boolean }> {
+export function updateSampleTrackRemark(data: { id: number; remark: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/progress/sample/remark/save`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -235,7 +235,7 @@ export function costAccountingDeleteImage(params: { id: number }): Promise<{ dat
   return request({
     url: `${BASE_API}/progress/costAccounting/delete/img`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -408,11 +408,10 @@ export function saveTrialCalculation(params?: IProgressSample): Promise<ITrialCa
   })
 }
 
-
 /**
  * 拿样与核算-修改开发日志
  */
-export function updateProgressLog(data?: IUpdateProgressLogReq) :Promise<IComponentCopyResp>{
+export function updateProgressLog(data?: IUpdateProgressLogReq): Promise<IComponentCopyResp> {
   return request({
     url: `${BASE_API}/progress/update/log`,
     method: 'post',
@@ -423,7 +422,7 @@ export function updateProgressLog(data?: IUpdateProgressLogReq) :Promise<ICompon
 /**
  * 拿样清单成本试算-修改产品描述
  */
-export function updateTrialcalculationProductdesc(params?: IupdateTrialcalculationProductdesc){
+export function updateTrialcalculationProductdesc(params?: IupdateTrialcalculationProductdesc) {
   return request({
     url: `${BASE_API}/progress/update/trialcalculation/productdesc`,
     method: 'post',
@@ -445,7 +444,7 @@ export function getTrialCalculationProductDesc(params: IgetTrialCalculationProdu
 /**
  * 成本核算-修改产品描述
  */
-export function updateProgressProductdesc(params?: IupdateProgressProductdesc){
+export function updateProgressProductdesc(params?: IupdateProgressProductdesc) {
   return request({
     url: `${BASE_API}/progress/update/productdesc`,
     method: 'post',
@@ -455,7 +454,7 @@ export function updateProgressProductdesc(params?: IupdateProgressProductdesc){
 /**
  * 拿样清单成本试算-修改产品描述
  */
-export function updateProgressPriceInfo(params?: IupdateProgressPriceInfo){
+export function updateProgressPriceInfo(params?: IupdateProgressPriceInfo) {
   return request({
     url: `${BASE_API}/progress/update/priceInfo`,
     method: 'post',

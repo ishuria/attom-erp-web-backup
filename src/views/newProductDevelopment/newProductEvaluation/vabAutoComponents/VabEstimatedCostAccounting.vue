@@ -238,7 +238,7 @@
         </el-table-column>
         <el-table-column label="关税" prop="tariffPrice" width="85">
           <template #default="{ row }">
-            <span>{{ row.tariffPrice != null && row.tariffPrice !== '' ? row.symbol + row.tariffPrice : '' }}</span>
+            <span>{{ row.tariffPrice != null && row.tariffPrice !== '' ? '￥'+ row.tariffPrice : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="平台佣金" prop="platformCommission" width="90">

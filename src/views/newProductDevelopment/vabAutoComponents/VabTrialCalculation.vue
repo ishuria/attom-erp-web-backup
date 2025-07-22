@@ -161,6 +161,12 @@
           </template>
         </el-table-column>
 
+        <el-table-column label="关税" prop="tariffPrice" width="80">
+          <template #default="{ row }">
+            <span>{{ row.tariffPrice != null && row.tariffPrice != '' ? '￥' + row.tariffPrice: '' }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column label="平台佣金" prop="platformCommission" width="100">
           <template #default="{ row }">
             {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
