@@ -509,7 +509,8 @@ const handleAddFee = async () => {
       }
       const { data } = await addShipmentCost({
         shipId: _shipId.value!,
-        costName
+        costName,
+        shipmentId
       })
       if (data) {
         $baseMessage('添加费用成功！', 'success')
@@ -899,9 +900,11 @@ const fetchCostData = async (id: number) => {
 const currencyList = ref<{ id: number, label: string }[]>([])
 let channelId = -1;
 let freightName = ''
+let shipmentId = ''
 // 展示头程运费
 const showFirstLegFreight = async (row: any) => {
   costList.value = []
+  shipmentId = row.shipmentId
   _shipId.value = row.id
   _freightForwardingNumber.value = row.freightForwardingNumber
   _weight.value = row.weight
