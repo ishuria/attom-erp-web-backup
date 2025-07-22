@@ -87,7 +87,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { addHSList, delHSList, getHSList, updateHSList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type { IAddHSListReq, IGetHSList, IGetHSListReq } from '/@/type/customsDeclarationAndTaxRefund/hsHts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'

@@ -1449,7 +1449,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, dayjs } from 'element-plus'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { ref } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
 import {

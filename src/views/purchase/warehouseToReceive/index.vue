@@ -103,7 +103,7 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { warehouseOption } from '../constantOption.ts'
 import { addPurchaseRepository, delPurchaseRepository, getPurchaseRepository, updatePurchaseRepository } from '/@/api/devlocal/purchase'
 import type { IgetPurchaseRepository } from '/@/type/purchase/ourInformationType'

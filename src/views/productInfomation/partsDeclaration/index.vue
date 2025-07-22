@@ -333,16 +333,16 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-  getCustomsClearanceRatio,
-  getHsSelectList,
-  getProductCustomsList,
-  updateCustomsClearanceRatio,
-  updateProductAlreadyComponent,
-  updateProductCustomsClearance,
-  updateProductCustomsClearanceSuppliserInfo,
+    getCustomsClearanceRatio,
+    getHsSelectList,
+    getProductCustomsList,
+    updateCustomsClearanceRatio,
+    updateProductAlreadyComponent,
+    updateProductCustomsClearance,
+    updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'

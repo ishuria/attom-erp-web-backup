@@ -354,7 +354,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, QuestionFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { downloadFile } from '/@/api/devlocal/download'
 import { deletePackageInspectionImage, getNewPackageInspection, submitPackageInspection, updateNewPackageInspection, updatePackageInspectionComponent, updatePackageInspectionDetail, uploadPackageInspectionImage } from '/@/api/devlocal/packagingShipping'

@@ -109,7 +109,7 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { deletePackageInspectionItemImage, getPackageInspection, submitPackageInspection, updateNewPackageInspection, updatePackageInspectionDetail, uploadPackageInspectionItemImage } from '/@/api/devlocal/packagingShipping'
 import type { IInspectionList } from '/@/type/packagingShipping/packagingType'

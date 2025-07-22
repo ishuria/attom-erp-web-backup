@@ -733,7 +733,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { getProductPositionList } from '~/src/api/devlocal/orderProcess'
 import { designTypeOption, taskTypeOption } from '../constantOption'

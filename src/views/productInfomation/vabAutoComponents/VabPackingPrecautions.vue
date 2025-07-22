@@ -69,7 +69,7 @@
               <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
             </el-tooltip> -->
             <div class="none">
-              <el-input v-model="row.packagePrecautions" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.packagePrecautions" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" @blur="clickCancel($event, row)" />
             </div>
             <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
           </template>
@@ -95,7 +95,7 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { addProductQualityInspection, delProductQualityInspection, getProductQualityInspection, updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'

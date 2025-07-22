@@ -197,7 +197,7 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, reverseCalculateProgressSample, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
@@ -386,7 +386,7 @@ const saveTrialCalculationHandler = async (row:IProgressSample) => {
       newValue.price = convertString(newInfo.totalCost!)
     }
 
-    // eslint-disable-next-line vue/no-mutating-props
+     
     props.costAccountingData?.push(newValue)
 
     // 重新加载成本核算

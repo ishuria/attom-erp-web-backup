@@ -570,8 +570,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
-import { isEqual } from 'lodash'
-import debounce from 'lodash/debounce'
+import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'

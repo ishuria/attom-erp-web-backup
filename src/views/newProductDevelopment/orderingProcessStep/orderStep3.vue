@@ -490,34 +490,34 @@
 
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
-  getReviewVariantHts,
-  reverseCalculateReview,
-  reviewStepNo3ComponentAdd,
-  reviewStepNo3ComponentCopy,
-  reviewStepNo3ComponentDel,
-  reviewStepNo3ComponentImtDel,
-  reviewStepNo3ComponentList,
-  reviewStepNo3ComponentSuitDetail,
-  reviewStepNo3ComponentUpdate,
-  reviewStepNo3ComponentUpload,
-  reviewStepNo3ContractTerms,
-  reviewStepNo3GetSelectVariantList,
-  reviewStepNo3PurchaseMatters,
-  reviewStepNo3SaveTh,
-  reviewStepNo3UpdateContractTerms,
-  reviewStepNo3UpdatePurchaseMatters,
-  reviewStepNo3VariantList,
-  reviewStepNo3VariantUpdate,
-  submitReviewComponent,
-  submitReviewConsumable,
-  updateReviewStepNo3ComponentSuitDetail
+    getReviewVariantHts,
+    reverseCalculateReview,
+    reviewStepNo3ComponentAdd,
+    reviewStepNo3ComponentCopy,
+    reviewStepNo3ComponentDel,
+    reviewStepNo3ComponentImtDel,
+    reviewStepNo3ComponentList,
+    reviewStepNo3ComponentSuitDetail,
+    reviewStepNo3ComponentUpdate,
+    reviewStepNo3ComponentUpload,
+    reviewStepNo3ContractTerms,
+    reviewStepNo3GetSelectVariantList,
+    reviewStepNo3PurchaseMatters,
+    reviewStepNo3SaveTh,
+    reviewStepNo3UpdateContractTerms,
+    reviewStepNo3UpdatePurchaseMatters,
+    reviewStepNo3VariantList,
+    reviewStepNo3VariantUpdate,
+    submitReviewComponent,
+    submitReviewConsumable,
+    updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'

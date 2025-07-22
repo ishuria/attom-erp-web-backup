@@ -4,8 +4,8 @@
     <vab-dialog
       v-model="visible"
       title="分类编码设定"
-      width="40%"
       top="5vh"
+      width="40%"
     >
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -22,11 +22,11 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table :data="list" border :header-cell-style="{ textAlign: 'center' }" stripe :cell-style="{ cursor: 'pointer' }" @cell-click="cellClick" max-height="70vh">
+      <el-table border :cell-style="{ cursor: 'pointer' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="70vh" stripe @cell-click="cellClick">
         <el-table-column label="分类名" prop="typeName" >
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.typeName" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.typeName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.typeName }}</span>
           </template>
@@ -34,12 +34,12 @@
         <el-table-column label="税收分类编码" prop="encodingCode" >
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.encodingCode" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+              <el-input v-model="row.encodingCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.encodingCode }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column align="center" label="操作" width="100">
           <template #default="{ row, $index }">
             <el-button text type="danger" @click="handleDel(row, $index)">删除</el-button>
           </template>
@@ -74,7 +74,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { addComponentEncoding, delComponentEncoding, getComponentEncodingList, updateComponentEncoding } from '/@/api/devlocal/productInformation'
 import { IGetComponentEncodingList } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'

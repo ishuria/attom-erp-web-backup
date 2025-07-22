@@ -233,7 +233,7 @@
 <script lang="ts" setup>
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementSku, getEncasementUpdate, updateEncasement, updateEncasementDetailCount } from '/@/api/devlocal/encasement'
 import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'

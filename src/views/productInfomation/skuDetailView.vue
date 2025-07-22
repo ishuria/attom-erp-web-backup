@@ -629,8 +629,8 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- SKU上传图片 -->
     <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
-    <vab-dialog v-model="updateVisible" width="20%" title="修改零件报关">
-      <el-form :model="modifyForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0" >
+    <vab-dialog v-model="updateVisible" title="修改零件报关" width="20%">
+      <el-form label-position="left" label-width="auto" :model="modifyForm" style="margin-left: 0; margin-right: 0" >
         <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位">
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
@@ -641,8 +641,8 @@
           <el-select v-model="modifyForm.hsId" >
             <el-option 
               v-for="item in hsOption"
-              :label="item.label"
               :key="item.id"
+              :label="item.label"
               :value="item.id"
             />
           </el-select>
@@ -665,7 +665,7 @@
 <script lang="ts" setup>
 import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE } from '~/src/const/role'

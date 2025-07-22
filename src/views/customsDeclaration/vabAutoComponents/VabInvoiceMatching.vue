@@ -57,7 +57,7 @@
               <el-icon />
             </template>
           </el-image> -->
-          <el-button style="min-width: 20px; min-height: 35px" size="small" @click="showPdf(row.invoicePath)">PDF</el-button>
+          <el-button size="small" style="min-width: 20px; min-height: 35px" @click="showPdf(row.invoicePath)">PDF</el-button>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
@@ -153,12 +153,12 @@
       </el-table-column>
       <el-table-column label="匹配合同号" prop="matchContractNumber" :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')" />
       <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-      <el-table-column label="零件PO含税价" prop="taxInclusiveCost" min-width="130" />
+      <el-table-column label="零件PO含税价" min-width="130" prop="taxInclusiveCost" />
       <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link type="primary" :loading="matchListLoading" :underline="false" @click="showMatch(row)">匹配</el-link>
+          <el-link :loading="matchListLoading" type="primary" :underline="false" @click="showMatch(row)">匹配</el-link>
           <el-link type="primary" :underline="false" @click="handleCleanInvoice(row)">清空</el-link>
         </template>
       </el-table-column>
@@ -219,7 +219,7 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="matchListLoading" max-height="50vh" border :cell-style="matchCellStyle" class="noneHoveTable" :data="pagedData" :header-cell-style="{ textAlign: 'center' }" @row-click="handleRowClick">
+    <el-table v-loading="matchListLoading" border :cell-style="matchCellStyle" class="noneHoveTable" :data="pagedData" :header-cell-style="{ textAlign: 'center' }" max-height="50vh" @row-click="handleRowClick">
       <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(pagedData, '合同编号', 'contractNumber')" />
       <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
       <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" />
@@ -266,7 +266,7 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
   cleanTaxRefundInvoice,
