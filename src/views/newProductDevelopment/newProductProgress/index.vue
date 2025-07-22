@@ -570,7 +570,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'

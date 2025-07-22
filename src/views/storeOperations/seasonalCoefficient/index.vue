@@ -260,7 +260,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { FormInstance, FormRules } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { months } from '../constantOption'
 import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientList, getSeasonalCoefficientSiteList, updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'

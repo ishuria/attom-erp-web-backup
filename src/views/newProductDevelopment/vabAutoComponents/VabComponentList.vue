@@ -24,7 +24,7 @@
       <el-table-column fixed="left" label="零件操作" width="125">
         <template #default="{ row }">
           <el-dropdown>
-            <el-link :underline="false" type="primary" @click="addSuppliserInfo(row)">
+            <el-link type="primary" :underline="false" @click="addSuppliserInfo(row)">
               新增供应商
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -385,7 +385,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
@@ -415,7 +415,7 @@ const props = defineProps<{
   trialCalculationData: (() => Promise<void>) | undefined
 }>();
 
-// eslint-disable-next-line vue/no-dupe-keys
+ 
 const progressId = ref<string>('')
 const wangEditorVisible = ref<boolean>(false)
 const progressLog = ref<string>('')

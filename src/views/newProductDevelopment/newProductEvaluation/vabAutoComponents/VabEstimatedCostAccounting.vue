@@ -315,10 +315,11 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { ElLink, ElMessageBox } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
   addEstimatedCostAccounting,
@@ -337,7 +338,6 @@ import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 
 defineOptions({
   name: 'VabEstimatedCostAccounting'

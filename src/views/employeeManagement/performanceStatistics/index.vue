@@ -289,7 +289,7 @@
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
             <el-table-column label="姓名" min-width="100" prop="userName" />
-            <el-table-column label="角色" prop="roleName" min-width="130" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
           <el-table-column label="打包时长(小时)" min-width="100" prop="packageDuration" />
@@ -339,7 +339,7 @@
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
             <el-table-column label="姓名" min-width="100" prop="userName" />
-            <el-table-column label="角色" prop="roleName" min-width="130" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
           <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign" />
@@ -389,7 +389,7 @@
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
             <el-table-column label="姓名" min-width="100" prop="userName" />
-            <el-table-column label="角色" prop="roleName" min-width="130" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
           <el-table-column label="美工图片" min-width="100" prop="artDesignPicture" />
@@ -440,7 +440,7 @@
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
             <el-table-column label="姓名" min-width="100" prop="userName" />
-            <el-table-column label="角色" prop="roleName" min-width="130" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
           <el-table-column label="采购奖金" min-width="100" prop="procurementBonus" />
@@ -528,7 +528,7 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="{ row }">
-            <el-link :underline="false" type="primary" @click="showViewDetail(row)">查看调整明细</el-link>
+            <el-link type="primary" :underline="false" @click="showViewDetail(row)">查看调整明细</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -544,7 +544,7 @@
     <adjust-detail-dialog v-model="adjustDetailVisible" @query-data="fetchAssessmentData" />
     <!-- 对应月份 对应人员调整明细 -->
     <vab-dialog v-model="viewDetailVisible" title="调整明细">
-         <el-table stripe border :data="detailList" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }">
+         <el-table border :cell-style="{ textAlign: 'center' }" :data="detailList" :header-cell-style="{ textAlign: 'center' }" stripe>
         <el-table-column label="月份" prop="month" />
         <el-table-column label="被调整人" prop="userName" />
         <el-table-column label="类型" prop="type" >
@@ -555,7 +555,7 @@
         <el-table-column label="调整数量" prop="adjustQuantity" />
         <el-table-column label="OEM" >
           <template #default="{ row }">
-            <el-checkbox v-model="row.oem" :false-value="0" :true-value="1" disabled />
+            <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column label="父体" prop="parent" />
@@ -578,7 +578,7 @@
       </template>
     </vab-dialog>
     <!-- 考核数结账 -->
-    <vab-dialog title="考核数结账" v-model="checkoutVisible" width="20%" @close="closeCheckout">
+    <vab-dialog v-model="checkoutVisible" title="考核数结账" width="20%" @close="closeCheckout">
       <el-form label-position="top">
         <el-form-item label="请选择结账人员">
           <el-select v-model="userIdList" multiple placeholder="请选择结账人员">
@@ -602,7 +602,7 @@
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
   checkoutAssessmentNumber,

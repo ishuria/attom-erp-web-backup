@@ -336,10 +336,10 @@
     <!-- 待签收修改 -->
     <vab-dialog
       v-model="modifyPendingVisible"
+      :draggable="false"
       title="修改"
       width="40%"
       @close="closeModifyPendingDialog"
-      :draggable="false"
     >
       <el-table
         border
@@ -492,7 +492,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
-import { debounce, isEqual } from 'lodash'
+import { debounce, isEqual } from 'lodash-es'
 import { CSSProperties, ref } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
 import type { siteValue } from '../constantOption'

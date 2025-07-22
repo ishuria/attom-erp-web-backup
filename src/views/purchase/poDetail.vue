@@ -1587,7 +1587,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right" min-width="130" >
+          <el-table-column fixed="right" label="操作" min-width="130" >
             <template #default="{ row }">
               <el-link type="primary" :underline="false" @click="handleShowModify(row)">{{ route.query.tab === 'view' ? '查看' : '修改' }}零件报关</el-link>
             </template>
@@ -1669,8 +1669,8 @@
     <!-- 零件上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- 零件报关修改 -->
-    <vab-dialog :title="`${route.query.tab === 'view' ? '查看' : '修改'}零件报关`" v-model="modifyVisible" width="20%">
-      <el-form :model="modifyForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
+    <vab-dialog v-model="modifyVisible" :title="`${route.query.tab === 'view' ? '查看' : '修改'}零件报关`" width="20%">
+      <el-form label-position="left" label-width="auto" :model="modifyForm" style="margin-left: 0; margin-right: 0">
         <el-form-item label="采购单位" prop="unit">
           <el-input v-model="modifyForm.unit" disabled />
         </el-form-item>
@@ -1692,7 +1692,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'

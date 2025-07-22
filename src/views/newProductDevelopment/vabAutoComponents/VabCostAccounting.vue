@@ -168,9 +168,9 @@
           <template #default="{ row }">
             <el-select 
               v-model="row.firstMileChannel" 
+              filterable
               placeholder="请选择头程渠道"
               style="min-width: 100%;"
-              filterable
               @change="handlerEstimatendChange(row)"
             >
               <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
@@ -310,7 +310,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableRefs } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import debounce from 'lodash/debounce'
 import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'

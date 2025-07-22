@@ -45,7 +45,7 @@
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.purchaseName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.purchaseName }}</span>
@@ -63,12 +63,12 @@
               <el-icon />
             </template>
           </el-image> -->
-          <el-button style="min-width: 70px; min-height: 35px" size="small" @click="showPdf(row.invoicePath)">PDF</el-button>
+          <el-button size="small" style="min-width: 70px; min-height: 35px" @click="showPdf(row.invoicePath)">PDF</el-button>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.invoiceCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceCode }}</span>
@@ -76,7 +76,7 @@
       </el-table-column>
       <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.invoiceNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.invoiceNumber }}</span>
@@ -84,7 +84,7 @@
       </el-table-column>
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.suppliser }}</span>
@@ -92,7 +92,7 @@
       </el-table-column>
       <el-table-column label="开票品名" prop="invoiceName" :width="flexColumnWidth(list, '开票品名', 'invoiceName')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.invoiceName" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceName }}</span>
@@ -100,7 +100,7 @@
       </el-table-column>
       <el-table-column label="规格型号" prop="specificationModel" :width="flexColumnWidth(list, '规格型号', 'specificationModel')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input
               v-model="row.specificationModel"
               @blur="clickDetailCancel($event, row)"
@@ -112,7 +112,7 @@
       </el-table-column>
       <el-table-column label="发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '发票数量', 'invoiceCount')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input
               v-model="row.invoiceCount"
               type="number"
@@ -125,7 +125,7 @@
       </el-table-column>
       <el-table-column label="发票单位" prop="invoiceUnit" :width="flexColumnWidth(list, '发票单位', 'invoiceUnit')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input v-model="row.invoiceUnit" @blur="clickDetailCancel($event, row)" @keyup.enter="clickDetailCancel($event, row)" />
           </div>
           <span>{{ row.invoiceUnit }}</span>
@@ -133,7 +133,7 @@
       </el-table-column>
       <el-table-column label="发票含税金额" prop="includingTaxPrice" :width="flexColumnWidth(list, '发票含税金额', 'includingTaxPrice')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input
               v-model="row.includingTaxPrice"
               type="number"
@@ -146,7 +146,7 @@
       </el-table-column>
       <el-table-column label="发票未税金额" prop="preTaxPrice" :width="flexColumnWidth(list, '发票未税金额', 'preTaxPrice')">
         <template #default="{ row }">
-          <div class="none" v-if="invoiceFlag">
+          <div v-if="invoiceFlag" class="none">
             <el-input
               v-model="row.preTaxPrice"
               type="number"
@@ -158,13 +158,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column fixed="right" label="操作" width="70" v-if="invoiceFlag">
+      <el-table-column v-if="invoiceFlag" fixed="right" label="操作" width="70">
         <template #default="{ row }">
           <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
-    <template #footer v-if="!invoiceFlag">
+    <template v-if="!invoiceFlag" #footer>
       <div style="text-align: center">
         <el-button @click="closeInvoiceMatching">取消</el-button>
         <el-button type="primary" @click="handleSubmitConfirm">确认</el-button>
@@ -206,7 +206,7 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import VabPdf from '/@/plugins/VabPdf'
 

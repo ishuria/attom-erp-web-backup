@@ -30,17 +30,17 @@
         </vab-query-form>
 
         <el-table 
-          v-loading="listLoading"
-          ref="tableRef" 
+          ref="tableRef"
+          v-loading="listLoading" 
           border 
           :cell-class-name="cellClassName" 
+          :cell-style="cellStyle"
           class="noneHoveTable"
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
           @cell-click="cellClick"
-          :cell-style="cellStyle"
         >
           <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
             <template #default="{ row }">
@@ -85,7 +85,7 @@
           <el-table-column label="发货数量调整" min-width="120" prop="shippingCountAdjustment" >
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.shippingCountAdjustment" @keyup.enter="clickCancel($event, row)" @blur="clickCancel($event, row)" />
+                <el-input v-model="row.shippingCountAdjustment" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
               <span>{{ row.shippingCountAdjustment }}</span>
             </template>
@@ -136,8 +136,8 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-          v-loading="listLoading"
-          ref="tableRef" 
+          ref="tableRef"
+          v-loading="listLoading" 
           border 
           :cell-class-name="cellClassName2" 
           class="noneHoveTable"
@@ -208,8 +208,8 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table 
-          v-loading="listLoading"
-          ref="tableRef" 
+          ref="tableRef"
+          v-loading="listLoading" 
           border 
           :cell-class-name="cellClassName2" 
           class="noneHoveTable"
@@ -266,7 +266,7 @@ import type { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/typ
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
 defineOptions({
   name: 'ShippedProduct',

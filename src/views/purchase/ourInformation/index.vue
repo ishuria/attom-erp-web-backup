@@ -97,9 +97,9 @@
   
 <script lang="ts" setup>
 import type { FormInstance, TableInstance } from 'element-plus'
+import { isEqual } from 'lodash-es'
+import { addPurchaseCompany, delPurchaseCompany, getPurchaseCompanyList, updatePurchaseCompany } from '/@/api/devlocal/purchase'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { addPurchaseCompany, delPurchaseCompany, getPurchaseCompanyList, updatePurchaseCompany } from '/@/api/devlocal/purchase';
-import { isEqual } from 'lodash'
   
 defineOptions({
     name: 'OurInformation',

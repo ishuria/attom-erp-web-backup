@@ -216,7 +216,7 @@
 <script lang="ts" setup>
 import { Delete, Document, Download, Plus, Search } from '@element-plus/icons-vue'
 import type { TableInstance, UploadUserFile } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { downloadFile } from '/@/api/devlocal/download'
 import { getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'

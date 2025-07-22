@@ -152,18 +152,18 @@
 </template>
 
 <script lang="ts" setup>
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { checkTypeList } from '../indexCommon'
 import {
-  reviewStepNo3GetSelectVariantList,
-  reviewStepNo4AddQualityInspection,
-  reviewStepNo4DelQualityInspection,
-  reviewStepNo4ListQualityInspection,
-  reviewStepNo4SaveFr,
-  reviewStepNo4SupplierList,
-  reviewStepNo4UpdateQualityInspection,
-  reviewStepNo4UpdateSupplier
+    reviewStepNo3GetSelectVariantList,
+    reviewStepNo4AddQualityInspection,
+    reviewStepNo4DelQualityInspection,
+    reviewStepNo4ListQualityInspection,
+    reviewStepNo4SaveFr,
+    reviewStepNo4SupplierList,
+    reviewStepNo4UpdateQualityInspection,
+    reviewStepNo4UpdateSupplier
 } from '/@/api/devlocal/orderProcess'
 import type { IGetSelectVariantsList, IreviewStepNo4ListQualityInspection } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'

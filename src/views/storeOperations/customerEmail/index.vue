@@ -192,7 +192,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { addEmailAfterSales, deleteEmailAfterSales, getCustomerServiceSourceList, getEmailAfterSalesList, updateEmailAfterSales } from '/@/api/devlocal/emailAfterSales'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'

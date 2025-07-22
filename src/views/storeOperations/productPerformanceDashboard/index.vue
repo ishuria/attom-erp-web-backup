@@ -393,7 +393,7 @@
                         <template #content>
                           <div class="custom-tooltip">{{ row.sku }}</div>
                         </template>
-                        <el-link :href="row.amazonUrl" class="sku-text"  target="_blank">{{ row.sku }}</el-link>
+                        <el-link class="sku-text" :href="row.amazonUrl"  target="_blank">{{ row.sku }}</el-link>
                       </el-tooltip>
                       <el-tooltip effect="dark" placement="top">
                         <template #content>
@@ -428,7 +428,7 @@
                         <div class="custom-tooltip">上新时间<=360天</div>
                       </template>
                       <!-- <vab-icon icon="calendar-2-fill" class="icon-green" /> -->
-                      <el-tag type="success" size="small" >新</el-tag>
+                      <el-tag size="small" type="success" >新</el-tag>
                     </el-tooltip>
                     <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
                       <template #content>
@@ -442,59 +442,59 @@
                       <template #content>
                         <div class="custom-tooltip">断货警告</div>
                       </template>
-                      <vab-icon icon="shopping-cart-2-fill" :class="handleOutOfStock(row)" />
+                      <vab-icon :class="handleOutOfStock(row)" icon="shopping-cart-2-fill" />
                     </el-tooltip>
                     <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">有低量配送费</div>
                       </template>
                       <!-- <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;"> -->
-                      <vab-icon icon="home-6-line" class="icon-red" />
+                      <vab-icon class="icon-red" icon="home-6-line" />
                     </el-tooltip>
                     <el-tooltip v-if="isWareHousing(row)"  effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">低量仓储费预警</div>
                       </template>
-                      <vab-icon icon="home-6-line" class="icon-yellow" />
+                      <vab-icon class="icon-yellow" icon="home-6-line" />
                       <!-- <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;"> -->
                     </el-tooltip>
                     <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">库龄警告</div>
                       </template>
-                      <vab-icon icon="alarm-warning-fill" :class="handleStorageAge(row)"/>
+                      <vab-icon :class="handleStorageAge(row)" icon="alarm-warning-fill"/>
                     </el-tooltip>
                     <el-tooltip v-if="isVoc(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
                       </template>
-                      <vab-icon icon="emotion-unhappy-fill" :class="handleVocSatisfaction(row.vocSatisfaction)" />
+                      <vab-icon :class="handleVocSatisfaction(row.vocSatisfaction)" icon="emotion-unhappy-fill" />
                     </el-tooltip>
                     <el-tooltip v-if="isAvailableSaleDayTotal(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">低动销预警</div>
                       </template>
-                      <vab-icon icon="line-chart-fill" :class="handleAvailableSaleDayTotal(row)" />
+                      <vab-icon :class="handleAvailableSaleDayTotal(row)" icon="line-chart-fill" />
                     </el-tooltip>
                     <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">高退货率</div>
                       </template>
-                      <vab-icon icon="reply-fill" :class="handleReturnGoods(row)" />
+                      <vab-icon :class="handleReturnGoods(row)" icon="reply-fill" />
                     </el-tooltip>
                     <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">FBA费异常</div>
                       </template>
                    
-                      <img src="../../../icon/FBA费异常.svg" alt="FBA" style="width: 20px; height: 20px; margin-top: -1px;">
+                      <img alt="FBA" src="../../../icon/FBA费异常.svg" style="width: 20px; height: 20px; margin-top: -1px;">
              
                     </el-tooltip>
                     <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">产品健康</div>
                       </template>
-                      <vab-icon icon="checkbox-circle-fill" class="icon-green" />
+                      <vab-icon class="icon-green" icon="checkbox-circle-fill" />
                     </el-tooltip>
                     
                   </div>
@@ -1656,7 +1656,7 @@ import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'

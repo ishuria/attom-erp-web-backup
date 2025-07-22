@@ -79,7 +79,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="箱数" prop="encasementNumber" min-width="80" />
+      <el-table-column label="箱数" min-width="80" prop="encasementNumber" />
       <el-table-column label="产品总数" min-width="100" prop="totalNumber"/>
       <el-table-column label="重量" min-width="70" prop="weight"/>
       <el-table-column label="体积" min-width="70" prop="volume"/>
@@ -192,10 +192,10 @@
         class="noneHoveTable center-table"
         :data="costList"
         :header-cell-style="{ textAlign: 'center' }"
-        :summary-cell-style="{ textAlign: 'center' }"
         max-height="70vh"
         show-summary
         stripe
+        :summary-cell-style="{ textAlign: 'center' }"
         :summary-method="handleSummaryMethod"
         @cell-click="cellClick"
         @close="closeFirstLegFreight"
@@ -206,9 +206,9 @@
             <el-select v-model="row.settlementObject" @change="handleUpdateSettlementObject(row)" >
               <el-option 
                 v-for="item in settlementObjectList"
+                :key="item.id"
                 :label="item.label"
                 :value="item.id"
-                :key="item.id"
               />
             </el-select>
           </template>
@@ -221,7 +221,7 @@
             <span>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="单价" :width="flexColumnWidth(costList, '单价', 'unitPrice')" prop="unitPrice">
+        <el-table-column label="单价" prop="unitPrice" :width="flexColumnWidth(costList, '单价', 'unitPrice')">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.unitPrice"  @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -394,7 +394,7 @@
     <vab-dialog v-model="addFeeVisible" :title="`货代渠道：${freightName}`" width="20%" >
       <el-form ref="addFeeFormRef" label-position="top" :model="addFeeForm" :rules="addFeeFormRules" >
         <el-form-item label="费用名" prop="costNameId">
-          <el-select placeholder="请选择费用名" v-model="addFeeForm.costNameId" clearable >
+          <el-select v-model="addFeeForm.costNameId" clearable placeholder="请选择费用名" >
             <el-option
               v-for="item in costNameList"
               :key="item.id"
@@ -412,10 +412,10 @@
     <!-- 入仓单上传 -->
     <vab-dialog v-model="uploadPDFVisible" title="入仓单上传" width="25%">
       <el-upload
+        v-model:file-list="fileList"
+        :auto-upload="false"
         class="upload-demo"
         drag
-        :auto-upload="false"
-        v-model:file-list="fileList"
       >
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
@@ -424,7 +424,7 @@
       </el-upload>
       <template #footer>
         <div style="text-align: center;">
-          <el-button type="success" @click="uploadPDF" :loading="uploadLoading">上传</el-button>
+          <el-button :loading="uploadLoading" type="success" @click="uploadPDF">上传</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -435,7 +435,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
