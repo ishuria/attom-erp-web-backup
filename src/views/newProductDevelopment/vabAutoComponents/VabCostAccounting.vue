@@ -310,8 +310,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableRefs } from 'element-plus'
-import { isEqual } from 'lodash-es'
-import debounce from 'lodash-es/debounce'
+import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
