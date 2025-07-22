@@ -186,7 +186,7 @@ const handleData = async (response: any): Promise<any> => {
  * @param defaultFileName 默认下载文件名
  */
 const downloadDeal = (type: string, data: any, headers: any, defaultFileName = 'download') => {
-  debugger
+  // debugger
   switch (type) {
     case 'application/vnd.ms-excel':
     case 'text/csv':
