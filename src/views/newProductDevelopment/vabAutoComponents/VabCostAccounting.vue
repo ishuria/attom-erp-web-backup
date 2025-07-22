@@ -311,7 +311,7 @@
 import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableRefs } from 'element-plus'
 import { isEqual } from 'lodash-es'
-import debounce from 'lodash/debounce'
+import debounce from 'lodash-es/debounce'
 import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
