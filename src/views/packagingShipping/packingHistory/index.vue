@@ -80,18 +80,18 @@
             <template #dropdown>
               <el-dropdown-menu>
               <el-dropdown-item @click="handleDownloadFile1(row)">
-                  <el-link type="primary" :underline="false" >下载模板文件</el-link>
+                  <el-link type="primary" underline='never' >下载模板文件</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleDownloadFile2(row)">
-                  <el-link type="primary" :underline="false" >下载装箱文件</el-link>
+                  <el-link type="primary" underline='never' >下载装箱文件</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleDownloadFile3(row)">
-                  <el-link type="primary" :underline="false" >下载装箱表格</el-link>
+                  <el-link type="primary" underline='never' >下载装箱表格</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-link style="display: none" type="primary" :underline="false" @click="handleDownloadFile4(row)">下载沃尔玛文件</el-link>
+          <el-link style="display: none" type="primary" underline='never' @click="handleDownloadFile4(row)">下载沃尔玛文件</el-link>
         </template>
       </el-table-column>
       <template #empty>

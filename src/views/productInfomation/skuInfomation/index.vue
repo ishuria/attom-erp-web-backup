@@ -124,19 +124,19 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleSkuDetail(row)">
-                  <el-link type="primary" :underline="false" >SKU详情</el-link>
+                  <el-link type="primary" underline='never' >SKU详情</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCopySku(row)">
-                  <el-link type="primary" :underline="false">SKU复制</el-link>
+                  <el-link type="primary" underline='never'>SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false">打包工时</el-link>
+                  <el-link type="primary" underline='never'>打包工时</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false">交期查看</el-link>
+                  <el-link type="primary" underline='never'>交期查看</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" :underline="false">证书</el-link>
+                  <el-link type="primary" underline='never'>证书</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>

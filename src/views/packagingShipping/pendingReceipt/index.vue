@@ -40,9 +40,9 @@
           <el-table-column fixed="left" label="仓库操作" width="150" >
             <template #default="{ row }">
               <el-space>
-                <el-link type="primary" :underline="false" @click="showSignDialog(row)">签收</el-link>
-                <el-link type="primary" :underline="false" @click="handleGetSignRecord(row)">明细</el-link>
-                <el-link type="primary" :underline="false" @click="showPrint(row)">打印</el-link>
+                <el-link type="primary" underline='never' @click="showSignDialog(row)">签收</el-link>
+                <el-link type="primary" underline='never' @click="handleGetSignRecord(row)">明细</el-link>
+                <el-link type="primary" underline='never' @click="showPrint(row)">打印</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -197,13 +197,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-link type="primary" :underline="false" >打印面单</el-link>
+                      <el-link type="primary" underline='never' >打印面单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetSignedRecord(row)">
-                      <el-link type="primary" :underline="false" >修改</el-link>
+                      <el-link type="primary" underline='never' >修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleIfShowRecord(row)">
-                      <el-link type="danger" :underline="false" >取消签收</el-link>
+                      <el-link type="danger" underline='never' >取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -499,18 +499,18 @@ import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
 import {
-  deleteSign,
-  deleteSignRecord,
-  getSignList,
-  getSignLog,
-  getSignRecord,
-  printSign,
-  signBatch,
-  signComponent,
-  signMoreRecord,
-  updateProductDate,
-  updateRecordOrder,
-  updateSignLog
+    deleteSign,
+    deleteSignRecord,
+    getSignList,
+    getSignLog,
+    getSignRecord,
+    printSign,
+    signBatch,
+    signComponent,
+    signMoreRecord,
+    updateProductDate,
+    updateRecordOrder,
+    updateSignLog
 } from '/@/api/devlocal/packagingShipping'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'

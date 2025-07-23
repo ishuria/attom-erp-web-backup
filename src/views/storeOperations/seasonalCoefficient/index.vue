@@ -176,8 +176,8 @@
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="viewChart(row)">查看</el-link>
-          <el-link type="danger" :underline="false" @click="handleDel(row)">删除</el-link>
+          <el-link type="primary" underline='never' @click="viewChart(row)">查看</el-link>
+          <el-link type="danger" underline='never' @click="handleDel(row)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>

@@ -47,13 +47,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handlePublishPo(row)">
-                      <el-link type="primary" :underline="false" >发布PO</el-link>
+                      <el-link type="primary" underline='never' >发布PO</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleUpdateStatus(row)">
-                      <el-link type="primary" :underline="false" >未达起订量</el-link>
+                      <el-link type="primary" underline='never' >未达起订量</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" :underline="false" >删除</el-link>
+                      <el-link type="danger" underline='never' >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -178,13 +178,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handlePublishPo(row)">
-                      <el-link type="primary" :underline="false" >发布PO</el-link>
+                      <el-link type="primary" underline='never' >发布PO</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleUpdateRStatus(row)">
-                      <el-link type="primary" :underline="false" >达到起订量</el-link>
+                      <el-link type="primary" underline='never' >达到起订量</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" :underline="false" >删除</el-link>
+                      <el-link type="danger" underline='never' >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -283,17 +283,17 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import {
-  deleteAllPlanPo,
-  deletePlanPo,
-  deletePurchasePlanPo,
-  getPlanPoList,
-  getPoPurchaseMatters,
-  planPoNrMoq,
-  planPorMoq,
-  releaseBatchPlanPo,
-  releasePlanPo,
-  updatePlanPoStatus,
-  updatePoPurchaseMatters
+    deleteAllPlanPo,
+    deletePlanPo,
+    deletePurchasePlanPo,
+    getPlanPoList,
+    getPoPurchaseMatters,
+    planPoNrMoq,
+    planPorMoq,
+    releaseBatchPlanPo,
+    releasePlanPo,
+    updatePlanPoStatus,
+    updatePoPurchaseMatters
 } from '/@/api/devlocal/purchasePo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'

@@ -49,8 +49,8 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
-            <el-link type="primary" :underline="false" @click="handleSupplier(row)">供应商</el-link>
-            <el-link type="primary" :underline="false" @click="handleAddOtherSku(row)">添加到SKU</el-link>
+            <el-link type="primary" underline='never' @click="handleSupplier(row)">供应商</el-link>
+            <el-link type="primary" underline='never' @click="handleAddOtherSku(row)">添加到SKU</el-link>
           </el-space>
         </template>
       </el-table-column>

@@ -56,13 +56,13 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="manualReceipt(row)">
-                  <el-link type="primary" :underline="false" >手动签收</el-link>
+                  <el-link type="primary" underline='never' >手动签收</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="orderNo1688Update(row)">
-                  <el-link type="primary" :underline="false" >1688订单号修改</el-link>
+                  <el-link type="primary" underline='never' >1688订单号修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="logisticsNoUpdate(row)">
-                  <el-link type="primary" :underline="false" >物流订单修改</el-link>
+                  <el-link type="primary" underline='never' >物流订单修改</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>

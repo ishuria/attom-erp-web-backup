@@ -50,7 +50,7 @@
         <el-table-column align="center" label="汇率"/>
         <el-table-column align="center" fixed="right" label="操作" width="160">
           <template #default="{ row }">
-            <el-button text type="danger" :underline="false" @click="handleDelete(row)">删除</el-button>
+            <el-button text type="danger" underline='never' @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>

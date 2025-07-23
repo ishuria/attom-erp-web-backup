@@ -257,8 +257,8 @@
         <el-table-column align="center" fixed="right" label="操作" width="130">
           <template #default="{ row }">
             <el-space :size="20">
-              <el-link type="primary" :underline="false" @click="handleComponentCopy(row)">复制</el-link>
-              <el-link type="danger" :underline="false" @click="handleComponentDel(row)">删除</el-link>
+              <el-link type="primary" underline='never' @click="handleComponentCopy(row)">复制</el-link>
+              <el-link type="danger" underline='never' @click="handleComponentDel(row)">删除</el-link>
             </el-space>
           </template>
         </el-table-column>
@@ -466,7 +466,7 @@
 
         <el-table-column align="center" fixed="right" label="操作" width="100">
           <template #default="{ row }">
-            <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
+            <el-link type="primary" underline='never' @click="handleCalculate(row)">逆算</el-link>
           </template>
         </el-table-column>
         <template #empty>

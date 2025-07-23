@@ -182,8 +182,8 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="{ row }">
             <el-space :size="15">
-              <el-link type="primary" :underline="false" @click="handleCalculate(row)">逆算</el-link>
-              <el-link type="success" :underline="false"  @click="saveTrialCalculationHandler(row)">保存</el-link>
+              <el-link type="primary" underline='never' @click="handleCalculate(row)">逆算</el-link>
+              <el-link type="success" underline='never'  @click="saveTrialCalculationHandler(row)">保存</el-link>
             </el-space>
           </template>
         </el-table-column>

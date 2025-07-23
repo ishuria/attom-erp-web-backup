@@ -134,16 +134,16 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleOrderProcess(row)">
-                  <el-link type="primary" :underline="false" >{{ (row.reviewStatus === 0 || row.reviewStatus === 2) ? '编辑' : '查看' }}</el-link>
+                  <el-link type="primary" underline='never' >{{ (row.reviewStatus === 0 || row.reviewStatus === 2) ? '编辑' : '查看' }}</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item
                   v-if="row.reviewStatus === 1 || row.reviewStatus === 2 || row.reviewStatus === 3 || row.reviewStatus === 4 || row.reviewStatus === 5"
                   @click="handleOrderReview(row)"
                 >
-                  <el-link type="primary" :underline="false" >审批和PO发布</el-link>
+                  <el-link type="primary" underline='never' >审批和PO发布</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
-                  <el-link type="primary" :underline="false" >分数明细</el-link>
+                  <el-link type="primary" underline='never' >分数明细</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>

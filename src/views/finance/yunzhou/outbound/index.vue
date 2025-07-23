@@ -61,8 +61,8 @@
       <el-table-column label="备注" min-width="150" prop="remark" />
       <!-- <el-table-column label="操作" prop="" width="140">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
-          <el-link type="primary" :underline="false" @click="showInOrDe(row)">调增调减</el-link>
+          <el-link type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <el-link type="primary" underline='never' @click="showInOrDe(row)">调增调减</el-link>
         </template>
       </el-table-column> -->
       <template #empty>

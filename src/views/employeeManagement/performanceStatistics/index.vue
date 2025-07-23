@@ -528,7 +528,7 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="{ row }">
-            <el-link type="primary" :underline="false" @click="showViewDetail(row)">查看调整明细</el-link>
+            <el-link type="primary" underline='never' @click="showViewDetail(row)">查看调整明细</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -605,22 +605,22 @@ import { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-  checkoutAssessmentNumber,
-  getAdjustDetailByUser,
-  getAssessmentList,
-  getMaximumOverfulfillment,
-  getProductManager,
-  getProductManagerAssessmentList,
-  getUserAttendanceList,
-  updateMaximumOverfulfillment,
-  updateProductManagerAssessment,
+    checkoutAssessmentNumber,
+    getAdjustDetailByUser,
+    getAssessmentList,
+    getMaximumOverfulfillment,
+    getProductManager,
+    getProductManagerAssessmentList,
+    getUserAttendanceList,
+    updateMaximumOverfulfillment,
+    updateProductManagerAssessment,
 } from '/@/api/devlocal/performanceStatistics'
 import type {
-  IGetAdjustDetail,
-  IGetAssessmentList,
-  IGetAssessmentListReq,
-  IGetProductManagerAssessmentList,
-  IGetUserAttendanceList,
+    IGetAdjustDetail,
+    IGetAssessmentList,
+    IGetAssessmentListReq,
+    IGetProductManagerAssessmentList,
+    IGetUserAttendanceList,
 } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 

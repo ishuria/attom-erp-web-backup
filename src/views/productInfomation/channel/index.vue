@@ -47,7 +47,7 @@
       />
       <el-table-column align="center" fixed="right" label="操作" width="90">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="handleModify(row)">修改</el-link>
+          <el-link type="primary" underline='never' @click="handleModify(row)">修改</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -119,7 +119,7 @@
         <el-table-column label="渠道" min-width="280" prop="channel"/>
         <el-table-column align="center" label="操作" width="80">
           <template #default="{ row }">
-            <el-link type="primary" :underline="false" @click="handleModifySetUp(row)">修改</el-link>
+            <el-link type="primary" underline='never' @click="handleModifySetUp(row)">修改</el-link>
           </template>
         </el-table-column>
       </el-table>

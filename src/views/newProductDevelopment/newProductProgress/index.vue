@@ -192,26 +192,26 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleSampleCosting(row)">
-                      <el-link type="primary" :underline="false">拿样与核算</el-link>
+                      <el-link type="primary" underline='never'>拿样与核算</el-link>
                     </el-dropdown-item>
 <!--                    <el-dropdown-item @click="addProgressMold">-->
-<!--                      <el-link type="primary" :underline="false">开模申请</el-link>-->
+<!--                      <el-link type="primary" underline='never'>开模申请</el-link>-->
 <!--                    </el-dropdown-item>-->
                     <el-dropdown-item @click="handleOrderProcess(row)">
-                      <el-link type="primary" :underline="false">{{ handleSwitchName(row) }}</el-link>
+                      <el-link type="primary" underline='never'>{{ handleSwitchName(row) }}</el-link>
                     </el-dropdown-item>
                   
                     <el-dropdown-item @click="handleCopyProgress(row)">
-                      <el-link type="primary" :underline="false">复制</el-link>
+                      <el-link type="primary" underline='never'>复制</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetShareList(row.progressId)">
-                      <el-link type="primary" :underline="false">共享</el-link>
+                      <el-link type="primary" underline='never'>共享</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetEvaluationById(row.evaluationId)">
-                      <el-link type="primary" :underline="false">查看新款评估</el-link>
+                      <el-link type="primary" underline='never'>查看新款评估</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleArchived(row.progressId)">
-                      <el-link type="primary" :underline="false">归档</el-link>
+                      <el-link type="primary" underline='never'>归档</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -580,20 +580,20 @@ import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
 import wangEditor from './wangEditor.vue'
 import {
-  copyProgress,
-  deleteImage,
-  getByIdQueryEvaluation,
-  getList,
-  getProgressLog,
-  getProgressPersonList,
-  getProgressSharelist,
-  getProgressSuppliserList,
-  updateProgressArchive,
-  updateProgressImgSort,
-  updateProgressManage,
-  updateProgressMoldAdd,
-  updateProgressSharelist,
-  uploadFile
+    copyProgress,
+    deleteImage,
+    getByIdQueryEvaluation,
+    getList,
+    getProgressLog,
+    getProgressPersonList,
+    getProgressSharelist,
+    getProgressSuppliserList,
+    updateProgressArchive,
+    updateProgressImgSort,
+    updateProgressManage,
+    updateProgressMoldAdd,
+    updateProgressSharelist,
+    uploadFile
 } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'

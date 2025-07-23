@@ -125,37 +125,37 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="showMatch(row)">
-                  <el-link type="primary" :underline="false" >匹配</el-link>
+                  <el-link type="primary" underline='never' >匹配</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="showModify(row)">
-                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">修改</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchivePackage(row)">
-                  <el-link :disabled="row.packArchiveStatus === 1" type="primary" :underline="false" >打包归档</el-link>
+                  <el-link :disabled="row.packArchiveStatus === 1" type="primary" underline='never' >打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleArchiveTaxRefund(row)">
-                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" :underline="false">退税归档</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>退税归档</el-link>
                 </el-dropdown-item>
                 <!-- <el-dropdown-item @click="handleArchiveOutbound(row)" >
-                  <el-link :disabled="row.outboundStatus === 1" type="primary" :underline="false" >出库归档</el-link>
+                  <el-link :disabled="row.outboundStatus === 1" type="primary" underline='never' >出库归档</el-link>
                 </el-dropdown-item> -->
                 <el-dropdown-item @click="showFirstLegFreight(row)">
-                  <el-link type="primary" :underline="false" >头程运费</el-link>
+                  <el-link type="primary" underline='never' >头程运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item >
-                  <el-link type="primary" :underline="false" >合同导入</el-link>
+                  <el-link type="primary" underline='never' >合同导入</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchivePackage(row)">
-                  <el-link :disabled="row.packArchiveStatus === 0" type="primary" :underline="false">撤销打包归档</el-link>
+                  <el-link :disabled="row.packArchiveStatus === 0" type="primary" underline='never'>撤销打包归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchiveTaxRefund(row)">
-                  <el-link :disabled="row.taxRefundStatus === 0" type="primary" :underline="false" >撤销退税归档</el-link>
+                  <el-link :disabled="row.taxRefundStatus === 0" type="primary" underline='never' >撤销退税归档</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelArchiveOutbound(row)">
-                  <el-link :disabled="row.outboundStatus === 0" type="primary" :underline="false">撤销出库</el-link>
+                  <el-link :disabled="row.outboundStatus === 0" type="primary" underline='never'>撤销出库</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleCancelEncasement(row)">
-                  <el-link type="primary" :underline="false">撤销装箱(删除)</el-link>
+                  <el-link type="primary" underline='never'>撤销装箱(删除)</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -310,7 +310,7 @@
         </el-table-column>
         <el-table-column label="操作" width="90">
           <template #default="{ row, $index }">
-            <el-link type="danger" :underline="false" @click="handleDelLeg($index, row)">删除</el-link>
+            <el-link type="danger" underline='never' @click="handleDelLeg($index, row)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>

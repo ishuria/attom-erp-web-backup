@@ -27,7 +27,7 @@
       <el-table-column label="人员" prop="staffs" />
       <el-table-column label="操作" >
         <template #default="{ row }">
-          <el-link type="danger" :underline="false" @click="handleDel(row)">删除</el-link>
+          <el-link type="danger" underline='never' @click="handleDel(row)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -71,8 +71,8 @@ import { Search } from "@element-plus/icons-vue"
 import { type FormInstance, dayjs } from 'element-plus'
 import { addHolidaySettings, deleteHolidaySettings, getHolidaySettingsList } from '/@/api/devlocal/holidaySettings'
 import type {
-  IGetHolidaySettingsList,
-  IGetHolidaySettingsReq
+    IGetHolidaySettingsList,
+    IGetHolidaySettingsReq
 } from '/@/type/employeeManagement/holidaySettings'
 import { getCurrentFormatDate } from "/@/utils/dateUtils"
 

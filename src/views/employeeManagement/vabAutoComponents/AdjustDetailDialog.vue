@@ -48,7 +48,7 @@
         <el-table-column label="来源" prop="source" />
         <el-table-column label="操作" width="100">
           <template #default="{ row }">
-            <el-link :underline="false" type="danger" @click="deleteDetail(row)">删除</el-link>
+            <el-link underline='never' type="danger" @click="deleteDetail(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>

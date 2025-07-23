@@ -38,11 +38,11 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="360">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
-          <el-link type="primary" :underline="false" @click="showCopy(row)">复制</el-link>
-          <el-link type="primary" :underline="false">价格趋势</el-link>
-          <el-link type="primary" :underline="false">时效趋势</el-link>
-          <el-link type="primary" :underline="false" @click="calculateSafeDays(row)">安全天数计算</el-link>
+          <el-link type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <el-link type="primary" underline='never' @click="showCopy(row)">复制</el-link>
+          <el-link type="primary" underline='never'>价格趋势</el-link>
+          <el-link type="primary" underline='never'>时效趋势</el-link>
+          <el-link type="primary" underline='never' @click="calculateSafeDays(row)">安全天数计算</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -143,7 +143,7 @@
         </el-table-column>
         <el-table-column label="操作" width="80">
           <template #default="{ row, $index }">
-            <el-link v-if="row.status === 1" type="danger" :underline="false" @click="delFeeSetting(row, $index)">删除</el-link>
+            <el-link v-if="row.status === 1" type="danger" underline='never' @click="delFeeSetting(row, $index)">删除</el-link>
             <span v-if="row.status === 0">{{ '-' }}</span>
           </template>
         </el-table-column>

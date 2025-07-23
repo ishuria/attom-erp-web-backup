@@ -160,7 +160,7 @@
 
       <el-table-column v-if="invoiceFlag" fixed="right" label="操作" width="70">
         <template #default="{ row }">
-          <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
+          <el-link type="danger" underline='never' @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -211,13 +211,13 @@ import type { CSSProperties } from 'vue'
 import VabPdf from '/@/plugins/VabPdf'
 
 import {
-  aiTuoMuInvoiceMatch,
-  deleteAiTuoMuInvoice,
-  finishAiTuoMuInvoice,
-  getAiTuoMuInvoiceList,
-  updateAiTuoMuInvoice,
-  updateAiTuoMuInvoiceDetail,
-  uploadAiTuoInvoice,
+    aiTuoMuInvoiceMatch,
+    deleteAiTuoMuInvoice,
+    finishAiTuoMuInvoice,
+    getAiTuoMuInvoiceList,
+    updateAiTuoMuInvoice,
+    updateAiTuoMuInvoiceDetail,
+    uploadAiTuoInvoice,
 } from '/@/api/devlocal/aiTuoMu'
 import { IAiTuoMuInvoiceItem, IAiTuoMuInvoiceReq } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 

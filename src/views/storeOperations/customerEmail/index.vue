@@ -120,7 +120,7 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="100">
         <template #default="{ row, $index }">
-          <el-link type="danger" :underline="false" @click="handleDelete(row.id, $index)">删除</el-link>
+          <el-link type="danger" underline='never' @click="handleDelete(row.id, $index)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>

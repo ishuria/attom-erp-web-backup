@@ -244,8 +244,8 @@
       </el-table-column> -->
       <el-table-column align="center" fixed="right" label="操作" width="230">
         <template #default="{ row }">
-          <el-link :underline="false" type="primary" @click="showHts(row)">查看HTS</el-link>
-          <el-link :underline="false" type="primary" @click="showClearance(row)">查看清关信息</el-link>
+          <el-link underline='never' type="primary" @click="showHts(row)">查看HTS</el-link>
+          <el-link underline='never' type="primary" @click="showClearance(row)">查看清关信息</el-link>
         </template>
       </el-table-column>
       <template #empty>

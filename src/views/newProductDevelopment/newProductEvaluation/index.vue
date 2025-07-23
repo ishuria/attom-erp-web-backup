@@ -99,21 +99,21 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleClick(row)">
-                  <el-link type="primary" :underline="false">产品核算推进</el-link>
+                  <el-link type="primary" underline='never'>产品核算推进</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="toUpdateEvaluation(row)">
-                  <el-link type="primary" :underline="false">查看和修改</el-link>
+                  <el-link type="primary" underline='never'>查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" :underline="false">
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" underline='never'>
                     关键词趋势
                   </el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
-                  <el-link type="primary" :underline="false">共享</el-link>
+                  <el-link type="primary" underline='never'>共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" :underline="false">
+                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" underline='never'>
                     分数明细
                   </el-link>
                 </el-dropdown-item>
@@ -229,26 +229,26 @@ import { type TableInstance } from 'element-plus'
 import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
 import {
-  getEstimatedCostAccountingList,
-  getEvaluationScoreDetail,
-  getEvaluationScoreParameter,
-  getEvaluationShareInfo,
-  getEvaluationTrendList,
-  getList,
-  getSalesSiteList,
-  updateEvaluationScoreParams,
-  updateSharePerson,
+    getEstimatedCostAccountingList,
+    getEvaluationScoreDetail,
+    getEvaluationScoreParameter,
+    getEvaluationShareInfo,
+    getEvaluationTrendList,
+    getList,
+    getSalesSiteList,
+    updateEvaluationScoreParams,
+    updateSharePerson,
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import type {
-  IBenchmarkScore,
-  ICostAccounting,
-  IEstimatedCostAccounting,
-  IEvaluation,
-  IEvaluationQueryReq,
-  IEvaluationScore,
-  IKeyWordTrend,
-  IShared,
+    IBenchmarkScore,
+    ICostAccounting,
+    IEstimatedCostAccounting,
+    IEvaluation,
+    IEvaluationQueryReq,
+    IEvaluationScore,
+    IKeyWordTrend,
+    IShared,
 } from '/@/type/evaluation/evaluationType'
 
 import type { CSSProperties } from 'vue'

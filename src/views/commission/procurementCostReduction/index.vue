@@ -122,7 +122,7 @@
         
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showPrices">历史单价</el-link>
+          <el-link type="primary" underline='never' @click="showPrices">历史单价</el-link>
         </template>
       </el-table-column>
       <template #empty>

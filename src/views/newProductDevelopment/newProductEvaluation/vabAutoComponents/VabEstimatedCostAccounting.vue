@@ -269,13 +269,13 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="handleCalculate(row)">
-                    <el-link type="primary" :underline="false">逆算</el-link>
+                    <el-link type="primary" underline='never'>逆算</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handlerCopyData(row)">
-                    <el-link type="primary" :underline="false">复制</el-link>
+                    <el-link type="primary" underline='never'>复制</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handlerDelete(row)">
-                    <el-link type="danger" :underline="false">删除</el-link>
+                    <el-link type="danger" underline='never'>删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -326,17 +326,17 @@ import { VueDraggable } from 'vue-draggable-plus'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
-  addEstimatedCostAccounting,
-  addEstimatedCostAccountingProductRelease,
-  copyEstimatedCostAccounting,
-  deleteEstimatedCostAccounting,
-  evaluationCostDeleteImg,
-  getExchangeRate,
-  reverseCalculateEstimatedCostAccounting,
-  updateEstimatedCostAccounting,
-  updateEstimatedCostAccountingFirstMileChannel,
-  updateEstimatedCostAccountingSort,
-  uploadFileBoBakend,
+    addEstimatedCostAccounting,
+    addEstimatedCostAccountingProductRelease,
+    copyEstimatedCostAccounting,
+    deleteEstimatedCostAccounting,
+    evaluationCostDeleteImg,
+    getExchangeRate,
+    reverseCalculateEstimatedCostAccounting,
+    updateEstimatedCostAccounting,
+    updateEstimatedCostAccountingFirstMileChannel,
+    updateEstimatedCostAccountingSort,
+    uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
 import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 import { formatDate } from '/@/utils/dateUtils'

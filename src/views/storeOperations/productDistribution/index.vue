@@ -117,7 +117,7 @@
         <el-table-column align="center" label="自动认领站点" min-width="200" prop="siteName"/>
         <el-table-column align="center" label="操作" min-width="80">
           <template #default="{ row, $index }">
-            <el-link type="danger" :underline="false" @click="handleDelDistributionList(row, $index)">删除</el-link>
+            <el-link type="danger" underline='never' @click="handleDelDistributionList(row, $index)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -154,16 +154,16 @@ import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import {
-  addDistributionList,
-  delDistributionList,
-  getDistributionList,
-  getDistributionOptionUserList,
-  getDistributionProductList,
-  getDistributionSiteList,
-  getDistributionUserType,
-  getDistributionUserTypeList,
-  updateDistributionAsinUser,
-  updateDistributionUserType
+    addDistributionList,
+    delDistributionList,
+    getDistributionList,
+    getDistributionOptionUserList,
+    getDistributionProductList,
+    getDistributionSiteList,
+    getDistributionUserType,
+    getDistributionUserTypeList,
+    updateDistributionAsinUser,
+    updateDistributionUserType
 } from '/@/api/devlocal/productDistribution'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'

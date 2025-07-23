@@ -34,7 +34,7 @@
     >
       <el-table-column fixed="left" label="操作" width="70">
         <template #default="{ row }">
-          <el-link type="danger" :underline="false" @click="handleDeleteInvoice(row)">删除</el-link>
+          <el-link type="danger" underline='never' @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
       <el-table-column label="购方名称" prop="purchaseName" :width="flexColumnWidth(list, '购方名称', 'purchaseName')">
@@ -285,22 +285,22 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-  cleanTaxRefundInvoice,
-  deleteTaxRefundInvoice,
-  finishTaxRefundInvoice,
-  getTaxRefundInvoiceList,
-  getTaxRefundInvoiceMatch,
-  submitConfirmTaxRefundInvoiceMatch,
-  submitTaxRefundInvoiceMatch,
-  updateTaxRefundInvoice,
-  updateTaxRefundInvoiceDetail,
-  uploadTaxRefund,
+    cleanTaxRefundInvoice,
+    deleteTaxRefundInvoice,
+    finishTaxRefundInvoice,
+    getTaxRefundInvoiceList,
+    getTaxRefundInvoiceMatch,
+    submitConfirmTaxRefundInvoiceMatch,
+    submitTaxRefundInvoiceMatch,
+    updateTaxRefundInvoice,
+    updateTaxRefundInvoiceDetail,
+    uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type {
-  IGetTaxRefundInvoiceList,
-  IGetTaxRefundInvoiceListQuery,
-  IGetTaxRefundInvoiceMatchList,
-  IGetTaxRefundInvoiceMatchQuery,
+    IGetTaxRefundInvoiceList,
+    IGetTaxRefundInvoiceListQuery,
+    IGetTaxRefundInvoiceMatchList,
+    IGetTaxRefundInvoiceMatchQuery,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'

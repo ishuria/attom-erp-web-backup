@@ -101,8 +101,8 @@
           <el-table-column fixed="right" label="操作" width="260">
             <template #default="{ row }">
               <el-space>
-                <el-link type="primary" :underline="false" @click="showMove(row)">移动到已联系</el-link>
-                <el-link type="primary" :underline="false" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
+                <el-link type="primary" underline='never' @click="showMove(row)">移动到已联系</el-link>
+                <el-link type="primary" underline='never' @click="showAfterSalesLog(row)">打包反馈日志</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -521,8 +521,8 @@
           <el-table-column fixed="right" label="操作" width="260">
             <template #default="{ row }">
               <el-space>
-                <el-link type="primary" :underline="false" @click="showMove(row)">移动到已联系</el-link>
-                <el-link type="primary" :underline="false" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
+                <el-link type="primary" underline='never' @click="showMove(row)">移动到已联系</el-link>
+                <el-link type="primary" underline='never' @click="showAfterSalesLog(row)">打包反馈日志</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -643,7 +643,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="140">
             <template #default="{ row }">
-              <el-link :underline="false" type="primary" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
+              <el-link underline='never' type="primary" @click="showAfterSalesLog(row)">打包反馈日志</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -760,17 +760,17 @@ import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { CSSProperties } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
 import {
-  archiveAfterSales,
-  badDebtAfterSales,
-  checkAfterSalesArchive,
-  deleteAfterSales,
-  getAfterSalesList,
-  getAfterSalesLog,
-  getAfterSalesLogs,
-  updateAfterSales,
-  updateAfterSalesLog,
-  updateSalesStatus,
-  uploadAfterSales
+    archiveAfterSales,
+    badDebtAfterSales,
+    checkAfterSalesArchive,
+    deleteAfterSales,
+    getAfterSalesList,
+    getAfterSalesLog,
+    getAfterSalesLogs,
+    updateAfterSales,
+    updateAfterSalesLog,
+    updateSalesStatus,
+    uploadAfterSales
 } from '/@/api/devlocal/packagingShipping'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'

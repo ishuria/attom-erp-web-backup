@@ -89,8 +89,8 @@
       <el-table-column fixed="right" label="操作" width="260">
         <template #default="{ row }">
           <el-space :size="20">
-            <el-link type="primary" :underline="false" @click="showDetails(row)">明细</el-link>
-            <el-link type="primary" :underline="false" @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
+            <el-link type="primary" underline='never' @click="showDetails(row)">明细</el-link>
+            <el-link type="primary" underline='never' @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
           </el-space>
         </template>
       </el-table-column>

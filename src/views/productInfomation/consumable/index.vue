@@ -194,10 +194,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleSupplier(row)">
-                  <el-link type="primary" :underline="false">供应商</el-link>
+                  <el-link type="primary" underline='never'>供应商</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleAddOtherSku(row)">
-                  <el-link type="primary" :underline="false" >添加到SKU</el-link>
+                  <el-link type="primary" underline='never' >添加到SKU</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -258,7 +258,7 @@
           <el-table-column label="耗材种类" prop="consumablesName"/>
           <el-table-column align="center" fixed="right" label="操作" width="120">
             <template #default="{ row, $index }">
-              <el-link type="danger" :underline="false" @click="handleDelConsumableType(row, $index)">删除</el-link>
+              <el-link type="danger" underline='never' @click="handleDelConsumableType(row, $index)">删除</el-link>
             </template>
           </el-table-column>
           <template #empty>

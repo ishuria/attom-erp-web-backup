@@ -92,9 +92,9 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" :underline="false" @click="showPictureUpdate(row)">修改</el-link>
-              <el-link type="danger" :underline="false" @click="handlePausePicture(row)">暂停</el-link>
-              <el-link type="success" :underline="false" @click="handleContinuePicture(row)">继续</el-link>
+              <el-link type="primary" underline='never' @click="showPictureUpdate(row)">修改</el-link>
+              <el-link type="danger" underline='never' @click="handlePausePicture(row)">暂停</el-link>
+              <el-link type="success" underline='never' @click="handleContinuePicture(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -181,9 +181,9 @@
           <el-table-column label="合作加成" min-width="100" prop="cooperationBonus" />
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" :underline="false" @click="showLongUpdate(row)">修改</el-link>
-              <el-link type="danger" :underline="false" @click="handlePauseLong(row)">暂停</el-link>
-              <el-link type="success" :underline="false" @click="handleContinueLong(row)">继续</el-link>
+              <el-link type="primary" underline='never' @click="showLongUpdate(row)">修改</el-link>
+              <el-link type="danger" underline='never' @click="handlePauseLong(row)">暂停</el-link>
+              <el-link type="success" underline='never' @click="handleContinueLong(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -252,9 +252,9 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" :underline="false" @click="showDevelopUpdate(row)">修改</el-link>
-              <el-link type="danger" :underline="false" @click="handlePauseDevelop(row)">暂停</el-link>
-              <el-link type="success" :underline="false" @click="handleContinueDevelop(row)">继续</el-link>
+              <el-link type="primary" underline='never' @click="showDevelopUpdate(row)">修改</el-link>
+              <el-link type="danger" underline='never' @click="handlePauseDevelop(row)">暂停</el-link>
+              <el-link type="success" underline='never' @click="handleContinueDevelop(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -341,11 +341,11 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-link v-if="row.status === '待审核'" type="success" :underline="false" @click="handlePassCost(row)">审核通过</el-link>
-              <el-link v-if="row.status === '待审核'" type="danger" :underline="false" @click="handleNotPassCost(row)">不通过</el-link>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="showCostUpdate(row)">修改</el-link>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="handlePauseCost(row)">暂停</el-link>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" :underline="false" @click="handleContinueCost(row)">继续</el-link>
+              <el-link v-if="row.status === '待审核'" type="success" underline='never' @click="handlePassCost(row)">审核通过</el-link>
+              <el-link v-if="row.status === '待审核'" type="danger" underline='never' @click="handleNotPassCost(row)">不通过</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="showCostUpdate(row)">修改</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="handlePauseCost(row)">暂停</el-link>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="handleContinueCost(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -471,38 +471,38 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
+import { designTypeOption } from '../../newProductTask/constantOption'
 import {
-  continueCommissionTaskPicture,
-  continueDevelopDesignTask,
-  continueLongCommissionTask,
-  continueReductionCostTask,
-  getCommissionTaskPictureList,
-  getDevelopDesignTaskList,
-  getLongCommissionTaskList,
-  getReductionCostList,
-  notPassReductionCostTask,
-  passReductionCostTask,
-  pauseCommissionTaskPicture,
-  pauseDevelopDesignTask,
-  pauseLongCommissionTask,
-  pauseReductionCostTask,
-  updateCommissionTaskPicture,
-  updateDevelopDesignTask,
-  updateLongCommissionTask,
-  updateReductionCostTask,
+    continueCommissionTaskPicture,
+    continueDevelopDesignTask,
+    continueLongCommissionTask,
+    continueReductionCostTask,
+    getCommissionTaskPictureList,
+    getDevelopDesignTaskList,
+    getLongCommissionTaskList,
+    getReductionCostList,
+    notPassReductionCostTask,
+    passReductionCostTask,
+    pauseCommissionTaskPicture,
+    pauseDevelopDesignTask,
+    pauseLongCommissionTask,
+    pauseReductionCostTask,
+    updateCommissionTaskPicture,
+    updateDevelopDesignTask,
+    updateLongCommissionTask,
+    updateReductionCostTask,
 } from '/@/api/devlocal/commission'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import type {
-  IGetCommissionTaskPictureList,
-  IGetCommissionTaskPictureListReq,
-  IGetDevelopDesignTaskList,
-  IGetLongCommissionTaskList,
-  IGetLongCommissionTaskListReq,
-  IGetReductionCostList,
+    IGetCommissionTaskPictureList,
+    IGetCommissionTaskPictureListReq,
+    IGetDevelopDesignTaskList,
+    IGetLongCommissionTaskList,
+    IGetLongCommissionTaskListReq,
+    IGetReductionCostList,
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import { designTypeOption } from '../../newProductTask/constantOption'
 
 defineOptions({
   name: 'CommissionTaskSummary',

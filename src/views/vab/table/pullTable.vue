@@ -92,13 +92,13 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="handleDetail(row)">
-                    <el-link type="primary" :underline="false">详情</el-link>
+                    <el-link type="primary" underline='never'>详情</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleEdit(row)">
-                    <el-link type="primary" :underline="false">编辑</el-link>
+                    <el-link type="primary" underline='never'>编辑</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleDelete(row)">
-                    <el-link type="danger" :underline="false">删除</el-link>
+                    <el-link type="danger" underline='never'>删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>

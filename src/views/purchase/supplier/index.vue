@@ -10,7 +10,7 @@
             :limit="1"
             :show-file-list="false"
           >
-            <el-link style="color: #fff" type="primary" :underline="false">上传通用合同模板</el-link>
+            <el-link style="color: #fff" type="primary" underline='never'>上传通用合同模板</el-link>
           </el-upload>
         </el-button>
           <el-button :loading="downloadLoading" type="primary" @click="handleDownLoad">下载通用合同模板</el-button>

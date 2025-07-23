@@ -104,10 +104,10 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
-          <el-link type="primary" :underline="false" @click="showModify(row)">修改</el-link>
-          <el-link type="primary" :underline="false" @click="showSplit(row)">拆分</el-link>
-          <el-link type="danger" :underline="false" @click="handleDelEncasement(row)">删除</el-link>
-          <el-link type="primary" :underline="false" @click="showPrint(row)">打印</el-link>
+          <el-link type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <el-link type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
+          <el-link type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
+          <el-link type="primary" underline='never' @click="showPrint(row)">打印</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -503,34 +503,34 @@ import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
-  checkEncasementShipment,
-  confirmEncasementShipments,
-  delEncasement,
-  doLockEncasement,
-  finishWalmartShipment,
-  generateTemplateFile1,
-  generateTemplateFile3,
-  generateWalmartShipment,
-  getChannelList,
-  getEncasementError,
-  getEncasementList,
-  getEncasementUserPrinter,
-  getIncrementBoxNo,
-  getProductNewSkuList,
-  getReinsertionBoxNo,
-  insertPdf,
-  plusEncasementCount,
-  printEncasement,
-  reduceEncasementCount,
-  splitEncasement,
-  splitEncasementCsv,
-  unlockEncasement,
-  updateEncasementError,
-  updateEncasementRemark,
-  updateEncasementShipmentDate,
-  updateEncasementUserPrinter,
-  uploadEncasementFile,
-  uploadGenerateTemplateFile2
+    checkEncasementShipment,
+    confirmEncasementShipments,
+    delEncasement,
+    doLockEncasement,
+    finishWalmartShipment,
+    generateTemplateFile1,
+    generateTemplateFile3,
+    generateWalmartShipment,
+    getChannelList,
+    getEncasementError,
+    getEncasementList,
+    getEncasementUserPrinter,
+    getIncrementBoxNo,
+    getProductNewSkuList,
+    getReinsertionBoxNo,
+    insertPdf,
+    plusEncasementCount,
+    printEncasement,
+    reduceEncasementCount,
+    splitEncasement,
+    splitEncasementCsv,
+    unlockEncasement,
+    updateEncasementError,
+    updateEncasementRemark,
+    updateEncasementShipmentDate,
+    updateEncasementUserPrinter,
+    uploadEncasementFile,
+    uploadGenerateTemplateFile2
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'

@@ -24,7 +24,7 @@
       <el-table-column fixed="left" label="零件操作" width="125">
         <template #default="{ row }">
           <el-dropdown>
-            <el-link type="primary" :underline="false" @click="addSuppliserInfo(row)">
+            <el-link type="primary" underline='never' @click="addSuppliserInfo(row)">
               新增供应商
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -34,10 +34,10 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="addSuppliserInfo(row)">
-                    <el-link type="primary" :underline="false">新增供应商</el-link>
+                    <el-link type="primary" underline='never'>新增供应商</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="copyComponentInfo(row)">
-                    <el-link type="primary" :underline="false">复制</el-link>
+                    <el-link type="primary" underline='never'>复制</el-link>
                   </el-dropdown-item>
                
                 </el-dropdown-menu>
@@ -391,14 +391,14 @@ import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog, } from '/@/api/devlocal/progress'
 import {
-  addComponent, addSuppliers,
-  componentDeleteImage,
-  componentUploadImage, copyComponent,
-  deleteSuppliers, getComponentList,
-  submitProgressComponent,
-  submitProgressConsumable,
-  updateComponenet,
-  updateProgressLog
+    addComponent, addSuppliers,
+    componentDeleteImage,
+    componentUploadImage, copyComponent,
+    deleteSuppliers, getComponentList,
+    submitProgressComponent,
+    submitProgressConsumable,
+    updateComponenet,
+    updateProgressLog
 } from '/@/api/devlocal/progressSample'
 import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'

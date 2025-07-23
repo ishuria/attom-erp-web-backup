@@ -425,19 +425,19 @@
               <template #dropdown>
                 <el-dropdown-menu>
                 <el-dropdown-item @click="handleSupplier(row)">
-                    <el-link type="primary" :underline="false" >供应商</el-link>
+                    <el-link type="primary" underline='never' >供应商</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleAddOtherSku(row)">
-                    <el-link type="primary" :underline="false" >添加到其他SKU</el-link>
+                    <el-link type="primary" underline='never' >添加到其他SKU</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleUpdateComponentName(row)">
-                    <el-link type="primary" :underline="false" >修改零件名</el-link>
+                    <el-link type="primary" underline='never' >修改零件名</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleShowModify(row)">
-                    <el-link type="primary" :underline="false">修改零件报关</el-link>
+                    <el-link type="primary" underline='never'>修改零件报关</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleDel(row, $index)">
-                    <el-link type="danger" :underline="false" >删除</el-link>
+                    <el-link type="danger" underline='never' >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -671,35 +671,35 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE } from '~/src/const/role'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
-  addProductComponentOtherSku,
-  createProductComponent,
-  delComponentImage,
-  delProductComponent,
-  delSkuImage,
-  getHsSelectList,
-  getProductAllName,
-  getProductAllSupplier,
-  getProductComponentPurchase,
-  getProductComponentStore,
-  getProductConsumablesType,
-  getProductDefaultListComponent,
-  getProductQualityInspection,
-  getProductSkuDetail,
-  getProductSkuList,
-  getProductSupplier,
-  getSkuComponentInfo,
-  saveProductComponentSuitDetail,
-  saveProductContractTerms,
-  saveProductPurchaseMatters,
-  submitProductComponent,
-  submitProductConsumable,
-  updateProductComponent,
-  updateProductComponentName,
-  updateProductSku,
-  updateProductSkuRemark,
-  updateSkuComponentInfo,
-  uploadComponentImage,
-  uploadSkuImage
+    addProductComponentOtherSku,
+    createProductComponent,
+    delComponentImage,
+    delProductComponent,
+    delSkuImage,
+    getHsSelectList,
+    getProductAllName,
+    getProductAllSupplier,
+    getProductComponentPurchase,
+    getProductComponentStore,
+    getProductConsumablesType,
+    getProductDefaultListComponent,
+    getProductQualityInspection,
+    getProductSkuDetail,
+    getProductSkuList,
+    getProductSupplier,
+    getSkuComponentInfo,
+    saveProductComponentSuitDetail,
+    saveProductContractTerms,
+    saveProductPurchaseMatters,
+    submitProductComponent,
+    submitProductConsumable,
+    updateProductComponent,
+    updateProductComponentName,
+    updateProductSku,
+    updateProductSkuRemark,
+    updateSkuComponentInfo,
+    uploadComponentImage,
+    uploadSkuImage
 } from '/@/api/devlocal/productInformation'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'

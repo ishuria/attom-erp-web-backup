@@ -136,7 +136,7 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作" width="120">
         <template #default="{ row }">
-          <el-link type="danger" :underline="false" @click="handleDelQualityInspection(row)">删除</el-link>
+          <el-link type="danger" underline='never' @click="handleDelQualityInspection(row)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>

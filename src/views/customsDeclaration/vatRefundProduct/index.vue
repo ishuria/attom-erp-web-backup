@@ -159,11 +159,11 @@
             <template #default="{ row }">
               <div v-if="row.formattedInvoiceNumber.length > 0">
                 <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index">
-                  <el-link type="danger" :underline="false" @click="handleDeleteMatch(item)">删除匹配</el-link>
+                  <el-link type="danger" underline='never' @click="handleDeleteMatch(item)">删除匹配</el-link>
                 </div>
               </div>
               <div v-else>
-                <el-link type="danger" :underline="false" @click="handleDeleteMatch(row)">删除匹配</el-link>
+                <el-link type="danger" underline='never' @click="handleDeleteMatch(row)">删除匹配</el-link>
               </div>
             </template>
           </el-table-column> -->

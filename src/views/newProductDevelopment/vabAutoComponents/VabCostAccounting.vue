@@ -268,13 +268,13 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="handleReverseCalculate(row)"> 
-                    <el-link type="primary" :underline="false">逆算</el-link>
+                    <el-link type="primary" underline='never'>逆算</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="costAccountCopy(row)">
-                    <el-link type="primary" :underline="false" >复制</el-link>
+                    <el-link type="primary" underline='never' >复制</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="costAccountDelete(row)">
-                    <el-link type="danger" :underline="false" >删除</el-link>
+                    <el-link type="danger" underline='never' >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -315,19 +315,19 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import {
-  addCostAccounting,
-  costAccountingCopy,
-  costAccountingDelete,
-  costAccountingDeleteImage,
-  costAccountingUpdate,
-  costAccountingUpdateRowSort,
-  costAccountingUploadImage,
-  getCostAccountingList,
-  getProgressPriceInfo,
-  getProgressProductDesc,
-  reverseCalculateProgress,
-  updateProgressPriceInfo,
-  updateProgressProductdesc
+    addCostAccounting,
+    costAccountingCopy,
+    costAccountingDelete,
+    costAccountingDeleteImage,
+    costAccountingUpdate,
+    costAccountingUpdateRowSort,
+    costAccountingUploadImage,
+    getCostAccountingList,
+    getProgressPriceInfo,
+    getProgressProductDesc,
+    reverseCalculateProgress,
+    updateProgressPriceInfo,
+    updateProgressProductdesc
 } from '/@/api/devlocal/progressSample'
 import type { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'

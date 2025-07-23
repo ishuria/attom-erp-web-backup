@@ -22,7 +22,7 @@
           <el-table-column prop="totalPurchaseAmount" label="总采购金额(￥)" />
           <el-table-column label="操作" >
             <template #default="{ row }">
-              <el-link :underline="false" type="primary" @click="showProductDetail(row)">产品明细</el-link>
+              <el-link underline='never' type="primary" @click="showProductDetail(row)">产品明细</el-link>
             </template>
           </el-table-column>
           <template #empty>

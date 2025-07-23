@@ -117,7 +117,7 @@
             <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingUpdate(row, prop)"/>
           </template>
           <template v-if="row['column0'] === 'operate'">
-            <el-link type="primary" :underline="false" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
+            <el-link type="primary" underline='never' @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
           </template>
           <template v-if="row['column0'] === 'productPosition'">
             <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" @change="handleChangeProductPosition(row, prop)">

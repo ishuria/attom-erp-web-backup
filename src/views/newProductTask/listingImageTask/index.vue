@@ -151,19 +151,19 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleShowSellingPoint(row)">
-                      <el-link type="primary" :underline="false">卖点</el-link>
+                      <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowCopywriting(row)">
-                      <el-link type="primary" :underline="false">文案</el-link>
+                      <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
-                      <el-link type="primary" :underline="false">长期提成</el-link>
+                      <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleFinish(row)">
-                      <el-link type="success" :underline="false">完成</el-link>
+                      <el-link type="success" underline='never'>完成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDelArtDesignTask(row)">
-                      <el-link type="danger" :underline="false">删除</el-link>
+                      <el-link type="danger" underline='never'>删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -331,19 +331,19 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleShowSellingPoint(row)">
-                      <el-link type="primary" :underline="false">卖点</el-link>
+                      <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowCopywriting(row)">
-                      <el-link type="primary" :underline="false">文案</el-link>
+                      <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
-                      <el-link type="primary" :underline="false">长期提成</el-link>
+                      <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleFinish(row)">
-                      <el-link type="success" :underline="false">完成</el-link>
+                      <el-link type="success" underline='never'>完成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleDelArtDesignTask(row)">
-                      <el-link type="danger" :underline="false">删除</el-link>
+                      <el-link type="danger" underline='never'>删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -489,13 +489,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleShowSellingPoint(row)">
-                      <el-link type="primary" :underline="false">卖点</el-link>
+                      <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowCopywriting(row)">
-                      <el-link type="primary" :underline="false">文案</el-link>
+                      <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleLongTerm(row)">
-                      <el-link type="primary" :underline="false">长期提成</el-link>
+                      <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -703,7 +703,7 @@
         <el-table-column label="选品理由" prop="reason"/>
         <el-table-column align="center" label="操作" width="80">
           <template #default="{ row, $index }">
-            <el-link type="danger" :underline="false" @click="handleDelReason(row, $index)">删除</el-link>
+            <el-link type="danger" underline='never' @click="handleDelReason(row, $index)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
