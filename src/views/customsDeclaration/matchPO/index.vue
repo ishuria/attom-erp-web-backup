@@ -997,7 +997,8 @@ const clickCancel = async (event: Event, value: any) => {
         unitPrice: value.unitPrice,
         estimateRate: value.estimateExchangeRate,
         actualRate: value.actualExchangeRate,
-        cost: value.actualCost
+        cost: value.actualCost,
+        settlementObject: value.settlementObject
       })
     } catch {
       Object.assign(value, copyRow)
@@ -1025,7 +1026,8 @@ const clickCostCancel = async (event: Event, value: any) => {
         unitPrice: value.unitPrice,
         estimateRate: value.estimateExchangeRate,
         actualRate: value.actualExchangeRate,
-        cost: value.actualCost
+        cost: value.actualCost,
+        settlementObject: value.settlementObject
       })
       fetchCostData(_shipId.value!)
     } catch {

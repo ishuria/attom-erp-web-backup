@@ -40,7 +40,7 @@
   "typescript.format.semicolons": "remove",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "vue.codeActions.savingTimeLimit": 100000,
-  "workbench.colorTheme": "Dark",
+  "workbench.colorTheme": "Default Light Modern",
   "cSpell.words": [
     "actived",
     "aliyun",

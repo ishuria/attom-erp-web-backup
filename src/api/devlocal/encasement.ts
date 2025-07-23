@@ -408,7 +408,7 @@ export const updateCostFreightForwarder = (data: IUpdateCostFreightForwarderReq)
  * @param params id: number; costName: string; error: number
  * @returns boolean
  */
-export const updateCostError = (params: { id: number; costName: string; error: number }): Promise<IBooleanRes> => {
+export const updateCostError = (params: { id: number; costName: string; error: number | null }): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/freight/forwarding/cost/error/update`,
     method: 'post',
