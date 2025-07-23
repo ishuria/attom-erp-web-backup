@@ -453,6 +453,11 @@
             <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="关税" prop="tariffPrice">
+          <template #default="{ row }">
+            <span>{{ row.tariffPrice != null && row.tariffPrice != '' ? '￥' +row.tariffPrice: '' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
           <template #default="{ row }">
             {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
@@ -497,27 +502,27 @@ import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
-    getReviewVariantHts,
-    reverseCalculateReview,
-    reviewStepNo3ComponentAdd,
-    reviewStepNo3ComponentCopy,
-    reviewStepNo3ComponentDel,
-    reviewStepNo3ComponentImtDel,
-    reviewStepNo3ComponentList,
-    reviewStepNo3ComponentSuitDetail,
-    reviewStepNo3ComponentUpdate,
-    reviewStepNo3ComponentUpload,
-    reviewStepNo3ContractTerms,
-    reviewStepNo3GetSelectVariantList,
-    reviewStepNo3PurchaseMatters,
-    reviewStepNo3SaveTh,
-    reviewStepNo3UpdateContractTerms,
-    reviewStepNo3UpdatePurchaseMatters,
-    reviewStepNo3VariantList,
-    reviewStepNo3VariantUpdate,
-    submitReviewComponent,
-    submitReviewConsumable,
-    updateReviewStepNo3ComponentSuitDetail
+  getReviewVariantHts,
+  reverseCalculateReview,
+  reviewStepNo3ComponentAdd,
+  reviewStepNo3ComponentCopy,
+  reviewStepNo3ComponentDel,
+  reviewStepNo3ComponentImtDel,
+  reviewStepNo3ComponentList,
+  reviewStepNo3ComponentSuitDetail,
+  reviewStepNo3ComponentUpdate,
+  reviewStepNo3ComponentUpload,
+  reviewStepNo3ContractTerms,
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo3PurchaseMatters,
+  reviewStepNo3SaveTh,
+  reviewStepNo3UpdateContractTerms,
+  reviewStepNo3UpdatePurchaseMatters,
+  reviewStepNo3VariantList,
+  reviewStepNo3VariantUpdate,
+  submitReviewComponent,
+  submitReviewConsumable,
+  updateReviewStepNo3ComponentSuitDetail
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'
