@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="调整明细" width="43%" top="5%">
+    <vab-dialog v-model="visible" title="调整明细" top="5%" width="45%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAdd">新增</el-button>
@@ -22,16 +22,16 @@
           </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table stripe border :data="list" :header-cell-style="{ textAlign: 'center' }" :cell-style="{ textAlign: 'center' }" max-height="800">
+      <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="800" stripe>
         <el-table-column label="月份" prop="month" width="100" />
         <el-table-column label="被调整人" prop="userName" width="100" />
-        <el-table-column label="类型" prop="type" width="110" 
-          column-key="type"
-          :filters="[
+        <el-table-column column-key="type" :filter-method="filterHandler" :filters="[
             { text: '考核数', value: '0' },
             { text: '完成数', value: '1' },
-          ]"
-          :filter-method="filterHandler"
+          ]" 
+          label="类型"
+          prop="type"
+          width="110"
         >
           <template #default="{ row }">
             {{ row.type === 0 ? '考核数' : '完成数' }}
@@ -40,15 +40,16 @@
         <el-table-column label="调整数量" prop="adjustQuantity" width="100" />
         <el-table-column label="OEM" width="100">
           <template #default="{ row }">
-            <el-checkbox v-model="row.oem" :false-value="0" :true-value="1" disabled />
+            <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="父体" prop="parent" />
+        <el-table-column label="父体" prop="parent" width="100" />
         <el-table-column label="备注" prop="remark" />
         <el-table-column label="来源" prop="source" />
+        <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column label="操作" width="100">
           <template #default="{ row }">
-            <el-link underline='never' type="danger" @click="deleteDetail(row)">删除</el-link>
+            <el-link type="danger" underline='never' @click="deleteDetail(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -65,18 +66,18 @@
     </vab-dialog>
     <!-- 新增 -->
     <vab-dialog v-model="addVisible" title="新增" width="20%" @close="closeAdd">
-      <el-form :model="addForm" :rules="addRules" ref="addFormRef" style="margin-left: 0; margin-right: 0;" label-width="auto">
+      <el-form ref="addFormRef" label-width="auto" :model="addForm" :rules="addRules" style="margin-left: 0; margin-right: 0;">
         <el-form-item label="月份" prop="month">
-          <el-date-picker v-model="addForm.month" type="month" value-format="YYYY-MM" placeholder="请选择月份" />
+          <el-date-picker v-model="addForm.month" placeholder="请选择月份" type="month" value-format="YYYY-MM" />
         </el-form-item>
         <el-form-item label="被调整人" prop="userId">
           <el-select v-model="addForm.userId" placeholder="请选择被调整人" >
-            <el-option v-for="item in productManagerList" :label="item.label" :value="item.id" :key="item.id" />
+            <el-option v-for="item in productManagerList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-select v-model="addForm.type" placeholder="请选择类型">
-            <el-option v-for="item in typeOption" :label="item.label" :value="item.value" :key="item.value" />
+            <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="调整数量" prop="adjustQuantity">
@@ -89,8 +90,7 @@
           <el-input v-model="addForm.parent" placeholder="请输入父体" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input type="textarea" :rows="2" v-model="addForm.remark" placeholder="请输入备注" :autosize="{ minRows: 2, maxRows: 4 }">
-          </el-input>
+          <el-input v-model="addForm.remark" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入备注" :rows="2" type="textarea"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -103,6 +103,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance, TableColumnCtx } from 'element-plus'
+import { CSSProperties } from 'vue'
 import { addAdjustDetail, deleteAdjustDetail, getAdjustDetail, getProductManager } from '/@/api/devlocal/performanceStatistics'
 import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
 
@@ -166,6 +167,17 @@ const filterHandler = (
 ) => {
   const property = column['property']
   return row[property] === Number(value)
+}
+const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+  if (data.column.label === '类型') {
+    return {
+      color: data.row.type === 0 ? 'var(--el-color-primary)' : '#6C3483',
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'center'
+  }
 }
 const showAdd = async () => {
   addVisible.value = true

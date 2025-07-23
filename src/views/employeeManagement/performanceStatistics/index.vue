@@ -567,16 +567,7 @@
       </el-table>
     </vab-dialog>
     <!-- 参数设定 -->
-    <vab-dialog v-model="parameterSettingsVisible" title="参数设定" width="16%">
-      <el-form ref="parameterSettingsFormRef" :model="parameterSettingsForm" :rules="parameterSettingsRules" style="margin-left: 0; margin-right: 0;" >
-        <el-form-item label="最大超额完成数" prop="count">
-          <el-input v-model="parameterSettingsForm.count" clearable />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button type="primary" @click="updateParameterSettings">修改</el-button>
-      </template>
-    </vab-dialog>
+    <parameter-settings-dialog v-model="parameterSettingsVisible" />
     <!-- 考核数结账 -->
     <vab-dialog v-model="checkoutVisible" title="考核数结账" width="20%" @close="closeCheckout">
       <el-form label-position="top">
@@ -601,26 +592,23 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
-import { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-    checkoutAssessmentNumber,
-    getAdjustDetailByUser,
-    getAssessmentList,
-    getMaximumOverfulfillment,
-    getProductManager,
-    getProductManagerAssessmentList,
-    getUserAttendanceList,
-    updateMaximumOverfulfillment,
-    updateProductManagerAssessment,
+  checkoutAssessmentNumber,
+  getAdjustDetailByUser,
+  getAssessmentList,
+  getProductManager,
+  getProductManagerAssessmentList,
+  getUserAttendanceList,
+  updateProductManagerAssessment
 } from '/@/api/devlocal/performanceStatistics'
 import type {
-    IGetAdjustDetail,
-    IGetAssessmentList,
-    IGetAssessmentListReq,
-    IGetProductManagerAssessmentList,
-    IGetUserAttendanceList,
+  IGetAdjustDetail,
+  IGetAssessmentList,
+  IGetAssessmentListReq,
+  IGetProductManagerAssessmentList,
+  IGetUserAttendanceList,
 } from '/@/type/employeeManagement/performanceStatistics'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -664,6 +652,7 @@ const handleCheckout = async () => {
   if (data) {
     $baseMessage("考核数结账成功且发送邮件成功！", 'success')
     checkoutVisible.value = false
+    fetchAssessmentData()
   }
 }
 const userIdList = ref<number[]>([])
@@ -671,31 +660,10 @@ const userIdList = ref<number[]>([])
 const adjustDetailVisible = ref<boolean>(false)
 // 参数设定
 const parameterSettingsVisible = ref<boolean>(false)
-const parameterSettingsForm = reactive<any>({
-  count: undefined,
-})
-const parameterSettingsFormRef = ref<FormInstance>()
-const parameterSettingsRules = reactive<any>({
-  count: [{ required: true, message: '请输入最大超额完成数', trigger: 'blur' }],
-})
-const showParameterSettings = async () => {
-  const { data } = await getMaximumOverfulfillment()
-  parameterSettingsForm.count = data
+const showParameterSettings = () => {
   parameterSettingsVisible.value = true
 }
-const updateParameterSettings = async () => {
-  parameterSettingsFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await updateMaximumOverfulfillment({
-        number: parameterSettingsForm.count,
-      })
-      if (data) {
-        $baseMessage("修改成功！", 'success')
-        parameterSettingsVisible.value = false
-      }
-    }
-  })
-}
+
 const activeName = ref<number>(0)
 /* ============================== 考勤明细变量 ============================== */
 const listLoading = ref<boolean>(false)

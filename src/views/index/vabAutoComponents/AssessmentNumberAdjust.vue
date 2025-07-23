@@ -5,7 +5,7 @@
    
       <div class="slider-demo-block">
         <span class="demonstration">放到下月的完成数</span>
-        <el-slider v-model="value" :disabled="disabled" show-input :show-tooltip="false" :max="max" :step="0.1" @change="handleAdjustValue" />
+        <el-slider v-model="value" :disabled="disabled" :max="max" show-input :show-tooltip="false" :step="0.01" @input="handleAdjustValue" />
       </div>
       <el-table border :data="list" >
         <el-table-column align="center" label="本月完成数" prop="monthlyCompletion" />
@@ -15,7 +15,7 @@
       </el-table>
    
       <template #footer>
-        <el-button type="primary" @click="handleConfirm" :disabled="disabled">提交</el-button>
+        <el-button :disabled="disabled" type="primary" @click="handleConfirm">提交</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -62,8 +62,8 @@ const handleConfirm = async () => {
   })
 }
 const handleAdjustValue = () => {
-  list.value[0].nextMonthCompletion = originalNextMonthCompletion.value + value.value
-  list.value[0].monthlyCompletion = originalMonthCompletion.value - value.value
+  list.value[0].nextMonthCompletion = parseFloat((originalNextMonthCompletion.value + value.value).toFixed(2))
+  list.value[0].monthlyCompletion = parseFloat((originalMonthCompletion.value - value.value).toFixed(2))
 }
 const originalMonthCompletion = ref<number>(0)
 const originalNextMonthCompletion = ref<number>(0)

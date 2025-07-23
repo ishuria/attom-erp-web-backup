@@ -3,13 +3,13 @@
     <el-row :gutter="20">
       <!-- 第一层 -->
       <el-col v-if="ableViewCommissionCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card  background="white" :count-config="countConfig1" :month-diff="countConfig1.monthDiff" :year-diff="countConfig1.yearDiff" title="本月总提成" @open-table="handleJumpTo" >
+        <top-card  background="white" :count-config="countConfig1" :month-diff="countConfig1.monthDiff" title="本月总提成" :year-diff="countConfig1.yearDiff" @open-table="handleJumpTo" >
           <template #select>
             <el-select v-model="type" size="small" @change="handleChangePieList" >
               <el-option 
                 v-for="item in selectOption"
-                :label="item.label"
                 :key="item.value"
+                :label="item.label"
                 :value="item.value"
               />
             </el-select>
@@ -24,9 +24,9 @@
         </top-card>
       </el-col>
       <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card background="white" :month-diff="countConfig2Start.monthDiff" :year-diff="countConfig2Start.yearDiff" title="本月考核完成数" @open-table="fetchHistoryAssessmentRecords">
+        <top-card background="white" :month-diff="countConfig2Start.monthDiff" title="本月考核完成数" :year-diff="countConfig2Start.yearDiff" @open-table="fetchHistoryAssessmentRecords">
            <template #select>
-            <el-button type="primary" size="small" @click="assessmentAdjustVisible = true">考核调整</el-button>
+            <el-button size="small" type="primary" @click="assessmentAdjustVisible = true">考核调整</el-button>
           </template>
           <template #count>
             <vab-count
@@ -54,7 +54,7 @@
         </top-card>
       </el-col>
       <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card  background="white" :month-diff="countConfig3Start.monthDiff" :year-diff="countConfig3Start.yearDiff" title="本月OEM完成数"  @open-table="fetchHistoryAssessmentRecords">
+        <top-card  background="white" :month-diff="countConfig3Start.monthDiff" title="本月OEM完成数" :year-diff="countConfig3Start.yearDiff"  @open-table="fetchHistoryAssessmentRecords">
           <template #count>
             <vab-count
               :decimals="countConfig3Start.decimals"
@@ -81,23 +81,23 @@
         </top-card>
       </el-col>
       <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-bar-card  background="white" :count-config="countConfig4" :month-diff="monthDiff" :year-diff="yearDiff" title="推进中的项目" url="/newProductDevelopment/newProductProgress">
+        <top-bar-card  background="white" :count-config="countConfig4" :month-diff="monthDiff" title="推进中的项目" url="/newProductDevelopment/newProductProgress" :year-diff="yearDiff">
           <template #chart>
             <in-progress-projects-bar :data="inProgressProjectsData" :total="countConfig4.endValue" />
           </template>
         </top-bar-card>
       </el-col>
-       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24"></el-col>
+       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24"/>
       <!-- 第二层 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <!-- <pending2 /> -->
         <monthly-product-profit-table :list="profitList" />
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
-        <monthly-assessment-table title="当月考核数减免" :list="listSub" />
+        <monthly-assessment-table :list="listSub" title="当月考核数减免" />
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
-        <monthly-assessment-table title="当月考核数加回" :list="listAdd" />
+        <monthly-assessment-table :list="listAdd" title="当月考核数加回" />
       </el-col>
       <!-- 第三层 -->
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -110,33 +110,33 @@
             <el-select v-model="userId" placeholder="人员" style="max-width: 5em;" @change="fetchData">
               <el-option
                 v-for="item in userList"
-                :label="item.label"
                 :key="item.id"
+                :label="item.label"
                 :value="item.id"
               />
             </el-select>
-            <el-date-picker type="monthrange" v-model="selectDate" value-format="YYYY-MM" @change="fetchData" />
+            <el-date-picker v-model="selectDate" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
           </template>
         </performance-history>
       </el-col>
       <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月超额完成排行" :list="rank1List" name="超额完成数" :my-name="myName" />
+        <rank :list="rank1List" :my-name="myName" name="超额完成数" title="上月超额完成排行" />
       </el-col>
       <!-- <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank title="上月提成排行" :list="rank2List" name="提成" :my-name="myName" />
       </el-col> -->
       <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank title="上月新品提成排行(上线1年以内)" :list="rank3List" name="新品提成" :my-name="myName" />
+        <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
     </el-row>
     <history-assessment-records 
       v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
-      @query="queryData" @page-change="handleCurrentChange" @size-change="handleSizeChange"
+      @page-change="handleCurrentChange" @query="queryData" @size-change="handleSizeChange"
     />
     <!-- 考核数调整 -->
     <assessment-number-adjust
       v-model="assessmentAdjustVisible"
-      @update:frontPage="fetchAssessmentData"
+      @update:front-page="fetchAssessmentData"
     />
   </div>
  

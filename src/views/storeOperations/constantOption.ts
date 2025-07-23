@@ -1,132 +1,132 @@
 export const opeClassOption = [
   {
     label: '每日关注',
-    value: 0
+    value: 0,
   },
   {
     label: '停产',
-    value: 1
-  }
+    value: 1,
+  },
 ]
 
 export const filterShowOption = [
   {
     label: '全部',
-    value: -1
+    value: -1,
   },
   {
     label: '手动输入',
-    value: 0
+    value: 0,
   },
   {
     label: '系统抓取',
-    value: 1
+    value: 1,
   },
   {
     label: '广告',
-    value: 2
-  }
+    value: 2,
+  },
 ]
 
 export const levelOption = [
   {
     label: 'SKU',
-    value: 0
+    value: 0,
   },
   {
     label: 'ASIN',
-    value: 1
+    value: 1,
   },
   {
     label: '父体ASIN',
-    value: 2
-  }
+    value: 2,
+  },
 ]
 
 export const dateOption = [
   {
     label: '30天',
-    value: 0
+    value: 0,
   },
   {
     label: '60天',
-    value: 1
+    value: 1,
   },
   {
     label: '180天',
-    value: 2
+    value: 2,
   },
   {
     label: '360天',
-    value: 3
+    value: 3,
   },
   {
     label: '本月',
-    value: 4
+    value: 4,
   },
   {
     label: '上月',
-    value: 5
+    value: 5,
   },
   {
     label: '全部',
-    value: -1
-  }
+    value: -1,
+  },
 ]
 
 export const adOption = [
   {
     label: '所有广告组之和',
-    value: 0
-  }
+    value: 0,
+  },
 ]
 
 export const dayOption = [
   {
     label: '7天',
-    value: 0
+    value: 0,
   },
   {
     label: '15天',
-    value: 1
+    value: 1,
   },
   {
     label: '30天',
-    value: 2
+    value: 2,
   },
   {
     label: '60天',
-    value: 3
+    value: 3,
   },
 ]
 
 export const adStatusOption = [
   {
     label: '开',
-    value: 1
+    value: 1,
   },
   {
     label: '关',
-    value: 0
-  }
+    value: 0,
+  },
 ]
 
 export const pieSelectOption = [
   {
     label: '花费',
-    value: 0
+    value: 0,
   },
   {
     label: '展示量',
-    value: 1
+    value: 1,
   },
   {
     label: '点击量',
-    value: 2
+    value: 2,
   },
   {
     label: '订单数',
-    value: 3
+    value: 3,
   },
 ]
 
@@ -134,20 +134,20 @@ export const highLowMap: Record<number, string> = {
   0: '低点击不出单',
   1: '高点击不出单',
   2: '低ACOS',
-  3: '高ACOS'
+  3: '高ACOS',
 }
 
 export const pieSelectMap: Record<number, string> = {
   0: 'spend',
   1: 'impressions',
   2: 'clicks',
-  3: 'orders'
+  3: 'orders',
 }
 export const pieSelectLabelMap: Record<number, string> = {
   0: '花费',
   1: '展示量',
   2: '点击量',
-  3: '订单数'
+  3: '订单数',
 }
 
 export const colorList = [
@@ -170,45 +170,39 @@ export const colorList = [
   '#52bfff',
 ]
 
-export const storageAgeColorList = [
-  '#99db70',
-  '#52bfff',
-  '#ce82fa',
-  '#ffdd36',
-  '#ff8fa5',
-]
+export const storageAgeColorList = ['#99db70', '#52bfff', '#ce82fa', '#ffdd36', '#ff8fa5']
 
 export const card4Option = [
   {
     label: '前7天',
-    value: 0
+    value: 0,
   },
   {
     label: '前30天',
-    value: 1
+    value: 1,
   },
   {
     label: '本月',
-    value: 2
+    value: 2,
   },
   {
     label: '上月',
-    value: 3
+    value: 3,
   },
   {
     label: '自定义',
-    value: 4
+    value: 4,
   },
 ]
 
 export const sizeSourceOption = [
   {
     label: '自量',
-    value: 0
+    value: 0,
   },
   {
     label: '亚马逊',
-    value: 1
+    value: 1,
   },
 ]
 
@@ -232,13 +226,13 @@ export const orderColumns = [
     label: '图片',
     prop: 'asinImgUrl',
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'ASIN',
     prop: 'asin',
     minWidth: 170,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '今销量',
