@@ -161,7 +161,7 @@
           <el-form label-position="top" >
             <el-row>
               <el-col :span="12">
-                <el-form-item v-permissions="SkuPermission.SKU_REMARKS_UPDATE">
+                <el-form-item>
                   <el-space>
                     <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
                     <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><edit /></el-icon>

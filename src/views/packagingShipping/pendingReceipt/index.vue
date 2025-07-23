@@ -4,8 +4,8 @@
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-              <el-button v-permissions="SignPermission.SIGN_BATCH" type="primary" @click="handleAllSigned">批量签收</el-button>
-              <el-select  v-model="printer" v-permissions="SignPermission.SIGN_BATCH" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+              <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">批量签收</el-button>
+              <el-select  v-model="printer" v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
                 <el-option
                   v-for="item in printerOption"
                   :key="item.value"
@@ -40,9 +40,9 @@
           <el-table-column v-permissions="SignPermission.signOperationColume()"fixed="left" label="仓库操作" width="150"  >
             <template #default="{ row }">
               <el-space>
-                <el-link v-permissions="SignPermission.SIGN_COMPONENT" type="primary" underline="never" @click="showSignDialog(row)">签收</el-link>
-                <el-link v-permissions="SignPermission.SIGN_RECORD_LIST" type="primary" underline="never" @click="handleGetSignRecord(row)">明细</el-link>
-                <el-link v-permissions="SignPermission.SIGN_PRINT" type="primary" underline="never" @click="showPrint(row)">打印</el-link>
+                <el-link v-permissions="{ permission: [SignPermission.SIGN_COMPONENT] }" type="primary" underline="never" @click="showSignDialog(row)">签收</el-link>
+                <el-link v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" type="primary" underline="never" @click="handleGetSignRecord(row)">明细</el-link>
+                <el-link v-permissions="{ permission: [SignPermission.SIGN_PRINT] }" type="primary" underline="never" @click="showPrint(row)">打印</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -199,10 +199,10 @@
                     <el-dropdown-item>
                       <el-link type="primary" underline="never" >打印面单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="SignPermission.SIGN_RECORD_LIST" @click="handleGetSignedRecord(row)">
+                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" @click="handleGetSignedRecord(row)">
                       <el-link type="primary" underline="never" >修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="SignPermission.SIGN_DELETE" @click="handleIfShowRecord(row)">
+                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_DELETE]}" @click="handleIfShowRecord(row)">
                       <el-link type="danger" underline="never" >取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>

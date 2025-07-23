@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status === 0 ? '展示停产' : '隐藏停产' }}</el-button>
-        <el-button v-permissions="SkuPermission.CUSTOM_DECLARE_RATIO_QUERY" type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
+        <el-button v-permissions="{ permission: [SkuPermission.CUSTOM_DECLARE_RATIO_QUERY] }" type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
