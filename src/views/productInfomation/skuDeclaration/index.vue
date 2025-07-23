@@ -471,7 +471,7 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { addCustomsClearanceSkuInfo, getCustomsClearanceCountryList, getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
