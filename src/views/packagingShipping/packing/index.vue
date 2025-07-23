@@ -7,11 +7,11 @@
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_WALMART] }" type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
         <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button>
         <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
-        <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
-        <el-button type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
-        <el-button type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
-        <el-button type="primary" @click="showExportSize">尺寸导出</el-button>
-        <el-button type="primary" @click="showUpdateError">误差</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE_PLAN] }" type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPLOAD_PDF] }" type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SPLIT] }" type="primary" @click="uploadSplitVisible = true">上传拆分</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SIZE_EXPORT] }" type="primary" @click="showExportSize">尺寸导出</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_ERROR] }" type="primary" @click="showUpdateError">误差</el-button>
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
