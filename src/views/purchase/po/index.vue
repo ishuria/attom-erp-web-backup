@@ -5,7 +5,7 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
+              v-permissions="{ permission: [PoPermission.PAY] }"
               :loading="fullPaymentLoading"
               type="success"
               @click="handlePaymentPaid"
@@ -13,7 +13,7 @@
               已付全款/尾款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:batch'] }"
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
               :loading="installmentLoading"
               type="warning"
               @click="handleShowInstallment"
@@ -21,7 +21,7 @@
               分批付款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:refund'] }"
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
               :loading="refundLoading"
               type="danger"
               @click="handleShowRefund"
@@ -29,7 +29,7 @@
               退款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:total:price:allocation'] }"
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
               @click="handleShowTotalPriceSharing"
@@ -37,7 +37,7 @@
               总价分摊
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:generate:contract'] }"
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
               :loading="generateContractLoading"
               type="primary"
               @click="handleGenerateContract"
@@ -45,7 +45,7 @@
               生成合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:aggregation:contract'] }"
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
               :loading="mergeContractLoading"
               type="primary"
               @click="handleShowMergeContract"
@@ -53,7 +53,7 @@
               聚合合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:remittance:template'] }"
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
               :loading="moneyTransferLoading"
               type="primary"
               @click="handleShowGenerateMoneyTransfer"
@@ -61,7 +61,7 @@
               生成汇款模板
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
               :loading="reduceCostLoading"
               type="primary"
               @click="handleReduceCost"
@@ -69,13 +69,13 @@
               降本提成申请
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
               type="primary"
               @click="handleShowAutomaticSignature"
             >
               自动签收设定
             </el-button>
-            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
             <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
@@ -87,7 +87,7 @@
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -107,7 +107,7 @@
         <el-table
           ref="tableRef"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="PoPermission.queryFormPermission()"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
@@ -206,7 +206,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -226,7 +226,7 @@
               已付全款/尾款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:batch'] }"
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
               :loading="installmentLoading"
               type="warning"
               @click="handleShowInstallment"
@@ -234,7 +234,7 @@
               分批付款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:refund'] }"
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
               :loading="refundLoading"
               type="danger"
               @click="handleShowRefund"
@@ -242,7 +242,7 @@
               退款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:total:price:allocation'] }"
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
               @click="handleShowTotalPriceSharing"
@@ -250,7 +250,7 @@
               总价分摊
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:generate:contract'] }"
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
               :loading="generateContractLoading"
               type="primary"
               @click="handleGenerateContract"
@@ -258,7 +258,7 @@
               生成合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:aggregation:contract'] }"
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
               :loading="mergeContractLoading"
               type="primary"
               @click="handleShowMergeContract"
@@ -266,7 +266,7 @@
               聚合合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:remittance:template'] }"
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
               :loading="moneyTransferLoading"
               type="primary"
               @click="handleShowGenerateMoneyTransfer"
@@ -274,7 +274,7 @@
               生成汇款模板
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
               :loading="reduceCostLoading"
               type="primary"
               @click="handleReduceCost"
@@ -282,13 +282,13 @@
               降本提成申请
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
               type="primary"
               @click="handleShowAutomaticSignature"
             >
               自动签收设定
             </el-button>
-            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
             <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
@@ -300,7 +300,7 @@
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -320,7 +320,7 @@
         <el-table
           ref="tableRef2"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
@@ -425,7 +425,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -445,7 +445,7 @@
               已付全款/尾款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:batch'] }"
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
               :loading="installmentLoading"
               type="warning"
               @click="handleShowInstallment"
@@ -453,7 +453,7 @@
               分批付款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:refund'] }"
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
               :loading="refundLoading"
               type="danger"
               @click="handleShowRefund"
@@ -461,7 +461,7 @@
               退款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:total:price:allocation'] }"
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
               @click="handleShowTotalPriceSharing"
@@ -469,7 +469,7 @@
               总价分摊
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:generate:contract'] }"
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
               :loading="generateContractLoading"
               type="primary"
               @click="handleGenerateContract"
@@ -477,7 +477,7 @@
               生成合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:aggregation:contract'] }"
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
               :loading="mergeContractLoading"
               type="primary"
               @click="handleShowMergeContract"
@@ -485,7 +485,7 @@
               聚合合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:remittance:template'] }"
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
               :loading="moneyTransferLoading"
               type="primary"
               @click="handleShowGenerateMoneyTransfer"
@@ -493,7 +493,7 @@
               生成汇款模板
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
               :loading="reduceCostLoading"
               type="primary"
               @click="handleReduceCost"
@@ -501,13 +501,13 @@
               降本提成申请
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
               type="primary"
               @click="handleShowAutomaticSignature"
             >
               自动签收设定
             </el-button>
-            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
             <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
@@ -519,7 +519,7 @@
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -539,7 +539,7 @@
         <el-table
           ref="tableRef3"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
@@ -644,7 +644,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -664,7 +664,7 @@
               已付全款/尾款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:batch'] }"
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
               :loading="installmentLoading"
               type="warning"
               @click="handleShowInstallment"
@@ -672,7 +672,7 @@
               分批付款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:refund'] }"
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
               :loading="refundLoading"
               type="danger"
               @click="handleShowRefund"
@@ -680,7 +680,7 @@
               退款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:total:price:allocation'] }"
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
               @click="handleShowTotalPriceSharing"
@@ -688,7 +688,7 @@
               总价分摊
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:generate:contract'] }"
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
               :loading="generateContractLoading"
               type="primary"
               @click="handleGenerateContract"
@@ -696,7 +696,7 @@
               生成合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:aggregation:contract'] }"
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
               :loading="mergeContractLoading"
               type="primary"
               @click="handleShowMergeContract"
@@ -704,7 +704,7 @@
               聚合合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:remittance:template'] }"
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
               :loading="moneyTransferLoading"
               type="primary"
               @click="handleShowGenerateMoneyTransfer"
@@ -712,7 +712,7 @@
               生成汇款模板
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
               :loading="reduceCostLoading"
               type="primary"
               @click="handleReduceCost"
@@ -720,13 +720,13 @@
               降本提成申请
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
               type="primary"
               @click="handleShowAutomaticSignature"
             >
               自动签收设定
             </el-button>
-            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
             <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
@@ -738,7 +738,7 @@
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -758,7 +758,7 @@
         <el-table
           ref="tableRef4"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
@@ -863,7 +863,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -883,7 +883,7 @@
               已付全款/尾款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:batch'] }"
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
               :loading="installmentLoading"
               type="warning"
               @click="handleShowInstallment"
@@ -891,7 +891,7 @@
               分批付款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:pay:refund'] }"
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
               :loading="refundLoading"
               type="danger"
               @click="handleShowRefund"
@@ -899,7 +899,7 @@
               退款
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:total:price:allocation'] }"
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
               @click="handleShowTotalPriceSharing"
@@ -907,7 +907,7 @@
               总价分摊
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:generate:contract'] }"
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
               :loading="generateContractLoading"
               type="primary"
               @click="handleGenerateContract"
@@ -915,7 +915,7 @@
               生成合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:aggregation:contract'] }"
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
               :loading="mergeContractLoading"
               type="primary"
               @click="handleShowMergeContract"
@@ -923,7 +923,7 @@
               聚合合同
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:remittance:template'] }"
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
               :loading="moneyTransferLoading"
               type="primary"
               @click="handleShowGenerateMoneyTransfer"
@@ -931,7 +931,7 @@
               生成汇款模板
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:cost:reduction:apply'] }"
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
               :loading="reduceCostLoading"
               type="primary"
               @click="handleReduceCost"
@@ -939,13 +939,13 @@
               降本提成申请
             </el-button>
             <el-button
-              v-permissions="{ permission: ['purchase:component:auto:query'] }"
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
               type="primary"
               @click="handleShowAutomaticSignature"
             >
               自动签收设定
             </el-button>
-            <el-button v-permissions="{ permission: ['purchase:po:delete'] }" :loading="delLoading" type="danger" @click="handleDelPo">
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
             <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
@@ -957,7 +957,7 @@
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -977,7 +977,7 @@
         <el-table
           ref="tableRef5"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
@@ -1074,7 +1074,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -1085,7 +1085,7 @@
       <el-tab-pane label="已删除" :name="7">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
-            <el-form v-permissions="{ permission: ['purchase:po:query'] }" inline :model="queryForm" @submit.prevent>
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1105,7 +1105,7 @@
         <el-table
           ref="tableRef6"
           v-loading="listLoading"
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
@@ -1202,7 +1202,7 @@
           </template>
         </el-table>
         <vab-pagination
-          v-permissions="{ permission: ['purchase:po:query'] }"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -1215,7 +1215,7 @@
     <!-- 付款记录表 -->
     <vab-dialog
       v-model="paymentHistoryVisible"
-      v-permissions="{ permission: ['purchase:pay:record'] }"
+      v-permissions="{ permission: [PoPermission.PAY_RECORD] }"
       :before-close="handleClosePaymentHistoryDialog"
       class="moldDialog"
       title="付款记录"
@@ -1471,6 +1471,7 @@ import {
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
 import { ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
+import PoPermission from '/@/permissions/po'
 import { useAclStore } from '/@/store/modules/acl'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'

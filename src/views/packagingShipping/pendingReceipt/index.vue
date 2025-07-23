@@ -4,15 +4,15 @@
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleAllSigned">批量签收</el-button>
-            <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-              <el-option
-                v-for="item in printerOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+              <el-button v-permissions="SignPermission.SIGN_BATCH" type="primary" @click="handleAllSigned">批量签收</el-button>
+              <el-select  v-model="printer" v-permissions="SignPermission.SIGN_BATCH" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+                <el-option
+                  v-for="item in printerOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -37,12 +37,12 @@
           @cell-click="changeInput"
           @selection-change="setSelectRows"
         >
-          <el-table-column fixed="left" label="仓库操作" width="150" >
+          <el-table-column v-permissions="SignPermission.signOperationColume()"fixed="left" label="仓库操作" width="150"  >
             <template #default="{ row }">
               <el-space>
-                <el-link type="primary" underline='never' @click="showSignDialog(row)">签收</el-link>
-                <el-link type="primary" underline='never' @click="handleGetSignRecord(row)">明细</el-link>
-                <el-link type="primary" underline='never' @click="showPrint(row)">打印</el-link>
+                <el-link v-permissions="SignPermission.SIGN_COMPONENT" type="primary" underline="never" @click="showSignDialog(row)">签收</el-link>
+                <el-link v-permissions="SignPermission.SIGN_RECORD_LIST" type="primary" underline="never" @click="handleGetSignRecord(row)">明细</el-link>
+                <el-link v-permissions="SignPermission.SIGN_PRINT" type="primary" underline="never" @click="showPrint(row)">打印</el-link>
               </el-space>
             </template>
           </el-table-column>
@@ -153,15 +153,15 @@
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
-            <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-              <el-option
-                v-for="item in printerOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+              <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
+              <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+                <el-option
+                  v-for="item in printerOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -185,7 +185,7 @@
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column fixed="left" label="操作" width="150" >
+          <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150" >
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" >
@@ -197,13 +197,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item>
-                      <el-link type="primary" underline='never' >打印面单</el-link>
+                      <el-link type="primary" underline="never" >打印面单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleGetSignedRecord(row)">
-                      <el-link type="primary" underline='never' >修改</el-link>
+                    <el-dropdown-item v-permissions="SignPermission.SIGN_RECORD_LIST" @click="handleGetSignedRecord(row)">
+                      <el-link type="primary" underline="never" >修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleIfShowRecord(row)">
-                      <el-link type="danger" underline='never' >取消签收</el-link>
+                    <el-dropdown-item v-permissions="SignPermission.SIGN_DELETE" @click="handleIfShowRecord(row)">
+                      <el-link type="danger" underline="never" >取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -499,19 +499,20 @@ import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
 import {
-    deleteSign,
-    deleteSignRecord,
-    getSignList,
-    getSignLog,
-    getSignRecord,
-    printSign,
-    signBatch,
-    signComponent,
-    signMoreRecord,
-    updateProductDate,
-    updateRecordOrder,
-    updateSignLog
+  deleteSign,
+  deleteSignRecord,
+  getSignList,
+  getSignLog,
+  getSignRecord,
+  printSign,
+  signBatch,
+  signComponent,
+  signMoreRecord,
+  updateProductDate,
+  updateRecordOrder,
+  updateSignLog
 } from '/@/api/devlocal/packagingShipping'
+import SignPermission from '/@/permissions/sign'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -609,7 +610,6 @@ const signFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
 // 展示签收弹窗
 const showSignDialog = (row: any) => {
-  console.log(row)
   signVisible.value = true
   copyRow.value = row
   // 默认初始化签收数量为零件采购数量

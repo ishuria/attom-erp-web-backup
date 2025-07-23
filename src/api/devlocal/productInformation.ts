@@ -14,7 +14,7 @@ import type {
   IUpdateBatchSkuShippingChannelMerchandise,
   IUpdateMerchandiseReq,
   IUpdateMerchandiseTypeBatchReq,
-  IUpdateSkuShippingChannelMerchandise
+  IUpdateSkuShippingChannelMerchandise,
 } from '/@/type/productInformation/channelType'
 import type {
   IAddComponentEncoding,
@@ -80,7 +80,7 @@ import type {
   IupdateProductSku,
   IupdateProductSkuRemark,
   IupdateProductStatus,
-  IupdateProductSupplier
+  IupdateProductSupplier,
 } from '/@/type/productInformation/skuInformationType'
 
 // SKU信息 - 获取查询列表
@@ -88,131 +88,133 @@ export function getProductList(data: IgetProductListQuery): Promise<IgetProductL
   return request({
     url: `${BASE_API}/product/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
 // SKU详情-获取详情
 export function getProductSkuDetail(params: ISkuId): Promise<IgetProductSkuDetailResp> {
-    return request({
-      url: `${BASE_API}/product/sku/detail`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/sku/detail`,
+    method: 'get',
+    params,
+  })
 }
 
 // SKU详情-sku零配件清单列表
 export function getProductDefaultListComponent(params: ISkuId) {
-    return request({
-      url: `${BASE_API}/product/defaultList/component`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/defaultList/component`,
+    method: 'get',
+    params,
+  })
 }
 
 // SKU详情-默认供应商、开票下拉修改
 export function getChangeProductComponent(params: IgetChangeProductComponent) {
-    return request({
-      url: `${BASE_API}/product/getChange/component`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/getChange/component`,
+    method: 'get',
+    params,
+  })
 }
 
 // SKU详情-查找零件的供应商
 export function getProductComponentSuppliser(params: IcomponentId) {
-    return request({
-      url: `${BASE_API}/product/list/component/suppliser`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/list/component/suppliser`,
+    method: 'get',
+    params,
+  })
 }
 // SKU详情-查找默认收货仓库列表
-export function getProductComponentStore(): Promise<{data: { id: number, label: string }[]}> {
-    return request({
-      url: `${BASE_API}/product/list/component/store`,
-      method: 'get',
-    })
+export function getProductComponentStore(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/product/list/component/store`,
+    method: 'get',
+  })
 }
 // SKU详情 - 获取采购方列表
 export function getProductComponentPurchase() {
-    return request({
-      url: `${BASE_API}/product/list/component/purchase`,
-      method: 'get',
-    })
+  return request({
+    url: `${BASE_API}/product/list/component/purchase`,
+    method: 'get',
+  })
 }
 
 // SKU详情-添加到其他SKU，初始化数据
 export function getProductSkuList(params: IexistingPartsListId) {
-    return request({
-      url: `${BASE_API}/product/getSku/list`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/getSku/list`,
+    method: 'get',
+    params,
+  })
 }
 
 // SKU供应商信息 - 查询
 export function getProductListSuppliser(params: IcomponentId) {
-    return request({
-      url: `${BASE_API}/product/list/suppliser`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/list/suppliser`,
+    method: 'get',
+    params,
+  })
 }
 // 耗材信息 - 查询耗材列表
 export function getProductConsumables(params: IgetProductConsumables) {
-    return request({
-      url: `${BASE_API}/product/list/consumables`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/list/consumables`,
+    method: 'get',
+    params,
+  })
 }
 // 耗材信息-查询耗材种类
 export function getProductConsumablesType() {
-    return request({
-      url: `${BASE_API}/product/list/consumablesType`,
-      method: 'get',
-    })
+  return request({
+    url: `${BASE_API}/product/list/consumablesType`,
+    method: 'get',
+  })
 }
 // 供应商 - 查询列表
 export function getProductSupplierList(data: IgetProductSupplierListQuery): Promise<IgetProductSupplierListResp> {
-    return request({
-      url: `${BASE_API}/product/suppliser/getList`,
-      method: 'post',
-      data
-    })
+  return request({
+    url: `${BASE_API}/product/suppliser/getList`,
+    method: 'post',
+    data,
+  })
 }
 // 供应商-合同模板下载
 export function downloadProductSupplier(params?: IsuppliserId): any {
-    return request({
-      url: `${BASE_API}/product/suppliser/download`,
-      method: 'get',
-      responseType: 'blob',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/suppliser/download`,
+    method: 'get',
+    responseType: 'blob',
+    params,
+  })
 }
 // 产品补货计算参数 - 获取补货参数列表
 export function getProductReplenList(data: IgetProductReplenListQuery): Promise<IgetProductReplenListResp> {
-    return request({
-      url: `${BASE_API}/product/replen/list`,
-      method: 'post',
-      data
-    })
+  return request({
+    url: `${BASE_API}/product/replen/list`,
+    method: 'post',
+    data,
+  })
 }
 // 零件报关信息 - 获取零件报关信息列表
 export function getProductCustomsList(data: IgetProductCustomsListQuery): Promise<IgetProductCustomsListResp> {
-    return request({
-      url: `${BASE_API}/product/customs/clearance/list`,
-      method: 'post',
-      data
-    })
+  return request({
+    url: `${BASE_API}/product/customs/clearance/list`,
+    method: 'post',
+    data,
+  })
 }
 // 零件报关信息 - 修改报关零件供应商信息
-export function updateProductCustomsClearanceSuppliserInfo(data: IUpdateProductCustomsClearanceSuppliserInfoReq): Promise<{ data: boolean }> {
+export function updateProductCustomsClearanceSuppliserInfo(
+  data: IUpdateProductCustomsClearanceSuppliserInfoReq
+): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/customs/clearance/suppliser/info/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 零件报关信息 - 修改零件报关信息
@@ -220,7 +222,7 @@ export function updateProductCustomsClearance(data: IUpdateProductCustomsClearan
   return request({
     url: `${BASE_API}/product/customs/clearance/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 查询hs下拉列表
@@ -232,26 +234,26 @@ export function getHsSelectList() {
 }
 // SKU质检清单-查询
 export function getProductQualityInspection(params: ISkuId): Promise<IgetProductQualityInspectionResp> {
-    return request({
-      url: `${BASE_API}/product/list/quality/inspection`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/list/quality/inspection`,
+    method: 'get',
+    params,
+  })
 }
 // SKU零配件清单-创建零件-获取所有的供应商
 export function getProductAllSupplier(params: ISuppliserName) {
-    return request({
-      url: `${BASE_API}/product/all/suppliser`,
-      method: 'get',
-      params
-    })
+  return request({
+    url: `${BASE_API}/product/all/suppliser`,
+    method: 'get',
+    params,
+  })
 }
 // SKU配件清单- 获取供应商税点信息
 export function getProductSupplier(params: ISuppliserName): Promise<IgetProductSupplier> {
   return request({
     url: `${BASE_API}/product/get/suppliser`,
     method: 'get',
-    params
+    params,
   })
 }
 // 获取所有公司所有人名
@@ -259,243 +261,243 @@ export function getProductAllName(params: IgetProductAllName) {
   return request({
     url: `${BASE_API}/product/getAllName`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * SKU信息-sku停产、优先打包、打包拍照状态修改
  */
 export function updateProductStatus(data?: IupdateProductStatus) {
-    return request({
-      url: `${BASE_API}/product/update/status`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/status`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU详情 - 更新SKU详情信息
  */
 export function updateProductSku(data?: IupdateProductSku) {
-    return request({
-      url: `${BASE_API}/product/update/sku`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/sku`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU详情 - 更新SKU产品经理的备注
  */
 export function updateProductSkuRemark(params?: IupdateProductSkuRemark) {
-    return request({
-      url: `${BASE_API}/product/update/sku/remark`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/update/sku/remark`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU详情 - 上传SKU图片
  */
 export function uploadSkuImage(data: FormData) {
-    return request({
-      url: `${BASE_API}/product/sku/upload/image`,
-      method: 'post',
-      headers: { 'content-type': 'multipart/form-data' },
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/sku/upload/image`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
 }
 /**
  * SKU详情 - 删除SKU图片
  */
 export function delSkuImage(params: ISkuId) {
-    return request({
-      url: `${BASE_API}/product/sku/delete/image`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/sku/delete/image`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU详情-创建零件
  */
 export function createProductComponent(data: IcreateProductComponent) {
-    return request({
-      url: `${BASE_API}/product/create/component`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/create/component`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU详情-删除SKU配件信息
  */
 export function delProductComponent(params: IcomponentId) {
-    return request({
-      url: `${BASE_API}/product/delete/component`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/delete/component`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU详情-修改零件
  */
 export function updateProductComponent(data: IupdateProductComponent) {
-    return request({
-      url: `${BASE_API}/product/update/component`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/component`,
+    method: 'post',
+    data,
+  })
 }
 
 /**
  * SKU详情-更新零件名
  */
 export function updateProductComponentName(data: IupdateProductComponentName) {
-    return request({
-      url: `${BASE_API}/product/update/componentName`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/componentName`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU详情-添加到其他sku
  */
 export function addProductComponentOtherSku(data: IaddProductComponentOtherSku) {
-    return request({
-      url: `${BASE_API}/product/add/component/otherSku`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/add/component/otherSku`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU供应商信息 - 添加供应商
  */
 export function createProductComponentSuppliser(data: IcreateProductComponentSuppliser) {
-    return request({
-      url: `${BASE_API}/product/create/component/suppliser`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/create/component/suppliser`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU供应商信息 - 修改
  */
 export function updateProductComponentSuppliser(data: IupdateProductComponentSuppliser) {
-    return request({
-      url: `${BASE_API}/product/update/component/suppliser`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/component/suppliser`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU供应商信息 - 图片上传
  */
 export function uploadComponentImage(data: FormData) {
-    return request({
-      url: `${BASE_API}/product/component/upload`,
-      method: 'post',
-      headers: { 'content-type': 'multipart/form-data' },
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/component/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
 }
 /**
  * SKU供应商信息 - 删除上传图片
  */
 export function delComponentImage(params: Iid) {
-    return request({
-      url: `${BASE_API}/product/component/del/img`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/component/del/img`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * 耗材信息- 创建耗材
  */
 export function createConsumables(data: IcreateConsumables) {
-    return request({
-      url: `${BASE_API}/product/create/consumables`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/create/consumables`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 耗材信息 - 添加供应商
  */
 export function createConsumablesSupplier(data: IcreateConsumablesSupplier) {
-    return request({
-      url: `${BASE_API}/product/create/consumables/suppliser`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/create/consumables/suppliser`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 耗材信息 - 耗材信息修改
  */
 export function updateConsumablesSupplier(data: IupdateConsumablesSupplier) {
-    return request({
-      url: `${BASE_API}/product/update/consumables/suppliser`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/consumables/suppliser`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 耗材信息 - 添加到其他SKU
  */
 export function addConsumablesOtherSku(data: IaddConsumablesOtherSku) {
-    return request({
-      url: `${BASE_API}/product/add/consumables/otherSku`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/add/consumables/otherSku`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 耗材信息-添加耗材种类
  */
 export function addConsumablesType(params: IConsumablesType) {
-    return request({
-      url: `${BASE_API}/product/add/consumables/type`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/add/consumables/type`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * 耗材信息-删除耗材种类
  */
 export function delConsumablesType(params: Iid) {
-    return request({
-      url: `${BASE_API}/product/delete/consumables/type`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/delete/consumables/type`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * 供应商 - 修改
  */
 export function updateProductSupplier(data: IupdateProductSupplier) {
-    return request({
-      url: `${BASE_API}/product/suppliser/update`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/suppliser/update`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * 供应商-上传通过合同模板
  */
 export function uploadProductSupplierFile(data: FormData) {
-    return request({
-      url: `${BASE_API}/product/suppliser/file/upload`,
-      method: 'post',
-      headers: { 'content-type': 'multipart/form-data' },
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/suppliser/file/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
 }
 /**
  * 供应商-特殊合同模板上传
  */
 export function uploadProductSupplierSpecialFile(data: FormData) {
-    return request({
-      url: `${BASE_API}/product/suppliser/specialFile/upload`,
-      method: 'post',
-      headers: { 'content-type': 'multipart/form-data' },
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/suppliser/specialFile/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
 }
 /**
  * 产品补货计算参数 - 批量修改
@@ -512,51 +514,51 @@ export function updateProductReplenParams(data: IupdateProductReplenParams) {
  * SKU质检清单-添加质检清单
  */
 export function addProductQualityInspection(data: IaddProductQualityInspection) {
-    return request({
-      url: `${BASE_API}/product/add/quality/inspection`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/add/quality/inspection`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU质检清单-删除质检清单
  */
 export function delProductQualityInspection(params: Iid) {
-    return request({
-      url: `${BASE_API}/product/delete/quality/inspection`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/delete/quality/inspection`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU质检清单-修改质检清单
  */
 export function updateProductQualityInspection(data: IaddProductQualityInspection) {
-    return request({
-      url: `${BASE_API}/product/update/quality/inspection`,
-      method: 'post',
-      data,
-    })
+  return request({
+    url: `${BASE_API}/product/update/quality/inspection`,
+    method: 'post',
+    data,
+  })
 }
 /**
  * SKU零配件清单-保存采购注意事项
  */
 export function saveProductPurchaseMatters(params: IsaveProductPurchaseMatters) {
-    return request({
-      url: `${BASE_API}/product/save/purchaseMatters`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/save/purchaseMatters`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU零配件清单-保存合同条款
  */
 export function saveProductContractTerms(params: IsaveProductContractTerms) {
-    return request({
-      url: `${BASE_API}/product/save/contractTerms`,
-      method: 'post',
-      params,
-    })
+  return request({
+    url: `${BASE_API}/product/save/contractTerms`,
+    method: 'post',
+    params,
+  })
 }
 /**
  * SKU零配件清单-保存零件套装明细
@@ -651,7 +653,7 @@ export function updateCustomsClearanceRatio(data: IUpdateCustomsClearanceRatioRe
   return request({
     url: `${BASE_API}/customs/clearance/ratio/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -663,7 +665,7 @@ export function updateProductCustomsClearanceStatus(params: IUpdateProductCustom
   return request({
     url: `${BASE_API}/product/customs/clearance/status/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -674,7 +676,7 @@ export function getMerchandiseList(data: IGetMerchandiseListReq): Promise<IGetMe
   return request({
     url: `${BASE_API}/merchandise/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -684,7 +686,7 @@ export function getSkuShippingChannelList(params: IGetMerchandiseListReq): Promi
   return request({
     url: `${BASE_API}/sku/shipping/channel/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -712,7 +714,7 @@ export function getMerchandiseDetail(params: IId): Promise<IGetMerchandiseDetail
   return request({
     url: `${BASE_API}/merchandise/detail`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -722,7 +724,7 @@ export function updateMerchandise(data: IUpdateMerchandiseReq): Promise<IBoolean
   return request({
     url: `${BASE_API}/merchandise/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -732,7 +734,7 @@ export function addMerchandise(data: { merchandiseName: string }): Promise<IBool
   return request({
     url: `${BASE_API}/merchandise/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -742,7 +744,7 @@ export function getMerchandiseChannelDetail(params: ITypeId): Promise<IGetMercha
   return request({
     url: `${BASE_API}/merchandise/channel/detail`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -752,7 +754,7 @@ export function updateSkuShippingChannelMerchandise(params: IUpdateSkuShippingCh
   return request({
     url: `${BASE_API}/sku/shipping/channel/merchandise/update`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -762,7 +764,7 @@ export function updateBatchSkuShippingChannelMerchandise(params: IUpdateBatchSku
   return request({
     url: `${BASE_API}/sku/shipping/channel/merchandise/update/batch`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -772,7 +774,7 @@ export function getMerchandiseTypeChannel(params: { typeId: number }): Promise<I
   return request({
     url: `${BASE_API}/merchandise/type/channel`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -782,7 +784,7 @@ export function updateMerchandiseTypeBatch(data: IUpdateMerchandiseTypeBatchReq)
   return request({
     url: `${BASE_API}/merchandise/type/batch/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -793,28 +795,28 @@ export function getSkuInfo(params: { sku: string }): Promise<IGetSkuInfoRes> {
   return request({
     url: `${BASE_API}/get/skuInfo`,
     method: 'get',
-    params
+    params,
   })
 }
 
 /**
  * HTS 欧洲下拉列表
  */
-export function getHtsUkList(params:{country:string}): Promise<{ data: { id: number, label: string }[] }> {
+export function getHtsUkList(params: { country: string }): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/hts/europe/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * HTS 美国下拉列表
  */
-export function getHtsSelectList(params:{country:string}): Promise<{ data: { id: number, label: string }[] }> {
+export function getHtsSelectList(params: { country: string }): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/hts/select/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -824,77 +826,76 @@ export function updateCustomsClearanceSkuHts(data: IUpdateCustomsClearanceSkuHts
   return request({
     url: `${BASE_API}/customs/clearance/sku/hts/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * sku复制
  */
-export function copyProductSku(data: { skuId: number, sku: string }): Promise<{ data: boolean }> {
+export function copyProductSku(data: { skuId: number; sku: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/sku/copy`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * sku hts 信息列表查询
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getCustomsClearanceSkuHtsList(params: { skuCustomsDeclarationId: number }): Promise<{ data: Object }> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/hts/list`,
     method: 'post',
-    params
+    params,
   })
 }
 
-
 /**
  * sku清关信息查看
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getCustomsClearanceSkuInfo(params: { skuCustomId: number }): Promise<IGetCustomsClearanceSkuInfoRes> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/info`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * sku清关信息修改
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function updateCustomsClearanceSkuInfo(data: IUpdateCustomsClearanceSkuInfo): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/info/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * sku清关信息新增
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function addCustomsClearanceSkuInfo(data: IAddCustomsClearanceSkuInfo): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/info/add`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * 获取sku报关国家列表
- * @returns 
+ * @returns
  */
-export function getCustomsClearanceCountryList(): Promise<{ data: { id: number, label: string }[] }>  {
+export function getCustomsClearanceCountryList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/customs/clearance/country/list`,
     method: 'get',
@@ -904,67 +905,67 @@ export function getCustomsClearanceCountryList(): Promise<{ data: { id: number, 
 // ----------------------- 开票分类 ---------------------------
 /**
  * 零件开票分类-列表获取
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getComponentInvoiceTypeList(params: IGetComponentInvoiceTypeReq): Promise<IGetComponentInvoiceTypeRes> {
   return request({
     url: `${BASE_API}/component/invoice/type/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * 零件开票分类-添加分类编码
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function addComponentEncoding(data: IAddComponentEncoding): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/component/encoding/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 零件开票分类-删除分类编码
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function delComponentEncoding(params: { id: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/component/encoding/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * 零件开票分类-分类编码设定列表获取
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getComponentEncodingList(params: IGetComponentInvoiceTypeReq): Promise<IGetComponentEncodingListRes> {
   return request({
     url: `${BASE_API}/component/encoding/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
  * 零件开票分类-修改税收分类编码和分类名
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function updateComponentEncoding(params: { id: number, taxationEncoding?: string, typeName?: string }): Promise<{ data: boolean }> {
+export function updateComponentEncoding(params: { id: number; taxationEncoding?: string; typeName?: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/component/encoding/update`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * 零件开票分类-分类名列表获取
- * @returns 
+ * @returns
  */
 export function getComponentTypeList() {
   return request({
@@ -974,39 +975,39 @@ export function getComponentTypeList() {
 }
 /**
  * 零件开票分类-修改零件的分类
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function updateBatchComponentType(params: { ids: string, typeEncodingId: number }): Promise<{ data: boolean }> {
+export function updateBatchComponentType(params: { ids: string; typeEncodingId: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/component/batch/encoding/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
 /**
  * sku查询零件报关信息
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
-export function getSkuComponentInfo(data: { existingPartsListId: number, suppliserId: number }): Promise<{ data: IGetSkuComponentInfo }> {
+export function getSkuComponentInfo(data: { existingPartsListId: number; suppliserId: number }): Promise<{ data: IGetSkuComponentInfo }> {
   return request({
     url: `${BASE_API}/sku/component/info`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * sku零件报关信息修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updateSkuComponentInfo(data: IUpdateSkuComponent): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/sku/component/update`,
     method: 'post',
-    data
+    data,
   })
 }

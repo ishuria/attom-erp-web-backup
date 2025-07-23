@@ -3,7 +3,7 @@
     <vab-card class="auto-height-card">
       <vab-query-form>
         <vab-query-form-top-panel :span="12">
-          <el-button v-permissions="{ permission: ['system:menu:add']}" :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+          <el-button v-permissions="{ permission: [MenuPermission.ADD] }" :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-table
@@ -46,10 +46,10 @@
 
         <el-table-column align="center" label="创建时间" min-width="120" prop="createTime" show-overflow-tooltip />
 
-        <el-table-column v-permissions="{ permission: ['system:menu:update', 'system:menu:delete'] }" align="center" label="操作" width="200">
+        <el-table-column v-permissions="MenuPermission.operationColPermission()" align="center" label="操作" width="200">
           <template #default="{ row }">
-            <el-button v-permissions="{ permission: ['system:menu:update',]}" text type="primary" @click="handleEdit(row)">编辑</el-button>
-            <el-button v-permissions="{ permission: ['system:menu:delete',]}" text type="danger" @click="handleDelete(row)">删除</el-button>
+            <el-button v-permissions="{ permission: [MenuPermission.UPDATE] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
+            <el-button v-permissions="{ permission: [MenuPermission.DELETE] }" text type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
         <template #empty>
@@ -66,6 +66,7 @@
 import { Plus } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, getMenuList, } from '/@/api/devlocal/router'
+import MenuPermission from '/@/permissions/menu'
 import type { IMenuQueryResp } from '/@/type/menu/menuType'
 
 defineOptions({

@@ -2,8 +2,8 @@
   <div class="user-management-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button v-permissions="{ permission: ['system:user:add'] }" :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
-        <el-button v-permissions="{ permission: ['system:user:more:delete'] }" :icon="Delete" type="danger" @click="handleDelete">
+        <el-button v-permissions="{ permission: [UserPermission.ADD] }" :icon="Plus" type="primary" @click="handleAdd">添加</el-button>
+        <el-button v-permissions="{ permission: [UserPermission.MORE_DELETE] }" :icon="Delete" type="danger" @click="handleDelete">
           批量删除
         </el-button>
       </vab-query-form-left-panel>
@@ -52,10 +52,10 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
-      <el-table-column v-permissions="{ permission: ['system:user:edit', 'system:user:delete'] }" align="center" label="操作" width="250">
+      <el-table-column v-permissions="UserPermission.userOperationColPermission()" align="center" label="操作" width="250">
         <template #default="{ row }">
-          <el-button v-permissions="{ permission: ['system:user:edit'] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
-          <el-button v-permissions="{ permission: ['system:user:delete'] }" text type="danger" @click="handleDelete(row)">删除</el-button>
+          <el-button v-permissions="{ permission: [UserPermission.EDIT] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button v-permissions="{ permission: [UserPermission.DELETE] }" text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -76,8 +76,9 @@
 <script lang="ts" setup>
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { doDelete, doMostDelete, getList, getSupervisorList } from '/@/api/devlocal/user'
-import type {IUserQuery, IUserQueryReq} from '/@/type/user/userType'
+import { doDelete, doMostDelete, getList } from '/@/api/devlocal/user'
+import UserPermission from '/@/permissions/user'
+import type { IUserQuery, IUserQueryReq } from '/@/type/user/userType'
 
 defineOptions({
   name: 'User',

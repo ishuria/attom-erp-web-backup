@@ -21,7 +21,7 @@ import type {
   ISampleListResp,
   IShareListResp,
   ISharePersonReq,
-  ISharelistQueryReq
+  ISharelistQueryReq,
 } from '/@/type/progress/progressType'
 
 /**
@@ -51,7 +51,7 @@ export function getProgressSharelist(params: IProgressId): Promise<IShareListRes
  * 新品进度-评估id查询新款评估信息
  * @param idNo 评估id
  */
-export function getByIdQueryEvaluation(params: IIdNo): Promise<IGetByIdQueryEvaluationResp>{
+export function getByIdQueryEvaluation(params: IIdNo): Promise<IGetByIdQueryEvaluationResp> {
   return request({
     url: `${BASE_API}/evaluation/getById`,
     method: 'get',
@@ -81,7 +81,7 @@ export function getProgressLog(params?: IProgressId) {
 /**
  * 新品进度-开模进度列表
  */
-export function getProgressMoldList(params?: ISampleListQueryReq): Promise<IProgressMoldListResp>{
+export function getProgressMoldList(params?: ISampleListQueryReq): Promise<IProgressMoldListResp> {
   return request({
     url: `${BASE_API}/progress/mold/list`,
     method: 'get',
@@ -118,8 +118,6 @@ export function getProgressPersonList() {
   })
 }
 
-
-
 /**
  * 图片上传请求
  */
@@ -139,7 +137,7 @@ export function deleteImage(data: FormData) {
     url: `${BASE_API}/progress/del/image`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 /**
@@ -235,7 +233,7 @@ export function updateProgressArchive(params?: IProgressId) {
 /**
  * 新品进度-参与人员筛选
  */
-export function getProgressFilter(data?: ISharePersonReq): Promise<IProgressFilterResp>{
+export function getProgressFilter(data?: ISharePersonReq): Promise<IProgressFilterResp> {
   return request({
     url: `${BASE_API}/progress/filter`,
     method: 'post',
@@ -254,12 +252,10 @@ export function updateBulkGoodsStatusByProgressId(params?: IProgressId) {
   })
 }
 
-export function updateBulkGoodsStatusByReviewId(params: { reviewId: number, status: number}) {
+export function updateBulkGoodsStatusByReviewId(params: { reviewId: number; status: number }) {
   return request({
     url: `${BASE_API}/progress/bulk_goods_status/view/update`,
     method: 'post',
     params,
   })
 }
-
-

@@ -2,15 +2,15 @@
   <div class="custom-table-container auto-height-container" :class="{ 'vab-table-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button v-permissions="{ permission: ['newProduct:evaluation:add'] }" type="primary" @click="startEvaluation">开始评估</el-button>
+        <el-button v-permissions="{ permission: [EvaluationPermission.ADD] }" type="primary" @click="startEvaluation">开始评估</el-button>
         <el-button
-          v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }"
+          v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }"
           type="primary"
           @click="keyWordTrendVisible = true"
         >
           关键词趋势
         </el-button>
-        <el-button v-permissions="{ permission: ['newProduct:evaluation:default:params'] }" type="primary" @click="getScoreParams">
+        <el-button v-permissions="{ permission: [EvaluationPermission.DEFAULT_PARAMS] }" type="primary" @click="getScoreParams">
           评分参数
         </el-button>
         <!-- <el-button
@@ -105,7 +105,7 @@
                   <el-link type="primary" underline='never'>查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:keyword:trend'] }" type="primary" underline='never'>
+                  <el-link v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" underline="never">
                     关键词趋势
                   </el-link>
                 </el-dropdown-item>
@@ -113,7 +113,7 @@
                   <el-link type="primary" underline='never'>共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
-                  <el-link v-permissions="{ permission: ['newProduct:evaluation:score:detail'] }" type="primary" underline='never'>
+                  <el-link v-permissions="{ permission: [EvaluationPermission.SCORE_DETAIL] }" type="primary" underline="never">
                     分数明细
                   </el-link>
                 </el-dropdown-item>
@@ -229,30 +229,31 @@ import { type TableInstance } from 'element-plus'
 import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
 import {
-    getEstimatedCostAccountingList,
-    getEvaluationScoreDetail,
-    getEvaluationScoreParameter,
-    getEvaluationShareInfo,
-    getEvaluationTrendList,
-    getList,
-    getSalesSiteList,
-    updateEvaluationScoreParams,
-    updateSharePerson,
+  getEstimatedCostAccountingList,
+  getEvaluationScoreDetail,
+  getEvaluationScoreParameter,
+  getEvaluationShareInfo,
+  getEvaluationTrendList,
+  getList,
+  getSalesSiteList,
+  updateEvaluationScoreParams,
+  updateSharePerson,
 } from '/@/api/devlocal/evaluation'
 import { getUserInfo } from '/@/api/devlocal/userLogin'
 import type {
-    IBenchmarkScore,
-    ICostAccounting,
-    IEstimatedCostAccounting,
-    IEvaluation,
-    IEvaluationQueryReq,
-    IEvaluationScore,
-    IKeyWordTrend,
-    IShared,
+  IBenchmarkScore,
+  ICostAccounting,
+  IEstimatedCostAccounting,
+  IEvaluation,
+  IEvaluationQueryReq,
+  IEvaluationScore,
+  IKeyWordTrend,
+  IShared,
 } from '/@/type/evaluation/evaluationType'
 
 import type { CSSProperties } from 'vue'
 import { getChannelList } from '/@/api/devlocal/encasement'
+import EvaluationPermission from '/@/permissions/evaluation'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleMatched, handleTabs } from '/@/utils/routes'

@@ -2,10 +2,8 @@
   <div class="role-management-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
-        <el-button v-permissions="{ permission: ['system:role:add'] }" :icon="Plus" type="primary" @click="handleEdit()">添加</el-button>
-        <el-button v-permissions="{ permission: ['system:role:more:delete'] }" :icon="Delete" type="danger" @click="handleDelete()">
-          批量删除
-        </el-button>
+        <el-button v-permissions="{ permission: [RolePermission.ADD] }" :icon="Plus" type="primary" @click="handleEdit()">添加</el-button>
+        <el-button v-permissions="{ permission: [RolePermission.MORE_DELETE] }" :icon="Delete" type="danger" @click="handleDelete()">批量删除</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -32,10 +30,10 @@
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-permissions="{ permission: ['system:role:edit', 'system:role:delete'] }" align="center" label="操作" width="200">
+      <el-table-column v-permissions="RolePermission.operationColPermission()" align="center" label="操作" width="200">
         <template #default="{ row }">
-          <el-button v-permissions="{ permission: ['system:role:edit'] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
-          <el-button v-permissions="{ permission: ['system:role:delete'] }" text type="danger" @click="handleDelete(row)">删除</el-button>
+          <el-button v-permissions="{ permission: [RolePermission.EDIT] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
+          <el-button v-permissions="{ permission: [RolePermission.DELETE] }" text type="danger" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -57,7 +55,8 @@
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { doDelete, doDeleteList, getAllList } from '/@/api/devlocal/role'
-import type { IRole,IRoleQuery} from '/@/type/role/roleType'
+import RolePermission from '/@/permissions/role'
+import type { IRole, IRoleQuery } from '/@/type/role/roleType'
 
 defineOptions({
   name: 'Role',
