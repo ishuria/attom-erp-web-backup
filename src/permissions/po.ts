@@ -23,35 +23,6 @@ class PoPermission {
   static readonly QUERY = 'purchase:po:query'
   /** 付款记录权限 */
   static readonly PAY_RECORD = 'purchase:pay:record'
-
-  /** 查询表单权限 */
-  static queryFormPermission(): PermissionConfig {
-    return {
-      role: [],
-      permission: [PoPermission.QUERY],
-      mode: 'oneOf',
-    }
-  }
-
-  /** 操作按钮权限 */
-  static operationButtonsPermission(): PermissionConfig {
-    return {
-      role: [],
-      permission: [
-        PoPermission.PAY,
-        PoPermission.PAY_BATCH,
-        PoPermission.PAY_REFUND,
-        PoPermission.TOTAL_PRICE_ALLOCATION,
-        PoPermission.GENERATE_CONTRACT,
-        PoPermission.AGGREGATION_CONTRACT,
-        PoPermission.REMITTANCE_TEMPLATE,
-        PoPermission.COST_REDUCTION_APPLY,
-        PoPermission.COMPONENT_AUTO_QUERY,
-        PoPermission.DELETE,
-      ],
-      mode: 'oneOf',
-    }
-  }
 }
 
 export default PoPermission
