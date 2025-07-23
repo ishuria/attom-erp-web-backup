@@ -447,7 +447,7 @@ const cellClassName2 = (data: {row: any, column: any, rowIndex: number, columnIn
   return ''
 }
 
-// 已发货（未到货）col合并方法
+// 未到货col合并方法
 const objectSpanMethod = ({
     row,
     rowIndex,

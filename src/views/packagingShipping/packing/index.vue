@@ -2,9 +2,9 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel :span="18">
-        <el-button type="primary" @click="showBoxNumber">开始装箱</el-button>
-        <el-button type="primary" @click="showShippingAmazon">发货(亚马逊)</el-button>
-        <el-button type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" type="primary" @click="showBoxNumber">开始装箱</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_AMAZON] }" type="primary" @click="showShippingAmazon">发货(亚马逊)</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_WALMART] }" type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
         <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button>
         <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
         <el-button type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
@@ -41,6 +41,7 @@
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-table
+      v-permissions="{ permission: [EncasementPermission.ENCASEMENT_LIST] }"
       border 
       :cell-style="cellStyle"
       class="noneHoveTable"
@@ -48,9 +49,9 @@
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
+      @cell-click="handleCellClick"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
-      @cell-click="handleCellClick"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
@@ -92,13 +93,13 @@
       </el-table-column>
       <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')"/>
       <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')"/>
-      <el-table-column label="备注" prop="remarks" min-width="100">
+      <el-table-column label="备注" min-width="100" prop="remarks">
         <template #default="{ row }">
           <el-tooltip effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip">{{ row.remarks }}</div>
             </template>
-            <el-text truncated style="vertical-align: middle;">{{ row.remarks }}</el-text>
+            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -210,7 +211,7 @@
           <el-input v-model="shipmentWalmartForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentWalmartForm.channel" filterable clearable placeholder="请选择货代渠道">
+          <el-select v-model="shipmentWalmartForm.channel" clearable filterable placeholder="请选择货代渠道">
             <el-option 
               v-for="item in channelList"
               :key="item.id"
@@ -301,7 +302,7 @@
           <el-input v-model="shipmentAmazonForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentAmazonForm.channel" filterable clearable placeholder="请选择货代渠道">
+          <el-select v-model="shipmentAmazonForm.channel" clearable filterable placeholder="请选择货代渠道">
             <el-option 
               v-for="item in channelList"
               :key="item.id"
@@ -470,8 +471,8 @@
       </el-table>
     </vab-dialog>
     <!-- 误差 -->
-    <vab-dialog title="修改误差" width="10%" v-model="updateErrorVisible">
-      <el-form :model="errorForm" ref="errorFormRef" :rules="errorFormRules" label-position="top" >
+    <vab-dialog v-model="updateErrorVisible" title="修改误差" width="10%">
+      <el-form ref="errorFormRef" label-position="top" :model="errorForm" :rules="errorFormRules" >
         <el-form-item label="误差" prop="error">
           <el-input v-model="errorForm.error" clearable >
             <template #suffix>
@@ -489,8 +490,8 @@
     <!-- 修改备注 -->
     <vab-remark-dialog 
       v-model="remarkVisible"
-      title="修改备注"
       :remark="remark"
+      title="修改备注"
       @update:remark="handleUpdateRemark"
     />
   </div>
@@ -503,36 +504,37 @@ import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
-    checkEncasementShipment,
-    confirmEncasementShipments,
-    delEncasement,
-    doLockEncasement,
-    finishWalmartShipment,
-    generateTemplateFile1,
-    generateTemplateFile3,
-    generateWalmartShipment,
-    getChannelList,
-    getEncasementError,
-    getEncasementList,
-    getEncasementUserPrinter,
-    getIncrementBoxNo,
-    getProductNewSkuList,
-    getReinsertionBoxNo,
-    insertPdf,
-    plusEncasementCount,
-    printEncasement,
-    reduceEncasementCount,
-    splitEncasement,
-    splitEncasementCsv,
-    unlockEncasement,
-    updateEncasementError,
-    updateEncasementRemark,
-    updateEncasementShipmentDate,
-    updateEncasementUserPrinter,
-    uploadEncasementFile,
-    uploadGenerateTemplateFile2
+  checkEncasementShipment,
+  confirmEncasementShipments,
+  delEncasement,
+  doLockEncasement,
+  finishWalmartShipment,
+  generateTemplateFile1,
+  generateTemplateFile3,
+  generateWalmartShipment,
+  getChannelList,
+  getEncasementError,
+  getEncasementList,
+  getEncasementUserPrinter,
+  getIncrementBoxNo,
+  getProductNewSkuList,
+  getReinsertionBoxNo,
+  insertPdf,
+  plusEncasementCount,
+  printEncasement,
+  reduceEncasementCount,
+  splitEncasement,
+  splitEncasementCsv,
+  unlockEncasement,
+  updateEncasementError,
+  updateEncasementRemark,
+  updateEncasementShipmentDate,
+  updateEncasementUserPrinter,
+  uploadEncasementFile,
+  uploadGenerateTemplateFile2
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import EncasementPermission from '/@/permissions/encasement'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
