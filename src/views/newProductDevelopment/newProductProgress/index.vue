@@ -6,7 +6,7 @@
           <vab-query-form-left-panel>
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
 <!--            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>-->
-            <el-button type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
+            <el-button v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }" type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -192,26 +192,26 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="handleSampleCosting(row)">
-                      <el-link type="primary" underline='never'>拿样与核算</el-link>
+                      <el-link type="primary" underline="never">拿样与核算</el-link>
                     </el-dropdown-item>
 <!--                    <el-dropdown-item @click="addProgressMold">-->
-<!--                      <el-link type="primary" underline='never'>开模申请</el-link>-->
+<!--                      <el-link type="primary" underline="never">开模申请</el-link>-->
 <!--                    </el-dropdown-item>-->
                     <el-dropdown-item @click="handleOrderProcess(row)">
-                      <el-link type="primary" underline='never'>{{ handleSwitchName(row) }}</el-link>
+                      <el-link type="primary" underline="never">{{ handleSwitchName(row) }}</el-link>
                     </el-dropdown-item>
                   
                     <el-dropdown-item @click="handleCopyProgress(row)">
-                      <el-link type="primary" underline='never'>复制</el-link>
+                      <el-link type="primary" underline="never">复制</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetShareList(row.progressId)">
-                      <el-link type="primary" underline='never'>共享</el-link>
+                      <el-link type="primary" underline="never">共享</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleGetEvaluationById(row.evaluationId)">
-                      <el-link type="primary" underline='never'>查看新款评估</el-link>
+                      <el-link type="primary" underline="never">查看新款评估</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleArchived(row.progressId)">
-                      <el-link type="primary" underline='never'>归档</el-link>
+                      <el-link type="primary" underline="never">归档</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -234,7 +234,7 @@
       <el-tab-pane label="已归档" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleArchivedPersonselect">参与人员筛选</el-button>
+            <el-button v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }" type="primary" @click="handleArchivedPersonselect">参与人员筛选</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -580,21 +580,22 @@ import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
 import wangEditor from './wangEditor.vue'
 import {
-    copyProgress,
-    deleteImage,
-    getByIdQueryEvaluation,
-    getList,
-    getProgressLog,
-    getProgressPersonList,
-    getProgressSharelist,
-    getProgressSuppliserList,
-    updateProgressArchive,
-    updateProgressImgSort,
-    updateProgressManage,
-    updateProgressMoldAdd,
-    updateProgressSharelist,
-    uploadFile
+  copyProgress,
+  deleteImage,
+  getByIdQueryEvaluation,
+  getList,
+  getProgressLog,
+  getProgressPersonList,
+  getProgressSharelist,
+  getProgressSuppliserList,
+  updateProgressArchive,
+  updateProgressImgSort,
+  updateProgressManage,
+  updateProgressMoldAdd,
+  updateProgressSharelist,
+  uploadFile
 } from '/@/api/devlocal/progress'
+import ProgressPermission from '/@/permissions/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation, IProgress, IProgressQueryReq, IProgressShared, ISelectShare } from '/@/type/progress/progressType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
