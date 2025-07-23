@@ -67,7 +67,7 @@ export interface IKeyWordTrend {
  */
 export interface IEstimatedCostAccounting {
   // id
-  id?: string
+  id: string
   // 评估id
   evaluationId?: string
   // 日期
