@@ -202,7 +202,7 @@
         <el-table-column label="ROI" prop="roi" width="80">
           <template #default="{ row }">
             <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(estimatedCostList, 'ROI%', 'roi', 0), 'text-align': 'right' }">
-              {{ row.roi != null ? row.roi + '%' : '' }}
+              {{ row.roi != null && row.roi != '' ? row.roi + '%' : '' }}
             </span>
           </template>
         </el-table-column>
@@ -236,6 +236,14 @@
             </div>
             <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(estimatedCostList, '关税%', 'tariff', 0), 'text-align': 'right' }">
               {{ row.tariff ? row.tariff + '%' : '' }}
+            </span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="关税" width="80">
+          <template #default="{ row }">
+            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(estimatedCostList, '关税', 'tariffPrice', 0), 'text-align': 'right' }">
+              {{ row.tariffPrice ? '￥' + row.tariffPrice : '' }}
             </span>
           </template>
         </el-table-column>

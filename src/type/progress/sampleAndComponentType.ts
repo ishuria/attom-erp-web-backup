@@ -159,6 +159,10 @@ export interface IProgressEstimatedCostAccounting {
   volumeCoefficient?: string
   // 关税
   tariff?: string
+  /** 关税金额 */
+  tariffPrice?: string
+  /** 货币符号 */
+  symbol?: string
   // 平台佣金
   platformCommission?: string
   // 仓储费
