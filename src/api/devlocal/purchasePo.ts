@@ -352,8 +352,8 @@ export function deletePo(params: IIds): Promise<IBooleanResp> {
 }
 /**
  * 采购计划 - poSku零件清单删除
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function deletePurchasePlanPoSkuComponent(params: { id: number }): Promise<IBooleanResp> {
   return request({
@@ -364,8 +364,8 @@ export function deletePurchasePlanPoSkuComponent(params: { id: number }): Promis
 }
 /**
  * 采购计划-SKU删除
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function deletePurchasePlanPo(params: { poSkuId: number }): Promise<IBooleanResp> {
   return request({
@@ -557,10 +557,10 @@ export function planPorMoq(params?: IId) {
 }
 /**
  * @description 采购订单-降本提成申请
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq): Promise<{data: boolean}> {
+export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/purchase/cost/reduction/apply`,
     method: 'post',
@@ -568,13 +568,14 @@ export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq
   })
 }
 
-
 /**
  * @description 采购订单-查询采购降本默认金额
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function getPurchaseCostReduction(params: { poComponentId: number }): Promise<{ data: { beforePrice: number, afterPrice: number } }> {
+export function getPurchaseCostReduction(params: {
+  poComponentId: number
+}): Promise<{ data: { beforePrice: number; afterPrice: number } }> {
   return request({
     url: `${BASE_API}/purchase/cost/reduction/get`,
     method: 'post',
@@ -583,8 +584,8 @@ export function getPurchaseCostReduction(params: { poComponentId: number }): Pro
 }
 /**
  * @description 采购订单-详情前置check
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function checkPurchasePo(params: { poId: number }): Promise<{ data: boolean }> {
   return request({
@@ -595,8 +596,8 @@ export function checkPurchasePo(params: { poId: number }): Promise<{ data: boole
 }
 /**
  * 查询po sku 零件的零件明细
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getPoSkuComponentSuitDetail(params: { id: number }): Promise<{ data: string }> {
   return request({
@@ -607,10 +608,10 @@ export function getPoSkuComponentSuitDetail(params: { id: number }): Promise<{ d
 }
 /**
  * 更新po sku 零件套装明细
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function updatePoSkuComponentSuitDetail(params: { id: number, componentSuitDetail: string }): Promise<{ data: boolean }> {
+export function updatePoSkuComponentSuitDetail(params: { id: number; componentSuitDetail: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/purchase/poSkuComponent/update/componentSuitDetail`,
     method: 'post',
@@ -620,7 +621,7 @@ export function updatePoSkuComponentSuitDetail(params: { id: number, componentSu
 /**
  * 获取当前人的采购奖金
  */
-export function getPurchaseBonus(): Promise<{ data: { procurementBonus: number, procurementBonusCrossMonth: number }}> {
+export function getPurchaseBonus(): Promise<{ data: { procurementBonus: number; procurementBonusCrossMonth: number } }> {
   return request({
     url: `${BASE_API}/purchase/buns`,
     method: 'get',
@@ -628,10 +629,10 @@ export function getPurchaseBonus(): Promise<{ data: { procurementBonus: number, 
 }
 /**
  * 采购PO的需新品质检更新
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function updatePurchasePlanPoQualityMark(params: { poSkuId: number, status: number }): Promise<{ data: boolean }> {
+export function updatePurchasePlanPoQualityMark(params: { poSkuId: number; status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/purchase/planPo/qualityMark`,
     method: 'post',
@@ -641,8 +642,8 @@ export function updatePurchasePlanPoQualityMark(params: { poSkuId: number, statu
 
 /**
  * 采购订单-查看零件报关信息
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function getPurchaseComponentCustomInfo(params: { id: number }): Promise<{ data: IGetPurchaseComponentCustomInfo }> {
   return request({
@@ -650,16 +651,16 @@ export function getPurchaseComponentCustomInfo(params: { id: number }): Promise<
     method: 'get',
     params,
   })
-} 
+}
 /**
  * 采购订单-修改保存零件报关信息
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
-export function updatePurchaseComponentCustomInfo(data: IGetPurchaseComponentCustomInfo ): Promise<{ data: boolean }> {
+export function updatePurchaseComponentCustomInfo(data: IGetPurchaseComponentCustomInfo): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/purchase/component/custom/update`,
     method: 'post',
     data,
   })
-} 
+}

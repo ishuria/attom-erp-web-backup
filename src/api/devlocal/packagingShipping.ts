@@ -60,7 +60,7 @@ import type {
   IUpdateRecordOrder,
   IUpdateSalesStatus,
   IUpdateSignLog,
-  IUserIds
+  IUserIds,
 } from '/@/type/packagingShipping/packagingType'
 
 import type {
@@ -68,7 +68,7 @@ import type {
   IAddSkuPackagingTimeConsolidationReq,
   IGetPackagingSkuSelectListRes,
   IGetPackagingTimeConsolidationListReq,
-  IGetPackagingTimeConsolidationListRes
+  IGetPackagingTimeConsolidationListRes,
 } from '/@/type/packagingShipping/timeConsolidationType'
 
 export function getSignList(data: IGetSignListQuery): Promise<IGetSignListResp> {
@@ -190,7 +190,7 @@ export function confirmStartTask(data: IConfirmStartTask): Promise<IBooleanResp>
   return request({
     url: `${BASE_API}/package/startTask`,
     method: 'post',
-    data
+    data,
   })
 }
 // 开始多个任务-选择人员后确定
@@ -198,7 +198,7 @@ export function confirmStartMoreTask(data: IConfirmStartMoreTask): Promise<IBool
   return request({
     url: `${BASE_API}/package/more/startTask`,
     method: 'post',
-    data
+    data,
   })
 }
 // 结束任务-列表数据初始化
@@ -213,7 +213,7 @@ export function confirmEndTask(data: IConfirmEndTask): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/package/endTask`,
     method: 'post',
-    data
+    data,
   })
 }
 // 当前任务加人-初始人员数据获取
@@ -228,7 +228,7 @@ export function confirmCurrentTaskAddPerson(params: IUserIds): Promise<IBooleanR
   return request({
     url: `${BASE_API}/package/current/task/addPerson`,
     method: 'post',
-    params
+    params,
   })
 }
 // 下班人员-获取下班人员列表
@@ -243,7 +243,7 @@ export function checkGoOffWork(params: IUserIds): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/package/goOffWork/check`,
     method: 'post',
-    params
+    params,
   })
 }
 // 下班人员-确定提交
@@ -251,7 +251,7 @@ export function confirmGoOffWork(params: IUserIds): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/package/goOffWork`,
     method: 'post',
-    params
+    params,
   })
 }
 // 修改优先打包
@@ -259,7 +259,7 @@ export function updatePriorityPackaging(params: IUpdatePriorityPackaging): Promi
   return request({
     url: `${BASE_API}/package/update/priorityPackaging`,
     method: 'post',
-    params
+    params,
   })
 }
 // 查询零件清单数据列表
@@ -267,7 +267,7 @@ export function getPackageComponentList(params: IId): Promise<IGetPackageCompone
   return request({
     url: `${BASE_API}/package/component/list`,
     method: 'get',
-    params
+    params,
   })
 }
 // 查询质检信息
@@ -275,7 +275,7 @@ export function getQualityCheck(params: IId): Promise<IGetQualityCheckResp> {
   return request({
     url: `${BASE_API}/quality/check`,
     method: 'get',
-    params
+    params,
   })
 }
 // 添加质检信息前置校验
@@ -283,7 +283,7 @@ export function verificationCheckQuality(params: { taskId: number }): Promise<{ 
   return request({
     url: `${BASE_API}/quality/check/verification`,
     method: 'post',
-    params
+    params,
   })
 }
 // 添加质检信息
@@ -291,7 +291,7 @@ export function addQualityCheck(data: IAddQualityCheckReq): Promise<IBooleanResp
   return request({
     url: `${BASE_API}/quality/check/add`,
     method: 'post',
-    data
+    data,
   })
 }
 // 打包任务的拆分
@@ -299,7 +299,7 @@ export function splitPackageTask(data: ISplitPackageTask): Promise<IBooleanResp>
   return request({
     url: `${BASE_API}/package/task/split`,
     method: 'post',
-    data
+    data,
   })
 }
 // 打包任务修改
@@ -307,7 +307,7 @@ export function updatePackageTask(data: IUpdatePackageTask): Promise<IBooleanRes
   return request({
     url: `${BASE_API}/package/task/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 质检报告-保存
@@ -315,7 +315,7 @@ export function updatePackageInspection(data: IUpdatePackageInspection): Promise
   return request({
     url: `${BASE_API}/package/inspection/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 质检报告详情-修改
@@ -323,15 +323,15 @@ export function updatePackageInspectionDetail(data: IUpdatePackageInspectionDeta
   return request({
     url: `${BASE_API}/package/inspection/detail/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 质检报告查询
-export function getPackageInspection(data: { taskId: number, sku: string }): Promise<IGetPackageInspectionResp> {
+export function getPackageInspection(data: { taskId: number; sku: string }): Promise<IGetPackageInspectionResp> {
   return request({
     url: `${BASE_API}/package/inspection`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -340,7 +340,7 @@ export function getAfterSalesList(params: IGetAfterSalesListReq): Promise<IGetAf
   return request({
     url: `${BASE_API}/after/sales/list`,
     method: 'get',
-    params
+    params,
   })
 }
 // 售后-售后质检记录
@@ -348,7 +348,7 @@ export function getAfterSalesLog(params: IPoId): Promise<IGetAfterSalesLogResp> 
   return request({
     url: `${BASE_API}/after/sales/package/log`,
     method: 'get',
-    params
+    params,
   })
 }
 // 售后记录-已联系修改
@@ -356,7 +356,7 @@ export function updateAfterSales(data: IUpdateAfterSales): Promise<IBooleanResp>
   return request({
     url: `${BASE_API}/after/sales/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 售后凭证-上传
@@ -365,7 +365,7 @@ export function uploadAfterSales(data: FormData): Promise<IStringResp> {
     url: `${BASE_API}/after/sales/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 // 售后凭证-删除
@@ -373,7 +373,7 @@ export function deleteAfterSales(params: IId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/after/sales/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 // 售后-已联系归档前置请求
@@ -381,7 +381,7 @@ export function checkAfterSalesArchive(params: IId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/after/sales/archive/check`,
     method: 'post',
-    params
+    params,
   })
 }
 // 售后-已联系归档
@@ -389,7 +389,7 @@ export function archiveAfterSales(params: IId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/after/sales/archive`,
     method: 'post',
-    params
+    params,
   })
 }
 // 售后-已联系坏账
@@ -397,7 +397,7 @@ export function badDebtAfterSales(params: IId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/after/sales/badDebt`,
     method: 'post',
-    params
+    params,
   })
 }
 // 查询打包工时列表
@@ -405,7 +405,7 @@ export function getPackageTimeList(params: IGetPackageTimeListReq): Promise<IGet
   return request({
     url: `${BASE_API}/package/time/list`,
     method: 'get',
-    params
+    params,
   })
 }
 // 打包工时修改
@@ -413,7 +413,7 @@ export function updatePackageTime(data: IUpdatePackageTime): Promise<IBooleanRes
   return request({
     url: `${BASE_API}/package/time/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 打包工时统计列表查询
@@ -421,7 +421,7 @@ export function getPackageTimeDay(params: IGetPackageTimeDayRequest): Promise<IG
   return request({
     url: `${BASE_API}/package/time/day`,
     method: 'get',
-    params
+    params,
   })
 }
 // 开始任务确定-sku质检列表
@@ -429,7 +429,7 @@ export function getSkuQualityList(params: IIds) {
   return request({
     url: `${BASE_API}/package/task/skuQualityList`,
     method: 'get',
-    params
+    params,
   })
 }
 // 查询当前账号进行中的打包任务
@@ -437,7 +437,7 @@ export function getPackageTaskingList(params: IGetPackageTaskingList): Promise<I
   return request({
     url: `${BASE_API}/package/tasking/list`,
     method: 'get',
-    params
+    params,
   })
 }
 
@@ -446,7 +446,7 @@ export function updateSalesStatus(params: IUpdateSalesStatus): Promise<IStringRe
   return request({
     url: `${BASE_API}/after/sales/status/update`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -455,7 +455,7 @@ export function getAfterSalesLogs(params: IId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/after/sales/log`,
     method: 'get',
-    params
+    params,
   })
 }
 // 售后日志修改保存
@@ -463,7 +463,7 @@ export function updateAfterSalesLog(data: IUpdateAfterSalesLog): Promise<IString
   return request({
     url: `${BASE_API}/after/sales/update/log`,
     method: 'post',
-    data
+    data,
   })
 }
 // 打包条形码文件夹
@@ -471,7 +471,7 @@ export function getBarCodePath(params: ITaskId): Promise<IStringResp> {
   return request({
     url: `${BASE_API}/package/task/getBarCodePath`,
     method: 'get',
-    params
+    params,
   })
 }
 // 获取发货站点列表
@@ -487,7 +487,7 @@ export function getPackageTaskIsSplit(params: ITaskId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/package/task/isSplit`,
     method: 'get',
-    params
+    params,
   })
 }
 // 打包任务数修改-查询任务拆分列表
@@ -495,7 +495,7 @@ export function getPackageTaskSplitList(params: ITaskId): Promise<IGetPackageTas
   return request({
     url: `${BASE_API}/package/task/split/list`,
     method: 'get',
-    params
+    params,
   })
 }
 // 打包任务-站点修改
@@ -503,7 +503,7 @@ export function updatePackageTaskSite(data: IUpdatePackageTaskSite): Promise<IBo
   return request({
     url: `${BASE_API}/package/task/site/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -514,7 +514,7 @@ export function printSign(data: IPrintSignReq): Promise<IPrintSignRes> {
   return request({
     url: `${BASE_API}/sign/print`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -522,9 +522,9 @@ export function printSign(data: IPrintSignReq): Promise<IPrintSignRes> {
  */
 export function printSignSuccess(data: any) {
   return request({
-    url: "https://192.168.6.19:6789/api/v2/printWriting",
+    url: 'https://192.168.6.19:6789/api/v2/printWriting',
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -534,7 +534,7 @@ export function generatePackageBarcode(data: IGeneratePackageBarcodeReq): Promis
   return request({
     url: `${BASE_API}/package/generate/barcode`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -554,7 +554,7 @@ export function checkInMork(params: { userIds: string }): Promise<{ data: boolea
   return request({
     url: `${BASE_API}/mork/check/in`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -568,7 +568,7 @@ export function getPackagingSkuSelectList(params: IGetPackagingTimeConsolidation
   return request({
     url: `${BASE_API}/packaging/time/consolidation/getSku/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -576,11 +576,13 @@ export function getPackagingSkuSelectList(params: IGetPackagingTimeConsolidation
  * @param params
  * @returns
  */
-export function getPackagingTimeConsolidationList(params: IGetPackagingTimeConsolidationListReq): Promise<IGetPackagingTimeConsolidationListRes> {
+export function getPackagingTimeConsolidationList(
+  params: IGetPackagingTimeConsolidationListReq
+): Promise<IGetPackagingTimeConsolidationListRes> {
   return request({
     url: `${BASE_API}/packaging/time/consolidation/list`,
     method: 'get',
-    params
+    params,
   })
 }
 
@@ -593,7 +595,7 @@ export function addPackagingTimeConsolidation(data: IAddPackagingTimeConsolidati
   return request({
     url: `${BASE_API}/packaging/time/consolidation/add`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -606,7 +608,7 @@ export function addSkuPackagingTimeConsolidation(data: IAddSkuPackagingTimeConso
   return request({
     url: `${BASE_API}/packaging/time/consolidation/add/sku`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -618,7 +620,7 @@ export function deletePackagingTimeConsolidation(params: { id: number }): Promis
   return request({
     url: `${BASE_API}/packaging/time/consolidation/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -630,7 +632,7 @@ export function deleteSkuPackagingTimeConsolidation(params: { id: number }): Pro
   return request({
     url: `${BASE_API}/packaging/time/consolidation/delete/sku`,
     method: 'post',
-    params
+    params,
   })
 }
 
@@ -652,7 +654,7 @@ export function updatePackagingCost(params: { cost: number }): Promise<{ data: b
   return request({
     url: `${BASE_API}/packaging/cost/update`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -663,7 +665,7 @@ export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq)
   return request({
     url: `${BASE_API}/packaging/time/error/checking`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -677,7 +679,7 @@ export function getNewPackageInspection(params: { sku: string }): Promise<IGetNe
   return request({
     url: `${BASE_API}/package/inspection/productManager`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -689,7 +691,7 @@ export function updateNewPackageInspection(data: IUpdateNewPackageInspectionReq)
   return request({
     url: `${BASE_API}/package/inspection/productManager/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -701,7 +703,7 @@ export function updatePackageInspectionComponent(data: IUpdatePackageInspectionC
   return request({
     url: `${BASE_API}/package/inspection/component/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -709,12 +711,12 @@ export function updatePackageInspectionComponent(data: IUpdatePackageInspectionC
  * @param data
  * @returns
  */
-export function uploadPackageInspectionImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
+export function uploadPackageInspectionImage(data: FormData): Promise<{ data: { id: number; imgUrl: string } }> {
   return request({
     url: `${BASE_API}/package/inspection/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 /**
@@ -726,7 +728,7 @@ export function deletePackageInspectionImage(params: { id: number }): Promise<{ 
   return request({
     url: `${BASE_API}/package/inspection/img/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -734,11 +736,11 @@ export function deletePackageInspectionImage(params: { id: number }): Promise<{ 
  * @param params
  * @returns
  */
-export function submitPackageInspection(data: { reportId: number, type: number }): Promise<{ data: boolean }> {
+export function submitPackageInspection(data: { reportId: number; type: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/package/inspection/submit`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -746,12 +748,12 @@ export function submitPackageInspection(data: { reportId: number, type: number }
  * @param data
  * @returns
  */
-export function uploadPackageInspectionItemImage(data: FormData): Promise<{ data: { id: number, imgUrl: string } }> {
+export function uploadPackageInspectionItemImage(data: FormData): Promise<{ data: { id: number; imgUrl: string } }> {
   return request({
     url: `${BASE_API}/package/inspection/item/upload`,
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
-    data
+    data,
   })
 }
 /**
@@ -763,17 +765,17 @@ export function deletePackageInspectionItemImage(params: { id: number }): Promis
   return request({
     url: `${BASE_API}/package/inspection/item/img/delete`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * 开始任务前置check接口
  */
-export function checkStartTaskPackage(data: { taskIds: string, startTaskUserIds: string }): Promise<{ data: boolean, msg: string }> {
+export function checkStartTaskPackage(data: { taskIds: string; startTaskUserIds: string }): Promise<{ data: boolean; msg: string }> {
   return request({
     url: `${BASE_API}/package/startTask/check`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -784,7 +786,7 @@ export function getQualityInspectionList(data: IGetQualityInspectionListReq): Pr
   return request({
     url: `${BASE_API}/qualityInspection/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -794,7 +796,7 @@ export function getQualityInspectionNew(params: { reportId: number }): Promise<I
   return request({
     url: `${BASE_API}/qualityInspection/new/query`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -804,7 +806,7 @@ export function getQualityInspectionPackage(params: { reportId: number }): Promi
   return request({
     url: `${BASE_API}/qualityInspection/package/query`,
     method: 'get',
-    params
+    params,
   })
 }
 
@@ -813,10 +815,10 @@ export function getQualityInspectionPackage(params: { reportId: number }): Promi
  * @param params
  * @returns
  */
-export function updateShippingCountAdjustment(params: { id: number, count: number }): Promise<{ data: boolean }> {
+export function updateShippingCountAdjustment(params: { id: number; count: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/shipment/count/adjust`,
     method: 'post',
-    params
+    params,
   })
 }

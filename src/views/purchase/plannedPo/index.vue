@@ -4,10 +4,10 @@
       <el-tab-pane label="待发布" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel >
-            <el-button :loading="createLoading" type="primary" @click="handlePlannedPoCreate">创建</el-button>
-            <el-button :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
-            <el-button :loading="batchMoqLoading" type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
-            <el-button :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.CREATE] }" :loading="createLoading" type="primary" @click="handlePlannedPoCreate">创建</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }" :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_NOT_MOQ] }" :loading="batchMoqLoading" type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }" :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -18,7 +18,7 @@
                 <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
-          </vab-query-form-right-panel>
+          </vab-query-form-right-panel> 
         </vab-query-form>
         <el-table 
           ref="tableRef" 
@@ -35,10 +35,10 @@
           @selection-change="setSelectRows"
         >
           <el-table-column class="custom-checkbox" fixed="left" type="selection"/>
-          <el-table-column fixed="left" label="PO操作" width="105" >
+          <el-table-column  v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handlePublishPo(row)">
+                <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
                   发布PO
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -46,14 +46,14 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handlePublishPo(row)">
-                      <el-link type="primary" underline='never' >发布PO</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" @click="handlePublishPo(row)">
+                      <el-link type="primary" underline="never" >发布PO</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleUpdateStatus(row)">
-                      <el-link type="primary" underline='never' >未达起订量</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.NOT_MOQ] }" @click="handleUpdateStatus(row)">
+                      <el-link type="primary" underline="never" >未达起订量</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" underline='never' >删除</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.DELETE] }" @click="handleDelPlannedPo(row)">
+                      <el-link type="danger" underline="never" >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -114,11 +114,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="SKU操作" width="150" >
+          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150" >
             <template #default="{ row }">
               <el-space>
-                <el-button link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
-                <el-button link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
+                <el-button v-permissions="{ permission: [PlanPoPermission.DETAIL] }" link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
+                <el-button v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }" link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -137,8 +137,8 @@
       <el-tab-pane label="未达起订量" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
-            <el-button :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }" :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
+            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }":loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -166,10 +166,10 @@
           @selection-change="setSelectRows"
         >
           <el-table-column class="custom-checkbox" fixed="left" type="selection"/>
-          <el-table-column fixed="left" label="PO操作" width="105" >
+          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105" >
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handlePublishPo(row)">
+                <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
                   发布PO
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -177,14 +177,14 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handlePublishPo(row)">
-                      <el-link type="primary" underline='never' >发布PO</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" @click="handlePublishPo(row)">
+                      <el-link type="primary" underline="never" >发布PO</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleUpdateRStatus(row)">
-                      <el-link type="primary" underline='never' >达到起订量</el-link>
+                    <el-dropdown-item  v-permissions="{ permission: ['purchase:planPo:moq'] }" @click="handleUpdateRStatus(row)">
+                      <el-link type="primary" underline="never" >达到起订量</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" underline='never' >删除</el-link>
+                    <el-dropdown-item  v-permissions="{ permission: [PlanPoPermission.DELETE] }" @click="handleDelPlannedPo(row)">
+                      <el-link type="danger" underline="never" >删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -245,11 +245,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="SKU操作" width="150" >
+          <el-table-column  v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150" >
             <template #default="{ row }">
               <el-space>
-                <el-button link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
-                <el-button link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
+                <el-button v-permissions="{ permission: [PlanPoPermission.DETAIL] }" link type="primary" @click="handlePlannedPoDetail(row)" >详情</el-button>
+                <el-button v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }" link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -283,18 +283,19 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
 import {
-    deleteAllPlanPo,
-    deletePlanPo,
-    deletePurchasePlanPo,
-    getPlanPoList,
-    getPoPurchaseMatters,
-    planPoNrMoq,
-    planPorMoq,
-    releaseBatchPlanPo,
-    releasePlanPo,
-    updatePlanPoStatus,
-    updatePoPurchaseMatters
+  deleteAllPlanPo,
+  deletePlanPo,
+  deletePurchasePlanPo,
+  getPlanPoList,
+  getPoPurchaseMatters,
+  planPoNrMoq,
+  planPorMoq,
+  releaseBatchPlanPo,
+  releasePlanPo,
+  updatePlanPoStatus,
+  updatePoPurchaseMatters
 } from '/@/api/devlocal/purchasePo'
+import PlanPoPermission from '/@/permissions/planPo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetPlanPoList, IGetPlanPoListQuery } from '/@/type/purchase/po'
