@@ -12,7 +12,7 @@
         <el-col :style="{ maxWidth: imageColumnHeight + 'px', paddingLeft: '0',paddingRight: '10px' }"> 
           <div class="image-cell" :style="{ height: imageColumnHeight + 'px', marginTop: 30 + 'px' }">
             <!-- 有图片时显示 -->
-            <div v-if="sku.skuImgUrl" class="image-preview">
+            <div v-if="sku.skuImgUrl" v-permissions="SkuPermission.skuImageColPermission()" class="image-preview">
               <img alt="" :src="sku.skuImgUrl" />
               <div class="image-actions">
                 <el-icon @click="handlePreview(sku.skuImgUrl)"><zoom-in /></el-icon>
@@ -20,7 +20,7 @@
               </div>
             </div>
             <!-- 无图片时显示 -->
-            <div v-else class="upload-placeholder" @click="showSkuUploadDialog">
+            <div v-else v-permissions="SkuPermission.skuImageColPermission()" class="upload-placeholder" @click="showSkuUploadDialog">
               <el-icon><plus /></el-icon>
             </div>
           </div>
@@ -161,7 +161,7 @@
           <el-form label-position="top" >
             <el-row>
               <el-col :span="12">
-                <el-form-item >
+                <el-form-item v-permissions="SkuPermission.SKU_REMARKS_UPDATE">
                   <el-space>
                     <span style="font-size: var(--el-form-label-font-size);">质检清单</span>
                     <el-icon size="large" style="color: var(--el-color-primary); cursor: pointer;" @click="handlePacking"><edit /></el-icon>
@@ -425,19 +425,19 @@
               <template #dropdown>
                 <el-dropdown-menu>
                 <el-dropdown-item @click="handleSupplier(row)">
-                    <el-link type="primary" underline='never' >供应商</el-link>
+                    <el-link type="primary" underline="never" >供应商</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleAddOtherSku(row)">
-                    <el-link type="primary" underline='never' >添加到其他SKU</el-link>
+                    <el-link type="primary" underline="never" >添加到其他SKU</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleUpdateComponentName(row)">
-                    <el-link type="primary" underline='never' >修改零件名</el-link>
+                    <el-link type="primary" underline="never" >修改零件名</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleShowModify(row)">
-                    <el-link type="primary" underline='never'>修改零件报关</el-link>
+                    <el-link type="primary" underline="never">修改零件报关</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handleDel(row, $index)">
-                    <el-link type="danger" underline='never' >删除</el-link>
+                    <el-link type="danger" underline="never" >删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -671,36 +671,37 @@ import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE } from '~/src/const/role'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
-    addProductComponentOtherSku,
-    createProductComponent,
-    delComponentImage,
-    delProductComponent,
-    delSkuImage,
-    getHsSelectList,
-    getProductAllName,
-    getProductAllSupplier,
-    getProductComponentPurchase,
-    getProductComponentStore,
-    getProductConsumablesType,
-    getProductDefaultListComponent,
-    getProductQualityInspection,
-    getProductSkuDetail,
-    getProductSkuList,
-    getProductSupplier,
-    getSkuComponentInfo,
-    saveProductComponentSuitDetail,
-    saveProductContractTerms,
-    saveProductPurchaseMatters,
-    submitProductComponent,
-    submitProductConsumable,
-    updateProductComponent,
-    updateProductComponentName,
-    updateProductSku,
-    updateProductSkuRemark,
-    updateSkuComponentInfo,
-    uploadComponentImage,
-    uploadSkuImage
+  addProductComponentOtherSku,
+  createProductComponent,
+  delComponentImage,
+  delProductComponent,
+  delSkuImage,
+  getHsSelectList,
+  getProductAllName,
+  getProductAllSupplier,
+  getProductComponentPurchase,
+  getProductComponentStore,
+  getProductConsumablesType,
+  getProductDefaultListComponent,
+  getProductQualityInspection,
+  getProductSkuDetail,
+  getProductSkuList,
+  getProductSupplier,
+  getSkuComponentInfo,
+  saveProductComponentSuitDetail,
+  saveProductContractTerms,
+  saveProductPurchaseMatters,
+  submitProductComponent,
+  submitProductConsumable,
+  updateProductComponent,
+  updateProductComponentName,
+  updateProductSku,
+  updateProductSkuRemark,
+  updateSkuComponentInfo,
+  uploadComponentImage,
+  uploadSkuImage
 } from '/@/api/devlocal/productInformation'
+import SkuPermission from '/@/permissions/sku'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'

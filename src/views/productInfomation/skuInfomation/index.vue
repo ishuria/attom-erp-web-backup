@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
-        <el-button type="primary">批量新增质检项</el-button>
+        <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary">批量新增质检项</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -18,7 +18,9 @@
     </vab-query-form>
     <el-table 
       ref="tableRef" 
-      v-loading="listLoading" border 
+      v-loading="listLoading" 
+      v-permissions="{ permission: [SkuPermission.SKU_LIST] }"
+      border 
       :cell-class-name="clearPadding" 
       :cell-style="cellStyle"
       class="noneHoveTable"
@@ -52,12 +54,12 @@
         </template>
       </el-table-column>
       <el-table-column label="产品经理" min-width="90" prop="productManager"/>
-      <el-table-column label="停产" prop="productionHaltStatus">
+      <el-table-column  v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }" label="停产" prop="productionHaltStatus">
         <template #default="{ row }">
           <el-switch v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #ff4949;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="优先打包" min-width="90" prop="priorityPacking">
+      <el-table-column  v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }" label="优先打包" min-width="90" prop="priorityPacking">
         <template #default="{ row }">
           <el-switch v-model="row.priorityPacking" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
@@ -112,10 +114,10 @@
           {{ row.volumeCoefficient != null ? row.volumeCoefficient.toFixed(4) : '' }}
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column v-permissions="SkuPermission.skuOperationColPermission()" fixed="right" label="操作" width="150">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="handleSkuDetail(row)" >
+            <el-button v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" text type="primary" @click="handleSkuDetail(row)" >
               SKU详情
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -123,20 +125,20 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="handleSkuDetail(row)">
-                  <el-link type="primary" underline='never' >SKU详情</el-link>
+                <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" @click="handleSkuDetail(row)">
+                  <el-link type="primary" underline="never" >SKU详情</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCopySku(row)">
-                  <el-link type="primary" underline='never'>SKU复制</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" underline='never'>打包工时</el-link>
+                <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_COPY] }" @click="handleCopySku(row)">
+                  <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" underline='never'>交期查看</el-link>
+                  <el-link type="primary" underline="never">打包工时</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" underline='never'>证书</el-link>
+                  <el-link type="primary" underline="never">交期查看</el-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" underline="never">证书</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -174,6 +176,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { copyProductSku, getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
+import SkuPermission from '/@/permissions/sku'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'

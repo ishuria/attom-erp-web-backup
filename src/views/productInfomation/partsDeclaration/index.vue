@@ -4,7 +4,7 @@
       <vab-query-form-left-panel>
         <el-button :loading="status1Loading" type="primary" @click="handleStatus1Change">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
         <el-button :loading="status2Loading" type="primary" @click="handleStatus2Change">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>
-        <el-button type="primary" @click="showPriceCoefficientSetting">价格系数设定</el-button>
+        <el-button v-permissions="SkuPermission.CUSTOM_DECLARE_RATIO_QUERY" type="primary" @click="showPriceCoefficientSetting">价格系数设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -336,14 +336,15 @@ import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-    getCustomsClearanceRatio,
-    getHsSelectList,
-    getProductCustomsList,
-    updateCustomsClearanceRatio,
-    updateProductAlreadyComponent,
-    updateProductCustomsClearance,
-    updateProductCustomsClearanceSuppliserInfo,
+  getCustomsClearanceRatio,
+  getHsSelectList,
+  getProductCustomsList,
+  updateCustomsClearanceRatio,
+  updateProductAlreadyComponent,
+  updateProductCustomsClearance,
+  updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
+import SkuPermission from '/@/permissions/sku'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 

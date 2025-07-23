@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status === 0 ? '展示停产' : '隐藏停产' }}</el-button>
-        <el-button type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
+        <el-button v-permissions="SkuPermission.CUSTOM_DECLARE_RATIO_QUERY" type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -39,33 +39,33 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU品名" prop="sku" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')">
+      <el-table-column fixed="left" label="SKU品名" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')" prop="sku" >
         <template #default="{ row }">
           {{ row.sku }}<br />
           {{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="UPC" prop="upc" :min-width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" >
+      <el-table-column label="UPC" :min-width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" prop="upc" >
         <template #default="{ row }">
           <div v-html="row.upc"></div>
         </template>
       </el-table-column>
-      <el-table-column label="北美FNSKU" prop="northAmericaFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" >
+      <el-table-column label="北美FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" prop="northAmericaFnSku" >
         <template #default="{ row }">
           <div v-html="row.northAmericaFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="欧洲FNSKU" prop="europeFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" >
+      <el-table-column label="欧洲FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" prop="europeFnSku" >
         <template #default="{ row }">
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="日本FNSKU" prop="jpFnSku" :min-width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" >
+      <el-table-column label="日本FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" prop="jpFnSku" >
         <template #default="{ row }">
           <div v-html="row.jpFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" prop="brank" :min-width="flexColumnWidth(list, '品牌', 'brank')">
+      <el-table-column label="品牌" :min-width="flexColumnWidth(list, '品牌', 'brank')" prop="brank">
         <template #default="{ row }">
           <div class="none">
               <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
@@ -244,8 +244,9 @@
       </el-table-column> -->
       <el-table-column align="center" fixed="right" label="操作" width="230">
         <template #default="{ row }">
-          <el-link underline='never' type="primary" @click="showHts(row)">查看HTS</el-link>
-          <el-link underline='never' type="primary" @click="showClearance(row)">查看清关信息</el-link>
+          <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
+          <span style="margin: 0 5px;"></span>
+          <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -299,7 +300,7 @@
     </template>
     </vab-dialog>
     <!-- 查看HTS -->
-    <vab-dialog width="20%" title="查看和修改HTS" v-model="htsVisible" :draggable="false">
+    <vab-dialog v-model="htsVisible" :draggable="false" title="查看和修改HTS" width="20%">
       <el-form label-width="auto" style=" margin-right: 0;margin-left: 0;">
         <el-form-item label="HTS美国">
           <el-select
@@ -385,7 +386,7 @@
       </template> -->
     </vab-dialog>
     <!-- 查看清关信息 -->
-    <vab-dialog v-model="clearanceVisible" title="查看和修改清关信息" width="60%" :draggable="false">
+    <vab-dialog v-model="clearanceVisible" :draggable="false" title="查看和修改清关信息" width="60%">
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAddClearance">新增</el-button>
@@ -393,14 +394,14 @@
 
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table border stripe max-height="700" :data="clearanceList" @selection-change="setSelectRows">
+      <el-table border :data="clearanceList" max-height="700" stripe @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column label="国家" prop="countryName" min-width="80"/>
-        <el-table-column label="制造商名称" prop="manufacturer" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" />
-        <el-table-column label="制造商地址" prop="manufacturerAddress" :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')" />
-        <el-table-column label="清关品名" prop="clearanceName" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')"/>
-        <el-table-column label="材质比例" prop="material" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')"/>
-        <el-table-column label="用途" prop="usage" min-width="100" />
+        <el-table-column label="国家" min-width="80" prop="countryName"/>
+        <el-table-column label="制造商名称" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" prop="manufacturer" />
+        <el-table-column label="制造商地址" :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')" prop="manufacturerAddress" />
+        <el-table-column label="清关品名" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')" prop="clearanceName"/>
+        <el-table-column label="材质比例" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')" prop="material"/>
+        <el-table-column label="用途" min-width="100" prop="usage" />
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
@@ -408,9 +409,9 @@
       <template #footer></template>
     </vab-dialog>
     <vab-dialog v-model="addClearanceVisible" title="新增" width="30%">
-      <el-form ref="addClearanceFormRef" :model="addClearanceForm" label-position="top" :rules="addClearanceFormRules" >
+      <el-form ref="addClearanceFormRef" label-position="top" :model="addClearanceForm" :rules="addClearanceFormRules" >
         <el-form-item label="国家" prop="countryIds">
-          <el-select v-model="addClearanceForm.countryIds" placeholder="请选择国家" multiple >
+          <el-select v-model="addClearanceForm.countryIds" multiple placeholder="请选择国家" >
             <el-option
               v-for="item in countryList"
               :key="item.id"
@@ -441,8 +442,8 @@
       </template>
     </vab-dialog>
     <!-- 批量修改 -->
-    <vab-dialog title="批量修改" width="30%" v-model="batchUpdateVisible">
-      <el-form ref="batchUpdateFormRef" :model="batchUpdateForm" label-position="top">
+    <vab-dialog v-model="batchUpdateVisible" title="批量修改" width="30%">
+      <el-form ref="batchUpdateFormRef" label-position="top" :model="batchUpdateForm">
         <el-form-item label="制造商名称" prop="manufacturer">
           <el-input v-model="batchUpdateForm.manufacturer" clearable />
         </el-form-item>
@@ -473,6 +474,7 @@ import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { addCustomsClearanceSkuInfo, getCustomsClearanceCountryList, getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
+import SkuPermission from '/@/permissions/sku'
 import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
