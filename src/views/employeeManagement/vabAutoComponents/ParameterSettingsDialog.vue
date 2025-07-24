@@ -17,7 +17,6 @@
             <div
               class="editable-cell"
               :class="{ 'show-border': editRow !== row }"
-              @click="editRow = row"
             >
               <el-input
                 v-if="editRow === row"
