@@ -17,6 +17,31 @@ class EncasementPermission {
   static readonly ENCASEMENT_SIZE_EXPORT = 'encasement:size:export'
   /** 误差权限 */
   static readonly ENCASEMENT_ERROR = 'encasement:error'
+  /** 修改装箱权限 */
+  static readonly ENCASEMENT_UPDATE = 'encasement:update'
+  /** 拆分箱数权限 */
+  static readonly ENCASEMENT_COUNT_SPLIT = 'encasement:count:split'
+  /** 删除装箱权限 */
+  static readonly ENCASEMENT_DELETE = 'encasement:delete'
+  /** 打印权限 */
+  static readonly ENCASEMENT_PRINT = 'encasement:print'
+
+  /**
+   * 操作列权限
+   * @returns 权限
+   */
+  static operationColume(): PermissionConfig {
+    return {
+      role: [],
+      permission: [
+        EncasementPermission.ENCASEMENT_UPDATE,
+        EncasementPermission.ENCASEMENT_COUNT_SPLIT,
+        EncasementPermission.ENCASEMENT_DELETE,
+        EncasementPermission.ENCASEMENT_PRINT,
+      ],
+      mode: 'oneOf',
+    }
+  }
 }
 
 export default EncasementPermission

@@ -2,11 +2,11 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="handleShowAddChannel">新增渠道</el-button>
-        <el-button type="primary" @click="addForwarderVisible = true">新增货代</el-button>
-        <el-button type="primary" @click="showForwarderList">货代清单</el-button>
-        <el-button type="primary" @click="showFeeNameSetting">货代费用名设定</el-button>
-        <el-button type="primary" @click="showChannelSite">站点渠道设定</el-button>
+        <el-button v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_CHANNEL_ADD] }" type="primary" @click="handleShowAddChannel">新增渠道</el-button>
+        <el-button v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_ADD] }" type="primary" @click="addForwarderVisible = true">新增货代</el-button>
+        <el-button v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_LIST] }" type="primary" @click="showForwarderList">货代清单</el-button>
+        <el-button v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_COST_NAME_SETTING] }" type="primary" @click="showFeeNameSetting">货代费用名设定</el-button>
+        <el-button v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_CHANNEL_SITE_SETTING] }" type="primary" @click="showChannelSite">站点渠道设定</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -36,13 +36,17 @@
           <el-input v-model="row.safeDays" class="input-center" @change="modifySafeDays(row)" />
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作" width="360">
+      <el-table-column v-permissions="{ permission: FreightForwarderPermission.operationColume() }" align="center" fixed="right" label="操作" width="360">
         <template #default="{ row }">
-          <el-link type="primary" underline='never' @click="showModify(row)">修改</el-link>
-          <el-link type="primary" underline='never' @click="showCopy(row)">复制</el-link>
+          <el-link v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_CHANNEL_UPDATE] }" type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <span style="margin: 0 5px;"></span>
+          <el-link v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_CHANNEL_COPY] }" type="primary" underline='never' @click="showCopy(row)">复制</el-link>
+          <span style="margin: 0 5px;"></span>
           <el-link type="primary" underline='never'>价格趋势</el-link>
+          <span style="margin: 0 5px;"></span>
           <el-link type="primary" underline='never'>时效趋势</el-link>
-          <el-link type="primary" underline='never' @click="calculateSafeDays(row)">安全天数计算</el-link>
+          <span style="margin: 0 5px;"></span>
+          <el-link v-permissions="{ permission: [FreightForwarderPermission.FREIGHT_FORWARDER_CHANNEL_SAFE_DAYS_CALCULATE] }" type="primary" underline='never' @click="calculateSafeDays(row)">安全天数计算</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -102,8 +106,8 @@
             <el-select v-model="row.settlementObject" @change="modifyFeeNameSetting(row)">
               <el-option 
                 v-for="item in settlementObjectList"
-                :label="item.label"
                 :key="item.id"
+                :label="item.label"
                 :value="item.id"
               />
             </el-select>
@@ -499,6 +503,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
 import { addChannelFreightForwarder, addCostFreightForwarder, addFreightForwarderType, copyChannelFreightForwarder, delCostFreightForwarder, getChannelList, getChannelSiteList, getForwarderCostList, getForwarderList, getFreightForwarderSelect, getFreightForwarderTypeList, getSettlementObjectList, getUpdateForwarderList, safeDaysChannelFreightForwarder, updateChannelFreightForwarder, updateChannelSiteList, updateCostFreightForwarder, updateFreightForwarderType, updateSafeDaysFreightForwarder } from '/@/api/devlocal/encasement'
+import FreightForwarderPermission from '/@/permissions/freightforwarder'
 import type { IAddForwarder, IGetChannelSiteList, IGetForwarderCostList, IGetForwarderList, IGetForwarderListReq, OptionType } from '/@/type/packagingShipping/shippedType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'

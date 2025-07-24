@@ -19,12 +19,12 @@ import type {
   ISaveArtDesignCopywritingReq,
   ISaveBatchSellingPointReq,
   IUpdateArtDesignDemandAddressReq,
-  IUpdateArtDesignTaskDistributeReq
+  IUpdateArtDesignTaskDistributeReq,
 } from '/@/type/listingTask/imageTaskType'
 
 /**
  * @description 获取美工任务列表
- * @param IGetArtDesignTaskListReq 
+ * @param IGetArtDesignTaskListReq
  */
 export function getArtDesignTaskList(data: IGetArtDesignTaskListReq): Promise<IGetArtDesignTaskListRes> {
   return request({
@@ -35,7 +35,7 @@ export function getArtDesignTaskList(data: IGetArtDesignTaskListReq): Promise<IG
 }
 /**
  * @description 美工任务-发布任务
- * @param IAddArtDesignTaskReq 
+ * @param IAddArtDesignTaskReq
  */
 export function addArtDesignTask(data: IAddArtDesignTaskReq): Promise<{ data: boolean }> {
   return request({
@@ -83,7 +83,7 @@ export function updateArtDesignTaskMargin(data: IArtDesignTaskMargin): Promise<{
   return request({
     url: `${BASE_API}/artdesign/task/margin/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -102,7 +102,7 @@ export function updateLongTermArtDesignTask(params: { id: number }): Promise<{ d
   return request({
     url: `${BASE_API}/artdesign/task/long/term`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -112,17 +112,17 @@ export function finishArtDesignTask(params: { id: number }): Promise<{ data: boo
   return request({
     url: `${BASE_API}/artdesign/task/finish`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * @description 美工任务-备注
  */
-export function updateArtDesignTaskRemark(data: { id: number, remark: string }): Promise<{ data: boolean }> {
+export function updateArtDesignTaskRemark(data: { id: number; remark: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/task/remark`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -141,7 +141,7 @@ export function updateArtDesignTaskDistribute(data: IUpdateArtDesignTaskDistribu
   return request({
     url: `${BASE_API}/artdesign/task/distribution/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -151,7 +151,7 @@ export function getArtDesignSellingPoint(params: { sku: string }): Promise<IGetS
   return request({
     url: `${BASE_API}/artdesign/sell/point/query`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -161,13 +161,13 @@ export function saveArtDesignSellingPoint(data: IGetSellingPoint): Promise<{ dat
   return request({
     url: `${BASE_API}/artdesign/sell/point/save`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 美工任务-卖点下拉列表
  */
-export function getArtDesignSellingPointDropdownList(): Promise<{ data: { id: number, label: string }[]}> {
+export function getArtDesignSellingPointDropdownList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/artdesign/sell/point/dropdown/list`,
     method: 'get',
@@ -180,7 +180,7 @@ export function confirmOtherSkuArtDesignSellingPoint(params: { sku: string }): P
   return request({
     url: `${BASE_API}/artdesign/sell/point/other/sku`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -190,7 +190,7 @@ export function getArtDesignCopywriting(params: { sku: string }): Promise<IGetCo
   return request({
     url: `${BASE_API}/artdesign/copywriting/query`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -200,7 +200,7 @@ export function saveArtDesignCopywriting(data: ISaveArtDesignCopywritingReq): Pr
   return request({
     url: `${BASE_API}/artdesign/copywriting/save`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -210,7 +210,7 @@ export function getBatchArtDesignSellingPoint(params: { skus: string }): Promise
   return request({
     url: `${BASE_API}/artdesign/sell/point/batch/query`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -220,13 +220,13 @@ export function saveBatchArtDesignSellingPoint(data: ISaveBatchSellingPointReq):
   return request({
     url: `${BASE_API}/artdesign/sell/point/batch`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 美工任务-选品理由下拉列表
  */
-export function getArtDesignSelectionReasons(): Promise<{ data: { id: number, label: string}[] }> {
+export function getArtDesignSelectionReasons(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/artdesign/selection/reasons`,
     method: 'get',
@@ -248,7 +248,7 @@ export function delArtDesignSelectionReasons(data: { id: number }): Promise<{ da
   return request({
     url: `${BASE_API}/artdesign/selection/reasons/delete`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -258,7 +258,7 @@ export function addArtDesignSelectionReasons(data: { reason: string }): Promise<
   return request({
     url: `${BASE_API}/artdesign/selection/reasons/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -268,18 +268,18 @@ export function updateArtDesignDemandAddress(data: IUpdateArtDesignDemandAddress
   return request({
     url: `${BASE_API}/artdesign/demand/address/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * listing-图片任务 已分配人员查询
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export function queryArtDesignTaskDistribution(params: { taskId: number }): Promise<IQueryArtDesignTaskDistributionRes> {
   return request({
     url: `${BASE_API}/artdesign/task/distribution/query`,
     method: 'post',
-    params
+    params,
   })
 }

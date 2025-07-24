@@ -13,7 +13,7 @@
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SIZE_EXPORT] }" type="primary" @click="showExportSize">尺寸导出</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_ERROR] }" type="primary" @click="showUpdateError">误差</el-button>
         <!-- <el-button type="success">装箱检查</el-button> -->
-        <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+        <el-select v-model="printer" v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
           <el-option 
             v-for="item in printerOption"
             :key="item.value"
@@ -103,12 +103,12 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
+      <el-table-column v-permissions="{ permission: EncasementPermission.operationColume() }" fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
-          <el-link type="primary" underline='never' @click="showModify(row)">修改</el-link>
-          <el-link type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
-          <el-link type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
-          <el-link type="primary" underline='never' @click="showPrint(row)">打印</el-link>
+          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE] }" type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_COUNT_SPLIT] }" type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
+          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_DELETE] }" type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
+          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_PRINT] }" type="primary" underline='never' @click="showPrint(row)">打印</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -116,6 +116,7 @@
       </template>
     </el-table>
     <vab-pagination 
+      v-permissions="{ permission: [EncasementPermission.ENCASEMENT_LIST] }"
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"

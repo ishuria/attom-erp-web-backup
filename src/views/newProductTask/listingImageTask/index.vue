@@ -4,13 +4,13 @@
       <el-tab-pane label="未分配" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="showPostTask">发布任务</el-button>
-            <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
-            <el-button type="primary" @click="showReasons">选品理由设定</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ADD] }" type="primary" @click="showPostTask">发布任务</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_MARGIN_SETTING] }" type="primary" @click="showMarginSetting">余量设定</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_REASONS] }" type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
-            <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT] }" type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <!-- <el-button type="primary" @click="showMissionClaim">任务认领</el-button> -->
-            <el-button type="primary" @click="showAssignTask">任务分配</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ASSIGN] }" type="primary" @click="showAssignTask">任务分配</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -139,10 +139,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handleShowSellingPoint(row)">
+                <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -150,19 +150,19 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleShowSellingPoint(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
                       <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowCopywriting(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleLongTerm(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
                       <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleFinish(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_FINISH] }" @click="handleFinish(row)">
                       <el-link type="success" underline='never'>完成</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleDelArtDesignTask(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_DELETE] }" @click="handleDelArtDesignTask(row)">
                       <el-link type="danger" underline='never'>删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -185,13 +185,13 @@
       <el-tab-pane label="已分配" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="showPostTask">发布任务</el-button>
-            <el-button type="primary" @click="showMarginSetting">余量设定</el-button>
-            <el-button type="primary" @click="showReasons">选品理由设定</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ADD] }" type="primary" @click="showPostTask">发布任务</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_MARGIN_SETTING] }" type="primary" @click="showMarginSetting">余量设定</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_REASONS] }" type="primary" @click="showReasons">选品理由设定</el-button>
             <el-button type="primary" @click="showTaskStatistics">任务量统计</el-button>
-            <el-button type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT] }" type="primary" @click="showBatchSellingPoint">卖点填写(批量)</el-button>
             <!-- <el-button type="primary" @click="showMissionClaim">任务认领</el-button> -->
-            <el-button type="primary" @click="showAssignTask">任务分配修改</el-button>
+            <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_ASSIGN] }" type="primary" @click="showAssignTask">任务分配修改</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -319,10 +319,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handleShowSellingPoint(row)">
+                <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -330,19 +330,19 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleShowSellingPoint(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
                       <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowCopywriting(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleLongTerm(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
                       <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleFinish(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_FINISH] }" @click="handleFinish(row)">
                       <el-link type="success" underline='never'>完成</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleDelArtDesignTask(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_DELETE] }" @click="handleDelArtDesignTask(row)">
                       <el-link type="danger" underline='never'>删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -477,10 +477,10 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handleShowSellingPoint(row)">
+                <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
                   卖点
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -488,13 +488,13 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleShowSellingPoint(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
                       <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowCopywriting(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleLongTerm(row)">
+                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
                       <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -740,6 +740,7 @@ import { designTypeOption, taskTypeOption } from '../constantOption'
 import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import ListingPermission from '/@/permissions/listing'
 import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'

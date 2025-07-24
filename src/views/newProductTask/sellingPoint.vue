@@ -191,7 +191,6 @@ const handleConfirmSave = async () => {
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (route.query.sku) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { summary, ...filteredForm } = form
         const { data } = await saveArtDesignSellingPoint({
           ...filteredForm,
@@ -204,7 +203,6 @@ const handleConfirmSave = async () => {
           goBack()
         }
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { summary, ...filteredForm } = form
         const { data } = await saveBatchArtDesignSellingPoint({
           ...filteredForm,
