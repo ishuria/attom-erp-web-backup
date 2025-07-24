@@ -87,7 +87,7 @@
           </template>
         </top-bar-card>
       </el-col>
-       <el-col :lg="8" :md="24" :sm="24" :xl="8" :xs="24"/>
+      <el-col v-if="ableViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24"/>
       <!-- 第二层 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <!-- <pending2 /> -->
@@ -162,7 +162,7 @@ const assessmentAdjustVisible = ref<boolean>(false)
 const router = useRouter()
 const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0];
-const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||　currentRoleCode === ROLE_BOSS_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const commissionRole = [

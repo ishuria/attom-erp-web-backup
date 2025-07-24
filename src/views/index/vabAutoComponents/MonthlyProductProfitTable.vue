@@ -2,7 +2,7 @@
   <vab-card class="profitTable">
     <template #header>
       <vab-icon icon="information-line" />
-      当前产品利润分
+      当月产品利润分
     </template>
     
     <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" :span-method="objectSpanMethod">
