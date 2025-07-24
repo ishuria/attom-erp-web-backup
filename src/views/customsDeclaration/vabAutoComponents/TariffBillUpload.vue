@@ -1,0 +1,93 @@
+<template>
+  <div>
+    <vab-dialog v-model="visible" title="关税单上传" width="20%">
+      <el-form ref="uploadFormRef" label-position="top" :model="uploadForm" :rules="rules">
+        <el-form-item label="误差设定" prop="error">
+          <el-input v-model.trim="uploadForm.error" >
+            <template #append>%</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="关税记在" prop="shipmentId">
+          <el-select v-model="uploadForm.shipmentId" placeholder="请选择关税记在">
+            <el-option
+              v-for="item in props.shipmentIdList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+           <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple style="min-width: 100%;">
+            <el-icon class="el-icon--upload">
+              <upload-filled />
+            </el-icon>
+            <div class="el-upload__text">
+              将PDF文件拖拽至此处或
+              <em>点击上传</em>
+            </div>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="success" @click="handleUpload">上传</el-button>
+      </template>
+    </vab-dialog>   
+  </div>
+
+</template>
+
+<script lang="ts" setup>
+import { UploadFilled } from '@element-plus/icons-vue'
+import { FormInstance } from 'element-plus'
+import { uploadTariffBillPDF } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+
+defineOptions({
+  name: 'TariffBillUpload',
+})
+const props = defineProps<{
+  modelValue: boolean
+  shipmentIdList: { label: string, value: string }[]
+}>()
+const emit = defineEmits(['update:modelValue'])
+const visible = computed({
+  get() {
+    return props.modelValue
+  },
+  set(val) {
+    emit('update:modelValue', val)
+  }
+})
+const fileList = ref<any[]>([])
+
+const uploadFormRef = ref<FormInstance>()
+const uploadForm = reactive({
+  error: undefined as number | undefined,
+  shipmentId: undefined as string | undefined,
+})
+const rules = reactive({
+  error: [
+    { required: true, message: '请输入误差设定', trigger: 'blur' },
+  ],
+  shipmentId: [
+    { required: true, message: '请选择关税记在', trigger: 'change' },
+  ],
+})
+const handleUpload = async () => {
+  if (fileList.value.length === 0) {
+    $baseMessage('请上传关税单', 'warning')
+    return
+  }
+  await uploadFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      let formData = new FormData()
+      formData.append('error', uploadForm.error!.toString())
+      formData.append('shipmentId', uploadForm.shipmentId!)
+      fileList.value.forEach((item: any) => {
+        formData.append('file', item.raw)
+      })
+      await uploadTariffBillPDF(formData)
+    }
+  })
+}
+</script>

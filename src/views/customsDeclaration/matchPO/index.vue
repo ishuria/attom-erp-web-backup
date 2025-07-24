@@ -6,6 +6,7 @@
         <el-button :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
         <el-button type="primary" @click="uploadPDFVisible = true">入仓单生成</el-button>
         <el-button type="primary" @click="sentButNotReportedVisible = true">已发未报</el-button>
+        <el-button type="primary" @click="showTariffBillUpload">关税单上传</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -429,6 +430,8 @@
       </template>
     </vab-dialog>
     <sent-but-not-reported v-model="sentButNotReportedVisible" />
+    <!-- 关税单上传 -->
+    <tariff-bill-upload v-model="tariffBillUploadVisible" :shipmentIdList="shipmentIdList" />
   </div>
 </template>
 
@@ -449,6 +452,35 @@ defineOptions({
   name: 'MatchPO'
 })
 
+// 关税单上传
+const tariffBillUploadVisible = ref<boolean>(false)
+const shipmentIdList = ref<{ label: string, value: string }[]>([])
+const showTariffBillUpload = () => {
+  // 校验:多选‘匹配’里的记录后，才可以点击关税单上传’ 已经匹配过关税单的货件不能再匹配；
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选择任何行！', 'warning', 'hey')
+    return
+  }
+  // 校验:多选的记录是同一个国家
+  const countryList = selectRows.value.map((item: any) => item.site)
+  if (new Set(countryList).size !== 1) {
+    $baseMessage('多选的记录必须是同一个国家！', 'warning', 'hey')
+    return
+  }
+  // 校验:已经匹配过关税单的货件不能再匹配
+  // if (selectRows.value.some((item: any) => item.tariffBillNumber)) {
+  //   $baseMessage('已经匹配过关税单的货件不能再匹配！', 'warning', 'hey')
+  //   return
+  // }
+  // 构建选择的shipmentId列表
+  shipmentIdList.value = selectRows.value.map((item: any) => {
+    return {
+      label: item.shipmentId,
+      value: item.shipmentId
+    }
+  })
+  tariffBillUploadVisible.value = true
+}
 const uploadPDFVisible = ref<boolean>(false)
 const fileList = ref<any[]>([])
 const uploadLoading = ref<boolean>(false)

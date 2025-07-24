@@ -877,3 +877,15 @@ export function uploadWarehouseReceiptPDF(data: FormData): Promise<{ data: boole
     data,
   })
 }
+
+/**
+ * 上传关税单
+ */
+export function uploadTariffBillPDF(data: FormData) {
+  return request({
+    url: `${BASE_API}/upload/tariff/bill/pdf`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
