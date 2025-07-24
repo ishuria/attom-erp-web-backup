@@ -128,6 +128,24 @@
                 </template>
               </el-table-column>
             </el-table-column>
+            <el-table-column label="考核数">
+              <el-table-column label="默认总考核数" prop="defaultAssessmentNumber">
+                <template #default="{ row }">
+                  <div class="none">
+                    <el-input v-model="row.defaultAssessmentNumber" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                  </div>
+                  <span>{{ row.defaultAssessmentNumber ? row.defaultAssessmentNumber : '' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="默认OEM考核数" prop="defaultOem">
+                <template #default="{ row }">
+                  <div class="none">
+                    <el-input v-model="row.defaultOem" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                  </div>
+                  <span>{{ row.defaultOem ? row.defaultOem : '' }}</span>
+                </template>
+              </el-table-column>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="产品采购类型(供应链)">
             <el-table-column label="云舟计件" prop="yunzhouCount">
@@ -372,7 +390,9 @@ const clickCancel2 = async (event:any, value:any) => {
         aiTuoMCount: value.aiTuoMCount,
         attomCount: value.attomCount,
         proportion: Number(value.proportion) / 100,
-        day: value.day
+        day: value.day,
+        defaultAssessmentNumber: value.defaultAssessmentNumber,
+        defaultOem: value.defaultOem
       })
     } catch {
       Object.assign(value, copyRow)
