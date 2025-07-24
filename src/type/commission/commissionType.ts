@@ -36,6 +36,8 @@ export interface IGetCommissionProductTypeList {
   productManagerProportion: number | null
   proportion: number | null
   yunzhouCount: number | null
+  defaultOem?: number
+  defaultAssessmentNumber?: number
 }
 export interface IUpdateCommissionProductTypeReq {
   id: number
@@ -47,6 +49,8 @@ export interface IUpdateCommissionProductTypeReq {
   productManagerProportion: number | null
   proportion: number | null
   yunzhouCount: number | null
+  defaultOem?: number
+  defaultAssessmentNumber?: number
 }
 export interface IGetCommissionSettingRes {
   data: {
@@ -69,7 +73,7 @@ export interface IUpdateCommissionSetting1Req {
   minConversionRate: number | null
   compensationDay: number | null
   newDiscountRatio: number | null
-  price?:string
+  price?: string
 }
 export interface IGetCommissionTaskPictureListReq {
   keyWord: string

@@ -25,7 +25,7 @@ import type {
   IUpdateCommissionTaskPictureReq,
   IUpdateDevelopDesignTaskReq,
   IUpdateLongCommissionTaskReq,
-  IUpdateReductionCostTaskReq
+  IUpdateReductionCostTaskReq,
 } from '/@/type/commission/commissionType'
 
 /**
@@ -84,17 +84,17 @@ export function updateCommissionSetting1(data: IUpdateCommissionSetting1Req): Pr
   return request({
     url: `${BASE_API}/commission/setting1/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 提成系数设定-参数设定2table修改
  */
-export function updateCommissionSetting2(data: { id: number, targetRate: number }): Promise<{ data: boolean }> {
+export function updateCommissionSetting2(data: { id: number; targetRate: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/commission/setting2/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -104,7 +104,7 @@ export function getCommissionTaskPictureList(data: IGetCommissionTaskPictureList
   return request({
     url: `${BASE_API}/commission/task/picture/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -114,7 +114,7 @@ export function pauseCommissionTaskPicture(params: { id: number }): Promise<{ da
   return request({
     url: `${BASE_API}/commission/task/picture/pause`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -124,7 +124,7 @@ export function continueCommissionTaskPicture(params: { id: number }): Promise<{
   return request({
     url: `${BASE_API}/commission/task/picture/continue`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -134,7 +134,7 @@ export function updateCommissionTaskPicture(data: IUpdateCommissionTaskPictureRe
   return request({
     url: `${BASE_API}/commission/task/picture/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -144,7 +144,7 @@ export function getLongCommissionTaskList(data: IGetLongCommissionTaskListReq): 
   return request({
     url: `${BASE_API}/long/commission/task/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -154,7 +154,7 @@ export function updateLongCommissionTask(data: IUpdateLongCommissionTaskReq): Pr
   return request({
     url: `${BASE_API}/long/commission/task/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -164,7 +164,7 @@ export function continueLongCommissionTask(params: { id: number }): Promise<{ da
   return request({
     url: `${BASE_API}/long/commission/task/continue`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -174,7 +174,7 @@ export function pauseLongCommissionTask(params: { id: number }): Promise<{ data:
   return request({
     url: `${BASE_API}/long/commission/task/pause`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -184,7 +184,7 @@ export function getDevelopDesignTaskList(data: IGetLongCommissionTaskListReq): P
   return request({
     url: `${BASE_API}/develop/design/task/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -194,7 +194,7 @@ export function continueDevelopDesignTask(params: { id: number }): Promise<{ dat
   return request({
     url: `${BASE_API}/develop/design/task/continue`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -204,7 +204,7 @@ export function pauseDevelopDesignTask(params: { id: number }): Promise<{ data: 
   return request({
     url: `${BASE_API}/develop/design/task/pause`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -214,7 +214,7 @@ export function updateDevelopDesignTask(data: IUpdateDevelopDesignTaskReq): Prom
   return request({
     url: `${BASE_API}/develop/design/task/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -224,7 +224,7 @@ export function getReductionCostList(data: IGetLongCommissionTaskListReq): Promi
   return request({
     url: `${BASE_API}/cost/reduction/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -234,7 +234,7 @@ export function passReductionCostTask(params: { id: number }): Promise<{ data: b
   return request({
     url: `${BASE_API}/cost/reduction/task/pass`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -244,7 +244,7 @@ export function notPassReductionCostTask(params: { id: number }): Promise<{ data
   return request({
     url: `${BASE_API}/cost/reduction/task/not/pass`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -254,7 +254,7 @@ export function pauseReductionCostTask(params: { id: number }): Promise<{ data: 
   return request({
     url: `${BASE_API}/cost/reduction/task/pause`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -264,7 +264,7 @@ export function continueReductionCostTask(params: { id: number }): Promise<{ dat
   return request({
     url: `${BASE_API}/cost/reduction/task/continue`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
@@ -274,7 +274,7 @@ export function updateReductionCostTask(data: IUpdateReductionCostTaskReq): Prom
   return request({
     url: `${BASE_API}/cost/reduction/task/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -284,7 +284,7 @@ export function getCommissionDetailPictureList(data: IGetCommissionDetailPicture
   return request({
     url: `${BASE_API}/commission/task/detail/picture/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -294,7 +294,7 @@ export function getCommissionDetailLongList(data: IGetCommissionDetailPictureLis
   return request({
     url: `${BASE_API}/long/commission/task/detail/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -304,7 +304,7 @@ export function getCommissionDetailDevelopList(data: IGetCommissionDetailDevelop
   return request({
     url: `${BASE_API}/develop/design/task/detail/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -314,14 +314,14 @@ export function getReductionCostDetailList(params: IGetReductionCostDetailListRe
   return request({
     url: `${BASE_API}/cost/reduction/detail/list`,
     method: 'get',
-    params
+    params,
   })
 }
 
 /**
  * 查询提成任务明细-产品开发设计-人员列表
  */
-export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/develop/design/task/detail/user/list`,
     method: 'get',
@@ -331,10 +331,10 @@ export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number, 
 /**
  * 获取提成明细的发放月份
  */
-export function getCommissionTypeMonth(params: { type: number }): Promise<{ data: { id: number, label: string }[] }> {
+export function getCommissionTypeMonth(params: { type: number }): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/commission/type/month`,
     method: 'get',
-    params
+    params,
   })
 }
