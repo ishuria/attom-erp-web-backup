@@ -13,7 +13,8 @@ import type {
   IGetProductManagerAssessmentListReq,
   IGetProductManagerAssessmentListRes,
   IGetUserAttendanceListRes,
-  IUpdateProductManagerAssessmentReq
+  IMinimumMonthlyAssessment,
+  IUpdateProductManagerAssessmentReq,
 } from '/@/type/employeeManagement/performanceStatistics'
 
 /**
@@ -23,139 +24,162 @@ export function getProductManagerAssessmentList(data: IGetProductManagerAssessme
   return request({
     url: `${BASE_API}/product/manager/assessment/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 修改产品经理考核数设定参数
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updateProductManagerAssessment(data: IUpdateProductManagerAssessmentReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/update/product/manager/assessment`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 绩效统计-产品经理考核列表数据获取
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function getAssessmentList(data: IGetAssessmentListReq): Promise<IGetAssessmentListRes> {
   return request({
     url: `${BASE_API}/assessment/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 绩效统计-考勤统计明细
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function getUserAttendanceList(data: IGetAssessmentListReq): Promise<IGetUserAttendanceListRes> {
   return request({
     url: `${BASE_API}/user/attendance/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * 调整明细-新增
  * @param data
- * @returns 
+ * @returns
  */
 export function addAdjustDetail(data: IAddAdjustDetailReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/performance/add/adjust/detail`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * 调整明细-查询
  * @param data
- * @returns 
+ * @returns
  */
 export function getAdjustDetail(data: IGetAdjustDetailReq): Promise<IGetAdjustDetailRes> {
   return request({
     url: `${BASE_API}/performance/adjust/detail/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 查询当月 人员 对应调整明细
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export function getAdjustDetailByUser(params: { userId: number, month: string }): Promise<{ data: IGetAdjustDetail[] }> {
+export function getAdjustDetailByUser(params: { userId: number; month: string }): Promise<{ data: IGetAdjustDetail[] }> {
   return request({
     url: `${BASE_API}/performance/adjust/detail/by_user`,
     method: 'get',
-    params
+    params,
   })
 }
 
 /**
  * 调整明细-删除
  * @param params
- * @returns 
+ * @returns
  */
 export function deleteAdjustDetail(data: IGetAdjustDetail): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/performance/adjust/detail/delete`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * 查询产品经理列表
- * @returns 
+ * @returns
  */
-export function getProductManager(): Promise<{ data: { id: number, label: string}[] }> {
+export function getProductManager(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/product/manager/user/list`,
-    method: 'get'
+    method: 'get',
   })
 }
 
 /**
  * 最大超额完成数-查询
- * @returns 
- */ 
+ * @returns
+ */
 export function getMaximumOverfulfillment(): Promise<{ data: string }> {
   return request({
     url: `${BASE_API}/get/maximum/overfulfillment`,
-    method: 'get'
+    method: 'get',
   })
 }
 /**
  * 最大超额完成数-修改
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function updateMaximumOverfulfillment(params: { number: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/update/maximum/overfulfillment`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * 考核数结账
- * @param data 
- * @returns 
+ * @param data
+ * @returns
  */
 export function checkoutAssessmentNumber(data: ICheckoutReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/assessment/number/checkout`,
     method: 'post',
-    data
+    data,
+  })
+}
+
+/**
+ * @description 获取最低每月考核数
+ * @returns 最低每月考核数列表
+ */
+export function getMinimumMonthlyAssessments(): Promise<{ data: IMinimumMonthlyAssessment[] }> {
+  return request({
+    url: `${BASE_API}/get/minimum/monthly/assessments`,
+    method: 'get',
+  })
+}
+/**
+ * @description 更新最低每月考核数
+ * @param params
+ * @returns
+ */
+export function updateMinimumMonthlyAssessment(params: { id: number; number: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/update/minimum/monthly/assessments`,
+    method: 'post',
+    params,
   })
 }

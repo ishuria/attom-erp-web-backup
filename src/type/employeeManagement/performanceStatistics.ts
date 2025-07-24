@@ -285,3 +285,9 @@ export interface ICheckoutReq {
 
   endMonth: string
 }
+
+export interface IMinimumMonthlyAssessment {
+  id: number
+  userName: string
+  minMonthlyAssessment: number
+}
