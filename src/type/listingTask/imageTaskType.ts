@@ -129,9 +129,13 @@ export interface IUpdateArtDesignTaskDistributeReq {
    */
   instructionPerson?: string
   /**
-   * 建模渲染人多个用,分割
+   * 建模人多个用,分割
    */
   moldingPerson?: string
+
+  /** 渲染人多个用,分割 */
+  renderingPerson?: string
+
   /**
    * 视频人多个用,分割
    */

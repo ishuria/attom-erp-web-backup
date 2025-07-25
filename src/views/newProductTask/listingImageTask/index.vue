@@ -101,7 +101,7 @@
             </template>
           </el-table-column>
           <template v-for="col in columnConfigs" :key="col.prop">
-            <el-table-column 
+            <el-table-column
               v-if="!col.isSpecial"
               :label="col.label"
               :prop="col.prop"
@@ -174,7 +174,7 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -281,7 +281,7 @@
             </template>
           </el-table-column>
           <template v-for="col in columnConfigs" :key="col.prop">
-            <el-table-column 
+            <el-table-column
               v-if="!col.isSpecial"
               :label="col.label"
               :prop="col.prop"
@@ -354,7 +354,7 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -439,7 +439,7 @@
             </template>
           </el-table-column>
           <template v-for="col in columnConfigs" :key="col.prop">
-            <el-table-column 
+            <el-table-column
               v-if="!col.isSpecial"
               :label="col.label"
               :prop="col.prop"
@@ -506,7 +506,7 @@
             <el-empty class="vab-data-empty"/>
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -616,8 +616,13 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="建模渲染">
+        <el-form-item label="建模">
           <el-select v-model="assignTaskForm.moldingPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="渲染">
+          <el-select v-model="assignTaskForm.renderingPerson" collapse-tags collapse-tags-tooltip :max-collapse-tags="6" multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -756,20 +761,21 @@ const route = useRoute()
 interface ColumnConfig {
   label: string
   prop: string
-  dataKey?: string 
+  dataKey?: string
   baseWidth?: number
-  isSpecial?: boolean 
+  isSpecial?: boolean
 }
 const columnConfigs: ColumnConfig[] = [
   { label: '基础图片', prop: 'basePicture', dataKey: '_basePicture', baseWidth: 100 },
-  { label: '建模/渲染', prop: 'modeling', dataKey: '_modeling', baseWidth: 110 },
+  { label: '建模', prop: 'modeling', dataKey: '_modeling', baseWidth: 100 },
+  { label: '渲染', prop: 'rendering', dataKey: '_rendering', baseWidth: 100 },
   { label: 'A+', prop: 'aAdd', dataKey: '_aAdd', baseWidth: 90 },
   { label: '视频', prop: 'video', dataKey: '_video', baseWidth: 90 },
   { label: '说明书/包装', prop: 'instructionManual', dataKey: '_instructionManual', baseWidth: 120 },
-  { 
-    label: '发布人', 
-    prop: 'publisherPersonName', 
-    isSpecial: true 
+  {
+    label: '发布人',
+    prop: 'publisherPersonName',
+    isSpecial: true
   },
   { label: '产品经理', prop: 'productManager', dataKey: '_productManager', baseWidth: 100 },
   { label: '产品设计', prop: 'productDesign', dataKey: '_productDesign', baseWidth: 100 },
@@ -799,7 +805,8 @@ const assignTaskForm = reactive<any>({
   moldingPerson: [],
   aPlus: [],
   videoPerson: [],
-  instructionPerson: []
+  instructionPerson: [],
+  renderingPerson: [],
 })
 const selectedRows = ref<IGetArtDesignTaskList[]>([])
 const setSelectedRows = (value: IGetArtDesignTaskList[]) => {
@@ -1117,6 +1124,7 @@ const handleConfirmAssignTask = async () => {
     aPlus: assignTaskForm.aPlus.join(','),
     videoPerson: assignTaskForm.videoPerson.join(','),
     instructionPerson: assignTaskForm.instructionPerson.join(','),
+    renderingPerson: assignTaskForm.renderingPerson.join(','),
     type: activeName.value
   })
   if (data) {
@@ -1195,7 +1203,7 @@ const handleFinish = async (row: IGetArtDesignTaskList) => {
 const showTaskStatistics = async () => {
   taskStatisticsVisible.value = true
   // const { data } = await getArtDesignTaskStatistics()
-  
+
 }
 const handleConfirmMarginSetting = async () => {
   marginSettingFormRef.value?.validate(async (isValid: boolean) => {
@@ -1388,7 +1396,7 @@ const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
 }
-onBeforeMount(() => { 
+onBeforeMount(() => {
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -1466,9 +1474,9 @@ onBeforeMount(() => {
   }
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 .none {
   display: none;
@@ -1477,6 +1485,6 @@ onBeforeMount(() => {
 //   background-color: #fff !important;
 // }
 // :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-//   background-color: #fafafa !important; 
+//   background-color: #fafafa !important;
 // }
 </style>
