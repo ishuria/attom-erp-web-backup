@@ -367,7 +367,12 @@ export const cancelShipmentEncasement = (params: IId): Promise<IBooleanRes> => {
 /**
  * @description 头程运费-添加费用
  */
-export const addShipmentCost = (params: { shipId: number; costName: string; shipmentId: string }): Promise<IBooleanRes> => {
+export const addShipmentCost = (params: {
+  shipId: number
+  costName: string
+  shipmentId: string
+  channelId: number
+}): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/shipment/cost/add`,
     method: 'post',

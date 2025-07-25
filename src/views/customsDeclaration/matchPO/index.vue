@@ -395,7 +395,7 @@
     <vab-dialog v-model="addFeeVisible" :title="`货代渠道：${freightName}`" width="20%" >
       <el-form ref="addFeeFormRef" label-position="top" :model="addFeeForm" :rules="addFeeFormRules" >
         <el-form-item label="费用名" prop="costNameId">
-          <el-select v-model="addFeeForm.costNameId" clearable placeholder="请选择费用名" >
+          <el-select v-model="addFeeForm.costNameId" clearable filterable placeholder="请选择费用名" >
             <el-option
               v-for="item in costNameList"
               :key="item.id"
@@ -539,10 +539,12 @@ const handleAddFee = async () => {
         $baseMessage('费用名重复，请重新选择！', 'error')
         return
       }
+      // console.log(channelId)
       const { data } = await addShipmentCost({
         shipId: _shipId.value!,
         costName,
-        shipmentId
+        shipmentId,
+        channelId
       })
       if (data) {
         $baseMessage('添加费用成功！', 'success')
