@@ -107,7 +107,7 @@
         <el-table
           ref="tableRef"
           v-loading="listLoading"
-          v-permissions="PoPermission.queryFormPermission()"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"

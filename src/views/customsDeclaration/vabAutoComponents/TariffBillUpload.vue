@@ -7,8 +7,8 @@
             <template #append>%</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="关税记在" prop="shipmentId">
-          <el-select v-model="uploadForm.shipmentId" placeholder="请选择关税记在">
+        <el-form-item label="关税记在" prop="shipId">
+          <el-select v-model="uploadForm.shipId" placeholder="请选择关税记在">
             <el-option
               v-for="item in props.shipmentIdList"
               :key="item.value"
@@ -47,7 +47,7 @@ defineOptions({
 })
 const props = defineProps<{
   modelValue: boolean
-  shipmentIdList: { label: string, value: string }[]
+  shipmentIdList: { label: string, value: number }[]
 }>()
 const emit = defineEmits(['update:modelValue'])
 const visible = computed({
@@ -63,13 +63,13 @@ const fileList = ref<any[]>([])
 const uploadFormRef = ref<FormInstance>()
 const uploadForm = reactive({
   error: undefined as number | undefined,
-  shipmentId: undefined as string | undefined,
+  shipId: undefined as number | undefined,
 })
 const rules = reactive({
   error: [
     { required: true, message: '请输入误差设定', trigger: 'blur' },
   ],
-  shipmentId: [
+  shipId: [
     { required: true, message: '请选择关税记在', trigger: 'change' },
   ],
 })
@@ -82,7 +82,7 @@ const handleUpload = async () => {
     if (isValid) {
       let formData = new FormData()
       formData.append('error', uploadForm.error!.toString())
-      formData.append('shipmentId', uploadForm.shipmentId!)
+      formData.append('shipId', uploadForm.shipId!.toString())
       fileList.value.forEach((item: any) => {
         formData.append('file', item.raw)
       })

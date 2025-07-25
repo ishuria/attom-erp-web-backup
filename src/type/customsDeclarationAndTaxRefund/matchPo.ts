@@ -74,6 +74,9 @@ export interface IGetMatchPoList {
   weight?: number
   lockStatus: number | null
   status: number | null
+
+  /** 关联关税单的id */
+  tariffId: number | null
 }
 
 export interface IGetMatchPackageListReq {
@@ -289,8 +292,8 @@ export interface IClearMatchComponent {
 }
 
 export interface IClearAllMatchComponent {
-  list: { mid: number, poComponentId: number }[]
-  id: number,
+  list: { mid: number; poComponentId: number }[]
+  id: number
   mIds: string
 }
 

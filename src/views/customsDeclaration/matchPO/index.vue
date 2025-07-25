@@ -468,15 +468,15 @@ const showTariffBillUpload = () => {
     return
   }
   // 校验:已经匹配过关税单的货件不能再匹配
-  // if (selectRows.value.some((item: any) => item.tariffBillNumber)) {
-  //   $baseMessage('已经匹配过关税单的货件不能再匹配！', 'warning', 'hey')
-  //   return
-  // }
+  if (selectRows.value.some((item: any) => item.tariffId !== null)) {
+    $baseMessage('已经匹配过关税单的货件不能再匹配！', 'warning', 'hey')
+    return
+  }
   // 构建选择的shipmentId列表
   shipmentIdList.value = selectRows.value.map((item: any) => {
     return {
       label: item.shipmentId,
-      value: item.shipmentId
+      value: item.id
     }
   })
   tariffBillUploadVisible.value = true
