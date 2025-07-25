@@ -37,3 +37,7 @@ export interface IFreightCheckItem {
   manualRemarks?: string
   status?: number
 }
+export interface IPaymentStatistics {
+  amount: number
+  currency: string
+}

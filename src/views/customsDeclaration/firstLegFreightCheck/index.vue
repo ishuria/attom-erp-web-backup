@@ -10,6 +10,7 @@
             <el-button :disabled="finishCheckDisabled" type="danger" @click="deleteCheck">取消核对</el-button>
             <el-button :disabled="finishCheckDisabled" type="success" @click="handleApproved">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
+            <el-button type="primary" @click="showStatistics">付款统计</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -100,6 +101,13 @@
     </vab-dialog>
     <!-- 误差允许范围 -->
     <error-allow-range-dialog v-model="allowRangeVisible" @update:data="fetchData" />
+    <!-- 付款统计 -->
+    <vab-dialog v-model="statisticsVisible" title="付款统计" width="16%">
+      <el-table border :data="statisticsList">
+        <el-table-column label="币种" prop="currency" />
+        <el-table-column label="金额" prop="amount" />
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -107,13 +115,23 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, TabsPaneContext } from 'element-plus'
 import { downloadFileN } from '/@/api/devlocal/download'
-import { approvedFreightCheck, deleteFreightCheck, getFreightCheckList, sendFreightCheckEmail, updateFreightCheckPaid, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
-import { IFreightCheckItem } from '/@/type/freightCheck/freightCheckType'
+import { approvedFreightCheck, deleteFreightCheck, getFreightCheckList, getFreightCheckPaymentStatisticsList, sendFreightCheckEmail, updateFreightCheckPaid, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
+import { IFreightCheckItem, IPaymentStatistics } from '/@/type/freightCheck/freightCheckType'
 
 defineOptions({
   name: 'FirstLegFreightCheck'
 })
 
+// 付款统计
+const statisticsVisible = ref<boolean>(false)
+const statisticsList = ref<IPaymentStatistics[]>([])
+const showStatistics = async () => {
+  const { data } = await getFreightCheckPaymentStatisticsList()
+  if (data) {
+    statisticsList.value = data
+  }
+  statisticsVisible.value = true
+}
 // 开始核对
 const startCheckVisible = ref<boolean>(false)
 const startCheckDisabled = ref<boolean>(false)
