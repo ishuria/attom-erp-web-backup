@@ -61,9 +61,13 @@
           <el-table-column fixed="right" label="操作" width="380">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showFreightFee(row)">退税运费</el-link>
+              <span style="margin: 0 5px;"></span>
               <el-link type="primary" underline='never' @click="showDetail(row)">明细</el-link>
+              <span style="margin: 0 5px;"></span>
               <el-link type="primary" underline='never' @click="showInvoiceCollection()">发票归集</el-link>
+              <span style="margin: 0 5px;"></span>
               <el-link type="primary" underline='never' @click="handleArchiveOutbound(row)">出库归档</el-link>
+              <span style="margin: 0 5px;"></span>
               <el-link type="success" underline='never' @click="handleUpdateStatus(row)">退税完成</el-link>
             </template>
           </el-table-column>
@@ -132,6 +136,7 @@
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showDetail(row)">明细</el-link>
+              <span style="margin: 0 5px;"></span>
               <el-link type="primary" underline='never' @click="showInvoiceCollection()">发票归集</el-link>
             </template>
           </el-table-column>
