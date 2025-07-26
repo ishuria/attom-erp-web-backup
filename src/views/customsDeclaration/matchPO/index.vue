@@ -2,11 +2,11 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button :loading="declarationLoading" type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
-        <el-button :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
-        <el-button type="primary" @click="uploadPDFVisible = true">入仓单生成</el-button>
-        <el-button type="primary" @click="sentButNotReportedVisible = true">已发未报</el-button>
-        <el-button type="primary" @click="showTariffBillUpload">关税单上传</el-button>
+        <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DECLARATION_GENERATE] }" :loading="declarationLoading" type="primary" @click="handleGenerateDeclaration">报关资料生成</el-button>
+        <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TAXREFUND] }" :loading="clearanceLoading" type="primary" @click="handleGenerateClearance">清关资料生成</el-button>
+        <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_WAREHOUSE_RECEIPT_PDF] }" type="primary" @click="uploadPDFVisible = true">入仓单生成</el-button>
+        <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_YFWB_LIST] }"  type="primary" @click="sentButNotReportedVisible = true">已发未报</el-button>
+        <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TARIFF_BILL_PDF] }" type="primary" @click="showTariffBillUpload">关税单上传</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -71,7 +71,7 @@
       <el-table-column label="货代渠道" min-width="180" prop="channelId">
         <template #default="{ row }">
           <el-select v-model="row.channelId" >
-            <el-option 
+            <el-option
               v-for="item in forwarderOption"
               :key="item.id"
               :label="item.label"
@@ -88,7 +88,7 @@
       <el-table-column label="实际运费" min-width="100" prop=""/>
       <el-table-column label="已付运费" min-width="100" prop="payStatus">
         <template #default="{ row }">
-          <el-checkbox 
+          <el-checkbox
             v-model="row.payStatus"
             :class="handleColorSwitch(row)"
             @change="handleUpdatePayStatus(row)"
@@ -97,9 +97,9 @@
       </el-table-column>
       <el-table-column label="状态" min-width="160" prop="status" >
         <template #default="{ row }">
-          <span 
-            :style="{ 
-              color: row.matchStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' // 绿色 
+          <span
+            :style="{
+              color: row.matchStatus === 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' // 绿色
             }">
             {{ row.matchStatus === 0 ? '待匹配' : '已匹配' }}
           </span><br />
@@ -114,10 +114,10 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="115">
+      <el-table-column v-permissions="ShipmentPermission.operationColPermission()" fixed="right" label="操作" width="115">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="showMatch(row)">
+            <el-button text type="primary" @click="showMatch(row)" v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] }">
               匹配
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -125,37 +125,37 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="showMatch(row)">
+                <el-dropdown-item  v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] }" @click="showMatch(row)">
                   <el-link type="primary" underline='never' >匹配</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="showModify(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_UPDATE] }" @click="showModify(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>修改</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleArchivePackage(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_PACKAGE_ARCHIVE] }" @click="handleArchivePackage(row)">
                   <el-link :disabled="row.packArchiveStatus === 1" type="primary" underline='never' >打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleArchiveTaxRefund(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_ARCHIVE] }" @click="handleArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>退税归档</el-link>
                 </el-dropdown-item>
-                <!-- <el-dropdown-item @click="handleArchiveOutbound(row)" >
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_ARCHIVE] }"  @click="handleArchiveOutbound(row)" >
                   <el-link :disabled="row.outboundStatus === 1" type="primary" underline='never' >出库归档</el-link>
-                </el-dropdown-item> -->
-                <el-dropdown-item @click="showFirstLegFreight(row)">
+                </el-dropdown-item>
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_COST_LIST] }" @click="showFirstLegFreight(row)">
                   <el-link type="primary" underline='never' >头程运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item >
                   <el-link type="primary" underline='never' >合同导入</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCancelArchivePackage(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_PACKAGE_CANCEL_ARCHIVE] }" @click="handleCancelArchivePackage(row)">
                   <el-link :disabled="row.packArchiveStatus === 0" type="primary" underline='never'>撤销打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCancelArchiveTaxRefund(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_CANCEL_ARCHIVE] }" @click="handleCancelArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 0" type="primary" underline='never' >撤销退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCancelArchiveOutbound(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_CANCEL] }" @click="handleCancelArchiveOutbound(row)">
                   <el-link :disabled="row.outboundStatus === 0" type="primary" underline='never'>撤销出库</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleCancelEncasement(row)">
+                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_CANCEL_ENCASEMENT] }" @click="handleCancelEncasement(row)">
                   <el-link type="primary" underline='never'>撤销装箱(删除)</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -167,7 +167,7 @@
         <el-empty class="vab-data-empty" description="暂无数据"/>
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -205,7 +205,7 @@
         <el-table-column label="结算对象" min-width="120">
           <template #default="{ row }">
             <el-select v-model="row.settlementObject" @change="handleUpdateSettlementObject(row)" >
-              <el-option 
+              <el-option
                 v-for="item in settlementObjectList"
                 :key="item.id"
                 :label="item.label"
@@ -242,7 +242,7 @@
         <el-table-column label="货币" min-width="100" prop="currency">
           <template #default="{ row }">
             <el-select v-model="row.currency" style="min-width: 100%;" @change="handleUpdateLegCurrency(row)">
-              <el-option 
+              <el-option
                 v-for="item in currencyList"
                 :key="item.id"
                 :label="item.label"
@@ -318,14 +318,14 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 匹配 -->
-    <vab-match-dialog 
+    <vab-match-dialog
       :disabled1="disabled1"
       :disabled2="disabled2"
       :disabled3="disabled3"
       :match-visible="matchVisible"
       :ship-id="shipId"
       :status="status"
-      
+
       @update-match-visible="handleCloseMatch"
     />
     <!-- 修改货代渠道 -->
@@ -384,7 +384,7 @@
             <span v-html="row.mergeList"></span>
           </template>
         </el-table-column>
-        
+
       </el-table>
       <template #footer>
         <el-button @click="closeGenerate">取消</el-button>
@@ -436,6 +436,7 @@
 </template>
 
 <script lang="ts" setup>
+import ShipmentPermission from '/@/permissions/shipment.ts'
 import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
@@ -526,7 +527,7 @@ const showAddFee = async () => {
   } else {
     costNameList.value = []
   }
-  
+
   addFeeFormRef.value?.resetFields()
 }
 const handleAddFee = async () => {
@@ -691,7 +692,7 @@ const handleDownload = async () => {
             $baseMessage('生成清关资料成功！', 'success')
           } catch {
             $baseMessage('生成清关资料失败！', 'error')
-          } 
+          }
         })
       }
     } catch(error) {
@@ -759,7 +760,7 @@ const handleGenerateClearance = async () => {
 let copyRow: any
 
 // 修改付款状态
-const handleUpdatePayStatus = async (row: any) => {  
+const handleUpdatePayStatus = async (row: any) => {
   const item = payStatusList.value.find((item: any) => item.id === row.id)
   if (row.payStatus === true) {
     item!.payStatus = 2
@@ -1080,7 +1081,7 @@ const handleUpdateSettlementObject = async (row: any) => {
       cost: row.actualCost,
       settlementObject: row.settlementObject
     })
- 
+
   } catch {
     $baseMessage('更新失败！', 'error')
   }
@@ -1123,7 +1124,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
             }
           }, 0).toFixed(2)}`,
         ])
-      
+
         break;
       }
        case 4: {
@@ -1145,7 +1146,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] })
             }
           }, 0).toFixed(2)}`,
         ])
-      
+
         break;
       }
       default: {
@@ -1196,7 +1197,7 @@ const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     return {
       textAlign: 'left'
     }
-  } 
+  }
   return {
     textAlign: 'center'
   }
@@ -1215,8 +1216,8 @@ const tableRowClassName = ({
 }
 const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   switch (data.columnIndex) {
-    case 0: 
-    case 13: 
+    case 0:
+    case 13:
     case 15: {
       return {
         textAlign: 'left',
@@ -1230,7 +1231,7 @@ const firstLegFreightStyle = (data: { row: any, column: any, rowIndex: number, c
         cursor: 'not-allowed'
       }
     }
-    case 9: 
+    case 9:
     case 11: {
       return {
         textAlign: 'center',
@@ -1318,7 +1319,7 @@ onActivated(() => {
 //   padding-right: 3px;
 //   padding-left: 3px;
 // }
-// :deep(.center-table tr:last-child td), 
+// :deep(.center-table tr:last-child td),
 // :deep(.center-table tr:last-child th) {
 //   text-align: center !important;
 // }
@@ -1385,7 +1386,7 @@ onActivated(() => {
     .warning-row > td {
       background-color: var(--el-color-warning-light-9) !important;
     }
-    
+
     // 普通行hover时保持白色
     .el-table__body tr:not(.warning-row) {
       &.hover-row > td,
@@ -1408,8 +1409,8 @@ onActivated(() => {
   }
 }
 .custom-tooltip {
-  max-width: 400px; 
+  max-width: 400px;
   font-size: 14px;
-  white-space: pre-wrap; 
+  white-space: pre-wrap;
 }
 </style>

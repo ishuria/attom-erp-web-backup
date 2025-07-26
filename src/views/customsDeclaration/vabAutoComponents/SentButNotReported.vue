@@ -37,11 +37,11 @@
         class="noneHoveTable"
         :data="sentList"
         :header-cell-style="{ textAlign: 'center' }"
+        :row-class-name="tableRowClassName"
         stripe
+        style="height: calc(80vh - 200px); max-height: calc(80vh - 200px)"
         @cell-click="changeInput"
         @selection-change="setSelectRows"
-        :row-class-name="tableRowClassName"
-        style="height: calc(80vh - 200px); max-height: calc(80vh - 200px)"
       >
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')" />
