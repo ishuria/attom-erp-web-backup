@@ -11,7 +11,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="设计任务">
-                <el-select placeholder="全部" v-model="queryForm.designTaskId" @change="queryData">
+                <el-select v-model="queryForm.designTaskId" placeholder="全部" @change="queryData">
                   <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
@@ -114,7 +114,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="设计任务">
-                <el-select placeholder="全部" v-model="longQueryForm.designTaskId" @change="longQueryData">
+                <el-select v-model="longQueryForm.designTaskId" placeholder="全部" @change="longQueryData">
                   <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
@@ -473,33 +473,33 @@ import type { CSSProperties } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
 import { designTypeOption } from '../../newProductTask/constantOption'
 import {
-    continueCommissionTaskPicture,
-    continueDevelopDesignTask,
-    continueLongCommissionTask,
-    continueReductionCostTask,
-    getCommissionTaskPictureList,
-    getDevelopDesignTaskList,
-    getLongCommissionTaskList,
-    getReductionCostList,
-    notPassReductionCostTask,
-    passReductionCostTask,
-    pauseCommissionTaskPicture,
-    pauseDevelopDesignTask,
-    pauseLongCommissionTask,
-    pauseReductionCostTask,
-    updateCommissionTaskPicture,
-    updateDevelopDesignTask,
-    updateLongCommissionTask,
-    updateReductionCostTask,
+  continueCommissionTaskPicture,
+  continueDevelopDesignTask,
+  continueLongCommissionTask,
+  continueReductionCostTask,
+  getCommissionTaskPictureList,
+  getDevelopDesignTaskList,
+  getLongCommissionTaskList,
+  getReductionCostList,
+  notPassReductionCostTask,
+  passReductionCostTask,
+  pauseCommissionTaskPicture,
+  pauseDevelopDesignTask,
+  pauseLongCommissionTask,
+  pauseReductionCostTask,
+  updateCommissionTaskPicture,
+  updateDevelopDesignTask,
+  updateLongCommissionTask,
+  updateReductionCostTask,
 } from '/@/api/devlocal/commission'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import type {
-    IGetCommissionTaskPictureList,
-    IGetCommissionTaskPictureListReq,
-    IGetDevelopDesignTaskList,
-    IGetLongCommissionTaskList,
-    IGetLongCommissionTaskListReq,
-    IGetReductionCostList,
+  IGetCommissionTaskPictureList,
+  IGetCommissionTaskPictureListReq,
+  IGetDevelopDesignTaskList,
+  IGetLongCommissionTaskList,
+  IGetLongCommissionTaskListReq,
+  IGetReductionCostList,
 } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -521,13 +521,13 @@ const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: -1
+  designTaskId: 0
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: -1
+  designTaskId: 0
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
