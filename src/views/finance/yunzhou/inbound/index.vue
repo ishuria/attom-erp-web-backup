@@ -110,14 +110,14 @@
 
         <el-table
           border
-          :data="componentSummaryList"
           class="noneHoverTable"
+          :data="componentSummaryList"
           :row-class-name="componentSummaryRowClassName"
         >
-          <el-table-column label="供应商名称" prop="suppliser" :min-width="flexColumnWidth(componentSummaryList, '供应商名称', 'suppliser')" />
-          <el-table-column label="PO" prop="po" :min-width="flexColumnWidth(componentSummaryList, 'PO', 'po')"/>
-          <el-table-column label="SKU" prop="sku" :min-width="flexColumnWidth(componentSummaryList, 'SKU', 'sku')" />
-          <el-table-column label="零件名" prop="componentName" :min-width="flexColumnWidth(componentSummaryList, '零件名', 'componentName')"/>
+          <el-table-column label="供应商名称" :min-width="flexColumnWidth(componentSummaryList, '供应商名称', 'suppliser')" prop="suppliser" />
+          <el-table-column label="PO" :min-width="flexColumnWidth(componentSummaryList, 'PO', 'po')" prop="po"/>
+          <el-table-column label="SKU" :min-width="flexColumnWidth(componentSummaryList, 'SKU', 'sku')" prop="sku" />
+          <el-table-column label="零件名" :min-width="flexColumnWidth(componentSummaryList, '零件名', 'componentName')" prop="componentName"/>
           <el-table-column label="已入库数量" min-width="130" prop="inboundCount" />
           <el-table-column label="PO零件总数" min-width="130" prop="purchaseCount" />
           <el-table-column label="零件单位" min-width="130" prop="unit" />
@@ -176,11 +176,11 @@
 
           <el-table
             border
-            :data="supplierSummaryList"
             class="noneHoverTable"
+            :data="supplierSummaryList"
             :header-cell-style="{ textAlign: 'center' }"
-            :summary-method="handleSummaryMethod"
             show-summary
+            :summary-method="handleSummaryMethod"
           >
             <el-table-column label="供应商名称" prop="supplierName" :width="flexColumnWidth(supplierSummaryList, '供应商名称', 'supplierName', 90)" />
             <el-table-column label="PO未税价" min-width="130" prop="preTaxPrice" />

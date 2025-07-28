@@ -2,17 +2,17 @@
   <vab-dialog v-model="visible" title="产品明细" top="10vh"> 
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
-        <el-form :model="queryForm" inline @submit.prevent >
+        <el-form inline :model="queryForm" @submit.prevent >
           <el-form-item>
-            <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keyup.enter="queryData" @input="queryData" />
+            <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
           </el-form-item>
           <el-form-item>
-            <el-button :loading="listLoading" :icon="Search" type="primary" @click="queryData" />
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" :data="list" border stripe max-height="60vh" >
+    <el-table v-loading="listLoading" border :data="list" max-height="60vh" stripe >
       <el-table-column label="零件图片" prop="componentImgUrl" width="91">
         <template #default="{ row }">
           <el-image :src="row.componentImgUrl" style="width: 65px; height: 65px; display: block" @click="showImagePreview(row.componentImgUrl)">
@@ -20,12 +20,12 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="零件ID" prop="id" min-width="90" />
-      <el-table-column label="零件名" prop="componentName" :min-width="flexColumnWidth(list, '零件名', 'componentName')" />
-      <el-table-column label="采购总额(￥)" prop="totalPurchaseAmount" min-width="120" />
-      <el-table-column label="采购总数" prop="purchaseCount" min-width="100" />
-      <el-table-column label="单位" prop="unit" min-width="70" />
-      <el-table-column label="SKU" prop="sku" :min-width="calculateBrColumnWidth(list, (row: any) => row._sku, 90)" >
+      <el-table-column label="零件ID" min-width="90" prop="id" />
+      <el-table-column label="零件名" :min-width="flexColumnWidth(list, '零件名', 'componentName')" prop="componentName" />
+      <el-table-column label="采购总额(￥)" min-width="120" prop="totalPurchaseAmount" />
+      <el-table-column label="采购总数" min-width="100" prop="purchaseCount" />
+      <el-table-column label="单位" min-width="70" prop="unit" />
+      <el-table-column label="SKU" :min-width="calculateBrColumnWidth(list, (row: any) => row._sku, 90)" prop="sku" >
         <template #default="{ row }">
           <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
             <template #content>
@@ -35,7 +35,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="产品经理" prop="productManagerName" min-width="100" >
+      <el-table-column label="产品经理" min-width="100" prop="productManagerName" >
         <template #default="{ row }">
           <el-tooltip content=" " :disabled="!row.overflow_productManagerName" effect="dark" placement="top">
             <template #content>
@@ -54,7 +54,7 @@
       @size-change="handleSizeChange"
     />
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
+  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 </template>
 
 <script lang="ts" setup>

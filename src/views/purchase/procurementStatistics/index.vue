@@ -4,25 +4,25 @@
       <el-tab-pane label="供应商" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel :span="4">
-            <el-date-picker v-model="date" type="daterange" :disabled-date="(time: Date) => time.getTime() > Date.now()" :clearable="false" @change="queryData" />
+            <el-date-picker v-model="date" :clearable="false" :disabled-date="(time: Date) => time.getTime() > Date.now()" type="daterange" @change="queryData" />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="20">
-            <el-form :model="queryForm" inline @submit.prevent>
+            <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" placeholder="请输入搜索关键词" clearable @keydown.enter="queryData" @input="queryData" />
+                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border stripe :data="list">
-          <el-table-column prop="supplierName" label="供应商" />
-          <el-table-column prop="totalPurchaseAmount" label="总采购金额(￥)" />
+        <el-table v-loading="listLoading" border :data="list" stripe>
+          <el-table-column label="供应商" prop="supplierName" />
+          <el-table-column label="总采购金额(￥)" prop="totalPurchaseAmount" />
           <el-table-column label="操作" >
             <template #default="{ row }">
-              <el-link underline='never' type="primary" @click="showProductDetail(row)">产品明细</el-link>
+              <el-link type="primary" underline='never' @click="showProductDetail(row)">产品明细</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -40,31 +40,31 @@
       <el-tab-pane label="产品" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel :span="4">
-            <el-date-picker v-model="productDate" type="daterange" :disabled-date="(time: Date) => time.getTime() > Date.now()" :clearable="false" @change="queryProductData"  />
+            <el-date-picker v-model="productDate" :clearable="false" :disabled-date="(time: Date) => time.getTime() > Date.now()" type="daterange" @change="queryProductData"  />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="20">
-            <el-form :model="productQueryForm" inline @submit.prevent>
+            <el-form inline :model="productQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="productQueryForm.keyWord" placeholder="请输入搜索关键词" clearable @keydown.enter="queryProductData" @input="queryProductData" />
+                <el-input v-model="productQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryProductData" @keydown.enter="queryProductData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" type="primary" :loading="listLoading" @click="queryProductData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryProductData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border stripe :data="productList" >
-          <el-table-column prop="amount" label="零件图片" width="91" >
+        <el-table v-loading="listLoading" border :data="productList" stripe >
+          <el-table-column label="零件图片" prop="amount" width="91" >
             <template #default="{ row }">
               <el-image :src="row.componentImgUrl" style="width: 65px; height: 65px; display: block" @click="showImagePreview(row.componentImgUrl)">
                 <template #error><el-icon /></template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="id" label="零件ID" />
-          <el-table-column prop="componentName" label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" />
-          <el-table-column prop="componentPurchaseAmount" min-width="120" label="零件采购总额(￥)" />
-          <el-table-column prop="supplierName" label="供应商" :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)" >
+          <el-table-column label="零件ID" prop="id" />
+          <el-table-column label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" prop="componentName" />
+          <el-table-column label="零件采购总额(￥)" min-width="120" prop="componentPurchaseAmount" />
+          <el-table-column label="供应商" :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)" prop="supplierName" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_supplierName" effect="dark" placement="top">
                 <template #content>
@@ -74,7 +74,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="totalPurchaseAmount" label="采购总额(￥)" min-width="110" >
+          <el-table-column label="采购总额(￥)" min-width="110" prop="totalPurchaseAmount" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_totalPurchaseAmount" effect="dark" placement="top">
                 <template #content>
@@ -84,7 +84,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="purchaseCount" label="采购总数" min-width="100" >
+          <el-table-column label="采购总数" min-width="100" prop="purchaseCount" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_purchaseCount" effect="dark" placement="top">
                 <template #content>
@@ -94,7 +94,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="unit" label="单位" >
+          <el-table-column label="单位" prop="unit" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_unit" effect="dark" placement="top">
                 <template #content>
@@ -104,7 +104,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="sku" label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" >
+          <el-table-column label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" prop="sku" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
                 <template #content>
@@ -114,7 +114,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="productManagerName" label="产品经理" >
+          <el-table-column label="产品经理" prop="productManagerName" >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_productManagerName" effect="dark" placement="top">
                 <template #content>
@@ -138,8 +138,8 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="imagePreviewClose" hide-on-click-modal />
-    <product-statistics-detail v-model="detailVisible" :id="detailId" :start-date="date[0]" :end-date="date[1]" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <product-statistics-detail :id="detailId" :key="`${date[0]}-${date[1]}`" v-model="detailVisible" :end-date="date[1]" :start-date="date[0]" />
   </div>
 </template>
 
