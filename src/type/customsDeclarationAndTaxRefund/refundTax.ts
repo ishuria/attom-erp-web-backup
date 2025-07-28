@@ -87,6 +87,7 @@ export interface IGetTaxRefundBatchDetailList {
    * 付款记录
    */
   payRecordList?: PayRecordList[] | string
+  matchInvoiceRecord?: any[]
   // Po号
   po?: string
   // po的零件id
@@ -121,15 +122,15 @@ export interface PayRecordList {
   /**
    * 创建时间
    */
-  createTime?: string;
+  createTime?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 付款金额
    */
-  payPrice?: number;
+  payPrice?: number
   /**
    * 百分比
    */
@@ -258,39 +259,38 @@ export interface IGetTaxRefundInvoiceMatchRes {
 }
 
 export interface IGetTaxRefundInvoiceMatchList {
-
   /**
    * 唯一id
    */
-  uniqId:number
+  uniqId: number
   /**
    * cif价格
    */
-  cifPrice?: number;
+  cifPrice?: number
   /**
    * 合同编号
    */
-  contractNumber?: string;
+  contractNumber?: string
   /**
    * 报关数量
    */
-  customsDeclarationCount?: number;
+  customsDeclarationCount?: number
   /**
    * 报关单位
    */
-  customsDeclarationUnit?: string;
+  customsDeclarationUnit?: string
   /**
    * fob价格
    */
-  fobPrice?: number;
+  fobPrice?: number
   /**
    * 运费
    */
-  freightFee?: number;
+  freightFee?: number
   /**
    * 主键id
    */
-  id: number;
+  id: number
   /**
    * 发票数量
    */
@@ -362,41 +362,41 @@ export interface IGetTaxRefundProfitMarginList {
   /**
    * 合同号
    */
-  contractNumber?: string;
+  contractNumber?: string
   /**
    * 利润率
    */
-  profitMargin?: string;
+  profitMargin?: string
   /**
    * 汇率
    */
-  rate?: number;
+  rate?: number
   /**
    * 发货日期
    */
-  shipmentDate?: string;
+  shipmentDate?: string
   /**
    * 总CIF价格
    */
-  totalCif?: number;
+  totalCif?: number
   /**
    * 总成本
    */
-  totalCost?: number;
+  totalCost?: number
   /**
    * 费用
    */
-  totalFreightFee?: number;
+  totalFreightFee?: number
   /**
    * 总利润
    */
-  totalProfit?: number;
+  totalProfit?: number
   /**
    * 总人民币销售额
    */
-  totalSalePrice?: number;
+  totalSalePrice?: number
   /**
    * 总退税额
    */
-  totalTaxRebate?: number;
+  totalTaxRebate?: number
 }
