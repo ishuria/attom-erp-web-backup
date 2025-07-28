@@ -2,7 +2,7 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabChange">
       <el-tab-pane label="未匹配" :name="0">
-        <i-tuo-mu-table
+        <ai-tuo-mu-table
           :list="list"
           :loading="listLoading"
           :query-form="queryForm"
