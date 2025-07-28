@@ -41,6 +41,46 @@
               <span>{{ row.singlePersonProportion ? row.singlePersonProportion + '%' : '' }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="建模提成单人比例" min-width="" prop="moldingProportion">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.moldingProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.moldingProportion ? row.moldingProportion + '%' : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="渲染提成单人比例" min-width="" prop="renderingProportion">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.renderingProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.renderingProportion ? row.renderingProportion + '%' : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="A+提成单人比例" min-width="" prop="aPlusProportion">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.aPlusProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.aPlusProportion ? row.aPlusProportion + '%' : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="视频提成单人比例" min-width="" prop="videoProportion">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.videoProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.videoProportion ? row.videoProportion + '%' : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="说明书/包装提成单人比例" min-width="" prop="instructionManualRate">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.instructionManualRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.instructionManualRate ? row.instructionManualRate + '%' : '' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="长期提成天数" min-width="" prop="longDay">
             <template #default="{ row }">
               <div class="none">
@@ -221,11 +261,6 @@
             <template #append>%</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="说明书/包装提成比例">
-          <el-input v-model="form.instructionManualRate" disabled >
-            <template #append>%</template>
-          </el-input>
-        </el-form-item>
         <el-form-item label="转化率不达标豁免金额($)">
           <el-input v-model="form.price" />
         </el-form-item>
@@ -357,7 +392,12 @@ const clickCancel = async (event:any, value:any) => {
         longDay: value.longDay,
         longSinglePersonProportion: Number(value.longSinglePersonProportion) / 100,
         cooperationWeight: value.cooperationWeight,
-        addition: value.addition
+        addition: value.addition,
+        moldingProportion: Number(value.moldingProportion) / 100,
+        renderingProportion: Number(value.renderingProportion) / 100,
+        aPlusProportion: Number(value.aPlusProportion) / 100,
+        videoProportion: Number(value.videoProportion) / 100,
+        instructionManualRate: Number(value.instructionManualRate) / 100
       })
     } catch {
       Object.assign(value, copyRow)
@@ -430,14 +470,6 @@ const fetchData = async () => {
     keyWord: keyWord.value
   })
   list.value = data
-  list.value.forEach((item) => {
-    if (item.singlePersonProportion) {
-      item.singlePersonProportion = parseFloat((item.singlePersonProportion * 100).toFixed(2))
-    }
-    if (item.longSinglePersonProportion) {
-      item.longSinglePersonProportion = parseFloat((item.longSinglePersonProportion * 100).toFixed(2))
-    }
-  })
   listLoading.value = false
 }
 const fetchData2 = async () => {

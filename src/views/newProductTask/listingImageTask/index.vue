@@ -561,7 +561,7 @@
           <el-date-picker v-model="postTaskForm.finishDate" :disabled-date="(time: Date) => time.getTime() < Date.now() - 8.64e7" type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="设计类型" prop="artDesignType">
-          <el-select v-model="postTaskForm.artDesignType" placeholder="请选择设计类型">
+          <el-select v-model="postTaskForm.artDesignType" clearable multiple placeholder="请选择设计类型">
             <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -940,7 +940,7 @@ const postTaskForm = reactive<any>({
   sites: [],
   position: 0,
   finishDate: '',
-  artDesignType: 0,
+  artDesignType: [],
   artDesign: [],
   remark: '',
   linkAddress: ''
@@ -1273,12 +1273,9 @@ const handleDelArtDesignTask = async (row: IGetArtDesignTaskList) => {
 }
 const handleSubmitPostTask = async () => {
   postTaskFormRef.value?.validate(async (isValid: boolean) => {
-    console.log(postTaskForm.sites)
     if (isValid) {
       const { data } = await addArtDesignTask({
         ...postTaskForm,
-        // sites: postTaskForm.sites.join(','),
-        // artDesign: postTaskForm.artDesign.join(',')
         sites: Array.isArray(postTaskForm.sites) ? postTaskForm.sites.join(',') : '',
         artDesign: Array.isArray(postTaskForm.artDesign) ? postTaskForm.artDesign.join(',') : ''
       })

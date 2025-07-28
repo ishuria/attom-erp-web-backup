@@ -84,7 +84,7 @@ export interface IAddArtDesignTaskReq {
   taskType: string
   sites: string
   position: number
-  artDesignType: number
+  artDesignType: string
   finishDate: string
   artDesign?: string
   remark?: string

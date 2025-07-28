@@ -10,7 +10,18 @@ export interface IGetCommissionArtTypeList {
   longDay: number | null
   longSinglePersonProportion: number | null
   pictureDay: number | null
+  /** 图片提成比例 */
   singlePersonProportion: number | null
+  /** 建模提成比例 */
+  moldingProportion: number | null
+  /** 渲染提成比例 */
+  renderingProportion: number | null
+  /** 视频提成比例 */
+  videoProportion: number | null
+  /** A+提成比例 */
+  aPlusProportion: number | null
+  /** 说明书提成比例 */
+  instructionManualRate: number | null
 }
 export interface IUpdateCommissionArtTypeReq {
   id: number
@@ -20,6 +31,16 @@ export interface IUpdateCommissionArtTypeReq {
   longSinglePersonProportion: number | null
   pictureDay: number | null
   singlePersonProportion: number | null
+  /** 建模提成比例 */
+  moldingProportion: number | null
+  /** 渲染提成比例 */
+  renderingProportion: number | null
+  /** 视频提成比例 */
+  videoProportion: number | null
+  /** A+提成比例 */
+  aPlusProportion: number | null
+  /** 说明书提成比例 */
+  instructionManualRate: number | null
 }
 export interface IGetCommissionProductTypeListRes {
   data: IGetCommissionProductTypeList[]
@@ -73,7 +94,7 @@ export interface IUpdateCommissionSetting1Req {
   minConversionRate: number | null
   compensationDay: number | null
   newDiscountRatio: number | null
-  price?: string
+  price: string | null
 }
 export interface IGetCommissionTaskPictureListReq {
   keyWord: string
