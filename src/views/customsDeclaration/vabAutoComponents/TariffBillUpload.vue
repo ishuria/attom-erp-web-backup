@@ -81,8 +81,10 @@ const handleUpload = async () => {
   await uploadFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       let formData = new FormData()
+      const shipIds = props.shipmentIdList.map((item) => item.value).join(',')
       formData.append('error', uploadForm.error!.toString())
-      formData.append('shipId', uploadForm.shipId!.toString())
+      formData.append('selectShipId', uploadForm.shipId!.toString())
+      formData.append('shipIds', shipIds)
       fileList.value.forEach((item: any) => {
         formData.append('file', item.raw)
       })

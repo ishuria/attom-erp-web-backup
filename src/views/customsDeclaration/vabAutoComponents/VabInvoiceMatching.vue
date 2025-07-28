@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content; max-height: 90vh" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
+  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content;" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
@@ -28,7 +28,7 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      max-height="80vh"
+      max-height="800"
       :span-method="objectSpanMethod"
       @cell-click="cellClick"
     >
@@ -285,22 +285,22 @@ import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
-    cleanTaxRefundInvoice,
-    deleteTaxRefundInvoice,
-    finishTaxRefundInvoice,
-    getTaxRefundInvoiceList,
-    getTaxRefundInvoiceMatch,
-    submitConfirmTaxRefundInvoiceMatch,
-    submitTaxRefundInvoiceMatch,
-    updateTaxRefundInvoice,
-    updateTaxRefundInvoiceDetail,
-    uploadTaxRefund,
+  cleanTaxRefundInvoice,
+  deleteTaxRefundInvoice,
+  finishTaxRefundInvoice,
+  getTaxRefundInvoiceList,
+  getTaxRefundInvoiceMatch,
+  submitConfirmTaxRefundInvoiceMatch,
+  submitTaxRefundInvoiceMatch,
+  updateTaxRefundInvoice,
+  updateTaxRefundInvoiceDetail,
+  uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import type {
-    IGetTaxRefundInvoiceList,
-    IGetTaxRefundInvoiceListQuery,
-    IGetTaxRefundInvoiceMatchList,
-    IGetTaxRefundInvoiceMatchQuery,
+  IGetTaxRefundInvoiceList,
+  IGetTaxRefundInvoiceListQuery,
+  IGetTaxRefundInvoiceMatchList,
+  IGetTaxRefundInvoiceMatchQuery,
 } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'

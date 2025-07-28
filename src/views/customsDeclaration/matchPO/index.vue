@@ -117,7 +117,7 @@
       <el-table-column v-permissions="ShipmentPermission.operationColPermission()" fixed="right" label="操作" width="115">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button text type="primary" @click="showMatch(row)" v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] }">
+            <el-button v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] }" text type="primary" @click="showMatch(row)">
               匹配
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -204,7 +204,7 @@
         <el-table-column label="费用名" prop="costName" :width="flexColumnWidth(costList, '费用名', 'costName')"/>
         <el-table-column label="结算对象" min-width="120">
           <template #default="{ row }">
-            <el-select v-model="row.settlementObject" @change="handleUpdateSettlementObject(row)" >
+            <el-select v-model="row.settlementObject" :disabled="row.updateDisabled === 1" @change="handleUpdateSettlementObject(row)" >
               <el-option
                 v-for="item in settlementObjectList"
                 :key="item.id"
@@ -241,7 +241,7 @@
         </el-table-column>
         <el-table-column label="货币" min-width="100" prop="currency">
           <template #default="{ row }">
-            <el-select v-model="row.currency" style="min-width: 100%;" @change="handleUpdateLegCurrency(row)">
+            <el-select v-model="row.currency" :disabled="row.updateDisabled === 1" style="min-width: 100%;" @change="handleUpdateLegCurrency(row)">
               <el-option
                 v-for="item in currencyList"
                 :key="item.id"
@@ -311,7 +311,7 @@
         </el-table-column>
         <el-table-column label="操作" width="90">
           <template #default="{ row, $index }">
-            <el-link type="danger" underline='never' @click="handleDelLeg($index, row)">删除</el-link>
+            <el-link :disabled="row.updateDisabled === 1" type="danger" underline='never' @click="handleDelLeg($index, row)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -436,7 +436,6 @@
 </template>
 
 <script lang="ts" setup>
-import ShipmentPermission from '/@/permissions/shipment.ts'
 import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
@@ -444,6 +443,7 @@ import type { CSSProperties } from 'vue'
 import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
+import ShipmentPermission from '/@/permissions/shipment.ts'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -455,7 +455,7 @@ defineOptions({
 
 // 关税单上传
 const tariffBillUploadVisible = ref<boolean>(false)
-const shipmentIdList = ref<{ label: string, value: string }[]>([])
+const shipmentIdList = ref<{ label: string, value: number }[]>([])
 const showTariffBillUpload = () => {
   // 校验:多选‘匹配’里的记录后，才可以点击关税单上传’ 已经匹配过关税单的货件不能再匹配；
   if (selectRows.value.length === 0) {
@@ -995,6 +995,10 @@ const handleCloseMatch = (value: boolean) => {
 
 // 头程运费点击编辑
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  const label = column.label
+  if ((label === '数量' || label === '单价' || label === '暂估汇率') && row.updateDisabled === 1) {
+    return
+  }
   const firstChild = cell?.children[0]?.children[0];
   const secondChild = cell?.children[0]?.children[1];
 
