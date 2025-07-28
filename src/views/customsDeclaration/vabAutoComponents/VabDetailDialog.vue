@@ -1,11 +1,11 @@
 <template>
   <vab-dialog
     v-model="dflag"
+    :draggable="false"
     :title="`明细 | ${props.contractNumber}`"
     top="10vh"
     width="100%"
     @close="closeDetail"
-    :draggable="false"
   >
     <vab-query-form >
       <vab-query-form-left-panel>
@@ -31,7 +31,7 @@
         max-height="60vh"
       >
         <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName')"/>
-        <el-table-column label="报关数量" width="70" prop="customsDeclarationCount">
+        <el-table-column label="报关数量" prop="customsDeclarationCount" width="70">
           <template #header>
             报关<br />数量
           </template>
@@ -71,14 +71,51 @@
         </el-table-column>
         <el-table-column label="PO" min-width="100" prop="po"/>
         <el-table-column label="发票匹配日期" min-width="100" prop="invoiceMatchDate">
-          <template #header>
-            发票匹<br />配日期
+          <template #default="{ row }">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-number-row">{{ item.invoiceMatchDate }}</div>
+            </template>
+        </el-table-column>
+        <el-table-column label="发票代码" min-width="100">
+          <template #default="{ row }">
+            <div v-if="Array.isArray(row.matchInvoiceRecord)">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
+                {{ item.invoiceCode || '-' }}
+              </div>
+            </div>
+            <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票代码" min-width="100" prop="invoiceCode"/>
-        <el-table-column label="发票号码" min-width="100" prop="invoiceNumber"/>
-        <el-table-column label="发票数量" min-width="100" prop="invoiceCount"/>
-        <el-table-column label="发票文件" min-width="100" prop="invoiceFilePath"/>
+        <el-table-column label="发票号码" min-width="100">
+          <template #default="{ row }">
+            <div v-if="Array.isArray(row.matchInvoiceRecord)">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
+                {{ item.invoiceNumber || '-' }}
+              </div>
+            </div>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票数量" min-width="100">
+          <template #default="{ row }">
+            <div v-if="Array.isArray(row.matchInvoiceRecord)">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
+                {{ item.invoiceCount || '-' }}
+              </div>
+            </div>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票文件" min-width="100">
+          <template #default="{ row }">
+            <div v-if="Array.isArray(row.matchInvoiceRecord)">
+              <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
+                <el-button v-if="item.invoiceFilePath" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+                <span v-else>-</span>
+              </div>
+            </div>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
         <el-table-column label="SKU" min-width="90" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')"/>
         <el-table-column label="PO零件数" min-width="110" prop="componentCount"/>
         <el-table-column label="shipmentID" min-width="130" prop="shipmentId" :width="flexColumnWidth(list, 'shipmentID', 'shipmentId')"/>
@@ -97,15 +134,23 @@
         @size-change="handleSizeChange"
       />
     </div>
+
+    <!-- 预览pdf -->
+    <vab-dialog v-model="pdfVisible" top="5vh" @close="pdfVisible = false">
+      <div v-loading="pdfLoading" class="pdf-container">
+        <vab-pdf :source="source" />
+      </div>
+    </vab-dialog>
    
   </vab-dialog>
 
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Document, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { getTaxRefundBatchDetail } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import VabPdf from '/@/plugins/VabPdf'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundBatchDetailQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -127,6 +172,17 @@ const emit = defineEmits<{
 }>()
 const closeDetail = () => {
   emit('updateDetailVisible', false)
+}
+const source = ref<string>('')
+const pdfLoading = ref<boolean>(false)
+// pdf 可见
+const pdfVisible = ref<boolean>(false)
+
+const showPdf = (path: string) => {
+  pdfLoading.value = true
+  source.value = path
+  pdfVisible.value = true
+  pdfLoading.value = false
 }
 
 const listLoading = ref<boolean>(false)
