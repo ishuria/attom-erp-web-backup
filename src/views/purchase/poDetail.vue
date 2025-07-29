@@ -1596,6 +1596,10 @@
             <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
           </template>
         </el-table>
+        <el-footer class="button-center">
+          <el-button v-if="previousVisible" type="primary" @click="handleFetchPreviousData">上一个</el-button>
+          <el-button v-if="nextVisible" type="primary" @click="handleFetchNextData">下一个</el-button>
+        </el-footer>
       </div>
     </div>
     <wang-editor
@@ -3358,6 +3362,9 @@ const fetchPoSkuIdList = async () => {
 const handleShowPreviousOrNext = () => {
   const lastIndex = poSkuIdList.value.length - 1
   poSkuIdIndex.value = poSkuIdList.value.indexOf(parseInt(route.query.poSkuId))
+  // console.log(poSkuIdList.value)
+  // console.log(poSkuIdIndex.value)
+  // console.log(lastIndex)
   if (lastIndex === -1) {
     previousVisible.value = false
     nextVisible.value = false
