@@ -296,6 +296,7 @@ import {
   updateTaxRefundInvoiceDetail,
   uploadTaxRefund,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import VabPdf from '/@/plugins/VabPdf'
 import type {
   IGetTaxRefundInvoiceList,
   IGetTaxRefundInvoiceListQuery,
@@ -455,7 +456,10 @@ const applyKeywordFilter = () => {
     matchList.value = matchList.value.filter((item: any) => 
       item.contractNumber.toLowerCase().includes(keyword) ||
       item.po.toLowerCase().includes(keyword) ||
-      item.sku.toLowerCase().includes(keyword)
+      item.sku.toLowerCase().includes(keyword) || 
+      item.customsDeclarationCount.toLowerCase().includes(keyword) || 
+      item.customsDeclarationName.toLowerCase().includes(keyword) || 
+      item.taxInclusiveCost.toLowerCase().includes(keyword)
     )
   } else {
     fetchMatchData()
