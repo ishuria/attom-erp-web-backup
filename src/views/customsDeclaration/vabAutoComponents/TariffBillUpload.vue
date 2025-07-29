@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="关税单上传" width="20%">
+    <vab-dialog v-model="visible" title="关税单上传" width="20%" @close="close">
       <el-form ref="uploadFormRef" label-position="top" :model="uploadForm" :rules="rules">
         <el-form-item label="误差设定" prop="error">
           <el-input v-model.trim="uploadForm.error" >
@@ -30,7 +30,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="success" @click="handleUpload">上传</el-button>
+        <el-button type="success" @click="handleUpload" :loading="loading">上传</el-button>
       </template>
     </vab-dialog>   
   </div>
@@ -58,8 +58,13 @@ const visible = computed({
     emit('update:modelValue', val)
   }
 })
+const close = () => {
+  visible.value = false
+  fileList.value = []
+  uploadFormRef.value?.resetFields()
+}
 const fileList = ref<any[]>([])
-
+const loading = ref(false)
 const uploadFormRef = ref<FormInstance>()
 const uploadForm = reactive({
   error: undefined as number | undefined,
@@ -80,6 +85,7 @@ const handleUpload = async () => {
   }
   await uploadFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
+      loading.value = true
       let formData = new FormData()
       const shipIds = props.shipmentIdList.map((item) => item.value).join(',')
       formData.append('error', uploadForm.error!.toString())
@@ -88,7 +94,16 @@ const handleUpload = async () => {
       fileList.value.forEach((item: any) => {
         formData.append('file', item.raw)
       })
-      await uploadTariffBillPDF(formData)
+      try {
+        const { data } = await uploadTariffBillPDF(formData)
+        if (data) {
+          $baseMessage('关税单上传成功', 'success')
+          close()
+        }
+        loading.value = false
+      } catch (error) {
+        loading.value = false
+      }
     }
   })
 }
