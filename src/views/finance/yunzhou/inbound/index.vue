@@ -352,8 +352,8 @@ const queryDateData = () => {
 
 /** po零件汇总 start */
 const queryComponentSummaryData = () => {
-  componentSummaryForm.fromDate = date.value[0]
-  componentSummaryForm.toDate = date.value[1]
+  componentSummaryForm.fromDate = componentSummaryDate.value[0]
+  componentSummaryForm.toDate = componentSummaryDate.value[1]
   fetchComponentSummaryData()
 }
 
@@ -384,8 +384,8 @@ const handlePoComponentExport = async () =>{
 
 /** 供应商汇总 start */
 const querySupplierSummaryData = () => {
-  supplierSummaryForm.fromDate = date.value[0]
-  supplierSummaryForm.toDate = date.value[1]
+  supplierSummaryForm.fromDate = supplierSummaryDate.value[0]
+  supplierSummaryForm.toDate = supplierSummaryDate.value[1]
   fetchSupplierSummaryData()
 }
 
