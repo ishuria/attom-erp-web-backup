@@ -36,7 +36,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text class="text-center">
-          {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
+          {{ `总箱数：${totalBoxNumber || 0}，总重：${(totalWeight || 0).toFixed(2)}(kg)，总体积：${(totalVolume || 0).toFixed(2)}(m3)` }}
         </el-text>
       </vab-query-form-left-panel>
     </vab-query-form>
@@ -184,7 +184,7 @@
       <el-form ref="shipmentWalmartFormRef" label-position="top" :model="shipmentWalmartForm">
         <el-form-item style="margin-bottom: 10px">
           <el-text>
-            {{ `总箱数：${totalBoxNumber}，总重：${totalWeight.toFixed(2)}(kg)，总体积：${totalVolume.toFixed(2)}(m3)` }}
+            {{ `总箱数：${totalBoxNumber || 0}，总重：${(totalWeight || 0).toFixed(2)}(kg)，总体积：${(totalVolume || 0).toFixed(2)}(m3)` }}
           </el-text>
         </el-form-item>
         <el-form-item style="margin-bottom: 10px">
@@ -704,19 +704,22 @@ const selectRows = ref<any>([])
 // 总箱数
 const totalBoxNumber = computed<number>(() => {
   return selectRows.value.reduce((total: number, item: IEncasementList) => {
-    return total + item.numberOfBoxes!;  // 累加每个 item.numberOfBoxes
+    const boxes = Number(item.numberOfBoxes) || 0;
+    return total + boxes;  // 累加每个 item.numberOfBoxes
   }, 0); // 初始值为 0
 });
 // 总重
 const totalWeight = computed<number>(() => {
   return selectRows.value.reduce((total: number, item: IEncasementList) => {
-    return total + item.totalWeight!;  
+    const weight = Number(item.totalWeight) || 0;
+    return total + weight;  
   }, 0); // 初始值为 0
 })
 // 总体积
 const totalVolume = computed<number>(() => {
   return selectRows.value.reduce((total: number, item: IEncasementList) => {
-    return total + item.totalVolume!;  
+    const volume = Number(item.totalVolume) || 0;
+    return total + volume;  
   }, 0); // 初始值为 0
 })
 // 发货（沃尔玛）可见
