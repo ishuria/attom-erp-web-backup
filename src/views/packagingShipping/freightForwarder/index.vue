@@ -126,7 +126,7 @@
             合并报关<br>后可合并
           </template>
           <template #default="{ row }">
-            <el-checkbox v-model="row.bgStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
+            <el-checkbox v-model="row.bgStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSettingBg(row)" />
           </template>
         </el-table-column>
         <el-table-column label="合并清关后可合并" min-width="100" prop="qgStatus">
@@ -835,7 +835,34 @@ const clickCancel = async (event: any, row: any) => {
     })
   }
 }
+const modifyFeeNameSettingBg = async (row: IGetForwarderCostList) => {
+  // 限制合并报关或合并清关只能选择一个或者都不选，需要把多余的值设置为0
+  if (row.bgStatus && row.qgStatus) {
+    $baseMessage('合并报关和合并清关只能选择一个', 'error')
+    row.bgStatus = 0
+    return
+  }
+  try {
+    await updateCostFreightForwarder({
+      id: row.id,
+      costName: row.costName,
+      billCostName: row.billCostName,
+      bgStatus: row.bgStatus,
+      qgStatus: row.qgStatus,
+      costShowStatus: row.costShowStatus,
+      settlementObject: row.settlementObject
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
 const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
+  // 限制合并报关或合并清关只能选择一个或者都不选，需要把多余的值设置为0
+  if (row.bgStatus && row.qgStatus) {
+    $baseMessage('合并报关和合并清关只能选择一个', 'error')
+    row.qgStatus = 0
+    return
+  }
   try {
     await updateCostFreightForwarder({
       id: row.id,
