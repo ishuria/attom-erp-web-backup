@@ -33,7 +33,6 @@ export const convertRouter = (asyncRoutes: VabRouteRecord[]) => {
  * @returns {[]}
  */
 export const filterRoutes = (routes: VabRouteRecord[], rolesControl: boolean, baseUrl = '/') => {
-  
   return routes
     .filter((route: VabRouteRecord) => (rolesControl && route.meta && route.meta.guard ? hasPermission(route.meta.guard) : true))
     .map((route: VabRouteRecord) => {

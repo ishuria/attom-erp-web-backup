@@ -188,6 +188,7 @@ const closeSelectedSKU = () => {
   selectSKUVisible.value = false
 }
 const handleConfirmSave = async () => {
+  console.log("222")
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (route.query.sku) {

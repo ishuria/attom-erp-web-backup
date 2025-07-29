@@ -139,7 +139,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="ListingPermission.operationColume()" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
@@ -319,7 +319,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="ListingPermission.operationColume()" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
@@ -477,7 +477,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="{ permission: ListingPermission.operationColume() }" fixed="right" label="操作" width="110">
+          <el-table-column v-permissions="ListingPermission.operationColume()" fixed="right" label="操作" width="110">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" text type="primary" @click="handleShowSellingPoint(row)">
