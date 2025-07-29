@@ -1,8 +1,11 @@
 <template>
-  <vab-card :body-style="{ height: '422px' }" skeleton>
+  <vab-card :body-style="{ height: '422px' }" skeleton class="rank-card">
     <template #header>
       <vab-icon icon="align-top" />
       {{ title }}
+      <div class="right-select">
+        <slot name="select"></slot>
+      </div>
     </template>
     <vab-chart :option="option" />
   </vab-card>
@@ -84,3 +87,35 @@ watch(
   }
 )
 </script>
+
+<style lang="scss" scoped>
+.rank-card {
+  position: relative;
+  
+  :deep(.el-card__header) {
+    position: relative;
+   
+ 
+    display: flex;
+    align-items: center;
+  }
+  
+  .right-select {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    width: auto;
+    height: 60px;
+    line-height: 60px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    z-index: 10;
+  
+  }
+  
+}
+ 
+</style>

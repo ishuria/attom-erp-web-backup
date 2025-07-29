@@ -135,3 +135,26 @@ export function getMonthlyAssessment(): Promise<{ data: { listAdd: IGetFrontPage
     method: 'get'
   })
 }
+
+/**
+ * 首页-排行考核数完成
+ * @param params 
+ * @returns 
+ */
+export function getFrontPageRankAssessmentFinish(params: { month: string }): Promise<{ data: IRankItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/rank/assessment_finish`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 首页-排行考核数完成-月份列表
+ * @returns 
+ */
+export function getFrontPageHistoryMonthList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/front_page/rank/history/month`,
+    method: 'get'
+  })
+}

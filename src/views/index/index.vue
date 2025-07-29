@@ -128,6 +128,20 @@
       <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
+      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank :list="rank4List" :my-name="myName" name="考核完成数" title="考核数完成排行" >
+          <template #select>
+            <el-select v-model="selectMonth" placeholder="月份" style="max-width: 5em;" @change="fetchRankAssessmentFinish">
+              <el-option 
+                v-for="item in historyMonthList"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </template>
+        </rank>
+      </el-col>
     </el-row>
     <history-assessment-records 
       v-model="historyVisible" :list="list" :loading="listLoading" :query-form="queryForm" :total="total" 
@@ -146,7 +160,7 @@
 import { random } from 'lodash-es'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved, getMonthlyAssessment, getMonthlyProductProfit } from '/@/api/devlocal/frontPage'
+import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPageHistoryMonthList, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankAssessmentFinish, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved, getMonthlyAssessment, getMonthlyProductProfit } from '/@/api/devlocal/frontPage'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
@@ -361,6 +375,7 @@ const fetchData = async () => {
 const rank1List = ref<IRankItem[]>([])
 const rank2List = ref<IRankItem[]>([])
 const rank3List = ref<IRankItem[]>([])
+const rank4List = ref<IRankItem[]>([])
 const fetchRankOverAchieved = async () => {
   const { data } = await getFrontPageRankOverAchieved()
   rank1List.value = data
@@ -384,7 +399,19 @@ const fetchMonthlyAssessment = async () => {
   listAdd.value = data.listAdd
   listSub.value = data.listSub
 }
-onBeforeMount(() => {
+const historyMonthList = ref<string[]>([])
+const selectMonth = ref<string>()
+// 查询月份列表
+const fetchHistoryMonthList = async () => {
+  const { data } = await getFrontPageHistoryMonthList()
+  historyMonthList.value = data
+  selectMonth.value = data[0]
+}
+const fetchRankAssessmentFinish = async () => {
+  const { data } = await getFrontPageRankAssessmentFinish({ month: selectMonth.value! })
+  rank4List.value = data
+}
+onBeforeMount(async () => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
     fetchUpdateDate()
@@ -396,6 +423,8 @@ onBeforeMount(() => {
   if (ableBossViewCard) {
     fetchUserList()
     fetchRankNewProductCommission()
+    await fetchHistoryMonthList()
+    await fetchRankAssessmentFinish()
   }
   if (ableProductManagerViewCard) {
     fetchMonthlyProductProfit()
