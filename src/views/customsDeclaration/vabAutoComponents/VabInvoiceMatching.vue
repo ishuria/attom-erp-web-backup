@@ -160,7 +160,7 @@
         <template #default="{ row }">
           <div style="display: flex;">
             <el-button
-              :disabled="matchLoading === row.id"
+              :disabled="matchLoading === row.detailId"
               link
               type="primary"
               @click="showMatch(row)" 
