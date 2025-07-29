@@ -220,17 +220,20 @@ const uploadExcelFile = async () => {
     return
   }
   uploadLoading.value = true
-  const { data } = await uploadFreightCheckFile(uploadForm)
-  if (data === true) {
+  try {
+    const { data } = await uploadFreightCheckFile(uploadForm)
+    if (data === true) {
+      $baseMessage('上传文件成功！', 'success', 'hey')
+      startCheckVisible.value = false
+      startCheckDisabled.value = true // 上传后 开始核对禁止掉
+      finishCheckDisabled.value = false // 上传后 可以核对完成
+      await fetchData()
+    }
     uploadLoading.value = false
-    $baseMessage('上传文件成功！', 'success', 'hey')
-    startCheckVisible.value = false
-    startCheckDisabled.value = true // 上传后 开始核对禁止掉
-    finishCheckDisabled.value = false // 上传后 可以核对完成
-    await fetchData()
-  } else {
+  } catch (error) {
     uploadLoading.value = false
   }
+  
 }
 const showErrorAllowRange = () => {
   allowRangeVisible.value = true
