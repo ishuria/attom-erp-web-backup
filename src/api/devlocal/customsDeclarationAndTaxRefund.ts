@@ -553,6 +553,20 @@ export const updateTaxRefundBatchStatus = (params: IId): Promise<IBooleanRes> =>
     params,
   })
 }
+
+/**
+ * 退税批次-撤销到待退税
+ * @param params
+ * @returns
+ */
+export const updateCancleTaxRefundBatchStatus = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/cancel`,
+    method: 'post',
+    params,
+  })
+}
+
 /**
  * @description 退税批次-退税运费
  */

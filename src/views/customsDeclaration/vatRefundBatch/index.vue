@@ -133,9 +133,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="190">
+          <el-table-column fixed="right" label="操作" width="290">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showDetail(row)">明细</el-link>
+              <span style="margin: 0 5px;"></span>
+              <el-link type="primary" underline='never' @click="cancleToWaitTaxRefund(row)">撤销到待退税</el-link>
               <span style="margin: 0 5px;"></span>
               <el-link type="primary" underline='never' @click="showInvoiceCollection()">发票归集</el-link>
             </template>
@@ -214,7 +216,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { archiveTaxRefundBatchOutbound, checkTaxRefundBatchAiTuoMuExport, getTaxRefundBatchList, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import { archiveTaxRefundBatchOutbound, checkTaxRefundBatchAiTuoMuExport, getTaxRefundBatchList, updateCancleTaxRefundBatchStatus, updateTaxRefundBatchDate, updateTaxRefundBatchFreightFee, updateTaxRefundBatchRemark, updateTaxRefundBatchStatus } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { formatDate } from '/@/utils/dateUtils'
@@ -433,6 +435,17 @@ const queryData = () => {
   })
   fetchData()
 }
+
+const cancleToWaitTaxRefund = async (row: IGetTaxRefundBatchList) => {
+  const { data } = await updateCancleTaxRefundBatchStatus({
+    id: row.id!
+  })
+  if (data) {
+    fetchData()
+    $baseMessage('撤销到待退税成功！', 'success')
+  }
+}
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getTaxRefundBatchList(queryForm)
