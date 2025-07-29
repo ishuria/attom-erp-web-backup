@@ -119,7 +119,7 @@
           </template>
         </performance-history>
       </el-col>
-      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank1List" :my-name="myName" name="超额完成数" title="上月超额完成排行" />
       </el-col>
       <!-- <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
@@ -162,7 +162,8 @@ const assessmentAdjustVisible = ref<boolean>(false)
 const router = useRouter()
 const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0];
-const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||　currentRoleCode === ROLE_BOSS_CODE
+const ableProductManagerViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
+const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_ADMINBUYERLEAD_CODE
 const commissionRole = [
@@ -394,12 +395,14 @@ onBeforeMount(() => {
   }
   if (ableBossViewCard) {
     fetchUserList()
-    fetchRankOverAchieved()
     fetchRankNewProductCommission()
   }
   if (ableProductManagerViewCard) {
     fetchMonthlyProductProfit()
     fetchMonthlyAssessment()
+  }
+  if (ableProductManagerLeadViewCard) {
+    fetchRankOverAchieved()
   }
 })
 </script>
