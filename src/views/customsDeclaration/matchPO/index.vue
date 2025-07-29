@@ -875,6 +875,11 @@ const _volume = ref<number>()
 
 // 修改头程运费合并报关
 const handleUpdateBgStatus = async (row: any) => {
+  if (row.bgStatus && row.qgStatus) {
+    $baseMessage('合并报关和合并清关只能选择一个', 'error')
+    row.bgStatus = 0
+    return
+  }
   await updateBgShipmentLeg({
     id: row.id,
     status: row.bgStatus
@@ -882,6 +887,11 @@ const handleUpdateBgStatus = async (row: any) => {
 }
 // 修改头程运费合并清关
 const handleUpdateQgStatus = async (row: any) => {
+  if (row.bgStatus && row.qgStatus) {
+    $baseMessage('合并报关和合并清关只能选择一个', 'error')
+    row.qgStatus = 0
+    return
+  }
   await updateQgShipmentLeg({
     id: row.id,
     status: row.qgStatus
@@ -1312,7 +1322,7 @@ onActivated(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.noneHoveTable .el-checkbox) {
+.el-checkbox {
   transform: scale(1.3);
   transform-origin: center;
 }
