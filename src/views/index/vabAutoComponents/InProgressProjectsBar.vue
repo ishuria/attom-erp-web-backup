@@ -17,10 +17,6 @@ const props = defineProps<{
   total: number
 }>()
 
-
-// const yAxisMax = Math.ceil(props.total / 10) * 10 // 向上取整到10的倍数
-// const yAxisInterval = yAxisMax / 2 // 5个刻度间隔，实际显示为：0, interval, 2*interval, ...
-
 const option = reactive({
   grid: {
     left: '35px',
@@ -50,11 +46,12 @@ const option = reactive({
   },
   yAxis: {
     type: 'value',
+    minInterval: 1, // 设置最小间隔为1，确保坐标值为整数
     axisLabel: {
       show: true,
       color: '#666',
       fontSize: 12,
-      formatter: (val: number) => `${Math.round(val)}个`,
+      formatter: (val: number) => `${val}个`,
     },
     splitLine: {
       show: false,
