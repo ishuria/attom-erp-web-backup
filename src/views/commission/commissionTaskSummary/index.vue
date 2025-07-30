@@ -521,13 +521,13 @@ const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: 0
+  designTaskId: -1
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: 0
+  designTaskId: -1
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
