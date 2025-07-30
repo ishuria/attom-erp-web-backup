@@ -172,3 +172,14 @@ export function getFrontPageHistoryMonthList(): Promise<{ data: string[] }> {
     method: 'get'
   })
 }
+
+/**
+ * 首页-调整明细-月份列表
+ * @returns 
+ */
+export function getFrontPageAdjustDetailMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/front_page/adjust/detail/month`,
+    method: 'get'
+  })
+}

@@ -129,7 +129,7 @@ const handleJumpTo = async () => {
       transform: translateX(5px);
       margin-top: -2px;
       min-width: 50px;
-      width: 80px;
+      width: 60px;
       float: right;
     }
   }

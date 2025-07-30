@@ -24,9 +24,9 @@
         </top-card>
       </el-col>
       <el-col v-if="ableViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <top-card background="white" :month-diff="countConfig2Start.monthDiff" title="本月考核完成数" :year-diff="countConfig2Start.yearDiff" @open-table="fetchHistoryAssessmentRecords">
+        <top-card background="white" :month-diff="countConfig2Start.monthDiff" title="本月总完成数" :year-diff="countConfig2Start.yearDiff" @open-table="fetchHistoryAssessmentRecords">
            <template #select>
-            <el-button size="small" type="primary" @click="assessmentAdjustVisible = true">超额完成自调</el-button>
+            <el-button size="small" type="primary" @click="assessmentAdjustVisible = true">超额自调</el-button>
           </template>
           <template #count>
             <vab-count
@@ -204,7 +204,7 @@
 import { random } from 'lodash-es'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
-import { getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPageHistoryMonthList, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankAssessmentFinish, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved, getMonthlyAssessmentMinus, getMonthlyAssessmentPlus, getMonthlyProductProfit } from '/@/api/devlocal/frontPage'
+import { getFrontPageAdjustDetailMonth, getFrontPageAssessmentData, getFrontPageBonus, getFrontPageHistoryAssessmentRecords, getFrontPageHistoryMonthList, getFrontPagePerformanceHistory, getFrontPageProductManagerSelectOption, getFrontPageProgressProjects, getFrontPageRankAssessmentFinish, getFrontPageRankNewProductCommission, getFrontPageRankOverAchieved, getMonthlyAssessmentMinus, getMonthlyAssessmentPlus, getMonthlyProductProfit } from '/@/api/devlocal/frontPage'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { ROLE_ADMINBUYERLEAD_CODE, ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNER_CODE, ROLE_GRAPHICDESIGNLEAD_CODE, ROLE_INDUSTRIAL_DESIGN_CODE, ROLE_PRODUCTMANAGER_CODE, ROLE_PRODUCTMANNAGERLEAD_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE, ROLE_SUPPLY_CHAIN_MANG_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
@@ -452,17 +452,12 @@ const selectAssessmentMinusMonth = ref<string>()
 const fetchHistoryMonthList = async () => {
   const { data } = await getFrontPageHistoryMonthList()
   historyMonthList.value = data
-  
-  // 获取当前月份的下个月
-  const currentDate = new Date()
-  const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
-  const nextMonthStr = `${nextMonth.getFullYear()}-${String(nextMonth.getMonth() + 1).padStart(2, '0')}`
-  
-  // 创建新的monthList，包含下个月和历史月份
-  monthList.value = [nextMonthStr, ...data]
-  
   selectAchievedMonth.value = data[0]
   selectFinishMonth.value = data[0]
+}
+const fetchAdjustDetailMonthList = async () => {
+  const { data } = await getFrontPageAdjustDetailMonth()
+  monthList.value = data
   selectProfitMonth.value = data[0]
   selectAssessmentPlusMonth.value = data[0]
   selectAssessmentMinusMonth.value = data[0]
@@ -487,6 +482,7 @@ onBeforeMount(async () => {
 
   if (ableProductManagerViewCard) {
     await fetchHistoryMonthList()
+    await fetchAdjustDetailMonthList()
     fetchUserList()
     fetchRankNewProductCommission()
     await fetchMonthlyProductProfit()
