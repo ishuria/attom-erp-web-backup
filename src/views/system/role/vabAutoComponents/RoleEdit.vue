@@ -18,7 +18,11 @@
             @check="handleCheckChange"
           >
             <template #default="{ data }">
-              <span>{{ data.meta.title }}</span>
+              <span>
+                {{ data.meta.title }}
+                <span v-if="data.id === 146">-沃尔玛</span>
+                <span v-else-if="data.id === 151">-美工</span>
+              </span>
             </template>
           </el-tree>
         </div>
@@ -91,7 +95,6 @@ const showEdit = (row: any) => {
       })
       form.menuCheckedList = arr
       treeRef.value?.setCheckedKeys(arr)
-
       title.value = '编辑'
       disableRoleCode.value = true
       Object.assign(form, row)
