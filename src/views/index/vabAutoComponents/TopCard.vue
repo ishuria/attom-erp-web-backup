@@ -128,8 +128,8 @@ const handleJumpTo = async () => {
     .el-button {
       transform: translateX(5px);
       margin-top: -2px;
-      min-width: 30px;
-      width: 60px;
+      min-width: 50px;
+      width: 80px;
       float: right;
     }
   }

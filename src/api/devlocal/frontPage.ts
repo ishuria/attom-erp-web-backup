@@ -76,10 +76,11 @@ export function getFrontPageProductManagerSelectOption(): Promise<{ data: { id: 
  * 首页-排行超额完成
  * @returns 
  */
-export function getFrontPageRankOverAchieved(): Promise<{ data: IRankItem[] }> {
+export function getFrontPageRankOverAchieved(params: { month: string }): Promise<{ data: IRankItem[] }> {
   return request({
     url: `${BASE_API}/front_page/rank/overAchieved`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 /**
@@ -119,20 +120,33 @@ export function submitAssess(params: { number: number }): Promise<{ data: boolea
  * 首页-当月产品利润分
  * @returns 
  */
-export function getMonthlyProductProfit(): Promise<{ data: IGetFrontPageProductProfitRes[] }> {
+export function getMonthlyProductProfit(params: { month: string }): Promise<{ data: IGetFrontPageProductProfitRes[] }> {
   return request({
     url: `${BASE_API}/front_page/monthly/product/profit`,
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 /**
- * 首页-当月考核数 减免/加回
+ * 首页-当月考核数 加回
  * @returns 
  */
-export function getMonthlyAssessment(): Promise<{ data: { listAdd: IGetFrontPageMonthlyAssessment[], listSub: IGetFrontPageMonthlyAssessment[] } }> {
+export function getMonthlyAssessmentPlus(params: { month: string }): Promise<{ data: IGetFrontPageMonthlyAssessment[] }> {
   return request({
-    url: `${BASE_API}/front_page/monthly/assessment`,
-    method: 'get'
+    url: `${BASE_API}/front_page/monthly/assessment/plus`,
+    method: 'get',
+    params
+  })
+}
+/**
+ * 首页-当月考核数 减免
+ * @returns 
+ */
+export function getMonthlyAssessmentMinus(params: { month: string }): Promise<{ data: IGetFrontPageMonthlyAssessment[] }> {
+  return request({
+    url: `${BASE_API}/front_page/monthly/assessment/minus`,
+    method: 'get',
+    params
   })
 }
 

@@ -2,7 +2,10 @@
   <vab-card class="profitTable">
     <template #header>
       <vab-icon icon="information-line" />
-      当月产品利润分
+      产品利润分
+      <div class="right-select">
+        <slot name="select"></slot>
+      </div>
     </template>
     
     <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" :span-method="objectSpanMethod">
@@ -84,53 +87,25 @@ const objectSpanMethod = ({
     flex-direction: column;
     overflow: scroll;
   }
+    
+  .right-select {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    width: auto;
+    height: 60px;
+    line-height: 60px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    z-index: 10;
+  
+  }
 
   :deep(.el-table) {
     height: 100%;
   }
 }
-// .version-information {
-//   &-rely {
-//     min-width: 500px;
-//     margin-top: var(--el-margin);
-//     text-align: left;
-//     border-radius: var(--el-border-radius-base);
-
-//     :deep() {
-//       .el-button {
-//         margin-bottom: 0;
-//       }
-//     }
-//   }
-
-//   .table {
-//     width: 100%;
-//     color: var(--el-color-grey);
-//     border-collapse: collapse;
-//     background-color: var(--el-color-white);
-
-//     td {
-//       position: relative;
-//       padding: 12px 15px !important;
-//       overflow: hidden;
-//       font-size: var(--el-font-size-base);
-//       text-overflow: ellipsis;
-//       white-space: nowrap;
-//       border: 1px solid var(--el-border-color);
-
-//       &:nth-child(odd) {
-//         width: 10%;
-//         font-weight: bold;
-//         color: var(--el-color-grey);
-//         text-align: right;
-//         background-color: var(--el-color-white);
-
-//         span {
-//           margin-left: 10px;
-//           font-weight: normal;
-//         }
-//       }
-//     }
-//   }
-// }
 </style>

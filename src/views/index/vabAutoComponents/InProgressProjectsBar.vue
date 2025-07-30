@@ -54,7 +54,7 @@ const option = reactive({
       show: true,
       color: '#666',
       fontSize: 12,
-      formatter: (val: number) => `${val}个`,
+      formatter: (val: number) => `${Math.round(val)}个`,
     },
     splitLine: {
       show: false,

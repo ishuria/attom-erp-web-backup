@@ -3,6 +3,9 @@
     <template #header>
       <vab-icon icon="information-line" />
       {{ title }}
+      <div class="right-select">
+        <slot name="select"></slot>
+      </div>
     </template>
     <el-table :data="list" border :header-cell-style="{ textAlign: 'center' }" :cell-style="cellStyle" :span-method="objectSpanMethod">
       <el-table-column label="人员" prop="userName" width="100" />
@@ -28,7 +31,7 @@ const props = defineProps<{
 
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
   if (data.column.label === "总调整" || data.column.label === "调整数") {
-    if (props.title === "当月考核数减免") {
+    if (props.title === "考核数减免") {
       return {
         color: 'var(--el-color-success)',
         textAlign: 'center'
@@ -91,6 +94,21 @@ const objectSpanMethod = ({
 
   :deep(.el-table) {
     height: 100%;
+  }
+  .right-select {
+    position: absolute;
+    top: 50%;
+    right: 25px;
+    width: auto;
+    height: 60px;
+    line-height: 60px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    z-index: 10;
+  
   }
 }
 </style>

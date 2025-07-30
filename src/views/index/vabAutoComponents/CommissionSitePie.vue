@@ -51,7 +51,7 @@ const option = reactive<any>({
       stillShowZeroSum: false,
       data: [],
       // color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
-      color: colorList,
+      // color: colorList, // 移除全局颜色配置，使用itemStyle单独设置
     },
   ],
 })
@@ -59,7 +59,16 @@ const option = reactive<any>({
 watch(
   () => [props.data],
   () => {
-      option.series[0].data = props.data?.slice().sort((a: any, b: any) => b.value - a.value)
+    // 先排序数据
+    const sortedData = props.data?.slice().sort((a: any, b: any) => b.value - a.value)
+    
+    // 为每个数据项分配固定的颜色
+    option.series[0].data = sortedData?.map((item: any, index: number) => ({
+      ...item,
+      itemStyle: {
+        color: colorList[index % colorList.length]
+      }
+    }))
   },
   { immediate: true, deep: true }
 )
