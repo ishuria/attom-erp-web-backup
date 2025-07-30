@@ -283,3 +283,15 @@ export function queryArtDesignTaskDistribution(params: { taskId: number }): Prom
     params,
   })
 }
+/**
+ * @description 美工任务-校对状态修改
+ * @param params
+ * @returns
+ */
+export function updateProofreadingStatus(params: { id: number, value: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/task/proofreading/update`,
+    method: 'post',
+    params,
+  })
+}

@@ -125,8 +125,7 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
-              {{ '' }}
+              <el-checkbox v-model="row.proofreadingStatus" :true-value="1" :false-value="0" @change="handleUpdateProofreadingStatus(row)" />
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -305,8 +304,7 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
-              {{ '' }}
+              <el-checkbox v-model="row.proofreadingStatus" :true-value="1" :false-value="0" @change="handleUpdateProofreadingStatus(row)" />
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -740,9 +738,9 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { getProductPositionList } from '~/src/api/devlocal/orderProcess'
 import { designTypeOption, taskTypeOption } from '../constantOption'
-import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask } from '/@/api/devlocal/imageTask'
+import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionReasons, delArtDesignTask, finishArtDesignTask, getArtDesignSelectionReasonsList, getArtDesignTaskList, getArtDesignTaskMargin, getArtDesignTaskUserList, queryArtDesignTaskDistribution, updateArtDesignDemandAddress, updateArtDesignTaskDistribute, updateArtDesignTaskMargin, updateArtDesignTaskRemark, updateLongTermArtDesignTask, updateProofreadingStatus } from '/@/api/devlocal/imageTask'
+import { getProductPositionList } from '/@/api/devlocal/orderProcess'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import ListingPermission from '/@/permissions/listing'
@@ -836,6 +834,16 @@ const splitUsernames = (usernames: string) => {
 const getHighlightClass = (username: string) => {
   return username === currentUser ? 'highlight' : ''
 }
+const handleUpdateProofreadingStatus = async (row: IGetArtDesignTaskList) => {
+  const { data } =await updateProofreadingStatus({
+    id: row.id!,
+    value: row.proofreadingStatus
+  })
+  if (data && row.proofreadingStatus === 1) {
+    fetchData()
+  }
+}
+
 // table blur事件
 const clickCancel = async (event:any, value:any) => {
   const rootElement = getRootElement(event.srcElement, ".cell")
