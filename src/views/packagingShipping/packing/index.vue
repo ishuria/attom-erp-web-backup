@@ -106,8 +106,11 @@
       <el-table-column v-permissions="{ permission: EncasementPermission.operationColume() }" fixed="right" label="操作" width="200">
         <template #default="{ row, $index }">
           <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE] }" type="primary" underline='never' @click="showModify(row)">修改</el-link>
+          <span style="margin: 0 3px;"></span>
           <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_COUNT_SPLIT] }" type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
+          <span style="margin: 0 3px;"></span>
           <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_DELETE] }" type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
+          <span style="margin: 0 3px;"></span>
           <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_PRINT] }" type="primary" underline='never' @click="showPrint(row)">打印</el-link>
         </template>
       </el-table-column>

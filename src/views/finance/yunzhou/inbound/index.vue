@@ -370,7 +370,7 @@ const componentSummaryHandleSizeChange = (value: number) => {
 const queryComponentData = async () =>{
   componentSummaryForm.pageNo = 1
   fetchComponentSummaryData()
-}
+} 
 
 const handlePoComponentExport = async () =>{
   await downloadFilePD('/inbound/export/component', {
