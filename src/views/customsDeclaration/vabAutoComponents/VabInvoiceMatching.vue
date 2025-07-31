@@ -153,7 +153,11 @@
       </el-table-column>
       <el-table-column label="匹配合同号" prop="matchContractNumber" :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')" />
       <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-      <el-table-column label="零件PO含税价" min-width="130" prop="taxInclusiveCost" />
+      <el-table-column label="零件PO含税价" width="100" prop="taxInclusiveCost" >
+        <template #header>
+          零件PO<br />含税价
+        </template>
+      </el-table-column>
       <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
       <el-table-column fixed="right" label="操作" width="100">
@@ -211,7 +215,7 @@
     </template>
   </vab-dialog>
   <!-- 匹配 -->
-  <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" >
+  <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" @close="matchStatus = -1">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
@@ -477,6 +481,8 @@ const handleMatchSizeChange = (value: number) => {
   // fetchMatchData()
 }
 
+const detailIds = ref<number[]>([])
+
 const handleConfirm = async () => {
   matchInvoiceLoading.value = true
   if (matchStatus.value === -1){
@@ -497,6 +503,7 @@ const handleConfirm = async () => {
       $baseMessage('提交成功！', 'success')
       matchVisible.value = false
       await fetchData()
+      detailIds.value.push(matchQueryForm.detailId)
     }
   } catch (error) {
     console.error(error)
@@ -504,17 +511,18 @@ const handleConfirm = async () => {
     matchInvoiceLoading.value = false
   }
 }
+
 const handleSubmitConfirm = async () => {
-  let detailIds: number[] = []
-  let isNotNull = false
-  list.value.forEach((item) => {
-    if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit ) {
-      isNotNull = true
-      detailIds.push(item.detailId!)
-    }
-  })
-  if (isNotNull) {
-    const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds)
+ 
+  // let isNotNull = false
+  // list.value.forEach((item) => {
+  //   if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit ) {
+  //     isNotNull = true
+  //     detailIds.push(item.detailId!)
+  //   }
+  // })
+  if (detailIds.value.length > 0) {
+    const { data } = await submitConfirmTaxRefundInvoiceMatch(detailIds.value)
     if (data) {
       $baseMessage('确认成功！', 'success')
       closeInvoiceMatching()

@@ -344,7 +344,7 @@
         <el-form-item label="发货日期">
           <el-date-picker
             v-model="ticketReminderForm.shipmentDate"
-            :clearable="false"
+            :clearable="true"
             :editable="false"
             end-placeholder="最晚发货日期"
             range-separator="至"
@@ -356,7 +356,7 @@
         <el-form-item label="付款日期" prop="">
           <el-date-picker
             v-model="ticketReminderForm.dateRange"
-            :clearable="false"
+            :clearable="true"
             :editable="false"
             end-placeholder="最晚付款日期"
             range-separator="至"
