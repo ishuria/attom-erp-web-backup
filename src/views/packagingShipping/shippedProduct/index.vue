@@ -90,12 +90,12 @@
               <span>{{ row.shippingCountAdjustment }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="站点" min-width="120" prop="site"/>
-          <el-table-column label="Shipment ID" min-width="120" prop="shipmentId"/>
-          <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" />
+          <el-table-column label="站点" prop="site" :width="flexColumnWidth(list, '站点', 'site')"/>
+          <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId', 30)"/>
+          <el-table-column label="货代单号" prop="freightForwardingNumber" :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')" />
           <el-table-column label="PO" min-width="100" prop="po"/>
           <el-table-column label="发货数" min-width="100" prop="actualCount"/>
-          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName')"/>
+          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName', 50)"/>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -185,7 +185,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="">
+                <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="queryData">
                   <el-option 
                     v-for="item in siteList"
                     :key="item.id"
@@ -199,10 +199,10 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="" @keyup.enter="" />
+                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click=""/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -238,6 +238,7 @@
           <el-table-column label="已接收数" min-width="110" prop="receiptsCount"/>
           <el-table-column label="缺数" min-width="80" prop="lackCount"/>
           <el-table-column label="已接收" min-width="90" prop="acceptDays"/>
+          <el-table-column label="Shipment ID" prop="shipmentId" min-width="100"/>
           <el-table-column label="PO" min-width="100" prop="po"/>
           <el-table-column label="发货数" min-width="100" prop="actualCount"/>
           <template #empty>
@@ -260,13 +261,14 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
+import { isEqual } from 'lodash-es'
+import { CSSProperties } from 'vue'
 import { getShipmentArrivedList, updateLostGoodsStatus } from '/@/api/devlocal/encasement'
 import { getPackageSiteList, updateShippingCountAdjustment } from '/@/api/devlocal/packagingShipping'
 import type { IGetShipmentArrivedList, IGetShipmentArrivedListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { isEqual } from 'lodash-es'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ShippedProduct',
@@ -420,13 +422,20 @@ const queryData = () => {
   fetchData()
 }
 
-const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
-  if (data.column.label === '发货数量调整') {
+const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (label === '发货数量调整') {
     return {
       cursor: 'pointer'
     }
-  } 
-  return {}
+  } else if (label === '发货日期' || label === '初始预计到货' || label === '最新预计到货' || label === 'PO' || label === '发货数' || label === '发货总数' || label === 'Shipment ID' || label === '丢货') {
+    return {
+      textAlign: 'center'
+    }
+  }
+  return {
+    textAlign: 'left'
+  }
 }
 const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
   if (data.columnIndex === 4) {
