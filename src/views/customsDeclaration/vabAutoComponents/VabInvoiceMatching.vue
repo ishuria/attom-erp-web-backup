@@ -1,37 +1,39 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" style="width: fit-content;" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="queryData"
-              @keyup.enter="queryData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table
-      border
-      :cell-class-name="clearPadding"
-      :cell-style="cellStyle"
-      class="noneHoveTable"
-      :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
-      max-height="800"
-      :span-method="objectSpanMethod"
-      @cell-click="cellClick"
-    >
+  <vab-dialog v-model="dflag" :draggable="false" width="90%" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
+    <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%;">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryData"
+                @keyup.enter="queryData"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+    
+      <el-table
+        border
+        :cell-class-name="clearPadding"
+        :cell-style="cellStyle"
+        class="noneHoveTable"
+        :data="list"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="800"
+        :span-method="objectSpanMethod"
+        @cell-click="cellClick"
+      >
       <el-table-column fixed="left" label="操作" width="70">
         <template #default="{ row }">
           <el-link type="danger" underline='never' @click="handleDeleteInvoice(row)">删除</el-link>
@@ -160,7 +162,7 @@
       </el-table-column>
       <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column fixed="right" align="center" label="操作" width="130">
         <template #default="{ row }">
           <div style="display: flex;">
             <el-button
@@ -182,7 +184,9 @@
           </div>
         </template>
       </el-table-column>
-    </el-table>
+      </el-table>
+ 
+    </div>
     <template #footer>
       <div style="text-align: center">
         <el-button @click="closeInvoiceMatching">取消</el-button>
@@ -216,58 +220,60 @@
   </vab-dialog>
   <!-- 匹配 -->
   <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" @close="matchStatus = -1">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
-          供应商：{{ _supplier }}，开票品名：{{ _invoiceName }}，单位：{{ _invoiceUnit }}，数量：{{ _invoiceCount }}，发票含税金额: {{ _includingTaxPrice }}
-        </el-text>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form inline :model="matchQueryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="matchQueryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="queryMatchData"
-              @keyup.enter="queryMatchData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="matchListLoading" native-type="submit" type="primary" @click="queryMatchData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table v-loading="matchListLoading" border :cell-style="matchCellStyle" class="noneHoveTable" :data="pagedData" :header-cell-style="{ textAlign: 'center' }" max-height="50vh" @row-click="handleRowClick">
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(pagedData, '合同编号', 'contractNumber')" />
-      <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
-      <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" />
-      <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(pagedData, '运费', 'freightFee')" />
-      <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(pagedData, 'FOB售价', 'fobPrice')" />
-      <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(pagedData, '利润率', 'profitMargin')" />
-      <el-table-column label="汇率" prop="rate" width="80" />
-      <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(pagedData, '人民币售价', 'salePrice')" />
-      <el-table-column label="报关数量" prop="customsDeclarationCount" width="95" />
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" width="95" />
-      <el-table-column label="PO" prop="po" width="100" />
-      <el-table-column label="含税成本价￥" prop="taxInclusiveCost" width="125" />
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(pagedData, 'SKU', 'sku')" />
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(pagedData, '零件名', 'componentName')" />
-      <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" />
-      <el-table-column label="匹配" prop="status" width="70">
-        <template #default="{ row }">
-          <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
-        </template>
-      </el-table-column>
-    </el-table>
-    <vab-pagination
-      :current-page="matchQueryForm.pageNo"
-      :page-size="matchQueryForm.pageSize"
-      :total="matchTotal"
-      @current-change="handleMatchCurrentChange"
-      @size-change="handleMatchSizeChange"
-    />
+    <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%;">
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
+            供应商：{{ _supplier }}，开票品名：{{ _invoiceName }}，单位：{{ _invoiceUnit }}，数量：{{ _invoiceCount }}，发票含税金额: {{ _includingTaxPrice }}
+          </el-text>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-form inline :model="matchQueryForm" @submit.prevent>
+            <el-form-item>
+              <el-input
+                v-model.trim="matchQueryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryMatchData"
+                @keyup.enter="queryMatchData"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="matchListLoading" native-type="submit" type="primary" @click="queryMatchData" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-table v-loading="matchListLoading" border :cell-style="matchCellStyle" class="noneHoveTable" :data="pagedData" :header-cell-style="{ textAlign: 'center' }" max-height="50vh" @row-click="handleRowClick">
+        <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(pagedData, '合同编号', 'contractNumber')" />
+        <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
+        <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" />
+        <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(pagedData, '运费', 'freightFee')" />
+        <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(pagedData, 'FOB售价', 'fobPrice')" />
+        <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(pagedData, '利润率', 'profitMargin')" />
+        <el-table-column label="汇率" prop="rate" width="80" />
+        <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(pagedData, '人民币售价', 'salePrice')" />
+        <el-table-column label="报关数量" prop="customsDeclarationCount" width="95" />
+        <el-table-column label="报关单位" prop="customsDeclarationUnit" width="95" />
+        <el-table-column label="PO" prop="po" width="100" />
+        <el-table-column label="含税成本价￥" prop="taxInclusiveCost" width="125" />
+        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(pagedData, 'SKU', 'sku')" />
+        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(pagedData, '零件名', 'componentName')" />
+        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" />
+        <el-table-column label="匹配" prop="status" width="70">
+          <template #default="{ row }">
+            <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
+          </template>
+        </el-table-column>
+      </el-table>
+      <vab-pagination
+        :current-page="matchQueryForm.pageNo"
+        :page-size="matchQueryForm.pageSize"
+        :total="matchTotal"
+        @current-change="handleMatchCurrentChange"
+        @size-change="handleMatchSizeChange"
+      />
+    </div>
     <template #footer>
       <div style="text-align: center">
         <el-button @click="matchVisible = false">取消</el-button>
@@ -382,9 +388,10 @@ const handleFinishUpload = async () => {
       const { data: resData, msg } = await finishTaxRefundInvoice(data)
       if (resData) {
         $baseMessage(resData, 'error')
+        await fetchData()
       } else {
         uploadInvoiceVisible.value = false
-        fetchData()
+        await fetchData()
       }
     }
   } catch {
