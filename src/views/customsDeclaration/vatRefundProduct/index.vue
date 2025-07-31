@@ -396,7 +396,7 @@
       </el-form>
       <template #footer>
         <el-button @click="closeTicketReminder">取消</el-button>
-        <el-button type="primary" @click="handleConfirmTicketReminder">确定</el-button>
+        <el-button type="primary" @click="handleConfirmTicketReminder" :loading="generateLoading">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 发票匹配导出 -->
@@ -688,10 +688,12 @@ const closeTicketReminder = () => {
   ticketReminderFormRef.value?.resetFields()
   ticketReminderVisible.value = false
 }
+const generateLoading = ref(false)
 const handleConfirmTicketReminder = async () => {
   ticketReminderFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       try {
+        generateLoading.value = true
         const response = await downloadFilePD('/taxRefund/hasten/invoice', {
           fromDate: ticketReminderForm.dateRange[0],
           toDate: ticketReminderForm.dateRange[1],
@@ -710,10 +712,12 @@ const handleConfirmTicketReminder = async () => {
             }
           })
           reader.readAsText(response)
+          generateLoading.value = false
         }
       } catch (error) {
         console.error(error)
         $baseMessage('下载失败，请稍后重试', 'error')
+        generateLoading.value = false
       }
     }
   })
