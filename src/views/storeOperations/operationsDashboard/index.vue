@@ -66,8 +66,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem1(item.label)"
-                            
+                            @click="handleSwitchItem1(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -99,7 +99,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem2(item.label)"
+                            @click="handleSwitchItem2(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -131,7 +132,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem3(item.label)"
+                            @click="handleSwitchItem3(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -163,7 +165,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem4(item.label)"
+                            @click="handleSwitchItem4(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -195,7 +198,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem5(item.label)"
+                            @click="handleSwitchItem5(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -227,7 +231,8 @@
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem6(item.label)"
+                            @click="handleSwitchItem6(item)"
+                            :disabled="item.disabled"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -406,16 +411,16 @@ const card3Text = ref<string>('净利润率')
 const card4Text = ref<string>('广告销售额')
 const card5Text = ref<string>('广告销售占比')
 const card6Text = ref<string>('ACOS')
-const dropdownItems = ref([
-  { label: '总销售额' },
-  { label: '净利润' },
-  { label: '净利润率', },
-  { label: '广告销售额', },
-  { label: '广告销售占比', },
-  { label: 'ACOS', },
-  { label: 'TACOS', },
-  { label: '退款率', },
-  { label: '预计下月仓储费', },
+const dropdownItems = reactive<{ label: string, disabled: boolean }[]>([
+  { label: '总销售额', disabled: false },
+  { label: '净利润', disabled: false },
+  { label: '净利润率', disabled: false },
+  { label: '广告销售额', disabled: false },
+  { label: '广告销售占比', disabled: false },
+  { label: 'ACOS', disabled: false },
+  { label: 'TACOS', disabled: false },
+  { label: '退款率', disabled: false },
+  { label: '预计下月仓储费', disabled: false },
 ])
 const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
@@ -788,46 +793,67 @@ const handleCanSelect = (cardActive: boolean) => {
   }
   return true
 }
-const handleSwitchItem1 = (dataName: string) => {
+// 更新所有下拉项的禁用状态
+const updateDropdownItemsDisabled = () => {
+  const selectedTexts = [
+    card1Text.value,
+    card2Text.value,
+    card3Text.value,
+    card4Text.value,
+    card5Text.value,
+    card6Text.value
+  ]
+  
+  dropdownItems.forEach(item => {
+    item.disabled = selectedTexts.includes(item.label)
+  })
+}
+const handleSwitchItem1 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card1Active.value)
   if (can) {
-    card1Text.value = dataName
+    card1Text.value = item.label
     card1Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem2 = (dataName: string) => {
+const handleSwitchItem2 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card2Active.value)
   if (can) {
-    card2Text.value = dataName
+    card2Text.value = item.label
     card2Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem3 = (dataName: string) => {
+const handleSwitchItem3 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card3Active.value)
   if (can) {
-    card3Text.value = dataName
+    card3Text.value = item.label
     card3Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem4 = (dataName: string) => {
+const handleSwitchItem4 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card4Active.value)
   if (can) {
-    card4Text.value = dataName
+    card4Text.value = item.label
     card4Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem5 = (dataName: string) => {
+const handleSwitchItem5 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card5Active.value)
   if (can) {
-    card5Text.value = dataName
+    card5Text.value = item.label
     card5Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem6 = (dataName: string) => {
+const handleSwitchItem6 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card6Active.value)
   if (can) {
-    card6Text.value = dataName
+    card6Text.value = item.label
     card6Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
 // 更新剩余的 Y 轴和系列的索引
@@ -1004,25 +1030,21 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
   return false
 }
 // 处理选中的值重复问题
-const handleUnique = (cardText: string) => {
-  const index = selectedItems.indexOf(cardText)
-  if (index === -1) {
-    selectedItems.push(cardText)
-    return true
-  } else {
-    $baseMessage('选中的值不能重复, 请重新选择', 'error')
-    return false
-  }
-}
+// const handleUnique = (cardText: string) => {
+//   const index = selectedItems.indexOf(cardText)
+//   if (index === -1) {
+//     selectedItems.push(cardText)
+//     return true
+//   } else {
+//     $baseMessage('选中的值不能重复, 请重新选择', 'error')
+//     return false
+//   }
+// }
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value
   
   if (card1Active.value) {
-    const unique = handleUnique(card1Text.value)
-    if (!unique) {
-      card1Active.value = false
-      return
-    }
+    selectedItems.push(card1Text.value)
     clickCard.value = 'card1'
   }
   const dataGroup = getGroup(card1Text.value) as IDataGroup
@@ -1038,11 +1060,7 @@ const handleCard2Click = () => {
   card2Active.value = !card2Active.value
   
   if (card2Active.value) {
-    const unique = handleUnique(card2Text.value)
-    if (!unique) {
-      card2Active.value = false
-      return
-    }
+    selectedItems.push(card2Text.value)
     clickCard.value = 'card2'
   }
   const dataGroup = getGroup(card2Text.value) as IDataGroup
@@ -1057,11 +1075,7 @@ const handleCard3Click = () => {
   card3Active.value = !card3Active.value
 
   if (card3Active.value) {
-    const unique = handleUnique(card3Text.value)
-    if (!unique) {
-      card3Active.value = false
-      return
-    }
+    selectedItems.push(card3Text.value)
     clickCard.value = 'card3'
   }
   const dataGroup = getGroup(card3Text.value) as IDataGroup
@@ -1075,11 +1089,7 @@ const handleCard4Click = () => {
   card4Active.value = !card4Active.value
   
   if (card4Active.value) {
-    const unique = handleUnique(card4Text.value)
-    if (!unique) {
-      card4Active.value = false
-      return
-    }
+    selectedItems.push(card4Text.value)
     clickCard.value = 'card4'
   }
   const dataGroup = getGroup(card4Text.value) as IDataGroup
@@ -1093,11 +1103,7 @@ const handleCard5Click = () => {
   card5Active.value = !card5Active.value
   
   if (card5Active.value) {
-    const unique = handleUnique(card5Text.value)
-    if (!unique) {
-      card5Active.value = false
-      return
-    }
+    selectedItems.push(card5Text.value)
     clickCard.value = 'card5'
   }
   const dataGroup = getGroup(card5Text.value) as IDataGroup
@@ -1111,11 +1117,7 @@ const handleCard6Click = () => {
   card6Active.value = !card6Active.value
  
   if (card6Active.value) {
-    const unique = handleUnique(card6Text.value)
-    if (!unique) {
-      card6Active.value = false
-      return
-    }
+    selectedItems.push(card6Text.value)
     clickCard.value = 'card6'
   }
   const dataGroup = getGroup(card6Text.value) as IDataGroup
@@ -1441,6 +1443,7 @@ onMounted(() => {
     chartObserver2.observe(chartContainer2.value)
     initChart2()
   }
+  updateDropdownItemsDisabled()
 })
 </script>
 

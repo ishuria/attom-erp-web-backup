@@ -902,7 +902,7 @@ const getMonthlyData = (data: IData[], type: IDataProp): any[] => {
   return getGroupedData(data, type, 'month')
 }
 
-// 判断是否可选择，已选中需要取消选中再进行选择
+// 已选中需要取消选中再进行选择
 const handleCanSelect = (cardActive: boolean) => {
   if (cardActive) {
     $baseMessage('请先取消选中，再进行选择！', 'error')
@@ -913,16 +913,16 @@ const handleCanSelect = (cardActive: boolean) => {
 // 更新所有下拉项的禁用状态
 const updateDropdownItemsDisabled = () => {
   const selectedTexts = [
-    {label: card1Text.value, active: card1Active.value },
-    {label: card2Text.value, active: card2Active.value },
-    {label: card3Text.value, active: card3Active.value },
-    {label: card4Text.value, active: card4Active.value },
-    {label: card5Text.value, active: card5Active.value },
-    {label: card6Text.value, active: card6Active.value }
+    card1Text.value,
+    card2Text.value,
+    card3Text.value,
+    card4Text.value,
+    card5Text.value,
+    card6Text.value
   ]
   
   dropdownItems.forEach(item => {
-    item.disabled = selectedTexts.some(t => t.label === item.label && t.active)
+    item.disabled = selectedTexts.includes(item.label)
   })
 }
 
@@ -1392,32 +1392,22 @@ function getDataForName(dataName: string) {
 }
 
 // 处理选中的值重复问题
-const handleUnique = (cardText: string) => {
-  const index = selectedItems.indexOf(cardText)
-  if (index === -1) {
-    selectedItems.push(cardText)
-    return true
-  } else {
-    $baseMessage('选中的值不能重复, 请重新选择', 'error')
-    return false
-  }
-}
+// const handleUnique = (cardText: string) => {
+//   const index = selectedItems.indexOf(cardText)
+//   if (index === -1) {
+//     selectedItems.push(cardText)
+//     return true
+//   } else {
+//     $baseMessage('选中的值不能重复, 请重新选择', 'error')
+//     return false
+//   }
+// }
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value
   
   if (card1Active.value) {
-    const unique = handleUnique(card1Text.value)
-    if (!unique) {
-      card1Active.value = false
-      return
-    }
+    selectedItems.push(card1Text.value)
     clickCard.value = 'card1'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card1Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
   }
   const dataGroup = getGroup(card1Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
@@ -1425,54 +1415,28 @@ const handleCard1Click = () => {
     card1Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
   
   if (card2Active.value) {
-    const unique = handleUnique(card2Text.value)
-    if (!unique) {
-      card2Active.value = false
-      return
-    }
+    selectedItems.push(card2Text.value)
     clickCard.value = 'card2'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card2Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
-  }
+  } 
   const dataGroup = getGroup(card2Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
   if (moreThan3) {
     card2Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 const handleCard3Click = () => {
   card3Active.value = !card3Active.value
 
   if (card3Active.value) {
-    const unique = handleUnique(card3Text.value)
-    if (!unique) {
-      card3Active.value = false
-      return
-    }
+    selectedItems.push(card3Text.value)
     clickCard.value = 'card3'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card3Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
   }
   const dataGroup = getGroup(card3Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
@@ -1480,26 +1444,13 @@ const handleCard3Click = () => {
     card3Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 const handleCard4Click = () => {
   card4Active.value = !card4Active.value
   
   if (card4Active.value) {
-    const unique = handleUnique(card4Text.value)
-    if (!unique) {
-      card4Active.value = false
-      return
-    }
+    selectedItems.push(card4Text.value)
     clickCard.value = 'card4'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card4Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
   }
   const dataGroup = getGroup(card4Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
@@ -1507,26 +1458,13 @@ const handleCard4Click = () => {
     card4Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 const handleCard5Click = () => {
   card5Active.value = !card5Active.value
   
   if (card5Active.value) {
-    const unique = handleUnique(card5Text.value)
-    if (!unique) {
-      card5Active.value = false
-      return
-    }
+    selectedItems.push(card5Text.value)
     clickCard.value = 'card5'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card5Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
   }
   const dataGroup = getGroup(card5Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
@@ -1534,26 +1472,13 @@ const handleCard5Click = () => {
     card5Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 const handleCard6Click = () => {
   card6Active.value = !card6Active.value
  
   if (card6Active.value) {
-    const unique = handleUnique(card6Text.value)
-    if (!unique) {
-      card6Active.value = false
-      return
-    }
+    selectedItems.push(card6Text.value)
     clickCard.value = 'card6'
-  } else {
-    // 取消选中时，从selectedItems中移除
-    const index = selectedItems.indexOf(card6Text.value)
-    if (index > -1) {
-      selectedItems.splice(index, 1)
-    }
   }
   const dataGroup = getGroup(card6Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
@@ -1561,9 +1486,6 @@ const handleCard6Click = () => {
     card6Active.value = false
     selectedItems.pop()
   }
-  
-  // 更新下拉项禁用状态
-  updateDropdownItemsDisabled()
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
