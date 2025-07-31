@@ -396,5 +396,6 @@ export interface IQueryArtDesignTaskDistributionRes {
     moldingPersons: number[]
     videoPersons: number[]
     aPlus: number[]
+    renderingPersons: number[]
   }
 }

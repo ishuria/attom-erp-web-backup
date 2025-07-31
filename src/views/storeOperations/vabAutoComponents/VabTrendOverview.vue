@@ -18,8 +18,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem1(item.label)"
-                    
+                    @click="handleSwitchItem1(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -51,7 +51,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem2(item.label)"
+                    @click="handleSwitchItem2(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -83,7 +84,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem3(item.label)"
+                    @click="handleSwitchItem3(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -115,7 +117,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem4(item.label)"
+                    @click="handleSwitchItem4(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -147,7 +150,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem5(item.label)"
+                    @click="handleSwitchItem5(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -179,7 +183,8 @@
                   <el-dropdown-item
                     v-for="(item, index) in dropdownItems"
                     :key="index"
-                    @click="handleSwitchItem6(item.label)"
+                    @click="handleSwitchItem6(item)"
+                    :disabled="item.disabled"
                   >
                     {{ item.label }}
                   </el-dropdown-item>
@@ -514,38 +519,38 @@ const card4Text = ref<string>('ACOS')
 const card5Text = ref<string>('点击成本')
 const card6Text = ref<string>('TACOS')
 
-const dropdownItems = ref([
-  { label: '总销售额' },
-  { label: '广告销售额' },
-  { label: '广告花费' },
-  { label: '净利润' },
+const dropdownItems = reactive<{ label: string, disabled: boolean }[]>([
+  { label: '总销售额', disabled: false },
+  { label: '广告销售额', disabled: false },
+  { label: '广告花费', disabled: false },
+  { label: '净利润', disabled: false },
   // { label: '预计下月仓储费' },
-  { label: '退款金额', },
+  { label: '退款金额', disabled: false },
   // { label: '毛利润', },
-  { label: '点击成本' },
-  { label: '售价' },
-  { label: 'CPA' },
-  { label: '广告转化率' },
-  { label: '自然转化率', },
-  { label: '综合转化率', },
-  { label: '退货率', },
-  { label: '退款率', },
-  { label: '净利润率', },
+  { label: '点击成本', disabled: false },
+  { label: '售价', disabled: false },
+  { label: 'CPA', disabled: false },
+  { label: '广告转化率', disabled: false },
+  { label: '自然转化率', disabled: false },
+  { label: '综合转化率', disabled: false },
+  { label: '退货率', disabled: false },
+  { label: '退款率', disabled: false },
+  { label: '净利润率', disabled: false },
   // { label: '毛利润率', },
-  { label: 'TACOS', },
-  { label: 'ACOS', },
-  { label: '广告点击率', },
-  { label: '总访客', },
-  { label: 'PC端访客', },
-  { label: '移动端访客', },
-  { label: '自然点击/访客', },
-  { label: '广告点击/访客', },
-  { label: 'Rating', },
-  { label: '库存', },
-  { label: '小类排名', },
-  { label: '大类排名', },
-  { label: '广告展现量', },
-  { label: '退货量', },
+  { label: 'TACOS', disabled: false },
+  { label: 'ACOS', disabled: false },
+  { label: '广告点击率', disabled: false },
+  { label: '总访客', disabled: false },
+  { label: 'PC端访客', disabled: false },
+  { label: '移动端访客', disabled: false },
+  { label: '自然点击/访客', disabled: false },
+  { label: '广告点击/访客', disabled: false },
+  { label: 'Rating', disabled: false },
+  { label: '库存', disabled: false },
+  { label: '小类排名', disabled: false },
+  { label: '大类排名', disabled: false },
+  { label: '广告展现量', disabled: false },
+  { label: '退货量', disabled: false },
 ])
 
 type IData = {
@@ -905,46 +910,68 @@ const handleCanSelect = (cardActive: boolean) => {
   }
   return true
 }
-const handleSwitchItem1 = (dataName: string) => {
+// 更新所有下拉项的禁用状态
+const updateDropdownItemsDisabled = () => {
+  const selectedTexts = [
+    {label: card1Text.value, active: card1Active.value },
+    {label: card2Text.value, active: card2Active.value },
+    {label: card3Text.value, active: card3Active.value },
+    {label: card4Text.value, active: card4Active.value },
+    {label: card5Text.value, active: card5Active.value },
+    {label: card6Text.value, active: card6Active.value }
+  ]
+  
+  dropdownItems.forEach(item => {
+    item.disabled = selectedTexts.some(t => t.label === item.label && t.active)
+  })
+}
+
+const handleSwitchItem1 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card1Active.value)
   if (can) {
-    card1Text.value = dataName
+    card1Text.value = item.label
     card1Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem2 = (dataName: string) => {
+const handleSwitchItem2 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card2Active.value)
   if (can) {
-    card2Text.value = dataName
+    card2Text.value = item.label
     card2Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem3 = (dataName: string) => {
+const handleSwitchItem3 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card3Active.value)
   if (can) {
-    card3Text.value = dataName
+    card3Text.value = item.label
     card3Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem4 = (dataName: string) => {
+const handleSwitchItem4 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card4Active.value)
   if (can) {
-    card4Text.value = dataName
+    card4Text.value = item.label
     card4Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem5 = (dataName: string) => {
+const handleSwitchItem5 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card5Active.value)
   if (can) {
-    card5Text.value = dataName
+    card5Text.value = item.label
     card5Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem6 = (dataName: string) => {
+const handleSwitchItem6 = (item: { label: string, disabled: boolean }) => {
   const can = handleCanSelect(card6Active.value)
   if (can) {
-    card6Text.value = dataName
+    card6Text.value = item.label
     card6Active.value = false
+    updateDropdownItemsDisabled()
   }
 }
 
@@ -1385,6 +1412,12 @@ const handleCard1Click = () => {
       return
     }
     clickCard.value = 'card1'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card1Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card1Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
@@ -1393,6 +1426,8 @@ const handleCard1Click = () => {
     selectedItems.pop()
   }
   
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 
 const handleCard2Click = () => {
@@ -1405,6 +1440,12 @@ const handleCard2Click = () => {
       return
     }
     clickCard.value = 'card2'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card2Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card2Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
@@ -1413,6 +1454,8 @@ const handleCard2Click = () => {
     selectedItems.pop()
   }
   
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 const handleCard3Click = () => {
   card3Active.value = !card3Active.value
@@ -1424,6 +1467,12 @@ const handleCard3Click = () => {
       return
     }
     clickCard.value = 'card3'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card3Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card3Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
@@ -1431,6 +1480,9 @@ const handleCard3Click = () => {
     card3Active.value = false
     selectedItems.pop()
   }
+  
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 const handleCard4Click = () => {
   card4Active.value = !card4Active.value
@@ -1442,6 +1494,12 @@ const handleCard4Click = () => {
       return
     }
     clickCard.value = 'card4'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card4Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card4Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
@@ -1449,6 +1507,9 @@ const handleCard4Click = () => {
     card4Active.value = false
     selectedItems.pop()
   }
+  
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 const handleCard5Click = () => {
   card5Active.value = !card5Active.value
@@ -1460,6 +1521,12 @@ const handleCard5Click = () => {
       return
     }
     clickCard.value = 'card5'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card5Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card5Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
@@ -1467,6 +1534,9 @@ const handleCard5Click = () => {
     card5Active.value = false
     selectedItems.pop()
   }
+  
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 const handleCard6Click = () => {
   card6Active.value = !card6Active.value
@@ -1478,6 +1548,12 @@ const handleCard6Click = () => {
       return
     }
     clickCard.value = 'card6'
+  } else {
+    // 取消选中时，从selectedItems中移除
+    const index = selectedItems.indexOf(card6Text.value)
+    if (index > -1) {
+      selectedItems.splice(index, 1)
+    }
   }
   const dataGroup = getGroup(card6Text.value) as IDataGroup
   const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
@@ -1486,6 +1562,8 @@ const handleCard6Click = () => {
     selectedItems.pop()
   }
   
+  // 更新下拉项禁用状态
+  updateDropdownItemsDisabled()
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
@@ -1524,6 +1602,8 @@ onMounted(() => {
     initChart()
     handleSwitchTime()
   }
+  // 初始化下拉项的禁用状态
+  updateDropdownItemsDisabled()
 })
 
 onBeforeUnmount(() => chartObserver.disconnect());

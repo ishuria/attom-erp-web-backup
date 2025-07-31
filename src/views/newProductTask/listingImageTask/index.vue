@@ -1247,6 +1247,7 @@ const showAssignTask = async () => {
       assignTaskForm.aPlus = data.aPlus
       assignTaskForm.videoPerson = data.videoPersons
       assignTaskForm.instructionPerson = data.instructionPersons
+      assignTaskForm.renderingPerson = data.renderingPersons
     }
   }
   assignTaskVisible.value = true
