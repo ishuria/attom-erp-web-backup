@@ -587,6 +587,8 @@ export interface IGetCommissionDetailDevelopListReq {
   month: string
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
 }
 export interface IGetCommissionDetailDevelopListRes {
   data?: {

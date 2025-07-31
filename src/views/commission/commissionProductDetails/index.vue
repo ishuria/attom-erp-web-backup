@@ -205,6 +205,8 @@ const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
   month: '',
   pageNo: 1,
   pageSize: 20,
+  orderByField: 'currentMonthBonus',
+  orderDirection: 'desc'
 })
 
 const listLoading = ref<boolean>(false)
