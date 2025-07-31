@@ -427,19 +427,25 @@ const fetchRankNewProductCommission = async () => {
 // 获取当月产品利润分
 const profitList = ref<IGetFrontPageProductProfitRes[]>([])
 const fetchMonthlyProductProfit = async () => {
-  const { data } = await getMonthlyProductProfit({ month: selectProfitMonth.value! })
-  profitList.value = data
+  if (selectProfitMonth.value) {
+    const { data } = await getMonthlyProductProfit({ month: selectProfitMonth.value })
+    profitList.value = data
+  }
 }
 // 获取当月考核数
 const listAdd = ref<IGetFrontPageMonthlyAssessment[]>([])
 const listSub = ref<IGetFrontPageMonthlyAssessment[]>([])
 const fetchMonthlyPlusAssessment = async () => {
-  const { data } = await getMonthlyAssessmentPlus({ month: selectAssessmentPlusMonth.value! })
-  listAdd.value = data
+  if (selectAssessmentPlusMonth.value) {
+    const { data } = await getMonthlyAssessmentPlus({ month: selectAssessmentPlusMonth.value })
+    listAdd.value = data
+  }
 }
 const fetchMonthlyMinusAssessment = async () => {
-  const { data } = await getMonthlyAssessmentMinus({ month: selectAssessmentMinusMonth.value! })
-  listSub.value = data
+  if (selectAssessmentMinusMonth.value) {
+    const { data } = await getMonthlyAssessmentMinus({ month: selectAssessmentMinusMonth.value })
+    listSub.value = data
+  }
 }
 const historyMonthList = ref<string[]>([])
 const selectAchievedMonth = ref<string>()
@@ -458,9 +464,11 @@ const fetchHistoryMonthList = async () => {
 const fetchAdjustDetailMonthList = async () => {
   const { data } = await getFrontPageAdjustDetailMonth()
   monthList.value = data
-  selectProfitMonth.value = data[0]
-  selectAssessmentPlusMonth.value = data[0]
-  selectAssessmentMinusMonth.value = data[0]
+  if (data.length > 0) {
+    selectProfitMonth.value = data[0]
+    selectAssessmentPlusMonth.value = data[0]
+    selectAssessmentMinusMonth.value = data[0]
+  }
 }
 const fetchRankOverAchieved = async () => {
   const { data } = await getFrontPageRankOverAchieved({ month: selectAchievedMonth.value! })
