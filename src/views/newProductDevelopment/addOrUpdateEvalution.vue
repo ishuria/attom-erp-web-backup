@@ -193,7 +193,9 @@ import type {
   UploadFile,
   UploadFiles, UploadInstance
 } from 'element-plus'
+import { h } from 'vue'
 import {
+  checkPlagiarisme,
   doAddEvaluation,
   getEvaluationById,
   getEvaluationTrendList,
@@ -288,56 +290,80 @@ const fileBeforeRemove = (file:UploadFile, fileListVal:UploadFiles) => {
   return true
 }
 
-const handlerSave = async() =>{
-  isSaveLoading.value = true
+const handlerSave = async () => {
+  inputFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
 
-  const formData = new FormData();
-  // 向formData中添加数据
-  formData.append('productSource', inputForm.productSource)
-  formData.append('productNameZh', inputForm.productNameZh)
-  formData.append('amazonFrontendKeywords', inputForm.amazonFrontendKeywords)
-  formData.append('amazonBackendKeywords', inputForm.amazonBackendKeywords)
-  formData.append('amazonListingQuantity', inputForm.amazonListingQuantity)
-  formData.append('averageSellingPrice', inputForm.averageSellingPrice)
-  formData.append('searchVolume90Days', inputForm.searchVolume90Days)
-  formData.append('averageSales360Days', inputForm.averageSales360Days)
-  formData.append('top80PercentClickedProductsCount', inputForm.top80PercentClickedProductsCount)
-  formData.append('amazonAdCpc', inputForm.amazonAdCpc)
-  formData.append('categoryAvgConversionRate', inputForm.categoryAvgConversionRate)
-  
-  // formData可以添加同名数据，
-  fileList.value.forEach((v:any) => {
-      formData.append('file', v.raw)
-  })
+      isSaveLoading.value = true
 
-  if (route.query.idNo){
-    formData.append("id",route.query.idNo)
+      const formData = new FormData();
+      // 向formData中添加数据
+      formData.append('productSource', inputForm.productSource)
+      formData.append('productNameZh', inputForm.productNameZh)
+      formData.append('amazonFrontendKeywords', inputForm.amazonFrontendKeywords)
+      formData.append('amazonBackendKeywords', inputForm.amazonBackendKeywords)
+      formData.append('amazonListingQuantity', inputForm.amazonListingQuantity)
+      formData.append('averageSellingPrice', inputForm.averageSellingPrice)
+      formData.append('searchVolume90Days', inputForm.searchVolume90Days)
+      formData.append('averageSales360Days', inputForm.averageSales360Days)
+      formData.append('top80PercentClickedProductsCount', inputForm.top80PercentClickedProductsCount)
+      formData.append('amazonAdCpc', inputForm.amazonAdCpc)
+      formData.append('categoryAvgConversionRate', inputForm.categoryAvgConversionRate)
 
-    $baseConfirm('您确定要修改保存新款评估吗', null, async () => {
-      // aginAnalyzeFlg.value = false
-      const { data } = await updateEvaluation(formData)
-      if (data) {
-        $baseMessage("新款评估修改保存成功!","success","hey")
+      // formData可以添加同名数据，
+      fileList.value.forEach((v:any) => {
+          formData.append('file', v.raw)
+      })
+
+      if (route.query.idNo) {
+        formData.append("id",route.query.idNo)
+
+        $baseConfirm('您确定要修改保存新款评估吗', null, async () => {
+          // aginAnalyzeFlg.value = false
+          const { data } = await updateEvaluation(formData)
+          if (data) {
+            $baseMessage("新款评估修改保存成功!","success","hey")
+          }
+          setResponseValue(data)
+        })
+        isSaveLoading.value = false
+      } else {
+        // 先进行跑分查重
+          const { data } = await checkPlagiarisme({ amazonFrontendKeywords: inputForm.amazonFrontendKeywords, amazonBackendKeywords: inputForm.amazonBackendKeywords })
+          if (data.length > 0) {
+            const nameItems = data.map((item: string) => h('div', { style: 'margin: 8px 0; color: #666;' }, `• ${item}`))
+            const content = h('div', { style: 'text-align: left;' }, [
+              h('div', { style: 'margin-bottom: 15px; color: #333;' }, '以下人员已经评估过该产品：'),
+              ...nameItems,
+              h('div', { style: 'margin-top: 15px; color: #333;' }, '是否继续跑分？')
+            ])
+            
+            $baseConfirm(content, null, async () => {
+              await handleAddEvaluation(formData)
+              outPutResFlg.value = true
+            })
+          } else {
+            await handleAddEvaluation(formData)
+            outPutResFlg.value = true
+          }
+          isSaveLoading.value = false
       }
-      setResponseValue(data)
-    })
-
-  }else{
-    try {
-      const { data } = await doAddEvaluation(formData)
-      await $baseMessage("评估分析成功！", "success", "hey")
-      setResponseValue(data)
-      route.query.idNo = data.evaluationId
-      aginAnalyzeFlg.value = true
-      saveBtnText.value = "修改保存"
-    } catch {
-      isSaveLoading.value = false
     }
-  }
-  outPutResFlg.value = true
-  isSaveLoading.value = false
+  })
+ 
 }
-
+const handleAddEvaluation = async (formData: FormData) => {
+  try {
+    const { data } = await doAddEvaluation(formData)
+    await $baseMessage("评估分析成功！", "success", "hey")
+    setResponseValue(data)
+    route.query.idNo = data.evaluationId
+    aginAnalyzeFlg.value = true
+    saveBtnText.value = "修改保存"
+  } catch {
+    isSaveLoading.value = false
+  }
+}
 const setResponseValue = (data:any) =>{
   outputForm.evaluationId = data.evaluationId
   outputForm.marketCapacity = data.marketCapacity

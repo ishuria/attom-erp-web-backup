@@ -108,6 +108,19 @@ export function updateSharePerson(data?: IEvaluationSharePersonReq) {
   })
 }
 
+/**
+ * 新款评估-跑分查重
+ * @param params 参数
+ * @returns Promise
+ */
+export function checkPlagiarisme(params: { amazonFrontendKeywords: string, amazonBackendKeywords: string}): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/evaluation/plagiarism/check`,
+    method: 'get',
+    params,
+  })
+}
+
 // =============================== 产品成本核算与推进 ===============================
 
 /**
