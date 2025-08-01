@@ -17,5 +17,7 @@ export const ROLE_ADMINBUYERLEAD_CODE = "ROLE_ADMINBUYERLEAD" // 行政主管
 
 export const ROLE_SUPPLY_CHAIN_MANG_CODE = "ROLE_SUPPLY_CHAIN_MANG" // 供应链管理
 
+export const ROLE_PARTNER_CODE = "ROLE_PARTNER" // 校对
+
 
 

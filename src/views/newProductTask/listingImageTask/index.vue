@@ -125,8 +125,8 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-if="row.taskType === '新品任务'" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
-              <vab-icon v-else-if="row.taskType !== '新品任务' && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
+              <el-checkbox v-if="ableCheck" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               <span v-else>{{ '' }}</span>
             </template>
           </el-table-column>
@@ -300,8 +300,8 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-if="row.taskType === '新品任务'" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
-              <vab-icon v-else-if="row.taskType !== '新品任务' && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
+              <el-checkbox v-if="ableCheck" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               <span v-else>{{ '' }}</span>
             </template>
           </el-table-column>
@@ -741,7 +741,9 @@ import { addArtDesignSelectionReasons, addArtDesignTask, delArtDesignSelectionRe
 import { getProductPositionList } from '/@/api/devlocal/orderProcess'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
+import { ROLE_BOSS_CODE, ROLE_PARTNER_CODE } from '/@/const/role'
 import ListingPermission from '/@/permissions/listing'
+import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -752,6 +754,8 @@ defineOptions({
   name: 'ListingImageTask'
 })
 
+const currentRoleCode = useAclStore().getRole[0]
+const ableCheck = currentRoleCode === ROLE_BOSS_CODE || ROLE_PARTNER_CODE
 const router = useRouter()
 const route = useRoute()
 interface ColumnConfig {
