@@ -125,7 +125,9 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <el-checkbox v-if="row.taskType === '新品任务'" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <vab-icon v-else-if="row.taskType !== '新品任务' && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
+              <span v-else>{{ '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -298,7 +300,9 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <el-checkbox v-if="row.taskType === '新品任务'" v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
+              <vab-icon v-else-if="row.taskType !== '新品任务' && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
+              <span v-else>{{ '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -540,7 +544,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="站点" prop="sites">
-          <el-select v-model="postTaskForm.sites" collapse-tags collapse-tags-tooltip multiple placeholder="请选择站点">
+          <el-select v-model="postTaskForm.sites" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择站点">
             <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -558,7 +562,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="美工" prop="artDesign">
-          <el-select v-model="postTaskForm.artDesign" collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
+          <el-select v-model="postTaskForm.artDesign" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
