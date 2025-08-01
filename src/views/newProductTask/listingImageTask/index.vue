@@ -125,7 +125,7 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-model="row.proofreadingStatus" :true-value="1" :false-value="0" @change="handleUpdateProofreadingStatus(row)" />
+              <el-checkbox v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -154,12 +154,6 @@
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
-                      <el-link type="primary" underline='never'>长期提成</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_FINISH] }" @click="handleFinish(row)">
-                      <el-link type="success" underline='never'>完成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_DELETE] }" @click="handleDelArtDesignTask(row)">
                       <el-link type="danger" underline='never'>删除</el-link>
@@ -304,7 +298,7 @@
           </template>
           <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <el-checkbox v-model="row.proofreadingStatus" :true-value="1" :false-value="0" @change="handleUpdateProofreadingStatus(row)" />
+              <el-checkbox v-model="row.proofreadingStatus" :false-value="0" :true-value="1" @change="handleUpdateProofreadingStatus(row)" />
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
