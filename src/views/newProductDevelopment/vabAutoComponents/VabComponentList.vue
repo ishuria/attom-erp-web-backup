@@ -4,11 +4,11 @@
     <vab-query-form style="margin-top: 0;">
       <vab-query-form-left-panel>
         <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
-        <el-button type="primary" @click="addSampleHandler">拿样</el-button>
+        <el-button type="primary" @click="addSampleHandler">拿样并新增</el-button>
         <el-button type="primary" @click="sampleTrackHandler">样品追踪</el-button>
         <el-button type="primary" @click="handleGetLog">开发日志</el-button>
-        <el-button type="primary" @click="handleAddConsumable">添加耗材</el-button>
-        <el-button type="primary" @click="handleAddComponent">添加零件</el-button>
+        <el-button type="primary" @click="handleAddConsumable">添加已有耗材</el-button>
+        <el-button type="primary" @click="handleAddComponent">添加已有零件</el-button>
       </vab-query-form-left-panel>
     </vab-query-form>
 
@@ -45,21 +45,7 @@
           </el-dropdown>
         </template>
       </el-table-column>
-      <el-table-column label="" prop="includedInCost" width="80">
-          <template #header>
-            计入利<br>润核算
-          </template>
-          <template #default="{ row }">
-            <el-checkbox 
-              v-model="row.includedInCost" 
-              class="custom-checkbox" 
-              :false-value="1" 
-              size="large"
-              :true-value="0" 
-              @change="includedInCostChange(row)"
-            />
-          </template>
-        </el-table-column>
+    
       <el-table-column label="图片" prop="componentImg" width="76">
         <template #default="{ row }">
           <div class="image-cell">
@@ -121,7 +107,7 @@
           </span>
           </template>
         </el-table-column>
-
+        
         <el-table-column label="零件单位" prop="componentUnit" width="100">
           <!-- <template #header>
             零件<br>单位
@@ -138,7 +124,21 @@
             <span>{{ row.componentUnit  }}</span>
           </template>
         </el-table-column>
-
+        <el-table-column label="" prop="includedInCost" width="80">
+          <template #header>
+            计入利<br>润核算
+          </template>
+          <template #default="{ row }">
+            <el-checkbox 
+              v-model="row.includedInCost" 
+              class="custom-checkbox" 
+              :false-value="1" 
+              size="large"
+              :true-value="0" 
+              @change="includedInCostChange(row)"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="出厂单价" prop="unitPrice" width="100">
           <!-- <template #header>
             出厂<br>单价
@@ -391,14 +391,14 @@ import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog, } from '/@/api/devlocal/progress'
 import {
-    addComponent, addSuppliers,
-    componentDeleteImage,
-    componentUploadImage, copyComponent,
-    deleteSuppliers, getComponentList,
-    submitProgressComponent,
-    submitProgressConsumable,
-    updateComponenet,
-    updateProgressLog
+  addComponent, addSuppliers,
+  componentDeleteImage,
+  componentUploadImage, copyComponent,
+  deleteSuppliers, getComponentList,
+  submitProgressComponent,
+  submitProgressConsumable,
+  updateComponenet,
+  updateProgressLog
 } from '/@/api/devlocal/progressSample'
 import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
@@ -834,7 +834,7 @@ const componentTableInputChange = async (row: any, column: any, cell: HTMLTableC
     return
   }
   // 不能被修改cell的下标
-  if (column.no === 3) return
+  if (column.no === 2) return
 
   rowCopy = JSON.parse(JSON.stringify(row))
 
@@ -945,7 +945,7 @@ const objectSpanMethod = ({
   columnIndex,
 }: SpanMethodProps) => {
   // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
     // 获取当前row的零件id
     const componentId = row.componentId;
     // 默认不跨行
@@ -990,7 +990,7 @@ const clickLog = async (val: any) => {
 }
 // 去掉图片列的padding
 const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number}): string => {
-  if (data.columnIndex === 2 || data.columnIndex === 0) {
+  if (data.columnIndex === 1 || data.columnIndex === 0) {
     return 'clear-padding'
   }
   return ''

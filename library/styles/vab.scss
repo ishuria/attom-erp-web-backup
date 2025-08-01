@@ -18,6 +18,7 @@
     width: 6px;
     height: 6px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: rgba(#909399, 0.3);
     border-radius: var(--el-border-radius-round);
@@ -45,25 +46,31 @@ html {
 
     /* 横向滚动条的滑块 */
     .el-scrollbar__bar.is-horizontal .el-scrollbar__thumb {
-      border-radius: 6px; /* 滑块的圆角 */
+      border-radius: 6px;
+      /* 滑块的圆角 */
     }
+
     /* 纵向滚动条的滑块 */
     .el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
       border-radius: 6px;
     }
+
     /* 修改滑块宽度 */
     .el-scrollbar__bar.is-horizontal {
       height: 12px;
     }
-    .el-scrollbar__bar.is-vertical  {
+
+    .el-scrollbar__bar.is-vertical {
       width: 12px;
     }
+
     &.color-weakness {
       filter: invert(80%);
     }
+
     // 修改图片预览初始大小不占据全部屏幕
-    .el-image-viewer__wrapper{
-      .el-image-viewer__canvas{
+    .el-image-viewer__wrapper {
+      .el-image-viewer__canvas {
         .el-image-viewer__img {
           position: absolute;
           top: 8.35%;
@@ -71,6 +78,7 @@ html {
         }
       }
     }
+
     #app {
       height: calc(var(--vh, 1vh) * 100);
 
@@ -81,8 +89,8 @@ html {
       }
 
       .vue-shop-vite-box {
-        div:not(
-          .el-drawer,
+
+        div:not(.el-drawer,
           .el-drawer *,
           .el-dialog,
           .el-dialog *,
@@ -113,8 +121,7 @@ html {
           .global-animation-disabled *,
           .no-transition-container *,
           .vab-magnifier,
-          .vab-magnifier *
-        ) {
+          .vab-magnifier *) {
           text-shadow: none;
           transition: var(--el-transition);
           -webkit-font-smoothing: antialiased;
@@ -126,8 +133,8 @@ html {
             padding: var(--el-padding);
             overflow: hidden;
 
-            > section {
-              > [class*='-container'] {
+            >section {
+              >[class*='-container'] {
                 min-height: var(--el-container-height);
                 padding: var(--el-padding);
                 background: var(--el-color-white);
@@ -143,9 +150,7 @@ html {
     .vue-shop-vite-box.mobile {
       --el-margin: 16px;
       --el-padding: 16px;
-      --el-container-height: calc(
-        var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height)
-      );
+      --el-container-height: calc(var(--vh, 1vh) * 100 - var(--el-nav-height) - var(--el-tabs-height) - var(--el-padding) * 3 - var(--el-footer-height));
 
       .ri-contract-right-line.fold-unfold {
         position: fixed;
@@ -263,10 +268,10 @@ html {
         border-radius: var(--el-border-radius-circle);
       }
 
-      [class*='el-icon-'] + span,
-      span + [class*='el-icon-'],
-      [class*='ri-'] + span,
-      span + [class*='ri-'] {
+      [class*='el-icon-']+span,
+      span+[class*='el-icon-'],
+      [class*='ri-']+span,
+      span+[class*='ri-'] {
         margin-left: 3px;
       }
     }
@@ -353,6 +358,7 @@ html {
       margin: 0 0 var(--el-margin) 0;
 
       &.is-light {
+
         .el-alert__icon,
         .el-alert__close-btn {
           color: currentColor;
@@ -459,7 +465,7 @@ html {
             border-radius: var(--el-border-radius-base);
           }
 
-          .el-button.is-text + .el-button.is-text {
+          .el-button.is-text+.el-button.is-text {
             margin-left: 0;
           }
         }
@@ -492,6 +498,7 @@ html {
 
       .el-sub-menu__title,
       .el-menu-item {
+
         svg,
         [class*='ri-'] {
           margin-right: 3px;
@@ -503,6 +510,7 @@ html {
     /* el-tabs--top */
     .el-tabs.el-tabs--top {
       .el-tabs__item {
+
         svg,
         [class*='ri-'] {
           margin-right: 3px;
@@ -577,6 +585,7 @@ html {
 
     /* el-dialog */
     @media (max-width: 768px) {
+
       .el-dialog,
       .el-message-box {
         width: calc(100% - 10vw);
@@ -928,7 +937,7 @@ html {
 
     /* el-upload */
     .el-upload {
-      &.el-upload--text + .el-button {
+      &.el-upload--text+.el-button {
         margin-left: 10px;
       }
 
@@ -950,7 +959,7 @@ html {
 
       .el-scrollbar {
         //margin-right: -20px;
-        
+
         .vab-auto-box {
           flex: 1;
           width: 100%;
@@ -968,7 +977,7 @@ html {
       .auto-height-card {
         margin-bottom: 0;
 
-        > .el-card__body {
+        >.el-card__body {
           display: flex;
           flex-direction: column;
           height: calc(var(--el-container-height) - 2px);
@@ -979,7 +988,7 @@ html {
         }
 
         &.has-header {
-          > .el-card__body {
+          >.el-card__body {
             height: calc(var(--el-container-height) - 57px);
           }
         }
@@ -988,8 +997,8 @@ html {
       @media (max-width: 1200px) {
         margin-bottom: calc(0 - var(--el-margin));
 
-        > .el-row {
-          > .el-col + .el-col {
+        >.el-row {
+          >.el-col+.el-col {
             .auto-height-card {
               margin-bottom: 0;
             }
@@ -999,7 +1008,7 @@ html {
         .auto-height-card {
           margin-bottom: var(--el-margin);
 
-          > .el-card__body {
+          >.el-card__body {
             &:not(:has(.el-alert)) {
               height: auto;
             }
@@ -1008,7 +1017,7 @@ html {
           &.has-header {
             margin-bottom: 0;
 
-            > .el-card__body {
+            >.el-card__body {
               height: auto;
               min-height: calc(var(--el-container-height) - 57px);
             }
@@ -1020,7 +1029,7 @@ html {
         padding: var(--el-padding) !important;
 
         .auto-height-card {
-          > .el-card__body {
+          >.el-card__body {
             height: calc(var(--vh, 1vh) * 100 - var(--el-padding) * 2 - 2px);
           }
         }
@@ -1028,7 +1037,7 @@ html {
     }
 
     :not(.auto-height-container).no-background-container {
-      > .el-row:has(.el-card) {
+      >.el-row:has(.el-card) {
         margin-bottom: calc(0px - var(--el-margin));
       }
     }
@@ -1074,6 +1083,7 @@ html {
       }
 
       &:hover {
+
         svg,
         path {
           fill: inherit;
@@ -1181,6 +1191,7 @@ html {
 }
 
 html:not(.dark) body.vab-theme-default.glass-mode {
+
   .vab-layout-header,
   .vab-theme-setting {
     background: var(--vab-glass-bg) !important;
@@ -1255,8 +1266,8 @@ html:not(.dark) body.vab-theme-default.glass-mode {
     }
   }
 
-  .vab-avatar-popper > .el-popper__arrow,
-  .vab-tabs-more-dropdown > .el-popper__arrow {
+  .vab-avatar-popper>.el-popper__arrow,
+  .vab-tabs-more-dropdown>.el-popper__arrow {
     display: none !important;
   }
 
@@ -1327,4 +1338,35 @@ html:not(.dark) body.vab-theme-default.glass-mode {
       background: transparent !important;
     }
   }
+}
+
+/*
+ *@author: gaoyan.ma
+ *@date: 2025-08-01
+ *@description: 自定义默认展示两行文本，超出省略号
+ */
+.multi-line-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* 显示2行 */
+  line-clamp: 2;
+  /* 标准属性 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-height: 1.5;
+  max-height: 3em;
+  /* 2行文字的大致高度 */
+}
+
+/*
+ *@author: gaoyan.ma
+ *@date: 2025-08-01
+ *@description: 自定义tooltip样式
+ */
+.custom-tooltip {
+  max-width: 400px;
+  font-size: 16px;
+  white-space: pre-wrap;
 }

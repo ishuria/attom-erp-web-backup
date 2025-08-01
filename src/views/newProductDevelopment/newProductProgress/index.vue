@@ -55,12 +55,7 @@
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" width="120">
             <template #default="{ row }">
-              <!-- <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip" v-html="row.sharerName.replace(/,/g, '<br/>')"></div>
-                </template>
-                
-              </el-tooltip> -->
+             
               <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName + 'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
                 </span>
             </template>
@@ -118,11 +113,11 @@
           </el-table-column>
           <el-table-column label="调研报告链接" prop="researchReportLink" width="200">
             <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ row.researchReportLink }}</el-text>
+                <div class="multi-line-ellipsis">{{ row.researchReportLink  }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -138,21 +133,21 @@
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -307,11 +302,11 @@
           </el-table-column>
           <el-table-column label="调研报告链接" prop="" width="350">
             <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ row.researchReportLink }}</el-text>
+                <div class="multi-line-ellipsis">{{ row.researchReportLink }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -324,21 +319,21 @@
           </el-table-column>
           <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.progressLog) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+              <el-tooltip effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -569,7 +564,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
-import type { FormInstance, TableInstance, TabsPaneContext } from 'element-plus'
+import { ElLink, type FormInstance, type TableInstance, type TableTooltipData, type TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
@@ -606,6 +601,15 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+const tableRowFormatter = (data: TableTooltipData<IProgress>) => {
+  return `${data.cellValue}: table formatter`
+}
+
+const withVNode = (data: TableTooltipData<IProgress>) => {
+  return h(ElLink, { type: 'primary', href: data.cellValue }, () =>
+    h('span', null, data.cellValue)
+  )
+}
 const handleSwitchName = (row: any) => {
   if (row.bulkGoodsStatus === 1) {
     return '继续大货申请'
@@ -1538,11 +1542,7 @@ onBeforeMount(() => {
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
+
 
 .image-list {
   display: flex;
