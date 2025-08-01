@@ -249,7 +249,7 @@
               <template #content>
                 <div class="custom-tooltip" >{{ row.supplier }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ row.supplier }}</el-text>
+              <div class="multi-line-ellipsis">{{ row.supplier }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -311,7 +311,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
+            <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -322,7 +322,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.remarks }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.remarks }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -1037,11 +1037,6 @@ onMounted(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 // 图片列去掉padding
 .noneHoveTable :deep(.clear-padding) {

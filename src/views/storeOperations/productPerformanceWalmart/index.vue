@@ -1155,11 +1155,6 @@ onBeforeMount(async () => {
 .disabled-handle {
   cursor: not-allowed;
 }
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 .custom-bar {
   width: 100%;
   height: 50px;

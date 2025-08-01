@@ -84,7 +84,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -94,7 +94,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -253,7 +253,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -263,7 +263,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -395,7 +395,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -405,7 +405,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -504,7 +504,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -514,7 +514,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -627,7 +627,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -637,7 +637,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.salesLog) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.salesLog) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.salesLog) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -760,17 +760,17 @@ import type { TableInstance, TabsPaneContext, UploadFile } from 'element-plus'
 import { CSSProperties } from 'vue'
 import handleClipboard from '~/src/utils/clipboard'
 import {
-    archiveAfterSales,
-    badDebtAfterSales,
-    checkAfterSalesArchive,
-    deleteAfterSales,
-    getAfterSalesList,
-    getAfterSalesLog,
-    getAfterSalesLogs,
-    updateAfterSales,
-    updateAfterSalesLog,
-    updateSalesStatus,
-    uploadAfterSales
+  archiveAfterSales,
+  badDebtAfterSales,
+  checkAfterSalesArchive,
+  deleteAfterSales,
+  getAfterSalesList,
+  getAfterSalesLog,
+  getAfterSalesLogs,
+  updateAfterSales,
+  updateAfterSalesLog,
+  updateSalesStatus,
+  uploadAfterSales
 } from '/@/api/devlocal/packagingShipping'
 import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -1257,11 +1257,6 @@ onBeforeMount(() => {
   display: block;
   max-height: 65.2px;
   overflow-y: auto;
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {

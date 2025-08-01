@@ -422,11 +422,6 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
     margin-left: 3px;
   }
 }
-.custom-tooltip {
-  max-width: 430px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 .image-text {
   margin-top: 2px;
   line-height: 1.2;

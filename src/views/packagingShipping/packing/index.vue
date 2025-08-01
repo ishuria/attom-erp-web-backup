@@ -99,7 +99,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.remarks }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
+            <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -1360,10 +1360,5 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
-}
-.custom-tooltip { 
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 </style>

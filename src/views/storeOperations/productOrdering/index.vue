@@ -940,11 +940,6 @@ onBeforeMount(() => {
     color: #36788C;
   }
 }
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 .noneHoverTable :deep(.clear-padding) {
   padding-top: 0px;
   padding-bottom: 0px;

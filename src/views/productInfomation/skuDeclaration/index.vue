@@ -881,11 +881,6 @@ onBeforeMount(() => {
   padding-right: 0;
   padding-left: 0;
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 :deep(.el-checkbox) {
   transform: scale(1.3);
 }

@@ -158,7 +158,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.purchaseLink }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
+            <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -168,7 +168,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+            <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -178,7 +178,7 @@
             <template #content>
               <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+            <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -813,11 +813,6 @@ onBeforeMount(() => {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 .noneHoveTable :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;

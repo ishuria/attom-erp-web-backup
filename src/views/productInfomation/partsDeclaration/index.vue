@@ -227,7 +227,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.declarationElements }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.declarationElements }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.declarationElements }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -813,10 +813,5 @@ onBeforeMount(() => {
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 </style>

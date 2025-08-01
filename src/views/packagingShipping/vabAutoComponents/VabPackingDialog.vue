@@ -74,7 +74,7 @@
               <div class="custom-tooltip" >{{ row.productName }}</div>
             </template>
             <span style="display: flex; align-items: center;">
-              <el-text style="vertical-align: middle;" truncated>{{ row.productName }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.productName }}</div>
             </span>
           </el-tooltip>
         </template>
@@ -439,11 +439,3 @@ const switchNext = () => {
 }
 
 </script>
-
-<style lang="scss" scoped>
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
-</style>

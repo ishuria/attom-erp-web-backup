@@ -3597,11 +3597,6 @@ onBeforeMount(() => {
     color: #36788c;
   }
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 .customTag {
   width: 7em;
   padding: 0 30px;

@@ -33,7 +33,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</el-text>
+              <div class="multi-line-ellipsis" @click="handleDescClick($index)">{{ removeHtmlTags(row.desc) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -557,11 +557,6 @@ onMounted(async ()=>{
 // :deep(.el-table .el-table__body tr:first-child td) {
 //   border-top: none; /* 去掉第一行的上边框 */
 // }
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 .el-table {
   :deep(td) {
     background-color: #fff !important;

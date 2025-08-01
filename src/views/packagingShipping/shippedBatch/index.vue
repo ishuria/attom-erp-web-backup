@@ -72,7 +72,7 @@
             <template #content>
               <div class="custom-tooltip" >{{ row.remarks }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.remarks }}</el-text>
+            <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -552,10 +552,5 @@ onBeforeMount(() => {
 /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
 :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
   background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: 14px;
-  white-space: pre-wrap; 
 }
 </style>

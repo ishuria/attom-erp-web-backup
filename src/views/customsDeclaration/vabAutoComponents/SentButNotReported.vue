@@ -63,7 +63,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
               </template>
-              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.remark) }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.remark) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>

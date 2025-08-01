@@ -512,11 +512,6 @@ onBeforeMount(() => {
     display: none;
   }
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 .el-table :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;

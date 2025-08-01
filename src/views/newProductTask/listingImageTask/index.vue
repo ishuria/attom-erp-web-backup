@@ -89,7 +89,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.requiredAddress }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.requiredAddress }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ row.requiredAddress }}</div>
               </el-tooltip>
               <!-- <el-text truncated>{{ row.requiredAddress }}</el-text> -->
             </template>
@@ -134,7 +134,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.remark }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+                <div class="multi-line-ellipsis">{{ row.remark }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -263,7 +263,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.requiredAddress }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.requiredAddress }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ row.requiredAddress }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -307,7 +307,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.remark }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+                <div class="multi-line-ellipsis">{{ row.remark }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -465,7 +465,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.remark }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.remark }}</el-text>
+                <div class="multi-line-ellipsis">{{ row.remark }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1472,11 +1472,6 @@ onBeforeMount(() => {
       }
     }
   }
-}
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 .none {
   display: none;

@@ -1317,11 +1317,6 @@ onBeforeMount(async () => {
     margin-left: 3px;
   }
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 
 .sku-text {
   :deep(.el-link__inner){

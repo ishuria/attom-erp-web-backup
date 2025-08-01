@@ -42,7 +42,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.buyerRemarks }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.buyerRemarks }}</el-text>
+            <div class="multi-line-ellipsis-1">{{ row.buyerRemarks }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -513,10 +513,5 @@ const handleSizeChange = (value: number) => {
       }
     }
   }
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 </style>

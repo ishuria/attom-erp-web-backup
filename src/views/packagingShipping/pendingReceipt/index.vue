@@ -133,7 +133,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.log) }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
               </el-tooltip>
             </template>
 
@@ -305,7 +305,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.log) }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
               </el-tooltip>
             </template>
 
@@ -1101,11 +1101,6 @@ onBeforeMount(() => {
 // :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);

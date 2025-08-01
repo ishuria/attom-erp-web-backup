@@ -315,7 +315,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
                   </template>
-                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+                  <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '订货总数'">
@@ -430,7 +430,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                   </template>
-                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                  <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '供应商'">
@@ -509,7 +509,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ row.purchaseLink }}</div>
                   </template>
-                  <el-text style="vertical-align: middle" truncated>{{ row.purchaseLink }}</el-text>
+                  <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '起订量'">
@@ -550,7 +550,7 @@
                   <template #content>
                     <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                   </template>
-                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+                  <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </el-tooltip>
               </span>
             </template>
@@ -825,7 +825,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1049,7 +1049,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1140,7 +1140,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.purchaseLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ row.purchaseLink }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1191,7 +1191,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1389,7 +1389,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1512,7 +1512,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <span>{{ removeHtmlTags(row.purchaseMatters) }}</span>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1562,7 +1562,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.purchaseLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ row.purchaseLink }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -1583,7 +1583,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -3706,11 +3706,6 @@ onMounted(() => {
 }
 :deep(input[type='number']) {
   -moz-appearance: textfield;
-}
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 .icon-hover {
   padding: 6px;

@@ -130,7 +130,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</el-text>
+              <div class="multi-line-ellipsis">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -439,10 +439,5 @@ onMounted(() => {
 :deep(.center-select) {
   text-align: center;
   text-align-last: center;
-}
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 </style>

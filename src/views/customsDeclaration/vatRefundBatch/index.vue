@@ -54,7 +54,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.remark }}</div>
                 </template>
-                <span>{{ row.remark }}</span>
+                <div class="multi-line-ellipsis-1">{{ row.remark }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -129,7 +129,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.remark }}</div>
                 </template>
-                <span>{{ row.remark }}</span>
+                <div class="multi-line-ellipsis-1">{{ row.remark }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -523,10 +523,5 @@ onBeforeMount(() => {
       }
     }
   }
-}
-.custom-tooltip { 
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 </style>

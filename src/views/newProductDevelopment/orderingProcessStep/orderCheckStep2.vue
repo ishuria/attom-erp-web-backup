@@ -33,7 +33,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -99,7 +99,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseLink) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -114,7 +114,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </template>
-              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+              <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -124,7 +124,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
               </template>
-              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+              <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -177,7 +177,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</el-text>
+                <div class="multi-line-ellipsis">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -425,11 +425,6 @@ onMounted(async () => {
 :deep(.el-upload--picture-card) {
   width: 75px;
   height: 75px;
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 </style>
   

@@ -117,7 +117,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ row.researchReportLink  }}</div>
+                <div class="multi-line-ellipsis-1">{{ row.researchReportLink  }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -306,7 +306,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ row.researchReportLink }}</div>
+                <div class="multi-line-ellipsis-1">{{ row.researchReportLink }}</div>
               </el-tooltip>
             </template>
           </el-table-column>

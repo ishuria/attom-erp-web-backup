@@ -1436,11 +1436,6 @@ const tableRowClassName = ({
 .add-icon:hover {
   color: var(--el-color-primary);
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 .dialog {
   .el-dialog {
     height: 80vh;

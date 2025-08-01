@@ -110,7 +110,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -241,7 +241,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -932,11 +932,6 @@ onUnmounted(() => {
  display: block;
  max-height: 81.2px; /* 设置文本的最大高度 */
  overflow-y: auto; /* 溢出时显示垂直滚动条 */
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 .copySku {
   cursor: pointer;

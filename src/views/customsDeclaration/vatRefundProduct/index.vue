@@ -1007,11 +1007,6 @@ onBeforeMount(() => {
     transform-origin: center;
   }
 }
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: 14px;
-  white-space: pre-wrap; 
-}
 .noneHoveTable :deep(.header-cell .cell) {
   display: flex;          /* 应用 Flexbox 布局 */
   align-items: center;   /* 垂直居中 */

@@ -67,7 +67,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.desc) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.desc) }}</el-text>
+              <div class="multi-line-ellipsis">{{ removeHtmlTags(row.desc) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -78,7 +78,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.priceInfo) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.priceInfo) }}</el-text>
+              <div class="multi-line-ellipsis">{{ removeHtmlTags(row.priceInfo) }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -323,19 +323,19 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import {
-    addCostAccounting,
-    costAccountingCopy,
-    costAccountingDelete,
-    costAccountingDeleteImage,
-    costAccountingUpdate,
-    costAccountingUpdateRowSort,
-    costAccountingUploadImage,
-    getCostAccountingList,
-    getProgressPriceInfo,
-    getProgressProductDesc,
-    reverseCalculateProgress,
-    updateProgressPriceInfo,
-    updateProgressProductdesc
+  addCostAccounting,
+  costAccountingCopy,
+  costAccountingDelete,
+  costAccountingDeleteImage,
+  costAccountingUpdate,
+  costAccountingUpdateRowSort,
+  costAccountingUploadImage,
+  getCostAccountingList,
+  getProgressPriceInfo,
+  getProgressProductDesc,
+  reverseCalculateProgress,
+  updateProgressPriceInfo,
+  updateProgressProductdesc
 } from '/@/api/devlocal/progressSample'
 import type { IProgressEstimatedCostAccounting } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -781,11 +781,6 @@ onMounted(()=>{
 // :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 // 图片样式
 .image-cell {
   width: 100%;

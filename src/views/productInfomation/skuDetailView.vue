@@ -374,7 +374,7 @@
                 <template #content>
                   <div class="custom-tooltip" >{{ row.purchaseLink }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ row.purchaseLink }}</el-text>
+                <div class="multi-line-ellipsis-1">{{ row.purchaseLink }}</div>
               </el-tooltip>
             </span>
             <span v-if="item.label === '默认收货仓库'">
@@ -392,7 +392,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.purchaseMatters) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </span>
             <span v-if="item.label === '合同条款'">
@@ -400,7 +400,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.contractTerms) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.contractTerms) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.contractTerms) }}</div>
               </el-tooltip>
             </span>
             <span v-if="item.label === '零件明细'">
@@ -408,7 +408,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
                 </template>
-                <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.componentSuitDetail) }}</el-text>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.componentSuitDetail) }}</div>
               </el-tooltip>
             </span>
           </template>
@@ -1911,11 +1911,6 @@ onMounted(async () => {
 }
 :deep(input[type="number"]) {
   -moz-appearance: textfield;
-}
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
 }
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0px;

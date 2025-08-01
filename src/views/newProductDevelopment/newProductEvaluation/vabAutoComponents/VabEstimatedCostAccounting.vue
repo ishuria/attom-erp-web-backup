@@ -53,7 +53,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.desc }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ row.desc }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.desc }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -63,7 +63,7 @@
               <template #content>
                 <div class="custom-tooltip">{{ row.priceInfo }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ row.priceInfo }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.priceInfo }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -74,7 +74,7 @@
                 <!-- <el-link class="link-tooltip" :href="row.url1688" target="_blank" type="primary">{{ row.url1688 }}</el-link> -->
                 <div class="link-tooltip">{{ row.url1688 }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ row.url1688 }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.url1688 }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -326,17 +326,17 @@ import { VueDraggable } from 'vue-draggable-plus'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
 import {
-    addEstimatedCostAccounting,
-    addEstimatedCostAccountingProductRelease,
-    copyEstimatedCostAccounting,
-    deleteEstimatedCostAccounting,
-    evaluationCostDeleteImg,
-    getExchangeRate,
-    reverseCalculateEstimatedCostAccounting,
-    updateEstimatedCostAccounting,
-    updateEstimatedCostAccountingFirstMileChannel,
-    updateEstimatedCostAccountingSort,
-    uploadFileBoBakend,
+  addEstimatedCostAccounting,
+  addEstimatedCostAccountingProductRelease,
+  copyEstimatedCostAccounting,
+  deleteEstimatedCostAccounting,
+  evaluationCostDeleteImg,
+  getExchangeRate,
+  reverseCalculateEstimatedCostAccounting,
+  updateEstimatedCostAccounting,
+  updateEstimatedCostAccountingFirstMileChannel,
+  updateEstimatedCostAccountingSort,
+  uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
 import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -835,11 +835,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 75px;
-}
-.custom-tooltip {
-  max-width: 650px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
 }
 .link-tooltip {
   // max-width: 650px;

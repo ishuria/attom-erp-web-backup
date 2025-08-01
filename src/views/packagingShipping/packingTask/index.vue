@@ -1486,31 +1486,31 @@ import { ref } from 'vue'
 import { formatDate } from '~/src/utils/dateUtils'
 import { sizeOption } from '../constantOption'
 import {
-    addQualityCheck,
-    checkGoOffWork,
-    checkInMork,
-    checkStartTaskPackage,
-    confirmCurrentTaskAddPerson,
-    confirmEndTask,
-    confirmGoOffWork,
-    confirmStartMoreTask,
-    confirmStartTask,
-    generatePackageBarcode,
-    getBarCodePath,
-    getEndTaskList,
-    getFreeList,
-    getGoOffWorkList,
-    getPackageComponentList,
-    getPackageSiteList,
-    getPackageTaskIsSplit,
-    getPackageTaskList,
-    getPackageTaskSplitList,
-    getPackageTaskingList,
-    getSkuQualityList,
-    getStartTaskList,
-    splitPackageTask,
-    updatePackageTask,
-    updatePackageTaskSite
+  addQualityCheck,
+  checkGoOffWork,
+  checkInMork,
+  checkStartTaskPackage,
+  confirmCurrentTaskAddPerson,
+  confirmEndTask,
+  confirmGoOffWork,
+  confirmStartMoreTask,
+  confirmStartTask,
+  generatePackageBarcode,
+  getBarCodePath,
+  getEndTaskList,
+  getFreeList,
+  getGoOffWorkList,
+  getPackageComponentList,
+  getPackageSiteList,
+  getPackageTaskIsSplit,
+  getPackageTaskList,
+  getPackageTaskSplitList,
+  getPackageTaskingList,
+  getSkuQualityList,
+  getStartTaskList,
+  splitPackageTask,
+  updatePackageTask,
+  updatePackageTaskSite
 } from '/@/api/devlocal/packagingShipping'
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { useUserStore } from '/@/store/modules/user'
@@ -2606,21 +2606,5 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.custom-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
-}
-
-.multi-line-ellipsis {
-  display: -webkit-box;
-  -webkit-line-clamp: 2; /* 显示2行 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  line-height: 1.5;
-  max-height: 3em; /* 2行文字的大致高度 */
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: 16px;
-  white-space: pre-wrap; 
 }
 </style>

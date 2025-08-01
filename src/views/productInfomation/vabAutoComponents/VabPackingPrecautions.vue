@@ -318,9 +318,4 @@ onActivated(() => {
 .none {
   display: none;
 }
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap; 
-}
 </style>

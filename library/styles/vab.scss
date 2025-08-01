@@ -1360,6 +1360,21 @@ html:not(.dark) body.vab-theme-default.glass-mode {
   /* 2行文字的大致高度 */
 }
 
+.multi-line-ellipsis-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  /* 显示1行 */
+  line-clamp: 1;
+  /* 标准属性 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  line-height: 1.5;
+  max-height: 1.5em;
+  /* 1行文字的大致高度 */
+}
+
 /*
  *@author: gaoyan.ma
  *@date: 2025-08-01

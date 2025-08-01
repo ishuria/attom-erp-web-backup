@@ -47,7 +47,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.productCategory }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.productCategory }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.productCategory }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -57,7 +57,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.categoryOne }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.categoryOne }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.categoryOne }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -67,7 +67,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.categoryTwo }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.categoryTwo }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.categoryTwo }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -77,7 +77,7 @@
             <template #content>
               <div class="custom-tooltip">{{ row.categoryThree }}</div>
             </template>
-            <el-text style="vertical-align: middle;" truncated>{{ row.categoryThree }}</el-text>
+            <div class="multi-line-ellipsis">{{ row.categoryThree }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -265,11 +265,6 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 </script>
 
 <style lang="scss" scoped>
-.custom-tooltip {
-  max-width: 400px;
-  font-size: var(--el-font-size-base);
-  white-space: pre-wrap;
-}
 .none {
   display: none;
 }

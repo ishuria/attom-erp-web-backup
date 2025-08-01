@@ -47,11 +47,11 @@
         <el-table-column label="实际币种" prop="actualCurrency" min-width="100"></el-table-column>
         <el-table-column label="账单备注" prop="billRemarks" min-width="100">
           <template #default="{ row }">
-             <el-tooltip content=" " effect="dark" placement="top">
+            <el-tooltip effect="dark" placement="top">
               <template #content>
                 <div class="custom-tooltip">{{ row.billRemarks }}</div>
               </template>
-              <el-text style="vertical-align: middle" truncated>{{ row.billRemarks }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.billRemarks }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -76,11 +76,11 @@
         </el-table-column>
         <el-table-column label="人工检查问题备注" prop="manualRemarks" min-width="100">
           <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
+            <el-tooltip effect="dark" placement="top">
               <template #content>
                 <div class="custom-tooltip">{{ row.manualRemarks }}</div>
               </template>
-              <el-text style="vertical-align: middle" truncated>{{ row.manualRemarks }}</el-text>
+              <div class="multi-line-ellipsis-1">{{ row.manualRemarks }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -215,10 +215,5 @@ defineExpose({
       }
     }
   }
-}
-.custom-tooltip {
-  max-width: 400px; 
-  font-size: 16px;
-  white-space: pre-wrap; 
 }
 </style>
