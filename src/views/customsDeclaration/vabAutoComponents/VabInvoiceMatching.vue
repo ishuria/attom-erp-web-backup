@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" width="90%" title="发票匹配" top="10vh" @close="closeInvoiceMatching">
+  <vab-dialog v-model="dflag" :draggable="false" title="发票匹配" top="10vh" width="90%" @close="closeInvoiceMatching">
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%;">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -155,26 +155,26 @@
       </el-table-column>
       <el-table-column label="匹配合同号" prop="matchContractNumber" :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')" />
       <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-      <el-table-column label="零件PO含税价" width="100" prop="taxInclusiveCost" >
+      <el-table-column label="零件PO含税价" prop="taxInclusiveCost" width="100" >
         <template #header>
           零件PO<br />含税价
         </template>
       </el-table-column>
       <el-table-column label="报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')" />
       <el-table-column label="报关单位" prop="customsDeclarationUnit" :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')" />
-      <el-table-column fixed="right" align="center" label="操作" width="130">
+      <el-table-column align="center" fixed="right" label="操作" width="130">
         <template #default="{ row }">
           <div style="display: flex;">
             <el-button
               :disabled="matchLoading === row.detailId"
               link
               type="primary"
-              @click="showMatch(row)" 
+              @click="showMatch(row)"  
             >
             匹配
           </el-button>
             <el-button
-              :disabled="cleanLoading === row.id"
+              :disabled="cleanLoading === row.detailId"
               link
               type="danger"
               @click="handleCleanInvoice(row)"

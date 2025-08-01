@@ -93,7 +93,9 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showPictureUpdate(row)">修改</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="danger" underline='never' @click="handlePausePicture(row)">暂停</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="success" underline='never' @click="handleContinuePicture(row)">继续</el-link>
             </template>
           </el-table-column>
@@ -182,7 +184,9 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showLongUpdate(row)">修改</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="danger" underline='never' @click="handlePauseLong(row)">暂停</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="success" underline='never' @click="handleContinueLong(row)">继续</el-link>
             </template>
           </el-table-column>
@@ -253,7 +257,9 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
               <el-link type="primary" underline='never' @click="showDevelopUpdate(row)">修改</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="danger" underline='never' @click="handlePauseDevelop(row)">暂停</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link type="success" underline='never' @click="handleContinueDevelop(row)">继续</el-link>
             </template>
           </el-table-column>
@@ -342,10 +348,14 @@
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
               <el-link v-if="row.status === '待审核'" type="success" underline='never' @click="handlePassCost(row)">审核通过</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link v-if="row.status === '待审核'" type="danger" underline='never' @click="handleNotPassCost(row)">不通过</el-link>
+              <span style="margin: 0 3px;"></span>
               <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="showCostUpdate(row)">修改</el-link>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="handlePauseCost(row)">暂停</el-link>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="handleContinueCost(row)">继续</el-link>
+              <span style="margin: 0 3px;"></span>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="warning" underline='never' @click="handlePauseCost(row)">暂停</el-link>
+              <span style="margin: 0 3px;"></span>
+              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="success" underline='never' @click="handleContinueCost(row)">继续</el-link>
             </template>
           </el-table-column>
           <template #empty>
