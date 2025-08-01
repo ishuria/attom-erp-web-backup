@@ -1017,7 +1017,9 @@
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
+                  <span style="margin-top: -2px" :class="{ 'japan-flag': row.flag === 'JP' }">
+                    <country-flag :country='row.flag'/>
+                  </span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
@@ -1494,7 +1496,9 @@
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
+                  <span style="margin-top: -2px" :class="{ 'japan-flag': row.flag === 'JP' }">
+                    <country-flag :country='row.flag'/>
+                  </span>
                 </div>
               </span>
               <span v-if="item.label === 'SKU'">
@@ -3689,17 +3693,9 @@ onBeforeMount(() => {
   }
 }
 
-// 日本国旗样式增强
+// 日本国旗样式增加边框
 .japan-flag {
-  // display: inline-block;
-  // padding: 0px 6px 3px 3px;
-  // background-color: #f0f0f0;
-  // border-radius: 3px;
-  // border: 1px solid #ddd;
-  
   :deep(.flag) {
-    // 增强日本国旗的显示效果
-    // filter: contrast(1.2) brightness(1.1);
     border: 1px solid #ddd;
   }
 }

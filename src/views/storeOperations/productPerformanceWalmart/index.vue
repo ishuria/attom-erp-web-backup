@@ -178,7 +178,9 @@
                 <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
               </span>
               <span class="rate-count">{{ row.commentsNumbers }}</span>
-              <span style="margin-top: -2px"><country-flag :country='row.flag'/></span>
+              <span style="margin-top: -2px" :class="{ 'japan-flag': row.flag === 'JP' }">
+                <country-flag :country='row.flag'/>
+              </span>
             </div>
           </span>
           <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -1172,5 +1174,11 @@ onBeforeMount(async () => {
   display: flex;          /* 应用 Flexbox 布局 */
   align-items: center;   /* 垂直居中 */
   justify-content: center;
+}
+// 日本国旗样式增加边框
+.japan-flag {
+  :deep(.flag) {
+    border: 1px solid #ddd;
+  }
 }
 </style>
