@@ -3696,15 +3696,16 @@ onBeforeMount(() => {
 
 // 日本国旗样式增强
 .japan-flag {
-  display: inline-block;
-  padding: 0px 6px 3px 3px;
-  background-color: #f0f0f0;
-  border-radius: 3px;
+  // display: inline-block;
+  // padding: 0px 6px 3px 3px;
+  // background-color: #f0f0f0;
+  // border-radius: 3px;
   // border: 1px solid #ddd;
   
-  // :deep(.flag) {
-  //   // 增强日本国旗的显示效果
-  //   filter: contrast(1.2) brightness(1.1);
-  // }
+  :deep(.flag) {
+    // 增强日本国旗的显示效果
+    // filter: contrast(1.2) brightness(1.1);
+    border: 1px solid #ddd;
+  }
 }
 </style>

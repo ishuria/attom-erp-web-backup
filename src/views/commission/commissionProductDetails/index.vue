@@ -56,6 +56,9 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
       @cell-click="cellClick"
+      :default-sort="{ prop: 'currentMonthBonus', order: 'descending' }"
+      sortable="custom"
+      @sort-change="handleSortChange"
     >
       <el-table-column label="发布日期" min-width="130" prop="releaseDate">
         <template #default="{ row }">
@@ -81,7 +84,7 @@
         </template>
       </el-table-column>
       <el-table-column label="站点" min-width="150" prop="siteName" />
-      <el-table-column label="上新天数" min-width="150" prop="days" />
+      <el-table-column label="上新天数" min-width="130" prop="days" sortable />
       <el-table-column label="状态" min-width="100" prop="status">
         <template #default="{ row }">
           <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
@@ -89,7 +92,7 @@
         </template>
       </el-table-column>
       <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
-      <el-table-column label="当月总提成" min-width="110" prop="currentMonthBonus">
+      <el-table-column label="当月总提成" min-width="130" prop="currentMonthBonus" sortable>
         <template #default="{ row }">
           <el-text v-if="row.currentMonthBonus >= 0" type="success">
             {{ row.currentMonthBonus ? '￥' + row.currentMonthBonus : '' }}
@@ -116,12 +119,12 @@
           {{ row.totalCommissionProportion ? row.totalCommissionProportion + '%' : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="基础提成比例" min-width="120" prop="baseProportion">
+      <el-table-column label="基础提成比例" min-width="130" prop="baseProportion">
         <template #default="{ row }">
           {{ row.baseProportion ? row.baseProportion + '%' : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="超额完成加成" min-width="120" prop="rewardProportion">
+      <el-table-column label="超额完成加成" min-width="130" prop="rewardProportion">
         <template #default="{ row }">
           {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
         </template>
@@ -213,6 +216,26 @@ const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
+
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  // console.log(prop, order)
+  if (developQueryForm.orderByField === prop) {
+    if (!order) {
+      if (developQueryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (developQueryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    } 
+  } else {
+    column.order = 'descending'
+  }
+  developQueryForm.orderByField = prop
+  developQueryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  developQueryData()
+}
+
 const handleMonth = () => {
   return developQueryForm.month
 }
