@@ -144,7 +144,7 @@
                   <el-link type="primary" underline='never' >头程运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item >
-                  <el-link type="primary" underline='never' >合同导入</el-link>
+                  <el-link type="primary" underline='never' @click="showContractNumberImport(row)">合同导入</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_PACKAGE_CANCEL_ARCHIVE] }" @click="handleCancelArchivePackage(row)">
                   <el-link :disabled="row.packArchiveStatus === 0" type="primary" underline='never'>撤销打包归档</el-link>
@@ -174,6 +174,34 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+
+      <!-- 合同导入 -->
+      <vab-dialog
+      v-model="contractNumberImportVisible"
+      class="dialog"
+      :draggable="false"
+      title="合同导入"
+      top="7vh"
+      width="30%"
+    >
+    <el-form
+    label-width="auto"
+    :model="contractNumberForm"
+  >
+    
+    <el-form-item label="PO所在文件夹路径" label-position="top">
+      <el-input v-model="contractNumberForm.sourcePath" />
+        </el-form-item>
+        <el-form-item label="报关资料所在文件夹路径" label-position="top">
+          <el-input v-model="contractNumberForm.targetPath" />
+        </el-form-item>
+    </el-form>  
+    <template #footer>
+      <el-button type="primary" @click="confirmContractNumberImport">确认</el-button>
+    </template>
+
+    </vab-dialog>
+
     <!-- 头程运费 -->
     <vab-dialog
       v-model="firstLegFreightVisible"
@@ -440,7 +468,31 @@ import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { addShipmentCost, archiveOutbound, archivePackageShipment, archiveTaxRefund, cancelArchiveOutbound, cancelArchivePackageShipment, cancelArchiveTaxRefund, cancelShipmentEncasement, delShipmentLeg, generateCustomsDeclaration, generateTaxRefund, getCostNameListByChannelId, getMatchPoList, getShipmentCostList, getShipmentLegCurrencyList, updateBgShipmentLeg, updateQgShipmentLeg, updateShipment, updateShipmentLeg, updateShipmentLegCurrency, updateShipmentLegPay, updateShipmentPay } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import {
+  addShipmentCost,
+  archiveOutbound,
+  archivePackageShipment,
+  archiveTaxRefund,
+  cancelArchiveOutbound,
+  cancelArchivePackageShipment,
+  cancelArchiveTaxRefund,
+  cancelShipmentEncasement,
+  delShipmentLeg,
+  generateCustomsDeclaration,
+  generateTaxRefund,
+  getCostNameListByChannelId,
+  getMatchPoList,
+  getShipmentCostList,
+  getShipmentLegCurrencyList,
+  importContractNumber,
+  updateBgShipmentLeg,
+  updateQgShipmentLeg,
+  updateShipment,
+  updateShipmentLeg,
+  updateShipmentLegCurrency,
+  updateShipmentLegPay,
+  updateShipmentPay
+} from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
 import ShipmentPermission from '/@/permissions/shipment.ts'
@@ -483,8 +535,21 @@ const showTariffBillUpload = () => {
   tariffBillUploadVisible.value = true
 }
 const uploadPDFVisible = ref<boolean>(false)
+const contractNumberImportVisible = ref<boolean>(false)
 const fileList = ref<any[]>([])
 const uploadLoading = ref<boolean>(false)
+
+interface IContractNumberForm {
+  targetPath: string
+  sourcePath: string
+  shipmentId:string
+}
+const contractNumberForm = reactive<IContractNumberForm>({
+  targetPath: '',
+  sourcePath: 'F:\\0云舟付款',
+  shipmentId: ''
+})
+
 const uploadPDF = async () => {
   let uploadForm = new FormData()
   fileList.value.forEach((item: any) => {
@@ -961,6 +1026,21 @@ const showFirstLegFreight = async (row: any) => {
   await fetchCostData(row.id)
   fetchSettlementObjectData()
 }
+
+// 合同导入
+const showContractNumberImport = (row: any) => {
+  contractNumberForm.shipmentId = row.shipmentId
+  contractNumberImportVisible.value = true
+}
+
+const confirmContractNumberImport = async () => {
+  const { data } = await importContractNumber(contractNumberForm)
+  if (data) {
+    $baseMessage('合同导入成功', 'success')
+    contractNumberImportVisible.value = false
+  }
+}
+
 const settlementObjectList = ref<{ id: number, label: string }[]>([])
 const fetchSettlementObjectData = async () => {
   const { data } = await getSettlementObjectList()

@@ -908,3 +908,16 @@ export function uploadTariffBillPDF(data: FormData) {
     data,
   })
 }
+
+/**
+ * 合同导入
+ * @param data
+ * @returns
+ */
+export function importContractNumber(data: { sourcePath: string; targetPath: string; shipmentId: string }) {
+  return request({
+    url: `${BASE_API}/shipment/contract/import`,
+    method: 'post',
+    data,
+  })
+}
