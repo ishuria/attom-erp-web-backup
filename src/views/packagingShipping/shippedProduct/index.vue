@@ -491,7 +491,7 @@ const objectSpanMethod2 = ({
     columnIndex,
 }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 6 && columnIndex !== 7) {
+  if (columnIndex !== 7 && columnIndex !== 8) {
     const id = row.id;
     // 默认不跨行
     let rowspan = 1;

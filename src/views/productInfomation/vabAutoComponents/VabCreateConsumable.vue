@@ -223,7 +223,7 @@ const mergedPartName = computed(() => {
     type = i?.consumablesName || ''
   }
   
-  return `${type}-${form.size}-${form.sizeUnit}-${form.specification}`
+  return `${type}-${form.size}${form.sizeUnit}-${form.specification}`
 })
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项

@@ -198,6 +198,7 @@ declare module 'vue' {
     VabAppMain: typeof import('./../../components/VabAppMain/index.vue')['default']
     VabAutomaticSignature: typeof import('./../../../src/views/purchase/vabAutoComponents/vabAutomaticSignature.vue')['default']
     VabAvatar: typeof import('./../../components/VabAvatar/index.vue')['default']
+    VabBatchPackingPrecautions: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabBatchPackingPrecautions.vue')['default']
     VabBatchProfitMargin: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabBatchProfitMargin.vue')['default']
     VabBox: typeof import('./../../components/VabBox/index.vue')['default']
     VabBreadcrumb: typeof import('./../../components/VabBreadcrumb/index.vue')['default']

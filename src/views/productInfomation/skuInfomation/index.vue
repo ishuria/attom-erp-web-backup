@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
-        <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary">批量新增质检项</el-button>
+        <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary" @click="showBatchPackingPrecautions">批量新增质检项</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -27,6 +27,7 @@
       :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
+      @selection-change="handleSelectionChange"
     >
       <el-table-column fixed="left" type="selection" width="53"/>
       <el-table-column class="image-wall" label="图片" width="75">
@@ -169,6 +170,7 @@
         <el-button type="primary" @click="handleCopySkuConfirm">确定</el-button>
       </template>
     </vab-dialog>
+    <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" />
   </div>
 </template>
 
@@ -188,6 +190,19 @@ defineOptions({
   name: 'SkuInfomation',
 })
 
+const selectedRows = ref<any[]>([])
+const handleSelectionChange = (rows: any[]) => {
+  selectedRows.value = rows
+}
+// 批量新增打包注意事项
+const batchPackingPrecautionsVisible = ref<boolean>(false)
+const showBatchPackingPrecautions = () => {
+  if (selectedRows.value.length === 0) {
+    $baseMessage('请先选择要新增质检项的SKU', 'warning', 'hey')
+    return
+  }
+  batchPackingPrecautionsVisible.value = true
+}
 const listLoading = ref<boolean>(true)
 // 零件列表
 const list = ref<any>([])

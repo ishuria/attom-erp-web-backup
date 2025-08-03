@@ -996,6 +996,9 @@ export interface IgetProductQualityInspection {
   packagePrecautions: string
   skuId: number
   status: number
+  createTime: string
+  isUploadImages: number
+  site: number
 }
 export interface IgetProductQualityInspectionResp {
   code: number
