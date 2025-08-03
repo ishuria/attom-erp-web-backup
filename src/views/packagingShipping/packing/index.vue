@@ -21,6 +21,11 @@
             :value="item.value"
           />
         </el-select>
+        <div class="summary-info">
+          <el-text class="text-center">
+            {{ `总箱数：${totalBoxNumber || 0}，总重：${(totalWeight || 0).toFixed(2)}(kg)，总体积：${(totalVolume || 0).toFixed(2)}(m3)` }}
+          </el-text>
+        </div>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="6">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -32,13 +37,6 @@
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
-    </vab-query-form>
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-text class="text-center">
-          {{ `总箱数：${totalBoxNumber || 0}，总重：${(totalWeight || 0).toFixed(2)}(kg)，总体积：${(totalVolume || 0).toFixed(2)}(m3)` }}
-        </el-text>
-      </vab-query-form-left-panel>
     </vab-query-form>
     <el-table
       v-permissions="{ permission: [EncasementPermission.ENCASEMENT_LIST] }"
@@ -1359,6 +1357,46 @@ onBeforeMount(() => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+
+/* 响应式布局样式 */
+.summary-info {
+  margin: 10px 10px calc(var(--el-margin) / 2) 0;
+}
+
+/* 在平板设备上调整布局 */
+@media (max-width: 1024px) {
+  .summary-info {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  :deep(.vab-query-form .left-panel) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  :deep(.vab-query-form .right-panel) {
+    margin-top: 10px;
+  }
+}
+
+/* 在手机设备上进一步调整 */
+@media (max-width: 768px) {
+  .summary-info {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  
+  :deep(.vab-query-form .left-panel) {
+    gap: 8px;
+  }
+  
+  :deep(.vab-query-form .right-panel) {
+    margin-top: 15px;
   }
 }
 </style>
