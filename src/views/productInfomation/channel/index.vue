@@ -31,7 +31,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+      <el-table-column label="SKU" prop="sku" :width="Math.max(calculateBrColumnWidth(list, (row: any) => row.sku, 100), calculateBrColumnWidth(list, (row: any) => row.productDesc, 100))">
         <template #default="{ row }">
           <span>{{ row.sku }}</span><br /><span>{{ row.productDesc }}</span>
         </template>
@@ -42,7 +42,7 @@
         v-for="(item, index) in option"
         :key="index"
         :label="item.siteName"
-        :min-width="flexColumnWidth(list, '亚马逊MX墨西哥', item.siteName)"
+        :min-width="flexColumnWidth(list, '亚马逊MX墨西哥', item.siteName, 30)"
         :prop="item.siteName"
       />
       <el-table-column align="center" fixed="right" label="操作" width="90">
@@ -175,7 +175,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeChannel, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateMerchandiseTypeBatch, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
 import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Channel'

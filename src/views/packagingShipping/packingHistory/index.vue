@@ -12,7 +12,7 @@
           <el-statistic class="compact-statistic" title="产品总数" :value="totalProductNumber" />
         </el-space>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel >
+      <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -314,34 +314,5 @@ onBeforeMount(() => {
       font-size: 18px;
     }
   }
-}
-
-/* 响应式布局样式 */
-/* 在平板设备上调整布局 */
-@media (max-width: 1024px) {
-  :deep(.vab-query-form .left-panel) {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  :deep(.vab-query-form .right-panel) {
-    order: 1; /* 让搜索框保持在按钮同一行 */
-    margin-top: 0;
-    justify-content: flex-end;
-  }
-  
-  /* 确保按钮和搜索框在同一行 */
-  :deep(.vab-query-form .el-row) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-  
-  :deep(.vab-query-form .el-col) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
 }
 </style>

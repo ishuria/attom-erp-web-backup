@@ -1146,10 +1146,10 @@ const setDefaultArtDesignUser = async () => {
   queryForm.artDesignUserId = data
 }
 onBeforeMount(async () => {
-  await fetchSiteList()
-  await fetchCurrencyList()
+  fetchSiteList()
+  fetchCurrencyList()
+  fetchArtDesignUserList()
   await fetchCurrency()
-  await fetchArtDesignUserList()
   await setDefaultArtDesignUser()
   await fetchData()
 })

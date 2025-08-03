@@ -1,7 +1,7 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-left-panel :span="18">
+      <vab-query-form-left-panel>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" type="primary" @click="showBoxNumber">开始装箱</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_AMAZON] }" type="primary" @click="showShippingAmazon">发货(亚马逊)</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_WALMART] }" type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
@@ -31,7 +31,7 @@
             </el-space>
         </div>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel :span="6">
+      <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData"  />
@@ -1366,54 +1366,9 @@ onBeforeMount(() => {
   }
 }
 
-/* 响应式布局样式 */
+/* 统计样式 */
 .summary-info {
   margin: 0px 10px calc(var(--el-margin) / 2) 15px;
-}
-
-/* 在平板设备上调整布局 */
-@media (max-width: 1024px) {
-  .summary-info {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    text-align: center;
-    order: 2; /* 让总箱数信息排在最后 */
-  }
-  
-  :deep(.vab-query-form .left-panel) {
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  :deep(.vab-query-form .right-panel) {
-    order: 1; /* 让搜索框保持在按钮同一行 */
-    margin-top: 0;
-    justify-content: flex-end;
-  }
-  
-  /* 确保按钮和搜索框在同一行 */
-  :deep(.vab-query-form .el-row) {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-  }
-  
-  :deep(.vab-query-form .el-col) {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  /* 调整按钮间距，让它们更紧凑 */
-  :deep(.vab-query-form .left-panel > .el-button) {
-    margin: 0 5px 8px 0 !important;
-  }
-  
-  :deep(.vab-query-form .left-panel > .el-select) {
-    margin: 0 5px 8px 0 !important;
-  }
-
 }
 .compact-statistic {
   :deep() {
