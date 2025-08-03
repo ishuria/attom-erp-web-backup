@@ -22,9 +22,13 @@
           />
         </el-select>
         <div class="summary-info">
-          <el-text class="text-center">
-            {{ `总箱数：${totalBoxNumber || 0}，总重：${(totalWeight || 0).toFixed(2)}(kg)，总体积：${(totalVolume || 0).toFixed(2)}(m3)` }}
-          </el-text>
+            <el-space :size="16" style="align-items: center;">
+              <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxNumber" />
+              <el-divider direction="vertical" style="height: 34px;"/>
+              <el-statistic class="compact-statistic" title="总重量(kg)" :value="totalWeight" :formatter="(val: number) => val.toFixed(2)" />
+              <el-divider direction="vertical" style="height: 34px;"/>
+              <el-statistic class="compact-statistic" title="总体积(m³)" :value="totalVolume" :formatter="(val: number) => val.toFixed(2)" />
+            </el-space>
         </div>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="6">
@@ -711,17 +715,19 @@ const totalBoxNumber = computed<number>(() => {
 });
 // 总重
 const totalWeight = computed<number>(() => {
-  return selectRows.value.reduce((total: number, item: IEncasementList) => {
+  const total = selectRows.value.reduce((sum: number, item: IEncasementList) => {
     const weight = Number(item.totalWeight) || 0;
-    return total + weight;  
-  }, 0); // 初始值为 0
+    return sum + weight;
+  }, 0);
+  return Number(total);
 })
 // 总体积
 const totalVolume = computed<number>(() => {
-  return selectRows.value.reduce((total: number, item: IEncasementList) => {
+  const total = selectRows.value.reduce((sum: number, item: IEncasementList) => {
     const volume = Number(item.totalVolume) || 0;
-    return total + volume;  
-  }, 0); // 初始值为 0
+    return sum + volume;
+  }, 0);
+  return Number(total);
 })
 // 发货（沃尔玛）可见
 const shippingWalmartVisible = ref<boolean>(false)
@@ -1362,7 +1368,7 @@ onBeforeMount(() => {
 
 /* 响应式布局样式 */
 .summary-info {
-  margin: 10px 10px calc(var(--el-margin) / 2) 0;
+  margin: 0px 10px calc(var(--el-margin) / 2) 15px;
 }
 
 /* 在平板设备上调整布局 */
@@ -1407,37 +1413,18 @@ onBeforeMount(() => {
   :deep(.vab-query-form .left-panel > .el-select) {
     margin: 0 5px 8px 0 !important;
   }
-}
 
-/* 在手机设备上进一步调整 */
-@media (max-width: 768px) {
-  .summary-info {
-    margin: 10px 0;
-    font-size: 14px;
-    order: 2;
-  }
-  
-  :deep(.vab-query-form .left-panel) {
-    gap: 6px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  :deep(.vab-query-form .right-panel) {
-    margin-top: 10px;
-    order: 1;
-    justify-content: center;
-  }
-  
-  /* 手机端按钮更紧凑 */
-  :deep(.vab-query-form .left-panel > .el-button) {
-    margin: 0 0 6px 0 !important;
-    width: 100%;
-  }
-  
-  :deep(.vab-query-form .left-panel > .el-select) {
-    margin: 0 0 6px 0 !important;
-    width: 100%;
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
+    }
   }
 }
 </style>
