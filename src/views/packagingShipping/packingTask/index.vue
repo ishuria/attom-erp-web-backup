@@ -83,7 +83,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
@@ -431,7 +431,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
@@ -604,7 +604,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
@@ -776,7 +776,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
@@ -948,7 +948,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 90, 50)">
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}

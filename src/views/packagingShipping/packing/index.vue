@@ -13,7 +13,7 @@
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SIZE_EXPORT] }" type="primary" @click="showExportSize">尺寸导出</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_ERROR] }" type="primary" @click="showUpdateError">误差</el-button>
         <!-- <el-button type="success">装箱检查</el-button> -->
-        <el-select v-model="printer" v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
+        <el-select v-model="printer" v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0;" @change="handleChangePrinter">
           <el-option 
             v-for="item in printerOption"
             :key="item.value"

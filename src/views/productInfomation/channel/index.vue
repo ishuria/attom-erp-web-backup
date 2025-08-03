@@ -31,7 +31,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="Math.max(calculateBrColumnWidth(list, (row: any) => row.sku, 100), calculateBrColumnWidth(list, (row: any) => row.productDesc, 100))">
+      <el-table-column label="SKU" prop="sku" :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))">
         <template #default="{ row }">
           <span>{{ row.sku }}</span><br /><span>{{ row.productDesc }}</span>
         </template>
@@ -175,7 +175,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { addMerchandise, getFreightForwarderQuery, getMerchandiseList, getMerchandiseTypeChannel, getMerchandiseTypeList, getSkuShippingChannelList, updateBatchSkuShippingChannelMerchandise, updateMerchandise, updateMerchandiseTypeBatch, updateSkuShippingChannelMerchandise } from '/@/api/devlocal/productInformation'
 import type { IGetMerchandiseList, IGetMerchandiseListReq, IGetMerchandiseTypeList, IGetSkuShippingChannelList } from '/@/type/productInformation/channelType'
-import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Channel'
