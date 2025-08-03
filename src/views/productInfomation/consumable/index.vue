@@ -415,7 +415,8 @@ const handleSubmitOtherSku = async () => {
     $baseConfirm('添加后不可逆，无法批量删除，是否继续？', '系统提示', async () => {
         const { data } = await addConsumablesOtherSku({
             skuIds: `${transferValue.value}`,
-            componentId: _compoenntId.value!
+          componentId: _compoenntId.value!,
+            type: 1
         })
         if(data === true) {
             $baseMessage('添加到其他SKU成功', 'success', 'hey')

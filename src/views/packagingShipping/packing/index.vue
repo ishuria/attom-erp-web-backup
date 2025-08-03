@@ -1372,15 +1372,40 @@ onBeforeMount(() => {
     margin-bottom: 10px;
     width: 100%;
     text-align: center;
+    order: 2; /* 让总箱数信息排在最后 */
   }
   
   :deep(.vab-query-form .left-panel) {
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: flex-start;
+    gap: 8px;
   }
   
   :deep(.vab-query-form .right-panel) {
-    margin-top: 10px;
+    order: 1; /* 让搜索框保持在按钮同一行 */
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  
+  /* 确保按钮和搜索框在同一行 */
+  :deep(.vab-query-form .el-row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  :deep(.vab-query-form .el-col) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  /* 调整按钮间距，让它们更紧凑 */
+  :deep(.vab-query-form .left-panel > .el-button) {
+    margin: 0 5px 8px 0 !important;
+  }
+  
+  :deep(.vab-query-form .left-panel > .el-select) {
+    margin: 0 5px 8px 0 !important;
   }
 }
 
@@ -1389,14 +1414,30 @@ onBeforeMount(() => {
   .summary-info {
     margin: 10px 0;
     font-size: 14px;
+    order: 2;
   }
   
   :deep(.vab-query-form .left-panel) {
-    gap: 8px;
+    gap: 6px;
+    flex-direction: column;
+    align-items: stretch;
   }
   
   :deep(.vab-query-form .right-panel) {
-    margin-top: 15px;
+    margin-top: 10px;
+    order: 1;
+    justify-content: center;
+  }
+  
+  /* 手机端按钮更紧凑 */
+  :deep(.vab-query-form .left-panel > .el-button) {
+    margin: 0 0 6px 0 !important;
+    width: 100%;
+  }
+  
+  :deep(.vab-query-form .left-panel > .el-select) {
+    margin: 0 0 6px 0 !important;
+    width: 100%;
   }
 }
 </style>

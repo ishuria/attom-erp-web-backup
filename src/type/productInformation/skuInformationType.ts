@@ -473,6 +473,7 @@ export interface IupdateConsumablesSupplier {
 export interface IaddConsumablesOtherSku {
     skuIds: string
     componentId: number
+    type: number
 }
 
 export interface IConsumablesType {
