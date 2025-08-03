@@ -5,9 +5,9 @@
         <el-space :size="16" style="align-items: center;">
           <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
           <el-divider direction="vertical" style="height: 34px;"/>
-          <el-statistic class="compact-statistic" title="总重量(kg)" :value="totalWeight" />
+          <el-statistic class="compact-statistic" title="总重量(kg)" :value="totalWeight" :formatter="(val: number) => val.toFixed(2)" />
           <el-divider direction="vertical" style="height: 34px;"/>
-          <el-statistic class="compact-statistic" title="总体积(m³)" :value="totalVolume" />
+          <el-statistic class="compact-statistic" title="总体积(m³)" :value="totalVolume" :formatter="(val: number) => val.toFixed(2)" />
           <el-divider direction="vertical" style="height: 34px;"/>
           <el-statistic class="compact-statistic" title="产品总数" :value="totalProductNumber" />
         </el-space>
@@ -146,15 +146,17 @@ const queryData = () => {
 const selectRows = ref<any>([])
 // 总箱数
 const totalBoxes = computed(() => {
-  return sumUniqueByField(selectRows.value,"numberOfBoxes");
+  const result = sumUniqueByField(selectRows.value,"numberOfBoxes");
+  return Number(result);
 })
 // 总重量
 const totalWeight = computed(() => {
-  return sumUniqueByField(selectRows.value,"totalWeight",2);
+  const result = sumUniqueByField(selectRows.value,"totalWeight",2);
+  return Number(result);
 })
 const totalVolume = computed(() => {
-
-  return sumUniqueByField(selectRows.value,"totalVolume",2);
+  const result = sumUniqueByField(selectRows.value,"totalVolume",2);
+  return Number(result);
 })
 const totalProductNumber = computed(() => {
   return selectRows.value.reduce((acc: number, item: any) => {
@@ -312,6 +314,34 @@ onBeforeMount(() => {
       font-size: 18px;
     }
   }
+}
 
+/* 响应式布局样式 */
+/* 在平板设备上调整布局 */
+@media (max-width: 1024px) {
+  :deep(.vab-query-form .left-panel) {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  :deep(.vab-query-form .right-panel) {
+    order: 1; /* 让搜索框保持在按钮同一行 */
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+  
+  /* 确保按钮和搜索框在同一行 */
+  :deep(.vab-query-form .el-row) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  
+  :deep(.vab-query-form .el-col) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
 }
 </style>

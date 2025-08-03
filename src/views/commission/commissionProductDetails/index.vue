@@ -4,6 +4,11 @@
       <vab-query-form-left-panel>
         <el-form inline>
           <template v-if="currentRoleCode === ROLE_BOSS_CODE">
+            <el-form-item label="角色">
+              <el-select v-model="developQueryForm.roleId" placeholder="请选择角色" @change="developQueryData">
+                <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
+            </el-form-item>
             <el-form-item label="人员">
               <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
                 <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
@@ -175,7 +180,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionTypeMonth, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
+import { getCommissionDetailDevelopList, getCommissionTypeMonth, getDevelopDesignDetailRoleList, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role.ts'
@@ -200,11 +205,13 @@ const sitePieVisible = ref<boolean>(false)
 const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
 const siteList = ref<{ id: number; label: string }[]>([])
+const roleList = ref<{ id: number; label: string }[]>([])
 
 const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
   keyWord: '',
   site: -1,
   userId: -1,
+  roleId: -1,
   month: '',
   pageNo: 1,
   pageSize: 20,
@@ -409,7 +416,12 @@ const fetchDevelopUserList = async () => {
   developUserList.value = data
   developUserList.value.unshift({ id: -1, label: '全部' })
 }
-
+const fetchDevelopRoleList = async () => {
+  const { data } = await getDevelopDesignDetailRoleList()
+  roleList.value = data
+  roleList.value.unshift({ id: -1, label: '全部' })
+  developQueryForm.roleId = roleList.value.find((item) => item.label === '产品经理')?.id || -1
+}
 const bonus = ref<number>(0)
 
 const fetchDevelopData = async () => {
@@ -468,10 +480,11 @@ const fetchCommissionTypeMonth = async () => {
   developQueryForm.month = currentMonth
 }
 onBeforeMount(async () => {
-  await fetchSiteList()
-  await fetchUpdateDate()
-  await fetchCommissionTypeMonth()
-  await fetchDevelopUserList()
+  fetchSiteList()
+  fetchUpdateDate()
+  fetchCommissionTypeMonth()
+  fetchDevelopUserList()
+  fetchDevelopRoleList()
   await developQueryData()
 })
 </script>

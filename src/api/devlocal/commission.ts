@@ -329,6 +329,16 @@ export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number; 
 }
 
 /**
+ * 查询提成任务明细-产品开发设计-角色列表
+ */
+export function getDevelopDesignDetailRoleList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/develop/design/task/detail/role/list`,
+    method: 'get',
+  })
+}
+
+/**
  * 获取提成明细的发放月份
  */
 export function getCommissionTypeMonth(params: { type: number }): Promise<{ data: { id: number; label: string }[] }> {

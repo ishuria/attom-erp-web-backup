@@ -584,6 +584,7 @@ export interface IGetCommissionDetailDevelopListReq {
   keyWord: string
   site: number
   userId: number
+  roleId: number
   month: string
   pageNo: number
   pageSize: number
