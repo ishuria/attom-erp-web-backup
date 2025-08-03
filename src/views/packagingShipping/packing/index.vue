@@ -5,7 +5,7 @@
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" type="primary" @click="showBoxNumber">开始装箱</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_AMAZON] }" type="primary" @click="showShippingAmazon">发货(亚马逊)</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_WALMART] }" type="primary" @click="showShippingWalmart">发货(沃尔玛)</el-button>
-        <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button>
+        <!-- <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button> -->
         <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE_PLAN] }" type="primary" @click="showModifyShippingPlan">修改发货计划</el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPLOAD_PDF] }" type="primary" @click="uploadPdfVisible = true">上传pdf插页</el-button>
