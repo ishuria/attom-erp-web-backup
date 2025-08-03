@@ -1,5 +1,5 @@
 <template>
-  <div class="comprehensive-table-container auto-height-container">
+  <div class="blog-container">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" type="primary" @click="showBoxNumber">开始装箱</el-button>
@@ -54,6 +54,7 @@
       @cell-click="handleCellClick"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
+      height="calc(100vh - 200px)"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
@@ -105,15 +106,14 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column v-permissions="{ permission: EncasementPermission.operationColume() }" fixed="right" label="操作" width="200">
+      <el-table-column v-permissions="{ permission: EncasementPermission.operationColume() }" fixed="right" label="操作" width="180">
         <template #default="{ row, $index }">
-          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE] }" type="primary" underline='never' @click="showModify(row)">修改</el-link>
-          <span style="margin: 0 3px;"></span>
-          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_COUNT_SPLIT] }" type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
-          <span style="margin: 0 3px;"></span>
-          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_DELETE] }" type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
-          <span style="margin: 0 3px;"></span>
-          <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_PRINT] }" type="primary" underline='never' @click="showPrint(row)">打印</el-link>
+          <div class="operation-buttons">
+            <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE] }" type="primary" underline='never' @click="showModify(row)">修改</el-link>
+            <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_COUNT_SPLIT] }" type="primary" underline='never' @click="showSplit(row)">拆分</el-link>
+            <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_DELETE] }" type="danger" underline='never' @click="handleDelEncasement(row)">删除</el-link>
+            <el-link v-permissions="{ permission: [EncasementPermission.ENCASEMENT_PRINT] }" type="primary" underline='never' @click="showPrint(row)">打印</el-link>
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -1227,18 +1227,20 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
-  if (data.column.label === '备注') {
+  const label = data.column.label;
+  if (label === '备注') {
     return {
       textAlign: 'left',
       cursor: 'pointer'
     }
-  } else if (data.columnIndex !== 11 && data.columnIndex !== 12) {
+  } else if (label === 'SKU' || label === 'Description') {
+    return {
+      textAlign: 'left'
+    }
+  } else {
     return {
       textAlign: 'center'
     }
-  } 
-  return {
-    textAlign: 'left'
   }
 }
 let previous: any = null; 
@@ -1381,5 +1383,13 @@ onBeforeMount(() => {
       font-size: 18px;
     }
   }
+}
+
+/* 操作按钮样式 */
+.operation-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 </style>
