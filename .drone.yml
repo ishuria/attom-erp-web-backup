@@ -112,4 +112,4 @@ volumes:
 # matster分支触发构建
 trigger:
   branch:
-    - local-dev
+    - master
