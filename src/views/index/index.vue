@@ -151,7 +151,7 @@
           </template>
         </performance-history>
       </el-col>
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank1List" :my-name="myName" name="超额完成数" title="超额完成排行" >
           <template #select>
             <el-select v-model="selectAchievedMonth" placeholder="月份" style="max-width: 5em;" @change="fetchRankOverAchieved">
@@ -165,7 +165,7 @@
           </template>
         </rank>
       </el-col>
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank4List" :my-name="myName" name="考核完成数" title="考核数完成排行" >
           <template #select>
             <el-select v-model="selectFinishMonth" placeholder="月份" style="max-width: 5em;" @change="fetchRankAssessmentFinish">
@@ -496,11 +496,12 @@ onBeforeMount(async () => {
     await fetchMonthlyProductProfit()
     await fetchMonthlyPlusAssessment()
     await fetchMonthlyMinusAssessment()
-  }
-  if (ableProductManagerLeadViewCard) {
     await fetchRankOverAchieved()
     await fetchRankAssessmentFinish()
   }
+  // if (ableProductManagerViewCard) {
+ 
+  // }
 })
 </script>
 
