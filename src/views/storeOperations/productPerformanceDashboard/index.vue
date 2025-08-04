@@ -30,7 +30,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
+                <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -675,7 +675,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="运营">
-                <el-select v-model="asinQueryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
+                <el-select v-model="asinQueryForm.operationUserId" placeholder="请选择运营人员" style="width: 5em" @change="queryAsinData">
                   <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -1183,7 +1183,6 @@
               <el-form-item label="运营">
                 <el-select
                   v-model="pAsinQueryForm.operationUserId"
-                    :disabled="disabledOpe"
                   placeholder="请选择运营人员"
                   style="width: 5em"
                   @change="queryPAsinData"
@@ -3358,7 +3357,7 @@ const operationAndDevelopSelect = () => {
   switch (role) {
     // 老板和运营主管
     case 'ROLE_BOSS': {
-      disabledOpe.value = false
+      // disabledOpe.value = false
       disabledDev.value = false
       queryForm.site = [0]
       asinQueryForm.site = [0]
@@ -3366,14 +3365,14 @@ const operationAndDevelopSelect = () => {
       break;
     }
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
-      disabledOpe.value = false
+      // disabledOpe.value = false
       disabledDev.value = false
     
       break;
     }
     // 运营
     case 'ROLE_ECOMMERCEOPERATOR': {
-      disabledOpe.value = true
+      // disabledOpe.value = true
       disabledDev.value = false
 
       break;
@@ -3382,7 +3381,7 @@ const operationAndDevelopSelect = () => {
     case 'ROLE_PRODUCTMANAGER': 
     case 'ROLE_PRODUCTDESIGNER': 
     case 'ROLE_INDUSTRIAL_DESIGN': {
-      disabledOpe.value = false
+      // disabledOpe.value = false
       disabledDev.value = true
       
       break;
@@ -3390,7 +3389,7 @@ const operationAndDevelopSelect = () => {
     // 产品主管, 行政主管
     case 'ROLE_PRODUCTMANNAGERLEAD':
     case 'ROLE_ADMINBUYERLEAD': {
-      disabledOpe.value = false
+      // disabledOpe.value = false
       disabledDev.value = false
       
       break;

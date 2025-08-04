@@ -40,7 +40,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'desc'))">
             <template #default="{ row }">
               {{  row.sku  }}<br />
               {{ row.desc }}
@@ -216,7 +216,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'desc'))">
             <template #default="{ row }">
               {{  row.sku  }}<br />
               {{ row.desc }}
@@ -388,7 +388,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+          <el-table-column label="SKU" prop="sku" :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'desc'))">
             <template #default="{ row }">
               {{  row.sku  }}<br />
               {{ row.desc }}
