@@ -1,96 +1,98 @@
 <template>
-  <vab-dialog 
-    v-model="visible" 
-    :before-close="handlerCloseDialog" 
-    title="打包注意事项"
-    top="15vh"
-    width="70%"
-  >
-    <div id="table-height-container">
-      <vab-query-form>
-        <vab-query-form-left-panel>
-          <el-button type="primary" @click="handleAdd">新增</el-button>
-        </vab-query-form-left-panel>
-      </vab-query-form>
-      <el-table 
-        ref="tableRef" 
-        v-loading="listLoading" border 
-        :cell-style="cellStyle"
-        :data="list"
-        :header-cell-style="{ 'text-align': 'center' }"
-        stripe
-        @cell-click="changeInput"
-      >
-        <el-table-column label="修改日期" prop="createTime" width="140">
-          <template #default="{ row }">
-            {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="需质检" prop="status" width="90">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="需拍照" prop="isUploadImages" width="90">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
-          </template>
-        </el-table-column>
-        <el-table-column label="站点" prop="site" width="200">
-          <template #default="{ row }">
-            <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
-              <el-option 
-                v-for="item in siteList"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="检查类型" min-width="40">
-          <template #default="{ row }">
-            <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
-              <el-option
-                v-for="item in checkTypeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
-          <template #default="{ row }">
-            <!-- <el-tooltip content=" " effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ removeHtmlTags(row.packagePrecautions) }}</div>
-              </template>
+  <div>
+    <vab-dialog 
+      v-model="visible" 
+      :before-close="handlerCloseDialog" 
+      title="打包注意事项"
+      top="15vh"
+      width="70%"
+    >
+      <div id="table-height-container">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-button type="primary" @click="handleAdd">新增</el-button>
+          </vab-query-form-left-panel>
+        </vab-query-form>
+        <el-table 
+          ref="tableRef" 
+          v-loading="listLoading" border 
+          :cell-style="cellStyle"
+          :data="list"
+          :header-cell-style="{ 'text-align': 'center' }"
+          stripe
+          @cell-click="changeInput"
+        >
+          <el-table-column label="修改日期" prop="createTime" width="140">
+            <template #default="{ row }">
+              {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="需质检" prop="status" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.status" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="需拍照" prop="isUploadImages" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleStatusChange(row)"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="站点" prop="site" width="200">
+            <template #default="{ row }">
+              <el-select v-model="row.site" placeholder="请选择站点" @change="handleStatusChange(row)">
+                <el-option 
+                  v-for="item in siteList"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="检查类型" min-width="40">
+            <template #default="{ row }">
+              <el-select v-model="row.checkType" placeholder="请选择检查类型" style="min-width: 100%;" @change="handleCheckType(row)">
+                <el-option
+                  v-for="item in checkTypeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="打包注意事项" min-width="200" prop="packagePrecautions">
+            <template #default="{ row }">
+              <!-- <el-tooltip content=" " effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packagePrecautions) }}</div>
+                </template>
+                <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
+              </el-tooltip> -->
+              <div class="none">
+                <el-input v-model="row.packagePrecautions" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" @blur="clickCancel($event, row)" />
+              </div>
               <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
-            </el-tooltip> -->
-            <div class="none">
-              <el-input v-model="row.packagePrecautions" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea" @blur="clickCancel($event, row)" />
-            </div>
-            <div style="white-space: pre-wrap" v-html="row.packagePrecautions"></div>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="130">
+            <template #default="{ row, $index }">
+              <el-link type="danger" underline='never' @click="handleDelQualityInspection(row, $index)">删除</el-link>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="操作" width="130">
-          <template #default="{ row, $index }">
-            <el-link type="danger" underline='never' @click="handleDelQualityInspection(row, $index)">删除</el-link>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" />
-        </template>
-      </el-table>
-    </div>
-  </vab-dialog>
-  <!-- <vab-remark-dialog 
-    v-model="remarkVisible"
-    :remark="remark"
-    title="修改打包注意事项"
-    @update:remark="handleUpdatePackagePrecautions"
-  /> -->
+        </el-table>
+      </div>
+    </vab-dialog>
+    <!-- <vab-remark-dialog 
+      v-model="remarkVisible"
+      :remark="remark"
+      title="修改打包注意事项"
+      @update:remark="handleUpdatePackagePrecautions"
+    /> -->
+  </div>
 </template>
 
 <script lang="ts" setup>

@@ -55,6 +55,7 @@
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
       height="calc(100vh - 200px)"
+      :default-sort="{ prop: 'createTime', order: 'descending' }"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">

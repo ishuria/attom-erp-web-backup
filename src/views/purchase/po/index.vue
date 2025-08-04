@@ -78,7 +78,7 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0"> 
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
@@ -1470,7 +1470,7 @@ import {
   updateComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
-import { ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
+import { ROLE_BOSS_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
 import PoPermission from '/@/permissions/po'
 import { useAclStore } from '/@/store/modules/acl'
 import { useRoutesStore } from '/@/store/modules/routes'

@@ -1,334 +1,336 @@
 <template>
-  <vab-dialog
-    v-model="dflag" class="dialog" :class="{ fullscreenDialog: isFullscreen, normalDialog: !isFullscreen }" :draggable="false" 
-    :fullscreen="isFullscreen" title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'" @close="handleCloseCheck">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
-          开始匹配
-        </el-button>
-        <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="showSentButNotReported">已发未报</el-button>
-        <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="handleClearCheckAll">清空全部</el-button>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="queryData"
-              @keydown.enter="queryData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-    <el-table
-      border
-      :cell-style="match1Style"
-      class="noneHoveTable"
-      :class="isFullscreen ? 'fullscreenTable' : 'normalTable'"
-      :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
-      :row-class-name="stripedRowClass"
-      :span-method="objectSpanMethod1"
-    >
-      <el-table-column label="SKU">
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
-          <template #default="{ row }">
-            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
-              {{ row.sku }}
-              <vab-icon icon="file-copy-2-fill" />
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="装箱总数" prop="encasementCount" width="95" />
-        <el-table-column label="站点" prop="site" width="140" />
-        <el-table-column label="匹配的PO" prop="po" width="115" >
-          <template #default="{ row }">
-            <span class="copySku"  @click="handleClipboard($event, row.po)" >
-              {{ row.po }}
-              <vab-icon v-if="row.po" icon="file-copy-2-fill" />
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column label="SKU实际数量" prop="skuActualCount" width="125" />
-      </el-table-column>
-      <el-table-column label="零件">
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
-        <el-table-column label="实际数量" prop="actualComponentCount" width="95" />
-        <el-table-column label="退税报关数量" prop="customsDeclarationCount" width="125" />
-        <el-table-column label="PO总数" prop="purchaseCount" width="85" />
-        <el-table-column label="采购方" prop="purchase" width="80" />
-        <el-table-column label="不报关" prop="customsDeclarationStatus" width="75">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-          </template>
-        </el-table-column>
-        <el-table-column label="有已发未报" prop="flag" width="110">
-          <template #default="{ row }">
-            <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
-            <el-checkbox v-model="row.flag" disabled  />
-          </template>
-        </el-table-column>
-        <el-table-column label="有HS" width="70">
-          <template #default="{ row }">
-            <vab-icon v-if="row.componentInformationStatus === 1" icon="check-fill" style="color: var(--el-color-success)" />
-            <vab-icon v-if="row.componentInformationStatus === 2" icon="close-fill" style="color: var(--el-color-danger)" />
-          </template>
-        </el-table-column>
-        <el-table-column label="零件操作" width="95">
-          <template #default="{ row }">
-            <el-link type="primary" underline='never' @click="showModifyHS(row)" :disabled="!row.poComponentId || row.customsDeclarationStatus === 1" >修改HS</el-link>
-          </template>
-        </el-table-column>
-      </el-table-column>
-      <el-table-column v-if="!disabled3 && !disabled1 && !disabled2" fixed="right" label="操作" width="150">
-        <template #default="{ row }">
-          <el-link v-if="row.delStatus === 0" type="primary" underline='never' @click="handleShowMatch2(row)">匹配</el-link>
-          <el-link v-if="row.delStatus === 0" type="danger" underline='never' @click="handleCheckClear(row)">清空</el-link>
-          <el-link v-if="row.delStatus === 1" type="danger" underline='never' @click="handleDelCheckMatch(row)">删除</el-link>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty"/>
-      </template>
-    </el-table>
-    <!-- <vab-pagination
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    /> -->
-    <template #footer>
-      <div style="text-align: center">
-        <el-button v-if="!disabled3 && !disabled1 && !disabled2" :loading="unlockLoading" type="danger" @click="handleUnlockAndClear">
-          清空解锁
-        </el-button>
-        <el-button
-          v-if="!disabled3 && !disabled1 && !disabled2"
-          :loading="confirmMatchLoading"
-          type="success"
-          @click="handleConfirmCheckMatch"
-        >
-          确认匹配结果
-        </el-button>
-      </div>
-    </template>
-  </vab-dialog>
-  <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content" :draggable="false">
-    <div style="width: fit-content; margin: 0 auto">
+  <div>
+    <vab-dialog
+      v-model="dflag" class="dialog" :class="{ fullscreenDialog: isFullscreen, normalDialog: !isFullscreen }" :draggable="false" 
+      :fullscreen="isFullscreen" title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'" @close="handleCloseCheck">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
-          <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
-            SKU：
-            <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
-            品名：
-            <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
-            剩余未匹配数量：
-            <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
-          </el-text>
+          <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
+            开始匹配
+          </el-button>
+          <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="showSentButNotReported">已发未报</el-button>
+          <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="handleClearCheckAll">清空全部</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
-          <el-form inline>
+          <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
-              <el-input v-model.trim="keyWord" clearable placeholder="请输入搜索关键词" @keydown.enter="fetchMatchData" @input="fetchMatchData" />
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="queryData"
+                @keydown.enter="queryData"
+              />
             </el-form-item>
             <el-form-item>
-              <el-button :loading="match2ListLoading" :icon="Search" type="primary" @click="fetchMatchData" />
+              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
             </el-form-item>
           </el-form>
-
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-table
-        v-loading="match2ListLoading"
         border
-        :cell-style="match2Style"
+        :cell-style="match1Style"
         class="noneHoveTable"
-        :data="matchList"
+        :class="isFullscreen ? 'fullscreenTable' : 'normalTable'"
+        :data="list"
         :header-cell-style="{ textAlign: 'center' }"
-        max-height="70vh"
-        :row-class-name="stripedRowClass2"
-        :span-method="objectSpanMethod2"
-        style="width: fit-content; margin: 0 auto"
+        :row-class-name="stripedRowClass"
+        :span-method="objectSpanMethod1"
       >
         <el-table-column label="SKU">
-          <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
-          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
-          <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
-          <el-table-column label="打包任务数" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
-          <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
-          <el-table-column label="SKU实际数量" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
             <template #default="{ row }">
-              <el-input
-                v-model="row.skuActualCount"
-                :max="row.goodCount"
-                :min="0"
-                type="number"
-                @change="handleUpdateSkuCount(row)"
-                @focus="handleFocus(row)"
-                @wheel.stop.prevent
-              />
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
             </template>
           </el-table-column>
+          <el-table-column label="装箱总数" prop="encasementCount" width="95" />
+          <el-table-column label="站点" prop="site" width="140" />
+          <el-table-column label="匹配的PO" prop="po" width="115" >
+            <template #default="{ row }">
+              <span class="copySku"  @click="handleClipboard($event, row.po)" >
+                {{ row.po }}
+                <vab-icon v-if="row.po" icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU实际数量" prop="skuActualCount" width="125" />
         </el-table-column>
         <el-table-column label="零件">
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-          <el-table-column label="实际数量" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
-          <el-table-column label="退税报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
-            <template #default="{ row }">
-              <el-input
-                v-model="row.customsDeclarationCount"
-                :disabled="row.customsDeclarationStatus === 1"
-                :min="0"
-                type="number"
-                @change="handleUpdateComponentCustomCount(row)"
-                @focus="handleFocus(row)"
-                @wheel.stop.prevent
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
-          <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
-          <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
-          <el-table-column label="不报关" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
+          <el-table-column label="实际数量" prop="actualComponentCount" width="95" />
+          <el-table-column label="退税报关数量" prop="customsDeclarationCount" width="125" />
+          <el-table-column label="PO总数" prop="purchaseCount" width="85" />
+          <el-table-column label="采购方" prop="purchase" width="80" />
+          <el-table-column label="不报关" prop="customsDeclarationStatus" width="75">
             <template #default="{ row }">
               <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
-          <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
-          <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
+          <el-table-column label="有已发未报" prop="flag" width="110">
+            <template #default="{ row }">
+              <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
+              <el-checkbox v-model="row.flag" disabled  />
+            </template>
+          </el-table-column>
+          <el-table-column label="有HS" width="70">
+            <template #default="{ row }">
+              <vab-icon v-if="row.componentInformationStatus === 1" icon="check-fill" style="color: var(--el-color-success)" />
+              <vab-icon v-if="row.componentInformationStatus === 2" icon="close-fill" style="color: var(--el-color-danger)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="零件操作" width="95">
+            <template #default="{ row }">
+              <el-link type="primary" underline='never' @click="showModifyHS(row)" :disabled="!row.poComponentId || row.customsDeclarationStatus === 1" >修改HS</el-link>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="230">
+        <el-table-column v-if="!disabled3 && !disabled1 && !disabled2" fixed="right" label="操作" width="150">
           <template #default="{ row }">
-            <el-link type="primary" underline='never' @click="handleShowPackingCount(row)">修正质检</el-link>
-            <el-link type="primary" underline='never' @click="handleInsertAll(row)">填入全部</el-link>
-            <el-link type="danger" underline='never' @click="handleClear(row)">清空</el-link>
+            <el-link v-if="row.delStatus === 0" type="primary" underline='never' @click="handleShowMatch2(row)">匹配</el-link>
+            <el-link v-if="row.delStatus === 0" type="danger" underline='never' @click="handleCheckClear(row)">清空</el-link>
+            <el-link v-if="row.delStatus === 1" type="danger" underline='never' @click="handleDelCheckMatch(row)">删除</el-link>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty"/>
+        </template>
       </el-table>
-    </div>
-    <div style="margin-top: 20px; text-align: center">
-      <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
-        剩余SKU：
-        <span :style="{ color: 'var(--el-color-danger)' }">{{ lastSku }}个</span>
-      </el-text>
-    </div>
-    <template #footer>
-      <div style="text-align: center">
-        <el-button v-if="previousVisible" type="warning" @click="fetchPreviousMatchData">上一个</el-button>
-        <el-button type="success" @click="handleCloseMatch2">关闭</el-button>
-        <el-button v-if="nextVisible" type="warning" @click="fetchNextMatchData">下一个</el-button>
+      <!-- <vab-pagination
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      /> -->
+      <template #footer>
+        <div style="text-align: center">
+          <el-button v-if="!disabled3 && !disabled1 && !disabled2" :loading="unlockLoading" type="danger" @click="handleUnlockAndClear">
+            清空解锁
+          </el-button>
+          <el-button
+            v-if="!disabled3 && !disabled1 && !disabled2"
+            :loading="confirmMatchLoading"
+            type="success"
+            @click="handleConfirmCheckMatch"
+          >
+            确认匹配结果
+          </el-button>
+        </div>
+      </template>
+    </vab-dialog>
+    <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content" :draggable="false">
+      <div style="width: fit-content; margin: 0 auto">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
+            <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+              SKU：
+              <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
+              品名：
+              <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
+              剩余未匹配数量：
+              <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
+            </el-text>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-input v-model.trim="keyWord" clearable placeholder="请输入搜索关键词" @keydown.enter="fetchMatchData" @input="fetchMatchData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button :loading="match2ListLoading" :icon="Search" type="primary" @click="fetchMatchData" />
+              </el-form-item>
+            </el-form>
+
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="match2ListLoading"
+          border
+          :cell-style="match2Style"
+          class="noneHoveTable"
+          :data="matchList"
+          :header-cell-style="{ textAlign: 'center' }"
+          max-height="70vh"
+          :row-class-name="stripedRowClass2"
+          :span-method="objectSpanMethod2"
+          style="width: fit-content; margin: 0 auto"
+        >
+          <el-table-column label="SKU">
+            <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
+            <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
+            <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
+            <el-table-column label="打包任务数" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
+            <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
+            <el-table-column label="SKU实际数量" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
+              <template #default="{ row }">
+                <el-input
+                  v-model="row.skuActualCount"
+                  :max="row.goodCount"
+                  :min="0"
+                  type="number"
+                  @change="handleUpdateSkuCount(row)"
+                  @focus="handleFocus(row)"
+                  @wheel.stop.prevent
+                />
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="零件">
+            <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
+            <el-table-column label="实际数量" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
+            <el-table-column label="退税报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
+              <template #default="{ row }">
+                <el-input
+                  v-model="row.customsDeclarationCount"
+                  :disabled="row.customsDeclarationStatus === 1"
+                  :min="0"
+                  type="number"
+                  @change="handleUpdateComponentCustomCount(row)"
+                  @focus="handleFocus(row)"
+                  @wheel.stop.prevent
+                />
+              </template>
+            </el-table-column>
+            <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
+            <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
+            <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
+            <el-table-column label="不报关" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
+              <template #default="{ row }">
+                <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
+              </template>
+            </el-table-column>
+            <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
+            <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="230">
+            <template #default="{ row }">
+              <el-link type="primary" underline='never' @click="handleShowPackingCount(row)">修正质检</el-link>
+              <el-link type="primary" underline='never' @click="handleInsertAll(row)">填入全部</el-link>
+              <el-link type="danger" underline='never' @click="handleClear(row)">清空</el-link>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-    </template>
-  </vab-dialog>
-  <!-- 已发未报 -->
-  <sent-but-not-reported v-model="sentButNotReportedVisible" :shipId="props.shipId" @query-data="queryData" />
-  <!-- 点击清点质检 - 打包总数 -->
-  <vab-dialog v-model="packingCountVisible" :before-close="closePackingCount" class="packingTotal" title="打包总数" width="22%">
-    <el-form
-      ref="packingCountFormRef"
-      label-position="left"
-      label-width="auto"
-      :model="packingCountForm"
-      style="margin-right: 0px; margin-left: 20px"
-    >
-      <el-form-item label="任务数量" prop="packageTaskCount">
-        <div style="width: 85%">
-          <el-input v-model="packingCountForm.packageTaskCount" disabled />
-        </div>
-      </el-form-item>
-      <el-form-item label="好" prop="goodCount">
-        <div style="width: 85%; margin-right: 10px">
-          <el-input v-model.trim="packingCountForm.goodCount" clearable />
-        </div>
-        <div style="display: flex; align-items: center; width: 10%">
-          <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
-        </div>
-      </el-form-item>
-      <el-form-item label="留样" prop="keepSampleCount">
-        <div style="width: 85%">
-          <el-input v-model.trim="packingCountForm.keepSampleCount" clearable />
-        </div>
-      </el-form-item>
-      <el-form-item label="坏" prop="badCount">
-        <div style="width: 85%">
-          <el-input v-model.trim="packingCountForm.badCount" clearable />
-        </div>
-      </el-form-item>
-      <el-form-item label="缺">
-        <div style="width: 85%">
-          <el-input v-model="lackCount" disabled />
-        </div>
-      </el-form-item>
-      <el-form-item label="多">
-        <div style="width: 85%">
-          <el-input v-model="manyCount" disabled />
-        </div>
-      </el-form-item>
-      <el-form-item label="打包总数">
-        <div style="width: 85%">
-          <el-input v-model="packingTotal" disabled />
-        </div>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div style="margin-right: 10px">
-        <el-button type="danger" @click="closePackingCount">取消</el-button>
-        <el-button type="success" @click="confirmQualityCheck">确认</el-button>
+      <div style="margin-top: 20px; text-align: center">
+        <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+          剩余SKU：
+          <span :style="{ color: 'var(--el-color-danger)' }">{{ lastSku }}个</span>
+        </el-text>
       </div>
-    </template>
-  </vab-dialog>
-  <!-- 增加 -->
-  <vab-dialog v-model="addVisible" title="增加" width="17%" @close="handleCloseAdd">
-    <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px">
-      <el-form-item label="好" prop="good">
-        <el-input v-model.trim="addForm.good" clearable />
-      </el-form-item>
-      <el-form-item label="留样" prop="sample">
-        <el-input v-model.trim="addForm.sample" clearable />
-      </el-form-item>
-      <el-form-item label="坏" prop="bad">
-        <el-input v-model.trim="addForm.bad" clearable />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="handleCloseAdd">取消</el-button>
-      <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
-    </template>
-  </vab-dialog>
-  <!-- 修改HS -->
-  <vab-dialog title="修改HS" width="20%" v-model="modifyHSVisible">
-    <el-form :model="modifyHsForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
-      <el-form-item label="HS">
-        <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" filterable clearable>
-          <el-option 
-            v-for="item in hsOption"
-            :label="item.label"
-            :key="item.id"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="法定单位">
-        <el-input v-model="modifyHsForm.statutoryUnit" disabled clearable />
-      </el-form-item>
-      <el-form-item label="每零件单位有多少个法定第1单位">
-        <el-input v-model="modifyHsForm.quorum" clearable />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <el-button @click="modifyHSVisible = false">取消</el-button>
-      <el-button type="primary" @click="handleConfirmModify">确认</el-button>
-    </template>
-  </vab-dialog>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button v-if="previousVisible" type="warning" @click="fetchPreviousMatchData">上一个</el-button>
+          <el-button type="success" @click="handleCloseMatch2">关闭</el-button>
+          <el-button v-if="nextVisible" type="warning" @click="fetchNextMatchData">下一个</el-button>
+        </div>
+      </template>
+    </vab-dialog>
+    <!-- 已发未报 -->
+    <sent-but-not-reported v-model="sentButNotReportedVisible" :shipId="props.shipId" @query-data="queryData" />
+    <!-- 点击清点质检 - 打包总数 -->
+    <vab-dialog v-model="packingCountVisible" :before-close="closePackingCount" class="packingTotal" title="打包总数" width="22%">
+      <el-form
+        ref="packingCountFormRef"
+        label-position="left"
+        label-width="auto"
+        :model="packingCountForm"
+        style="margin-right: 0px; margin-left: 20px"
+      >
+        <el-form-item label="任务数量" prop="packageTaskCount">
+          <div style="width: 85%">
+            <el-input v-model="packingCountForm.packageTaskCount" disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="好" prop="goodCount">
+          <div style="width: 85%; margin-right: 10px">
+            <el-input v-model.trim="packingCountForm.goodCount" clearable />
+          </div>
+          <div style="display: flex; align-items: center; width: 10%">
+            <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
+          </div>
+        </el-form-item>
+        <el-form-item label="留样" prop="keepSampleCount">
+          <div style="width: 85%">
+            <el-input v-model.trim="packingCountForm.keepSampleCount" clearable />
+          </div>
+        </el-form-item>
+        <el-form-item label="坏" prop="badCount">
+          <div style="width: 85%">
+            <el-input v-model.trim="packingCountForm.badCount" clearable />
+          </div>
+        </el-form-item>
+        <el-form-item label="缺">
+          <div style="width: 85%">
+            <el-input v-model="lackCount" disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="多">
+          <div style="width: 85%">
+            <el-input v-model="manyCount" disabled />
+          </div>
+        </el-form-item>
+        <el-form-item label="打包总数">
+          <div style="width: 85%">
+            <el-input v-model="packingTotal" disabled />
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="margin-right: 10px">
+          <el-button type="danger" @click="closePackingCount">取消</el-button>
+          <el-button type="success" @click="confirmQualityCheck">确认</el-button>
+        </div>
+      </template>
+    </vab-dialog>
+    <!-- 增加 -->
+    <vab-dialog v-model="addVisible" title="增加" width="17%" @close="handleCloseAdd">
+      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px">
+        <el-form-item label="好" prop="good">
+          <el-input v-model.trim="addForm.good" clearable />
+        </el-form-item>
+        <el-form-item label="留样" prop="sample">
+          <el-input v-model.trim="addForm.sample" clearable />
+        </el-form-item>
+        <el-form-item label="坏" prop="bad">
+          <el-input v-model.trim="addForm.bad" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseAdd">取消</el-button>
+        <el-button type="primary" @click="handleConfirmAdd">确认</el-button>
+      </template>
+    </vab-dialog>
+    <!-- 修改HS -->
+    <vab-dialog title="修改HS" width="20%" v-model="modifyHSVisible">
+      <el-form :model="modifyHsForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
+        <el-form-item label="HS">
+          <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" filterable clearable>
+            <el-option 
+              v-for="item in hsOption"
+              :label="item.label"
+              :key="item.id"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="法定单位">
+          <el-input v-model="modifyHsForm.statutoryUnit" disabled clearable />
+        </el-form-item>
+        <el-form-item label="每零件单位有多少个法定第1单位">
+          <el-input v-model="modifyHsForm.quorum" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="modifyHSVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmModify">确认</el-button>
+      </template>
+    </vab-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -337,27 +339,27 @@ import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { getHsSelectList } from '~/src/api/devlocal/productInformation'
 import {
-    clearAllMatchComponent,
-    clearAllMatchShipment,
-    clearMatchComponent,
-    clearMatchShipment,
-    clearUnlockMatchShipment,
-    delMatchShipment,
-    getCheckMatchList,
-    getMatchPackageList,
-    getPurchaseComponentHsInfo,
-    insertAllMatchComponent,
-    lockMatchShipment,
-    submitMatchShipment,
-    updateMatchComponentCustomCount,
-    updateMatchQuality,
-    updateMatchSkuActualCount,
-    updatePurchaseComponentHs
+  clearAllMatchComponent,
+  clearAllMatchShipment,
+  clearMatchComponent,
+  clearMatchShipment,
+  clearUnlockMatchShipment,
+  delMatchShipment,
+  getCheckMatchList,
+  getMatchPackageList,
+  getPurchaseComponentHsInfo,
+  insertAllMatchComponent,
+  lockMatchShipment,
+  submitMatchShipment,
+  updateMatchComponentCustomCount,
+  updateMatchQuality,
+  updateMatchSkuActualCount,
+  updatePurchaseComponentHs
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
 import type {
-    IGetCheckMatchList,
-    IGetMatchPackageList
+  IGetCheckMatchList,
+  IGetMatchPackageList
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
