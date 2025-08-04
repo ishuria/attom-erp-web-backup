@@ -133,6 +133,11 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
+            </template>
+          </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
             <template #default="{ row }">
               {{ row.releaseDate.split(' ')[0] }}
@@ -344,6 +349,11 @@
                 <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
                 <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
               </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -565,6 +575,11 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
+            </template>
+          </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
             <template #default="{ row }">
               {{ row.releaseDate.split(' ')[0] }}
@@ -784,6 +799,11 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
+            </template>
+          </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
             <template #default="{ row }">
               {{ row.releaseDate.split(' ')[0] }}
@@ -995,6 +1015,11 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
+            </template>
+          </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
             <template #default="{ row }">
               {{ row.releaseDate.split(' ')[0] }}
@@ -1121,6 +1146,11 @@
                 <el-link style="margin-right: 3px;" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
                 <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
               </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
             </template>
           </el-table-column>
           <el-table-column label="发布日期" min-width="115" prop="releaseDate">
@@ -2366,7 +2396,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
 
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
     const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
@@ -2383,7 +2413,7 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   }
 
   // 合并 SKU 行
-  if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7) {
+  if (columnIndex === 8 || columnIndex === 6 || columnIndex === 7) {
     const poSkuId = row.poSkuId
 
     // 遍历后面的行，检查相同的 SKU ID
@@ -2408,7 +2438,7 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 const lastTowTabSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
 
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
     const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
@@ -2425,7 +2455,7 @@ const lastTowTabSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   }
 
   // 合并 SKU 行
-  if (columnIndex === 4 || columnIndex === 5 || columnIndex === 6) {
+  if (columnIndex === 7 || columnIndex === 5 || columnIndex === 6) {
     const poSkuId = row.poSkuId
 
     // 遍历后面的行，检查相同的 SKU ID
@@ -2533,13 +2563,15 @@ const fetchData = async () => {
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex !== 6 && data.columnIndex !== 9 && data.columnIndex !== 17 && data.columnIndex !== 18)
+  const label = data.column.label
+  if (label !== 'SKU' && label !== '零件名' && label !== '付款记录' && label !== '供应商')
     return {
       textAlign: 'center',
     }
 }
 const lastTwoTabCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 8 && data.columnIndex !== 16 && data.columnIndex !== 17)
+  const label = data.column.label
+  if (label !== 'SKU' && label !== '零件名' && label !== '付款记录' && label !== '供应商')
     return {
       textAlign: 'center',
     }
@@ -2572,19 +2604,19 @@ const getCellClass = (data: { row: any; column: any; rowIndex: number; columnInd
       return 'yellow'
     }
   }
-  if (data.columnIndex === 5) {
+  if (data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
   return ''
 }
 const getLastTwoCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 4) {
+  if (data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
   return ''
 }
 const payHistoryCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 4) {
+  if (data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
   return ''
