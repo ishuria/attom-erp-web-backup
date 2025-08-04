@@ -1664,20 +1664,8 @@ const handleSelectedPoRow = (event: any, row: any) => {
   const rowId = row.id
   if (event) {
     selectedPORow.value.add(rowId)
-    // 找出所有相同id的行，累加它们的含税总价
-    const sameIdRows = poList.value.filter((item: any) => item.id === rowId)
-    const totalPrice = sameIdRows.reduce((sum: number, item: any) => {
-      return sum + Number(item.taxIncludedPrice)
-    }, 0)
-    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + totalPrice).toFixed(2))
   } else {
     selectedPORow.value.delete(rowId)
-    // 找出所有相同id的行，累减它们的含税总价
-    const sameIdRows = poList.value.filter((item: any) => item.id === rowId)
-    const totalPrice = sameIdRows.reduce((sum: number, item: any) => {
-      return sum + Number(item.taxIncludedPrice)
-    }, 0)
-    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - totalPrice).toFixed(2))
   }
   selectedPOArray.value = Array.from(selectedPORow.value)
 }
@@ -1687,16 +1675,13 @@ const handleSelectAllPoRow = (event: any) => {
     poList.value.forEach((item: any) => {
       item.selectedPoRow = true
       selectedPORow.value.add(item.id)
-      taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
     })
-    taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
     // console.log(selectedPORow.value);
   } else {
     poList.value.forEach((item: any) => {
       item.selectedPoRow = false
     })
     selectedPORow.value.clear()
-    taxIncludedTotalPrice.value = 0
     // console.log(selectedPORow.value);
   }
   selectedPOArray.value = Array.from(selectedPORow.value)
@@ -1705,9 +1690,13 @@ const handleSelectAllPoRow = (event: any) => {
 const handleSelectedCompRow = (event: any, row: any) => {
   if (event) {
     selectedCompArray.value.push(row)
+    // 累加含税总价
+    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + Number(row.taxIncludedPrice)).toFixed(2))
   } else {
     const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
     selectedCompArray.value.splice(index, 1)
+    // 累减含税总价
+    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - Number(row.taxIncludedPrice)).toFixed(2))
   }
 }
 // 全选零件操作列
@@ -1716,13 +1705,16 @@ const handleSelectAllCompRow = (event: any) => {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = true
       selectedCompArray.value.push(item)
+      taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
     })
+    taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
     // console.log(selectedCompRow.value);
   } else {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = false
     })
     selectedCompArray.value = []
+    taxIncludedTotalPrice.value = 0
     // console.log(selectedCompRow.value);
   }
 }
@@ -2510,6 +2502,7 @@ const fetchData = async () => {
       poList.value = data.list
       selectedPORow.value.clear()
       selectedCompArray.value = []
+      taxIncludedTotalPrice.value = 0
       // 每个零件的付款进度进行处理
       poList.value.forEach((item: any) => {
         item.selectedCompRow = false
