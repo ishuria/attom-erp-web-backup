@@ -833,8 +833,8 @@ const componentTableInputChange = async (row: any, column: any, cell: HTMLTableC
     remark.value = row.remarks
     return
   }
-  // 不能被修改cell的下标
-  if (column.no === 2) return
+  // // 不能被修改cell的下标
+  // if (column.no === 2) return
 
   rowCopy = JSON.parse(JSON.stringify(row))
 
