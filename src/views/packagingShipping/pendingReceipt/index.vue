@@ -188,7 +188,7 @@
           <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150" >
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" >
+                <el-button text type="primary" @click="showPrint(row)">
                   打印面单
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -196,8 +196,8 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-link type="primary" underline="never" >打印面单</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_PRINT] }" @click="showPrint(row)">
+                      <el-link type="primary" underline="never">打印面单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" @click="handleGetSignedRecord(row)">
                       <el-link type="primary" underline="never" >修改</el-link>
