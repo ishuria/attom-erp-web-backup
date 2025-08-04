@@ -176,12 +176,11 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { getReductionCostDetailList } from '/@/api/devlocal/commission'
+import { getCostReductionUserList, getReductionCostDetailList } from '/@/api/devlocal/commission'
 import type { IGetReductionCostDetailList, IGetReductionCostDetailListReq } from '/@/type/commission/commissionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { formatDate } from '/@/utils/dateUtils'
 import type { CSSProperties } from 'vue'
-import { getArtDesignTaskUserList } from '/@/api/devlocal/imageTask'
 
 defineOptions({
   name: 'ProcurementCostReduction'
@@ -279,7 +278,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
   return ''
 }
 const fetchUserList = async () => {
-  const { data } = await getArtDesignTaskUserList()
+  const { data } = await getCostReductionUserList()
   userList.value = data
   userList.value.unshift({ id: -1, label: '全部' })
 }

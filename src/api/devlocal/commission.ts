@@ -348,3 +348,13 @@ export function getCommissionTypeMonth(params: { type: number }): Promise<{ data
     params,
   })
 }
+
+/**
+ * 获取采购降本提成任务-用户列表
+ */
+export function getCostReductionUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/cost/reduction/user/list`,
+    method: 'get',
+  })
+}
