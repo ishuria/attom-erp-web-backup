@@ -36,6 +36,8 @@
           stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
+          :default-sort="{ prop: 'payDate', order: 'descending' }"
+          @sort-change="handleSortChange"
         >
           <el-table-column v-permissions="SignPermission.signOperationColume()"fixed="left" label="仓库操作" width="150"  >
             <template #default="{ row }">
@@ -52,7 +54,7 @@
                   <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
               </template>
           </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po" sortable="custom">
             <template #default="{ row }">
               <span class="copySku" @click="handleClipboard($event, row.po)" >
                 {{ row.po }}
@@ -82,7 +84,7 @@
               {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="付款日期" min-width="115" prop="payDate">
+          <el-table-column label="付款日期" min-width="115" prop="payDate" sortable="custom">
             <template #default="{ row }">
               {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
             </template>
@@ -107,7 +109,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="剩余可售" min-width="100" prop="sellableDay"/>
+          <el-table-column label="剩余可售" min-width="120" prop="sellableDay" sortable="custom"/>
           <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
           <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
@@ -779,7 +781,9 @@ const queryForm = reactive<any>({
   keyWord: '',
   status: 0, //0待签收 1签收
   signUserId: -1,
-  signDate: ''
+  signDate: '',
+  orderByField: 'payDate',
+  orderDirection: 'desc'
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -1030,6 +1034,24 @@ const fetchUserList = async () => {
 const fetchSignDateList = async () => {
   const { data } = await getSignDateList();
   signDateOption.value = data
+}
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  // console.log(prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    } 
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryData()
 }
 onBeforeMount(() => {
   fetchUserList()

@@ -3,19 +3,21 @@
     v-model="dflag" 
     title="共享" 
     width="650"
+    top="5vh"
     :before-close = "handlerCloseDialog"
  >
-    <el-table :data="props.list" :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }">
-      <el-table-column v-for="(item, index) in sharedColumns" :key="index" :label="item.label" :prop="item.prop">
+    <el-table :data="props.list" :cell-style="{ textAlign: 'center' }" :header-cell-style="{ 'text-align': 'center' }" height="75vh">
+      <el-table-column label="用户id" prop="userID" />
+      <el-table-column label="用户名" prop="userName" />
+      <el-table-column label="角色名" prop="roleName" column-key="type" :filter-method="filterHandler" :filters="roleNameFilters" />
+      <el-table-column label="操作" prop="isShare" >
         <template #default="{ row }">
-          <div v-if="item.label === '操作'">
-            <el-switch
-              v-model="row.share"
-              class="ml-2"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-              @change="props.handlerSwitchChange(row)"
-            />
-          </div>
+          <el-switch
+            v-model="row.share"
+            class="ml-2"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            @change="props.handlerSwitchChange(row)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -28,8 +30,9 @@
 
 <script lang="ts" setup>
 
-import {IShared,} from '/@/type/evaluation/evaluationType'
-import { IProgressShared} from '/@/type/progress/progressType'
+import { TableColumnCtx } from 'element-plus'
+import { IShared, } from '/@/type/evaluation/evaluationType'
+import { IProgressShared } from '/@/type/progress/progressType'
 defineOptions({
   name: 'VabShared',
 })
@@ -56,6 +59,23 @@ const dflag = ref<boolean>(false)
   }
 )
 
+// 计算属性：从list中提取角色名并去重
+const roleNameFilters = computed(() => {
+  const roleNames = [...new Set(props.list.map(item => item.roleName))]
+  return roleNames.map(roleName => ({
+    text: roleName,
+    value: roleName
+  }))
+})
+
+const filterHandler = (
+  value: string,
+  row: IShared,
+  column: TableColumnCtx<IShared>
+) => {
+  const property = column['property']
+  return row[property] === value
+}
 const sharedColumns = [
   {
     label: '用户id',

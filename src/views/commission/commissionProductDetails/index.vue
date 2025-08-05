@@ -226,7 +226,6 @@ const imagePreviewList = ref<string[]>([])
 
 const handleSortChange = (data: { column: any, prop: string, order: any }) => {
   const { column, prop, order } = data 
-  // console.log(prop, order)
   if (developQueryForm.orderByField === prop) {
     if (!order) {
       if (developQueryForm.orderDirection === 'asc') {
