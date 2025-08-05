@@ -11,7 +11,7 @@
       <el-col :span="12">
         <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
           <el-form-item :label="upcOrFnSku" prop="fnSkuOrUpc">
-            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" clearable :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" />
+            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" clearable :disabled="barcodeDisabled" @blur="handleKeyPress" @keydown.enter="handleKeyPress" />
           </el-form-item>
           <el-form-item label="SKU" prop="sku">
             <el-input v-model="packingForm.sku" disabled />
@@ -294,6 +294,9 @@ const save = async () => {
 }
 // 打开装箱时自动聚焦到FNSKU输入框
 const handlePackingOpen = () => {
+  // 重置初始化标志，确保每次打开弹窗都能正常工作
+  isInitialized.value = false
+  
   nextTick(() => {
     if (barcodeInput.value) {   
       barcodeInput.value.focus()
@@ -308,50 +311,63 @@ function generateUUID() {
   });
 }
 
+// 添加一个标志来防止初次打开时的误触发
+const isInitialized = ref(false)
+
 // 监听回车键扫描事件（包括用户回车和扫枪回车）
 const handleKeyPress = async (event: any) => {
+  // 如果是初次打开，跳过处理
+  if (!isInitialized.value) {
+    isInitialized.value = true
+    return
+  }
 
-  if (event.code === 'Enter') {
-    const barcodeValue = (event.target as HTMLInputElement).value
-    packingForm.fnSkuOrUpc = barcodeValue;
-    let str = barcodeValue
-    if (props.site === 4 && barcodeValue.startsWith("00")) {
-      str = barcodeValue.substring(2); // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  const barcodeValue = (event.target as HTMLInputElement).value
+  
+  // 确保有条码值才进行处理
+  if (!barcodeValue || !barcodeValue.trim()) {
+    return
+  }
+
+  packingForm.fnSkuOrUpc = barcodeValue;
+  let str = barcodeValue
+  if (props.site === 4 && barcodeValue.startsWith("00")) {
+    str = barcodeValue.substring(2); // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  }
+ 
+  // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
+  const { data } = await getEncasementSku({
+    site: props.site!,
+    fnSkuOrUpc: str
+  })
+  if (data) {
+    // Object.assign(packingForm, data)
+    // 更新 packingForm
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(packingForm, key)) {
+        packingForm[key] = (data as any)[key];
+      }
     }
-   
-    // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
-    const { data } = await getEncasementSku({
-      site: props.site!,
-      fnSkuOrUpc: str
-    })
-    if (data) {
-      // Object.assign(packingForm, data)
-      // 更新 packingForm
-      for (const key in data) {
-        if (Object.prototype.hasOwnProperty.call(packingForm, key)) {
-          packingForm[key] = (data as any)[key];
-        }
-      }
-      // console.log('扫码后的form', packingForm);
-      
-      tempCurId.value = generateUUID()
-      let flag = _addPacking(packingForm, tempCurId.value)
-      if (flag) {
-        // 如果是有相同的，就清空
-        packingFormRef.value?.resetFields()
-        packingForm.skuImageUrl = ''  
-        return
-      }
-      // console.log('packingData', packingStore.packingData)
-      barcodeDisabled.value = true
-      if (packingCount.value) {
-        packingCount.value.focus()
-        packingCount.value.select()
-      }
-    } else {
-      packingForm.fnSkuOrUpc = ''
-      $baseMessage(`找不到该${upcOrFnSku}，请重新扫描`, 'error')
+    // console.log('扫码后的form', packingForm);
+    
+    tempCurId.value = generateUUID()
+    let flag = _addPacking(packingForm, tempCurId.value)
+    if (flag) {
+      // 如果是有相同的，就清空
+      packingFormRef.value?.resetFields()
+      packingForm.skuImageUrl = ''  
+      barcodeDisabled.value = false
+      return
     }
+    // console.log('packingData', packingStore.packingData)
+    barcodeDisabled.value = true
+    if (packingCount.value) {
+      packingCount.value.focus()
+      packingCount.value.select()
+    }
+  } else {
+    packingForm.fnSkuOrUpc = ''
+    $baseMessage(`找不到该${upcOrFnSku}，请重新扫描`, 'error')
   }
 }
 
