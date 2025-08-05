@@ -11,7 +11,7 @@
       <el-col :span="12">
         <el-form ref="packingFormRef" label-position="top" :model="packingForm" :rules="packingFormRules">
           <el-form-item :label="upcOrFnSku" prop="fnSkuOrUpc">
-            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" clearable :disabled="barcodeDisabled" @blur="handleKeyPress" @keydown.enter="handleKeyPress" />
+            <el-input ref="barcodeInput" v-model="packingForm.fnSkuOrUpc" clearable :disabled="barcodeDisabled" @blur="handleBlur" @keydown.enter="handleEnter" />
           </el-form-item>
           <el-form-item label="SKU" prop="sku">
             <el-input v-model="packingForm.sku" disabled />
@@ -296,6 +296,8 @@ const save = async () => {
 const handlePackingOpen = () => {
   // 重置初始化标志，确保每次打开弹窗都能正常工作
   isInitialized.value = false
+  // 重置上次处理的条码，确保每次打开弹窗都能正常扫码
+  lastProcessedBarcode.value = ''
   
   nextTick(() => {
     if (barcodeInput.value) {   
@@ -313,22 +315,19 @@ function generateUUID() {
 
 // 添加一个标志来防止初次打开时的误触发
 const isInitialized = ref(false)
+// 添加一个标志来防止重复处理同一个条码
+const lastProcessedBarcode = ref('')
 
-// 监听回车键扫描事件（包括用户回车和扫枪回车）
-const handleKeyPress = async (event: any) => {
-  // 如果是初次打开，跳过处理
-  if (!isInitialized.value) {
-    isInitialized.value = true
+// 通用的扫码处理函数
+const processBarcodeScan = async (barcodeValue: string) => {
+  // 检查是否已经处理过这个条码
+  if (lastProcessedBarcode.value === barcodeValue) {
     return
   }
-
-  const barcodeValue = (event.target as HTMLInputElement).value
   
-  // 确保有条码值才进行处理
-  if (!barcodeValue || !barcodeValue.trim()) {
-    return
-  }
-
+  // 记录当前处理的条码
+  lastProcessedBarcode.value = barcodeValue
+  
   packingForm.fnSkuOrUpc = barcodeValue;
   let str = barcodeValue
   if (props.site === 4 && barcodeValue.startsWith("00")) {
@@ -369,6 +368,44 @@ const handleKeyPress = async (event: any) => {
     packingForm.fnSkuOrUpc = ''
     $baseMessage(`找不到该${upcOrFnSku}，请重新扫描`, 'error')
   }
+}
+
+// 处理回车键事件（扫枪或用户手动回车）
+const handleEnter = async (event: any) => {
+  // 如果是初次打开，跳过处理
+  if (!isInitialized.value) {
+    isInitialized.value = true
+    return
+  }
+
+  const barcodeValue = (event.target as HTMLInputElement).value
+  
+  // 确保有条码值才进行处理
+  if (!barcodeValue || !barcodeValue.trim()) {
+    return
+  }
+
+  await processBarcodeScan(barcodeValue)
+}
+
+// 处理失焦事件
+const handleBlur = async (event: any) => {
+  // 如果是初次打开，跳过处理
+  if (!isInitialized.value) {
+    isInitialized.value = true
+    return
+  }
+
+  const barcodeValue = (event.target as HTMLInputElement).value
+  
+  // 确保有条码值才进行处理
+  if (!barcodeValue || !barcodeValue.trim()) {
+    return
+  }
+
+  // 对于blur事件，我们可能需要一些额外的逻辑来避免重复处理
+  // 比如检查是否已经处理过这个条码
+  await processBarcodeScan(barcodeValue)
 }
 
 // 更新表单
