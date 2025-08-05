@@ -301,6 +301,11 @@ const fetchErrorsData = async () => {
   const { data } = await checkingPackagingTimeError(errorsQueryForm)
   errorsTotal.value = data.total
   errorList.value = data.list
+  errorList.value.forEach((item: any) => {
+    if (item.workingHours) {
+      item.workingHours = item.workingHours.toFixed(2)
+    }
+  })
 }
 const queryErrorsData = () => {
   errorsQueryForm.pageNo = 1
@@ -416,7 +421,9 @@ const fetchData = async () => {
     item.sku = item.sku.replaceAll(',', '<br>');
     item.productName = item.productName.replaceAll(',', '<br>');
     item.packTaskId = item.packTaskId.replaceAll(',', '<br>');
-    item.workerHouse = item.workerHouse.toFixed(1)
+    if (item.workerHouse) {
+      item.workerHouse = item.workerHouse.toFixed(2)
+    }
   })
   listLoading.value = false
 }
@@ -425,11 +432,11 @@ const fetchRightData = async () => {
   const { data } = await getPackageTimeDay(queryRightForm)
   rightList.value = data?.list
   rightTotal.value = data?.total!
-  // leftList.value.forEach((item: any) => {
-  //   item.po = item.po.replace(/,/g, '<br>');
-  //   item.sku = item.sku.replace(/,/g, '<br>');
-  //   item.productName = item.productName.replace(/,/g, '<br>');
-  // })
+  rightList.value.forEach((item: any) => {
+    if (item.workerHouse) {
+      item.workerHouse = item.workerHouse.toFixed(2)
+    }
+  })
   listLoading.value = false
 }
 const total = ref<number>(0)
