@@ -144,6 +144,26 @@ export function updateRecordOrder(params: IUpdateRecordOrder): Promise<IBooleanR
     params,
   })
 }
+/**
+ * 获取签收人员列表
+ * @returns
+ */
+export function getSignUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/sign/user/list`,
+    method: 'get',
+  })
+}
+/**
+ * 签收日期列表
+ */
+export function getSignDateList(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/sign/date/list`,
+    method: 'get',
+  })
+}
+
 // 已签收-取消签收前置判断该条数据是否有多条签收记录-返回true说明有多条签收记录，需要弹窗显示。返回false需要调用已签收-取消签收接口
 export function signMoreRecord(params: ISignId): Promise<IBooleanResp> {
   return request({

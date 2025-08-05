@@ -162,6 +162,22 @@
                   :value="item.value"
                 />
               </el-select>
+              <el-select v-model="queryForm.signUserId" label="签收人员" placeholder="请选择签收人员" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
+                <el-option
+                  v-for="item in signUserOption"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.id"
+                />
+              </el-select>
+              <el-select v-model="queryForm.signDate" label="签收日期" placeholder="请选择签收日期" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
+                <el-option
+                  v-for="item in signDateOption"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -501,9 +517,11 @@ import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/de
 import {
   deleteSign,
   deleteSignRecord,
+  getSignDateList,
   getSignList,
   getSignLog,
   getSignRecord,
+  getSignUserList,
   printSign,
   signBatch,
   signComponent,
@@ -514,7 +532,6 @@ import {
 } from '/@/api/devlocal/packagingShipping'
 import SignPermission from '/@/permissions/sign'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
-import type { IGetPlanPoListQuery } from '/@/type/purchase/po'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -756,11 +773,13 @@ const router = useRouter()
 const route = useRoute()
 // 总记录数
 const total = ref<number>(0)
-const queryForm = reactive<IGetPlanPoListQuery>({
+const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   keyWord: '',
   status: 0, //0待签收 1签收
+  signUserId: -1,
+  signDate: ''
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -1001,7 +1020,20 @@ const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIn
 onActivated(() => {
   tableRef.value?.doLayout()
 })
+const signUserOption = ref<{ id: number; label: string }[]>([])
+const signDateOption = ref<string[]>([])
+const fetchUserList = async () => {
+  const { data } = await getSignUserList();
+  signUserOption.value = data
+  signUserOption.value.unshift({ id: -1, label: '全部' })
+}
+const fetchSignDateList = async () => {
+  const { data } = await getSignDateList();
+  signDateOption.value = data
+}
 onBeforeMount(() => {
+  fetchUserList()
+  fetchSignDateList()
   fetchDefaultPrinter()
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
