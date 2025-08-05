@@ -1264,7 +1264,10 @@ const handleClosePackingPrecautions = (value: boolean) => {
     
 const handleTableDataValue = (value: any) => {
   qualityCheckList.value = value
-    .map((item: any) => `${item.createTime.split(' ')[0]}: ${item.packagePrecautions}`)
+    .map((item: any) => {
+      const date = item.createTime ? item.createTime.split(' ')[0] : ''
+      return `${date}: ${item.packagePrecautions || ''}`
+    })
     .join('\n')
 }
 
