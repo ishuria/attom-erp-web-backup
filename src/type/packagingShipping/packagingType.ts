@@ -14,82 +14,81 @@ export interface IGetSignListResp {
 }
 
 export interface IGetSignList {
+  componentName?: string
 
-  componentName?: string;
-
-  componentUrl?: string;
+  componentUrl?: string
   /**
    * 跟单日志
    */
-  log?: string;
+  log?: string
   /**
    * 外发 0不外发 1外发
    */
-  outsourced?: number;
+  outsourced?: number
   /**
    * 支付时间
    */
-  payDate?: string;
+  payDate?: string
 
-  po?: string;
+  po?: string
 
-  poDate?: string;
+  poDate?: string
   /**
    * poSku零件的id
    */
-  poSkuComponentId?: number;
+  poSkuComponentId?: number
   /**
    * 生产完成日
    */
-  produceCompletionDate?: string;
+  produceCompletionDate?: string
 
-  productName?: string;
+  productName?: string
   /**
    * 零件数量
    */
-  purchaseCount?: string;
+  purchaseCount?: string
   /**
    * 收货仓库id
    */
-  repositoryId?: string;
+  repositoryId?: string
   /**
    * 收货仓库
    */
-  repositoryName?: string;
+  repositoryName?: string
   /**
    * 剩余可售天数
    */
-  sellableDay?: number;
+  sellableDay?: number
   /**
    * 签收数量
    */
-  signCount?: number;
+  signCount?: number
   /**
    * 签收日期
    */
-  signDate?: string;
+  signDate?: string
   /**
    * 主键id
    */
-  signId?: number;
+  signId?: number
   /**
    * 站点 0 亚马逊US 1 亚马逊DE 2 亚马逊UK  3亚马逊CA  4 沃尔玛US
    */
-  site?: number;
+  site?: number
 
-  sku?: string;
+  sku?: string
 
-  skuImageUrl?: string;
+  skuImageUrl?: string
   /**
    * 状态 0待签收 1已签收
    */
-  status?: number;
+  status?: number
   /**
    * 供应商名称
    */
-  suppliserName?: string;
+  suppliserName?: string
 
-  unit?: string;
+  unit?: string
 }
 
 export interface IUpdateProductDate {
@@ -155,8 +154,8 @@ export interface IGetPackageTaskListQuery {
 
 export interface IGetPackageTaskListResp {
   data?: {
-    list?: IGetPackageTaskList[];
-    total?: number;
+    list?: IGetPackageTaskList[]
+    total?: number
   }
 }
 
@@ -164,56 +163,56 @@ export interface IGetPackageTaskList {
   /**
    * 实际完成数
    */
-  actualCompletionCount?: number;
+  actualCompletionCount?: number
   /**
    * 任务id
    */
-  id?: number;
+  id?: number
   /**
    * 打包注意事项
    */
-  packageRemark?: string;
+  packageRemark?: string
   /**
    * 打包任务数
    */
-  packageTaskCount?: number;
+  packageTaskCount?: number
   /**
    * PO号
    */
-  po?: string;
+  po?: string
   /**
    * 优先打包标识 0不优先 1优先
    */
-  priorityPackaging?: number;
+  priorityPackaging?: number
   /**
    * 产品经理
    */
-  productManager?: string;
+  productManager?: string
   /**
    * 清单质检 0不质检 1质检
    */
-  qualityCheckStatus?: number;
+  qualityCheckStatus?: number
   /**
    * 推荐数量
    */
-  recommendCount?: number;
+  recommendCount?: number
   /**
    * 发货日期
    */
-  sendDate?: string;
+  sendDate?: string
   /**
    * 发货站点 0 亚马逊US 1 亚马逊DE 2 亚马逊UK  3亚马逊CA  4 沃尔玛US
    */
-  sendSite?: number;
+  sendSite?: number
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * sku图片地址
    */
-  skuImageUrl?: string;
-  [property: string]: any;
+  skuImageUrl?: string
+  [property: string]: any
 }
 
 export interface IGetStartTaskList {
@@ -258,39 +257,39 @@ export interface IId {
 }
 
 export interface IGetPackageComponentListResp {
-  data: IGetPackageComponentList[];
+  data: IGetPackageComponentList[]
 }
 
 export interface IGetPackageComponentList {
   /**
    * 零件名
    */
-  componentName: string;
+  componentName: string
   /**
    * 零件图片
    */
-  componentUrl: string;
+  componentUrl: string
   /**
    * 每套sku所需零件数量
    */
-  count: number;
+  count: number
   /**
    * 已有零件id
    */
-  existingPartsListId: number;
+  existingPartsListId: number
   /**
    * 收货仓库名
    */
-  repositoryName: string;
+  repositoryName: string
   /**
    * 签收日期
    */
-  signDate: null;
+  signDate: null
   /**
    * 总数
    */
-  totalCount: number;
-  [property: string]: any;
+  totalCount: number
+  [property: string]: any
 }
 
 export interface IGetQualityCheckResp {
@@ -300,72 +299,72 @@ export interface IGetQualityCheck {
   /**
    * 坏的数量
    */
-  badCount?: number;
+  badCount?: number
   /**
-    * 好的数量
-    */
-  goodCount?: number;
+   * 好的数量
+   */
+  goodCount?: number
   /**
-    * 主键id
-    */
-  id?: number;
+   * 主键id
+   */
+  id?: number
   /**
-    * 留样数量
-    */
-  keepSampleCount?: number;
+   * 留样数量
+   */
+  keepSampleCount?: number
   /**
-    * 缺的数量
-    */
-  lackCount?: number;
+   * 缺的数量
+   */
+  lackCount?: number
   /**
-    * 多的数量
-    */
-  manyCount?: number;
+   * 多的数量
+   */
+  manyCount?: number
   /**
-    * 任务数
-    */
-  packageTaskCount?: number;
+   * 任务数
+   */
+  packageTaskCount?: number
   /**
-    * 打包任务id
-    */
-  packageTaskId?: number;
+   * 打包任务id
+   */
+  packageTaskId?: number
   /**
-    * 备注
-    */
-  remark?: string;
+   * 备注
+   */
+  remark?: string
 }
 
 export interface IAddQualityCheckReq {
   /**
    * 坏的数量
    */
-  badCount?: number;
+  badCount?: number
   /**
    * 好的数量
    */
-  goodCount?: number;
+  goodCount?: number
   /**
    * 留样数量
    */
-  keepSampleCount?: number;
+  keepSampleCount?: number
   /**
    * 缺的数量
    */
-  lackCount?: number;
+  lackCount?: number
   /**
    * 多的数量
    */
-  manyCount?: number;
+  manyCount?: number
   /**
    * 备注
    */
-  remark?: string;
+  remark?: string
   /**
    * 打包任务id
    */
-  taskId: number;
+  taskId: number
   status?: number
-  [property: string]: any;
+  [property: string]: any
 }
 
 export interface ISplitPackageTask {
@@ -385,27 +384,27 @@ export interface IUpdatePackageInspection {
   /**
    * 质检报告主键id
    */
-  id?: number;
+  id?: number
   /**
    * 产品经理打包数量
    */
-  packageCount?: number;
+  packageCount?: number
   /**
    * 包装高
    */
-  packageHeight?: number;
+  packageHeight?: number
   /**
    * 包装长
    */
-  packageLength?: number;
+  packageLength?: number
   /**
    * 包装宽
    */
-  packageWidth?: number;
+  packageWidth?: number
   /**
    * 其他反馈
    */
-  remark?: string;
+  remark?: string
   packageWeight?: number
 }
 
@@ -419,7 +418,7 @@ export interface IPoId {
   poId: number
 }
 export interface IGetPackageInspectionResp {
-  data?: IGetPackageInspection;
+  data?: IGetPackageInspection
 }
 /**
  * 数据
@@ -428,31 +427,31 @@ export interface IGetPackageInspection {
   /**
    * 质检项目列表
    */
-  inspectionList: IInspectionList[];
+  inspectionList: IInspectionList[]
   /**
    * 打包任务id
    */
-  packageTaskId?: number;
+  packageTaskId?: number
   /**
    * po
    */
-  po?: string;
+  po?: string
   /**
    * 产品名
    */
-  productName?: string;
+  productName?: string
   /**
    * 质检id
    */
-  reportId?: number;
+  reportId?: number
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * 结论 0不通过 1通过
    */
-  status?: number;
+  status?: number
   dete?: string
 }
 
@@ -460,55 +459,55 @@ export interface IInspectionList {
   /**
    * 主键ID (Primary Key ID)
    */
-  id?: number;
+  id?: number
   /**
    * 质检项零件图片列表
    */
-  images: PictureImgList[];
+  images: PictureImgList[]
   /**
    * 是否上传图片 (Whether Images are Uploaded) 0: 否 (No), 1: 是 (Yes)
    */
-  isUploadImages?: number;
+  isUploadImages?: number
   /**
    * 是否通过 (Whether the Inspection Passed) 0: 未通过 (Failed), 1: 通过 (Passed)
    */
-  pass?: number;
+  pass?: number
   /**
    * 质检项目名称 (Name of the Quality Inspection Item)
    */
-  qualityInspection?: string;
+  qualityInspection?: string
   /**
    * 备注信息 (Remarks)
    */
-  remark?: string;
+  remark?: string
   /**
    * 检查类型 (Type of Inspection)
    */
-  type?: string;
+  type?: string
 }
 
 export interface InspectionList {
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 是否通过
    */
-  pass?: number;
+  pass?: number
   /**
    * 质检项目
    */
-  qualityInspection?: string;
+  qualityInspection?: string
   /**
    * 备注
    */
-  remark?: string;
+  remark?: string
   /**
    * 检查类型
    */
-  type?: number;
-  [property: string]: any;
+  type?: number
+  [property: string]: any
 }
 
 export interface IGetAfterSalesListReq {
@@ -527,135 +526,135 @@ export interface IGetAfterSalesList {
   /**
    * 售后方式 ，0退款 1随大货补寄 2单独补寄 3采购 4无法售后 5需要采购
    */
-  afterSalesMethod?: number;
+  afterSalesMethod?: number
   /**
    * 坏的数量
    */
-  badCount?: number;
+  badCount?: number
   /**
    * 坏账金额
    */
-  badDebtPrice?: string;
+  badDebtPrice?: string
   /**
    * 反馈日期
    */
-  createTime?: string;
+  createTime?: string
   /**
    * 好的数量
    */
-  goodCount?: number;
+  goodCount?: number
   /**
    * 售后主键id
    */
-  id?: number;
+  id?: number
   /**
    * 留样数量
    */
-  keepSampleCount?: number;
+  keepSampleCount?: number
   /**
    * 缺的数量
    */
-  lackCount?: number;
+  lackCount?: number
   /**
    * 多的数量
    */
-  manyCount?: number;
+  manyCount?: number
   /**
    * 订货日期
    */
-  orderTime?: string;
+  orderTime?: string
   /**
    * PO号
    */
-  po?: string;
+  po?: string
   /**
    * PO的id
    */
-  poId?: number;
+  poId?: number
   /**
    * 产品sku状态 0正常 1停产
    */
-  productionHaltStatus?: number;
+  productionHaltStatus?: number
   /**
    * 产品名
    */
-  productName?: string;
+  productName?: string
   /**
    * PO总数
    */
-  purchaseSkuNumber?: number;
+  purchaseSkuNumber?: number
   /**
    * 退款金额
    */
-  refundAmount?: string;
+  refundAmount?: string
   /**
    * 打包反馈内容
    */
-  remark?: string;
+  remark?: string
   /**
    * 待售后
    */
-  salesPrice?: string;
+  salesPrice?: string
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * sku图片地址
    */
-  skuImageUrl?: string;
+  skuImageUrl?: string
   /**
    * 供应商
    */
-  suppliser?: string;
+  suppliser?: string
 }
 
 export interface IGetAfterSalesLogResp {
-  data: IGetAfterSalesLog[];
+  data: IGetAfterSalesLog[]
 }
 
 export interface IGetAfterSalesLog {
   /**
    * 坏的数量
    */
-  badCount: number;
+  badCount: number
   /**
    * 反馈时间
    */
-  createTime: string;
+  createTime: string
   /**
    * 好的数量
    */
-  goodCount: number;
+  goodCount: number
   /**
    * 留样数量
    */
-  keepSampleCount: null;
+  keepSampleCount: null
   /**
    * 缺的数量
    */
-  lackCount: number | null;
+  lackCount: number | null
   /**
    * 日志类型
    */
-  logType: string;
+  logType: string
   /**
    * 多的数量
    */
-  manyCount: null;
+  manyCount: null
   /**
    * 备注
    */
-  remark: string;
+  remark: string
   /**
    * 待售后
    */
-  salesPrice: string;
+  salesPrice: string
   /**
    * 任务id
    */
-  taskId: number;
-  [property: string]: any;
+  taskId: number
+  [property: string]: any
 }
 
 export interface IUpdateAfterSales {
@@ -678,8 +677,8 @@ export interface IGetPackageTimeListReq {
 
 export interface IGetPackageTimeListResp {
   data?: {
-    list?: IGetPackageTimeList[];
-    total?: number;
+    list?: IGetPackageTimeList[]
+    total?: number
   }
 }
 
@@ -687,35 +686,35 @@ export interface IGetPackageTimeList {
   /**
    * 结束时间
    */
-  endTime?: string;
+  endTime?: string
   /**
    * id
    */
-  id?: number;
+  id?: number
   /**
    * 姓名
    */
-  name?: string;
+  name?: string
   /**
    * PO
    */
-  po?: string;
+  po?: string
   /**
    * 产品名称
    */
-  productName?: string;
+  productName?: string
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * 开始时间
    */
-  startTime?: string;
+  startTime?: string
   /**
    * 工作时长
    */
-  workerHouse?: number;
+  workerHouse?: number
 }
 
 export interface IUpdatePackageTime {
@@ -728,30 +727,30 @@ export interface IGetPackageTimeDayRequest {
   /**
    * 结束时间
    */
-  endTime?: string;
+  endTime?: string
   /**
    * 当前页 默认1
    */
-  pageNo: number;
+  pageNo: number
   /**
    * 每页大小 默认20
    */
-  pageSize: number;
+  pageSize: number
   /**
    * 开始时间
    */
-  startTime?: string;
+  startTime?: string
   /**
    * 用户id
    */
-  userId?: number;
-  [property: string]: any;
+  userId?: number
+  [property: string]: any
 }
 
 export interface IGetPackageTimeDayResp {
   data?: {
-    list?: IGetPackageTimeDay[];
-    total?: number;
+    list?: IGetPackageTimeDay[]
+    total?: number
   }
 }
 
@@ -759,20 +758,20 @@ export interface IGetPackageTimeDay {
   /**
    * id
    */
-  id?: number;
+  id?: number
   /**
    * 姓名
    */
-  name?: string;
+  name?: string
   /**
    * 时间
    */
-  time?: string;
+  time?: string
   /**
    * 工作时长
    */
-  workerHouse?: number;
-  [property: string]: any;
+  workerHouse?: number
+  [property: string]: any
 }
 
 export interface IIds {
@@ -878,75 +877,75 @@ export interface IGetNewPackageInspection {
   /**
    * 成品组装图
    */
-  assemblyDrawingPictureImgList: PictureImgList[];
+  assemblyDrawingPictureImgList: PictureImgList[]
   /**
    * 基础图片列表
    */
-  basePictureImgList: PictureImgList[];
+  basePictureImgList: PictureImgList[]
   /**
    * 质检报告零件列表
    */
-  componentList: IComponentList[];
+  componentList: IComponentList[]
   /**
    * 零件细节图片列表
    */
-  componentPictureImgList: PictureImgList[];
+  componentPictureImgList: PictureImgList[]
   /**
    * 产品经理打包数量
    */
-  packageCount?: number;
+  packageCount?: number
   /**
    * 包装高
    */
-  packageHeight?: number;
+  packageHeight?: number
   /**
    * 包装长
    */
-  packageLength?: number;
+  packageLength?: number
   /**
    * 总量
    */
-  packageWeight?: number;
+  packageWeight?: number
   /**
    * 包装宽
    */
-  packageWidth?: number;
+  packageWidth?: number
   /**
    * 合并质检Po列表
    */
-  poList: string[];
+  poList: string[]
   /**
    * 处理方式
    */
-  processingMethod?: string;
+  processingMethod?: string
   /**
    * 产品经理名称
    */
-  productManager?: string;
+  productManager?: string
   /**
    * 产品名称
    */
-  productName?: string;
+  productName?: string
   /**
    * 原因
    */
-  reason?: string;
+  reason?: string
   /**
    * 其他反馈
    */
-  remark?: string;
+  remark?: string
   /**
    * 质检报告项目列表
    */
-  reportDetailList: ReportDetailList[];
+  reportDetailList: ReportDetailList[]
   /**
    * 质检报告id
    */
-  reportId: number;
+  reportId: number
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   date?: string
 }
 
@@ -954,179 +953,179 @@ export interface PictureImgList {
   /**
    * 主键
    */
-  id: number;
+  id: number
   /**
    * 图片地址
    */
-  imgUrl: string;
+  imgUrl: string
 }
 
 export interface IComponentList {
   /**
    * 零件图片地址
    */
-  componentImgUrl?: string;
+  componentImgUrl?: string
   /**
    * 零件名
    */
-  componentName?: string;
+  componentName?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 材质1名称
    */
-  material1?: string;
+  material1?: string
   /**
    * 材质2名称
    */
-  material2?: string;
+  material2?: string
   /**
    * 材质3名称
    */
-  material3?: string;
+  material3?: string
   /**
    * 材质名4名称
    */
-  material4?: string;
+  material4?: string
   /**
    * 材质1重量g
    */
-  weight1?: number;
+  weight1?: number
   /**
    * 材质2重量g
    */
-  weight2?: number;
+  weight2?: number
   /**
    * 材质3重量g
    */
-  weight3?: number;
+  weight3?: number
   /**
    * 材质4重量g
    */
-  weight4?: number;
+  weight4?: number
 }
 
 export interface ReportDetailList {
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 是否通过
    */
-  pass?: number;
+  pass?: number
   /**
    * 质检项目
    */
-  qualityInspection?: string;
+  qualityInspection?: string
   /**
    * 备注
    */
-  remark?: string;
+  remark?: string
   /**
    * 发往站点
    */
-  site?: string;
+  site?: string
   /**
    * sku的质检id
    */
-  skuInspectionId?: number;
+  skuInspectionId?: number
   /**
    * 检查类型
    */
-  type?: string;
+  type?: string
 }
 
 export interface IUpdateNewPackageInspectionReq {
   /**
    * 产品经理打包数量
    */
-  packageCount?: number;
+  packageCount?: number
   /**
    * 包装高
    */
-  packageHeight?: number;
+  packageHeight?: number
   /**
    * 包装长
    */
-  packageLength?: number;
+  packageLength?: number
   /**
    * 重量
    */
-  packageWeight?: number;
+  packageWeight?: number
   /**
    * 包装宽
    */
-  packageWidth?: number;
+  packageWidth?: number
   /**
    * 合并质检Po列表
    */
-  poList?: string[];
+  poList?: string[]
   /**
    * 处理方式
    */
-  processingMethod?: string;
+  processingMethod?: string
   /**
    * 产品经理名称
    */
-  productManager?: string;
+  productManager?: string
   /**
    * 原因
    */
-  reason?: string;
+  reason?: string
   /**
    * 其他反馈
    */
-  remark?: string;
+  remark?: string
   /**
    * 质检报告id
    */
-  reportId?: number;
+  reportId?: number
   /**
    * 0通过 1不通过
    */
-  status?: number;
+  status?: number
 }
 
 export interface IUpdatePackageInspectionComponentReq {
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 材质1名称
    */
-  material1?: string;
+  material1?: string
   /**
    * 材质2名称
    */
-  material2?: string;
+  material2?: string
   /**
    * 材质3名称
    */
-  material3?: string;
+  material3?: string
   /**
    * 材质名4名称
    */
-  material4?: string;
+  material4?: string
   /**
    * 材质1重量g
    */
-  weight1?: number;
+  weight1?: number
   /**
    * 材质2重量g
    */
-  weight2?: number;
+  weight2?: number
   /**
    * 材质3重量g
    */
-  weight3?: number;
+  weight3?: number
   /**
    * 材质4重量g
    */
-  weight4?: number;
+  weight4?: number
 }
 
 export interface IGetQualityInspectionListReq {

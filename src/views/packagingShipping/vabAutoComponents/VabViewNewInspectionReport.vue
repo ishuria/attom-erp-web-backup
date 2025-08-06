@@ -235,7 +235,7 @@
 <script lang="ts" setup>
 import { QuestionFilled, ZoomIn } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
-import type { IComponentList, PictureImgList, ReportDetailList } from '/@/type/packagingShipping/packagingType'
+import type { IComponentList, IGetNewPackageInspection, PictureImgList, ReportDetailList } from '/@/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -244,7 +244,7 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: boolean
-  reportData: any
+  reportData: IGetNewPackageInspection
 }>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
