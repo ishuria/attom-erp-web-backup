@@ -28,7 +28,7 @@ steps:
       - npm i -g pnpm
       - pnpm store prune
       - pnpm install
-      - npm run build
+      - pnpm build
 
   # 构建镜像并推送到镜像仓库
   - name: build-docker-image
