@@ -87,7 +87,7 @@
         <el-col :span="12">
           <el-form ref="addNewFormRef" label-position="top" :model="addNewForm" :rules="addNewFormRules">
             <el-form-item label="FNSKU" prop="fnSkuOrUpc">
-              <el-input ref="barcodeInput" v-model="addNewForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleKeyPress" />
+              <el-input ref="barcodeInput" v-model="addNewForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleEnter" @blur="handleBlur" />
             </el-form-item>
             <el-form-item label="SKU" prop="sku"><el-input v-model="addNewForm.sku" disabled /></el-form-item>
             <el-form-item label="产品名称" prop="productName"><el-input v-model="addNewForm.productName" disabled /></el-form-item>
@@ -276,40 +276,83 @@ let _row: any
 const handleOpenAdd = () => {
   addNewVisible.value = true
   barcodeDisabled.value = false
+  lastProcessedBarcode.value = ''
+  Object.assign(addNewForm, {
+    fnSkuOrUpc: '',
+    sku: '',
+    productName: '',
+    count: '',
+    skuImageUrl: ''
+  })
+
+  nextTick(() => {
+    barcodeInput.value?.focus()
+  })
+}
+const isInitialized = ref<boolean>(false)
+// 添加一个标志来防止重复处理同一个条码
+const lastProcessedBarcode = ref('')
+const handleBlur = async (event: any) => {
+  // 如果是初次打开，跳过处理
+  if (!isInitialized.value) {
+      isInitialized.value = true
+      return
+    }
+
+    const barcodeValue = (event.target as HTMLInputElement).value
+    
+    // 确保有条码值才进行处理
+    if (!barcodeValue || !barcodeValue.trim()) {
+      return
+    }
+
+    // 对于blur事件，我们可能需要一些额外的逻辑来避免重复处理
+    // 比如检查是否已经处理过这个条码
+    await processBarcodeScan(barcodeValue)
+}
+const handleEnter = async (event: any) => {
+   // 如果是初次打开，跳过处理
+   if (!isInitialized.value) {
+    isInitialized.value = true
+    return
+  }
+
+  const barcodeValue = (event.target as HTMLInputElement).value
+  
+  // 确保有条码值才进行处理
+  if (!barcodeValue || !barcodeValue.trim()) {
+    return
+  }
+
+  await processBarcodeScan(barcodeValue)
 }
 // 监听回车键扫描事件（包括用户回车和扫枪回车）
-const handleKeyPress = async (event: any) => {
+const processBarcodeScan = async (barcodeValue: string) => {
+  if (!barcodeValue || barcodeValue.trim() === '') return
+  if (lastProcessedBarcode.value === barcodeValue && barcodeDisabled.value) return
 
-if (event.code === 'Enter') {
-  const barcodeValue = (event.target as HTMLInputElement).value
-  addNewForm.fnSkuOrUpc = barcodeValue;
+  lastProcessedBarcode.value = barcodeValue
+  addNewForm.fnSkuOrUpc = barcodeValue
 
-  // 发送网络请求，根据结果判断，是否是清空重新输入还是聚焦到数量框
   const { data } = await getEncasementSku({
     site: modifyForm.siteId,
-    fnSkuOrUpc: addNewForm.fnSkuOrUpc
+    fnSkuOrUpc: barcodeValue
   })
+
   if (data) {
-    Object.assign(addNewForm, data)
-    // tempCurId.value = generateUUID()
-    // let flag = _addPacking(packingForm, tempCurId.value)
-    // if (flag) {
-    //   // 如果是有相同的，就清空
-    //   packingFormRef.value?.resetFields()
-    //   packingForm.skuImageUrl = ''  
-    //   return
-    // }
-    // console.log('packingData', packingStore.packingData)
+    addNewForm.sku = data.sku || ''
+    addNewForm.productName = data.productName || ''
+    addNewForm.skuImageUrl = data.skuImageUrl || ''
     barcodeDisabled.value = true
-    if (packingCount.value) {
-      packingCount.value.focus()
-      packingCount.value.select()
-    }
+
+    nextTick(() => {
+      packingCount.value?.focus()
+      packingCount.value?.select()
+    })
   } else {
     addNewForm.fnSkuOrUpc = ''
-    $baseMessage(`找不到该FNSKU，请重新扫描`, 'error')
+    $baseMessage('找不到该FNSKU，请重新扫描', 'error')
   }
-}
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
   
