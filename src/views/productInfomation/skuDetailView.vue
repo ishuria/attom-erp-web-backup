@@ -1597,6 +1597,8 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 }
 // 处理零件table blur事件
 const clickCancel = async (event: any, value: any) => {
+  // console.log('修改前', copyRow.quantity)
+  // console.log('修改后', value.quantity)
   // 获取根元素，避免重复调用 getRootElement
   const rootElement = getRootElement(event.srcElement, ".cell");
 
@@ -1619,8 +1621,10 @@ const clickCancel = async (event: any, value: any) => {
     try {
       await updateProductComponent({
         id: value.id,
+        sku: sku.value.sku,
         skuId: value.skuId,
         componentId: value.componentId,
+        componentName: value.componentName,
         existingPartsListId: value.existingPartsListId,
         suppliserId: value.suppliserId,
         quantity: value.quantity,

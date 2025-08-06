@@ -333,10 +333,14 @@ const processBarcodeScan = async (barcodeValue: string) => {
 
   lastProcessedBarcode.value = barcodeValue
   addNewForm.fnSkuOrUpc = barcodeValue
+  let str = barcodeValue
+  if (modifyForm.siteId === 4 && barcodeValue.startsWith("00")) {
+    str = barcodeValue.substring(2); // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  }
 
   const { data } = await getEncasementSku({
     site: modifyForm.siteId,
-    fnSkuOrUpc: barcodeValue
+    fnSkuOrUpc: str
   })
 
   if (data) {
