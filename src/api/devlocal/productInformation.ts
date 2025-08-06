@@ -19,6 +19,7 @@ import type {
 import type {
   IAddComponentEncoding,
   IAddCustomsClearanceSkuInfo,
+  IBatchAddPackingPrecautions,
   IBooleanResp,
   IConsumablesType,
   IGetComponentEncodingListRes,
@@ -1007,6 +1008,18 @@ export function getSkuComponentInfo(data: { existingPartsListId: number; supplis
 export function updateSkuComponentInfo(data: IUpdateSkuComponent): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/sku/component/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 批量新增打包注意事项
+ * @param data
+ * @returns
+ */
+export function batchAddPackingPrecautions(data: IBatchAddPackingPrecautions): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/batch/add/quality/inspection`,
     method: 'post',
     data,
   })

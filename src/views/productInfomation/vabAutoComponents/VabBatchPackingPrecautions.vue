@@ -92,6 +92,7 @@
 </template>
 
 <script lang="ts" setup>
+import { batchAddPackingPrecautions } from '~/src/api/devlocal/productInformation'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { IgetProductQualityInspection } from '/@/type/productInformation/skuInformationType'
 import { checkTypeList } from '/@/views/newProductDevelopment/indexCommon'
@@ -102,6 +103,7 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: boolean
+  skuIdList: number[]
 }>()
 const emit = defineEmits(['update:modelValue'])
 const visible = computed({
@@ -126,8 +128,17 @@ const handleCancel = () => {
   visible.value = false
   list.value = []
 }
-const handleConfirm = () => {
-  console.log(list.value)
+const handleConfirm = async () => {
+  // console.log(list.value)
+  // console.log(props.skuIdList)
+  const { data } = await batchAddPackingPrecautions({
+    skuIdList: props.skuIdList,
+    list: list.value
+  })
+  if (data) {
+    $baseMessage('批量新增打包注意事项成功', 'success', 'hey')
+    handleCancel()
+  }
 }
 const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
   const label = data.column.label

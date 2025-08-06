@@ -170,7 +170,8 @@
         <el-button type="primary" @click="handleCopySkuConfirm">确定</el-button>
       </template>
     </vab-dialog>
-    <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" />
+    <!-- 批量新增打包注意事项 -->
+    <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" :sku-id-list="skuIdList" />
   </div>
 </template>
 
@@ -196,12 +197,14 @@ const handleSelectionChange = (rows: any[]) => {
 }
 // 批量新增打包注意事项
 const batchPackingPrecautionsVisible = ref<boolean>(false)
+const skuIdList = ref<number[]>([])
 const showBatchPackingPrecautions = () => {
   if (selectedRows.value.length === 0) {
     $baseMessage('请先选择要新增质检项的SKU', 'warning', 'hey')
     return
   }
   batchPackingPrecautionsVisible.value = true
+  skuIdList.value = selectedRows.value.map((item: any) => item.skuId)
 }
 const listLoading = ref<boolean>(true)
 // 零件列表

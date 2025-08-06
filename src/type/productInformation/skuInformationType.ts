@@ -1386,3 +1386,15 @@ export interface IUpdateSkuComponent {
   billingUnit?: string
 }
 
+export interface IBatchAddPackingPrecautions {
+  skuIdList: number[]
+  list: IAddPackingPrecautions[]
+}
+export interface IAddPackingPrecautions {
+  status: number
+  checkType: number
+  packagePrecautions: string
+  isUploadImages: number
+  site: number
+}
+
