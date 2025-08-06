@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" @change="queryData">
+            <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" @change="queryData">
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -497,7 +497,7 @@ const asinId = ref<number>(-1)
 const smoothForm = reactive<any>({})
 const shipList = ref<any[]>([])
 const orderListLoading = ref<boolean>(false)
-const disabledOpe = ref<boolean>(false)
+
 const aclStore = useAclStore()
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
@@ -537,13 +537,13 @@ const operationSelect = () => {
     // 老板和运营主管
     case 'ROLE_BOSS': 
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
-      disabledOpe.value = false
+      
      
       break;
     }
     // 运营
     case 'ROLE_ECOMMERCEOPERATOR': {
-      disabledOpe.value = true
+    
     
       break;
     }
