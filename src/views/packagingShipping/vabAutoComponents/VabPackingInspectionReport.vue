@@ -89,8 +89,8 @@
       </el-table>
       <el-form-item label="结论" prop="status" style="margin-top: 10px">
         <el-radio-group v-model="qualityInspectionForm.status" @change="handleUpdateInspection">
-          <el-radio :value="0">通过</el-radio>
-          <el-radio :value="1">不通过</el-radio>
+          <el-radio :value="1">通过</el-radio>
+          <el-radio :value="0">不通过</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -349,11 +349,11 @@ const fetchData = async () => {
     data.inspectionList.forEach((row: any) => {
       if (row.images.length === 0) {
         row.imgUrl = ''
-      } else {
+        } else {
         row.imgUrl = row.images[0].imgUrl
         row.imgId = row.images[0].id
-      }
-    })
+        }
+      })
     inspectionList.value = data.inspectionList
     // console.log(inspectionList.value)
     reportId.value = data.reportId

@@ -215,10 +215,10 @@
           <el-radio :value="0" >不通过</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="qualityInspectionForm.status" label="原因" prop="reason"  >
+      <el-form-item v-if="qualityInspectionForm.status === 0" label="原因" prop="reason"  >
         <el-input v-model="qualityInspectionForm.reason"  clearable disabled placeholder="质检不通过的原因" style="min-width: 100%"/>
       </el-form-item>
-      <el-form-item v-if="qualityInspectionForm.status" label="处理方式" prop="processingMethod" >
+      <el-form-item v-if="qualityInspectionForm.status === 0" label="处理方式" prop="processingMethod" >
         <el-input v-model="qualityInspectionForm.processingMethod" clearable disabled placeholder="整批售后、打包全检、部分售后等"  style="min-width: 100%"/>
       </el-form-item>
     </el-form>
@@ -263,21 +263,37 @@ watch(() => props.modelValue, (value) => {
   }
 })
 const initData = () => {
-  console.log(props.reportData)
+  // console.log(props.reportData)
   Object.assign(qualityInspectionForm, props.reportData)
   componentList.value = props.reportData.componentList
   reportDetailList.value = props.reportData.reportDetailList
   
   qualityInspectionForm.date = qualityInspectionForm.date ? qualityInspectionForm.date.split(' ')[0] : ''
   qualityInspectionForm.poList = qualityInspectionForm.poList[0].split(',')
-  qualityInspectionForm.basePictureImgList.forEach((item: any, index: number) => {
-    if (item.imgUrl) {
-      basePictureImgList.value[index].imgUrl = item.imgUrl
-      basePictureImgList.value[index].id = item.id
-    }
-  })
-  componentDetailImgList.value = props.reportData.componentPictureImgList
-  finishedImgList.value = props.reportData.assemblyDrawingPictureImgList
+  
+  // 处理基础图片列表
+   if (qualityInspectionForm.basePictureImgList && qualityInspectionForm.basePictureImgList.length > 0) {
+    basePictureImgList.value = qualityInspectionForm.basePictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
+  
+  // 处理零件细节图片列表
+  if (qualityInspectionForm.componentPictureImgList && qualityInspectionForm.componentPictureImgList.length > 0) {
+    componentDetailImgList.value = qualityInspectionForm.componentPictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
+  
+  // 处理成品组装图片列表
+  if (qualityInspectionForm.assemblyDrawingPictureImgList && qualityInspectionForm.assemblyDrawingPictureImgList.length > 0) {
+    finishedImgList.value = qualityInspectionForm.assemblyDrawingPictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
 }
 
 const imagePreviewVisible = ref<boolean>(false)

@@ -324,14 +324,14 @@
         </el-form-item>
         <el-form-item label="结论" prop="status" >
           <el-radio-group v-model="inspectionResultsForm.status" @change="handleUpdateInspection">
-            <el-radio :value="0" >通过</el-radio>
-            <el-radio :value="1" >不通过</el-radio>
+            <el-radio :value="1" >通过</el-radio>
+            <el-radio :value="0" >不通过</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="inspectionResultsForm.status" label="原因" prop="reason"  >
+        <el-form-item v-if="inspectionResultsForm.status === 0" label="原因" prop="reason"  >
           <el-input v-model="inspectionResultsForm.reason"  clearable placeholder="质检不通过的原因" style="min-width: 100%"  @change="handleUpdateInspection"/>
         </el-form-item>
-        <el-form-item v-if="inspectionResultsForm.status" label="处理方式" prop="processingMethod" >
+        <el-form-item v-if="inspectionResultsForm.status === 0" label="处理方式" prop="processingMethod" >
           <el-input v-model="inspectionResultsForm.processingMethod" clearable placeholder="整批售后、打包全检、部分售后等" style="min-width: 100%"  @change="handleUpdateInspection"/>
         </el-form-item>
       </el-form>
@@ -448,7 +448,7 @@ const inspectionResultsFormRules = reactive({
   reason: [{
     required: true,
     validator: (rule: any, value: any, callback: any) => {
-      if (inspectionResultsForm.status === 1 && !inspectionResultsForm.reason) {
+      if (inspectionResultsForm.status === 0 && !inspectionResultsForm.reason) {
         callback(new Error('请输入原因'))
       } else {
         callback()
@@ -459,7 +459,7 @@ const inspectionResultsFormRules = reactive({
   processingMethod: [{
     required: true,
     validator: (rule: any, value: any, callback: any) => {
-      if (inspectionResultsForm.status === 1 && !inspectionResultsForm.processingMethod) {
+      if (inspectionResultsForm.status === 0 && !inspectionResultsForm.processingMethod) {
         callback(new Error('请输入处理方式'))
       } else {
         callback()
@@ -785,14 +785,29 @@ const fetchData = async () => {
     reportDetailList.value = data.reportDetailList
     poOption.value = data.poList[0].split(',')
     data.poList = poOption.value
-    data.basePictureImgList.forEach((item, index) => {
-      if (item.imgUrl) {
-        basePictureImgList.value[index].imgUrl = item.imgUrl
-        basePictureImgList.value[index].id = item.id
-      }
-    })
-    componentDetailImgList.value = data.componentPictureImgList
-    finishedImgList.value = data.assemblyDrawingPictureImgList
+    // 处理基础图片列表
+   if (data.basePictureImgList && data.basePictureImgList.length > 0) {
+    basePictureImgList.value = data.basePictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
+  
+  // 处理零件细节图片列表
+  if (data.componentPictureImgList && data.componentPictureImgList.length > 0) {
+    componentDetailImgList.value = data.componentPictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
+  
+  // 处理成品组装图片列表
+  if (data.assemblyDrawingPictureImgList && data.assemblyDrawingPictureImgList.length > 0) {
+    finishedImgList.value = data.assemblyDrawingPictureImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || ''
+    }))
+  }
     Object.assign(qualityInspectionForm, data)
     Object.assign(inspectionResultsForm, data)
   }
