@@ -23,7 +23,7 @@ steps:
     commands:
       - pwd
       - ls -alt
-      - rm -rf ./node_modules
+      
       - npm config set registry https://registry.npmmirror.com
       - npm i -g pnpm
       - pnpm store prune
