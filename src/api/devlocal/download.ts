@@ -8,7 +8,7 @@ import request from '/@/utils/request'
  * @returns {Promise<void>} - 返回Promise，在下载完成后解析
  */
 export function downloadFile(url: string, params: any) {
-  debugger
+  // debugger
   return request({
     method: 'GET',
     url: `${BASE_API}${url}`,
