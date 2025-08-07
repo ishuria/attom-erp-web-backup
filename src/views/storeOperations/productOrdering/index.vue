@@ -358,7 +358,7 @@
       v-model="releaseOrderVisible"
       :draggable="false"
       title="发布订货"
-      width="59%"
+      width="65%"
     >
       <el-form v-loading="orderListLoading" class="custom-form" inline label-position="top" :model="releaseOrderForm" style="justify-content: space-around; width: 100%">
         <el-form-item>
@@ -393,6 +393,9 @@
               </el-icon>
             </template>
           </el-input-number>
+        </el-form-item>
+        <el-form-item label="拆分">
+          <el-checkbox v-model="releaseOrderForm.split" disabled :false-value="0" :true-value="1" />
         </el-form-item>
         <el-form-item label="起订量">
           <el-input v-model="releaseOrderForm.moq" disabled style="width: 8em;" />
@@ -1052,5 +1055,8 @@ onBeforeMount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.el-checkbox {
+  transform: scale(1.3);
 }
 </style>

@@ -25,9 +25,9 @@
             <el-space :size="16" style="align-items: center;">
               <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxNumber" />
               <el-divider direction="vertical" style="height: 34px;"/>
-              <el-statistic class="compact-statistic" title="总重量(kg)" :value="totalWeight" :formatter="(val: number) => val.toFixed(2)" />
+              <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总重量(kg)" :value="totalWeight" />
               <el-divider direction="vertical" style="height: 34px;"/>
-              <el-statistic class="compact-statistic" title="总体积(m³)" :value="totalVolume" :formatter="(val: number) => val.toFixed(2)" />
+              <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总体积(m³)" :value="totalVolume" />
             </el-space>
         </div>
       </vab-query-form-left-panel>
@@ -48,14 +48,14 @@
       :cell-style="cellStyle"
       class="noneHoveTable"
       :data="list"
+      :default-sort="{ prop: 'createTime', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
+      height="calc(100vh - 200px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
       @cell-click="handleCellClick"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
-      height="calc(100vh - 200px)"
-      :default-sort="{ prop: 'createTime', order: 'descending' }"
     >
       <el-table-column fixed="left" type="selection" />
       <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
@@ -472,7 +472,7 @@
           <el-button :loading="exportSizeLoading" type="primary" @click="handleExportSize">尺寸导出</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table border :data="newSkuList.map(sku => ({ sku }))" style="width: 100%">
+      <el-table border :data="newSkuList.map(sku => ({ sku }))" height="800" style="width: 100%">
         <el-table-column label="#" type="index" width="50" />
         <el-table-column label="SKU" prop="sku" />
       </el-table>
@@ -1389,8 +1389,8 @@ onBeforeMount(() => {
 /* 操作按钮样式 */
 .operation-buttons {
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
 }
 </style>
