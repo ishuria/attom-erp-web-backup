@@ -1243,10 +1243,10 @@ const validateComponent = (item: any) => {
   } else if (!item.supplier) {
     $baseMessage('请先填写供应商！', 'warning', 'hey');
     return false;
-  } else if (!item.actualTaxRate) {
+  } else if (item.invoicing !== '2' && !item.actualTaxRate) {
     $baseMessage('请先填写实际税点！', 'warning', 'hey');
     return false;
-  } else if (!item.invoicingTaxRate) {
+  } else if (item.invoicing !== '2' && !item.invoicingTaxRate) {
     $baseMessage('请先填写开票税点！', 'warning', 'hey');
     return false;
   } else if (item.invoicing !== '0' && !item.purchaseLink) { //采购链接 必填的校验仅针对选择了普票和无法开票的
