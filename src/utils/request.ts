@@ -190,8 +190,8 @@ const downloadDeal = (type: string, data: any, headers: any, defaultFileName = '
     case 'text/csv':
     case 'image/jpeg':
     case 'image/png':
-    case 'application/zip':
-    case 'application/pdf': {
+    case 'application/pdf':
+    case 'application/zip': {
       // 获取 Content-Disposition 响应头
       const contentDisposition = headers['content-disposition']
       const contentType = headers['content-type']

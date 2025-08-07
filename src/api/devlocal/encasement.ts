@@ -11,7 +11,6 @@ import type {
   IEncasementDetailId,
   IEncasementId,
   IEncasementIds,
-  IFileName,
   IFilterShipmentFbaList,
   IFinishWalmartShipmentReq,
   IGenerateTemplateFile1Req,
@@ -292,17 +291,6 @@ export const uploadEncasementFile = (data: FormData): Promise<IStringRes> => {
     method: 'post',
     headers: { 'content-type': 'multipart/form-data' },
     data,
-  })
-}
-
-/**
- * @description 上传PDF插页提交并下载插页成功后的pdf
- */
-export const insertPdf = (params: IFileName) => {
-  return request({
-    url: `${BASE_API}/encasement/pdf/insertPage`,
-    method: 'post',
-    params,
   })
 }
 /**

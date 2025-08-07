@@ -1,7 +1,5 @@
-import request from '/@/utils/request'
-
-
 import { BASE_API } from '/@/api/devlocal/api'
+import request from '/@/utils/request'
 
 /**
  * 通用文件下载方法
@@ -9,8 +7,8 @@ import { BASE_API } from '/@/api/devlocal/api'
  * @param {Object} params - 请求的参数，通常是查询参数
  * @returns {Promise<void>} - 返回Promise，在下载完成后解析
  */
-export function downloadFile(url:string, params:any) {
-
+export function downloadFile(url: string, params: any) {
+  debugger
   return request({
     method: 'GET',
     url: `${BASE_API}${url}`,
@@ -19,8 +17,7 @@ export function downloadFile(url:string, params:any) {
   })
 }
 
-export function downloadFileP(url:string, params:any) {
-
+export function downloadFileP(url: string, params: any) {
   return request({
     method: 'POST',
     url: `${BASE_API}${url}`,
@@ -29,8 +26,7 @@ export function downloadFileP(url:string, params:any) {
   })
 }
 
-export function downloadFilePD(url:string, data:any) {
-
+export function downloadFilePD(url: string, data: any) {
   return request({
     method: 'POST',
     url: `${BASE_API}${url}`,
@@ -39,8 +35,7 @@ export function downloadFilePD(url:string, data:any) {
   })
 }
 
-export function downloadFileN(url:string) {
-
+export function downloadFileN(url: string) {
   return request({
     method: 'POST',
     url: `${BASE_API}${url}`,
@@ -48,8 +43,7 @@ export function downloadFileN(url:string) {
   })
 }
 
-export function downloadFilePDH(url:string, data:any) {
-
+export function downloadFilePDH(url: string, data: any) {
   return request({
     method: 'POST',
     url: `${BASE_API}${url}`,
