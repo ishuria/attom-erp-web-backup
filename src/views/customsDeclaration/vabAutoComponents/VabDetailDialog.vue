@@ -27,8 +27,10 @@
         border
         :cell-style="cellStyle"
         :data="list"
+        :default-sort="{ prop: 'invoiceNumber', order: 'descending' }"
         :header-cell-style="headerCellStyle"
         max-height="60vh"
+        @sort-change="handleSortChange"
       >
         <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" :width="flexColumnWidth(list, '报关品名', 'customsDeclarationName')"/>
         <el-table-column label="报关数量" prop="customsDeclarationCount" width="70">
@@ -85,7 +87,7 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票号码" min-width="100">
+        <el-table-column label="发票号码" min-width="120" prop="invoiceNumber" sortable="custom">
           <template #default="{ row }">
             <div v-if="Array.isArray(row.matchInvoiceRecord)">
               <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
@@ -191,7 +193,9 @@ const queryForm = reactive<IGetTaxRefundBatchDetailQuery>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  id: props.id!
+  id: props.id!,
+  orderByField: 'invoiceNumber',
+  orderDirection: 'desc'
 })
 const list = ref<IGetTaxRefundBatchDetailList[]>([])
 const queryData = () => {
@@ -250,6 +254,20 @@ const fetchData = async () => {
    
   })
   listLoading.value = false
+}
+const handleSortChange = (data: { column: any, prop: string, order: any }) => {
+  const { column, prop, order } = data 
+  queryForm.orderByField = prop
+  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
+  if (!order) {
+    if (queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
+    }
+  } 
+  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryData()
 }
 </script>
 

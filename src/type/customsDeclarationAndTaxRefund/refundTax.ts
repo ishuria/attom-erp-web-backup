@@ -47,6 +47,8 @@ export interface IGetTaxRefundBatchDetailQuery {
   id: number
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
 }
 export interface IGetTaxRefundBatchDetailRes {
   data?: {
