@@ -64,7 +64,7 @@
                       <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
                     </div>
                     <div class="list-item-meta-content">
-                      <el-input v-model="item.quantity" clearable style="width: 240px"/>
+                      <el-input v-model.trim="item.quantity" clearable style="width: 240px"/>
                     </div>
                     <div class="list-item-meta-content">
                       <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
@@ -387,8 +387,8 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
   ul {
     padding: 0;
     margin: 0;
-    list-style: none;
     outline: none;
+    list-style: none;
 
     .list-item {
       padding: calc(var(--el-padding) / 2);
@@ -430,10 +430,10 @@ onMounted(async () => {  //编辑进来的需要获取数据, 订大货的需要
         &-description {
           display: -webkit-box;
           overflow: hidden;
+          -webkit-line-clamp: 2;
           font-size: var(--el-font-size-base);
           color: var(--el-color-grey);
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
         }
 
         :deep() {
