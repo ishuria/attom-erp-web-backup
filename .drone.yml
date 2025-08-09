@@ -45,8 +45,24 @@ steps:
       tags:
         - v1.0
 
-  # 远程到主机并运行docker compose
-  - name: deploy-run
+  # 部署到测试环境
+  - name: deploy-run-prod
+    pull: if-not-exists
+    image: appleboy/drone-ssh
+    settings:
+      host: 192.168.6.14
+      port: 22
+      username: attom-14
+      password:
+        from_secret: ssh_password
+      # 使用docker compose拉去对应的镜像，并运行
+      script:
+        - cd ~/app/erp/web && docker compose pull && docker compose up -d
+    when:
+      branch: local-dev
+
+  # 部署到生成环境
+  - name: deploy-run-prod
     pull: if-not-exists
     image: appleboy/drone-ssh
     settings:
@@ -58,6 +74,8 @@ steps:
       # 使用docker compose拉去对应的镜像，并运行
       script:
         - cd ~/app/erp/web && docker compose pull && docker compose up -d
+    when:
+      branch: prod
 
   # 构建缓存
   - name: rebuild-cache
@@ -113,3 +131,4 @@ volumes:
 trigger:
   branch:
     - local-dev
+    - prod
