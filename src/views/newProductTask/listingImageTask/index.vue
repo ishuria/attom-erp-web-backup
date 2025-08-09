@@ -151,13 +151,13 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] })" @click="handleShowSellingPoint(row)">
                       <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_DELETE] }" @click="handleDelArtDesignTask(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })" @click="handleDelArtDesignTask(row)">
                       <el-link type="danger" underline='never'>删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -324,25 +324,25 @@
                     <arrow-down />
                   </el-icon>
                 </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
-                      <el-link type="primary" underline='never'>卖点</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
-                      <el-link type="primary" underline='never'>文案</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
-                      <el-link type="primary" underline='never'>长期提成</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_FINISH] }" @click="handleFinish(row)">
-                      <el-link type="success" underline='never'>完成</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_DELETE] }" @click="handleDelArtDesignTask(row)">
-                      <el-link type="danger" underline='never'>删除</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] })" @click="handleShowSellingPoint(row)">
+                        <el-link type="primary" underline='never'>卖点</el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })" @click="handleShowCopywriting(row)">
+                        <el-link type="primary" underline='never'>文案</el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_LONG_TERM] })" @click="handleLongTerm(row)">
+                        <el-link type="primary" underline='never'>长期提成</el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })" @click="handleFinish(row)">
+                        <el-link type="success" underline='never'>完成</el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })" @click="handleDelArtDesignTask(row)">
+                        <el-link type="danger" underline='never'>删除</el-link>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
               </el-dropdown>
             </template>
           </el-table-column>
@@ -484,13 +484,13 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] }" @click="handleShowSellingPoint(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_SELLING_POINT_FILL] })" @click="handleShowSellingPoint(row)">
                       <el-link type="primary" underline='never'>卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] }" @click="handleShowCopywriting(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })" @click="handleShowCopywriting(row)">
                       <el-link type="primary" underline='never'>文案</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [ListingPermission.LISTING_TASK_LONG_TERM] }" @click="handleLongTerm(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_LONG_TERM] })" @click="handleLongTerm(row)">
                       <el-link type="primary" underline='never'>长期提成</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -748,6 +748,7 @@ import { useUserStore } from '/@/store/modules/user'
 import type { IAddArtDesignTaskReq, IArtDesignTaskMargin, IGetArtDesignSelectionReasonsList, IGetArtDesignTaskList, IGetArtDesignTaskListReq } from '/@/type/listingTask/imageTaskType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
