@@ -46,7 +46,7 @@ steps:
         - v1.0
 
   # 部署到测试环境
-  - name: deploy-run-prod
+  - name: deploy-run-test
     pull: if-not-exists
     image: appleboy/drone-ssh
     settings:
