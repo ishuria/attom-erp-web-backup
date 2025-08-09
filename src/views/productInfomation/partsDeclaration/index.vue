@@ -33,8 +33,9 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      :row-class-name="stripedRowClass"
+      :row-class-name="tableRowClassName"
       :span-method="objectSpanMethod"
+      @row-click="handleRowClick"
       @cell-click="changeInput"
     >
       <el-table-column fixed="left" label="图片" prop="componentImgUrl" width="75">
@@ -755,16 +756,32 @@ const fetchData = async () => {
 let previous: any = null
 let currentGroupIndex = 0 // 当前组索引
 
-const stripedRowClass = (_row: any) => {
-  const { row } = _row
-  const currentId = row.pId
-  // 检查当前行是否与上一行不同
-  if (currentId !== previous) {
-    previous = currentId
-    currentGroupIndex++
+// const stripedRowClass = (_row: any) => {
+//   const { row } = _row
+//   const currentId = row.pId
+//   // 检查当前行是否与上一行不同
+//   if (currentId !== previous) {
+//     previous = currentId
+//     currentGroupIndex++
+//   }
+//   // 根据当前组索引设置条纹样式
+//   return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
+// }
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.pId
+}
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.pId === selectedRowIndex.value) {
+    return 'select-row'
   }
-  // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
+  return ''
 }
 // 获取hs下拉列表
 const fetchHsSelectList = async () => {
@@ -797,15 +814,15 @@ onBeforeMount(() => {
   transform: scale(1.4); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
+// /* 取消没有条纹的行的悬停背景色 */
+// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+// }
 
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
+// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// }
 .el-table :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;
@@ -813,5 +830,8 @@ onBeforeMount(() => {
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.el-table :deep(.select-row > td) {
+  background-color: #7bddde !important;
 }
 </style>

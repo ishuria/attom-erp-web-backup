@@ -129,7 +129,9 @@
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
           :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
-          stripe
+       
+          :row-class-name="tableRowClassName"
+          @row-click="handleRowClick"
           @cell-click="cellClick"
           @sort-change="sortChange"
           >
@@ -766,8 +768,10 @@
           :data="asinList"
           :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
+          :row-class-name="tableRowClassName"
           @cell-click="cellClick"
           @sort-change="asinSortChange"
+          @row-click="handleRowClick"
         >
           <el-table-column
             v-for="(item) in checkList2"
@@ -1274,8 +1278,10 @@
           :data="pAsinList"
           :header-cell-class-name="headerCell"
           :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
+          :row-class-name="tableRowClassName"
           @cell-click="cellClick"
           @sort-change="pAsinSortChange"
+          @row-click="handleRowClick"
         >
           <el-table-column
             v-for="(item) in checkList3"
@@ -1715,6 +1721,20 @@ defineOptions({
   name: 'ProductPerformanceDashboard',
 })
 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({
+  row,
+}: {
+  row: any
+}) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const goToReview = (asin: string) => {
   window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank');
 }
@@ -2523,6 +2543,7 @@ const tabLoadStatus = ref({
 })
 
 const handleTabClick = (tab: TabsPaneContext) => {
+  selectedRowIndex.value = -1
   if (tab.props.name === 0) {
     activeName.value = 0
     // 只在首次加载时获取数据
@@ -3548,14 +3569,29 @@ onBeforeMount(() => {
   transform: scale(1.3);
   transform-origin: center;
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoverTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+// /* 取消没有条纹的行的悬停背景色 */
+// :deep(.noneHoverTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+// }
+// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+// :deep(.noneHoverTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// }
+.el-table {
+  :deep() {
+    .select-row > td {
+      background-color: #7bddde !important;
+    }
+      // 普通行hover时保持白色
+      .el-table__body tr:not(.select-row) {
+      &.hover-row > td,
+      &:hover > td {
+        background-color: #ffffff !important;
+      }
+    }
+  }
 }
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoverTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
+
 .disabled-handle {
   cursor: not-allowed;
 }

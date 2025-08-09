@@ -66,9 +66,11 @@
           :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
           :header-cell-class-name="headerCell"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           show-summary
           :summary-method="handleSummaryMethod"
           @cell-click="cellClick"
+          @row-click="handleRowClick"
           @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" label="selection" type="selection" width="60" />
@@ -239,9 +241,11 @@
           :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
           :header-cell-class-name="headerCell"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           show-summary
           :summary-method="handleSummaryMethod"
           @cell-click="cellClick"
+          @row-click="handleRowClick"
           @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" label="selection" type="selection" width="60" />
@@ -565,6 +569,9 @@ const invoiceMatchExportForm = reactive<{ time: [string, string] }>({
   time: ['', ''],
 })
 const invoiceMatchExportFormRef = ref<FormInstance>()
+
+// 行高亮状态管理
+const selectedRowIndex = ref<number>(-1)
 // const invoiceMatchExportFormRules = reactive<FormRules<{time: [string, string]}>>({
 //   time: [{ required: true, message: '请选择发票匹配日期', trigger: 'change' }]
 // })
@@ -602,6 +609,7 @@ const handleTabClick = (pane: TabsPaneContext) => {
     const tabValue = Number(pane.props.name)
     queryForm.taxRefundStatus = tabValue
     activeName.value = tabValue
+    selectedRowIndex.value = -1 // 重置选中状态
     router.push({
     query: {
         ...route.query,
@@ -736,6 +744,24 @@ const invoiceMatchingVisible = ref<boolean>(false)
 const showInvoiceMatching = () => {
   invoiceMatchingVisible.value = true
 }
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+
+const tableRowClassName = ({
+  row,
+  rowIndex,
+}: {
+  row: any
+  rowIndex: number
+}) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'warning-row'
+  }
+  return ''
+}
+
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
@@ -762,6 +788,7 @@ const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  selectedRowIndex.value = -1 // 重置选中状态
   router.push({
     query: {
       ...route.query,
@@ -773,6 +800,7 @@ const queryData = () => {
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
+  selectedRowIndex.value = -1 // 重置选中状态
   router.push({
     query: {
       ...route.query,
@@ -953,7 +981,8 @@ onBeforeMount(() => {
             }
           }
         }
-        .noneHoveTable .el-checkbox {
+      
+        .el-checkbox {
           transform: scale(1.3);
           transform-origin: center;
         }
@@ -986,7 +1015,21 @@ onBeforeMount(() => {
           .none {
             display: none;
           }
-        }
+           // 选中行样式优先级提高
+           .warning-row > td {
+              background-color: #7bddde !important;
+            }
+            
+            // 普通行hover时保持白色
+            .el-table__body tr:not(.warning-row) {
+              &.hover-row > td,
+              &:hover > td {
+                background-color: #ffffff !important;
+              }
+            }
+          
+          }
+        
         .create-time {
           color: #4e88f3;
         }

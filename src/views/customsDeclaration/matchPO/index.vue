@@ -29,6 +29,7 @@
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       @selection-change="setSelectRows"
+      @row-click="handleRowClick"
     >
       <el-table-column type="selection"/>
       <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
@@ -125,37 +126,37 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item  v-permissions="{ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] }" @click="showMatch(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_DETAIL_LIST] })" @click="showMatch(row)">
                   <el-link type="primary" underline='never' >匹配</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_UPDATE] }" @click="showModify(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_UPDATE] })" @click="showModify(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>修改</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_PACKAGE_ARCHIVE] }" @click="handleArchivePackage(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_PACKAGE_ARCHIVE] })" @click="handleArchivePackage(row)">
                   <el-link :disabled="row.packArchiveStatus === 1" type="primary" underline='never' >打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_ARCHIVE] }" @click="handleArchiveTaxRefund(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_ARCHIVE] })" @click="handleArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 1" type="primary" underline='never'>退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_ARCHIVE] }"  @click="handleArchiveOutbound(row)" >
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_ARCHIVE] })"  @click="handleArchiveOutbound(row)" >
                   <el-link :disabled="row.outboundStatus === 1" type="primary" underline='never' >出库归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_COST_LIST] }" @click="showFirstLegFreight(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_COST_LIST] })" @click="showFirstLegFreight(row)">
                   <el-link type="primary" underline='never' >头程运费</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item >
                   <el-link type="primary" underline='never' @click="showContractNumberImport(row)">合同导入</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_PACKAGE_CANCEL_ARCHIVE] }" @click="handleCancelArchivePackage(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_PACKAGE_CANCEL_ARCHIVE] })" @click="handleCancelArchivePackage(row)">
                   <el-link :disabled="row.packArchiveStatus === 0" type="primary" underline='never'>撤销打包归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_CANCEL_ARCHIVE] }" @click="handleCancelArchiveTaxRefund(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_TAXREFUND_CANCEL_ARCHIVE] })" @click="handleCancelArchiveTaxRefund(row)">
                   <el-link :disabled="row.taxRefundStatus === 0" type="primary" underline='never' >撤销退税归档</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_CANCEL] }" @click="handleCancelArchiveOutbound(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_OUTBOUND_CANCEL] })" @click="handleCancelArchiveOutbound(row)">
                   <el-link :disabled="row.outboundStatus === 0" type="primary" underline='never'>撤销出库</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [ShipmentPermission.CUSTOMS_CANCEL_ENCASEMENT] }" @click="handleCancelEncasement(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [ShipmentPermission.CUSTOMS_CANCEL_ENCASEMENT] })" @click="handleCancelEncasement(row)">
                   <el-link type="primary" underline='never'>撤销装箱(删除)</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -499,6 +500,7 @@ import ShipmentPermission from '/@/permissions/shipment.ts'
 import type { IGetMatchPoList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { hasPermission } from '/@/utils/permission'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
@@ -1296,6 +1298,11 @@ const CellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
     textAlign: 'center'
   }
 }
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
 const tableRowClassName = ({
   row,
   rowIndex,
@@ -1305,6 +1312,9 @@ const tableRowClassName = ({
 }) => {
   if (row.lockStatus === 0 && row.status === 1) {
     return 'warning-row'
+  }
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
   }
   return ''
 }
@@ -1481,8 +1491,13 @@ onActivated(() => {
       background-color: var(--el-color-warning-light-9) !important;
     }
 
+  
+    .select-row > td {
+      background-color: #7bddde !important;
+    }
+            
     // 普通行hover时保持白色
-    .el-table__body tr:not(.warning-row) {
+    .el-table__body tr:not(.select-row) {
       &.hover-row > td,
       &:hover > td {
         background-color: #ffffff !important;

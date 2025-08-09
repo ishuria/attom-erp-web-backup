@@ -25,7 +25,8 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="headerCellStyle"
-      stripe
+      :row-class-name="tableRowClassName"
+      @row-click="handleRowClick"
       @cell-click="changeInput"
     >
       <el-table-column fixed="left" label="图片" prop="skuImgUrl" width="75">
@@ -483,6 +484,20 @@ defineOptions({
   name: 'SkuDeclaration',
 })
 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({
+  row,
+}: {
+  row: any
+}) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const router = useRouter()
 const route = useRoute()
 const ukHtsList = ref<{ id: number, label: string }[]>([])
@@ -864,15 +879,15 @@ onBeforeMount(() => {
   transform: scale(1.4); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
+// /* 取消没有条纹的行的悬停背景色 */
+// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
+//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
+// }
 
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
+// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
+//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
+// }
 .el-table :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;
@@ -883,5 +898,8 @@ onBeforeMount(() => {
 }
 :deep(.el-checkbox) {
   transform: scale(1.3);
+}
+.el-table :deep(.select-row > td) {
+  background-color: #7bddde !important;
 }
 </style>

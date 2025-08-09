@@ -35,8 +35,9 @@
         :class="isFullscreen ? 'fullscreenTable' : 'normalTable'"
         :data="list"
         :header-cell-style="{ textAlign: 'center' }"
-        :row-class-name="stripedRowClass"
+        :row-class-name="tableRowClassName"
         :span-method="objectSpanMethod1"
+        @row-click="handleRowClick"
       >
         <el-table-column label="SKU">
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
@@ -365,6 +366,12 @@ import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+
 const modifyHSVisible = ref<boolean>(false)
 const modifyHsForm = reactive<any>({
 
@@ -436,6 +443,7 @@ watchEffect(() => {
   disabled2.value = props.disabled2
   disabled3.value = props.disabled3
   if (dflag.value === true) {
+    selectedRowIndex.value = -1
     fetchData()
   }
 })
@@ -1413,9 +1421,13 @@ const tableRowClassName = ({
   row: any
   rowIndex: number
 }) => {
-  if (!row.shipmentId) {
-    return 'danger-row'
+  // if (!row.shipmentId) {
+  //   return 'danger-row'
+  // }
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
   }
+  return ''
 }
 </script>
 
@@ -1430,6 +1442,10 @@ const tableRowClassName = ({
     td {
       background-color: #ffffff !important;
     }
+    .select-row > td {
+      background-color: #7bddde !important;
+    }
+    
   }
 }
 :deep(.striped) {
