@@ -81,6 +81,39 @@
               />
             </template>
           </el-table-column>
+          <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
+            <template #default="{ row, $index }">
+              <div style="display: flex; align-items: center">
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
+                  <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
+                    <div class="image-preview">
+                      <img :alt="image.imageId" :src="image.imageUrl" />
+                      <div class="image-actions">
+                        <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
+                        <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
+                      </div>
+                    </div>
+                  </div>
+                </vue-draggable>
+               
+                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
+                  <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
+                    <el-icon><plus /></el-icon>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+             <el-table-column label="开发日志" min-width="300" prop="progressLog">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column label="MOQ" prop="moq" width="80">
             <template #default="{ row }">
               <div class="none">
@@ -94,6 +127,26 @@
               <span >
                 {{ row.moq }}
               </span>
+            </template>
+          </el-table-column>
+               <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px' , 'text-align': 'left' }" >
+                {{ row.currentPhaseStatus }}
+              </span>
+            </template>
+          </el-table-column>
+           <el-table-column label="备注" min-width="160" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" width="120">
@@ -120,60 +173,7 @@
                 <div class="multi-line-ellipsis-1">{{ row.researchReportLink  }}</div>
               </el-tooltip>
             </template>
-          </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px' , 'text-align': 'left' }" >
-                {{ row.currentPhaseStatus }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="开发日志" min-width="300" prop="progressLog">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" min-width="160" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
-            <template #default="{ row, $index }">
-              <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
-                  <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
-                    <div class="image-preview">
-                      <img :alt="image.imageId" :src="image.imageUrl" />
-                      <div class="image-actions">
-                        <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
-                        <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
-                      </div>
-                    </div>
-                  </div>
-                </vue-draggable>
-               
-                <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
-                  <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
-                    <el-icon><plus /></el-icon>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-table-column>
+          </el-table-column>  
 
           <el-table-column :fixed="fixed" label="操作" width="180">
             <template #default="{ row }">
@@ -292,52 +292,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="MOQ" prop="moq" width="80" />
-          <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
-            <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales+'px', 'text-align': 'right' }" >
-                {{ row.targetMonthlySales }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="调研报告链接" prop="" width="350">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.researchReportLink }}</div>
-                </template>
-                <div class="multi-line-ellipsis-1">{{ row.researchReportLink }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
-            <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus+'px', 'text-align': 'left' }" >
-                {{ row.currentPhaseStatus }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="开发日志" min-width="300" prop="progressLog">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="备注" min-width="160" prop="remark">
-            <template #default="{ row }">
-              <el-tooltip effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
+           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
@@ -360,7 +315,53 @@
               </div>
             </template>
           </el-table-column>
-
+           <el-table-column label="开发日志" min-width="300" prop="progressLog">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.progressLog) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.progressLog) }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="MOQ" prop="moq" width="80" />
+              <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus+'px', 'text-align': 'left' }" >
+                {{ row.currentPhaseStatus }}
+              </span>
+            </template>
+          </el-table-column>
+         
+          <el-table-column label="备注" min-width="160" prop="remark">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales+'px', 'text-align': 'right' }" >
+                {{ row.targetMonthlySales }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="调研报告链接" prop="" width="350">
+            <template #default="{ row }">
+              <el-tooltip effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.researchReportLink }}</div>
+                </template>
+                <div class="multi-line-ellipsis-1">{{ row.researchReportLink }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+      
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制到进行中</el-button>
