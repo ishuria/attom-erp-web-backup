@@ -5,8 +5,10 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="getSampleProgress">样品进度</el-button>
-<!--            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>-->
-            <el-button v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }" type="primary" @click="handlePersonSelect">参与人员筛选</el-button>
+            <!--            <el-button type="primary" @click="getMoldProgress">开模进度</el-button>-->
+            <el-button v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }" type="primary" @click="handlePersonSelect">
+              参与人员筛选
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -38,12 +40,7 @@
         >
           <el-table-column label="优先级" prop="priority" width="120">
             <template #default="{ row }">
-              <el-select
-                v-model="row.priority"
-                class="center-select"
-                style="min-width: 100%"
-                @change="updatePriority(row)"
-              >
+              <el-select v-model="row.priority" class="center-select" style="min-width: 100%" @change="updatePriority(row)">
                 <el-option v-for="item in priorityOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </template>
@@ -55,14 +52,15 @@
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" width="120">
             <template #default="{ row }">
-             
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName + 'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
-                </span>
+              <span
+                :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName + 'px', 'text-align': 'left' }"
+                v-html="row.sharerName.replace(/,/g, '<br/>')"
+              ></span>
             </template>
           </el-table-column>
           <el-table-column label="产品" prop="product" :width="columnWidths.product + 50">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product + 'px', 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product + 'px', 'text-align': 'left' }">
                 {{ row.product }}
                 <br />
                 {{ row.mainSearchTerms }}
@@ -95,7 +93,7 @@
                     </div>
                   </div>
                 </vue-draggable>
-               
+
                 <div v-if="row.imageList.length < 5" class="image-cell" :style="{ marginLeft: row.imageList.length > 0 ? 8 + 'px' : 0 }">
                   <div class="upload-placeholder" @click="showUploadDialog(row, $index)">
                     <el-icon><plus /></el-icon>
@@ -104,7 +102,7 @@
               </div>
             </template>
           </el-table-column>
-             <el-table-column label="开发日志" min-width="300" prop="progressLog">
+          <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -114,32 +112,18 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="MOQ" prop="moq" width="80">
-            <template #default="{ row }">
-              <div class="none">
-                <el-input
-                  v-model="row.moq"
-                  type="text"
-                  @blur="clickCancel($event, row)"
-                  @keyup.enter="clickCancel($event, row)"
-                />
-              </div>
-              <span >
-                {{ row.moq }}
-              </span>
-            </template>
-          </el-table-column>
-               <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
+
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus + 30">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.currentPhaseStatus" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
               </div>
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px' , 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px', 'text-align': 'left' }">
                 {{ row.currentPhaseStatus }}
               </span>
             </template>
           </el-table-column>
-           <el-table-column label="备注" min-width="160" prop="remark">
+          <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -147,6 +131,16 @@
                 </template>
                 <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
               </el-tooltip>
+            </template>
+          </el-table-column>
+          <el-table-column label="MOQ" prop="moq" width="100">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.moq" type="text" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>
+                {{ row.moq }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column label="目标月销" prop="targetMonthlySales" width="120">
@@ -159,7 +153,7 @@
                   @keyup.enter="clickCancel($event, row)"
                 />
               </div>
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales + 'px', 'text-align': 'right' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales + 'px', 'text-align': 'right' }">
                 {{ row.targetMonthlySales }}
               </span>
             </template>
@@ -170,10 +164,10 @@
                 <template #content>
                   <div class="custom-tooltip">{{ row.researchReportLink }}</div>
                 </template>
-                <div class="multi-line-ellipsis-1">{{ row.researchReportLink  }}</div>
+                <div class="multi-line-ellipsis-1">{{ row.researchReportLink }}</div>
               </el-tooltip>
             </template>
-          </el-table-column>  
+          </el-table-column>
 
           <el-table-column :fixed="fixed" label="操作" width="180">
             <template #default="{ row }">
@@ -189,13 +183,13 @@
                     <el-dropdown-item @click="handleSampleCosting(row)">
                       <el-link type="primary" underline="never">拿样与核算</el-link>
                     </el-dropdown-item>
-<!--                    <el-dropdown-item @click="addProgressMold">-->
-<!--                      <el-link type="primary" underline="never">开模申请</el-link>-->
-<!--                    </el-dropdown-item>-->
+                    <!--                    <el-dropdown-item @click="addProgressMold">-->
+                    <!--                      <el-link type="primary" underline="never">开模申请</el-link>-->
+                    <!--                    </el-dropdown-item>-->
                     <el-dropdown-item @click="handleOrderProcess(row)">
                       <el-link type="primary" underline="never">{{ handleSwitchName(row) }}</el-link>
                     </el-dropdown-item>
-                  
+
                     <el-dropdown-item @click="handleCopyProgress(row)">
                       <el-link type="primary" underline="never">复制</el-link>
                     </el-dropdown-item>
@@ -229,7 +223,13 @@
       <el-tab-pane label="已归档" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }" type="primary" @click="handleArchivedPersonselect">参与人员筛选</el-button>
+            <el-button
+              v-permissions="{ permission: [ProgressPermission.PERSON_FILTER] }"
+              type="primary"
+              @click="handleArchivedPersonselect"
+            >
+              参与人员筛选
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <div class="custom-table-right-tools">
@@ -266,13 +266,15 @@
           </el-table-column>
           <el-table-column label="参与人员" prop="sharerName" width="100">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName+'px', 'text-align': 'left' }" v-html="row.sharerName.replace(/,/g, '<br/>')">
-                </span>
+              <span
+                :style="{ display: 'inline-block', 'min-width': columnWidths.sharerName + 'px', 'text-align': 'left' }"
+                v-html="row.sharerName.replace(/,/g, '<br/>')"
+              ></span>
             </template>
           </el-table-column>
-          <el-table-column label="产品" prop="product" :width="columnWidths.product+50">
+          <el-table-column label="产品" prop="product" :width="columnWidths.product + 50">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product+'px', 'text-align': 'left' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.product + 'px', 'text-align': 'left' }">
                 {{ row.product }}
                 <br />
                 {{ row.mainSearchTerms }}
@@ -292,7 +294,7 @@
               />
             </template>
           </el-table-column>
-           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
+          <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
@@ -315,7 +317,7 @@
               </div>
             </template>
           </el-table-column>
-           <el-table-column label="开发日志" min-width="300" prop="progressLog">
+          <el-table-column label="开发日志" min-width="300" prop="progressLog">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -325,15 +327,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="MOQ" prop="moq" width="80" />
-              <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus+30">
-            <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus+'px', 'text-align': 'left' }" >
-                {{ row.currentPhaseStatus }}
-              </span>
-            </template>
-          </el-table-column>
-         
+
           <el-table-column label="备注" min-width="160" prop="remark">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
@@ -344,9 +338,17 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="目标月销" prop="targetMonthlySales" width="120" >
+          <el-table-column label="MOQ" prop="moq" width="100" />
+          <el-table-column label="当前阶段" prop="currentPhaseStatus" :width="columnWidths.currentPhaseStatus + 30">
             <template #default="{ row }">
-              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales+'px', 'text-align': 'right' }" >
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.currentPhaseStatus + 'px', 'text-align': 'left' }">
+                {{ row.currentPhaseStatus }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="目标月销" prop="targetMonthlySales" width="120">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.targetMonthlySales + 'px', 'text-align': 'right' }">
                 {{ row.targetMonthlySales }}
               </span>
             </template>
@@ -361,7 +363,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-      
+
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制到进行中</el-button>
@@ -589,7 +591,7 @@ import {
   updateProgressManage,
   updateProgressMoldAdd,
   updateProgressSharelist,
-  uploadFile
+  uploadFile,
 } from '/@/api/devlocal/progress'
 import ProgressPermission from '/@/permissions/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
@@ -607,9 +609,7 @@ const tableRowFormatter = (data: TableTooltipData<IProgress>) => {
 }
 
 const withVNode = (data: TableTooltipData<IProgress>) => {
-  return h(ElLink, { type: 'primary', href: data.cellValue }, () =>
-    h('span', null, data.cellValue)
-  )
+  return h(ElLink, { type: 'primary', href: data.cellValue }, () => h('span', null, data.cellValue))
 }
 const handleSwitchName = (row: any) => {
   if (row.bulkGoodsStatus === 1) {
@@ -621,7 +621,6 @@ const handleSwitchName = (row: any) => {
 }
 // 订大货
 const handleOrderProcess = async (row: IProgress) => {
-
   if (row.bulkGoodsStatus === 1) {
     const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
     await router.push({
@@ -648,8 +647,6 @@ const handleOrderProcess = async (row: IProgress) => {
       },
     })
   }
-
-  
 }
 const updateResearchReportLinkVisible = ref<boolean>(false)
 const researchReportLink = ref<string>('')
@@ -686,9 +683,12 @@ const progressList = ref<IProgress[]>([])
 const columnWidths = computed(() => ({
   currentPhaseStatus: flexColumnWidth(progressList.value, '当前阶段', 'currentPhaseStatus', 0),
   sharerName: flexColumnWidth(progressList.value, '参与人员', 'other', 0),
-  product: Math.max(flexColumnWidth(progressList.value, '中文品名', 'product', 0), flexColumnWidth(progressList.value, '中文品名', 'mainSearchTerms', 0)),
+  product: Math.max(
+    flexColumnWidth(progressList.value, '中文品名', 'product', 0),
+    flexColumnWidth(progressList.value, '中文品名', 'mainSearchTerms', 0)
+  ),
   targetMonthlySales: flexColumnWidth(progressList.value, '目标月销', 'targetMonthlySales', 0),
-}));
+}))
 let tableClickProgressId = ref<number>(0)
 // 点击上传图标的行下标
 let tableClickRowIndex = ref<number>(0)
@@ -699,7 +699,7 @@ const queryForm = reactive<IProgressQueryReq>({
   pageSize: 20,
   productKeyWord: '',
   status: 0, //查询状态：0表示进行中 1表示已归档
-  userNameList: []
+  userNameList: [],
 })
 
 const priorityOptions = [
@@ -1322,15 +1322,15 @@ const handleArchivedShareSelectConfirm = async () => {
   //   // 如果没有筛选任何人
   //   fetchData()
   // } else {
-    // const { data } = await getProgressFilter({
-    //   userNameList: userNameArchivedList.value,
-    //   status: queryForm.status,
-    //   pageNo: queryForm.pageNo,
-    //   pageSize: queryForm.pageSize,
-    // })
+  // const { data } = await getProgressFilter({
+  //   userNameList: userNameArchivedList.value,
+  //   status: queryForm.status,
+  //   pageNo: queryForm.pageNo,
+  //   pageSize: queryForm.pageSize,
+  // })
   queryForm.userNameList = userNameArchivedList.value
-    fetchData()
-    // shareSelect.value = []
+  fetchData()
+  // shareSelect.value = []
   // }
 }
 const updateSharedVisibleValue = (newValue: boolean) => {
@@ -1544,7 +1544,6 @@ onBeforeMount(() => {
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 
-
 .image-list {
   display: flex;
   gap: 8px;
@@ -1640,7 +1639,7 @@ onBeforeMount(() => {
   border-color: #fff;
 }
 :deep(.center-select) {
- text-align: center;
- text-align-last: center;
+  text-align: center;
+  text-align-last: center;
 }
 </style>
