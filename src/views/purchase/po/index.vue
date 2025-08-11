@@ -78,12 +78,21 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0"> 
+            <div
+              v-if="
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -127,9 +136,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -159,9 +168,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -296,12 +305,17 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+            <div
+              v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE"
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -345,9 +359,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -383,9 +397,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -520,12 +534,17 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+            <div
+              v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE"
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -569,9 +588,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -607,9 +626,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -641,7 +660,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -744,12 +763,17 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+            <div
+              v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE"
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -793,9 +817,9 @@
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -831,9 +855,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -865,7 +889,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -968,12 +992,17 @@
             <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
               删除
             </el-button>
-            <div v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE" style="margin: 0 10px 10px 0"> 
+            <div
+              v-if="currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE || currentRoleCode === ROLE_PURCHASER_CODE"
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">含税价格合计：{{ taxIncludedTotalPrice }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
             </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
@@ -1007,11 +1036,11 @@
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
         >
-        <el-table-column label="PO" min-width="120" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -1047,9 +1076,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -1081,7 +1110,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -1140,11 +1169,11 @@
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
         >
-        <el-table-column label="PO" min-width="120" prop="po">
+          <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku"  >
-                <el-link style="margin-right: 3px;" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)"/>
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
               </span>
             </template>
           </el-table-column>
@@ -1180,9 +1209,9 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -1214,7 +1243,7 @@
               <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
             </template>
           </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')"/>
+          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
           <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
@@ -1336,21 +1365,21 @@
         <el-form-item label="金额" prop="price">
           <el-input v-model="refundForm.price" clearable @input="handleComputeRefundPercent" />
         </el-form-item>
-        <el-form-item label="凭证上传" prop="refundVoucher"> 
-            <div class="image-cell">
-              <!-- 有图片时显示 -->
-              <div v-if="refundForm.refundVoucher" class="image-preview">
-                <img alt="" :src="refundForm.refundVoucher" />
-                <div class="image-actions">
-                  <el-icon @click="handlePreview(refundForm.refundVoucher)"><zoom-in /></el-icon>
-                  <el-icon @click="handleRefundVoucherRemove"><delete /></el-icon>
-                </div>
-              </div>
-              <!-- 无图片时显示 -->
-              <div v-else class="upload-placeholder" @click="imageUploadVisible = true">
-                <el-icon><plus /></el-icon>
+        <el-form-item label="凭证上传" prop="refundVoucher">
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="refundForm.refundVoucher" class="image-preview">
+              <img alt="" :src="refundForm.refundVoucher" />
+              <div class="image-actions">
+                <el-icon @click="handlePreview(refundForm.refundVoucher)"><zoom-in /></el-icon>
+                <el-icon @click="handleRefundVoucherRemove"><delete /></el-icon>
               </div>
             </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="imageUploadVisible = true">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1522,7 +1551,7 @@ const disabledDate = (time: Date) => {
   // 不能选择晚于今天的日期
   return date.isAfter(now, 'day')
 }
-const currentRoleCode = useAclStore().getRole[0];
+const currentRoleCode = useAclStore().getRole[0]
 const procurementBonus = ref<number>(0)
 const procurementBonusCrossMonth = ref<number>(0)
 const _poComponentId = ref<number>(0)
@@ -1955,11 +1984,11 @@ const handleComputeRefundPercent = (value: string) => {
  * 上传图片
  */
 async function uploadImage(file: File) {
-   const fileUrl = URL.createObjectURL(file)
-  
+  const fileUrl = URL.createObjectURL(file)
+
   // 保存文件对象用于后续上传
   refundForm.refundVoucher = fileUrl
-  
+
   // 如果需要保存原始文件对象用于后续处理，可以添加一个新属性
   refundForm.refundVoucherFile = file
   imageUploadVisible.value = false
@@ -2087,17 +2116,32 @@ const handleGenerateContract = async () => {
       clearTableSelect()
       $baseMessage('生成合同成功', 'success')
       // 下载合同
-      data.forEach(async (fileName: string) => {
-        await downloadFile('/purchase/download', {
-          fileName,
-        })
-          .then((res) => {
-            console.log(res)
+      for (let i = 0; i < data.length; i++) {
+        const fileName = data[i]
+        try {
+          await downloadFile('/purchase/download', {
+            fileName,
           })
-          .catch((error) => {
-            console.error(error)
-          })
-      })
+          console.log(`下载成功: ${fileName}`)
+          // 添加小延迟，避免浏览器阻止下载
+          if (i < data.length - 1) {
+            await new Promise((resolve) => setTimeout(resolve, 100))
+          }
+        } catch (error) {
+          console.error(`下载失败: ${fileName}`, error)
+        }
+      }
+      // data.forEach(async (fileName: string) => {
+      //   await downloadFile('/purchase/download', {
+      //     fileName,
+      //   })
+      //     .then((res) => {
+      //       console.log(res)
+      //     })
+      //     .catch((error) => {
+      //       console.error(error)
+      //     })
+      // })
     }
   } catch (error) {
     console.error(error)
@@ -2315,7 +2359,7 @@ const handlePoDetail = async (row: any) => {
         from: row.po,
         poSkuId: row.poSkuId,
         poId: row.id,
-        del
+        del,
         // timestamp: Date.now(),
       },
     })
@@ -2340,7 +2384,7 @@ const handleDelPoDetail = (row: any) => {
       poId: row.id,
       // timestamp: Date.now(),
       del: 'true',
-      tab: 'view'
+      tab: 'view',
     },
   })
 
@@ -2504,7 +2548,7 @@ const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   router.push({
     query: {
-     ...route.query,
+      ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
     },
@@ -2515,7 +2559,7 @@ const queryData = () => {
   queryForm.pageNo = 1
   router.push({
     query: {
-     ...route.query,
+      ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
     },
@@ -2918,20 +2962,20 @@ onUnmounted(() => {
 .image-cell {
   width: 130px;
   height: 130px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -2945,21 +2989,21 @@ onUnmounted(() => {
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
@@ -2971,14 +3015,14 @@ onUnmounted(() => {
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
