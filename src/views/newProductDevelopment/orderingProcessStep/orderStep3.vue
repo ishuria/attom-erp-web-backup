@@ -1172,7 +1172,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 const clickSupplierCancel = async (event: any, value: any) => {
   // 判断新输入的供应商是否和其余的一样
   componentList.value.forEach((item: any) => {
-    if (item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
+    if (item.orderEntryId !== 0 && item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
       value.supplier = ''
       $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'error', 'hey')
       return

@@ -1,50 +1,52 @@
 <template>
   <div>
     <!-- 修改 -->
-    <vab-dialog
-      v-model="dflag"
-      :before-close="handleCloseDialog"
-      :draggable="false"
-      title="修改"
-      top="7vh"
-      width="40%"
-    >
-      <el-form ref="modifyFormRef" label-position="right" label-width="auto" :model="modifyForm" style="margin-right: 3px; margin-left: 3px;">
-        <el-form-item label="数量(箱)" prop="boxNumber" >
+    <vab-dialog v-model="dflag" :before-close="handleCloseDialog" :draggable="false" title="修改" top="7vh" width="40%">
+      <el-form
+        ref="modifyFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="modifyForm"
+        style="margin-right: 3px; margin-left: 3px"
+      >
+        <el-form-item label="数量(箱)" prop="boxNumber">
           <el-input v-model="modifyForm.boxNumber" clearable />
         </el-form-item>
-        <el-form-item label="毛重(kg)" prop="grossWeight" >
+        <el-form-item label="毛重(kg)" prop="grossWeight">
           <el-input v-model="modifyForm.grossWeight" clearable />
         </el-form-item>
-        <el-form-item label="长(cm)" prop="length" >
+        <el-form-item label="长(cm)" prop="length">
           <el-input v-model="modifyForm.length" clearable />
         </el-form-item>
-        <el-form-item label="宽(cm)" prop="width" >
+        <el-form-item label="宽(cm)" prop="width">
           <el-input v-model="modifyForm.width" clearable />
         </el-form-item>
-        <el-form-item label="高(cm)" prop="height" >
+        <el-form-item label="高(cm)" prop="height">
           <el-input v-model="modifyForm.height" clearable />
         </el-form-item>
-        <el-form-item label="发往站点" prop="siteId" >
+        <el-form-item label="发往站点" prop="siteId">
           <el-select v-model="modifyForm.siteId" placeholder="请选择站点">
-            <el-option 
-              v-for="item in props.siteList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+            <el-option v-for="item in props.siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
       <el-button style="margin-top: 10px; margin-bottom: 10px" type="primary" @click="handleOpenAdd">新增</el-button>
-      <el-table border class="noneHoverTable" :data="skuDetailList" :header-cell-style="{ textAlign: 'center' }" max-height="35vh" stripe @cell-click="changeInput">
+      <el-table
+        border
+        class="noneHoverTable"
+        :data="skuDetailList"
+        :header-cell-style="{ textAlign: 'center' }"
+        max-height="35vh"
+        stripe
+        @cell-click="changeInput"
+      >
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(skuDetailList, 'SKU', 'sku')" />
         <el-table-column label="FNSKU" min-width="140" prop="fnSkuOrUpc" :width="flexColumnWidth(skuDetailList, 'FNSKU', 'fnSkuOrUpc')" />
-        <el-table-column label="说明" min-width="160" prop="productName" :width="flexColumnWidth(skuDetailList, '说明', 'productName')"/>
+        <el-table-column label="说明" min-width="160" prop="productName" :width="flexColumnWidth(skuDetailList, '说明', 'productName')" />
         <el-table-column align="center" label="数量" min-width="70" prop="count">
           <template #default="{ row }">
             <div class="none">
-              <el-input-number 
+              <el-input-number
                 v-model="row.count"
                 :controls="false"
                 :min="0"
@@ -58,13 +60,13 @@
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作">
           <template #default="{ row, $index }">
-            <el-link type="primary" underline='never' @click="showInspection(row)">清点质检</el-link>
-            <span style="margin: 0 5px;"></span>
-            <el-link type="danger" underline='never' @click="handleDelEncasementDetail(row, $index)">删除</el-link>
+            <el-link type="primary" underline="never" @click="showInspection(row)">清点质检</el-link>
+            <span style="margin: 0 5px"></span>
+            <el-link type="danger" underline="never" @click="handleDelEncasementDetail(row, $index)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
-      <vab-pagination 
+      <vab-pagination
         :current-page="queryForm.pageNo"
         :page-size="queryForm.pageSize"
         :total="total"
@@ -77,17 +79,18 @@
       </template>
     </vab-dialog>
     <!-- 新增新的明细 -->
-    <vab-dialog
-      v-model="addNewVisible"
-      title="新增"
-      width="660px"
-      @close="closeAddNewDetail"
-    >
+    <vab-dialog v-model="addNewVisible" title="新增" width="660px" @close="closeAddNewDetail">
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form ref="addNewFormRef" label-position="top" :model="addNewForm" :rules="addNewFormRules">
             <el-form-item label="FNSKU" prop="fnSkuOrUpc">
-              <el-input ref="barcodeInput" v-model="addNewForm.fnSkuOrUpc" :disabled="barcodeDisabled" @keydown.enter="handleEnter" @blur="handleBlur" />
+              <el-input
+                ref="barcodeInput"
+                v-model="addNewForm.fnSkuOrUpc"
+                :disabled="barcodeDisabled"
+                @blur="handleBlur"
+                @keydown.enter="handleEnter"
+              />
             </el-form-item>
             <el-form-item label="SKU" prop="sku"><el-input v-model="addNewForm.sku" disabled /></el-form-item>
             <el-form-item label="产品名称" prop="productName"><el-input v-model="addNewForm.productName" disabled /></el-form-item>
@@ -95,9 +98,13 @@
           </el-form>
         </el-col>
         <el-col :span="12">
-          <el-image :src="addNewForm.skuImageUrl" style="width: 300px; height: 300px; cursor: pointer; border: 2px #DCDFE6 solid; border-radius: 2%;" @click="imagePreviewShow(addNewForm.skuImageUrl)">
+          <el-image
+            :src="addNewForm.skuImageUrl"
+            style="width: 300px; height: 300px; cursor: pointer; border: 2px #dcdfe6 solid; border-radius: 2%"
+            @click="imagePreviewShow(addNewForm.skuImageUrl)"
+          >
             <template #error>
-              <el-icon/>
+              <el-icon />
             </template>
           </el-image>
         </el-col>
@@ -108,94 +115,96 @@
       </template>
     </vab-dialog>
     <!-- 清点质检 -->
-    <vab-dialog
-      v-model="inspectionVisible"
-      title="清点质检"
-      top="10vh"
-      width="45%"
-    >
-      <el-table 
+    <vab-dialog v-model="inspectionVisible" title="清点质检" top="10vh" width="45%">
+      <el-table
         v-loading="inspectionLoading"
-        border 
-        :cell-class-name="cellClassName" class="noneHoveTable"  
-        :data="inspectionList" 
+        border
+        :cell-class-name="cellClassName"
+        class="noneHoveTable"
+        :data="inspectionList"
         :header-cell-style="{ textAlign: 'center' }"
-        max-height="60vh" 
+        max-height="60vh"
         stripe
       >
-        <el-table-column align="center" label="PO" min-width="100" prop="po"/>
+        <el-table-column align="center" label="PO" min-width="100" prop="po" />
         <el-table-column align="center" label="产品图片" prop="skuImageUrl" width="70">
           <template #default="{ row }">
-            <el-image :src="row.skuImageUrl" style="display: block; width: 70px; height: 70px;" @click="imagePreviewShow(row.skuImageUrl)">
+            <el-image :src="row.skuImageUrl" style="display: block; width: 70px; height: 70px" @click="imagePreviewShow(row.skuImageUrl)">
               <template #error>
-                <el-icon/>
+                <el-icon />
               </template>
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="到货状态" min-width="100" prop="taskStatus"/>
-        <el-table-column align="center" label="任务数" min-width="90" prop="packageTaskCount"/>
-        <el-table-column align="center" label="站点" min-width="130" prop="siteName"/>
-        <el-table-column align="center" label="已装箱数" min-width="100" prop="boxNumber"/>
+        <el-table-column align="center" label="到货状态" min-width="100" prop="taskStatus" />
+        <el-table-column align="center" label="任务数" min-width="90" prop="packageTaskCount" />
+        <el-table-column align="center" label="站点" min-width="130" prop="siteName" />
+        <el-table-column align="center" label="已装箱数" min-width="100" prop="boxNumber" />
         <el-table-column align="center" label="清点质检" min-width="100" prop="qualityCheckStatus">
           <template #default="{ row }">
-            <el-switch v-model="row.qualityCheckStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleShowPackingCount(row)"/>
+            <el-switch
+              v-model="row.qualityCheckStatus"
+              :active-value="1"
+              :inactive-value="0"
+              style="--el-switch-on-color: #13ce66"
+              @change="handleShowPackingCount(row)"
+            />
           </template>
         </el-table-column>
-        <el-table-column align="center" label="实际完成数" min-width="110" prop="actualCompleted"/>
+        <el-table-column align="center" label="实际完成数" min-width="110" prop="actualCompleted" />
       </el-table>
     </vab-dialog>
     <!-- 点击清点质检 - 打包总数 -->
-    <vab-dialog
-      v-model="packingCountVisible"
-      :before-close="closePackingCount"
-      class="packingTotal"
-      title="打包总数"
-      width="22%"
-    >
-      <el-form ref="packingCountFormRef" label-position="left" label-width="auto" :model="packingCountForm" style="margin-right: 0px; margin-left: 20px;">
+    <vab-dialog v-model="packingCountVisible" :before-close="closePackingCount" class="packingTotal" title="打包总数" width="22%">
+      <el-form
+        ref="packingCountFormRef"
+        label-position="left"
+        label-width="auto"
+        :model="packingCountForm"
+        style="margin-right: 0px; margin-left: 20px"
+      >
         <el-form-item label="任务数量" prop="packageTaskCount">
-          <div style="width: 85%;">
-            <el-input v-model="packingCountForm.packageTaskCount" disabled  />
+          <div style="width: 85%">
+            <el-input v-model="packingCountForm.packageTaskCount" disabled />
           </div>
         </el-form-item>
         <el-form-item label="好" prop="goodCount">
-          <div style="width: 85%; margin-right: 10px;">
-            <el-input v-model.trim="packingCountForm.goodCount" clearable/>
+          <div style="width: 85%; margin-right: 10px">
+            <el-input v-model.trim="packingCountForm.goodCount" clearable />
           </div>
-          <div style="display: flex; align-items: center; width: 10%; ">
-            <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer;" @click="handleShowAdd"><circle-plus /></el-icon>
+          <div style="display: flex; align-items: center; width: 10%">
+            <el-icon class="add-icon" :size="23" style="margin: 0 auto; cursor: pointer" @click="handleShowAdd"><circle-plus /></el-icon>
           </div>
         </el-form-item>
         <el-form-item label="留样" prop="keepSampleCount">
-          <div style="width: 85%;">
-            <el-input v-model.trim="packingCountForm.keepSampleCount" clearable/>
+          <div style="width: 85%">
+            <el-input v-model.trim="packingCountForm.keepSampleCount" clearable />
           </div>
         </el-form-item>
         <el-form-item label="坏" prop="badCount">
-          <div style="width: 85%;">
-            <el-input v-model.trim="packingCountForm.badCount" clearable/>
+          <div style="width: 85%">
+            <el-input v-model.trim="packingCountForm.badCount" clearable />
           </div>
           <!-- <el-button type="primary" @click="handleShowDetails">明细</el-button> -->
         </el-form-item>
         <el-form-item label="缺">
-          <div style="width: 85%;">
+          <div style="width: 85%">
             <el-input v-model="lackCount" disabled />
           </div>
         </el-form-item>
         <el-form-item label="多">
-          <div style="width: 85%;">
+          <div style="width: 85%">
             <el-input v-model="manyCount" disabled />
           </div>
         </el-form-item>
         <el-form-item label="打包总数">
-          <div style="width: 85%;">
+          <div style="width: 85%">
             <el-input v-model="packingTotal" disabled />
           </div>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <div style="width: 85%;">
-            <el-input v-model="packingCountForm.remark" resize="none" :rows="2" style="margin-bottom: 18px" type="textarea"/>
+          <div style="width: 85%">
+            <el-input v-model="packingCountForm.remark" resize="none" :rows="2" style="margin-bottom: 18px" type="textarea" />
           </div>
         </el-form-item>
       </el-form>
@@ -207,13 +216,8 @@
       </template>
     </vab-dialog>
     <!-- 增加 -->
-    <vab-dialog
-      v-model="addVisible"
-      title="增加"
-      width="17%"
-      @close="handleCloseAdd"
-    >
-      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px;">
+    <vab-dialog v-model="addVisible" title="增加" width="17%" @close="handleCloseAdd">
+      <el-form ref="addFormRef" label-position="left" label-width="auto" :model="addForm" style="margin-right: 20px; margin-left: 20px">
         <el-form-item label="好" prop="good">
           <el-input v-model.trim="addForm.good" clearable />
         </el-form-item>
@@ -237,7 +241,15 @@
 import { CirclePlus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
-import { addDetailEncasement, delEncasementInspection, getEncasementInspection, getEncasementSku, getEncasementUpdate, updateEncasement, updateEncasementDetailCount } from '/@/api/devlocal/encasement'
+import {
+  addDetailEncasement,
+  delEncasementInspection,
+  getEncasementInspection,
+  getEncasementSku,
+  getEncasementUpdate,
+  updateEncasement,
+  updateEncasementDetailCount,
+} from '/@/api/devlocal/encasement'
 import { addQualityCheck, getQualityCheck, verificationCheckQuality } from '/@/api/devlocal/packagingShipping'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import type { IAddDetailEncasementReq, IGetEncasementInspection, ISiteOption, ISkuDetailList } from '/@/type/packagingShipping/shippedType'
@@ -282,7 +294,7 @@ const handleOpenAdd = () => {
     sku: '',
     productName: '',
     count: '',
-    skuImageUrl: ''
+    skuImageUrl: '',
   })
 
   nextTick(() => {
@@ -295,30 +307,30 @@ const lastProcessedBarcode = ref('')
 const handleBlur = async (event: any) => {
   // 如果是初次打开，跳过处理
   if (!isInitialized.value) {
-      isInitialized.value = true
-      return
-    }
-
-    const barcodeValue = (event.target as HTMLInputElement).value
-    
-    // 确保有条码值才进行处理
-    if (!barcodeValue || !barcodeValue.trim()) {
-      return
-    }
-
-    // 对于blur事件，我们可能需要一些额外的逻辑来避免重复处理
-    // 比如检查是否已经处理过这个条码
-    await processBarcodeScan(barcodeValue)
-}
-const handleEnter = async (event: any) => {
-   // 如果是初次打开，跳过处理
-   if (!isInitialized.value) {
     isInitialized.value = true
     return
   }
 
   const barcodeValue = (event.target as HTMLInputElement).value
-  
+
+  // 确保有条码值才进行处理
+  if (!barcodeValue || !barcodeValue.trim()) {
+    return
+  }
+
+  // 对于blur事件，我们可能需要一些额外的逻辑来避免重复处理
+  // 比如检查是否已经处理过这个条码
+  await processBarcodeScan(barcodeValue)
+}
+const handleEnter = async (event: any) => {
+  // 如果是初次打开，跳过处理
+  if (!isInitialized.value) {
+    isInitialized.value = true
+    return
+  }
+
+  const barcodeValue = (event.target as HTMLInputElement).value
+
   // 确保有条码值才进行处理
   if (!barcodeValue || !barcodeValue.trim()) {
     return
@@ -334,13 +346,16 @@ const processBarcodeScan = async (barcodeValue: string) => {
   lastProcessedBarcode.value = barcodeValue
   addNewForm.fnSkuOrUpc = barcodeValue
   let str = barcodeValue
-  if (modifyForm.siteId === 4 && barcodeValue.startsWith("00")) {
-    str = barcodeValue.substring(2); // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  if (modifyForm.siteId === 4 && barcodeValue.startsWith('00')) {
+    str = barcodeValue.substring(2) // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
+  }
+  if (modifyForm.siteId === 16 && barcodeValue.startsWith('00')) {
+    str = barcodeValue.substring(2) // 或者 str = str.slice(2); 只有沃尔玛站点的去掉前面两个0
   }
 
   const { data } = await getEncasementSku({
     site: modifyForm.siteId,
-    fnSkuOrUpc: str
+    fnSkuOrUpc: str,
   })
 
   if (data) {
@@ -358,8 +373,7 @@ const processBarcodeScan = async (barcodeValue: string) => {
     $baseMessage('找不到该FNSKU，请重新扫描', 'error')
   }
 }
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -367,33 +381,32 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     return
   }
 
-  _row = JSON.parse(JSON.stringify(row));
+  _row = JSON.parse(JSON.stringify(row))
 
   // 如果是第一次点击（firstChild 有 'none' 类名），执行以下逻辑
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
     // 聚焦并全选输入框或文本框
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
-
 }
 // 处理零件table blur事件
 const clickCancel = async (event: any, value: any) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
 
   // 只有在数据变化时才处理更新
   if (isEqual(value, _row)) {
-    return; // 数据没有变化，不执行更新
+    return // 数据没有变化，不执行更新
   }
 
   if (event.type === 'blur') {
@@ -404,10 +417,10 @@ const clickCancel = async (event: any, value: any) => {
       Object.assign(value, _row)
     }
   }
-};
+}
 const fetchData = async () => {
   const { data } = await getEncasementUpdate({
-    encasementId: props.encasementId
+    encasementId: props.encasementId,
   })
   if (data) {
     Object.assign(modifyForm, data)
@@ -416,10 +429,7 @@ const fetchData = async () => {
   }
 }
 const fetchSkuData = () => {
-  list.value = skuDetailList.value.slice(
-    (queryForm.pageNo - 1) * queryForm.pageSize,
-    queryForm.pageNo * queryForm.pageSize
-  );
+  list.value = skuDetailList.value.slice((queryForm.pageNo - 1) * queryForm.pageSize, queryForm.pageNo * queryForm.pageSize)
   total.value = skuDetailList.value.length
 }
 watchEffect(() => {
@@ -435,7 +445,7 @@ const modifyFormRef = ref<FormInstance>()
 const addNewForm = reactive<any>({
   fnSkuOrUpc: '',
   count: '',
-  skuImageUrl: ''
+  skuImageUrl: '',
 })
 const addNewFormRef = ref<FormInstance>()
 const addNewFormRules = reactive<FormRules<IAddDetailEncasementReq>>({
@@ -451,7 +461,7 @@ interface IAddForm {
 const addForm = reactive<IAddForm>({
   good: null,
   sample: null,
-  bad: null
+  bad: null,
 })
 // 增加form-ref
 const addFormRef = ref<FormInstance>()
@@ -465,7 +475,7 @@ const showInspection = async (row: ISkuDetailList) => {
   inspectionVisible.value = true
   const { data } = await getEncasementInspection({
     id: row.id!,
-    sku: row.sku!
+    sku: row.sku!,
   })
   inspectionList.value = data
   inspectionLoading.value = false
@@ -480,7 +490,7 @@ const confirmQualityCheck = async () => {
     lackCount: lackCount.value,
     badCount: packingCountForm.badCount,
     remark: packingCountForm.remark,
-    status: copyRow.value.qualityCheckStatus
+    status: copyRow.value.qualityCheckStatus,
   })
   if (data) {
     $baseMessage('添加质检信息成功', 'success')
@@ -492,10 +502,9 @@ const copyRow = ref<any>()
 const handleShowPackingCount = async (row: any) => {
   // 点击了清单质检
   if (row.qualityCheckStatus === 1) {
-    
     copyRow.value = row
     const { data: res } = await verificationCheckQuality({
-      taskId: row.taskId
+      taskId: row.taskId,
     })
     if (res) {
       packingCountVisible.value = true
@@ -503,7 +512,7 @@ const handleShowPackingCount = async (row: any) => {
       return
     }
     const { data } = await getQualityCheck({
-      id: row.taskId
+      id: row.taskId,
     })
     Object.assign(packingCountForm, data)
     if (!data!.id) {
@@ -514,14 +523,14 @@ const handleShowPackingCount = async (row: any) => {
   } else {
     await addQualityCheck({
       taskId: row.taskId,
-      status: row.qualityCheckStatus
+      status: row.qualityCheckStatus,
     })
   }
 }
 const emit = defineEmits(['update:modifyVisible'])
 const handleCloseDialog = () => {
   dflag.value = false
-  emit('update:modifyVisible', dflag.value);
+  emit('update:modifyVisible', dflag.value)
 }
 // 装箱修改确认
 const confirmUpdateEncasement = async () => {
@@ -533,7 +542,7 @@ const confirmUpdateEncasement = async () => {
     height: Number(modifyForm.height),
     site: modifyForm.siteId,
     boxNumber: Number(modifyForm.boxNumber),
-    skuList: skuDetailList.value
+    skuList: skuDetailList.value,
   })
   if (data) {
     $baseMessage('修改成功', 'success')
@@ -544,7 +553,7 @@ const confirmUpdateEncasement = async () => {
 const handleDelEncasementDetail = async (row: any, index: number) => {
   $baseConfirm('确定要删除装箱明细吗？', null, async () => {
     const { data } = await delEncasementInspection({
-      encasementDetailId: row.id
+      encasementDetailId: row.id,
     })
     if (data) {
       $baseMessage('删除成功', 'success')
@@ -558,13 +567,13 @@ const packingCountForm = reactive<IGetQualityCheck>({})
 // 缺的数量
 const lackCount = computed<number>({
   get() {
-    let good = Number(packingCountForm.goodCount);
-    let bad = Number(packingCountForm.badCount);
-    let taskCount = Number(packingCountForm.packageTaskCount);
-    return taskCount - good - bad;
+    let good = Number(packingCountForm.goodCount)
+    let bad = Number(packingCountForm.badCount)
+    let taskCount = Number(packingCountForm.packageTaskCount)
+    return taskCount - good - bad
   },
-  set() {}
-});
+  set() {},
+})
 // 多的数量
 const manyCount = computed({
   get() {
@@ -574,16 +583,16 @@ const manyCount = computed({
       return good - taskCount
     }
   },
-  set() {}
+  set() {},
 })
 // 打包总数数量
-const packingTotal = computed({  
+const packingTotal = computed({
   get() {
     let good = Number(packingCountForm.goodCount)
     let bad = Number(packingCountForm.badCount)
     return good + bad
   },
-  set() {}
+  set() {},
 })
 // 关闭增加
 const handleCloseAdd = () => {
@@ -625,7 +634,7 @@ const confirmAddNewDetail = async () => {
         fnSkuOrUpc: addNewForm.fnSkuOrUpc,
         sku: addNewForm.sku,
         productName: addNewForm.productName,
-        count: addNewForm.count
+        count: addNewForm.count,
       })
       if (data) {
         $baseMessage('新增成功', 'success')
@@ -638,7 +647,7 @@ const confirmAddNewDetail = async () => {
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total = ref<number>(0)
 const handleCurrentChange = (value: number) => {
@@ -651,7 +660,7 @@ const handleSizeChange = (value: number) => {
   fetchSkuData()
 }
 
-const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 1) {
     return 'clear-padding'
   }
@@ -661,7 +670,7 @@ const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIn
 
 <style lang="scss" scoped>
 .add-icon:hover {
-  color: var(--el-color-primary); 
+  color: var(--el-color-primary);
 }
 .noneHoveTable :deep(.clear-padding) {
   padding-top: 0;
