@@ -32,11 +32,11 @@
           :cell-style="cellStyle"
           class="noneHoveTable"
           :data="list"
+          :default-sort="{ prop: 'payDate', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
           stripe
           @cell-click="changeInput"
           @selection-change="setSelectRows"
-          :default-sort="{ prop: 'payDate', order: 'descending' }"
           @sort-change="handleSortChange"
         >
           <el-table-column v-permissions="SignPermission.signOperationColume()"fixed="left" label="仓库操作" width="150"  >
@@ -164,7 +164,7 @@
                   :value="item.value"
                 />
               </el-select>
-              <el-select v-model="queryForm.signUserId" label="签收人员" placeholder="请选择签收人员" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
+              <el-select v-model="queryForm.signUserId" clearable label="签收人员" placeholder="请选择签收人员" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
                 <el-option
                   v-for="item in signUserOption"
                   :key="item.id"
@@ -172,7 +172,7 @@
                   :value="item.id"
                 />
               </el-select>
-              <el-select v-model="queryForm.signDate" label="签收日期" placeholder="请选择签收日期" clearable style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
+              <el-select v-model="queryForm.signDate" clearable label="签收日期" placeholder="请选择签收日期" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
                 <el-option
                   v-for="item in signDateOption"
                   :key="item"
@@ -484,7 +484,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCancelSignBatch">取消</el-button>
-        <el-button type="primary" @click="handleConfirmSignBatch">确认</el-button>
+        <el-button :loading="batchBtnLoading" type="primary" @click="handleConfirmSignBatch">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 打印 -->
@@ -542,6 +542,8 @@ defineOptions({
   name: 'PendingReceipt',
 })
 
+const batchBtnLoading = ref<boolean>(false)
+const signLoading = ref<boolean>(false)
 const printer = ref<string>('')
 const activeName = ref<number>(0)
 const printCountVisible = ref<boolean>(false)
@@ -641,15 +643,21 @@ const closeSignDialog = () => {
 }
 // 确认签收
 const confirmSign = async () => {
-  const { data } = await signComponent({
-    signId: copyRow.value.signId,
-    signCount: signForm.signCount,
-    signOrder: signForm.signOrder
-  })
-  if (data) {
-    $baseMessage('签收成功', 'success')
-    closeSignDialog()
-    fetchData()
+  try {
+    signLoading.value = true
+    const { data } = await signComponent({
+      signId: copyRow.value.signId,
+      signCount: signForm.signCount,
+      signOrder: signForm.signOrder
+    })
+    if (data) {
+      $baseMessage('签收成功', 'success')
+      signLoading.value = false
+      closeSignDialog()
+      fetchData()
+    }
+  } catch (error) {
+    signLoading.value = false
   }
 }
 // 修改弹窗是否可见
@@ -697,15 +705,21 @@ const handleAllSigned = async () => {
   signBatchVisible.value = true
 }
 const handleConfirmSignBatch = async () => {
-  const signIds = selectRows.value.map((item: any) => item.signId).join(',')
-  const { data } = await signBatch({
-    signIds,
-    signOrder: signBatchForm.signOrder
-  })
-  if (data) {
-    handleCancelSignBatch()
-    $baseMessage('批量签收成功', 'success')
-    fetchData()
+  try {
+    batchBtnLoading.value = true
+    const signIds = selectRows.value.map((item: any) => item.signId).join(',')
+    const { data } = await signBatch({
+      signIds,
+      signOrder: signBatchForm.signOrder
+    })
+    if (data) {
+      handleCancelSignBatch()
+      batchBtnLoading.value = false
+      $baseMessage('批量签收成功', 'success')
+      fetchData()
+    }
+  } catch (error) {
+    batchBtnLoading.value = false
   }
 }
 
