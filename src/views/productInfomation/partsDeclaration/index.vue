@@ -35,8 +35,8 @@
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       :span-method="objectSpanMethod"
-      @row-click="handleRowClick"
       @cell-click="changeInput"
+      @row-click="handleRowClick"
     >
       <el-table-column fixed="left" label="图片" prop="componentImgUrl" width="75">
         <template #default="{ row }">
@@ -555,7 +555,7 @@ const clickCancel2 = async (event: Event, value: any) => {
     // 执行失去焦点处理逻辑
     try {
       await updateProductCustomsClearanceSuppliserInfo({
-        id: value.pId,
+        id: value.cId,
         customsDeclarationStatus: value.customsDeclarationStatus,
         placeOrigin: value.placeOrigin,
         customsDeclarationNameZh: value.customsDeclarationNameZh,
