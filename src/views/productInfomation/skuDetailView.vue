@@ -290,9 +290,6 @@
               </div>
             </span>
             <span v-if="item.label === '数量'">
-              <div class="none">
-                <el-input v-model="row.quantity" type="number" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-              </div>
               <span>{{ row.quantity }}</span>
             </span>
             <span v-if="item.label === '出厂单价'">
@@ -620,18 +617,35 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- SKU上传图片 -->
     <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
-    <vab-dialog v-model="updateVisible" title="修改零件报关" width="20%">
-      <el-form label-position="left" label-width="auto" :model="modifyForm" style="margin-left: 0; margin-right: 0">
-        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位">
-          <el-input v-model="modifyForm.billingUnit" clearable />
+    <vab-dialog v-model="updateVisible" title="修改零件报关" width="23%">
+      <el-form
+        ref="modifyFormRef"
+        label-position="left"
+        label-width="auto"
+        :model="modifyForm"
+        require-asterisk-position="right"
+        :rules="modifyFormRules"
+        style="margin-left: 0; margin-right: 0"
+      >
+        <el-form-item label="每套SKU采购数量" prop="componentQuantity">
+          <el-input v-model.trim="modifyForm.componentQuantity" clearable />
+        </el-form-item>
+        <el-form-item label="采购单位" prop="componentUnit">
+          <el-input v-model.trim="modifyForm.componentUnit" clearable />
         </el-form-item>
         <el-form-item
           v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE"
-          label="每零件单位都多少个开票单位"
+          label="开票单位"
+          prop="billingUnit"
         >
-          <el-input v-model="modifyForm.quantity" clearable />
+          <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
-        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS">
+        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位和采购单位比例">
+          每【{{ modifyForm.billingUnit }}】有
+          <el-input v-model="modifyForm.quantity" clearable style="display: inline-block; width: 80px; margin: 0 8px" />
+          【{{ modifyForm.componentUnit }}】
+        </el-form-item>
+        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS" prop="hsId">
           <el-select v-model="modifyForm.hsId">
             <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
@@ -641,9 +655,11 @@
         </el-form-item>
         <el-form-item
           v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE"
-          label="每零件单位有多少个法定第1单位"
+          label="法定第1单位比例"
         >
-          <el-input v-model="modifyForm.quorum" clearable />
+          每【{{ modifyForm.componentUnit }}】有
+          <el-input v-model="modifyForm.quorum" clearable style="display: inline-block; width: 80px; margin: 0 8px" />
+          【{{ modifyForm.statutoryUnit }}】
         </el-form-item>
       </el-form>
       <template #footer>
@@ -708,6 +724,10 @@ defineOptions({
 const currentRoleCode = useAclStore().getRole[0]
 const updateVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({})
+const modifyFormRef = ref<FormInstance>()
+const modifyFormRules = reactive({
+  componentQuantity: [{ required: true, message: '请输入每套SKU采购数量', trigger: 'blur' }],
+})
 const hsOption = ref<{ id: number; label: string }[]>([])
 const fetchHsSelectList = async () => {
   const { data } = await getHsSelectList()
@@ -715,33 +735,50 @@ const fetchHsSelectList = async () => {
 }
 let _existingPartsListId = -1
 let _suppliserId = -1
+const updateRow = ref<any>({})
 const handleShowModify = async (row: any) => {
-  $baseConfirm('需要一起修改否则报关资料会有错误！', null, async () => {
+  $baseConfirm('零件数量和单位的修改，需要和开票报关信息一起准确修改，否则报关资料会有错误！', null, async () => {
+    updateRow.value = JSON.parse(JSON.stringify(row))
     updateVisible.value = true
     _existingPartsListId = row.existingPartsListId
     _suppliserId = row.defaultSuppliserId
     await fetchHsSelectList()
     const { data } = await getSkuComponentInfo({ existingPartsListId: row.existingPartsListId, suppliserId: row.defaultSuppliserId })
     Object.assign(modifyForm, data)
+    modifyForm.componentQuantity = row.quantity
+    modifyForm.componentUnit = row.componentUnit
   })
 }
 const handleConfirmModify = async () => {
   try {
-    const { data } = await updateSkuComponentInfo({
-      existingPartsListId: _existingPartsListId,
-      suppliserId: _suppliserId,
-      hsId: modifyForm.hsId,
-      statutoryCount: modifyForm.quorum,
-      quantity: modifyForm.quantity,
-      billingUnit: modifyForm.billingUnit,
+    // 表单验证
+    await modifyFormRef.value?.validate(async (isValid: boolean) => {
+      if (isValid) {
+        updateRow.value.quantity = modifyForm.componentQuantity
+        updateRow.value.componentUnit = modifyForm.componentUnit
+        updateRow.value.sku = sku.value.sku
+        const { data: data1 } = await updateProductComponent(updateRow.value)
+
+        const { data: data2 } = await updateSkuComponentInfo({
+          existingPartsListId: _existingPartsListId,
+          suppliserId: _suppliserId,
+          hsId: modifyForm.hsId,
+          statutoryCount: modifyForm.quorum,
+          quantity: modifyForm.quantity,
+          billingUnit: modifyForm.billingUnit,
+        })
+        if (data1 && data2) {
+          $baseMessage('修改成功！', 'success')
+          updateVisible.value = false
+          await fetchComponentData()
+        }
+      }
     })
-    if (data) {
-      $baseMessage('修改成功！', 'success')
-      updateVisible.value = false
-      await fetchComponentData()
-    }
   } catch (error) {
-    $baseMessage('修改失败！', 'error')
+    if (error === false) {
+      // 表单验证失败
+      return
+    }
   }
 }
 const route: any = useRoute()
@@ -1788,7 +1825,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     case 'componentUnit':
     case 'preTaxPrice':
     case 'actualTaxRate':
-    case 'invoicingTaxRate': {
+    case 'invoicingTaxRate':
+    case 'quantity': {
       return {
         textAlign: 'center',
         color: '#999',
