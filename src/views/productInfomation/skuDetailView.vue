@@ -631,7 +631,7 @@
           <el-input v-model.trim="modifyForm.componentQuantity" clearable />
         </el-form-item>
         <el-form-item label="采购单位" prop="componentUnit">
-          <el-input v-model.trim="modifyForm.componentUnit" clearable />
+          <el-input v-model="modifyForm.componentUnit" clearable />
         </el-form-item>
         <el-form-item
           v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE"
@@ -642,7 +642,7 @@
         </el-form-item>
         <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位和采购单位比例">
           每【{{ modifyForm.billingUnit }}】有
-          <el-input v-model="modifyForm.quantity" clearable style="display: inline-block; width: 80px; margin: 0 8px" />
+          <el-input v-model.trim="modifyForm.quantity" clearable style="display: inline-block; width: 100px; margin: 0 8px" />
           【{{ modifyForm.componentUnit }}】
         </el-form-item>
         <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS" prop="hsId">
@@ -655,11 +655,11 @@
         </el-form-item>
         <el-form-item
           v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE"
-          label="法定第1单位比例"
+          label="法定第1单位和采购单位比例"
         >
-          每【{{ modifyForm.componentUnit }}】有
-          <el-input v-model="modifyForm.quorum" clearable style="display: inline-block; width: 80px; margin: 0 8px" />
-          【{{ modifyForm.statutoryUnit }}】
+          每【{{ modifyForm.statutoryUnit }}】有
+          <el-input v-model.trim="modifyForm.quorum" clearable style="display: inline-block; width: 100px; margin: 0 8px" />
+          【{{ modifyForm.componentUnit }}】
         </el-form-item>
       </el-form>
       <template #footer>
@@ -757,17 +757,17 @@ const handleConfirmModify = async () => {
         updateRow.value.quantity = modifyForm.componentQuantity
         updateRow.value.componentUnit = modifyForm.componentUnit
         updateRow.value.sku = sku.value.sku
-        const { data: data1 } = await updateProductComponent(updateRow.value)
 
         const { data: data2 } = await updateSkuComponentInfo({
           existingPartsListId: _existingPartsListId,
           suppliserId: _suppliserId,
           hsId: modifyForm.hsId,
           statutoryCount: modifyForm.quorum,
-          quantity: modifyForm.quantity,
+          billQuantity: modifyForm.quantity,
           billingUnit: modifyForm.billingUnit,
+          ...updateRow.value,
         })
-        if (data1 && data2) {
+        if (data2) {
           $baseMessage('修改成功！', 'success')
           updateVisible.value = false
           await fetchComponentData()
