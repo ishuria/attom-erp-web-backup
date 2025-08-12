@@ -640,10 +640,10 @@
         >
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
-        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="开票单位和采购单位比例">
-          每【{{ modifyForm.billingUnit }}】有
-          <el-input v-model.trim="modifyForm.quantity" clearable style="display: inline-block; width: 100px; margin: 0 8px" />
-          【{{ modifyForm.componentUnit }}】
+        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="采购单位和开票单位比例">
+          每【{{ modifyForm.componentUnit }}】采购单位对应
+          <el-input v-model.trim="modifyForm.quantity" clearable style="display: inline-block; width: 100px; margin: 0 8px; flex: 1" />
+          【{{ modifyForm.billingUnit }}】开票单位，非整数需保留10位小数点
         </el-form-item>
         <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS" prop="hsId">
           <el-select v-model="modifyForm.hsId">
@@ -655,11 +655,11 @@
         </el-form-item>
         <el-form-item
           v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE"
-          label="法定第1单位和采购单位比例"
+          label="采购单位和法定第1单位比例"
         >
-          每【{{ modifyForm.statutoryUnit }}】有
-          <el-input v-model.trim="modifyForm.quorum" clearable style="display: inline-block; width: 100px; margin: 0 8px" />
-          【{{ modifyForm.componentUnit }}】
+          每【{{ modifyForm.componentUnit }}】采购单位对应
+          <el-input v-model.trim="modifyForm.quorum" clearable style="display: inline-block; width: 100px; margin: 0 8px; flex: 1" />
+          【{{ modifyForm.statutoryUnit }}】法定第1单位，非整数需保留10位小数点
         </el-form-item>
       </el-form>
       <template #footer>
