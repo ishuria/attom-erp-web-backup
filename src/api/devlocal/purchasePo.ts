@@ -155,12 +155,29 @@ export function getAddComponentList(params: IGetAddComponentListQuery): Promise<
     params,
   })
 }
+
+// 获取添加零件列表
+export function queryPoSkuComponentList(data: IGetAddComponentListQuery): Promise<IGetAddComponentListResp> {
+  return request({
+    url: `${BASE_API}/list/purchase/sku/component`,
+    method: 'post',
+    data,
+  })
+}
 // 获取添加耗材列表
 export function getAddConsumableList(params: IGetAddConsumableListQuery): Promise<IGetAddConsumableListResp> {
   return request({
     url: `${BASE_API}/list/consumables`,
     method: 'get',
     params,
+  })
+}
+// 获取po零件添加耗材列表
+export function queryPoSkuConsumableList(data: IGetAddConsumableListQuery): Promise<IGetAddConsumableListResp> {
+  return request({
+    url: `${BASE_API}/list/purchase/sku/consumables`,
+    method: 'post',
+    data,
   })
 }
 // 采购添加SKU-根据输入查询所有的sku列表

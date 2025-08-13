@@ -78,7 +78,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { createConsumables, getProductConsumablesType } from '/@/api/devlocal/productInformation'
-import { getAddConsumableList } from '/@/api/devlocal/purchasePo'
+import { getAddConsumableList, queryPoSkuConsumableList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
   name: 'VabAddConsumable'
@@ -87,6 +87,8 @@ defineOptions({
 const route = useRoute()
 const props = defineProps<{
   createConsumableVisible: boolean
+  sku?: string
+  type?: string
 }>()
 const dflag = ref<boolean>(false)
 // 创建耗材可见
@@ -138,15 +140,23 @@ const queryForm = reactive<any>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  fetchData()
+  typeInit()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  fetchData()
+  typeInit()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  fetchData()
+  typeInit()
+}
+
+const typeInit = () => {
+  if (props.type === 'po') {
+    fetchPurchasePoData()
+  } else {
+    fetchData()
+  }
 }
 
 const list = ref<any>([])
@@ -205,6 +215,24 @@ const showPreviewImage = (url: string) => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getAddConsumableList(queryForm)
+  if (data) {
+    total.value = data.total
+    list.value = data.list
+    listLoading.value = false
+  }
+}
+
+/**
+ * 获取posku的耗材数据
+ */
+const fetchPurchasePoData = async () => {
+  listLoading.value = true
+  const req = queryForm
+  console.log(props.sku)
+  if (props.sku) {
+    req.sku = props.sku
+  }
+  const { data } = await queryPoSkuConsumableList(req)
   if (data) {
     total.value = data.total
     list.value = data.list
