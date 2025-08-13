@@ -82,7 +82,7 @@
       v-permissions="{ permission: [EncasementPermission.ENCASEMENT_LIST] }"
       border
       :cell-style="cellStyle"
-      class="noneHoveTable"
+      class="noneHoveTable custom-table-hover"
       :data="list"
       :default-sort="{ prop: 'createTime', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
@@ -90,6 +90,7 @@
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
       @cell-click="handleCellClick"
+      @row-click="handleRowClick"
       @selection-change="setSelectRows"
       @sort-change="handleSortChange"
     >
@@ -557,6 +558,10 @@ defineOptions({
   name: 'Packing',
 })
 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.id
+}
 let _row: any
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
@@ -1252,14 +1257,14 @@ let currentGroupIndex = 0 // 当前组索引
 
 const stripedRowClass = (_row: any) => {
   const { row } = _row
-  const currentId = row.id
-  // 检查当前行是否与上一行不同
-  if (currentId !== previous) {
-    previous = currentId
-    currentGroupIndex++
-  }
-  // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
+
+  const stripedClass = row.id % 2 === 0 ? 'el-table__row--striped' : ''
+
+  // 选中状态
+  const selectedClass = row.id === selectedRowIndex.value ? 'select-row' : ''
+
+  // 组合类名
+  return [stripedClass, selectedClass].filter(Boolean).join(' ')
 }
 // 装箱合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
@@ -1347,16 +1352,6 @@ onBeforeMount(() => {
 }
 .text-center {
   margin: 0 10px calc(var(--el-margin) / 2) 0;
-}
-
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 .copySku {
   cursor: pointer;

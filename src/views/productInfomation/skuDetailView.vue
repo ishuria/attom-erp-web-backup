@@ -617,7 +617,7 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- SKU上传图片 -->
     <vab-image-upload v-model="skuImageUploadVisible" @image-upload="uploadImage" />
-    <vab-dialog v-model="updateVisible" title="修改零件报关" width="23%">
+    <vab-dialog v-model="updateVisible" title="修改零件报关" width="35%">
       <el-form
         ref="modifyFormRef"
         label-position="left"
@@ -641,9 +641,12 @@
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
         <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="采购单位和开票单位比例">
-          每【{{ modifyForm.componentUnit }}】采购单位对应
-          <el-input v-model.trim="modifyForm.quantity" clearable style="display: inline-block; width: 100px; margin: 0 8px; flex: 1" />
-          【{{ modifyForm.billingUnit }}】开票单位，非整数需保留10位小数点
+          <div style="display: flex; align-items: center; width: 100%">
+            每【{{ modifyForm.componentUnit }}】采购单位对应
+            <el-input v-model.trim="modifyForm.quantity" clearable placeholder="请输入比例" style="width: 120px; flex: 1; margin: 0 6px" />
+            【{{ modifyForm.billingUnit }}】开票单位
+          </div>
+          <div style="color: var(--el-color-danger)">非整数需保留10位小数点</div>
         </el-form-item>
         <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS" prop="hsId">
           <el-select v-model="modifyForm.hsId">
@@ -657,9 +660,12 @@
           v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE"
           label="采购单位和法定第1单位比例"
         >
-          每【{{ modifyForm.componentUnit }}】采购单位对应
-          <el-input v-model.trim="modifyForm.quorum" clearable style="display: inline-block; width: 100px; margin: 0 8px; flex: 1" />
-          【{{ modifyForm.statutoryUnit }}】法定第1单位，非整数需保留10位小数点
+          <div style="display: flex; align-items: center; width: 100%">
+            每【{{ modifyForm.componentUnit }}】采购单位对应
+            <el-input v-model.trim="modifyForm.quorum" clearable style="width: 120px; margin: 0 6px; flex: 1" />
+            【{{ modifyForm.statutoryUnit }}】法定第1单位
+          </div>
+          <div style="color: var(--el-color-danger)">非整数需保留10位小数点</div>
         </el-form-item>
       </el-form>
       <template #footer>

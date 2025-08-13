@@ -1385,3 +1385,30 @@ html:not(.dark) body.vab-theme-default.glass-mode {
   font-size: 16px;
   white-space: pre-wrap;
 }
+
+/*
+ *@author: gaoyan.ma
+ *@date: 2025-08-13
+ *@description: 自定义表格行hover样式
+ */
+ .custom-table-hover {
+  /* 取消没有条纹的行的悬停背景色 */
+  .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell {
+    background-color: #fff !important;
+  }
+
+  /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
+  .el-table__body tr.hover-row.el-table__row--striped > td.el-table__cell {
+    background-color: #fafafa !important;
+  }
+
+  /* 选中行保持蓝色背景 - 优先级最高 */
+  .el-table__body tr.select-row > td.el-table__cell {
+    background-color: #7bddde !important;
+  }
+
+  /* 选中行悬浮时也保持蓝色背景 */
+  .el-table__body tr.select-row.hover-row > td.el-table__cell {
+    background-color: #7bddde !important;
+  }
+}

@@ -3,11 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-permissions="{ permission: [EvaluationPermission.ADD] }" type="primary" @click="startEvaluation">开始评估</el-button>
-        <el-button
-          v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }"
-          type="primary"
-          @click="keyWordTrendVisible = true"
-        >
+        <el-button v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" @click="keyWordTrendVisible = true">
           关键词趋势
         </el-button>
         <el-button v-permissions="{ permission: [EvaluationPermission.DEFAULT_PARAMS] }" type="primary" @click="getScoreParams">
@@ -47,23 +43,33 @@
       v-loading="listLoading"
       border
       :cell-style="{ textAlign: 'center' }"
+      class="custom-table-hover"
       :data="evaluationList"
       :header-cell-style="{ textAlign: 'center' }"
-      :row-key="row => row.idNo"
+      :row-class-name="tableRowClassName"
+      :row-key="(row) => row.idNo"
       stripe
       @cell-click="keyWordTrendCellClick"
+      @row-click="handleRowClick"
     >
       <el-table-column
         v-for="(item, index) in indexColumns"
         :key="index"
         :label="item.label"
-        :min-width="columnRenderConfig[item.label]?.padding && item.prop && columnWidths[item.prop]?.columnWidth ? columnWidths[item.prop].columnWidth : item.minWidth"
+        :min-width="
+          columnRenderConfig[item.label]?.padding && item.prop && columnWidths[item.prop]?.columnWidth
+            ? columnWidths[item.prop].columnWidth
+            : item.minWidth
+        "
         :prop="item.prop"
       >
         <template #header>
           <span v-if="item.label === '自然单'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">自然单 <el-icon><info-filled /></el-icon> </div>
+              <div class="questionIcon">
+                自然单
+                <el-icon><info-filled /></el-icon>
+              </div>
               <template #content>
                 <div class="custom-tooltip">达到30%毛利所需要的自然销量占比（越低越好）</div>
               </template>
@@ -99,10 +105,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleClick(row)">
-                  <el-link type="primary" underline='never'>产品核算推进</el-link>
+                  <el-link type="primary" underline="never">产品核算推进</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="toUpdateEvaluation(row)">
-                  <el-link type="primary" underline='never'>查看和修改</el-link>
+                  <el-link type="primary" underline="never">查看和修改</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="cliekFontSearchKeyWord(row)">
                   <el-link v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" underline="never">
@@ -110,7 +116,7 @@
                   </el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
-                  <el-link type="primary" underline='never'>共享</el-link>
+                  <el-link type="primary" underline="never">共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
                   <el-link v-permissions="{ permission: [EvaluationPermission.SCORE_DETAIL] }" type="primary" underline="never">
@@ -164,7 +170,8 @@
         :cell-style="cellParameterStyle"
         :data="scoreParametersList"
         :header-cell-style="cellParameterStyle"
-        height="700px" stripe
+        height="700px"
+        stripe
       >
         <el-table-column label="名称" property="key" />
         <el-table-column label="值">
@@ -182,7 +189,7 @@
       <el-table border :data="benchmarkScoreList" :header-cell-style="cellScoreStyle" stripe style="width: fit-content">
         <el-table-column align="left" label="描述" prop="desc" width="290" />
         <el-table-column align="right" label="数量" prop="quantity" width="130" />
-        <el-table-column align="right" label="分数" prop="score" width="100" >
+        <el-table-column align="right" label="分数" prop="score" width="100">
           <template #default="{ row }">
             <div v-if="row.desc === '第一部分总分-市场供求评分' || row.desc === '第二部分总分-亚马逊关键词首页评分'">
               {{ Math.round(row.score) }}
@@ -264,141 +271,137 @@ defineOptions({
   name: 'NewProductEvaluation',
 })
 
-
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.idNo
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.idNo === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 interface RenderConfig {
-  align: 'left' | 'right';
-  format: (value: any) => number | string;
-  widthLabel: string;
-  widthProp: string;
-  padding?: number;
+  align: 'left' | 'right'
+  format: (value: any) => number | string
+  widthLabel: string
+  widthProp: string
+  padding?: number
 }
 // 渲染配置
 const columnRenderConfig: Record<string, RenderConfig> = {
-  '中文品名': {
+  中文品名: {
     align: 'left',
     format: (value) => value,
     widthLabel: '中文品名',
     widthProp: 'productNameZh',
     padding: 30,
   },
-  '评估人': {
+  评估人: {
     align: 'left',
     format: (value) => value,
     widthLabel: '评估人',
     widthProp: 'prop',
-    padding: 30
+    padding: 30,
   },
-  '亚马逊前台关键词': {
+  亚马逊前台关键词: {
     align: 'left',
     format: (value) => value,
     widthLabel: '亚马逊前台关键词',
     widthProp: 'amazonFrontendKeywords',
     padding: 30,
   },
-  '亚马逊后台关键词': {
+  亚马逊后台关键词: {
     align: 'left',
     format: (value) => value,
     widthLabel: '亚马逊后台关键词',
     widthProp: 'amazonBackendKeywords',
     padding: 30,
   },
-  '来源': {
+  来源: {
     align: 'left',
     format: (value) => value,
     widthLabel: '来源',
     widthProp: 'productSource',
-    padding: 30, 
+    padding: 30,
   },
-  '编号': {
+  编号: {
     align: 'right',
     format: (value) => value,
     widthLabel: '编号',
     widthProp: 'prop',
     padding: 30,
   },
-  '年市场容量': {
+  年市场容量: {
     align: 'right',
     format: (value) => value,
     widthLabel: '年市场容量',
     widthProp: 'prop',
   },
-  '头部个数': {
+  头部个数: {
     align: 'right',
     format: (value) => value,
     widthLabel: '头部个m',
     widthProp: 'other',
   },
-  'CPC$': {
+  CPC$: {
     align: 'right',
     format: (value) => value,
     widthLabel: 'CPC$',
     widthProp: 'prop',
   },
-  '平均转化': {
+  平均转化: {
     align: 'right',
     format: (value) => value,
     widthLabel: '平均转化',
     widthProp: 'prop',
-   
   },
-  '平均售价': {
+  平均售价: {
     align: 'right',
     format: (value) => value,
     widthLabel: '平均售价',
     widthProp: 'prop',
-  
   },
-  '自然单': {
+  自然单: {
     align: 'right',
     format: (value) => value,
     widthLabel: '自然单%',
     widthProp: 'prop',
-   
   },
-  '供求评分': {
+  供求评分: {
     align: 'right',
     format: (value) => Math.round(value),
     widthLabel: '供求评分',
     widthProp: 'other',
-   
   },
-  '总分': {
+  总分: {
     align: 'right',
     format: (value) => Math.round(value),
     widthLabel: '总分',
     widthProp: 'other',
-  
   },
-  '首页评分': {
+  首页评分: {
     align: 'right',
     format: (value) => Math.round(value),
     widthLabel: '首页评m',
     widthProp: 'other',
-  
   },
-};
+}
 
 // 计算列宽
 const columnWidths = computed(() => {
-  return indexColumns.reduce(
-    (acc: Record<string, { contentWidth: number; columnWidth: number }>, item: ColumnConfig) => {
-      if (item.prop && columnRenderConfig[item.label]) {
-        const config = columnRenderConfig[item.label];
-        const widthProp = config.widthProp === 'prop' ? item.prop : config.widthProp;
-        const contentWidth = flexColumnWidth(
-          evaluationList.value,
-          config.widthLabel,
-          widthProp,
-          0,
-        );
-        const padding = config.padding || 0;
-        const columnWidth = contentWidth + padding;
-        acc[item.prop] = { contentWidth, columnWidth };
-      }
-      return acc;
-    },
-    {},
-  );
+  return indexColumns.reduce((acc: Record<string, { contentWidth: number; columnWidth: number }>, item: ColumnConfig) => {
+    if (item.prop && columnRenderConfig[item.label]) {
+      const config = columnRenderConfig[item.label]
+      const widthProp = config.widthProp === 'prop' ? item.prop : config.widthProp
+      const contentWidth = flexColumnWidth(evaluationList.value, config.widthLabel, widthProp, 0)
+      const padding = config.padding || 0
+      const columnWidth = contentWidth + padding
+      acc[item.prop] = { contentWidth, columnWidth }
+    }
+    return acc
+  }, {})
 })
 
 const route = useRoute()
@@ -542,7 +545,7 @@ const toUpdateEvaluation = async (row: any) => {
   // row.avgConversionRate = row.avgConversionRate.split('%')[0]
   // setLocalStorage('evlautionRouteParams', { ...row })
   const matched = handleMatched(allRoutes.value, '/newProductDevelopment/addOrUpdateEvalution')
-  
+
   const tab = handleTabs({
     ...matched.at(-1),
     query: {
@@ -550,7 +553,7 @@ const toUpdateEvaluation = async (row: any) => {
       idNo: row.idNo,
     },
   })
-  
+
   if (tab) {
     await router.push({
       path: '/newProductDevelopment/addOrUpdateEvalution',
@@ -742,19 +745,19 @@ const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
 
-const cellScoreStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellScoreStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '描述') {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'right'
+    textAlign: 'right',
   }
 }
 const cellParameterStyle = (): CSSProperties => {
   return {
-    textAlign: 'left'
+    textAlign: 'left',
   }
 }
 onActivated(() => {

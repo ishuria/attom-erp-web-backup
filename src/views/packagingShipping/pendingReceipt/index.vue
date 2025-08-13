@@ -4,59 +4,93 @@
       <el-tab-pane label="待签收" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-              <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">批量签收</el-button>
-              <el-select  v-model="printer" v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-                <el-option
-                  v-for="item in printerOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+            <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">
+              批量签收
+            </el-button>
+            <el-select
+              v-model="printer"
+              v-permissions="{ permission: [SignPermission.SIGN_BATCH] }"
+              clearable
+              placeholder="请选择打印机"
+              style="margin: 0 10px calc(var(--el-margin) / 2) 0"
+              @change="handleChangePrinter"
+            >
+              <el-option v-for="item in printerOption" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="debouncedQueryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
           ref="tableRef"
-          v-loading="listLoading" border
+          v-loading="listLoading"
+          border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :default-sort="{ prop: 'payDate', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
           @sort-change="handleSortChange"
         >
-          <el-table-column v-permissions="SignPermission.signOperationColume()"fixed="left" label="仓库操作" width="150"  >
+          <el-table-column v-permissions="SignPermission.signOperationColume()" fixed="left" label="仓库操作" width="150">
             <template #default="{ row }">
               <el-space>
-                <el-link v-permissions="{ permission: [SignPermission.SIGN_COMPONENT] }" type="primary" underline="never" @click="showSignDialog(row)">签收</el-link>
-                <el-link v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" type="primary" underline="never" @click="handleGetSignRecord(row)">明细</el-link>
-                <el-link v-permissions="{ permission: [SignPermission.SIGN_PRINT] }" type="primary" underline="never" @click="showPrint(row)">打印</el-link>
+                <el-link
+                  v-permissions="{ permission: [SignPermission.SIGN_COMPONENT] }"
+                  type="primary"
+                  underline="never"
+                  @click="showSignDialog(row)"
+                >
+                  签收
+                </el-link>
+                <el-link
+                  v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }"
+                  type="primary"
+                  underline="never"
+                  @click="handleGetSignRecord(row)"
+                >
+                  明细
+                </el-link>
+                <el-link
+                  v-permissions="{ permission: [SignPermission.SIGN_PRINT] }"
+                  type="primary"
+                  underline="never"
+                  @click="showPrint(row)"
+                >
+                  打印
+                </el-link>
               </el-space>
             </template>
           </el-table-column>
-          <el-table-column fixed="left" type="selection"/>
+          <el-table-column fixed="left" type="selection" />
           <el-table-column label="外发" min-width="60" prop="outsourced">
-              <template #default = "{ row }">
-                  <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-              </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po" sortable="custom">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)" >
+              <span class="copySku" @click="handleClipboard($event, row.po)">
                 {{ row.po }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -64,17 +98,19 @@
           </el-table-column>
           <el-table-column class="image-wall" label="零件图片" width="82">
             <template #header>
-              零件<br>图片
+              零件
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
           <el-table-column label="签收数量" min-width="100" prop="signCount" />
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
           <el-table-column label="单位" min-width="60" prop="unit" />
@@ -91,26 +127,28 @@
           </el-table-column>
           <el-table-column class="image-wall" label="SKU图片" width="82">
             <template #header>
-              SKU<br>图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="剩余可售" min-width="120" prop="sellableDay" sortable="custom"/>
-          <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
+          <el-table-column label="剩余可售" min-width="120" prop="sellableDay" sortable="custom" />
+          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')" />
           <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
@@ -138,7 +176,6 @@
                 <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
               </el-tooltip>
             </template>
-
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
@@ -155,55 +192,69 @@
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-              <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
-              <el-select v-model="printer" clearable placeholder="请选择打印机" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="handleChangePrinter">
-                <el-option
-                  v-for="item in printerOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
-              <el-select v-model="queryForm.signUserId" clearable label="签收人员" placeholder="请选择签收人员" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
-                <el-option
-                  v-for="item in signUserOption"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                />
-              </el-select>
-              <el-select v-model="queryForm.signDate" clearable label="签收日期" placeholder="请选择签收日期" style="margin: 0 10px calc(var(--el-margin) / 2) 0" @change="queryData">
-                <el-option
-                  v-for="item in signDateOption"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
+            <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
+            <el-select
+              v-model="printer"
+              clearable
+              placeholder="请选择打印机"
+              style="margin: 0 10px calc(var(--el-margin) / 2) 0"
+              @change="handleChangePrinter"
+            >
+              <el-option v-for="item in printerOption" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-select
+              v-model="queryForm.signUserId"
+              clearable
+              label="签收人员"
+              placeholder="请选择签收人员"
+              style="margin: 0 10px calc(var(--el-margin) / 2) 0"
+              @change="queryData"
+            >
+              <el-option v-for="item in signUserOption" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-select
+              v-model="queryForm.signDate"
+              clearable
+              label="签收日期"
+              placeholder="请选择签收日期"
+              style="margin: 0 10px calc(var(--el-margin) / 2) 0"
+              @change="queryData"
+            >
+              <el-option v-for="item in signDateOption" :key="item" :label="item" :value="item" />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="debouncedQueryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="debouncedQueryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
           ref="tableRef"
-          v-loading="listLoading" border
+          v-loading="listLoading"
+          border
           :cell-class-name="getCellClass2"
           :cell-style="cellStyle2"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
         >
-          <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150" >
+          <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button text type="primary" @click="showPrint(row)">
@@ -218,30 +269,30 @@
                       <el-link type="primary" underline="never">打印面单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" @click="handleGetSignedRecord(row)">
-                      <el-link type="primary" underline="never" >修改</el-link>
+                      <el-link type="primary" underline="never">修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_DELETE]}" @click="handleIfShowRecord(row)">
-                      <el-link type="danger" underline="never" >取消签收</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_DELETE] }" @click="handleIfShowRecord(row)">
+                      <el-link type="danger" underline="never">取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="签收人" min-width="90" prop="signName"/>
+          <el-table-column label="签收人" min-width="90" prop="signName" />
           <el-table-column label="签收日期" min-width="115" prop="signDate">
             <template #default="{ row }">
               {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
           <el-table-column label="外发" min-width="60" prop="outsourced">
-              <template #default = "{ row }">
-                  <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-              </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
           </el-table-column>
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)" >
+              <span class="copySku" @click="handleClipboard($event, row.po)">
                 {{ row.po }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -249,21 +300,23 @@
           </el-table-column>
           <el-table-column label="零件图片" min-width="82">
             <template #header>
-              零件<br>图片
+              零件
+              <br />
+              图片
             </template>
             <template #default="{ row }">
-                <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
-                  <template #error>
-                    <el-icon/>
-                  </template>
-                </el-image>
+              <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')"/>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
           <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
           <el-table-column label="单位" min-width="60" prop="unit" />
           <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
-          <el-table-column label="签收物流单号" prop="signOrder" :width="flexColumnWidth(list, '签收物流单号', 'signOrder')" >
+          <el-table-column label="签收物流单号" prop="signOrder" :width="flexColumnWidth(list, '签收物流单号', 'signOrder')">
             <template #default="{ row }">
               <span class="overflow-text" v-html="row.signOrder"></span>
             </template>
@@ -280,25 +333,27 @@
           </el-table-column>
           <el-table-column class="image-wall" label="SKU图片" width="82">
             <template #header>
-              SKU<br>图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
           </el-table-column>
-          <el-table-column  label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')"/>
+          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')" />
           <el-table-column label="站点" min-width="130" prop="site">
             <template #default="{ row }">
               {{ siteMap[row.site as siteValue] }}
@@ -326,7 +381,6 @@
                 <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
               </el-tooltip>
             </template>
-
           </el-table-column>
 
           <template #empty>
@@ -342,7 +396,7 @@
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
@@ -352,13 +406,7 @@
       @click-child="clickLog"
     />
     <!-- 待签收修改 -->
-    <vab-dialog
-      v-model="modifyPendingVisible"
-      :draggable="false"
-      title="修改"
-      width="40%"
-      @close="closeModifyPendingDialog"
-    >
+    <vab-dialog v-model="modifyPendingVisible" :draggable="false" title="修改" width="40%" @close="closeModifyPendingDialog">
       <el-table
         border
         :cell-style="cellStyle3"
@@ -366,12 +414,17 @@
         :header-cell-style="{ textAlign: 'center' }"
         @cell-click="changeModifyInput"
       >
-        <el-table-column label="签收日期" prop="createTime"/>
-        <el-table-column label="签收数量" prop="signCount"/>
+        <el-table-column label="签收日期" prop="createTime" />
+        <el-table-column label="签收数量" prop="signCount" />
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.signOrder" clearable @blur="clickModifyOrderCancel($event, row)" @keyup.enter="clickModifyOrderCancel($event, row)" />
+              <el-input
+                v-model="row.signOrder"
+                clearable
+                @blur="clickModifyOrderCancel($event, row)"
+                @keyup.enter="clickModifyOrderCancel($event, row)"
+              />
             </div>
             <span>{{ row.signOrder }}</span>
           </template>
@@ -388,12 +441,7 @@
       </template>
     </vab-dialog>
     <!-- 已签收修改 -->
-    <vab-dialog
-      v-model="modifyVisible"
-      title="修改"
-      width="40%"
-      @close="closeModifyDialog"
-    >
+    <vab-dialog v-model="modifyVisible" title="修改" width="40%" @close="closeModifyDialog">
       <el-table
         border
         :cell-style="cellStyle4"
@@ -406,11 +454,16 @@
             {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
           </template>
         </el-table-column>
-        <el-table-column label="签收数量" prop="signCount"/>
+        <el-table-column label="签收数量" prop="signCount" />
         <el-table-column label="单号" prop="signOrder">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.signOrder" clearable @blur="clickModifyOrderCancel($event, row)"  @keyup.enter="clickModifyOrderCancel($event, row)" />
+              <el-input
+                v-model="row.signOrder"
+                clearable
+                @blur="clickModifyOrderCancel($event, row)"
+                @keyup.enter="clickModifyOrderCancel($event, row)"
+              />
             </div>
             <span>{{ row.signOrder }}</span>
           </template>
@@ -427,12 +480,7 @@
       </template>
     </vab-dialog>
     <!-- 入库单导出 -->
-    <vab-dialog
-      v-model="receiptExportVisible"
-      title="入库单导出"
-      width="25%"
-      @close="closeReceiptExport"
-    >
+    <vab-dialog v-model="receiptExportVisible" title="入库单导出" width="25%" @close="closeReceiptExport">
       <el-form ref="receiptExportFormRef" :model="receiptExportForm">
         <el-form-item label="日期" label-width="70px" prop="date">
           <el-date-picker
@@ -453,12 +501,7 @@
       </template>
     </vab-dialog>
     <!-- 签收 -->
-    <vab-dialog
-      v-model="signVisible"
-      title="签收"
-      width="20%"
-      @close="closeSignDialog"
-    >
+    <vab-dialog v-model="signVisible" title="签收" width="20%" @close="closeSignDialog">
       <el-form ref="signFormRef" label-position="right" label-width="auto" :model="signForm" :rules="signRules">
         <el-form-item label="签收数量" prop="signCount">
           <el-input v-model="signForm.signCount" clearable />
@@ -472,11 +515,7 @@
       </template>
     </vab-dialog>
     <!-- 批量签收 -->
-    <vab-dialog
-      v-model="signBatchVisible"
-      title="批量签收"
-      width="20%"
-    >
+    <vab-dialog v-model="signBatchVisible" title="批量签收" width="20%">
       <el-form ref="signBatchFormRef" label-position="top" :model="signBatchForm" :rules="signBatchFormRules">
         <el-form-item label="签收物流单号" prop="signOrder">
           <el-input v-model="signBatchForm.signOrder" clearable />
@@ -488,18 +527,14 @@
       </template>
     </vab-dialog>
     <!-- 打印 -->
-    <vab-dialog
-      v-model="printCountVisible"
-      title="打印数量"
-      width="20%"
-    >
-      <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0;" >
+    <vab-dialog v-model="printCountVisible" title="打印数量" width="20%">
+      <el-form ref="printFormRef" :model="printForm" :rules="printFormRules" style="margin: 0">
         <el-form-item label="数量" prop="count">
           <el-input v-model="printForm.count" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <div style="text-align: center;">
+        <div style="text-align: center">
           <el-button type="primary" @click="handleConfirmPrint">打印</el-button>
         </div>
       </template>
@@ -530,7 +565,7 @@ import {
   signMoreRecord,
   updateProductDate,
   updateRecordOrder,
-  updateSignLog
+  updateSignLog,
 } from '/@/api/devlocal/packagingShipping'
 import SignPermission from '/@/permissions/sign'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
@@ -542,17 +577,28 @@ defineOptions({
   name: 'PendingReceipt',
 })
 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.signId
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.signId === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
+
 const batchBtnLoading = ref<boolean>(false)
 const signLoading = ref<boolean>(false)
 const printer = ref<string>('')
 const activeName = ref<number>(0)
 const printCountVisible = ref<boolean>(false)
 const printForm = reactive<{ count: number | undefined }>({
-  count: undefined
+  count: undefined,
 })
 const printFormRef = ref<FormInstance>()
 const printFormRules = reactive<FormRules>({
-  count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }]
+  count: [{ required: true, message: '请输入打印数量', trigger: 'blur' }],
 })
 const _id = ref<number>(0)
 
@@ -566,11 +612,11 @@ const listLoading = ref<boolean>(true)
 // 批量签收可见
 const signBatchVisible = ref<boolean>(false)
 const signBatchForm = reactive<{ signOrder: string }>({
-  signOrder: ''
+  signOrder: '',
 })
 const signBatchFormRef = ref<FormInstance>()
 const signBatchFormRules = reactive<FormRules<{ signOrder: string }>>({
-  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
+  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }],
 })
 // 获取默认打印机
 const fetchDefaultPrinter = async () => {
@@ -589,16 +635,15 @@ const handleConfirmPrint = async () => {
     if (isValid) {
       const { data } = await printSign({
         signId: _id.value,
-        quantity: printForm.count!
+        quantity: printForm.count!,
       })
       if (data) {
-
         // const { data: res } = await printSignSuccess(
         //   JSON.stringify(data)
         // )
         // if (res.errorId === "0") {
-          $baseMessage('打印成功!', 'success')
-          printCountVisible.value = false
+        $baseMessage('打印成功!', 'success')
+        printCountVisible.value = false
         // } else {
         //   $baseMessage('打印失败!', 'error')
         // }
@@ -622,10 +667,10 @@ const signVisible = ref<boolean>(false)
 // 签收form
 const signForm = reactive<any>({
   signCount: '',
-  signOrder: ''
+  signOrder: '',
 })
 const signRules = reactive<any>({
-  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }]
+  signOrder: [{ required: true, message: '请输入签收物流单号', trigger: 'blur' }],
 })
 const signFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
@@ -648,7 +693,7 @@ const confirmSign = async () => {
     const { data } = await signComponent({
       signId: copyRow.value.signId,
       signCount: signForm.signCount,
-      signOrder: signForm.signOrder
+      signOrder: signForm.signOrder,
     })
     if (data) {
       $baseMessage('签收成功', 'success')
@@ -682,7 +727,7 @@ const confirmModifyPending = () => {
 }
 // 入库单导出表单
 const receiptExportForm = reactive<any>({
-  date: ''
+  date: '',
 })
 
 const receiptExportFormRef = ref<FormInstance>()
@@ -710,7 +755,7 @@ const handleConfirmSignBatch = async () => {
     const signIds = selectRows.value.map((item: any) => item.signId).join(',')
     const { data } = await signBatch({
       signIds,
-      signOrder: signBatchForm.signOrder
+      signOrder: signBatchForm.signOrder,
     })
     if (data) {
       handleCancelSignBatch()
@@ -731,7 +776,7 @@ const signedRecord = ref<any>([])
 const handleGetSignRecord = async (row: any) => {
   modifyPendingVisible.value = true
   const { data } = await getSignRecord({
-    signId: row.signId
+    signId: row.signId,
   })
   if (data) {
     pendingSignRecord.value = data
@@ -740,7 +785,7 @@ const handleGetSignRecord = async (row: any) => {
 const handleGetSignedRecord = async (row: any) => {
   modifyVisible.value = true
   const { data } = await getSignRecord({
-    signId: row.signId
+    signId: row.signId,
   })
   if (data) {
     signedRecord.value = data
@@ -749,34 +794,34 @@ const handleGetSignedRecord = async (row: any) => {
 const handleDeleteSignRecord = async (row: any, index: number) => {
   $baseConfirm('确定删除并取消签收吗', '系统提示', async () => {
     const { data } = await deleteSignRecord({
-      signRecordId: row.id
+      signRecordId: row.id,
     })
     if (data) {
       pendingSignRecord.value.splice(index, 1)
-      $baseMessage('删除取消零件签收成功！','success')
+      $baseMessage('删除取消零件签收成功！', 'success')
     }
   })
 }
 const handleDeleteSignedRecord = async (row: any, index: number) => {
   $baseConfirm('确定删除并取消签收吗', '系统提示', async () => {
     const { data } = await deleteSignRecord({
-      signRecordId: row.id
+      signRecordId: row.id,
     })
     if (data) {
       signedRecord.value.splice(index, 1)
-      $baseMessage('删除取消零件签收成功！','success')
+      $baseMessage('删除取消零件签收成功！', 'success')
     }
   })
 }
 const handleIfShowRecord = async (row: any) => {
   const { data } = await signMoreRecord({
-    signId: row.signId
+    signId: row.signId,
   })
   if (data === true) {
     handleGetSignedRecord(row)
   } else {
     const { data } = await deleteSign({
-      signId: row.signId
+      signId: row.signId,
     })
     if (data) {
       $baseMessage('取消签收成功', 'success')
@@ -797,7 +842,7 @@ const queryForm = reactive<any>({
   signUserId: -1,
   signDate: '',
   orderByField: 'payDate',
-  orderDirection: 'desc'
+  orderDirection: 'desc',
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -806,8 +851,8 @@ const handleSizeChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -817,8 +862,8 @@ const handleCurrentChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -828,20 +873,18 @@ const queryData = () => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
 const changeProductDate = async (row: any) => {
   await updateProductDate({
     signId: row.signId,
-    date: row.produceCompletionDate
+    date: row.produceCompletionDate,
   })
   // console.log(row.produceCompletionDate);
-
 }
-
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -850,14 +893,13 @@ const wangEditorLogVisible = ref<boolean>(false)
 const progressLogCopy = ref<string | undefined>('')
 const classify = ref<string>('')
 
-
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 
 const handleTabClick = async (tab: TabsPaneContext) => {
@@ -873,52 +915,52 @@ const handleTabClick = async (tab: TabsPaneContext) => {
       ...route.query,
       tab: queryForm.status,
       pageNo: 1,
-      pageSize: 20
-    }
+      pageSize: 20,
+    },
   })
   await fetchData()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 13 && data.columnIndex !== 15) {
     return {
-      textAlign:'center'
+      textAlign: 'center',
     }
   }
 }
-const cellStyle2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
-const cellStyle3 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+const cellStyle3 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   if (data.columnIndex === 0) {
     return {
       textAlign: 'center',
       color: '#bbb',
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
-const cellStyle4 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): any => {
+const cellStyle4 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   if (data.columnIndex === 0 || data.columnIndex === 1) {
     return {
       textAlign: 'center',
       color: '#bbb',
-      cursor: 'not-allowed'
+      cursor: 'not-allowed',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 /**
@@ -946,32 +988,32 @@ let _row: any
  * 当点击修改时切换输入框，修改输入
  */
 const changeModifyInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  _row = JSON.parse(JSON.stringify(row));
+  _row = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 
-const clickModifyOrderCancel = async (event: any, value: any) =>{
-  const rootElement = getRootElement(event.srcElement, ".cell");
+const clickModifyOrderCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(_row, value)) {
     return
@@ -980,7 +1022,7 @@ const clickModifyOrderCancel = async (event: any, value: any) =>{
     try {
       await updateRecordOrder({
         signRecordId: value.id,
-        order: value.signOrder
+        order: value.signOrder,
       })
     } catch {
       Object.assign(value, _row)
@@ -992,17 +1034,16 @@ const clickModifyOrderCancel = async (event: any, value: any) =>{
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  const { data } = await updateSignLog({ signId: clickRow.value.signId, log: val})
+  const { data } = await updateSignLog({ signId: clickRow.value.signId, log: val })
   if (data === true) {
     progressLogCopy.value = val
     clickRow.value.log = val
   }
-
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickLogBool = ( val: any) => {
+const clickLogBool = (val: any) => {
   wangEditorLogVisible.value = val
 }
 // 防抖处理
@@ -1017,19 +1058,19 @@ const fetchData = async () => {
     total.value = data.total!
     list.value.forEach((item: any) => {
       if (item.signOrder) {
-        item.signOrder = item.signOrder.replaceAll(',', '<br>');
+        item.signOrder = item.signOrder.replaceAll(',', '<br>')
       }
     })
   }
   listLoading.value = false
 }
-const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 4 || data.columnIndex === 12) {
     return 'clear-padding'
   }
   return ''
 }
-const getCellClass2 = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const getCellClass2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.column.label === '零件图片' || data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
@@ -1041,16 +1082,16 @@ onActivated(() => {
 const signUserOption = ref<{ id: number; label: string }[]>([])
 const signDateOption = ref<string[]>([])
 const fetchUserList = async () => {
-  const { data } = await getSignUserList();
+  const { data } = await getSignUserList()
   signUserOption.value = data
   signUserOption.value.unshift({ id: -1, label: '全部' })
 }
 const fetchSignDateList = async () => {
-  const { data } = await getSignDateList();
+  const { data } = await getSignDateList()
   signDateOption.value = data
 }
-const handleSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   // console.log(prop, order)
   if (queryForm.orderByField === prop) {
     if (!order) {
@@ -1059,12 +1100,12 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
       } else if (queryForm.orderDirection === 'desc') {
         column.order = 'ascending'
       }
-    } 
+    }
   } else {
     column.order = 'descending'
   }
   queryForm.orderByField = prop
-  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
 onBeforeMount(() => {
@@ -1147,7 +1188,6 @@ onBeforeMount(() => {
         transform: scale(1.2); // 放大 20%
         transform-origin: center; // 确保放大从中心开始
       }
-
     }
   }
 }
@@ -1160,15 +1200,6 @@ onBeforeMount(() => {
   max-height: 65.2px;
   overflow-y: auto;
 }
-// /* 取消没有条纹的行的悬停背景色 */
-// :deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-//   background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-// }
-
-// /* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-// :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-//   background-color: #fafafa !important; /* 保持原有条纹颜色 */
-// }
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);

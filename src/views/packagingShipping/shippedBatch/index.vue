@@ -7,26 +7,39 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
-      border :cell-style="cellStyle"
-      class="noneHoveTable"
+      border
+      :cell-style="cellStyle"
+      class="noneHoveTable custom-table-hover"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
+      :row-class-name="tableRowClassName"
       stripe
       @cell-click="cellClick"
+      @row-click="handleRowClick"
     >
-      <el-table-column label="FBA SHIPMENT ID" prop="fbaShipmentId" :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId', 30)" />
-      <el-table-column label="站点" min-width="130" prop="site"/>
-      <el-table-column label="状态" min-width="100" prop="status"/>
-      <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')"/>
+      <el-table-column
+        label="FBA SHIPMENT ID"
+        prop="fbaShipmentId"
+        :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId', 30)"
+      />
+      <el-table-column label="站点" min-width="130" prop="site" />
+      <el-table-column label="状态" min-width="100" prop="status" />
+      <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')" />
       <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
         <template #default="{ row }">
           {{ formatDate(new Date(row.shipmentDate)) }}
@@ -39,7 +52,7 @@
       </el-table-column>
       <el-table-column label="最新预计入库" min-width="130" prop="latestArrivalDate">
         <template #default="{ row }">
-          {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)): '' }}
+          {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)) : '' }}
         </template>
       </el-table-column>
       <el-table-column label="上架日期" min-width="115" prop="actualArrivalDate">
@@ -47,30 +60,30 @@
           {{ row.actualArrivalDate ? formatDate(new Date(row.actualArrivalDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="实际时效" min-width="100" prop="actualTimeliness"/>
-      <el-table-column label="已延误" min-width="100" prop="delayed"/>
+      <el-table-column label="实际时效" min-width="100" prop="actualTimeliness" />
+      <el-table-column label="已延误" min-width="100" prop="delayed" />
       <el-table-column label="实际延误" min-width="130" prop="actualDelay">
         <template #default="{ row }">
-          <span :style="{ color: row.actualDelay <= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }" >{{  row.actualDelay }}</span>
+          <span :style="{ color: row.actualDelay <= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.actualDelay }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="已接收天数" min-width="130" prop="acceptDays"/>
-      <el-table-column label="接收完成天数" min-width="130" prop="acceptFinishDays"/>
-      <el-table-column label="发货总数" min-width="100" prop="totalCount"/>
-      <el-table-column label="已接收数" min-width="100" prop="receiptsCount"/>
+      <el-table-column label="已接收天数" min-width="130" prop="acceptDays" />
+      <el-table-column label="接收完成天数" min-width="130" prop="acceptFinishDays" />
+      <el-table-column label="发货总数" min-width="100" prop="totalCount" />
+      <el-table-column label="已接收数" min-width="100" prop="receiptsCount" />
       <el-table-column label="缺数" min-width="80" prop="lackCount">
         <template #default="{ row }">
-          <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }" >{{  row.lackCount }}</span>
+          <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.lackCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="箱数" min-width="80" prop="totalEncasementCount"/>
-      <el-table-column label="体积(m3)" min-width="100" prop="volume"/>
-      <el-table-column label="重量(kg)" min-width="100" prop="weight"/>
-      <el-table-column label="备注" min-width="100" prop="remarks" >
+      <el-table-column label="箱数" min-width="80" prop="totalEncasementCount" />
+      <el-table-column label="体积(m3)" min-width="100" prop="volume" />
+      <el-table-column label="重量(kg)" min-width="100" prop="weight" />
+      <el-table-column label="备注" min-width="100" prop="remarks">
         <template #default="{ row }">
           <el-tooltip content="" effect="dark" placement="top">
             <template #content>
-              <div class="custom-tooltip" >{{ row.remarks }}</div>
+              <div class="custom-tooltip">{{ row.remarks }}</div>
             </template>
             <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
           </el-tooltip>
@@ -89,8 +102,8 @@
       <el-table-column fixed="right" label="操作" width="260">
         <template #default="{ row }">
           <el-space :size="20">
-            <el-link type="primary" underline='never' @click="showDetails(row)">明细</el-link>
-            <el-link type="primary" underline='never' @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
+            <el-link type="primary" underline="never" @click="showDetails(row)">明细</el-link>
+            <el-link type="primary" underline="never" @click="showUpdateStorageTime(row)">修改最新预计入库时间</el-link>
           </el-space>
         </template>
       </el-table-column>
@@ -98,79 +111,79 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <vab-pagination 
-      :current-page="queryForm.pageNo" 
-      :page-size="queryForm.pageSize" 
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
       :total="total"
-      @current-change="handleCurrentChange" 
-      @size-change="handleSizeChange" 
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 明细 -->
-    <vab-dialog
-      v-model="detailsVisible"
-      title="明细"
-      top="10vh"
-    >
+    <vab-dialog v-model="detailsVisible" title="明细" top="10vh">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="detailQueryForm" @submit.prevent>
-          <el-form-item>
-            <el-input v-model.trim="detailQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="detailQueryData" @keyup.enter="detailQueryData" />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="detailListLoading" native-type="submit" type="primary" @click="detailQueryData"/>
-          </el-form-item>
-        </el-form>
+            <el-form-item>
+              <el-input
+                v-model.trim="detailQueryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="detailQueryData"
+                @keyup.enter="detailQueryData"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" :loading="detailListLoading" native-type="submit" type="primary" @click="detailQueryData" />
+            </el-form-item>
+          </el-form>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <el-table 
-        border :cell-class-name="cellClassName" 
-        class="detailsTable" 
+      <el-table
+        border
+        :cell-class-name="cellClassName"
+        class="detailsTable"
         :data="detailList"
         :header-cell-style="{ textAlign: 'center' }"
-        stripe
         max-height="60vh"
+        stripe
       >
         <el-table-column label="图片" width="70">
           <template #default="{ row }">
-            <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 70px; height: 70px;" @click="showImagePreview(row)">
+            <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 70px; height: 70px" @click="showImagePreview(row)">
               <template #error>
-                <el-icon/>
+                <el-icon />
               </template>
             </el-image>
           </template>
         </el-table-column>
         <el-table-column label="SKU" min-width="200" prop="sku">
           <template #default="{ row }">
-            {{ row.sku }}<br />{{ row.description }}
+            {{ row.sku }}
+            <br />
+            {{ row.description }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="PO" min-width="100" prop="po"/>
-        <el-table-column align="center" label="发货数量" min-width="100" prop="shipmentTotalCount"/>
-        <el-table-column align="center" label="已接收数量" min-width="110" prop="receiptsCount"/>
-        <el-table-column align="center" label="缺数" min-width="100" prop="lackCount"/>
+        <el-table-column align="center" label="PO" min-width="100" prop="po" />
+        <el-table-column align="center" label="发货数量" min-width="100" prop="shipmentTotalCount" />
+        <el-table-column align="center" label="已接收数量" min-width="110" prop="receiptsCount" />
+        <el-table-column align="center" label="缺数" min-width="100" prop="lackCount" />
       </el-table>
-      <vab-pagination 
-        :current-page="detailQueryForm.pageNo" 
-        :page-size="detailQueryForm.pageSize" 
+      <vab-pagination
+        :current-page="detailQueryForm.pageNo"
+        :page-size="detailQueryForm.pageSize"
         :total="detailTotal"
-        @current-change="handleDetailCurrentChange" 
-        @size-change="handleDetailSizeChange" 
+        @current-change="handleDetailCurrentChange"
+        @size-change="handleDetailSizeChange"
       />
     </vab-dialog>
     <!-- 修改预计入库时间 -->
-    <vab-dialog
-      v-model="storageTimeVisible"
-      title="修改最新预计入库时间"
-      width="20%"
-      @close="closeUpdateStorageTime"
-    >
-      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-right: 0px; margin-left: 0px;">
+    <vab-dialog v-model="storageTimeVisible" title="修改最新预计入库时间" width="20%" @close="closeUpdateStorageTime">
+      <el-form ref="storageTimeFormRef" :model="storageTimeForm" :rules="storageTimeRule" style="margin-right: 0px; margin-left: 0px">
         <el-form-item label="最新预计入库时间" prop="date">
-          <el-date-picker 
-            v-model="storageTimeForm.date" 
-            format="YYYY-MM-DD" 
+          <el-date-picker
+            v-model="storageTimeForm.date"
+            format="YYYY-MM-DD"
             placeholder="选择最新预计入库时间"
             type="date"
             value-format="YYYY-MM-DD"
@@ -183,51 +196,42 @@
       </template>
     </vab-dialog>
     <!-- 筛选 -->
-    <vab-dialog
-      v-model="filterVisible"
-      title="筛选"
-      width="26%"
-      @close="closeFilter"
-    >
-      <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="margin-right: 10px; margin-left: 10px;">
+    <vab-dialog v-model="filterVisible" title="筛选" width="26%" @close="closeFilter">
+      <el-form
+        ref="filterFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="filterForm"
+        style="margin-right: 10px; margin-left: 10px"
+      >
         <el-form-item label="缺数">
           <div class="flex">
-            <el-input-number
-              v-model="filterForm.number1"
-              :min="0"
-              placeholder="最小值"
-              style="width: 45%"
-            />
+            <el-input-number v-model="filterForm.number1" :min="0" placeholder="最小值" style="width: 45%" />
             <span style="margin: 0 20px; color: #303133">至</span>
-            <el-input-number
-              v-model="filterForm.number2"
-              :min="0"
-              placeholder="最大值"
-              style="width: 45%"
-            />
+            <el-input-number v-model="filterForm.number2" :min="0" placeholder="最大值" style="width: 45%" />
           </div>
         </el-form-item>
         <el-form-item label="发货日期" prop="date1">
-          <el-date-picker 
+          <el-date-picker
             v-model="filterForm.date1"
-            :editable="false" 
-            end-placeholder="结束日期" 
-            format="YYYY-MM-DD" 
-            range-separator="至" 
-            start-placeholder="开始日期" 
-            type="daterange" 
+            :editable="false"
+            end-placeholder="结束日期"
+            format="YYYY-MM-DD"
+            range-separator="至"
+            start-placeholder="开始日期"
+            type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
         <el-form-item label="上架日期" prop="date2">
-          <el-date-picker 
+          <el-date-picker
             v-model="filterForm.date2"
-            :editable="false" 
-            end-placeholder="结束日期" 
-            format="YYYY-MM-DD" 
-            range-separator="至" 
-            start-placeholder="开始日期" 
-            type="daterange" 
+            :editable="false"
+            end-placeholder="结束日期"
+            format="YYYY-MM-DD"
+            range-separator="至"
+            start-placeholder="开始日期"
+            type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
@@ -238,12 +242,7 @@
       </template>
     </vab-dialog>
     <!-- 备注 -->
-    <vab-remark-dialog 
-      v-model="remarkVisible"
-      :remark="remark"
-      title="修改备注"
-      @update:remark="handleUpdateRemark"
-    />
+    <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
   </div>
 </template>
 
@@ -251,15 +250,31 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { filterShipmentFbaList, getShipmentFbaDetailList, getShipmentFbaList, updateShipmentFBA, updateShipmentFbaDate } from '/@/api/devlocal/encasement'
+import {
+  filterShipmentFbaList,
+  getShipmentFbaDetailList,
+  getShipmentFbaList,
+  updateShipmentFBA,
+  updateShipmentFbaDate,
+} from '/@/api/devlocal/encasement'
 import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ShippedBatch'
+  name: 'ShippedBatch',
 })
 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
 
@@ -269,7 +284,7 @@ const listLoading = ref<boolean>(true)
 const queryForm = reactive<IGetShipmentFbaListReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const list = ref<IGetShipmentFbaList[]>([])
 const total = ref<number>(0)
@@ -279,7 +294,7 @@ const detailListLoading = ref<boolean>(false)
 const detailQueryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const detailList = ref<any>([])
 const detailTotal = ref<number>(0)
@@ -302,11 +317,11 @@ const storageTimeVisible = ref<boolean>(false)
 const filterVisible = ref<boolean>(false)
 // 入库时间表单
 const storageTimeForm = reactive<any>({
-  date: ''
+  date: '',
 })
 // 入库时间rule
 const storageTimeRule = reactive<any>({
-  date: [{ required: true, message: '请选择预计入库时间', trigger: 'change' }]
+  date: [{ required: true, message: '请选择预计入库时间', trigger: 'change' }],
 })
 // 筛选表单
 const filterForm = reactive<any>({})
@@ -327,16 +342,14 @@ const handleUpdateRemark = async (val: string) => {
   try {
     const { data } = await updateShipmentFBA({
       id: copyRow.id!,
-      remarks: val
+      remarks: val,
     })
     if (data) {
       $baseMessage('修改备注成功！', 'success')
       remarkVisible.value = false
       copyRow.remarks = val
     }
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 }
 const handleUpdate = async (row: IGetShipmentFbaList) => {
   await updateShipmentFBA({
@@ -355,7 +368,7 @@ const fetchDetailData = async () => {
   detailListLoading.value = true
   const { data } = await getShipmentFbaDetailList({
     id: _id.value,
-    ...detailQueryForm
+    ...detailQueryForm,
   })
   detailTotal.value = data?.total!
   detailList.value = data?.list!
@@ -378,7 +391,7 @@ const confirmUpdateStorageTime = async () => {
     if (isValid) {
       const { data } = await updateShipmentFbaDate({
         id: _row.id!,
-        date: storageTimeForm.date
+        date: storageTimeForm.date,
       })
       if (data) {
         $baseMessage('修改最新预计入库时间成功！', 'success')
@@ -406,7 +419,7 @@ const confirmFilter = async () => {
   let arrivalDateStart = ''
   let arrivalDateEnd = ''
   // console.log(filterForm);
-  
+
   if (!filterForm.date1 || filterForm.date1 === '') {
     shipmentDateStart = ''
     shipmentDateEnd = ''
@@ -429,7 +442,7 @@ const confirmFilter = async () => {
     shipmentDateStart,
     shipmentDateEnd,
     arrivalDateStart,
-    arrivalDateEnd
+    arrivalDateEnd,
   })
   if (data) {
     $baseMessage('筛选成功!', 'success')
@@ -444,8 +457,8 @@ const queryData = () => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -455,8 +468,8 @@ const handleCurrentChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -467,8 +480,8 @@ const handleSizeChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -486,23 +499,23 @@ const handleDetailSizeChange = (value: number) => {
   fetchDetailData()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '备注') {
     return {
       textAlign: 'left',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
   }
   if (data.columnIndex !== 0 && data.columnIndex !== 3 && data.columnIndex !== 19) {
     return {
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'left'
+    textAlign: 'left',
   }
 }
-const cellClassName = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
   }
@@ -543,14 +556,5 @@ onBeforeMount(() => {
 .flex {
   display: flex;
   align-items: center;
-}
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 </style>

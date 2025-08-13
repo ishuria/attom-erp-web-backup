@@ -3,66 +3,101 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleHideStopProduction">{{ queryForm.haltStatus === 0 ? '隐藏停产' : '展示停产' }}</el-button>
-        <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary" @click="showBatchPackingPrecautions">批量新增质检项</el-button>
+        <el-button v-permissions="{ permission: [SkuPermission.SKU_COMPONENT_CREATE] }" type="primary" @click="showBatchPackingPrecautions">
+          批量新增质检项
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData"/>
+            <el-button :icon="Search" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
-      ref="tableRef" 
-      v-loading="listLoading" 
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
       v-permissions="{ permission: [SkuPermission.SKU_LIST] }"
-      border 
-      :cell-class-name="clearPadding" 
+      border
+      :cell-class-name="clearPadding"
       :cell-style="cellStyle"
-      class="noneHoveTable"
+      class="noneHoveTable custom-table-hover"
       :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
+      :row-class-name="tableRowClassName"
       stripe
+      @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column fixed="left" type="selection" width="53"/>
+      <el-table-column fixed="left" type="selection" width="53" />
       <el-table-column class="image-wall" label="图片" width="75">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="setPreviewImage(row.skuImgUrl)">
+          <el-image
+            fit="fill"
+            :src="row.skuImgUrl"
+            style="display: block; width: 75px; height: 75px"
+            @click="setPreviewImage(row.skuImgUrl)"
+          >
             <template #error><el-icon /></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 70, 50)" >
+      <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 70, 50)">
         <template #default="{ row }">
-          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row._sku[0])" >
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row._sku[0])">
             {{ row._sku[0] }}
             <vab-icon icon="file-copy-2-fill" />
-          </span><br />
+          </span>
+          <br />
           {{ row._sku[1] }}
         </template>
-      </el-table-column>   
-      <el-table-column label="FNSKUUPC" prop="fnSkuUpc" :width="calculateBrColumnWidth(list, (row: any) => row.fnSkuUpc, 70)" >
+      </el-table-column>
+      <el-table-column label="FNSKUUPC" prop="fnSkuUpc" :width="calculateBrColumnWidth(list, (row: any) => row.fnSkuUpc, 70)">
         <template #header>
-          FNSKU<br>UPC
+          FNSKU
+          <br />
+          UPC
         </template>
         <template #default="{ row }">
           <span v-html="row.fnSkuUpc"></span>
         </template>
       </el-table-column>
-      <el-table-column label="产品经理" min-width="90" prop="productManager"/>
-      <el-table-column  v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }" label="停产" prop="productionHaltStatus">
+      <el-table-column label="产品经理" min-width="90" prop="productManager" />
+      <el-table-column v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }" label="停产" prop="productionHaltStatus">
         <template #default="{ row }">
-          <el-switch v-model="row.productionHaltStatus" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #ff4949;" @change="handleUpdateStatus(row)"/>
+          <el-switch
+            v-model="row.productionHaltStatus"
+            :active-value="1"
+            :inactive-value="0"
+            style="--el-switch-on-color: #ff4949"
+            @change="handleUpdateStatus(row)"
+          />
         </template>
       </el-table-column>
-      <el-table-column  v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }" label="优先打包" min-width="90" prop="priorityPacking">
+      <el-table-column
+        v-permissions="{ permission: [SkuPermission.SKU_STATUS_UPDATE] }"
+        label="优先打包"
+        min-width="90"
+        prop="priorityPacking"
+      >
         <template #default="{ row }">
-          <el-switch v-model="row.priorityPacking" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
+          <el-switch
+            v-model="row.priorityPacking"
+            :active-value="1"
+            :inactive-value="0"
+            style="--el-switch-on-color: #13ce66"
+            @change="handleUpdateStatus(row)"
+          />
         </template>
       </el-table-column>
       <!-- <el-table-column label="打包拍照" min-width="90" prop="packagePhotograph">
@@ -70,47 +105,69 @@
           <el-switch v-model="row.packagePhotograph" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="总实际成本" min-width="80" prop="procurementCost" >
+      <el-table-column label="总实际成本" min-width="80" prop="procurementCost">
         <template #header>
-          总实际<br>成本
+          总实际
+          <br />
+          成本
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="dilapidationCost" >
+      <el-table-column label="" min-width="100" prop="dilapidationCost">
         <template #header>
-          损耗成本<br>(近10次)
+          损耗成本
+          <br />
+          (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="packingCost" >
+      <el-table-column label="" min-width="100" prop="packingCost">
         <template #header>
-          打包成本<br>(近10次)
+          打包成本
+          <br />
+          (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="freightFeeCost" >
+      <el-table-column label="" min-width="100" prop="freightFeeCost">
         <template #header>
-          运费<br>(近10次)
+          运费
+          <br />
+          (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="货币" prop="currency" width="110px"/>
-      <el-table-column label="" min-width="100" prop="avgTime" >
+      <el-table-column label="货币" prop="currency" width="110px" />
+      <el-table-column label="" min-width="100" prop="avgTime">
         <template #header>
-          平均交期<br>(近10次)
+          平均交期
+          <br />
+          (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="avgFluctuation" >
+      <el-table-column label="" min-width="100" prop="avgFluctuation">
         <template #header>
-          交期平均<br>波动
+          交期平均
+          <br />
+          波动
         </template>
       </el-table-column>
-      <el-table-column label="长(cm)" min-width="90" prop="length"/>
-      <el-table-column label="宽(cm)" min-width="90" prop="width"/>
-      <el-table-column label="高(cm)" min-width="90" prop="height"/>
-      <el-table-column label="重量(g)" prop="weight"/>
-      <el-table-column label="重量系数" min-width="100" prop="weightCoefficient" :width="flexColumnWidth(list, '重量系数', 'weightCoefficient')">
+      <el-table-column label="长(cm)" min-width="90" prop="length" />
+      <el-table-column label="宽(cm)" min-width="90" prop="width" />
+      <el-table-column label="高(cm)" min-width="90" prop="height" />
+      <el-table-column label="重量(g)" prop="weight" />
+      <el-table-column
+        label="重量系数"
+        min-width="100"
+        prop="weightCoefficient"
+        :width="flexColumnWidth(list, '重量系数', 'weightCoefficient')"
+      >
         <template #default="{ row }">
           {{ row.weightCoefficient != null ? row.weightCoefficient.toFixed(4) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="体积系数" min-width="100" prop="volumeCoefficient" :width="flexColumnWidth(list, '体积系数', 'volumeCoefficient')">
+      <el-table-column
+        label="体积系数"
+        min-width="100"
+        prop="volumeCoefficient"
+        :width="flexColumnWidth(list, '体积系数', 'volumeCoefficient')"
+      >
         <template #default="{ row }">
           {{ row.volumeCoefficient != null ? row.volumeCoefficient.toFixed(4) : '' }}
         </template>
@@ -118,7 +175,7 @@
       <el-table-column v-permissions="SkuPermission.skuOperationColPermission()" fixed="right" label="操作" width="150">
         <template #default="{ row }">
           <el-dropdown>
-            <el-button v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" text type="primary" @click="handleSkuDetail(row)" >
+            <el-button v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" text type="primary" @click="handleSkuDetail(row)">
               SKU详情
               <el-icon class="el-icon--right">
                 <arrow-down />
@@ -127,7 +184,7 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" @click="handleSkuDetail(row)">
-                  <el-link type="primary" underline="never" >SKU详情</el-link>
+                  <el-link type="primary" underline="never">SKU详情</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_COPY] }" @click="handleCopySku(row)">
                   <el-link type="primary" underline="never">SKU复制</el-link>
@@ -147,10 +204,10 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
     </el-table>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
@@ -160,7 +217,7 @@
     />
     <!-- 复制SKU -->
     <vab-dialog v-model="copySkuVisible" title="复制SKU" top="35vh" width="20%" @close="copySkuClose">
-      <el-form ref="copySkuFormRef" label-position="top" :model="copySkuForm" :rules="copySkuFormRules" >
+      <el-form ref="copySkuFormRef" label-position="top" :model="copySkuForm" :rules="copySkuFormRules">
         <el-form-item label="新SKU" prop="sku">
           <el-input v-model="copySkuForm.sku" clearable placeholder="请输入新SKU" />
         </el-form-item>
@@ -191,6 +248,17 @@ defineOptions({
   name: 'SkuInfomation',
 })
 
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.skuId
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.skuId === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const selectedRows = ref<any[]>([])
 const handleSelectionChange = (rows: any[]) => {
   selectedRows.value = rows
@@ -217,7 +285,7 @@ const tabsStore = useTabsStore()
 const { changeTabsMeta } = tabsStore
 const copySkuVisible = ref<boolean>(false)
 const copySkuForm = reactive({
-  sku: ''
+  sku: '',
 })
 const copySkuFormRef = ref()
 const copySkuClose = () => {
@@ -225,9 +293,7 @@ const copySkuClose = () => {
   copySkuFormRef.value.resetFields()
 }
 const copySkuFormRules = reactive({
-  sku: [
-    { required: true, message: '请输入新SKU', trigger: 'blur' },
-  ],
+  sku: [{ required: true, message: '请输入新SKU', trigger: 'blur' }],
 })
 const handleCopySkuConfirm = async () => {
   copySkuFormRef.value.validate(async (isValid: boolean) => {
@@ -235,7 +301,7 @@ const handleCopySkuConfirm = async () => {
       try {
         const { data } = await copyProductSku({
           skuId: skuId.value,
-          sku: copySkuForm.sku
+          sku: copySkuForm.sku,
         })
         if (data) {
           $baseMessage('复制成功', 'success')
@@ -260,12 +326,12 @@ const handleSkuDetail = async (row: any) => {
   const matched = handleMatched(allRoutes.value, '/productInfomation/skuDetailView')
   const tab = handleTabs({
     ...matched.at(-1),
-    query
+    query,
   })
   if (tab) {
     await router.push({
       path: '/productInfomation/skuDetailView',
-      query
+      query,
     })
     await changeTabsMeta({
       title: 'SKU详情',
@@ -284,12 +350,12 @@ const handleHideStopProduction = () => {
   fetchData()
 }
 
-const handleUpdateStatus = async (row: IgetProductList) => {  
+const handleUpdateStatus = async (row: IgetProductList) => {
   await updateProductStatus({
     skuId: row.skuId,
     haltStatus: row.productionHaltStatus,
     photographStatus: row.packagePhotograph,
-    priorityStatus: row.priorityPacking
+    priorityStatus: row.priorityPacking,
   })
 }
 const queryForm = reactive<any>({
@@ -306,8 +372,8 @@ const handleSizeChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: '1',
-      pageSize: value
-    }
+      pageSize: value,
+    },
   })
   fetchData()
 }
@@ -318,8 +384,8 @@ const handleCurrentChange = (value: number) => {
     query: {
       ...route.query,
       pageNo: value,
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -329,8 +395,8 @@ const queryData = () => {
     query: {
       ...route.query,
       pageNo: '1',
-      pageSize: queryForm.pageSize
-    }
+      pageSize: queryForm.pageSize,
+    },
   })
   fetchData()
 }
@@ -340,25 +406,25 @@ const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 const setPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label !== 'SKU') {
     return {
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'left'
+    textAlign: 'left',
   }
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
   }
@@ -366,7 +432,7 @@ const clearPadding = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 
 // 获取拿样零件添加数据
-const fetchData = async () =>{
+const fetchData = async () => {
   listLoading.value = true
   const { data } = await getProductList(queryForm)
   list.value = data.list
@@ -383,7 +449,7 @@ onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
   queryForm.pageNo = Number(pageNo) || 1
   queryForm.pageSize = Number(pageSize) || 20
-  fetchData();  // 执行数据获取
+  fetchData() // 执行数据获取
 })
 </script>
 
@@ -391,15 +457,14 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
+.el-checkbox {
+  transform: scale(1.3);
+}
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-.noneHoveTable {
-  :deep(.el-checkbox) {
-    transform: scale(1.3);
-  }
-}
+
 .noneHoveTable :deep(.clear-padding) {
   padding-top: 0;
   padding-bottom: 0;
@@ -408,15 +473,7 @@ onBeforeMount(() => {
   padding-right: 0;
   padding-left: 0;
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
 
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
 .overflow-text {
   display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
@@ -432,4 +489,3 @@ onBeforeMount(() => {
   }
 }
 </style>
-

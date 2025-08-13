@@ -33,10 +33,13 @@
           v-loading="listLoading"
           border
           :cell-style="cellStyle"
+          class="custom-table-hover"
           :data="progressList"
           :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
         >
           <el-table-column label="优先级" prop="priority" width="120">
             <template #default="{ row }">
@@ -249,10 +252,13 @@
           v-loading="listLoading"
           border
           :cell-style="cellStyle2"
+          class="custom-table-hover"
           :data="progressList"
           :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
         >
           <el-table-column label="优先级" prop="priority" width="90">
             <template #default="{ row }">
@@ -604,6 +610,17 @@ defineOptions({
   name: 'NewProductProgress',
 })
 
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.evaluationId
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.evaluationId === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const tableRowFormatter = (data: TableTooltipData<IProgress>) => {
   return `${data.cellValue}: table formatter`
 }
@@ -815,6 +832,7 @@ const handlerEvaluationCloseDialog = () => {
   newEvaluationVisible.value = false
 }
 const handleTabClick = (tab: TabsPaneContext) => {
+  selectedRowIndex.value = -1
   progressList.value = []
   queryForm.userNameList = []
   if (Number(tab.props.name) === 0) queryForm.status = 0

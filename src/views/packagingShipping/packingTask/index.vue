@@ -41,27 +41,27 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite" />
-          <el-table-column label="已签收天数" width="110" prop="signDay">
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
+          <el-table-column label="已签收天数" prop="signDay" width="110">
             <template #default="{ row }">
-              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">
-                {{ row.signDay }}天
-              </span>
+              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">{{ row.signDay }}天</span>
             </template>
           </el-table-column>
           <el-table-column label="产品图片" width="75">
@@ -93,9 +93,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -103,7 +103,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -128,8 +128,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-  
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -142,28 +142,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -223,22 +223,24 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="taskingList"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
-              {{ row.sendDate ? formatDate(new Date(row.sendDate)) : ''  }}
+              {{ row.sendDate ? formatDate(new Date(row.sendDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite" />
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -268,9 +270,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -278,7 +280,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -303,8 +305,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-       
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -317,28 +319,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -396,22 +398,24 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite" />
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -441,9 +445,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -451,7 +455,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -476,8 +480,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-    
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -490,28 +494,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -569,22 +573,24 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite" />
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -614,9 +620,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -624,7 +630,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -649,7 +655,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -662,28 +668,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -741,22 +747,24 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite"/>
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -786,9 +794,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -796,7 +804,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -821,8 +829,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-       
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -835,28 +843,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -913,22 +921,24 @@
           border
           :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
           stripe
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
           <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" width="115" prop="sendDate">
+          <el-table-column label="发货日期" prop="sendDate" width="115">
             <template #default="{ row }">
               {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="PO" width="100" prop="po" />
-          <el-table-column label="订单总数" width="100" prop="totalOrderQuantity" />
-          <el-table-column label="站点" width="145" prop="sendSite" />
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
               产品
@@ -958,9 +968,9 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="优先打包" width="100" prop="priorityPackaging">
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.priorityPackaging" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <el-table-column label="任务数" prop="packageTaskCount" width="100" />
@@ -968,7 +978,7 @@
           <el-table-column label="已装箱数" prop="productCount" width="100" />
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
-              <el-checkbox class="custom-checkbox" v-model="row.requirePhoto" disabled :false-value="0" :true-value="1" />
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -993,7 +1003,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品经理" width="100" prop="productManager" />
+          <el-table-column label="产品经理" prop="productManager" width="100" />
           <el-table-column fixed="right" label="操作" width="185">
             <template #default="{ row }">
               <el-dropdown>
@@ -1006,28 +1016,28 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="getPackageCodePath(row)">
-                      <el-link type="primary" underline='never' >条码文件夹</el-link>
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowPartsList(row)">
-                      <el-link type="primary" underline='never' >零件清单</el-link>
+                      <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
-                      <el-link type="primary" underline='never' >打包质检</el-link>
+                      <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showNewInspectionReport(row)">
-                      <el-link type="primary" underline='never' >新品质检</el-link>
+                      <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showBarcode(row)">
-                      <el-link type="primary" underline='never' >生成条形码</el-link>
+                      <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="showSplitTask(row)">
-                      <el-link type="primary" underline='never' >拆分</el-link>
+                      <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModify(row)">
-                      <el-link type="primary" underline='never' >站点修改</el-link>
+                      <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item @click="handleShowModifyTask(row)">
-                      <el-link type="primary" underline='never'>任务数修改</el-link>
+                      <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -1250,12 +1260,12 @@
         <el-table-column label="打包注意事项" min-width="300" prop="packagePrecautions" />
         <el-table-column align="center" label="需质检" min-width="80" prop="status">
           <template #default="{ row }">
-            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleInspectionChange(row)"/>
+            <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleInspectionChange(row)" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="需拍照" min-width="80" prop="isUploadImages">
           <template #default="{ row }">
-            <el-checkbox class="custom-checkbox" v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.isUploadImages" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
         <el-table-column align="center" label="修改日期" min-width="110" prop="updateTime">
@@ -1510,7 +1520,7 @@ import {
   getStartTaskList,
   splitPackageTask,
   updatePackageTask,
-  updatePackageTaskSite
+  updatePackageTaskSite,
 } from '/@/api/devlocal/packagingShipping'
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
 import { useUserStore } from '/@/store/modules/user'
@@ -1522,6 +1532,18 @@ import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/util
 defineOptions({
   name: 'PackingTask',
 })
+
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 
 // 传递给新品质检报告的sku
 const sku = ref<string>('')
@@ -1736,7 +1758,7 @@ const getPackageCodePath = async (row: any) => {
   if (data) {
     const { isSupported, copy } = useClipboard({ legacy: true })
     if (!isSupported) usePermission('clipboard-write')
-    
+
     copy(data)
       .then(() => {
         $baseMessage('已复制路径到剪贴板！', 'success')
@@ -1916,7 +1938,7 @@ const handleConfirmFinishTask = async () => {
     $baseMessage('您未选中任何人员', 'warning')
     return
   }
-  
+
   try {
     finishConfirmLoading.value = true
     const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
@@ -1982,18 +2004,13 @@ const handleShowQualityProject = async () => {
   if (res) {
     showSkuQualityList(taskIds, startTaskUserIds)
   } else {
-    ElMessageBox.confirm(
-      msg,
-      '系统提示',
-      {
-        confirmButtonText: '确定',
-        showCancelButton: false,
-        showClose: false,
-        type: 'warning',
-        customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
-      }
-    )
-    .then(() => {
+    ElMessageBox.confirm(msg, '系统提示', {
+      confirmButtonText: '确定',
+      showCancelButton: false,
+      showClose: false,
+      type: 'warning',
+      customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+    }).then(() => {
       showSkuQualityList(taskIds, startTaskUserIds)
     })
   }
@@ -2295,7 +2312,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
       ...route.query,
       tab: queryForm.status,
       pageNo: 1,
-      pageSize: 20
+      pageSize: 20,
     },
   })
   if (queryForm.status !== 5) {
@@ -2552,16 +2569,6 @@ onBeforeMount(() => {
   justify-content: center;
   margin-right: 30px;
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
-
 .el-input {
   flex: 1; /* 输入框占满可用空间 */
   margin-right: 10px; /* 输入框和按钮之间的间距 */

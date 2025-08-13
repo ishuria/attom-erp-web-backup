@@ -120,11 +120,12 @@
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -343,11 +344,12 @@
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -572,11 +574,12 @@
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -801,11 +804,12 @@
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO操作" prop="selectedPoRow" width="50">
             <template #header>
@@ -1030,11 +1034,12 @@
           border
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
@@ -1163,11 +1168,12 @@
           border
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="poList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="lastTowTabSpanMethod"
+          @row-click="handleRowClick"
         >
           <el-table-column label="PO" min-width="120" prop="po">
             <template #default="{ row }">
@@ -2620,19 +2626,23 @@ const lastTwoTabCellStyle = (data: { row: any; column: any; rowIndex: number; co
       textAlign: 'center',
     }
 }
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.id
+}
 let previous: any = null
 let currentGroupIndex = 0 // 当前组索引
 
 const stripedRowClass = (_row: any) => {
   const { row } = _row
-  const currentId = row.id
-  // 检查当前行是否与上一行不同
-  if (currentId !== previous) {
-    previous = currentId
-    currentGroupIndex++
-  }
-  // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
+
+  const stripedClass = row.id % 2 === 0 ? 'el-table__row--striped' : ''
+
+  // 选中状态
+  const selectedClass = row.id === selectedRowIndex.value ? 'select-row' : ''
+
+  // 组合类名
+  return [stripedClass, selectedClass].filter(Boolean).join(' ')
 }
 // 设置零件名显示样式和图片撑满样式
 const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
@@ -2839,14 +2849,6 @@ onUnmounted(() => {
       }
     }
   }
-}
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
 }
 
 // 设置行高

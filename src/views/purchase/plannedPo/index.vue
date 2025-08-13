@@ -3,39 +3,74 @@
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待发布" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel >
-            <el-button v-permissions="{ permission: [PlanPoPermission.CREATE] }" :loading="createLoading" type="primary" @click="handlePlannedPoCreate">创建</el-button>
-            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }" :loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
-            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_NOT_MOQ] }" :loading="batchMoqLoading" type="warning" @click="handleAllMOQ">批量未达MOQ</el-button>
-            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }" :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
+          <vab-query-form-left-panel>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.CREATE] }"
+              :loading="createLoading"
+              type="primary"
+              @click="handlePlannedPoCreate"
+            >
+              创建
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }"
+              :loading="batchReleaseLoading"
+              type="success"
+              @click="handleAllPublishPo"
+            >
+              批量发布
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.BATCH_NOT_MOQ] }"
+              :loading="batchMoqLoading"
+              type="warning"
+              @click="handleAllMOQ"
+            >
+              批量未达MOQ
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }"
+              :loading="batchDelLoading"
+              type="danger"
+              @click="handleAllDelete"
+            >
+              批量删除
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
-          </vab-query-form-right-panel> 
+          </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          ref="tableRef" 
-          v-loading="listLoading" 
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="plannedPoList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
-          <el-table-column class="custom-checkbox" fixed="left" type="selection"/>
-          <el-table-column  v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
+          <el-table-column class="custom-checkbox" fixed="left" type="selection" />
+          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
@@ -47,13 +82,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" @click="handlePublishPo(row)">
-                      <el-link type="primary" underline="never" >发布PO</el-link>
+                      <el-link type="primary" underline="never">发布PO</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.NOT_MOQ] }" @click="handleUpdateStatus(row)">
-                      <el-link type="primary" underline="never" >未达起订量</el-link>
+                      <el-link type="primary" underline="never">未达起订量</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.DELETE] }" @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" underline="never" >删除</el-link>
+                      <el-link type="danger" underline="never">删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -65,44 +100,46 @@
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column label="请购人" prop="userName"/>
-          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')"/>
+          <el-table-column label="请购人" prop="userName" />
+          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
-              SKU<br>图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
-          </el-table-column>   
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"/>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"/>
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"/>
-          <el-table-column label="单位" prop="unit" width="60"/>
-          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"/>    
+          </el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')" />
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')" />
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')" />
+          <el-table-column label="单位" prop="unit" width="60" />
+          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')" />
           <el-table-column label="货币" prop="currency" width="80">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column  label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')"/>
-          <el-table-column  label="采购方" min-width="100" prop="purchase"/>
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')" />
+          <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-              <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1"/>
-              </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" min-width="250" prop="purchaseMatters">
             <template #default="{ row }">
@@ -114,11 +151,25 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150" >
+          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150">
             <template #default="{ row }">
               <el-space>
-                <el-button v-permissions="{ permission: [PlanPoPermission.DETAIL] }" link type="primary" @click="handlePlannedPoDetail(row)">详情</el-button>
-                <el-button v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }" link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
+                <el-button
+                  v-permissions="{ permission: [PlanPoPermission.DETAIL] }"
+                  link
+                  type="primary"
+                  @click="handlePlannedPoDetail(row)"
+                >
+                  详情
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }"
+                  link
+                  type="danger"
+                  @click="handleDelSkuPlannedPo(row)"
+                >
+                  删除
+                </el-button>
               </el-space>
             </template>
           </el-table-column>
@@ -137,36 +188,57 @@
       <el-tab-pane label="未达起订量" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }" :loading="batchDelLoading" type="danger" @click="handleAllDelete">批量删除</el-button>
-            <el-button v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }":loading="batchReleaseLoading" type="success" @click="handleAllPublishPo">批量发布</el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.BATCH_DELETE] }"
+              :loading="batchDelLoading"
+              type="danger"
+              @click="handleAllDelete"
+            >
+              批量删除
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.BATCH_RELEASE] }"
+              :loading="batchReleaseLoading"
+              type="success"
+              @click="handleAllPublishPo"
+            >
+              批量发布
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           ref="tableRef2"
-          v-loading="listLoading" 
+          v-loading="listLoading"
           border
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="plannedPoList"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
           @cell-click="changeInput"
+          @row-click="handleRowClick"
           @selection-change="setSelectRows"
         >
-          <el-table-column class="custom-checkbox" fixed="left" type="selection"/>
-          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105" >
+          <el-table-column class="custom-checkbox" fixed="left" type="selection" />
+          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
@@ -178,13 +250,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" @click="handlePublishPo(row)">
-                      <el-link type="primary" underline="never" >发布PO</el-link>
+                      <el-link type="primary" underline="never">发布PO</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item  v-permissions="{ permission: ['purchase:planPo:moq'] }" @click="handleUpdateRStatus(row)">
-                      <el-link type="primary" underline="never" >达到起订量</el-link>
+                    <el-dropdown-item v-permissions="{ permission: ['purchase:planPo:moq'] }" @click="handleUpdateRStatus(row)">
+                      <el-link type="primary" underline="never">达到起订量</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item  v-permissions="{ permission: [PlanPoPermission.DELETE] }" @click="handleDelPlannedPo(row)">
-                      <el-link type="danger" underline="never" >删除</el-link>
+                    <el-dropdown-item v-permissions="{ permission: [PlanPoPermission.DELETE] }" @click="handleDelPlannedPo(row)">
+                      <el-link type="danger" underline="never">删除</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -196,44 +268,46 @@
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column label="请购人" prop="userName"/>
-          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')"/>
+          <el-table-column label="请购人" prop="userName" />
+          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')" />
           <el-table-column label="SKU图片" width="82">
             <template #header>
-              SKU<br>图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
-          </el-table-column>   
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')"/>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')"/>
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')"/>
-          <el-table-column label="单位" prop="unit" width="60"/>
-          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')"/>       
+          </el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')" />
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')" />
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')" />
+          <el-table-column label="单位" prop="unit" width="60" />
+          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')" />
           <el-table-column label="货币" prop="currency" width="80">
             <template #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
           </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')"/>
-          <el-table-column label="采购方" min-width="100" prop="purchase"/>
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')" />
+          <el-table-column label="采购方" min-width="100" prop="purchase" />
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-              <template #default = "{ row }">
-                  <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1"/>
-              </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
           </el-table-column>
           <el-table-column label="零件采购注意事项" min-width="250" prop="purchaseMatters">
             <template #default="{ row }">
@@ -245,28 +319,42 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column  v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150" >
+          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150">
             <template #default="{ row }">
               <el-space>
-                <el-button v-permissions="{ permission: [PlanPoPermission.DETAIL] }" link type="primary" @click="handlePlannedPoDetail(row)" >详情</el-button>
-                <el-button v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }" link type="danger" @click="handleDelSkuPlannedPo(row)">删除</el-button>
+                <el-button
+                  v-permissions="{ permission: [PlanPoPermission.DETAIL] }"
+                  link
+                  type="primary"
+                  @click="handlePlannedPoDetail(row)"
+                >
+                  详情
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PlanPoPermission.DELETE_PO_SKU] }"
+                  link
+                  type="danger"
+                  @click="handleDelSkuPlannedPo(row)"
+                >
+                  删除
+                </el-button>
               </el-space>
             </template>
           </el-table-column>
           <template #empty>
-              <el-empty class="vab-data-empty" description="暂无数据" />
+            <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
-        <vab-pagination 
-          :current-page="queryForm.pageNo" 
-          :page-size="queryForm.pageSize" 
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange" 
-          @size-change="handleSizeChange" 
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
-    <el-image-viewer v-if ="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
@@ -277,7 +365,7 @@
     />
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
@@ -293,7 +381,7 @@ import {
   releaseBatchPlanPo,
   releasePlanPo,
   updatePlanPoStatus,
-  updatePoPurchaseMatters
+  updatePoPurchaseMatters,
 } from '/@/api/devlocal/purchasePo'
 import PlanPoPermission from '/@/permissions/planPo'
 import { useRoutesStore } from '/@/store/modules/routes'
@@ -343,7 +431,7 @@ const handleSizeChange = (value: number) => {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
@@ -354,7 +442,7 @@ const handleCurrentChange = (value: number) => {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
@@ -362,14 +450,14 @@ const queryData = () => {
   queryForm.pageNo = 1
   router.push({
     query: {
-     ...route.query,
+      ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
-const getCellClass = (data: { row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 5 || data.columnIndex === 1) {
     return 'clear-padding'
   }
@@ -377,70 +465,72 @@ const getCellClass = (data: { row: any, column: any, rowIndex: number, columnInd
 }
 //采购计划col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  let rowspan = 1; // 默认不跨行
+  let rowspan = 1 // 默认不跨行
 
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
-    const id = row.id;
+    const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
     for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
       if (plannedPoList.value[i].id === id) {
-        rowspan++;
+        rowspan++
       } else {
-        break;
+        break
       }
     }
 
     // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
-    return rowIndex === 0 || plannedPoList.value[rowIndex - 1].id !== id
-      ? { rowspan, colspan: 1 }
-      : { rowspan: 0, colspan: 0 };
+    return rowIndex === 0 || plannedPoList.value[rowIndex - 1].id !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
   }
 
   // 合并 SKU 行
   if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 17) {
-    const poSkuId = row.poSkuId;
+    const poSkuId = row.poSkuId
 
     // 遍历后面的行，检查相同的 SKU ID
     for (let i = rowIndex + 1; i < plannedPoList.value.length; i++) {
       if (plannedPoList.value[i].poSkuId === poSkuId && plannedPoList.value[i].id === row.id) {
-        rowspan++;
+        rowspan++
       } else {
-        break;
+        break
       }
     }
 
     // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
     return rowIndex === 0 || plannedPoList.value[rowIndex - 1].poSkuId !== poSkuId || plannedPoList.value[rowIndex - 1].id !== row.id
       ? { rowspan, colspan: 1 }
-      : { rowspan: 0, colspan: 0 };
+      : { rowspan: 0, colspan: 0 }
   }
 
   // 对于其他列，默认返回不合并
-  return { rowspan: 1, colspan: 1 };
+  return { rowspan: 1, colspan: 1 }
 }
 
-let previous: any = null; 
-let currentGroupIndex = 0; // 当前组索引
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.id
+}
+let previous: any = null
+let currentGroupIndex = 0 // 当前组索引
 
 const stripedRowClass = (_row: any) => {
-  const { row } = _row;
-  const currentId = row.id;
-  // 检查当前行是否与上一行不同
-  if (currentId !== previous) {
-    previous = currentId; 
-    currentGroupIndex++; 
-  }
-  // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : '';
-};
+  const { row } = _row
+
+  const stripedClass = row.id % 2 === 0 ? 'el-table__row--striped' : ''
+
+  // 选中状态
+  const selectedClass = row.id === selectedRowIndex.value ? 'select-row' : ''
+
+  // 组合类名
+  return [stripedClass, selectedClass].filter(Boolean).join(' ')
+}
 
 // 处理未达起订量
 const handleUpdateStatus = async (row: any) => {
   try {
     $baseConfirm('确定该条PO未达起订量吗', null, async () => {
       const { data } = await updatePlanPoStatus({
-        id: row.id
+        id: row.id,
       })
       if (data === true) {
         $baseMessage('该条PO未达起订量成功', 'success', 'hey')
@@ -456,7 +546,7 @@ const handleUpdateRStatus = async (row: any) => {
   try {
     $baseConfirm('确定该条PO达到起订量吗', null, async () => {
       const { data } = await planPorMoq({
-        id: row.id
+        id: row.id,
       })
       if (data === true) {
         $baseMessage('该条PO达到起订量成功', 'success', 'hey')
@@ -477,7 +567,7 @@ const handleAllMOQ = async () => {
     batchMoqLoading.value = true
     const ids = selectRows.value.map((item: any) => item.id).join(',') // 组合 ID
     const { data } = await planPoNrMoq({
-      ids
+      ids,
     })
     if (data === true) {
       $baseMessage('批量未达起订量成功', 'success', 'hey')
@@ -488,7 +578,6 @@ const handleAllMOQ = async () => {
   } finally {
     batchMoqLoading.value = false
   }
-  
 }
 const batchDelLoading = ref<boolean>(false)
 // 批量删除
@@ -501,7 +590,7 @@ const handleAllDelete = async () => {
     try {
       batchDelLoading.value = true
       const ids = selectRows.value.map((item: any) => item.id).join(',')
-      const { data } = await deleteAllPlanPo({ids})
+      const { data } = await deleteAllPlanPo({ ids })
       if (data === true) {
         $baseMessage('批量删除PO成功', 'success', 'hey')
         fetchData()
@@ -518,7 +607,7 @@ const handleDelSkuPlannedPo = (row: any) => {
   try {
     $baseConfirm('确定要删除当前SKU吗', '系统提示', async () => {
       const { data } = await deletePurchasePlanPo({
-        poSkuId: row.poSkuId
+        poSkuId: row.poSkuId,
       })
       if (data === true) {
         $baseMessage('删除SKU成功', 'success', 'hey')
@@ -534,7 +623,7 @@ const handleDelPlannedPo = (row: any) => {
   try {
     $baseConfirm('确定要删除当前PO吗', '系统提示', async () => {
       const { data } = await deletePlanPo({
-        poId: row.id
+        poId: row.id,
       })
       if (data === true) {
         $baseMessage('删除PO成功', 'success', 'hey')
@@ -552,12 +641,12 @@ const handleAllPublishPo = async () => {
     $baseMessage('您未选中任何行', 'warning', 'hey')
     return
   }
-  
+
   try {
     batchReleaseLoading.value = true
     const ids = selectRows.value.map((item: any) => item.id).join(',')
     const { data } = await releaseBatchPlanPo({
-      poIds: ids
+      poIds: ids,
     })
     if (data === true) {
       $baseMessage('批量发布到PO成功', 'success', 'hey')
@@ -574,7 +663,7 @@ const handlePublishPo = async (row: any) => {
   try {
     $baseConfirm('确定要发布到PO吗', null, async () => {
       const { data } = await releasePlanPo({
-        id: row.id
+        id: row.id,
       })
       if (data === true) {
         $baseMessage('发布到PO成功', 'success', 'hey')
@@ -586,9 +675,8 @@ const handlePublishPo = async (row: any) => {
   }
 }
 const handlePlannedPoDetail = async (row: any) => {
-
-  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
-  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
   const wrapRef = scrollBarRef.wrapRef
   const wrapRef2 = scrollBarRef2.wrapRef
   const plannedPoStatus = {
@@ -602,7 +690,7 @@ const handlePlannedPoDetail = async (row: any) => {
   const tab = handleTabs({
     ...matched.at(-1),
     query: {
-      title: "采购计划订单详情",
+      title: '采购计划订单详情',
       from: 'plannedPoDetail',
       poSkuId: row.poSkuId,
       poId: row.id,
@@ -613,7 +701,7 @@ const handlePlannedPoDetail = async (row: any) => {
     await router.push({
       path: '/purchase/poDetail',
       query: {
-        title: "采购计划订单详情",
+        title: '采购计划订单详情',
         from: 'plannedPoDetail',
         poSkuId: row.poSkuId,
         poId: row.id,
@@ -643,7 +731,7 @@ const handlePlannedPoCreate = async () => {
   const tab = handleTabs({
     ...matched.at(-1),
     query: {
-      title: "采购计划创建",
+      title: '采购计划创建',
       from: 'plannedPoCreate',
       // timestamp: Date.now(),
     },
@@ -652,7 +740,7 @@ const handlePlannedPoCreate = async () => {
     await router.push({
       path: '/purchase/poDetail',
       query: {
-        title: "采购计划创建",
+        title: '采购计划创建',
         from: 'plannedPoCreate',
         // timestamp: Date.now(),
       },
@@ -679,31 +767,31 @@ const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
-  
+
 const handleTabClick = (tab: TabsPaneContext) => {
   plannedPoList.value = []
   if (tab.props.name !== undefined) {
     // activeName.value = tab.props.name;
-    queryForm.status = Number(tab.props.name);  
+    queryForm.status = Number(tab.props.name)
   }
   activeName.value = queryForm.status
   router.push({
     query: {
       ...route.query,
       tab: tab.props.name,
-    }
+    },
   })
   fetchData()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   if (data.columnIndex !== 6 && data.columnIndex !== 8 && data.columnIndex !== 13 && data.columnIndex !== 16) {
     return {
-      textAlign:'center'
-    } 
+      textAlign: 'center',
+    }
   }
 }
 
@@ -712,7 +800,7 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
 
-const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => { 
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property == 'purchaseMatters') {
     clickRow.value = row
     const { data } = await getPoPurchaseMatters({ id: row.componentId })
@@ -723,42 +811,40 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
 
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
-
 }
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-  
+
 /**
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  const { data } = await updatePoPurchaseMatters({ id: clickRow.value.componentId, purchaseMatters: val})
+  const { data } = await updatePoPurchaseMatters({ id: clickRow.value.componentId, purchaseMatters: val })
   if (data === true) {
     progressLogCopy.value = val
     clickRow.value.purchaseMatters = val
   }
-  
 }
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickLogBool = ( val: any) => {
+const clickLogBool = (val: any) => {
   wangEditorLogVisible.value = val
 }
 
@@ -774,8 +860,8 @@ const fetchData = async () => {
   } catch (error) {
     console.error(error)
   }
-}  
-onActivated(() => { 
+}
+onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
@@ -794,7 +880,7 @@ onBeforeMount(() => {
   // const pageNo = savedStatus.pageNo
   // const pageSize = savedStatus.pageSize
   // const keyWord = savedStatus.keyWord
-  
+
   // if (pageNo && pageSize) {
   //   Object.assign(queryForm, {
   //     pageNo,
@@ -811,10 +897,10 @@ onBeforeMount(() => {
 })
 const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
   if (scrollBarPosition) {
-    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
     const wrapRef = scrollBarRef.wrapRef
     setTimeout(() => {
-      wrapRef.scrollTop = scrollBarPosition;
+      wrapRef.scrollTop = scrollBarPosition
     }, 40)
   }
 }
@@ -829,8 +915,8 @@ onMounted(() => {
     if (scrollBarPosition2) {
       setScrollPosition(scrollBarPosition2, tableRef2)
     }
-  });  
-});
+  })
+})
 onUnmounted(() => {
   let length = tabsStore.getVisitedRoutes.length
   if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
@@ -838,7 +924,7 @@ onUnmounted(() => {
   }
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .tabs-table-container {
   :deep() {
@@ -902,7 +988,7 @@ onUnmounted(() => {
 }
 
 // 开模申请
-:deep(.moldDialog .el-dialog__body) { 
+:deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
 }
 
@@ -920,18 +1006,10 @@ onUnmounted(() => {
   padding-right: 0;
   padding-left: 0;
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
 .overflow-text {
- display: block;
- max-height: 81.2px; /* 设置文本的最大高度 */
- overflow-y: auto; /* 溢出时显示垂直滚动条 */
+  display: block;
+  max-height: 81.2px; /* 设置文本的最大高度 */
+  overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
 .copySku {
   cursor: pointer;
@@ -959,4 +1037,3 @@ onUnmounted(() => {
   border-color: #fff;
 }
 </style>
-  

@@ -7,12 +7,7 @@
             <el-form inline>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" placeholder="请选择站点" @change="queryData">
-                  <el-option 
-                    v-for="item in siteList"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.id"
-                  />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -20,27 +15,34 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
 
-        <el-table 
+        <el-table
           ref="tableRef"
-          v-loading="listLoading" 
-          border 
-          :cell-class-name="cellClassName" 
+          v-loading="listLoading"
+          border
+          :cell-class-name="cellClassName"
           :cell-style="cellStyle"
-          class="noneHoveTable"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
           @cell-click="cellClick"
+          @row-click="handleRowClick"
         >
           <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
             <template #default="{ row }">
@@ -57,32 +59,36 @@
               {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="延误" min-width="80" prop="delayDays"/>
-          
+          <el-table-column label="延误" min-width="80" prop="delayDays" />
+
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
-              产品<br>图片
+              产品
+              <br />
+              图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
             <template #default="{ row }">
-              {{ row.sku }}<br />{{ row.description }}
+              {{ row.sku }}
+              <br />
+              {{ row.description }}
             </template>
           </el-table-column>
-          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
           <el-table-column label="丢货" min-width="60" prop="lostGoodsStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdateLostGoodsStatus(row)" />
             </template>
           </el-table-column>
-          <el-table-column label="发货数量调整" min-width="120" prop="shippingCountAdjustment" >
+          <el-table-column label="发货数量调整" min-width="120" prop="shippingCountAdjustment">
             <template #default="{ row }">
               <div class="none">
                 <el-input v-model="row.shippingCountAdjustment" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -90,12 +96,16 @@
               <span>{{ row.shippingCountAdjustment }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="站点" prop="site" :width="flexColumnWidth(list, '站点', 'site')"/>
-          <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId', 30)"/>
-          <el-table-column label="货代单号" prop="freightForwardingNumber" :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')" />
-          <el-table-column label="PO" min-width="100" prop="po"/>
-          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
-          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName', 50)"/>
+          <el-table-column label="站点" prop="site" :width="flexColumnWidth(list, '站点', 'site')" />
+          <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId', 30)" />
+          <el-table-column
+            label="货代单号"
+            prop="freightForwardingNumber"
+            :width="flexColumnWidth(list, '货代单号', 'freightForwardingNumber')"
+          />
+          <el-table-column label="PO" min-width="100" prop="po" />
+          <el-table-column label="发货数" min-width="100" prop="actualCount" />
+          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName', 50)" />
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -114,12 +124,7 @@
             <el-form inline>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="queryData">
-                  <el-option 
-                    v-for="item in siteList"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.id"
-                  />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -127,47 +132,59 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           ref="tableRef"
-          v-loading="listLoading" 
-          border 
-          :cell-class-name="cellClassName2" 
-          class="noneHoveTable"
+          v-loading="listLoading"
+          border
+          :cell-class-name="cellClassName2"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod2"
+          @row-click="handleRowClick"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
-              产品<br>图片
+              产品
+              <br />
+              图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="170" prop="sku">
             <template #default="{ row }">
-              {{ row.sku }}<br />{{ row.description }}
+              {{ row.sku }}
+              <br />
+              {{ row.description }}
             </template>
           </el-table-column>
-          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
-          <el-table-column label="已接收数" min-width="110" prop="receiptsCount"/>
-          <el-table-column label="缺数" min-width="80" prop="lackCount"/>
-          <el-table-column label="已接收" min-width="90" prop="acceptDays"/>
-          <el-table-column label="PO" min-width="100" prop="po"/>
-          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
+          <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
+          <el-table-column label="缺数" min-width="80" prop="lackCount" />
+          <el-table-column label="已接收" min-width="90" prop="acceptDays" />
+          <el-table-column label="PO" min-width="100" prop="po" />
+          <el-table-column label="发货数" min-width="100" prop="actualCount" />
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -186,12 +203,7 @@
             <el-form inline>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="请选择站点" @change="queryData">
-                  <el-option 
-                    v-for="item in siteList"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.id"
-                  />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
             </el-form>
@@ -199,48 +211,60 @@
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           ref="tableRef"
-          v-loading="listLoading" 
-          border 
-          :cell-class-name="cellClassName2" 
-          class="noneHoveTable"
+          v-loading="listLoading"
+          border
+          :cell-class-name="cellClassName2"
+          class="noneHoveTable custom-table-hover"
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod2"
+          @row-click="handleRowClick"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
-              产品<br>图片
+              产品
+              <br />
+              图片
             </template>
             <template #default="{ row }">
-              <el-image fit="contain" :src="row.skuImgUrl" style=" display: block;width: 75px; height: 75px;" @click="imagePreviewShow(row)">
+              <el-image fit="contain" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row)">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
           </el-table-column>
           <el-table-column label="SKU" min-width="170" prop="sku">
             <template #default="{ row }">
-              {{ row.sku }}<br />{{ row.description }}
+              {{ row.sku }}
+              <br />
+              {{ row.description }}
             </template>
           </el-table-column>
-          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount"/>
-          <el-table-column label="已接收数" min-width="110" prop="receiptsCount"/>
-          <el-table-column label="缺数" min-width="80" prop="lackCount"/>
-          <el-table-column label="已接收" min-width="90" prop="acceptDays"/>
-          <el-table-column label="Shipment ID" prop="shipmentId" min-width="100"/>
-          <el-table-column label="PO" min-width="100" prop="po"/>
-          <el-table-column label="发货数" min-width="100" prop="actualCount"/>
+          <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
+          <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
+          <el-table-column label="缺数" min-width="80" prop="lackCount" />
+          <el-table-column label="已接收" min-width="90" prop="acceptDays" />
+          <el-table-column label="Shipment ID" min-width="100" prop="shipmentId" />
+          <el-table-column label="PO" min-width="100" prop="po" />
+          <el-table-column label="发货数" min-width="100" prop="actualCount" />
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -285,7 +309,7 @@ const queryForm = reactive<IGetShipmentArrivedListReq>({
   pageSize: 20,
   keyWord: '',
   site: -1,
-  status: 0
+  status: 0,
 })
 
 const imagePreviewVisible = ref<boolean>(false)
@@ -334,7 +358,7 @@ const clickCancel = async (event: Event, value: IGetShipmentArrivedList) => {
     try {
       await updateShippingCountAdjustment({
         id: value.id!,
-        count: value.shippingCountAdjustment!
+        count: value.shippingCountAdjustment!,
       })
     } catch {
       Object.assign(value, copyRow)
@@ -348,7 +372,7 @@ const handleClick = (tab: TabsPaneContext) => {
     query: {
       ...route.query,
       tab: queryForm.status,
-    }
+    },
   })
   fetchData()
 }
@@ -357,25 +381,29 @@ const handleUpdateLostGoodsStatus = async (row: IGetShipmentArrivedList) => {
   try {
     await updateLostGoodsStatus({
       id: row.id!,
-      status: row.lostGoodsStatus!
+      status: row.lostGoodsStatus!,
     })
   } catch {
     row.lostGoodsStatus = row.lostGoodsStatus === 1 ? 0 : 1
   }
 }
-let previous: any = null 
+const selectedRowIndex = ref<number>(-1)
+const handleRowClick = (row: any) => {
+  selectedRowIndex.value = row.id
+}
+let previous: any = null
 let currentGroupIndex = 0 // 当前组索引
 
 const stripedRowClass = (_row: any) => {
   const { row } = _row
-  const currentId = row.id
-  // 检查当前行是否与上一行不同
-  if (currentId !== previous) {
-    previous = currentId
-    currentGroupIndex++
-  }
-  // 根据当前组索引设置条纹样式
-  return currentGroupIndex % 2 === 0 ? 'el-table__row--striped' : ''
+
+  const stripedClass = row.id % 2 === 0 ? 'el-table__row--striped' : ''
+
+  // 选中状态
+  const selectedClass = row.id === selectedRowIndex.value ? 'select-row' : ''
+
+  // 组合类名
+  return [stripedClass, selectedClass].filter(Boolean).join(' ')
 }
 const fetchData = async () => {
   listLoading.value = true
@@ -393,7 +421,7 @@ const handleSizeChange = (value: number) => {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
@@ -405,7 +433,7 @@ const handleCurrentChange = (value: number) => {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
@@ -417,39 +445,48 @@ const queryData = () => {
       ...route.query,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === '发货数量调整') {
     return {
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
-  } else if (label === '发货日期' || label === '初始预计到货' || label === '最新预计到货' || label === 'PO' || label === '发货数' || label === '发货总数' || label === 'Shipment ID' || label === '丢货') {
+  } else if (
+    label === '发货日期' ||
+    label === '初始预计到货' ||
+    label === '最新预计到货' ||
+    label === 'PO' ||
+    label === '发货数' ||
+    label === '发货总数' ||
+    label === 'Shipment ID' ||
+    label === '丢货'
+  ) {
     return {
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'left'
+    textAlign: 'left',
   }
 }
-const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 4) {
     return 'clear-padding'
-  } 
+  }
   if (data.columnIndex !== 5 && data.columnIndex !== 13) {
     return 'text-center'
   }
   return ''
 }
-const cellClassName2 = (data: {row: any, column: any, rowIndex: number, columnIndex: number }) => {
+const cellClassName2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
-  } 
+  }
   if (data.columnIndex !== 1) {
     return 'text-center'
   }
@@ -457,58 +494,50 @@ const cellClassName2 = (data: {row: any, column: any, rowIndex: number, columnIn
 }
 
 // 未到货col合并方法
-const objectSpanMethod = ({
-    row,
-    rowIndex,
-    columnIndex,
-}: any) => {
+const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
   if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 13) {
-    const id = row.id;
+    const id = row.id
     // 默认不跨行
-    let rowspan = 1;
+    let rowspan = 1
     // 遍历后端返回的数据
     for (let i = rowIndex + 1; i < list.value.length; i++) {
       // 如果零件id一样需要合并
       if (list.value[i].id === id) {
-        rowspan++;
+        rowspan++
       } else {
-        break;
+        break
       }
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
     if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
-      return { rowspan, colspan: 1 };
+      return { rowspan, colspan: 1 }
     } else {
-      return { rowspan: 0, colspan: 0 };
+      return { rowspan: 0, colspan: 0 }
     }
   }
 }
 // 已发货（接收中）col合并方法
-const objectSpanMethod2 = ({
-    row,
-    rowIndex,
-    columnIndex,
-}: any) => {
+const objectSpanMethod2 = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
   if (columnIndex !== 7 && columnIndex !== 8) {
-    const id = row.id;
+    const id = row.id
     // 默认不跨行
-    let rowspan = 1;
+    let rowspan = 1
     // 遍历后端返回的数据
     for (let i = rowIndex + 1; i < list.value.length; i++) {
       // 如果零件id一样需要合并
       if (list.value[i].id === id) {
-        rowspan++;
+        rowspan++
       } else {
-        break;
+        break
       }
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
     if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
-      return { rowspan, colspan: 1 };
+      return { rowspan, colspan: 1 }
     } else {
-      return { rowspan: 0, colspan: 0 };
+      return { rowspan: 0, colspan: 0 }
     }
   }
 }
@@ -609,17 +638,7 @@ onBeforeMount(() => {
     }
   }
 }
-/* 取消没有条纹的行的悬停背景色 */
-:deep(.noneHoveTable .el-table__body tr.hover-row:not(.el-table__row--striped) > td.el-table__cell) {
-  background-color: #fff !important; /* 透明背景色，取消悬停颜色 */
-}
-
-/* 保留带条纹行的原有颜色，确保悬停时不会被覆盖 */
-:deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important; /* 保持原有条纹颜色 */
-}
 .none {
   display: none;
 }
 </style>
-
