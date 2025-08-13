@@ -1615,12 +1615,15 @@
     <vab-add-component
       :create-component-visible="createComponentVisible"
       :sku="sku"
+      type="po"
       @update:create-component-visible="handleCloseCreateComponent"
       @update:table-value="handleSubmitComponent"
     />
     <!-- 添加耗材 -->
     <vab-add-consumable
       :create-consumable-visible="createConsumableVisible"
+      :sku="sku"
+      type="po"
       @update:create-consumable-visible="handleCloseCreateConsumable"
       @update:table-value="handleSubmitConsumable"
     />

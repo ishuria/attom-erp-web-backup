@@ -1,11 +1,11 @@
 <template>
   <vab-dialog 
     v-model="dflag" 
-    title="添加零件" 
+    style="width: fit-content" 
+    title="添加零件"
     top="5%"
     width="60%"
     @close="handlerCloseDialog"
-    style="width: fit-content"
   >
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
@@ -71,7 +71,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { flexColumnWidth } from '~/src/utils/tableColum'
-import { getAddComponentList } from '/@/api/devlocal/purchasePo'
+import { getAddComponentList, queryPoSkuComponentList } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
   name: 'VabAddComponent'
@@ -79,6 +79,7 @@ defineOptions({
 const props = defineProps<{
   createComponentVisible: boolean
   sku?: string
+  type?: string
 }>();
 const dflag = ref<boolean>(false)
 
@@ -87,9 +88,18 @@ watch(() => props.createComponentVisible, (newVal) => {
   if (dflag.value === true) {
     // 只在首次打开时加载数据
     queryForm.keyWord = ''
-    fetchData()
+    typeInit()
+    
   }
 })
+
+const typeInit = () => {
+  if (props.type === 'po') {
+    fetchPurchasePoData()
+  } else {
+    fetchData()
+  }
+}
 // watchEffect(() => {
 //   dflag.value = props.createComponentVisible
 //   if (dflag.value === true) {
@@ -116,15 +126,15 @@ const queryForm = reactive<any>({
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  fetchData()
+  typeInit()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  fetchData()
+  typeInit()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  fetchData()
+  typeInit()
 }
 
 const list = ref<any>([])
@@ -192,6 +202,23 @@ const fetchData = async () => {
   }
   listLoading.value = false
 }
+/**
+ * 获取po零件列表
+ */
+const fetchPurchasePoData = async () => {
+  listLoading.value = true
+  const req = queryForm
+  if (props.sku) {
+    req.sku = props.sku
+  }
+  const { data } = await queryPoSkuComponentList(req)
+  if (data) {
+    total.value = data.total
+    list.value = data.list
+  }
+  listLoading.value = false
+}
+
 onActivated(() => {
   tableRef.value?.doLayout()
 })
