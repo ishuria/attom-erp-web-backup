@@ -634,13 +634,24 @@
           <el-input v-model="modifyForm.componentUnit" clearable />
         </el-form-item>
         <el-form-item
-          v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE"
+          v-if="
+            currentRoleCode === ROLE_PURCHASER_CODE ||
+            currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+            currentRoleCode === ROLE_BOSS_CODE
+          "
           label="开票单位"
           prop="billingUnit"
         >
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
-        <el-form-item v-if="currentRoleCode === ROLE_PURCHASER_CODE || currentRoleCode === ROLE_BOSS_CODE" label="采购单位和开票单位比例">
+        <el-form-item
+          v-if="
+            currentRoleCode === ROLE_PURCHASER_CODE ||
+            currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+            currentRoleCode === ROLE_BOSS_CODE
+          "
+          label="采购单位和开票单位比例"
+        >
           <div style="display: flex; align-items: center; width: 100%">
             每【{{ modifyForm.componentUnit }}】采购单位对应
             <el-input v-model.trim="modifyForm.quantity" clearable placeholder="请输入比例" style="width: 120px; flex: 1; margin: 0 6px" />
@@ -662,7 +673,7 @@
         >
           <div style="display: flex; align-items: center; width: 100%">
             每【{{ modifyForm.componentUnit }}】采购单位对应
-            <el-input v-model.trim="modifyForm.quorum" clearable style="width: 120px; margin: 0 6px; flex: 1" />
+            <el-input v-model.trim="modifyForm.quorum" clearable placeholder="请输入比例" style="width: 120px; margin: 0 6px; flex: 1" />
             【{{ modifyForm.statutoryUnit }}】法定第1单位
           </div>
           <div style="color: var(--el-color-danger)">非整数需保留10位小数点</div>
@@ -682,7 +693,7 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE } from '~/src/const/role'
+import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '~/src/const/role'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
   addProductComponentOtherSku,
@@ -749,6 +760,10 @@ const handleShowModify = async (row: any) => {
     _existingPartsListId = row.existingPartsListId
     _suppliserId = row.defaultSuppliserId
     await fetchHsSelectList()
+    // 重置表单
+    Object.keys(modifyForm).forEach((key) => {
+      modifyForm[key as keyof typeof modifyForm] = undefined
+    })
     const { data } = await getSkuComponentInfo({ existingPartsListId: row.existingPartsListId, suppliserId: row.defaultSuppliserId })
     Object.assign(modifyForm, data)
     modifyForm.componentQuantity = row.quantity
