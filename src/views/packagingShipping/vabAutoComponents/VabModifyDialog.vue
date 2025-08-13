@@ -10,19 +10,19 @@
         style="margin-right: 3px; margin-left: 3px"
       >
         <el-form-item label="数量(箱)" prop="boxNumber">
-          <el-input v-model="modifyForm.boxNumber" clearable />
+          <el-input v-model.trim="modifyForm.boxNumber" clearable />
         </el-form-item>
         <el-form-item label="毛重(kg)" prop="grossWeight">
-          <el-input v-model="modifyForm.grossWeight" clearable />
+          <el-input v-model.trim="modifyForm.grossWeight" clearable />
         </el-form-item>
         <el-form-item label="长(cm)" prop="length">
-          <el-input v-model="modifyForm.length" clearable />
+          <el-input v-model.trim="modifyForm.length" clearable />
         </el-form-item>
         <el-form-item label="宽(cm)" prop="width">
-          <el-input v-model="modifyForm.width" clearable />
+          <el-input v-model.trim="modifyForm.width" clearable />
         </el-form-item>
         <el-form-item label="高(cm)" prop="height">
-          <el-input v-model="modifyForm.height" clearable />
+          <el-input v-model.trim="modifyForm.height" clearable />
         </el-form-item>
         <el-form-item label="发往站点" prop="siteId">
           <el-select v-model="modifyForm.siteId" placeholder="请选择站点">
@@ -47,7 +47,7 @@
           <template #default="{ row }">
             <div class="none">
               <el-input-number
-                v-model="row.count"
+                v-model.trim="row.count"
                 :controls="false"
                 :min="0"
                 :precision="0"

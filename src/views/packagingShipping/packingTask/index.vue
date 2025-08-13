@@ -106,7 +106,7 @@
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
+          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
                 v-model="row.qualityCheckStatus"
@@ -116,7 +116,7 @@
                 @change="handleShowPackingCount(row)"
               />
             </template>
-          </el-table-column> -->
+          </el-table-column>
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -1516,6 +1516,7 @@ import {
   getPackageTaskList,
   getPackageTaskSplitList,
   getPackageTaskingList,
+  getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
   splitPackageTask,
@@ -2105,30 +2106,36 @@ const packingCountForm = reactive<IGetQualityCheck>({})
 const packingCountFormRef = ref<FormInstance>()
 let copyRow = ref<any>()
 // 展示打包总数
-// const handleShowPackingCount = async (row: any) => {
-//   // 点击了清单质检
-//   if (row.qualityCheckStatus === 1) {
-//     packingCountVisible.value = true
-//     copyRow.value = row
-//     const { data } = await getQualityCheck({
-//       id: row.id,
-//     })
-//     Object.assign(packingCountForm, data)
-//     if (!data!.id) {
-//       packingCountForm.packageTaskCount = row.packageTaskCount
-//     }
-//     // if (!data?.packageTaskCount) {
-//     //   packingCountForm.packageTaskCount = 0
-//     // }
-//     lackCount.value = data?.lackCount!
-//     manyCount.value = data?.manyCount
-//   } else {
-//     await addQualityCheck({
-//       taskId: row.id,
-//       status: row.qualityCheckStatus,
-//     })
-//   }
-// }
+const handleShowPackingCount = async (row: any) => {
+  // 点击了清单质检
+  if (row.qualityCheckStatus === 1) {
+    packingCountVisible.value = true
+    copyRow.value = row
+    // 重置表单
+    Object.keys(packingCountForm).forEach((key) => {
+      packingCountForm[key as keyof typeof packingCountForm] = undefined
+    })
+    const { data } = await getQualityCheck({
+      id: row.id,
+    })
+    if (data && Object.keys(data).length > 0) {
+      Object.assign(packingCountForm, data)
+    }
+    if (!data!.id) {
+      packingCountForm.packageTaskCount = row.packageTaskCount
+    }
+    // if (!data?.packageTaskCount) {
+    //   packingCountForm.packageTaskCount = 0
+    // }
+    lackCount.value = data?.lackCount!
+    manyCount.value = data?.manyCount
+  } else {
+    await addQualityCheck({
+      taskId: row.id,
+      status: row.qualityCheckStatus,
+    })
+  }
+}
 // 清点质检的取消
 const closePackingCount = () => {
   packingCountVisible.value = false
