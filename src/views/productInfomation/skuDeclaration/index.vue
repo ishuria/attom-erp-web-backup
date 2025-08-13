@@ -3,15 +3,27 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary" @click="handleStatus1Change">{{ queryForm.status === 0 ? '展示停产' : '隐藏停产' }}</el-button>
-        <el-button v-permissions="{ permission: [SkuPermission.CUSTOM_DECLARE_RATIO_QUERY] }" type="primary" @click="showPriceCoefficientSetting" >价格系数设定</el-button>
+        <el-button
+          v-permissions="{ permission: [SkuPermission.CUSTOM_DECLARE_RATIO_QUERY] }"
+          type="primary"
+          @click="showPriceCoefficientSetting"
+        >
+          价格系数设定
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -20,48 +32,59 @@
     <el-table
       ref="tableRef"
       v-loading="listLoading"
-      border :cell-class-name="cellClassName"
+      border
+      :cell-class-name="cellClassName"
       :cell-style="cellStyle"
       class="noneHoveTable"
       :data="list"
       :header-cell-style="headerCellStyle"
       :row-class-name="tableRowClassName"
-      @row-click="handleRowClick"
       @cell-click="changeInput"
+      @row-click="handleRowClick"
     >
       <el-table-column fixed="left" label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px;" @click="showImagePreview(row.skuImgUrl)">
+          <el-image
+            fit="fill"
+            :src="row.skuImgUrl"
+            style="display: block; width: 75px; height: 75px"
+            @click="showImagePreview(row.skuImgUrl)"
+          >
             <template #error>
               <div class="image-slot">
-                <el-icon/>
+                <el-icon />
               </div>
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column fixed="left" label="SKU品名" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')" prop="sku" >
+      <el-table-column fixed="left" label="SKU品名" :min-width="flexColumnWidth(list, 'SKU品名', 'sku')" prop="sku">
         <template #default="{ row }">
-          {{ row.sku }}<br />
+          {{ row.sku }}
+          <br />
           {{ row.description }}
         </template>
       </el-table-column>
-      <el-table-column label="UPC" :min-width="calculateBrColumnWidth(list, (row: any)=>row.upc, 90)" prop="upc" >
+      <el-table-column label="UPC" :min-width="calculateBrColumnWidth(list, (row: any) => row.upc, 90)" prop="upc">
         <template #default="{ row }">
           <div v-html="row.upc"></div>
         </template>
       </el-table-column>
-      <el-table-column label="北美FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.northAmericaFnSku, 90)" prop="northAmericaFnSku" >
+      <el-table-column
+        label="北美FNSKU"
+        :min-width="calculateBrColumnWidth(list, (row: any) => row.northAmericaFnSku, 90)"
+        prop="northAmericaFnSku"
+      >
         <template #default="{ row }">
           <div v-html="row.northAmericaFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="欧洲FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.europeFnSku, 90)" prop="europeFnSku" >
+      <el-table-column label="欧洲FNSKU" :min-width="calculateBrColumnWidth(list, (row: any) => row.europeFnSku, 90)" prop="europeFnSku">
         <template #default="{ row }">
           <div v-html="row.europeFnSku"></div>
         </template>
       </el-table-column>
-      <el-table-column label="日本FNSKU" :min-width="calculateBrColumnWidth(list, (row: any)=>row.jpFnSku, 90)" prop="jpFnSku" >
+      <el-table-column label="日本FNSKU" :min-width="calculateBrColumnWidth(list, (row: any) => row.jpFnSku, 90)" prop="jpFnSku">
         <template #default="{ row }">
           <div v-html="row.jpFnSku"></div>
         </template>
@@ -69,7 +92,7 @@
       <el-table-column label="品牌" :min-width="flexColumnWidth(list, '品牌', 'brank')" prop="brank">
         <template #default="{ row }">
           <div class="none">
-              <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
+            <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.brank }}</span>
         </template>
@@ -246,7 +269,7 @@
       <el-table-column align="center" fixed="right" label="操作" width="230">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
-          <span style="margin: 0 5px;"></span>
+          <span style="margin: 0 5px"></span>
           <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
         </template>
       </el-table-column>
@@ -254,7 +277,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
@@ -263,119 +286,81 @@
       @size-change="handleSizeChange"
     />
     <!-- 价格系数设定 -->
-    <vab-dialog
-      v-model="priceCoefficientSettingVisible"
-      title="价格系数设定"
-      width="47em"
-      @close="closePriceCoefficientSetting"
-    >
-    <el-form :model="priceCoefficientSettingForm" >
-      <el-form-item>
-        <el-text>
-          云舟采购单价 = PO含税单价￥ × Random（
-          <el-input v-model="priceCoefficientSettingForm.minProcurementCoefficient" clearable placeholder="随机最小价格系数" style="width: 10em;"/> &nbsp;
-          <el-input v-model="priceCoefficientSettingForm.maxProcurementCoefficient" clearable placeholder="随机最大价格系数" style="width: 10em;"/>
-          ）
-        </el-text>
-      </el-form-item>
-      <el-form-item>
-        <el-text>
-          云舟销售单价 = ( PO未税单价￥ ×
-          <el-input v-model="priceCoefficientSettingForm.salesCoefficient1" clearable placeholder="价格系数" style="width: 6em;"/>
-          + 预估运费 ×
-          <el-input v-model="priceCoefficientSettingForm.salesCoefficient2" clearable placeholder="价格系数" style="width: 6em;"/> ) / 当前汇率
-        </el-text>
-      </el-form-item>
-      <el-form-item>
-        <el-text>
-          SKU清关单价 = PO未税单价￥ / 当前汇率 ×
-          <el-input v-model="priceCoefficientSettingForm.customClearanceCoefficient" clearable placeholder="价格系数" style="width: 6em;"/>
-        </el-text>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div style="text-align: center;">
-        <el-button type="danger" @click="closePriceCoefficientSetting">取消</el-button>
-        <el-button type="success" @click="confirmPriceCoefficientSetting">确定</el-button>
-      </div>
-    </template>
+    <vab-dialog v-model="priceCoefficientSettingVisible" title="价格系数设定" width="47em" @close="closePriceCoefficientSetting">
+      <el-form :model="priceCoefficientSettingForm">
+        <el-form-item>
+          <el-text>
+            云舟采购单价 = PO含税单价￥ × Random（
+            <el-input
+              v-model="priceCoefficientSettingForm.minProcurementCoefficient"
+              clearable
+              placeholder="随机最小价格系数"
+              style="width: 10em"
+            />
+            &nbsp;
+            <el-input
+              v-model="priceCoefficientSettingForm.maxProcurementCoefficient"
+              clearable
+              placeholder="随机最大价格系数"
+              style="width: 10em"
+            />
+            ）
+          </el-text>
+        </el-form-item>
+        <el-form-item>
+          <el-text>
+            云舟销售单价 = ( PO未税单价￥ ×
+            <el-input v-model="priceCoefficientSettingForm.salesCoefficient1" clearable placeholder="价格系数" style="width: 6em" />
+            + 预估运费 ×
+            <el-input v-model="priceCoefficientSettingForm.salesCoefficient2" clearable placeholder="价格系数" style="width: 6em" />
+            ) / 当前汇率
+          </el-text>
+        </el-form-item>
+        <el-form-item>
+          <el-text>
+            SKU清关单价 = PO未税单价￥ / 当前汇率 ×
+            <el-input
+              v-model="priceCoefficientSettingForm.customClearanceCoefficient"
+              clearable
+              placeholder="价格系数"
+              style="width: 6em"
+            />
+          </el-text>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button type="danger" @click="closePriceCoefficientSetting">取消</el-button>
+          <el-button type="success" @click="confirmPriceCoefficientSetting">确定</el-button>
+        </div>
+      </template>
     </vab-dialog>
     <!-- 查看HTS -->
     <vab-dialog v-model="htsVisible" :draggable="false" title="查看和修改HTS" width="20%">
-      <el-form label-width="auto" style=" margin-right: 0;margin-left: 0;">
+      <el-form label-width="auto" style="margin-right: 0; margin-left: 0">
         <el-form-item label="HTS美国">
-          <el-select
-            v-model="htsForm.us"
-            filterable
-            placeholder="请选择HTS美国"
-            @change="handleChangeHtsUsa"
-          >
-            <el-option
-              v-for="item in usaList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="htsForm.us" filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
+            <el-option v-for="item in usaList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS英国">
-          <el-select
-            v-model="htsForm.uk"
-            filterable
-            placeholder="请选择HTS英国"
-            @change="handleChangeHtsUk"
-          >
-            <el-option
-              v-for="item in ukHtsList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="htsForm.uk" filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
+            <el-option v-for="item in ukHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS德国">
-          <el-select
-            v-model="htsForm.de"
-            filterable
-            placeholder="请选择HTS德国"
-            @change="handleChangeHtsDe"
-          >
-            <el-option
-              v-for="item in deHtsList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="htsForm.de" filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
+            <el-option v-for="item in deHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS加拿大">
-          <el-select
-            v-model="htsForm.ca"
-            filterable
-            placeholder="请选择HTS加拿大"
-            @change="handleChangeHtsCa"
-          >
-            <el-option
-              v-for="item in caHtsList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="htsForm.ca" filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
+            <el-option v-for="item in caHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS日本">
-          <el-select
-            v-model="htsForm.jp"
-            filterable
-            placeholder="请选择HTS日本"
-            @change="handleChangeHtsJp"
-          >
-            <el-option
-              v-for="item in jpHtsList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="htsForm.jp" filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
+            <el-option v-for="item in jpHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -392,16 +377,19 @@
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showAddClearance">新增</el-button>
           <el-button type="primary" @click="showBatchUpdate">批量修改</el-button>
-
         </vab-query-form-left-panel>
       </vab-query-form>
       <el-table border :data="clearanceList" max-height="700" stripe @selection-change="setSelectRows">
         <el-table-column align="center" type="selection" />
-        <el-table-column label="国家" min-width="80" prop="countryName"/>
+        <el-table-column label="国家" min-width="80" prop="countryName" />
         <el-table-column label="制造商名称" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" prop="manufacturer" />
-        <el-table-column label="制造商地址" :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')" prop="manufacturerAddress" />
-        <el-table-column label="清关品名" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')" prop="clearanceName"/>
-        <el-table-column label="材质比例" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')" prop="material"/>
+        <el-table-column
+          label="制造商地址"
+          :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')"
+          prop="manufacturerAddress"
+        />
+        <el-table-column label="清关品名" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')" prop="clearanceName" />
+        <el-table-column label="材质比例" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')" prop="material" />
         <el-table-column label="用途" min-width="100" prop="usage" />
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
@@ -410,15 +398,10 @@
       <template #footer></template>
     </vab-dialog>
     <vab-dialog v-model="addClearanceVisible" title="新增" width="30%">
-      <el-form ref="addClearanceFormRef" label-position="top" :model="addClearanceForm" :rules="addClearanceFormRules" >
+      <el-form ref="addClearanceFormRef" label-position="top" :model="addClearanceForm" :rules="addClearanceFormRules">
         <el-form-item label="国家" prop="countryIds">
-          <el-select v-model="addClearanceForm.countryIds" multiple placeholder="请选择国家" >
-            <el-option
-              v-for="item in countryList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="addClearanceForm.countryIds" multiple placeholder="请选择国家">
+            <el-option v-for="item in countryList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="制造商名称" prop="manufacturer">
@@ -474,7 +457,19 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { addCustomsClearanceSkuInfo, getCustomsClearanceCountryList, getCustomsClearanceRatio, getCustomsClearanceSkuHtsList, getCustomsClearanceSkuInfo, getCustomsClearanceSkuList, getHtsSelectList, updateCustomsClearanceRatio, updateCustomsClearanceSku, updateCustomsClearanceSkuHts, updateCustomsClearanceSkuInfo } from '/@/api/devlocal/productInformation'
+import {
+  addCustomsClearanceSkuInfo,
+  getCustomsClearanceCountryList,
+  getCustomsClearanceRatio,
+  getCustomsClearanceSkuHtsList,
+  getCustomsClearanceSkuInfo,
+  getCustomsClearanceSkuList,
+  getHtsSelectList,
+  updateCustomsClearanceRatio,
+  updateCustomsClearanceSku,
+  updateCustomsClearanceSkuHts,
+  updateCustomsClearanceSkuInfo,
+} from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -488,11 +483,7 @@ const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
 }
-const tableRowClassName = ({
-  row,
-}: {
-  row: any
-}) => {
+const tableRowClassName = ({ row }: { row: any }) => {
   if (row.id === selectedRowIndex.value) {
     return 'select-row'
   }
@@ -500,11 +491,11 @@ const tableRowClassName = ({
 }
 const router = useRouter()
 const route = useRoute()
-const ukHtsList = ref<{ id: number, label: string }[]>([])
-const deHtsList = ref<{ id: number, label: string }[]>([])
-const caHtsList = ref<{ id: number, label: string }[]>([])
-const jpHtsList = ref<{ id: number, label: string }[]>([])
-const usaList = ref<{ id: number, label: string }[]>([])
+const ukHtsList = ref<{ id: number; label: string }[]>([])
+const deHtsList = ref<{ id: number; label: string }[]>([])
+const caHtsList = ref<{ id: number; label: string }[]>([])
+const jpHtsList = ref<{ id: number; label: string }[]>([])
+const usaList = ref<{ id: number; label: string }[]>([])
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
 const listLoading = ref<boolean>(false)
@@ -516,9 +507,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
 })
 const htsVisible = ref<boolean>(false)
-const htsForm = reactive<any>({
-
-})
+const htsForm = reactive<any>({})
 const clearanceVisible = ref<boolean>(false)
 const clearanceList = ref<IGetCustomsClearanceSkuInfo[]>([])
 let skuCustomId = -1
@@ -530,15 +519,13 @@ const showClearance = async (row: any) => {
 }
 const addClearanceVisible = ref<boolean>(false)
 const addClearanceForm = reactive<any>({
-  countryIds: []
+  countryIds: [],
 })
 const addClearanceFormRef = ref<FormInstance>()
 const addClearanceFormRules = reactive<any>({
-  countryIds: [
-    { required: true, message: '请选择国家', trigger: 'change' },
-  ],
+  countryIds: [{ required: true, message: '请选择国家', trigger: 'change' }],
 })
-const countryList = ref<{ id: number, label: string }[]>([])
+const countryList = ref<{ id: number; label: string }[]>([])
 const showAddClearance = async () => {
   const { data } = await getCustomsClearanceCountryList()
   countryList.value = data
@@ -546,8 +533,15 @@ const showAddClearance = async () => {
 }
 let id = -1
 const showHts = async (row: any) => {
+  // 重置表单
+  Object.keys(htsForm).forEach((key) => {
+    delete htsForm[key]
+  })
+
   const { data } = await getCustomsClearanceSkuHtsList({ skuCustomsDeclarationId: row.id })
-  Object.assign(htsForm, data)
+  if (data && Object.keys(data).length > 0) {
+    Object.assign(htsForm, data)
+  }
   id = row.id
   htsVisible.value = true
 }
@@ -564,7 +558,7 @@ const confirmAddClearance = async () => {
         countryIds: addClearanceForm.countryIds.join(','),
       })
       if (data) {
-        $baseMessage("新增成功！", "success")
+        $baseMessage('新增成功！', 'success')
         addClearanceVisible.value = false
         const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
         clearanceList.value = data
@@ -587,7 +581,7 @@ const batchUpdateForm = reactive<any>({
 const batchUpdateFormRef = ref<FormInstance>()
 const showBatchUpdate = () => {
   if (selectRows.value.length === 0) {
-    $baseMessage("请选择要修改的行！", "warning")
+    $baseMessage('请选择要修改的行！', 'warning')
     return
   } else if (selectRows.value.length === 1) {
     Object.assign(batchUpdateForm, selectRows.value[0])
@@ -602,10 +596,10 @@ const closeBatchUpdate = () => {
 const confirmBatchUpdate = async () => {
   const { data } = await updateCustomsClearanceSkuInfo({
     ids: selectRows.value.map((item: any) => item.id).join(','),
-    ...batchUpdateForm
+    ...batchUpdateForm,
   })
   if (data) {
-    $baseMessage("修改成功！", "success")
+    $baseMessage('修改成功！', 'success')
     batchUpdateVisible.value = false
     const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
     clearanceList.value = data
@@ -619,14 +613,14 @@ const handleChangeHtsUsa = async () => {
   await updateCustomsClearanceSkuHts({
     id: id,
     htsId: htsForm.us,
-    type: 0
+    type: 0,
   })
 }
 const handleChangeHtsUk = async () => {
   await updateCustomsClearanceSkuHts({
     id: id,
     htsId: htsForm.uk,
-    type: 1
+    type: 1,
   })
 }
 
@@ -634,7 +628,7 @@ const handleChangeHtsDe = async () => {
   await updateCustomsClearanceSkuHts({
     id: id,
     htsId: htsForm.de,
-    type: 2
+    type: 2,
   })
 }
 
@@ -642,7 +636,7 @@ const handleChangeHtsCa = async () => {
   await updateCustomsClearanceSkuHts({
     id: id,
     htsId: htsForm.ca,
-    type: 3
+    type: 3,
   })
 }
 
@@ -650,10 +644,9 @@ const handleChangeHtsJp = async () => {
   await updateCustomsClearanceSkuHts({
     id: id,
     htsId: htsForm.jp,
-    type: 4
+    type: 4,
   })
 }
-
 
 // 打开价格系数设定
 const showPriceCoefficientSetting = async () => {
@@ -672,7 +665,7 @@ const confirmPriceCoefficientSetting = async () => {
     maxProcurementCoefficient: priceCoefficientSettingForm.maxProcurementCoefficient,
     salesCoefficient1: priceCoefficientSettingForm.salesCoefficient1,
     salesCoefficient2: priceCoefficientSettingForm.salesCoefficient2,
-    customClearanceCoefficient: priceCoefficientSettingForm.customClearanceCoefficient
+    customClearanceCoefficient: priceCoefficientSettingForm.customClearanceCoefficient,
   })
   if (data) {
     $baseMessage('价格系数修改成功', 'success')
@@ -685,8 +678,8 @@ const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 const showImagePreview = (url: string) => {
   imagePreviewList.value = []
@@ -729,17 +722,17 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 const handleStatus1Change = async () => {
-  queryForm.status === 0 ? queryForm.status = 1 : queryForm.status = 0
+  queryForm.status === 0 ? (queryForm.status = 1) : (queryForm.status = 0)
   fetchData()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (['SKU品名', 'UPC', '北美FNSKU', '欧洲FNSKU', '日本FNSKU'].includes(label)) {
     return {
       color: '#999',
       cursor: 'not-allowed',
-      textAlign:'left'
+      textAlign: 'left',
     }
   } else {
     return {
@@ -750,45 +743,44 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 const headerCellStyle = (): CSSProperties => {
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 let copyRow: any
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  copyRow = JSON.parse(JSON.stringify(row));
+  copyRow = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 // 零件table blur事件
 const clickCancel = async (event: any, value: any) => {
-
-  const rootElement = getRootElement(event.srcElement, ".cell");
+  const rootElement = getRootElement(event.srcElement, '.cell')
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
   }
 
   if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
+    // 执行失去焦点处理逻辑
     try {
       await updateCustomsClearanceSku({
         id: value.id,
@@ -800,7 +792,7 @@ const clickCancel = async (event: any, value: any) => {
         materialEn: value.materialEn,
         materialZh: value.materialZh,
         usageEn: value.usageEn,
-        usageZh: value.usageZh
+        usageZh: value.usageZh,
       })
     } catch {
       Object.assign(value, copyRow)
@@ -821,7 +813,7 @@ const fetchData = async () => {
     item.europeFnSku = item.europeFnSku.replaceAll(',', '<br />')
   })
 }
-const cellClassName = (data: {row: any, column: any, rowIndex: number, columnIndex: number}) => {
+const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
   }
@@ -829,24 +821,24 @@ const cellClassName = (data: {row: any, column: any, rowIndex: number, columnInd
 }
 // 获取HTS欧洲列表
 const fetchHtsUkList = async () => {
-  const { data } = await getHtsSelectList({country:"英国"})
+  const { data } = await getHtsSelectList({ country: '英国' })
   ukHtsList.value = data
 }
 // 获取HTS美国列表
 const fetchHtsUsaList = async () => {
-  const { data } = await getHtsSelectList({country:"美国"})
+  const { data } = await getHtsSelectList({ country: '美国' })
   usaList.value = data
 }
 const fetchHtsDeList = async () => {
-  const { data } = await getHtsSelectList({country:"德国"})
+  const { data } = await getHtsSelectList({ country: '德国' })
   deHtsList.value = data
 }
 const fetchHtsCaList = async () => {
-  const { data } = await getHtsSelectList({country:"加拿大"})
+  const { data } = await getHtsSelectList({ country: '加拿大' })
   caHtsList.value = data
 }
 const fetchHtsJpList = async () => {
-  const { data } = await getHtsSelectList({country:"日本"})
+  const { data } = await getHtsSelectList({ country: '日本' })
   jpHtsList.value = data
 }
 onActivated(() => {
