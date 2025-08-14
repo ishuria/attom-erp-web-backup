@@ -1,41 +1,29 @@
 <template>
-  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; ">
+  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
     <el-table
       ref="tableRef"
       border
-      :data="exchangeList" :header-cell-style="{ 'text-align': 'center' }"
+      :data="exchangeList"
+      :header-cell-style="{ 'text-align': 'center' }"
       stripe
-      style="width: auto; table-layout: fixed;"
+      style="width: auto; table-layout: fixed"
       @cell-click="changeInput"
     >
       <!-- 第一列固定标签列 -->
-      <el-table-column
-        align="right"
-        fixed
-        :label="labelMap['column0']"
-        :prop="'column0'"
-        width="310"
-      >
+      <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="310">
         <template #default="{ row }">
           <strong style="color: var(--el-table-header-text-color)" v-html="labelMap[row['column0']]"></strong>
         </template>
       </el-table-column>
       <el-table-column align="center" label="变体值相同" width="110">
-        <template #default="{row}">
+        <template #default="{ row }">
           <template v-if="row['column0'] !== 'productImgUrl'">
-            <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row)"/>
+            <el-checkbox v-model="row.variantsSame" class="custom-checkbox" @change="handleVariantsSame(row)" />
           </template>
         </template>
       </el-table-column>
       <!-- 动态列 -->
-      <el-table-column
-        v-for="(prop, index) in columnsChange"
-        :key="index"
-        align="center"
-        :label="prop"
-        min-width="260"
-        :prop="prop"
-      >
+      <el-table-column v-for="(prop, index) in columnsChange" :key="index" align="center" :label="prop" min-width="260" :prop="prop">
         <template #default="{ row }">
           <template v-if="row['column0'] === 'productImgUrl'">
             <div style="display: flex; justify-content: center">
@@ -55,9 +43,27 @@
               </div>
             </div>
           </template>
-          <template v-if="['productLength', 'productWidth', 'productHeight', 'material', 'battery', 'benchmarkAsin', 'patent'].includes(row['column0'])">
+          <template
+            v-if="
+              [
+                'productLength',
+                'productWidth',
+                'productHeight',
+                'material',
+                'battery',
+                'benchmarkAsin',
+                'patent',
+                'manufacturerEnglishName',
+              ].includes(row['column0'])
+            "
+          >
             <div class="none">
-              <el-input v-model="row[prop]" @blur="clickCancel($event, prop)" @input="handleInputChange(row, prop)" @keyup.enter="clickCancel($event, prop)" />
+              <el-input
+                v-model="row[prop]"
+                @blur="clickCancel($event, prop)"
+                @input="handleInputChange(row, prop)"
+                @keyup.enter="clickCancel($event, prop)"
+              />
             </div>
             <span>{{ row[prop] }}</span>
           </template>
@@ -74,12 +80,7 @@
               :remote-method="remotePeopleMethod"
               @change="handleChangeProductManager(row, prop)"
             >
-              <el-option
-                v-for="item in peopleOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </template>
           <template v-if="row['column0'] === 'productDesign'">
@@ -95,50 +96,66 @@
               :remote-method="remotePeopleMethod"
               @change="handleChangeProductDesign(row, prop)"
             >
-              <el-option
-                v-for="item in peopleOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
+              <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </template>
           <template v-if="row['column0'] === 'sampleRetention'">
-            <el-select v-model="row[prop]" class="center-select" collapse-tags collapse-tags-tooltip multiple placeholder="请选择拍照留样情况" @change="handleSampleRetentionStatus(row, prop)">
-              <el-option
-                v-for="item in packageSampleOption"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
+            <el-select
+              v-model="row[prop]"
+              class="center-select"
+              collapse-tags
+              collapse-tags-tooltip
+              multiple
+              placeholder="请选择拍照留样情况"
+              @change="handleSampleRetentionStatus(row, prop)"
+            >
+              <el-option v-for="item in packageSampleOption" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
           <template v-if="row['column0'] === 'packingGroup'">
-            <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingUpdate(row, prop)"/>
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handlePackingUpdate(row, prop)"
+            />
           </template>
           <template v-if="row['column0'] === 'operate'">
-            <el-link type="primary" underline='never' @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
+            <el-link type="primary" underline="never" @click="handleInsertSku(row, prop)">导入合并变体SKU的数据</el-link>
           </template>
           <template v-if="row['column0'] === 'productPosition'">
-            <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" @change="handleChangeProductPosition(row, prop)">
-              <el-option
-                v-for="item in productPositionOption"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
+            <el-select
+              v-model="row[prop]"
+              class="center-select"
+              placeholder="请选择产品定位"
+              @change="handleChangeProductPosition(row, prop)"
+            >
+              <el-option v-for="item in productPositionOption" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
           <template v-if="row['column0'] === 'oem'">
-            <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)" />
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateOEM(row, prop)"
+            />
           </template>
           <template v-if="row['column0'] === 'graphicDesign'">
-            <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)" />
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateGraphicDesign(row, prop)"
+            />
           </template>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" min-width="200px"/>
+        <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
       </template>
     </el-table>
 
@@ -155,7 +172,18 @@
 <script lang="ts" setup>
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { getProductPositionList, getReviewVariantPackageSampleList, reviewGetSkuList, reviewInsertSkuInfo, reviewProductManager, reviewStepNo3GetSelectVariantList, reviewStepNo5SaveFv, reviewStepNo5SkuInfoPerfect, reviewStepNo5VariantImgDel, reviewStepNo5VariantImgUpload } from '/@/api/devlocal/orderProcess'
+import {
+  getProductPositionList,
+  getReviewVariantPackageSampleList,
+  reviewGetSkuList,
+  reviewInsertSkuInfo,
+  reviewProductManager,
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo5SaveFv,
+  reviewStepNo5SkuInfoPerfect,
+  reviewStepNo5VariantImgDel,
+  reviewStepNo5VariantImgUpload,
+} from '/@/api/devlocal/orderProcess'
 import { getAllName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -171,7 +199,7 @@ const emit = defineEmits<{
   (e: 'change-step', value: number): void
   (e: 'update:imagePreviewVisible', value: boolean): void
   (e: 'update:previewListValue', value: string): void
- }>()
+}>()
 // 查询下拉变体列表
 const variantsSelectList = ref<IGetSelectVariantsList[]>([])
 // const listLoading = ref<boolean>(true)
@@ -181,17 +209,17 @@ const peopleList = ref<any[]>([]) //搜索列表
 const remotePeopleMethod = async (query: string) => {
   if (query) {
     const { data } = await getAllName({
-        name: query
+      name: query,
     })
 
     peopleList.value = data.map((item: any) => {
-        return { value: item.userId, label: item.userName }
+      return { value: item.userId, label: item.userName }
     })
     peopleLoading.value = true
     setTimeout(() => {
-        peopleLoading.value = false
-        peopleOptions.value = peopleList.value.filter((item) => {
-            return item.label.toLowerCase().includes(query.toLowerCase())
+      peopleLoading.value = false
+      peopleOptions.value = peopleList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
       })
     }, 200)
   } else {
@@ -199,18 +227,20 @@ const remotePeopleMethod = async (query: string) => {
   }
 }
 const handleUpdateOEM = async (row: any, prop: string) => {
-  if (exchangeList.value[3][prop] === 1 && row[prop] === 1) { // o 1 g 1 
-      row[prop] = 0
-      $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
-      return
+  if (exchangeList.value[3][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
+    row[prop] = 0
+    $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
+    return
   }
   handlePackingUpdate(row, prop)
 }
 const handleUpdateGraphicDesign = async (row: any, prop: string) => {
-  if (exchangeList.value[2][prop] === 1 && row[prop] === 1) { // o 1 g 1 
-      row[prop] = 0
-      $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
-      return
+  if (exchangeList.value[2][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
+    row[prop] = 0
+    $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
+    return
   }
   handlePackingUpdate(row, prop)
 }
@@ -235,7 +265,7 @@ const handleInsertSku = async (row: any, prop: string) => {
         material: exchangeList.value[7][prop],
         battery: exchangeList.value[8][prop],
         benchmarkAsin: exchangeList.value[9][prop],
-        orderEntryId: exchangeList.value[18][prop],
+        orderEntryId: exchangeList.value[19][prop],
       })
       $baseMessage('导入该SKU数据成功', 'success', 'hey')
     }
@@ -249,9 +279,9 @@ const tableRef = ref<TableInstance>()
 /**
  * 图片预览事件
  */
- const handlePictureCardPreview = (url: string) => {
-  emit("update:previewListValue", url)
-  emit("update:imagePreviewVisible", true)
+const handlePictureCardPreview = (url: string) => {
+  emit('update:previewListValue', url)
+  emit('update:imagePreviewVisible', true)
 }
 let _prop = ''
 let copyRow: any = null
@@ -265,33 +295,33 @@ const showUploadDialog = (row: any, prop: string) => {
 async function uploadImage(file: File) {
   try {
     let imageForm = new FormData()
-    imageForm.append('file', file);
-    imageForm.append('orderEntryId', exchangeList.value[18][_prop]);
+    imageForm.append('file', file)
+    imageForm.append('orderEntryId', exchangeList.value[18][_prop])
 
     // 上传图片
-    const { data } = await reviewStepNo5VariantImgUpload(imageForm);
+    const { data } = await reviewStepNo5VariantImgUpload(imageForm)
     if (data) {
       copyRow[_prop] = data
       // 提示成功信息
-      $baseMessage('图片上传成功!', 'success', 'hey');
+      $baseMessage('图片上传成功!', 'success', 'hey')
       imageUploadVisible.value = false
     } else {
-      $baseMessage('图片上传失败!', 'error', 'hey');
+      $baseMessage('图片上传失败!', 'error', 'hey')
     }
   } catch (error) {
-    console.error(error);
-    $baseMessage('图片上传失败!', 'error', 'hey');
+    console.error(error)
+    $baseMessage('图片上传失败!', 'error', 'hey')
   }
 }
 /**
  * 图片删除功能
  */
- const handleRemove = async (prop: any) => {
+const handleRemove = async (prop: any) => {
   try {
-    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
-      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[18][prop]})
+    $baseConfirm('确定要删除这张图片吗', '系统提示', async () => {
+      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[18][prop] })
       if (data === true) {
-        $baseMessage("此产品图片信息删除成功!", "success", "hey");
+        $baseMessage('此产品图片信息删除成功!', 'success', 'hey')
         exchangeList.value[0][prop] = ''
       }
     })
@@ -317,24 +347,24 @@ const labelMap: Record<string, string> = {
   productDesign: '产品设计',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
+  manufacturerEnglishName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
   certificateUpload: '证书上传',
   skuMerge: '合并变体的SKU',
   operate: '操作',
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 const buildParams = (key: string) => {
@@ -349,11 +379,12 @@ const buildParams = (key: string) => {
     battery: exchangeList.value[8][key],
     benchmarkAsin: exchangeList.value[9][key],
     patent: exchangeList.value[10][key],
-    productManagerId: exchangeList.value[19][key],
-    productDesignId: exchangeList.value[20][key],
+    productManagerId: exchangeList.value[20][key],
+    productDesignId: exchangeList.value[21][key],
     sampleRetention: exchangeList.value[13][key].join(','),
     checkStatus: exchangeList.value[14][key],
-    orderEntryId: exchangeList.value[18][key],
+    manufacturerEnglishName: exchangeList.value[15][key],
+    orderEntryId: exchangeList.value[19][key],
   }
   return params
 }
@@ -362,130 +393,133 @@ const update = async (prop: string) => {
   await reviewStepNo5SkuInfoPerfect(params)
 }
 function arraysEqual(arr1: any[], arr2: any[]) {
-  if (arr1.length !== arr2.length) return false;
+  if (arr1.length !== arr2.length) return false
   for (const [i, element] of arr1.entries()) {
-    if (element !== arr2[i]) return false;
+    if (element !== arr2[i]) return false
   }
-  return true;
+  return true
 }
 
 // 处理变体值相同
-const handleVariantsSame = (row: any) => { //变体值相同的值改变的时候,也要检查是否更改
-  const values = Object.values(row).filter(value => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0);
+const handleVariantsSame = (row: any) => {
+  //变体值相同的值改变的时候,也要检查是否更改
+  const values = Object.values(row).filter(
+    (value) => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0
+  )
   // console.log(values)
   if (row.variantsSame) {
     // console.log(values)
     // 如果有值，
     if (values.length === 1) {
       // 更新所有非空单元格的值
-      Object.keys(row).forEach(key => {
+      Object.keys(row).forEach((key) => {
         if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = values[0];
+          row[key] = values[0]
         }
-      });
+      })
     } else if (values.length > 1) {
       let valuesResult
       if (row['column0'] === 'sampleRetention') {
-        valuesResult = values.every( item => arraysEqual(item as any[], values[0] as any[])  );
+        valuesResult = values.every((item) => arraysEqual(item as any[], values[0] as any[]))
       } else {
-        valuesResult = values.every( item => item === values[0] );
+        valuesResult = values.every((item) => item === values[0])
       }
       if (!valuesResult) {
         row.variantsSame = false
         $baseMessage('当前多个变体值不同，无法勾选。', 'error', 'hey')
-      } else if(valuesResult){
+      } else if (valuesResult) {
         row.variantsSame = true
-        Object.keys(row).forEach(key => {
+        Object.keys(row).forEach((key) => {
           if (key !== 'column0' && key !== 'variantsSame') {
-            row[key] = values[0];
+            row[key] = values[0]
             update(key)
           }
-        });
+        })
       }
     }
   }
-  return row.variantsSame;
-};
-const syncVariantValues = (row: any) => { //默认勾选,如果当前行1个单元格只填了1个值，则该行其他单元格都填入该值。
-  const values = Object.values(row).filter(value => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0);
+  return row.variantsSame
+}
+const syncVariantValues = (row: any) => {
+  //默认勾选,如果当前行1个单元格只填了1个值，则该行其他单元格都填入该值。
+  const values = Object.values(row).filter(
+    (value) => value !== null && value !== undefined && value !== '' && value !== row.variantsSame && value !== row.column0
+  )
   // console.log(values[0]);
 
   if (values.length === 1) {
-    Object.keys(row).forEach(key => {
+    Object.keys(row).forEach((key) => {
       if (key !== 'column0' && key !== 'variantsSame') {
-        row[key] = values[0];
+        row[key] = values[0]
       }
-    });
-  } else if(values.length > 1) {
+    })
+  } else if (values.length > 1) {
     let valuesResult
     if (row['column0'] === 'sampleRetention') {
-      valuesResult = values.every( item => arraysEqual(item as any[], values[0] as any[])  );
+      valuesResult = values.every((item) => arraysEqual(item as any[], values[0] as any[]))
     } else {
-      valuesResult = values.every( item => item === values[0] );
+      valuesResult = values.every((item) => item === values[0])
     }
     if (!valuesResult) {
       row.variantsSame = false
-    } else if(valuesResult){
+    } else if (valuesResult) {
       row.variantsSame = true
     }
   }
-};
+}
 
 const handleInputChange = async (row: any, prop: string) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
+    const newValue = row[prop]
 
     // 确保新值非空
     if (newValue !== null && newValue !== undefined && newValue !== '') {
-      Object.keys(row).forEach(async key => {
+      Object.keys(row).forEach(async (key) => {
         if (key !== 'column0' && key !== 'variantsSame' && key !== prop) {
-          row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
+          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
           update(key)
         }
-
-      });
+      })
     }
   }
-};
+}
 /**
  * 输入失焦事件
  */
-const clickCancel = async (event: any, prop: any) =>{
+const clickCancel = async (event: any, prop: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
-    const rootElement = getRootElement(event.srcElement, ".cell");
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (rootElement) {
-      const t1 = rootElement.children[0];
-      const t2 = rootElement.children[1];
-
-      if (t1 && t1.classList[0] !== 'el-select') {
-          t1.classList.add("none");
-        }
-      if (t2) t2.classList.remove("none");
+    if (t1 && t1.classList[0] !== 'el-select') {
+      t1.classList.add('none')
     }
+    if (t2) t2.classList.remove('none')
+  }
 
-    if (event.type === 'blur') {
-      // 执行失去焦点处理逻辑
-      update(prop)
-    }
+  if (event.type === 'blur') {
+    // 执行失去焦点处理逻辑
+    update(prop)
+  }
 }
 // 修改打包小组
 const handlePackingUpdate = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
+    const newValue = row[prop]
     // 确保新值非空
     if (newValue !== null && newValue !== undefined && newValue !== '') {
-      Object.keys(row).forEach(async key => {
+      Object.keys(row).forEach(async (key) => {
         if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue; // 将其他单元格的值更新为当前输入框的值
+          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
           update(key)
         }
       })
     }
-
-  }else {
+  } else {
     await update(prop)
   }
 }
@@ -493,28 +527,28 @@ const handlePackingUpdate = async (row: any, prop: any) => {
 const handleChangeProductManager = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
-      Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+    const newValue = row[prop]
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
-          // 点击了修改,manager对应的就是id,让managerId就等于id
-          exchangeList.value[19][key] = exchangeList.value[11][key]
-          if (exchangeList.value[19][key] === exchangeList.value[20][key]) {
-            $baseMessage("产品经理和产品设计不能相同！", 'error')
-            row[key] = ''
-            row[prop] = ''
-            exchangeList.value[19][key] = null
-          }
-          update(key)
+        // 点击了修改,manager对应的就是id,让managerId就等于id
+        exchangeList.value[20][key] = exchangeList.value[11][key]
+        if (exchangeList.value[20][key] === exchangeList.value[20][key]) {
+          $baseMessage('产品经理和产品设计不能相同！', 'error')
+          row[key] = ''
+          row[prop] = ''
+          exchangeList.value[20][key] = null
         }
-      })
+        update(key)
+      }
+    })
   } else {
-    exchangeList.value[19][prop] = exchangeList.value[11][prop]
-    if (exchangeList.value[19][prop] === exchangeList.value[20][prop]) {
-      $baseMessage("产品经理和产品设计不能相同！", 'error')
+    exchangeList.value[20][prop] = exchangeList.value[11][prop]
+    if (exchangeList.value[20][prop] === exchangeList.value[21][prop]) {
+      $baseMessage('产品经理和产品设计不能相同！', 'error')
       row[prop] = ''
-      exchangeList.value[19][prop] = null
+      exchangeList.value[20][prop] = null
     }
     update(prop)
   }
@@ -523,30 +557,29 @@ const handleChangeProductManager = async (row: any, prop: any) => {
 const handleChangeProductDesign = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
+    const newValue = row[prop]
 
-      Object.keys(row).forEach(async key => {
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
-        if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
-
-          // 点击了修改,design对应的就是id,让designId就等于id
-          exchangeList.value[20][key] = exchangeList.value[12][key]
-          if (exchangeList.value[19][key] === exchangeList.value[20][key]) {
-            $baseMessage("产品经理和产品设计不能相同！", 'error')
-            row[key] = ''
-            row[prop] = ''
-            exchangeList.value[20][key] = null
-          }
-          update(key)
+        // 点击了修改,design对应的就是id,让designId就等于id
+        exchangeList.value[21][key] = exchangeList.value[12][key]
+        if (exchangeList.value[20][key] === exchangeList.value[21][key]) {
+          $baseMessage('产品经理和产品设计不能相同！', 'error')
+          row[key] = ''
+          row[prop] = ''
+          exchangeList.value[21][key] = null
         }
-      })
+        update(key)
+      }
+    })
   } else {
-    exchangeList.value[20][prop] = exchangeList.value[12][prop]
-    if (exchangeList.value[19][prop] === exchangeList.value[20][prop]) {
-      $baseMessage("产品经理和产品设计不能相同！", 'error')
+    exchangeList.value[21][prop] = exchangeList.value[12][prop]
+    if (exchangeList.value[20][prop] === exchangeList.value[21][prop]) {
+      $baseMessage('产品经理和产品设计不能相同！', 'error')
       row[prop] = ''
-      exchangeList.value[20][prop] = null
+      exchangeList.value[21][prop] = null
     }
     update(prop)
   }
@@ -555,16 +588,16 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
 const handleChangeProductPosition = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
-      // console.log(exchangeList.value);
-      // console.log(peopleList.value);
-      Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+    const newValue = row[prop]
+    // console.log(exchangeList.value);
+    // console.log(peopleList.value);
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
-          update(key)
-        }
-      })
+        update(key)
+      }
+    })
   } else {
     update(prop)
   }
@@ -573,34 +606,34 @@ const handleChangeProductPosition = async (row: any, prop: any) => {
 const handleSampleRetentionStatus = async (row: any, prop: any) => {
   if (row.variantsSame) {
     // 获取当前输入框的值
-    const newValue = row[prop];
-      // console.log(exchangeList.value);
-      // console.log(peopleList.value);
-      Object.keys(row).forEach(async key => {
-        if (key !== 'column0' && key !== 'variantsSame') {
-          row[key] = newValue // 将其他单元格的值更新为当前输入框的值
+    const newValue = row[prop]
+    // console.log(exchangeList.value);
+    // console.log(peopleList.value);
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
-          update(key)
-        }
-      })
+        update(key)
+      }
+    })
   } else {
-
     update(prop)
   }
 }
 // 当点击保存的时候
 const handleSave = async () => {
   let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
   } else {
-      classReviewId = route.query.reviewId
+    classReviewId = route.query.reviewId
   }
 
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
-      $baseMessage("当前信息已保存。", "success", "hey")
+      $baseMessage('当前信息已保存。', 'success', 'hey')
       _setStepNo(Number(classReviewId), 4)
       // await delVisitedRoute(handleActivePath(route, true))
     }
@@ -612,10 +645,11 @@ const handleSave = async () => {
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
   let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
   } else {
-      classReviewId = route.query.reviewId
+    classReviewId = route.query.reviewId
   }
 
   // 校验是否为空
@@ -629,12 +663,23 @@ const handleSaveAndContinue = async () => {
         }
       }
     }
-    if (['productLength', 'productWidth', 'productHeight', 'material', 'battery', 'benchmarkAsin', 'productManager'].includes(column0)) {
+    if (
+      [
+        'productLength',
+        'productWidth',
+        'productHeight',
+        'material',
+        'battery',
+        'benchmarkAsin',
+        'productManager',
+        'manufacturerEnglishName',
+      ].includes(column0)
+    ) {
       for (const key of Object.keys(item)) {
         if (key !== 'column0' && key !== 'variantsSame' && !item[key]) {
-            $baseMessage(`${key}变体的${labelMap[column0]}不能为空!`, 'warning')
-            return
-          }
+          $baseMessage(`${key}变体的${labelMap[column0]}不能为空!`, 'warning')
+          return
+        }
       }
     }
   }
@@ -642,7 +687,7 @@ const handleSaveAndContinue = async () => {
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
-      $baseMessage("当前信息已保存。","success","hey")
+      $baseMessage('当前信息已保存。', 'success', 'hey')
       emit('change-step', 5)
       _setStepNo(Number(classReviewId), 4)
       // if (route.query.reviewId) {
@@ -655,7 +700,7 @@ const handleSaveAndContinue = async () => {
 }
 // 当点击上一步的时候
 const handleGoback = () => {
-    emit('change-step', 3)
+  emit('change-step', 3)
 }
 
 // 表格原始数据
@@ -709,7 +754,7 @@ const useTableDataLineToColumn = () => {
     // 获取一条数组的所有字段
     props.value = Object.keys(firstData)
     // 初始化每个字段的分组数据
-    for(let i = 0; i < props.value.length; i++) {
+    for (let i = 0; i < props.value.length; i++) {
       groupData.value[i] = []
     }
   }
@@ -723,7 +768,7 @@ const useTableDataLineToColumn = () => {
       dataToGroupByKey(data)
       // 初始化分组内的数据，转为列数据
       return changeGroupData()
-    }
+    },
   }
 }
 // 转换后的列的数据
@@ -732,7 +777,8 @@ let columnsChange: any
 // 异步获取变体数据
 const fetchVariantList = async () => {
   let classReviewId: number | undefined
-  if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
     classReviewId = props.step1Data
   } else {
     classReviewId = route.query.reviewId
@@ -751,14 +797,12 @@ const fetchVariantList = async () => {
     const { data } = await reviewGetSkuList({ reviewId: classReviewId! })
 
     skuVariantsData.value = data.map((item: any) => {
-
       if (item.productManagerId === -1) {
         // 如果新的table里面的产品经理存在,就是新的; 如果不存在,就是默认的
         item.productManager = defaultProductManager
         item.productManagerId = defaultProductManagerId
-        
+
         item.sampleRetention = item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number)
-        
       } else {
         return {
           column0: '',
@@ -777,26 +821,27 @@ const fetchVariantList = async () => {
           productDesign: item.productDesign,
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
+          manufacturerEnglishName: item.manufacturerEnglishName,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,
           operate: '操作',
           orderEntryId: undefined,
           productManagerId: item.productManagerId,
-          productDesignId: item.productDesignId
+          productDesignId: item.productDesignId,
         }
       }
     })
     skuVariantsData.value.forEach((item: any, index: number) => {
       if (index < variantSelectList.length) {
-        const key = variantSelectList[index];
-        item.column0 = key.label;
-        item.orderEntryId = key.id;
+        const key = variantSelectList[index]
+        item.column0 = key.label
+        item.orderEntryId = key.id
       }
     })
     // console.log(skuVariantsData.value);
-    const { initData, columns } = useTableDataLineToColumn();
+    const { initData, columns } = useTableDataLineToColumn()
     columnsChange = columns
-    exchangeList.value = initData(skuVariantsData.value);
+    exchangeList.value = initData(skuVariantsData.value)
     exchangeList.value.forEach((item: any) => {
       item.variantsSame = true
       if (item.column0 !== 'productImgUrl') {
@@ -805,11 +850,11 @@ const fetchVariantList = async () => {
     })
     // console.log(exchangeList.value);
   } catch (error) {
-    console.error('Error fetching variant list:', error);
+    console.error('Error fetching variant list:', error)
   }
 }
-const productPositionOption = ref<{ id: number, label: string }[]>([])
-const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const productPositionOption = ref<{ id: number; label: string }[]>([])
+const packageSampleOption = ref<{ id: number; label: string }[]>([])
 const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
@@ -839,7 +884,7 @@ onMounted(() => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.el-table__body-wrapper tr:nth-last-child(-n+3)) {
+:deep(.el-table__body-wrapper tr:nth-last-child(-n + 3)) {
   display: none;
 }
 :deep(.center-select) {
@@ -907,8 +952,8 @@ onMounted(() => {
     }
 
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
