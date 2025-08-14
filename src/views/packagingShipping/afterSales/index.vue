@@ -102,7 +102,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -280,7 +280,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -442,7 +442,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -569,7 +569,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -712,7 +712,7 @@
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.remark) }}</div>
                 </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.remark) }}</div>
+                <div class="multi-line-ellipsis" v-html="row.remark"></div>
               </el-tooltip>
             </template>
           </el-table-column>
