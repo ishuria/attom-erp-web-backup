@@ -988,13 +988,7 @@ const fetchData = async () => {
     listLoading.value = false
     list.value.forEach((item: any) => {
       item.suppliser = item.suppliser.replaceAll(',', '<br>')
-      // item.remark = item.remark.replace(/,/g, '<br>');
-      item.remark = item.remark
-        .split(', ')
-        .map((item: string) => {
-          return item.split(' ')[0] + item.slice(item.indexOf('：'))
-        })
-        .join('<br>')
+      item.remark = item.remark.replace(/,/g, '\n')
       item.hide = false
       if (!item.voucherUrl) {
         item.hide = false
