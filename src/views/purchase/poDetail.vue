@@ -351,7 +351,7 @@
                 </div>
                 <span>{{ row.useStockCount }}</span>
               </span>
-              
+
               <span v-if="item.label === '出厂单价'">
                 <div class="none">
                   <el-input
@@ -558,26 +558,26 @@
           <el-table-column fixed="right" label="操作" min-width="160">
             <template #default="{ row, $index }">
               <el-dropdown>
-              <el-button text type="primary" @click="handleUpdateComponentPrice(row)">
-                更新单价
-                <el-icon class="el-icon--right">
-                  <arrow-down />
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                <el-dropdown-item @click="handleUpdateComponentPrice(row)">
-                    <el-link type="primary" underline='never' >更新单价</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="handleDelPoSKuComponent(row, $index)">
-                    <el-link type="danger" underline='never' >删除</el-link>
-                  </el-dropdown-item>
-                  <el-dropdown-item @click="showModify(row)">
-                    <el-link type="primary" underline='never' >修改零件报关</el-link>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+                <el-button text type="primary" @click="handleUpdateComponentPrice(row)">
+                  更新单价
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="handleUpdateComponentPrice(row)">
+                      <el-link type="primary" underline="never">更新单价</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleDelPoSKuComponent(row, $index)">
+                      <el-link type="danger" underline="never">删除</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="showModify(row)">
+                      <el-link type="primary" underline="never">修改零件报关</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -901,12 +901,14 @@
               库存
             </template>
           </el-table-column>
-          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')" >
+          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')">
             <template #header>
-              采购<br />单位
+              采购
+              <br />
+              单位
             </template>
           </el-table-column>
-       
+
           <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
             <template #header>
               出厂
@@ -1197,7 +1199,7 @@
           </el-table-column>
           <el-table-column align="center" fixed="right" label="操作" min-width="100">
             <template #default="{ $index }">
-              <el-link type="danger" underline='never' @click="handleCreateDelComponent($index)">删除</el-link>
+              <el-link type="danger" underline="never" @click="handleCreateDelComponent($index)">删除</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -1431,9 +1433,11 @@
               库存
             </template>
           </el-table-column>
-          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')" >
+          <el-table-column align="center" label="采购单位" prop="unit" :width="flexColumnWidth(skuComponentList, '单位', 'unit')">
             <template #header>
-              采购<br />单位
+              采购
+              <br />
+              单位
             </template>
           </el-table-column>
           <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(skuComponentList, '出厂', 'unitPrice')">
@@ -1587,9 +1591,11 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" min-width="130" >
+          <el-table-column fixed="right" label="操作" min-width="130">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="handleShowModify(row)">{{ route.query.tab === 'view' ? '查看' : '修改' }}零件报关</el-link>
+              <el-link type="primary" underline="never" @click="handleShowModify(row)">
+                {{ route.query.tab === 'view' ? '查看' : '修改' }}零件报关
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -1759,9 +1765,7 @@ defineOptions({
 })
 
 const modifyVisible = ref<boolean>(false)
-const modifyForm = reactive<any>({
-
-})
+const modifyForm = reactive<any>({})
 const handleShowModify = async (row: any) => {
   if (route.query.tab === 'view') {
     await fetchPurchaseComponentCustomInfo(row)
@@ -1775,7 +1779,7 @@ const fetchPurchaseComponentCustomInfo = async (row: any) => {
   Object.assign(modifyForm, data)
 }
 const showModify = (row: any) => {
-  $baseConfirm("需要一起修改否则报关资料会有错误！", null, async () => {
+  $baseConfirm('需要一起修改否则报关资料会有错误！', null, async () => {
     await fetchPurchaseComponentCustomInfo(row)
   })
 }
@@ -2192,6 +2196,7 @@ const handleAddComponent = async () => {
     $baseMessage('请先创建SKU', 'warning')
     return
   }
+  sku.value = poDetailData.value.sku
   createComponentVisible.value = true
 }
 //点击添加耗材
@@ -2200,6 +2205,7 @@ const handleAddConsumable = () => {
     $baseMessage('请先创建SKU', 'warning')
     return
   }
+  sku.value = poDetailData.value.sku
   createConsumableVisible.value = true
 }
 
@@ -2583,7 +2589,7 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
 }
 // let deleteRow: any
 // const changeDeleteInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
- 
+
 //   const firstChild = cell?.children[0]?.children[0]
 //   const secondChild = cell?.children[0]?.children[1]
 
@@ -3348,7 +3354,6 @@ const fetchData = async () => {
   } catch (error) {
     console.error(error)
   }
-  sku.value = poDetailData.value.sku
 }
 
 // 获取po的skuId列表
