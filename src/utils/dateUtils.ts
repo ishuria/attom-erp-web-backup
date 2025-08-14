@@ -16,12 +16,12 @@ export function formatDate(date: Date = new Date(), format = 'yyyy-MM-dd'): stri
   }
 
   if (/(y+)/.test(format)) {
-    format = format.replace(RegExp.$1, (`${date.getFullYear()}`).substr(4 - RegExp.$1.length))
+    format = format.replace(RegExp.$1, `${date.getFullYear()}`.substr(4 - RegExp.$1.length))
   }
 
   for (let k in map) {
     if (new RegExp(`(${k})`).test(format)) {
-      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? map[k].toString() : (`00${map[k]}`).substr((`${map[k]}`).length))
+      format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? map[k].toString() : `00${map[k]}`.substr(`${map[k]}`.length))
     }
   }
 
@@ -82,28 +82,28 @@ export function daysBetween(date1: Date, date2: Date): number {
  */
 // 日期初始化
 export function getDefaultStringTime(): [string, string] {
-  const today = new Date();
-  const lastMonthDate = new Date(today.getFullYear(), today.getMonth(), 2);
+  const today = new Date()
+  const lastMonthDate = new Date(today.getFullYear(), today.getMonth(), 2)
   // 今天的日期
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
   // 格式化为字符串形式
-  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0];
-  const formattedTodayDate = todayDate.toISOString().split('T')[0];
-  return [formattedLastMonthDate, formattedTodayDate];
+  const formattedLastMonthDate = lastMonthDate.toISOString().split('T')[0]
+  const formattedTodayDate = todayDate.toISOString().split('T')[0]
+  return [formattedLastMonthDate, formattedTodayDate]
 }
 /**
  *
  * @returns 获取当前日期的前30天
  */
 export function getLast30DaysStringTime(): [string, string] {
-  const today = new Date();
-  const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29);
+  const today = new Date()
+  const thirtyDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29)
   // 今天的日期
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
   // 格式化为字符串形式
-  const formattedThirtyDaysAgo = thirtyDaysAgo.toISOString().split('T')[0];
-  const formattedTodayDate = todayDate.toISOString().split('T')[0];
-  return [formattedThirtyDaysAgo, formattedTodayDate];
+  const formattedThirtyDaysAgo = thirtyDaysAgo.toISOString().split('T')[0]
+  const formattedTodayDate = todayDate.toISOString().split('T')[0]
+  return [formattedThirtyDaysAgo, formattedTodayDate]
 }
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
@@ -113,7 +113,7 @@ export function getWeekOfYear(date: Date | string | number): string {
   // 确保当前日期 date 参数可以被解析为有效的日期对象
   const currentDate = new Date(date)
   if (isNaN(currentDate.getTime())) {
-    throw new TypeError("提供的日期无效")
+    throw new TypeError('提供的日期无效')
   }
 
   const year = currentDate.getFullYear()
@@ -134,28 +134,27 @@ export function getWeekOfYear(date: Date | string | number): string {
  * @returns `${year}${month}${day}`
  */
 export const getCurrentFormatDate = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');  // 月份从0开始，所以加1
-  const day = date.getDate().toString().padStart(2, '0');  // 补充0到日期
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0') // 月份从0开始，所以加1
+  const day = date.getDate().toString().padStart(2, '0') // 补充0到日期
 
-  return `${year}${month}${day}`;
-};
-
+  return `${year}${month}${day}`
+}
 
 /**
  * @description 获取当年日期范围
  * @returns
  */
 export function getThisYearStringTime(): [string, string] {
-  const today = new Date();
-  const startOfYear = new Date(today.getFullYear(), 0, 1 + 1); // 1月是0索引
-  const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  const today = new Date()
+  const startOfYear = new Date(today.getFullYear(), 0, 1 + 1) // 1月是0索引
+  const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
 
-  const formattedStart = startOfYear.toISOString().split('T')[0];
-  const formattedEnd = endOfToday.toISOString().split('T')[0];
+  const formattedStart = startOfYear.toISOString().split('T')[0]
+  const formattedEnd = endOfToday.toISOString().split('T')[0]
 
-  return [formattedStart, formattedEnd];
+  return [formattedStart, formattedEnd]
 }
 
 /**

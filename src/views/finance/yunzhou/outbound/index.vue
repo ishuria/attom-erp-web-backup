@@ -214,7 +214,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { checkOutboundNotMatchInvoiceExport, getOutBoundList, getOutboundInventoryCheck } from '/@/api/devlocal/finance'
-import type { IGetOutBoundList, IGetOutBoundListReq, IGetOutboundInventoryCheckList } from '/@/type/finance/financeType'
+import type { IGetOutBoundList, IGetOutboundInventoryCheckList } from '/@/type/finance/financeType'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -222,12 +222,10 @@ defineOptions({
   name: 'Outbound',
 })
 const date = ref<[string, string]>(getDefaultStringTime())
-const queryForm = reactive<IGetOutBoundListReq>({
+const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  fromDate: date.value[0],
-  toDate: date.value[1],
 })
 const list = ref<IGetOutBoundList[]>([])
 const total = ref<number>(0)
@@ -278,13 +276,13 @@ const showWhVerify = async () => {
 
 const showSummary = async () => {
   const { data } = await checkOutboundNotMatchInvoiceExport({
-    fromDate: date.value[0],
-    toDate: date.value[1],
+    fromDate: formatDate(new Date(date.value[0])),
+    toDate: formatDate(new Date(date.value[1])),
   })
   if (data) {
     await downloadFilePD('/outbound/notMatch/invoiceExport', {
-      fromDate: date.value[0],
-      toDate: date.value[1],
+      fromDate: formatDate(new Date(date.value[0])),
+      toDate: formatDate(new Date(date.value[1])),
     })
   }
 }
@@ -313,15 +311,14 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   if (row.redStatus === 1) {
     return 'danger-row'
   }
-  return ""
-};
-
+  return ''
+}
 
 // 导出
 const handleExport = async () => {
   await downloadFilePD('/outbound/export', {
-    fromDate: date.value[0],
-    toDate: date.value[1],
+    fromDate: formatDate(new Date(date.value[0])),
+    toDate: formatDate(new Date(date.value[1])),
   })
     .then(() => {})
     .catch((error) => {
@@ -342,8 +339,8 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const queryDateData = () => {
-  queryForm.fromDate = date.value[0]
-  queryForm.toDate = date.value[1]
+  queryForm.fromDate = formatDate(new Date(date.value[0]))
+  queryForm.toDate = formatDate(new Date(date.value[1]))
   fetchData()
 }
 const queryData = () => {
@@ -368,6 +365,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
 }
 const fetchData = async () => {
+  queryForm.fromDate = formatDate(new Date(date.value[0]))
+  queryForm.toDate = formatDate(new Date(date.value[1]))
   listLoading.value = true
   const { data } = await getOutBoundList(queryForm)
   total.value = data?.total!
