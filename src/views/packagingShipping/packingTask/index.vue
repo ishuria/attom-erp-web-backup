@@ -6,8 +6,22 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowStartTask"
+                >
+                  开始任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
                 <!-- <el-button class="button-margin" type="warning" @click="handleOpenTest">测试模拟打卡</el-button> -->
               </el-form-item>
@@ -141,28 +155,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -187,10 +225,38 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowCurrentTask">当前任务加人</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowFinishTask">结束任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowStartTask"
+                >
+                  开始任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_ADD_PERSON] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowCurrentTask"
+                >
+                  当前任务加人
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_END] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowFinishTask"
+                >
+                  结束任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -318,28 +384,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -364,8 +454,22 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowStartTask"
+                >
+                  开始任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -493,28 +597,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -539,8 +667,22 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowStartTask"
+                >
+                  开始任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -667,28 +809,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -713,8 +879,22 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowStartTask">开始任务</el-button>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowStartTask"
+                >
+                  开始任务
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -842,28 +1022,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -888,7 +1092,14 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary" @click="handleShowGetOffWork">下班</el-button>
+                <el-button
+                  v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
+                  class="button-margin"
+                  type="primary"
+                  @click="handleShowGetOffWork"
+                >
+                  下班
+                </el-button>
                 <el-button class="button-margin" type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
@@ -1015,28 +1226,52 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="getPackageCodePath(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
                       <el-link type="primary" underline="never">条码文件夹</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowPartsList(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
                       <el-link type="primary" underline="never">零件清单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowQualityInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">打包质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showNewInspectionReport(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
                       <el-link type="primary" underline="never">新品质检</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showBarcode(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
                       <el-link type="primary" underline="never">生成条形码</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showSplitTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
                       <el-link type="primary" underline="never">拆分</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModify(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
                       <el-link type="primary" underline="never">站点修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="handleShowModifyTask(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
                       <el-link type="primary" underline="never">任务数修改</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -1493,7 +1728,9 @@
 import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
+import PackingTaskPermission from '~/src/permissions/packingTask'
 import { formatDate } from '~/src/utils/dateUtils'
+import { hasPermission } from '~/src/utils/permission'
 import { sizeOption } from '../constantOption'
 import {
   addQualityCheck,

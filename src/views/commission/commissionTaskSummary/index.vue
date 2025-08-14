@@ -41,9 +41,9 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" prop="userName" :width="flexColumnWidth(list, '人员', 'userName')" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -92,11 +92,32 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="showPictureUpdate(row)">修改</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="danger" underline='never' @click="handlePausePicture(row)">暂停</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="success" underline='never' @click="handleContinuePicture(row)">继续</el-link>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_PICTURE_UPDATE] })"
+                type="primary"
+                underline="never"
+                @click="showPictureUpdate(row)"
+              >
+                修改
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_PICTURE_PAUSE] })"
+                type="danger"
+                underline="never"
+                @click="handlePausePicture(row)"
+              >
+                暂停
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_PICTURE_CONTINUE] })"
+                type="success"
+                underline="never"
+                @click="handleContinuePicture(row)"
+              >
+                继续
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -122,7 +143,7 @@
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel >
+          <vab-query-form-right-panel>
             <el-form inline :model="longQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -146,9 +167,9 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" prop="userName" :width="flexColumnWidth(longList, '人员', 'userName')" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -183,11 +204,32 @@
           <el-table-column label="合作加成" min-width="100" prop="cooperationBonus" />
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="showLongUpdate(row)">修改</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="danger" underline='never' @click="handlePauseLong(row)">暂停</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="success" underline='never' @click="handleContinueLong(row)">继续</el-link>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_LONG_UPDATE] })"
+                type="primary"
+                underline="never"
+                @click="showLongUpdate(row)"
+              >
+                修改
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_LONG_PAUSE] })"
+                type="danger"
+                underline="never"
+                @click="handlePauseLong(row)"
+              >
+                暂停
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_LONG_CONTINUE] })"
+                type="success"
+                underline="never"
+                @click="handleContinueLong(row)"
+              >
+                继续
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -228,9 +270,9 @@
             </template>
           </el-table-column>
           <el-table-column label="人员" min-width="120" prop="userName" />
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -256,11 +298,32 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="150">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="showDevelopUpdate(row)">修改</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="danger" underline='never' @click="handlePauseDevelop(row)">暂停</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link type="success" underline='never' @click="handleContinueDevelop(row)">继续</el-link>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_DEVELOP_UPDATE] })"
+                type="primary"
+                underline="never"
+                @click="showDevelopUpdate(row)"
+              >
+                修改
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_DEVELOP_PAUSE] })"
+                type="danger"
+                underline="never"
+                @click="handlePauseDevelop(row)"
+              >
+                暂停
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_DEVELOP_CONTINUE] })"
+                type="success"
+                underline="never"
+                @click="handleContinueDevelop(row)"
+              >
+                继续
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -310,9 +373,9 @@
               <el-tag v-if="row.status === '待审核'" type="primary">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -347,15 +410,55 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-link v-if="row.status === '待审核'" type="success" underline='never' @click="handlePassCost(row)">审核通过</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link v-if="row.status === '待审核'" type="danger" underline='never' @click="handleNotPassCost(row)">不通过</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="primary" underline='never' @click="showCostUpdate(row)">修改</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="warning" underline='never' @click="handlePauseCost(row)">暂停</el-link>
-              <span style="margin: 0 3px;"></span>
-              <el-link v-if="row.status === '进行中' || row.status === '暂停'" type="success" underline='never' @click="handleContinueCost(row)">继续</el-link>
+              <el-link
+                v-if="row.status === '待审核'"
+                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PASS] }"
+                type="success"
+                underline="never"
+                @click="handlePassCost(row)"
+              >
+                审核通过
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="row.status === '待审核'"
+                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_NOT_PASS] }"
+                type="danger"
+                underline="never"
+                @click="handleNotPassCost(row)"
+              >
+                不通过
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="row.status === '进行中' || row.status === '暂停'"
+                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_UPDATE] }"
+                type="primary"
+                underline="never"
+                @click="showCostUpdate(row)"
+              >
+                修改
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="row.status === '进行中' || row.status === '暂停'"
+                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PAUSE] }"
+                type="warning"
+                underline="never"
+                @click="handlePauseCost(row)"
+              >
+                暂停
+              </el-link>
+              <span style="margin: 0 3px"></span>
+              <el-link
+                v-if="row.status === '进行中' || row.status === '暂停'"
+                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_CONTINUE] }"
+                type="success"
+                underline="never"
+                @click="handleContinueCost(row)"
+              >
+                继续
+              </el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -434,12 +537,7 @@
     </vab-dialog>
     <!-- 产品开发设计修改 -->
     <vab-dialog v-model="developUpdateVisible" title="产品开发设计修改" width="20%">
-      <el-form
-        label-position="right"
-        label-width="auto"
-        :model="developForm"
-        style="margin: 0"
-      >
+      <el-form label-position="right" label-width="auto" :model="developForm" style="margin: 0">
         <el-form-item label="基础比例" prop="baseProportion">
           <el-input v-model="developForm.baseProportion" type="number" />
         </el-form-item>
@@ -480,7 +578,9 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import CommissionPermission from '~/src/permissions/commission'
 import handleClipboard from '~/src/utils/clipboard'
+import { hasPermission } from '~/src/utils/permission'
 import { designTypeOption } from '../../newProductTask/constantOption'
 import {
   continueCommissionTaskPicture,
@@ -531,13 +631,13 @@ const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: -1
+  designTaskId: -1,
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  designTaskId: -1
+  designTaskId: -1,
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
@@ -988,7 +1088,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 }
 onBeforeMount(() => {
   fetchSiteList()
-  switch(activeName.value) {
+  switch (activeName.value) {
     case 0: {
       fetchData()
       break
