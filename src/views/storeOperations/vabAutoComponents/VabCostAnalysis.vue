@@ -300,6 +300,11 @@
           <span>{{ row.tariffPrice != null ? '￥' + row.tariffPrice : '' }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="VAT" min-width="100" prop="vat">
+        <template #default="{ row }">
+          <span>{{ row.vat != null ?  row.vat + '%' : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="平台佣金" min-width="100" prop="platformCommission">
         <template #default="{ row }">
           <div class="none">
