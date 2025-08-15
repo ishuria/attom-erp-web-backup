@@ -97,6 +97,10 @@ export interface IGetOperationAmazonCostList {
    */
   tariffPrice?: string
   /**
+   * VAT
+   */
+  vat?: number
+  /**
    * 币种符号
    */
   symbol?: string
