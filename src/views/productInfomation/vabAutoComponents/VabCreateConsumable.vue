@@ -1,31 +1,28 @@
 <template>
   <!-- 创建耗材 -->
-  <vab-dialog 
-    v-model="visible" 
-    :before-close="handleCloseDialog" 
-    class="moldDialog"
-    title="创建耗材"
-    width="570"
-  >
-    <el-divider style="margin-top: 0;"/>
-    <el-form ref="formRef" class="demo-form" label-position="right" label-width="auto" :model="form" :rules="rules" style="margin-right: 10px; margin-left: 10px;" >
+  <vab-dialog v-model="visible" :before-close="handleCloseDialog" class="moldDialog" title="创建耗材" width="570">
+    <el-divider style="margin-top: 0" />
+    <el-form
+      ref="formRef"
+      class="demo-form"
+      label-position="right"
+      label-width="auto"
+      :model="form"
+      :rules="rules"
+      style="margin-right: 10px; margin-left: 10px"
+    >
       <el-form-item label="耗材名" prop="componentName">
         <el-input v-model="mergedPartName" disabled />
-      </el-form-item>  
+      </el-form-item>
       <el-form-item label="耗材种类" prop="materialType">
-        <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类" >
-          <el-option
-            v-for="item in consumableTypeOption"
-            :key="item.id"
-            :label="item.consumablesName"
-            :value="item.id"
-          />
+        <el-select v-model="form.materialType" clearable placeholder="请选择耗材种类">
+          <el-option v-for="item in consumableTypeOption" :key="item.id" :label="item.consumablesName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-row style="margin-bottom: 18px;">
+      <el-row style="margin-bottom: 18px">
         <el-col :span="12">
           <el-form-item label="耗材尺寸" prop="size">
-            <el-input v-model="form.size" clearable placeholder="22x15x10"/>
+            <el-input v-model="form.size" clearable placeholder="22x15x10" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -35,10 +32,13 @@
         </el-col>
       </el-row>
       <el-form-item label="规格/说明" prop="specification">
-        <el-input v-model="form.specification" clearable placeholder="三层加硬空白"/>
+        <el-input v-model="form.specification" clearable placeholder="三层加硬空白" />
       </el-form-item>
-        <el-form-item label="按单采购" prop="status">
-      <el-switch v-model="form.status" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;"/>
+      <el-form-item label="采购链接" prop="purchaseLink">
+        <el-input v-model="form.purchaseLink" clearable placeholder="请输入采购链接" />
+      </el-form-item>
+      <el-form-item label="按单采购" prop="status">
+        <el-switch v-model="form.status" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66" />
       </el-form-item>
       <el-form-item label="零件单位" prop="unit">
         <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
@@ -57,24 +57,19 @@
           @blur="handleInput"
           @change="handleTaxDisabled"
         >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="开票" prop="invoicing">
-        <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%;" @change="handleInvoicingTaxChange">
+        <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleInvoicingTaxChange">
           <el-option v-for="dict in invoicingNumList" :key="dict.value" :label="dict.label" :value="dict.value" />
         </el-select>
       </el-form-item>
       <el-form-item v-show="taxVisible" label="实际税点" prop="actualTaxRate">
-        <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
+        <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13" />
       </el-form-item>
       <el-form-item v-show="taxVisible" label="开票税点" prop="invoicingTaxRate">
-        <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13"/>
+        <el-input v-model="form.invoicingTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -91,12 +86,12 @@ import type { FormInstance } from 'element-plus'
 import { getProductAllSupplier, getProductSupplier } from '/@/api/devlocal/productInformation'
 
 defineOptions({
-  name: 'VabCreateConsumable'
+  name: 'VabCreateConsumable',
 })
 
 const props = defineProps<{
   modelValue: boolean
-  consumableTypes: { consumablesName: string, id: number }[]
+  consumableTypes: { consumablesName: string; id: number }[]
 }>()
 const emit = defineEmits(['update:modelValue', 'submit'])
 const visible = computed({
@@ -116,7 +111,7 @@ const handleInvoicingTaxChange = async (value: number) => {
   } else {
     taxVisible.value = true
   }
-  if(form.supplier) {
+  if (form.supplier) {
     handleTaxDisabled(form.supplier)
   }
 }
@@ -145,12 +140,10 @@ const form = reactive<any>({
   status: 0,
   size: '',
   sizeUnit: '',
-  specification: ''
+  specification: '',
 })
 const rules = reactive({
-  materialType: [
-    { required: true, message: '请选择耗材种类', trigger: 'change' },
-  ],
+  materialType: [{ required: true, message: '请选择耗材种类', trigger: 'change' }],
   size: [
     { required: true, message: '请填写耗材尺寸', trigger: 'blur' },
     { validator: validateNoSpaces, trigger: 'blur' },
@@ -167,24 +160,20 @@ const rules = reactive({
     { required: true, message: '请填写规格和说明', trigger: 'blur' },
     { validator: validateNoSpaces, trigger: 'blur' },
   ],
-  suppliser: [
-    { required: true, message: '请填写供应商名称', trigger: 'blur' },
-  ],
-  invoicing: [
-    { required: true, message: '请选择开票类型', trigger: 'change' },
-  ],
+  suppliser: [{ required: true, message: '请填写供应商名称', trigger: 'blur' }],
+  invoicing: [{ required: true, message: '请选择开票类型', trigger: 'change' }],
   actualTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
         if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
-          callback(new Error('请填写实际税点'));
+          callback(new Error('请填写实际税点'))
         } else {
-          callback();
+          callback()
         }
         if (/\s/.test(value)) {
-          callback(new Error('输入不能包含空格'));
+          callback(new Error('输入不能包含空格'))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: 'blur',
@@ -194,25 +183,25 @@ const rules = reactive({
     {
       validator: (rule: any, value: any, callback: any) => {
         if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
-          callback(new Error('请填写开票税点'));
+          callback(new Error('请填写开票税点'))
         } else {
-          callback();
+          callback()
         }
         if (/\s/.test(value)) {
-          callback(new Error('输入不能包含空格'));
+          callback(new Error('输入不能包含空格'))
         } else {
-          callback();
+          callback()
         }
       },
       trigger: 'blur',
     },
   ],
 })
-function validateNoSpaces (rule: any, value: any, callback: any) {
+function validateNoSpaces(rule: any, value: any, callback: any) {
   if (/\s/.test(value)) {
-    callback(new Error('输入不能包含空格'));
+    callback(new Error('输入不能包含空格'))
   } else {
-    callback();
+    callback()
   }
 }
 // 耗材名自动生成
@@ -222,7 +211,7 @@ const mergedPartName = computed(() => {
     const i = consumableTypeOption.value.find((item: any) => item.id === form.materialType)
     type = i?.consumablesName || ''
   }
-  
+
   return `${type}-${form.size}${form.sizeUnit}-${form.specification}`
 })
 const loading = ref(false) //供应商搜索loading
@@ -233,7 +222,7 @@ const remoteMethod = async (query: string) => {
   if (query) {
     // 先获取供应商信息
     const { data } = await getProductAllSupplier({
-      suppliserName: query
+      suppliserName: query,
     })
     // console.log(data);
     supplierList.value = data.map((item: any) => {
@@ -258,18 +247,18 @@ const handleInput = (e: any) => {
   }
 }
 const handleTaxDisabled = async (value: string) => {
-  if(value) {
+  if (value) {
     const { data } = await getProductSupplier({ suppliserName: value })
-    
-    if(data === null) {
+
+    if (data === null) {
       taxDisabled.value = false
     } else {
       const { actualPTaxRate, actualZTaxRate, invoicingPTaxRate, invoicingZTaxRate } = data
       taxDisabled.value = true
-      if(form.invoicing === 0) {
+      if (form.invoicing === 0) {
         form.actualTaxRate = actualZTaxRate
         form.invoicingTaxRate = invoicingZTaxRate
-      } else if(form.invoicing === 1) {
+      } else if (form.invoicing === 1) {
         form.actualTaxRate = actualPTaxRate
         form.invoicingTaxRate = invoicingPTaxRate
       } else {

@@ -84,7 +84,7 @@
                     <el-checkbox
                       v-model="poDetailData.qualityMark"
                       class="custom-checkbox"
-                      :disabled="route.query.from !== 'plannedPoDetail'"
+                      :disabled="route.query.del === 'true'"
                       :false-value="0"
                       :true-value="1"
                       @change="handleUpdateQualityMark"

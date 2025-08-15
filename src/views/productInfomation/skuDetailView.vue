@@ -511,6 +511,9 @@
         <el-form-item v-if="form.type === 1" label="规格/说明" prop="specification">
           <el-input v-model="form.specification" clearable placeholder="三层加硬空白" />
         </el-form-item>
+        <el-form-item v-if="form.type === 1" label="采购链接" prop="purchaseLink">
+          <el-input v-model="form.purchaseLink" clearable placeholder="请输入采购链接" />
+        </el-form-item>
         <el-form-item v-if="form.type === 1" label="按单采购" prop="isSinglePurchase">
           <el-switch v-model="form.isSinglePurchase" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66" />
         </el-form-item>
@@ -821,6 +824,7 @@ const form = reactive<any>({
   invoicing: 0,
   actualTaxRate: '',
   invoicingTaxRate: '',
+  purchaseLink: '',
 })
 const tableData = ref<any>([])
 const imageColumnHeight = ref<number>(0)

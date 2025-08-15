@@ -201,6 +201,10 @@ export interface IGetSellingPoint {
   usageScenario?: string
   summaryId?: number
   artDesignTaskId?: number
+  title1?: string
+  title2?: string
+  linkKeywordsTs?: string
+  sellingPointContentTs?: string
 }
 export interface IConfirmOtherSkuArtDesignSellingPointRes {
   data: IConfirmOtherSkuArtDesignSellingPoint

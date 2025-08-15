@@ -1,18 +1,26 @@
 <template>
   <div class="comprehensive-form-container">
     <div style="display: flex; flex-direction: column; min-height: calc(var(--el-container-height) - 44px)">
-      <el-page-header @back="goBack" >
+      <el-page-header @back="goBack">
         <template #content>
           <span class="text-large font-600 mr-3">{{ route.query.sku ? route.query.sku : '' }}</span>
-          <span class="text-large font-600 mr-3"> 卖点 </span>
+          <span class="text-large font-600 mr-3">卖点</span>
           <span class="text-large font-600 mr-3" style="color: var(--el-color-primary)">(输入后系统自动保存)</span>
         </template>
       </el-page-header>
       <div style="display: flex; flex: 1; flex-direction: column">
-        <el-row :gutter="30" style=" display: flex;flex-grow: 1; align-items: center; justify-content: center;">
+        <el-row :gutter="40" style="display: flex; flex-grow: 1; align-items: flex-start; justify-content: center; padding: 20px 0">
           <!-- 左侧表单 -->
-          <el-col :span="10" style="display: flex; flex-direction: column;">
-            <el-form ref="formRef1" class="custom-form" label-position="right" label-width="15em" :model="form" :rules="formRules1" style="width: 100%; padding-right: 80px">
+          <el-col :span="8" style="display: flex; flex-direction: column">
+            <el-form
+              ref="formRef1"
+              class="custom-form"
+              label-position="right"
+              label-width="15em"
+              :model="form"
+              :rules="formRules1"
+              style="width: 100%; padding-right: 80px"
+            >
               <el-form-item label="产品差异化程度" prop="productDifferences">
                 <el-select v-model="form.productDifferences" @change="setLocalStorageData">
                   <el-option v-for="item in differencesOption" :key="item.id" :label="item.label" :value="item.id" />
@@ -42,7 +50,12 @@
                 <el-input v-model="form.competitiveAsin" clearable @change="setLocalStorageData" />
               </el-form-item>
               <el-form-item label="同赛道ASIN" prop="sameTrackAsin">
-                <el-input v-model="form.sameTrackAsin" clearable placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的" @change="setLocalStorageData" />
+                <el-input
+                  v-model="form.sameTrackAsin"
+                  clearable
+                  placeholder="提供至少2个产品价格定位和类型与我们一致的ASIN：上线时间长卖得好的成熟ASIN，以及新品卖得好的"
+                  @change="setLocalStorageData"
+                />
               </el-form-item>
               <el-form-item label="链接关键词" prop="linkKeywords">
                 <el-input v-model="form.linkKeywords" type="textarea" @change="setLocalStorageData" />
@@ -53,40 +66,71 @@
             </el-form>
           </el-col>
 
-          <!-- 右侧表单 -->
-          <el-col :span="10" style=" display: flex; justify-content: flex-start;padding: 45px;"> 
-            <el-form :model="form" style="width: 100%" >
-              <el-form-item 
+          <!-- 中间表单 -->
+          <el-col :span="8" style="display: flex; flex-direction: column">
+            <el-form :model="form" style="width: 100%">
+              <el-form-item
                 label="功能/卖点/5点&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&ensp;(重要性从高到低排列)"
-                label-width="11.5em" 
-                prop="sellingPointContent" 
-                :rules="[
-                  { required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }
-                ]"
+                label-width="11.5em"
+                prop="sellingPointContent"
+                :rules="[{ required: true, message: '请输入功能/卖点/5点(重要性从高到低排列)', trigger: 'blur' }]"
               >
-                <el-input v-model="form.sellingPointContent" resize="none" :rows="36"  style="flex-grow: 1;" type="textarea" @change="setLocalStorageData" />
+                <el-input
+                  v-model="form.sellingPointContent"
+                  resize="none"
+                  :rows="36"
+                  style="flex-grow: 1"
+                  type="textarea"
+                  @change="setLocalStorageData"
+                />
               </el-form-item>
             </el-form>
-          
+          </el-col>
+
+          <!-- 右侧表单 -->
+          <el-col :span="8" style="display: flex; flex-direction: column">
+            <el-form
+              ref="formRef"
+              class="custom-form"
+              label-position="right"
+              label-width="10.5em"
+              :model="form"
+              style="width: 100%; height: 100%"
+            >
+              <el-form-item label="标题1" prop="title1">
+                <el-input v-model="form.title1" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
+              </el-form-item>
+              <el-form-item label="标题2" prop="title2">
+                <el-input v-model="form.title2" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
+              </el-form-item>
+              <el-form-item label="链接关键词(译文)" prop="linkKeywordsTs">
+                <el-input v-model="form.linkKeywordsTs" resize="none" :rows="4" type="textarea" @change="setLocalStorageData" />
+              </el-form-item>
+              <el-form-item label="功能/卖点/5点(译文)" prop="sellingPointContentTs">
+                <el-input
+                  v-model="form.sellingPointContentTs"
+                  resize="none"
+                  :rows="20"
+                  style="flex-grow: 1"
+                  type="textarea"
+                  @change="setLocalStorageData"
+                />
+              </el-form-item>
+            </el-form>
           </el-col>
         </el-row>
 
         <!-- Footer -->
-        <div style="text-align: center;">
+        <div style="text-align: center">
           <el-button type="primary" @click="showSelectSKU">从其他SKU导入</el-button>
           <el-button type="danger" @click="goBack">返回</el-button>
           <el-button type="success" @click="handleConfirmSave">确定</el-button>
         </div>
       </div>
     </div>
-    <vab-dialog
-      v-model="selectSKUVisible"
-      title="从其他SKU导入"
-      width="20%"
-      @close="closeSelectedSKU"
-    >
-      <el-form style="margin: 0 10px;">
-        <el-form-item label="SKU" >
+    <vab-dialog v-model="selectSKUVisible" title="从其他SKU导入" width="20%" @close="closeSelectedSKU">
+      <el-form style="margin: 0 10px">
+        <el-form-item label="SKU">
           <el-select
             v-model="selectedSKUForm.sku"
             default-first-option
@@ -96,17 +140,12 @@
             remote
             :remote-method="remoteSKUMethod"
           >
-            <el-option
-              v-for="item in skuOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
-        <div style="margin-right: 10px;">
+        <div style="margin-right: 10px">
           <el-button @click="closeSelectedSKU">取消</el-button>
           <el-button type="primary" @click="handleConfirmSelectedSKU">确认</el-button>
         </div>
@@ -116,7 +155,15 @@
 </template>
 
 <script lang="ts" setup>
-import { confirmOtherSkuArtDesignSellingPoint, getArtDesignSelectionReasons, getArtDesignSellingPoint, getArtDesignSellingPointDropdownList, getBatchArtDesignSellingPoint, saveArtDesignSellingPoint, saveBatchArtDesignSellingPoint } from '/@/api/devlocal/imageTask'
+import {
+  confirmOtherSkuArtDesignSellingPoint,
+  getArtDesignSelectionReasons,
+  getArtDesignSellingPoint,
+  getArtDesignSellingPointDropdownList,
+  getBatchArtDesignSellingPoint,
+  saveArtDesignSellingPoint,
+  saveBatchArtDesignSellingPoint,
+} from '/@/api/devlocal/imageTask'
 
 import type { FormInstance, FormRules } from 'element-plus'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
@@ -125,7 +172,7 @@ import type { IGetSellingPoint } from '/@/type/listingTask/imageTaskType'
 import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
-  name: 'SellingPoint'
+  name: 'SellingPoint',
 })
 const sku = ref<string>('')
 const route: any = useRoute()
@@ -134,10 +181,10 @@ const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const selectSKUVisible = ref<boolean>(false)
 const selectedSKUForm = reactive<{ sku: string }>({
-  sku: ''
+  sku: '',
 })
-const differencesOption = ref<{ id: number, label: string }[]>([])
-const reasonsOption = ref<{ id: number, label: string }[]>([])
+const differencesOption = ref<{ id: number; label: string }[]>([])
+const reasonsOption = ref<{ id: number; label: string }[]>([])
 const form = reactive<IGetSellingPoint>({
   productDifferences: 0,
   summary: 0,
@@ -150,7 +197,11 @@ const form = reactive<IGetSellingPoint>({
   sameTrackAsin: '',
   linkKeywords: '',
   precautions: '',
-  sellingPointContent: ''
+  sellingPointContent: '',
+  title1: '',
+  title2: '',
+  linkKeywordsTs: '',
+  sellingPointContentTs: '',
 })
 
 const formRules1 = reactive<FormRules>({
@@ -167,18 +218,18 @@ const formRules1 = reactive<FormRules>({
 const formRef1 = ref<FormInstance>()
 
 const skuLoading = ref(false) //搜索SKU-loading
-const skuOptions = ref<{ value: string, label: string }[]>([]) //搜索选项
-const skuList = ref<{ value: string, label: string }[]>([]) //搜索列表
+const skuOptions = ref<{ value: string; label: string }[]>([]) //搜索选项
+const skuList = ref<{ value: string; label: string }[]>([]) //搜索列表
 const _id = ref<number>(0)
 const handleConfirmSelectedSKU = async () => {
   const { data } = await confirmOtherSkuArtDesignSellingPoint({
-    sku: selectedSKUForm.sku
+    sku: selectedSKUForm.sku,
   })
   if (data) {
     $baseMessage('导入成功！', 'success')
     Object.assign(form, data)
     form.id = _id.value
-    
+
     setLocalStorageData()
     selectSKUVisible.value = false
   }
@@ -188,7 +239,6 @@ const closeSelectedSKU = () => {
   selectSKUVisible.value = false
 }
 const handleConfirmSave = async () => {
-  console.log("222")
   formRef1.value?.validate(async (isValid) => {
     if (isValid) {
       if (route.query.sku) {
@@ -196,7 +246,7 @@ const handleConfirmSave = async () => {
         const { data } = await saveArtDesignSellingPoint({
           ...filteredForm,
           artDesignTaskId: Number(route.query.id),
-          summaryId: form.summary
+          summaryId: form.summary,
         })
         if (data) {
           $baseMessage('保存成功！', 'success')
@@ -208,7 +258,7 @@ const handleConfirmSave = async () => {
         const { data } = await saveBatchArtDesignSellingPoint({
           ...filteredForm,
           ids: route.query.ids,
-          summaryId: form.summary
+          summaryId: form.summary,
         })
         if (data) {
           $baseMessage('保存成功！', 'success')
@@ -216,10 +266,8 @@ const handleConfirmSave = async () => {
           goBack()
         }
       }
-     
     }
   })
- 
 }
 const remoteSKUMethod = async (query: string) => {
   if (query) {
@@ -257,8 +305,8 @@ const fetchReasonsOption = async () => {
   reasonsOption.value = data
 }
 const setLocalStorageData = () => {
-  const rawForm = toRaw(form)  // 获取非响应式的原始数据
-  const jsonString = JSON.stringify(rawForm)  // 现在可以进行字符串化了
+  const rawForm = toRaw(form) // 获取非响应式的原始数据
+  const jsonString = JSON.stringify(rawForm) // 现在可以进行字符串化了
   localStorage.setItem(`${sku.value}_sellingPointForm`, jsonString)
 }
 onBeforeMount(async () => {
@@ -274,14 +322,13 @@ onBeforeMount(async () => {
     } else {
       // 没缓存 get数据
       const { data } = await getArtDesignSellingPoint({
-        sku: sku.value
+        sku: sku.value,
       })
       _id.value = data.id!
       Object.assign(form, data)
       // 获取到的数据存储到localStorage
       setLocalStorageData()
     }
-    
   } else {
     // 批量修改，按照skus排序后的进行缓存，进来先排序，查找有缓存，获取缓存的数据；没缓存，请求数据；然后导入其他sku后，修改这个skus对应的数据，
     const querySkus = route.query.skus
@@ -293,7 +340,7 @@ onBeforeMount(async () => {
     } else {
       // 没缓存 get数据
       const { data } = await getBatchArtDesignSellingPoint({
-        skus: sku.value
+        skus: sku.value,
       })
       Object.assign(form, data)
       // 获取到的数据存储到localStorage
@@ -304,7 +351,6 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .custom-form {
   .el-form-item {
     margin-bottom: 25px;

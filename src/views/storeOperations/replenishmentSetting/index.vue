@@ -5,44 +5,51 @@
         <el-space>
           <span>站点</span>
           <el-select v-model="site" placeholder="请选择站点" @change="handleChangeSite">
-            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id"/>
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-button type="primary" @click="handleUpdate">批量修改</el-button>
         </el-space>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item >
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+          <el-form-item>
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keydown.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table 
-      ref="tableRef" 
-      v-loading="listLoading" 
-      border 
-      :cell-class-name="clearPadding" class="noneHoveTable" 
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      class="noneHoveTable"
       :data="list"
-      :header-cell-style="{ textAlign: 'center' }" 
-      stripe 
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @selection-change="setSelectRows"
     >
       <el-table-column align="center" fixed type="selection" width="45" />
-      <el-table-column align="center" label="图片" prop="skuUrl" width="75" >
+      <el-table-column align="center" label="图片" prop="skuUrl" width="75">
         <template #default="{ row }">
           <el-image fit="fill" :src="row.skuUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.skuUrl)">
             <template #error>
-              <el-icon/>
+              <el-icon />
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" min-width="200" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku)" >
+      <el-table-column label="SKU" min-width="200" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku)">
         <template #default="{ row }">
           <span v-html="row._sku"></span>
         </template>
@@ -57,7 +64,7 @@
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -65,24 +72,19 @@
       @size-change="handleSizeChange"
     />
     <!-- 批量修改 -->
-    <vab-dialog 
-      v-model="updateVisible" 
-      :before-close="handlerCloseDialog" 
-      class="moldDialog" 
+    <vab-dialog
+      v-model="updateVisible"
+      :before-close="handlerCloseDialog"
+      class="moldDialog"
       :close-on-click-modal="false"
       title="批量修改"
       width="500"
     >
-      <el-divider style="margin-top: 0;"/>
-      <el-form class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto;">
+      <el-divider style="margin-top: 0" />
+      <el-form class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto">
         <el-form-item label="产品分类" prop="kindId">
-          <el-select v-model="form.kindId" placeholder="请选择产品类别">
-            <el-option 
-              v-for="item in merchandiseTypeList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="form.kindId" filterable placeholder="请选择产品类别">
+            <el-option v-for="item in merchandiseTypeList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="维持库存天数" prop="stockPileNumberDays">
@@ -97,10 +99,10 @@
         <el-button type="primary" @click="handleSubmit">完成</el-button>
       </template>
     </vab-dialog>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
@@ -109,10 +111,10 @@ import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/a
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-    name: 'ReplenishmentSetting',
+  name: 'ReplenishmentSetting',
 })
 
-const siteList = ref<{id: number, label: string}[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const queryForm = reactive<any>({
   keyWord: '',
   site: 0,
@@ -131,8 +133,8 @@ const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
@@ -158,9 +160,9 @@ const setSelectRows = (value: string) => {
 const handlerCloseDialog = () => {
   updateVisible.value = false
 }
-const merchandiseTypeList = ref<{id: number, label: string}[]>([])
+const merchandiseTypeList = ref<{ id: number; label: string }[]>([])
 const handleUpdate = async () => {
-  if(selectRows.value.length > 0) {
+  if (selectRows.value.length > 0) {
     updateVisible.value = true
     // formRef.value?.resetFields()
     const { data } = await getSeasonalCoefficientSite({ site: site.value })
@@ -168,24 +170,23 @@ const handleUpdate = async () => {
   } else {
     $baseMessage('您未选中任何行', 'warning', 'hey')
   }
-
 }
 const ids = ref<any>([]) // 产品补货计ids使用
 const handleSubmit = async () => {
   // formRef.value?.validate(async (isValid: boolean) => {
   //   if (isValid) {
-      selectRows.value.forEach((item: any) => {
-        ids.value.push(item.id)
-      })
-      form.ids = `${ids.value}`
-      const { data } = await updateProductReplenParams({
-        ...form
-      })
-      if (data) {
-        updateVisible.value = false
-        fetchData()
-        $baseMessage('批量修改成功', 'success', 'hey')
-      }
+  selectRows.value.forEach((item: any) => {
+    ids.value.push(item.id)
+  })
+  form.ids = `${ids.value}`
+  const { data } = await updateProductReplenParams({
+    ...form,
+  })
+  if (data) {
+    updateVisible.value = false
+    fetchData()
+    $baseMessage('批量修改成功', 'success', 'hey')
+  }
   //   }
   // })
 }
@@ -215,13 +216,13 @@ const handleCurrentChange = (val: number) => {
 const handleSizeChange = (val: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = val
-  fetchData() 
+  fetchData()
 }
 const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
   siteList.value = data
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.columnIndex === 1) {
     return 'clear-padding'
   }
@@ -236,13 +237,13 @@ onBeforeMount(() => {
   fetchData()
 })
 </script>
-  
+
 <style lang="scss" scoped>
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
 }
-:deep(.moldDialog .el-dialog__body) { 
+:deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
 }
 /* 取消没有条纹的行的悬停背景色 */

@@ -2128,7 +2128,6 @@ const handleGenerateContract = async () => {
           await downloadFile('/purchase/download', {
             fileName,
           })
-          console.log(`下载成功: ${fileName}`)
           // 添加小延迟，避免浏览器阻止下载
           if (i < data.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 100))
