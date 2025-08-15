@@ -1489,6 +1489,7 @@ const handleSubmit = async () => {
         invoicingTaxRate: form.invoicingTaxRate,
         type: form.type,
         status: form.isSinglePurchase,
+        purchaseLink: form.type === 0 ? '' : form.purchaseLink,
       }
       try {
         const { data } = await createProductComponent({
@@ -1501,6 +1502,7 @@ const handleSubmit = async () => {
           invoicingTaxRate: form.invoicingTaxRate,
           type: form.type,
           status: form.isSinglePurchase,
+          purchaseLink: form.type === 0 ? '' : form.purchaseLink,
         })
         if (data) {
           tableData.value.push(newComponent)

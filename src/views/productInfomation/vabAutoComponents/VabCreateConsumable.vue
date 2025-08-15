@@ -281,6 +281,7 @@ const handleSubmit = async () => {
           actualTaxRate: form.actualTaxRate,
           invoicingTaxRate: form.invoicingTaxRate,
           status: form.status,
+          purchaseLink: form.purchaseLink,
         }
         emit('submit', newConsumable)
       } catch (error) {
