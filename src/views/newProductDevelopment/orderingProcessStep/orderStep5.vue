@@ -53,7 +53,7 @@
                 'battery',
                 'benchmarkAsin',
                 'patent',
-                'manufacturerEnglishName',
+                'manufacturerEnName',
               ].includes(row['column0'])
             "
           >
@@ -347,7 +347,7 @@ const labelMap: Record<string, string> = {
   productDesign: '产品设计',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
-  manufacturerEnglishName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
+  manufacturerEnName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
   certificateUpload: '证书上传',
   skuMerge: '合并变体的SKU',
   operate: '操作',
@@ -383,7 +383,7 @@ const buildParams = (key: string) => {
     productDesignId: exchangeList.value[21][key],
     sampleRetention: exchangeList.value[13][key].join(','),
     checkStatus: exchangeList.value[14][key],
-    manufacturerEnglishName: exchangeList.value[15][key],
+    manufacturerEnName: exchangeList.value[15][key],
     orderEntryId: exchangeList.value[19][key],
   }
   return params
@@ -672,7 +672,7 @@ const handleSaveAndContinue = async () => {
         'battery',
         'benchmarkAsin',
         'productManager',
-        'manufacturerEnglishName',
+        'manufacturerEnName',
       ].includes(column0)
     ) {
       for (const key of Object.keys(item)) {
@@ -821,7 +821,7 @@ const fetchVariantList = async () => {
           productDesign: item.productDesign,
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
-          manufacturerEnglishName: item.manufacturerEnglishName,
+          manufacturerEnName: item.manufacturerEnName,
           certificateUpload: item.certificateUpload,
           skuMerge: item.variantSku,
           operate: '操作',
