@@ -183,10 +183,10 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_DETAIL] }" @click="handleSkuDetail(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [SkuPermission.SKU_DETAIL] })" @click="handleSkuDetail(row)">
                   <el-link type="primary" underline="never">SKU详情</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-permissions="{ permission: [SkuPermission.SKU_COPY] }" @click="handleCopySku(row)">
+                <el-dropdown-item v-if="hasPermission({ permission: [SkuPermission.SKU_COPY] })" @click="handleCopySku(row)">
                   <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -235,6 +235,7 @@
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
+import { hasPermission } from '~/src/utils/permission'
 import { copyProductSku, getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { useRoutesStore } from '/@/store/modules/routes'
