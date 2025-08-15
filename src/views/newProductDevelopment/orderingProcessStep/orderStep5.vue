@@ -534,7 +534,7 @@ const handleChangeProductManager = async (row: any, prop: any) => {
 
         // 点击了修改,manager对应的就是id,让managerId就等于id
         exchangeList.value[20][key] = exchangeList.value[11][key]
-        if (exchangeList.value[20][key] === exchangeList.value[20][key]) {
+        if (exchangeList.value[20][key] === exchangeList.value[21][key]) {
           $baseMessage('产品经理和产品设计不能相同！', 'error')
           row[key] = ''
           row[prop] = ''
