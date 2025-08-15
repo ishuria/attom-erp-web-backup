@@ -189,6 +189,11 @@
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
           <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
           <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
+          <el-table-column label="签收日期" min-width="115" prop="signDate">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="含税运费" min-width="100" prop="freight" />
           <el-table-column label="模具含税" min-width="100" prop="moldCost" />
           <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
@@ -208,11 +213,6 @@
           <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
             <template #default="{ row }">
               <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
             </template>
           </el-table-column>
 

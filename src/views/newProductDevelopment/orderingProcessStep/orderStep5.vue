@@ -296,7 +296,7 @@ async function uploadImage(file: File) {
   try {
     let imageForm = new FormData()
     imageForm.append('file', file)
-    imageForm.append('orderEntryId', exchangeList.value[18][_prop])
+    imageForm.append('orderEntryId', exchangeList.value[19][_prop])
 
     // 上传图片
     const { data } = await reviewStepNo5VariantImgUpload(imageForm)
@@ -319,7 +319,7 @@ async function uploadImage(file: File) {
 const handleRemove = async (prop: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗', '系统提示', async () => {
-      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[18][prop] })
+      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[19][prop] })
       if (data === true) {
         $baseMessage('此产品图片信息删除成功!', 'success', 'hey')
         exchangeList.value[0][prop] = ''
