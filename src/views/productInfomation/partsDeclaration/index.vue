@@ -55,6 +55,7 @@
         </template>
       </el-table-column>
       <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
+      <el-table-column fixed="left" label="已有零件id" prop="componentId" :width="flexColumnWidth(list, '已有零件id', 'componentId')" />
       <el-table-column fixed="left" label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
       <el-table-column  label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
         <template #default="{ row }">
