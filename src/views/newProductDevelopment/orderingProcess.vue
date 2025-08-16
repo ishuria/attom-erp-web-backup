@@ -1,19 +1,17 @@
 <template>
   <div class="step-form-container">
-    <el-page-header  style="margin-bottom: 0px;" @back="goBack">
-      <template #title >
-        退出
-      </template>
+    <el-page-header style="margin-bottom: 0px" @back="goBack">
+      <template #title>退出</template>
 
       <template #content>
         <div class="flex items-center">
-          <span> <strong> 新品订货流程 </strong></span>
+          <span><strong>新品订货流程</strong></span>
         </div>
       </template>
     </el-page-header>
     <!-- 编辑 以及 订大货进入 -->
-    <div :class="{ 'none1': isNone1 }">
-      <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px;">
+    <div :class="{ none1: isNone1 }">
+      <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 1100px">
         <el-step title="产品基础信息录入" />
         <el-step title="拿样零件添加" />
         <el-step title="零件信息完善与售价核对" />
@@ -21,44 +19,40 @@
         <el-step title="完善SKU信息" />
         <el-step title="检查并提交" />
       </el-steps>
-      <order-step1 
-        v-if="active === 0" 
-        @change-step="handleSetStep"
-        @send-data-to-step2="setStep2Data"
-      />
-      <order-step2 
+      <order-step1 v-if="active === 0" @change-step="handleSetStep" @send-data-to-step2="setStep2Data" />
+      <order-step2
         v-if="active === 1"
-        :step1-data="step2ReceivedData" 
+        :step1-data="step2ReceivedData"
         @change-step="handleSetStep"
         @update:image-preview-visible="updateUploadPreviewVisible"
         @update:preview-list-value="setPreviewList"
       />
-      <order-step3 
-        v-if="active === 2" 
-        :step1-data="step2ReceivedData" 
+      <order-step3
+        v-if="active === 2"
+        :step1-data="step2ReceivedData"
         @change-step="handleSetStep"
         @update:image-preview-visible="updateUploadPreviewVisible"
         @update:preview-list-value="setPreviewList"
       />
       <order-step4 v-if="active === 3" :step1-data="step2ReceivedData" @change-step="handleSetStep" />
-      <order-step5 
-        v-if="active === 4" 
-        :step1-data="step2ReceivedData" 
+      <order-step5
+        v-if="active === 4"
+        :step1-data="step2ReceivedData"
         @change-step="handleSetStep"
         @update:image-preview-visible="updateUploadPreviewVisible"
         @update:preview-list-value="setPreviewList"
       />
-      <order-step6 
-        v-if="active === 5" 
-        :step1-data="step2ReceivedData"             
+      <order-step6
+        v-if="active === 5"
+        :step1-data="step2ReceivedData"
         @change-step="handleSetStep"
         @update:image-preview-visible="updateUploadPreviewVisible"
         @update:preview-list-value="setPreviewList"
       />
     </div>
     <!-- 只能查看 -->
-    <div :class="{ 'none2': isNone2 }">
-      <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px;">
+    <div :class="{ none2: isNone2 }">
+      <el-steps :active="activeCheck" align-center class="steps" :space="200" style="max-width: 1000px">
         <el-step title="产品基础信息录入" />
         <el-step title="零件信息完善与售价核对" />
         <el-step title="新供应信息完善" />
@@ -66,17 +60,33 @@
         <el-step title="检查并提交" />
       </el-steps>
       <order-check-step1 v-if="activeCheck === 0" @change-check-step="handleCheckSetStep" />
-      <order-check-step2 v-if="activeCheck === 1" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
+      <order-check-step2
+        v-if="activeCheck === 1"
+        @change-check-step="handleCheckSetStep"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
+      />
       <order-check-step3 v-if="activeCheck === 2" @change-check-step="handleCheckSetStep" />
-      <order-check-step4 v-if="activeCheck === 3" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
-      <order-check-step5 v-if="activeCheck === 4" @change-check-step="handleCheckSetStep" @update:image-preview-visible="updateUploadPreviewVisible" @update:preview-list-value="setPreviewList" />
+      <order-check-step4
+        v-if="activeCheck === 3"
+        @change-check-step="handleCheckSetStep"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
+      />
+      <order-check-step5
+        v-if="activeCheck === 4"
+        @change-check-step="handleCheckSetStep"
+        @update:image-preview-visible="updateUploadPreviewVisible"
+        @update:preview-list-value="setPreviewList"
+      />
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { _getStepNo } from '~/src/utils/stepNoState'
 import orderCheckStep1 from './orderingProcessStep/orderCheckStep1.vue'
 import orderCheckStep2 from './orderingProcessStep/orderCheckStep2.vue'
 import orderCheckStep3 from './orderingProcessStep/orderCheckStep3.vue'
@@ -90,7 +100,6 @@ import orderStep5 from './orderingProcessStep/orderStep5.vue'
 import orderStep6 from './orderingProcessStep/orderStep6.vue'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
-import { _getStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
   name: 'OrderingProcess',
@@ -104,7 +113,7 @@ const { delVisitedRoute } = tabsStore
 
 const active = ref<number | undefined>(undefined)
 // 查看跳转,从0开始
-const activeCheck = ref<number | undefined>(undefined)
+const activeCheck = ref<number>(0)
 const isNone1 = ref<boolean>(false)
 const isNone2 = ref<boolean>(false)
 
@@ -116,17 +125,17 @@ const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 // 控制图片是否预览
-const updateUploadPreviewVisible = (newV:boolean) =>{
-    imagePreviewVisible.value = newV
+const updateUploadPreviewVisible = (newV: boolean) => {
+  imagePreviewVisible.value = newV
 }
 // 修改图片预览列表
-const setPreviewList = (imageUrl:string) =>{
-    imagePreviewList.value = []
-    imagePreviewList.value.push(imageUrl)
+const setPreviewList = (imageUrl: string) => {
+  imagePreviewList.value = []
+  imagePreviewList.value.push(imageUrl)
 }
 
 const handleSetStep = (_active: number) => {
@@ -152,23 +161,30 @@ const goBack = async () => {
       path: '/newProductDevelopment/newProductApprovalAndRecords',
     })
   }
-  localStorage.removeItem('orderStep1ReviewId')
 }
+// onUnmounted(() => {
+//   active.value = _getStepNo(Number(route.query.reviewId))
+// })
 onMounted(() => {
+  // console.log('父组件 mounted')
   // 如果 `reviewStatus` 存在且值为 '0' 或 '2'，编辑和订大货显示
-  if (route.query.progressId || (route.query.reviewStatus === '0' || route.query.reviewStatus === '2')) {
-    isNone2.value = true;
-    isNone1.value = false;
+  if (route.query.progressId || route.query.reviewStatus === '0' || route.query.reviewStatus === '2') {
+    isNone2.value = true
+    isNone1.value = false
     if (route.query.reviewId) {
+      // console.log('route.query.reviewId', route.query.reviewId)
+      // console.log('route.query.stepNo', route.query.stepNo)
+
       // active.value = parseInt(route.query.stepNo)
       active.value = _getStepNo(Number(route.query.reviewId))
     } else {
+      // console.log('route.query.stepNo', route.query.stepNo)
       active.value = 0 // 订大货的是0
     }
-
-  } else { // 查看显示
-    isNone2.value = false;
-    isNone1.value = true;
+  } else {
+    // 查看显示
+    isNone2.value = false
+    isNone1.value = true
     if (route.query.reviewId) {
       const stepNo = _getStepNo(Number(route.query.reviewId))
       activeCheck.value = stepNo
@@ -178,7 +194,7 @@ onMounted(() => {
     }
   }
 })
-
+onUnmounted(() => console.log('父组件 unmounted'))
 </script>
 
 <style lang="scss" scoped>

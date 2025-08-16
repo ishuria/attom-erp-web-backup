@@ -1,52 +1,57 @@
 <template>
-  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <h2 style="text-align: center;">请选择需要添加到采购单里的零件</h2>
-    <el-table 
-      ref="tableRef" 
+  <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+    <h2 style="text-align: center">请选择需要添加到采购单里的零件</h2>
+    <el-table
+      ref="tableRef"
       border
-      :cell-style="{ textAlign: 'center'}" :data="progressProductList"
-      :header-cell-style="{'text-align': 'center'}" 
+      :cell-style="{ textAlign: 'center' }"
+      :data="progressProductList"
+      :header-cell-style="{ 'text-align': 'center' }"
       stripe
       style="width: 80%"
       @selection-change="setSelectRows"
     >
       <el-table-column label="图片" min-width="90" prop="componentImg">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" @click="showPreviewImage(row.componentImg)" >
+          <el-image fit="fill" :src="row.componentImg" style="width: 75px; height: 75px" @click="showPreviewImage(row.componentImg)">
             <template #error>
               <el-icon />
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="已有零件ID" width="120"/>   
-      <el-table-column label="零件名"  min-width="160" prop="componentName" />
-      <el-table-column label="数量"  min-width="70" prop="componentQuantity" />
-      <el-table-column label="单位"  min-width="70" prop="componentUnit" />
+      <el-table-column label="已有零件ID" width="120" />
+      <el-table-column label="零件名" min-width="160" prop="componentName" />
+      <el-table-column label="数量" min-width="70" prop="componentQuantity" />
+      <el-table-column label="单位" min-width="70" prop="componentUnit" />
       <el-table-column label="出厂单价" min-width="70" prop="unitPrice">
         <template #header>
-          出厂<br>单价
-        </template>
-      </el-table-column>    
-      <el-table-column label="出厂总价"  min-width="70" prop="totalPrice">
-        <template #header>
-          出厂<br>总价
+          出厂
+          <br />
+          单价
         </template>
       </el-table-column>
-      <el-table-column label="运费(含税)" prop="freight" width="100"/>    
-      <el-table-column label="总未税价" prop="preTaxPrice" width="100"/>
-      <el-table-column label="总含税价"  min-width="100" prop="taxIncludedPrice" />    
+      <el-table-column label="出厂总价" min-width="70" prop="totalPrice">
+        <template #header>
+          出厂
+          <br />
+          总价
+        </template>
+      </el-table-column>
+      <el-table-column label="运费(含税)" prop="freight" width="100" />
+      <el-table-column label="总未税价" prop="preTaxPrice" width="100" />
+      <el-table-column label="总含税价" min-width="100" prop="taxIncludedPrice" />
       <el-table-column label="货币" prop="currency" width="110px">
-        <template #default = "{ row }">
-          <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%;">
-            <el-option v-for="dict in currencyList" :key="dict.value" :label="dict.label" :value="dict.value"/>
+        <template #default="{ row }">
+          <el-select v-model="row.currency" disabled placeholder="请选择货币" style="min-width: 100%">
+            <el-option v-for="dict in currencyList" :key="dict.value" :label="dict.label" :value="dict.value" />
           </el-select>
         </template>
       </el-table-column>
       <el-table-column label="供应商" prop="supplier" :width="flexColumnWidth(progressProductList, '供应商', 'supplier')" />
-      <el-table-column class="custom-checkbox" fixed="right" type="selection" width="100"/>
+      <el-table-column class="custom-checkbox" fixed="right" type="selection" width="100" />
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
     </el-table>
     <div class="pay-button-group">
@@ -56,7 +61,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { currencyList } from '../indexCommon'
 import { reviewProgressId, reviewStepNo2Savetw, reviewStepNo3ComponentList } from '/@/api/devlocal/orderProcess'
@@ -66,16 +71,16 @@ import { _setStepNo } from '/@/utils/stepNoState'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-    name: 'OrderStep2',
+  name: 'OrderStep2',
 })
 
 const route: any = useRoute()
 const props = defineProps<{ step1Data: number | undefined }>()
-const emit = defineEmits<{ 
-    (e: 'change-step', value: number): void
-    (e: 'update:imagePreviewVisible', value: boolean): void
-    (e: 'update:previewListValue', value: string): void
- }>()
+const emit = defineEmits<{
+  (e: 'change-step', value: number): void
+  (e: 'update:imagePreviewVisible', value: boolean): void
+  (e: 'update:previewListValue', value: string): void
+}>()
 
 const selectRows = ref<any>([])
 const suppliserIds = ref<number[]>([])
@@ -83,23 +88,25 @@ const suppliserIds = ref<number[]>([])
 const progressProductList = ref<IComponentAdd[]>([])
 
 const showPreviewImage = (url: string) => {
-  emit("update:previewListValue", url)
-  emit("update:imagePreviewVisible", true)
+  emit('update:previewListValue', url)
+  emit('update:imagePreviewVisible', true)
 }
 const formattedPrice = (price: string) => {
-    return parseFloat(price).toFixed(2)
+  return parseFloat(price).toFixed(2)
 }
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 // 获取拿样零件添加数据
-const fetchDataComponent = async () =>{
+const fetchDataComponent = async () => {
   try {
     // 拿样零件添加列表
-    if (route.query.progressId) { //如果有progressId,就是订大货进去的
-      const {data} = await getComponentList({progressId: route.query.progressId})
+    if (route.query.progressId) {
+      //如果有progressId,就是订大货进去的
+      const { data } = await getComponentList({ progressId: route.query.progressId })
       progressProductList.value = data
-    } else { //如果是编辑进去的
+    } else {
+      //如果是编辑进去的
       // 获取 progressId
       const { data: progressId } = await reviewProgressId({ reviewId: route.query.reviewId })
       // 获取列表
@@ -116,12 +123,12 @@ const fetchDataComponent = async () =>{
       item.unitPrice = formattedPrice(item.unitPrice)
       item.totalPrice = formattedPrice(item.totalPrice)
     })
-    progressProductList.value.sort((a:IComponentAdd, b:IComponentAdd) => a.componentId! - b.componentId!)
-  }catch(error){
+    progressProductList.value.sort((a: IComponentAdd, b: IComponentAdd) => a.componentId! - b.componentId!)
+  } catch (error) {
     console.error(error as Error)
   }
 }
-onMounted(()=>{
+onMounted(() => {
   fetchDataComponent()
 })
 
@@ -135,8 +142,15 @@ const handleContinue = async () => {
     $baseMessage('请选择需要添加到采购单里的零件', 'warning')
     return
   }
+  let classReviewId: number | undefined
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
   // 判断选择的零件里面是否供应商重复
-  const { data } = await reviewStepNo3ComponentList({ reviewId: route.query.reviewId! })
+  const { data } = await reviewStepNo3ComponentList({ reviewId: classReviewId! })
   const supplierList = data.map((item: any) => item.supplier)
   const hasConflict = selectRows.value.some((item: any) => {
     if (item.supplier && supplierList.includes(item.supplier)) {
@@ -154,13 +168,8 @@ const handleContinue = async () => {
   })
 
   const id = `${suppliserIds.value}`
-  let classReviewId: number | undefined
+
   try {
-    if (route.query.progressId) { //说明是订大货进去的,接受上一步传来的reviewId
-      classReviewId = props.step1Data
-    } else {
-      classReviewId = route.query.reviewId
-    }
     const { data } = await reviewStepNo2Savetw({ suppliserIds: id, reviewId: classReviewId })
     if (data === true) {
       emit('change-step', 2)
@@ -178,7 +187,7 @@ const handleGoback = () => {
   emit('change-step', 0)
 }
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
   display: block;
@@ -194,4 +203,3 @@ const handleGoback = () => {
   max-height: 81.2px;
 }
 </style>
-  
