@@ -1,6 +1,242 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
+      <el-tab-pane label="全部" :name="0">
+        <vab-query-form>
+          <vab-query-form-left-panel :span="18">
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
+              :loading="priceSharingLoading"
+              type="primary"
+              @click="handleShowTotalPriceSharing"
+            >
+              总价分摊
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
+              :loading="generateContractLoading"
+              type="primary"
+              @click="handleGenerateContract"
+            >
+              生成合同
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
+              :loading="mergeContractLoading"
+              type="primary"
+              @click="handleShowMergeContract"
+            >
+              聚合合同
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
+              :loading="moneyTransferLoading"
+              type="primary"
+              @click="handleShowGenerateMoneyTransfer"
+            >
+              生成汇款模板
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
+              :loading="reduceCostLoading"
+              type="primary"
+              @click="handleReduceCost"
+            >
+              降本提成申请
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
+              type="primary"
+              @click="handleShowAutomaticSignature"
+            >
+              自动签收设定
+            </el-button>
+            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
+              删除
+            </el-button>
+            <div
+              v-if="
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
+                跨月调整金额：{{ procurementBonusCrossMonth }}
+              </el-text>
+              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
+                含税价格合计：{{ taxIncludedTotalPrice }}
+              </el-text>
+            </div>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="6">
+            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="debouncedQueryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
+          v-permissions="{ permission: [PoPermission.QUERY] }"
+          border
+          :cell-class-name="getCellClass"
+          :cell-style="cellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="poList"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="stripedRowClass"
+          :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
+        >
+          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllPoRow($event)" />
+            </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="PO" min-width="120" prop="po">
+            <template #default="{ row }">
+              <span class="copySku">
+                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
+                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数据来源" width="110">
+            <template #default="{ row }">
+              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
+            <template #default="{ row }">
+              {{ row.releaseDate.split(' ')[0] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="发布人" prop="userName" />
+          <el-table-column label="站点" min-width="130" prop="siteName" />
+          <el-table-column label="SKU图片" width="82">
+            <template #header>
+              SKU
+              <br />
+              图片
+            </template>
+            <template #default="{ row }">
+              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
+            <template #default="{ row }">
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
+          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
+            <template #header>
+              <el-checkbox @change="handleSelectAllCompRow($event)" />
+            </template>
+            <template #default="{ row }">
+              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+            </template>
+          </el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
+          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
+          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
+          <el-table-column label="签收日期" min-width="115" prop="signDate">
+            <template #default="{ row }">
+              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="含税运费" min-width="100" prop="freight" />
+          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
+          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
+          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
+          <el-table-column label="货币" prop="currency" width="90">
+            <template #default="{ row }">
+              {{ currencyMap[row.currency as CurrencyCode] }}
+            </template>
+          </el-table-column>
+          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
+            <template #default="{ row }">
+              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
+            </template>
+          </el-table-column>
+          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
+          <el-table-column label="采购方" min-width="100" prop="purchase" />
+          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+          </template>
+        </el-table>
+        <vab-pagination
+          v-permissions="{ permission: [PoPermission.QUERY] }"
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
       <el-tab-pane label="待付款" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
@@ -97,6 +333,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -321,6 +565,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -550,6 +802,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -780,6 +1040,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1010,6 +1278,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1144,6 +1420,14 @@
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1608,7 +1892,7 @@ const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
 
-const activeName = ref<number>(2)
+const activeName = ref<number>(0)
 const defaultTime2: [Date, Date] = [new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)] // '12:00:00', '08:00:00'
 
 // 预览图片列表
@@ -2535,6 +2819,7 @@ const queryForm = reactive<any>({
   pageSize: 50,
   keyWord: '',
   status: 2, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
+  customsStatus: -1,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -2826,6 +3111,9 @@ onUnmounted(() => {
                 margin: 0 10px 5px 0;
                 border-radius: 99px;
               }
+            }
+            .el-form-item:nth-child(2) {
+              margin-bottom: 5px !important;
             }
             .el-form-item:last-child {
               margin-bottom: 5px !important;
