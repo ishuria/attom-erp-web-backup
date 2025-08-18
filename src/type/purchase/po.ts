@@ -4,6 +4,7 @@ export interface IGetPlanPoListQuery {
   status: number //po状态 0待发布 1未达起订量
   pageNo: number
   pageSize: number
+  customsStatus: number //报关状态 -1全部 0报关 1不报关
 }
 // 采购计划-获取采购计划PlanPo返回值
 export interface IGetPlanPoListResp {

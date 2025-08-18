@@ -39,6 +39,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -207,6 +215,14 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
+              <!-- 新增：报关状态筛选 -->
+              <el-form-item label="">
+                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
+                  <el-option label="全部报关状态" :value="-1" />
+                  <el-option label="报关" :value="0" />
+                  <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -421,6 +437,7 @@ const queryForm = reactive<IGetPlanPoListQuery>({
   pageSize: 50,
   keyWord: '',
   status: 0, //po状态 0待发布 1未达起订量
+  customsStatus: -1, //报关状态 -1全部 0报关 1不报关
 })
 const route = useRoute()
 const handleSizeChange = (value: number) => {
@@ -958,6 +975,9 @@ onUnmounted(() => {
                 margin: 0 10px 5px 0;
                 border-radius: 99px;
               }
+            }
+            .el-form-item:nth-child(2) {
+              margin: 0 !important;
             }
             .el-form-item:last-child {
               margin: 0 !important;

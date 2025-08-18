@@ -1,7 +1,7 @@
 export interface IGetPackagingTimeConsolidationListReq {
   keyWord: string
-  pageNo: number
-  pageSize: number
+  pageNo?: number
+  pageSize?: number
 }
 
 export interface IGetPackagingTimeConsolidationListRes {
@@ -64,6 +64,6 @@ export interface IAddSkuPackagingTimeConsolidationReq {
 export interface IGetPackagingSkuSelectListRes {
   data: {
     total: number
-    list: { skuId: number, sku: string }[]
+    list: { skuId: number; sku: string }[]
   }
 }
