@@ -638,8 +638,9 @@ const handleSwitchName = (row: any) => {
 }
 // 订大货
 const handleOrderProcess = async (row: IProgress) => {
+  const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
+  // console.log('data', data)
   if (row.bulkGoodsStatus === 1) {
-    const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
     await router.push({
       path: '/newProductDevelopment/orderingProcess',
       query: {
@@ -649,14 +650,23 @@ const handleOrderProcess = async (row: IProgress) => {
     })
     return
   } else if (row.bulkGoodsStatus === 0) {
-    router.push({
-      path: '/newProductDevelopment/orderingProcess',
-      query: {
-        progressId: row.progressId,
-      },
-    })
+    if (data) {
+      await router.push({
+        path: '/newProductDevelopment/orderingProcess',
+        query: {
+          reviewStatus: '0',
+          reviewId: data,
+        },
+      })
+    } else {
+      await router.push({
+        path: '/newProductDevelopment/orderingProcess',
+        query: {
+          progressId: row.progressId,
+        },
+      })
+    }
   } else {
-    const { data } = await getReviewIdByProgressId({ progressId: row.progressId! })
     await router.push({
       path: '/newProductDevelopment/orderingProcess',
       query: {

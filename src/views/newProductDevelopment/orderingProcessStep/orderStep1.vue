@@ -211,8 +211,8 @@ const handleSubmit = () => {
             delVisitedRoute(handleActivePath(route, true))
             await router.replace({
               query: {
-                reviewId: _reviewId.value.toString(),
                 reviewStatus: '0',
+                reviewId: _reviewId.value.toString(),
               },
             })
             await fetchData()
@@ -260,10 +260,8 @@ const handleSubmitAndContinue = async () => {
               delVisitedRoute(handleActivePath(route, true))
               await router.push({
                 query: {
-                  ...route.query,
-
-                  reviewId: res.toString(),
                   reviewStatus: '0',
+                  reviewId: res.toString(),
                 },
               })
 
