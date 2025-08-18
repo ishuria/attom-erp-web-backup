@@ -233,14 +233,14 @@ export interface IReleaseOperationPlanPoReq {
   number: number
   asin?: string
   site?: number
-} 
+}
 export interface IReleaseOperationPlanPoRes {
   data: {
     nowSupplementAdvCalcu?: number
     nowSupplementCalcu?: number
     planPoPurchaseSkuNumber?: number
   }
-} 
+}
 export interface IGetOperationOrderSkuReq {
   id: number
   sku: string
@@ -255,4 +255,9 @@ export interface IGetOperationOrderSkuRes {
     productManagerName: string
     orderQuantity: number
   }
+}
+export interface IUpdateOperationOrderShipmentQuantityReq {
+  sku: string
+  planSite: number
+  skuNumber: number
 }

@@ -44,22 +44,30 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" /> 
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
-      ref="tableRef" 
+    <el-table
+      ref="tableRef"
       v-loading="listLoading"
       border
-      :cell-class-name="clearPadding" 
+      :cell-class-name="clearPadding"
       :cell-style="cellStyle"
-      class="noneHoverTable" 
-      :data="list" :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }" :header-cell-class-name="headerStyle"
+      class="noneHoverTable"
+      :data="list"
+      :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }"
+      :header-cell-class-name="headerStyle"
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       @row-click="handleRowClick"
@@ -76,35 +84,49 @@
         :width="item.width"
       >
         <template #header>
-          <span v-if="item.label==='库存可售'">
-            库存<br />可售
+          <span v-if="item.label === '库存可售'">
+            库存
+            <br />
+            可售
           </span>
-          <span v-if="item.label==='可售含在途'">
-            可售<br />含在途
+          <span v-if="item.label === '可售含在途'">
+            可售
+            <br />
+            含在途
           </span>
           <span v-if="item.label === '月广告%'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">月广告% <el-icon><question-filled /></el-icon> </div>
+              <div class="questionIcon">
+                月广告%
+                <el-icon><question-filled /></el-icon>
+              </div>
               <template #content>
-                <div class="custom-tooltip" >月广告销售占比</div>
+                <div class="custom-tooltip">月广告销售占比</div>
               </template>
             </el-tooltip>
           </span>
           <span v-if="item.label === '原始今补'">
-            原始<br />今补
+            原始
+            <br />
+            今补
           </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
-            <el-image fit="fill" :src="row.asinImgUrl" style="display: block; width: 75px; height: 75px;" @click="imagePreviewShow(row.asinImgUrl)" >
+            <el-image
+              fit="fill"
+              :src="row.asinImgUrl"
+              style="display: block; width: 75px; height: 75px"
+              @click="imagePreviewShow(row.asinImgUrl)"
+            >
               <template #error>
-                <el-icon/>
+                <el-icon />
               </template>
             </el-image>
           </span>
           <span v-if="item.label === 'ASIN'">
             <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
-            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)" >
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
               <vab-icon icon="file-copy-2-fill" />
             </span>
             <div class="rate-wrapper">
@@ -149,7 +171,7 @@
             {{ row[item.prop] ? row.currencyIcon + row[item.prop] : '' }}
           </span>
           <span v-if="item.label === '月净利率'">
-            {{ row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''  }}
+            {{ row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : '' }}
           </span>
           <span v-if="item.label === '半年有货率'">
             {{ row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : '' }}
@@ -157,25 +179,35 @@
           <span v-if="label.includes(item.label)">
             {{ row[labelMap.get(item.label)!] !== null ? row[labelMap.get(item.label)!].toFixed(2) + '%' : '' }}
           </span>
-          <span v-if="item.label === '剩余库存'">
-            {{ row.availableInventory }} / {{ row.fbaCount }}
-          </span>
+          <span v-if="item.label === '剩余库存'">{{ row.availableInventory }} / {{ row.fbaCount }}</span>
           <span v-if="item.label === '订货#'">
-            {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
+            {{ row.orderCount }}
+            <br />
+            <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
           </span>
           <span v-if="item.label === '库龄'">
             <span v-html="row.storageAge"></span>
           </span>
           <span v-if="item.label === '操作'">
-            <el-button type="primary" @click="handleShowReleaseOrder(row)" >发布订货</el-button>
+            <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
           </span>
           <span v-if="item.label === 'VOC满意度'">
             {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
-            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+            <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">
+              极差 {{ formatPercentage(row.vocDefect, 2) }}
+            </el-tag>
+            <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">
+              一般 {{ formatPercentage(row.vocDefect, 2) }}
+            </el-tag>
+            <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">
+              不合格 {{ formatPercentage(row.vocDefect, 2) }}
+            </el-tag>
+            <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">
+              良好 {{ formatPercentage(row.vocDefect, 2) }}
+            </el-tag>
+            <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">
+              极好 {{ formatPercentage(row.vocDefect, 2) }}
+            </el-tag>
           </span>
           <!-- <span v-if="item.label === 'VOC缺陷%'" >
             {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
@@ -183,10 +215,10 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -195,89 +227,39 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 筛选 -->
-    <vab-dialog
-      v-model="filterVisible"
-      title="筛选"
-      width="20%"
-    >
-      <el-form
-        ref="filterFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="filterForm"
-        style="width: 100%; margin-right: 10px"
-      >
+    <vab-dialog v-model="filterVisible" title="筛选" width="20%">
+      <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="width: 100%; margin-right: 10px">
         <el-form-item label="交期">
           <div class="flex">
-            <el-input-number
-              v-model="queryForm.minDeliveryDate"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="color: #303133; white-space: nowrap;">至</span>
-            <el-input-number
-              v-model="queryForm.maxDeliveryDate"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
+            <el-input-number v-model="queryForm.minDeliveryDate" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="queryForm.maxDeliveryDate" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上新天数">
           <div class="flex">
-            <el-input-number
-              v-model="queryForm.minNewArrivalDay"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="color: #303133; white-space: nowrap;">至</span>
-            <el-input-number
-              v-model="queryForm.maxNewArrivalDay"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
+            <el-input-number v-model="queryForm.minNewArrivalDay" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="queryForm.maxNewArrivalDay" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="库存可售">
           <div class="flex">
-            <el-input-number
-              v-model="queryForm.minEs"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="color: #303133; white-space: nowrap;">至</span>
-            <el-input-number
-              v-model="queryForm.maxEs"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
+            <el-input-number v-model="queryForm.minEs" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="queryForm.maxEs" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上海签收">
           <div class="flex">
-            <el-input-number
-              v-model="queryForm.minSign"
-              :min="0"
-              placeholder="最小值"
-              style="flex: 1"
-            />
-            <span style="color: #303133; white-space: nowrap;">至</span>
-            <el-input-number
-              v-model="queryForm.maxSign"
-              :min="0"
-              placeholder="最大值"
-              style="flex: 1"
-            />
+            <el-input-number v-model="queryForm.minSign" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="queryForm.maxSign" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
-            <el-date-picker 
+            <el-date-picker
               v-model="latestDate"
               end-placeholder="结束日期"
               range-separator="至"
@@ -294,11 +276,7 @@
       </template>
     </vab-dialog>
     <!-- 平滑指数设定 -->
-    <vab-dialog
-      v-model="smoothSettingVisible"
-      title="平滑指数设定"
-      width="20%"
-    >
+    <vab-dialog v-model="smoothSettingVisible" title="平滑指数设定" width="20%">
       <el-form label-position="top" :model="smoothForm">
         <el-form-item label="平滑指数" prop="smoothness">
           <el-input v-model="smoothForm.smoothness" type="number" />
@@ -316,36 +294,15 @@
       </template>
     </vab-dialog>
     <!-- 发货数检查 -->
-    <vab-dialog
-      v-model="quantityCheckVisible"
-      title="发货数检查"
-    >
-      <el-table border :cell-style="{ textAlign: 'center' }" class="noneHoverTable" :data="shipList" :header-cell-style="{ textAlign: 'center' }" stripe>\
-        <el-table-column type="selection"/>
-        <el-table-column label="站点" prop="siteName" />
-        <el-table-column label="发货计划" prop="shippingPlanDate"/>
-        <el-table-column label="产品数量" prop="productCount"/>
-        <el-table-column label="重量" prop="weight"/>
-        <el-table-column label="体积" prop="volume"/>
-        <el-table-column label="箱数" prop="encasementCount"/>
-      </el-table>
-      <template #footer>
-        <el-button @click="quantityCheckVisible = false">取消</el-button>
-        <el-button type="primary">确定</el-button>
-      </template>
-    </vab-dialog>
+    <vab-shipment-quantity-inspection v-model="quantityCheckVisible" />
     <!-- 春节备货 -->
-    <vab-dialog
-      v-model="stockUpVisible"
-      title="春节备货"
-      width="20%"
-    >
+    <vab-dialog v-model="stockUpVisible" title="春节备货" width="20%">
       <el-form class="noneHoverTable" style="margin: auto 0">
         <el-form-item label="春节备货">
           <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
         </el-form-item>
         <el-form-item label="节后开工日期" label-position="top">
-          <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD"/>
+          <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -354,26 +311,27 @@
       </template>
     </vab-dialog>
     <!-- 发布订货 -->
-    <vab-dialog
-      v-model="releaseOrderVisible"
-      :draggable="false"
-      title="发布订货"
-      width="65%"
-    >
-      <el-form v-loading="orderListLoading" class="custom-form" inline label-position="top" :model="releaseOrderForm" style="justify-content: space-around; width: 100%">
+    <vab-dialog v-model="releaseOrderVisible" :draggable="false" title="发布订货" width="65%">
+      <el-form
+        v-loading="orderListLoading"
+        class="custom-form"
+        inline
+        label-position="top"
+        :model="releaseOrderForm"
+        style="justify-content: space-around; width: 100%"
+      >
         <el-form-item>
-          <el-image :src="releaseOrderForm.skuImageUrl" style="display: block; width: 85px; height: 85px; cursor: pointer; border: 1px solid #e4e7ed; border-radius: 10%;" @click="imagePreviewShow(releaseOrderForm.skuImageUrl)">
+          <el-image
+            :src="releaseOrderForm.skuImageUrl"
+            style="display: block; width: 85px; height: 85px; cursor: pointer; border: 1px solid #e4e7ed; border-radius: 10%"
+            @click="imagePreviewShow(releaseOrderForm.skuImageUrl)"
+          >
             <template #error><el-icon /></template>
           </el-image>
         </el-form-item>
         <el-form-item label="SKU">
-          <el-select v-model="releaseOrderForm.sku" placeholder="请选择SKU" style="width: 20em;" @change="handleSwitchSku">
-            <el-option 
-              v-for="item in skuList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <el-select v-model="releaseOrderForm.sku" placeholder="请选择SKU" style="width: 20em" @change="handleSwitchSku">
+            <el-option v-for="item in skuList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="描述">
@@ -398,12 +356,12 @@
           <el-checkbox v-model="releaseOrderForm.split" disabled :false-value="0" :true-value="1" />
         </el-form-item>
         <el-form-item label="起订量">
-          <el-input v-model="releaseOrderForm.moq" disabled style="width: 8em;" />
+          <el-input v-model="releaseOrderForm.moq" disabled style="width: 8em" />
         </el-form-item>
         <el-form-item label="整箱数">
-          <el-input v-model="releaseOrderForm.numberOfCartons" disabled style="width: 8em;" />
+          <el-input v-model="releaseOrderForm.numberOfCartons" disabled style="width: 8em" />
         </el-form-item>
-        <el-form-item label="产品经理" style="margin-right: 0;">
+        <el-form-item label="产品经理" style="margin-right: 0">
           <el-input v-model="releaseOrderForm.productManagerName" disabled />
         </el-form-item>
       </el-form>
@@ -424,13 +382,12 @@ import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
-  getOperationOrderShippingInspection,
   getOperationOrderSku,
   getOperationOrderSmoothness,
   getOperationOrderSpringFestival,
   releaseOperationPlanPo,
   updateOperationOrderSmoothness,
-  updateOperationOrderSpringFestival
+  updateOperationOrderSpringFestival,
 } from '/@/api/devlocal/productOrdering'
 import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
@@ -439,7 +396,7 @@ import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ProductOrdering'
+  name: 'ProductOrdering',
 })
 const router = useRouter()
 const route = useRoute()
@@ -462,22 +419,16 @@ const queryForm = reactive<any>({
   operationUserId: -1,
   sites: '',
   orderByField: 'originalNowSupplement',
-  orderDirection: 'desc'
+  orderDirection: 'desc',
 })
 const total = ref<number>(0)
 const site = ref<number[]>([])
-const siteList = ref<{ id: number, label: string }[]>([])
-const operateUserList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
+const operateUserList = ref<{ id: number; label: string }[]>([])
 const list = ref<IGetOperationOrderList[]>([])
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const latestDate = ref<string[]>([])
-const label = [
-  '毛利率',
-  '月广告%',
-  '月ACOS',
-  '月TACOS',
-  '月退货%',
-]
+const label = ['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%']
 const label3 = ['库存可售', '可售含在途', '断货']
 const labelMap = new Map([
   ['毛利率', 'grossProfit'],
@@ -495,18 +446,17 @@ const releaseOrderVisible = ref<boolean>(false)
 // 发布订货表单
 const releaseOrderForm = reactive<any>({})
 // 发布订货里面的sku列表
-const skuList = ref<{ value: string, label: string }[]>([])
+const skuList = ref<{ value: string; label: string }[]>([])
 const asinId = ref<number>(-1)
 const smoothForm = reactive<any>({})
-const shipList = ref<any[]>([])
 const orderListLoading = ref<boolean>(false)
 
 const aclStore = useAclStore()
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
 
-const handleSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   queryForm.orderByField = prop
   // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
   if (!order) {
@@ -515,20 +465,14 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
     } else if (queryForm.orderDirection === 'desc') {
       column.order = 'ascending'
     }
-  } 
-  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  }
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
 const handleRowClick = (row: any, column: any, event: Event) => {
   currentRowId.value = row.id
 }
-const tableRowClassName = ({
-  row,
-  rowIndex,
-}: {
-  row: any
-  rowIndex: number
-}) => {
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.id === currentRowId.value) {
     return 'warning-row'
   }
@@ -538,19 +482,15 @@ const operationSelect = () => {
   const role = aclStore.getRole[0]
   switch (role) {
     // 老板和运营主管
-    case 'ROLE_BOSS': 
+    case 'ROLE_BOSS':
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
-      
-     
-      break;
+      break
     }
     // 运营
     case 'ROLE_ECOMMERCEOPERATOR': {
-    
-    
-      break;
+      break
     }
-  // No default
+    // No default
   }
 }
 // 确定修改春节备货
@@ -595,15 +535,15 @@ const handleReleaseOrder = async () => {
     // 先关闭弹窗,提升体验
     releaseOrderVisible.value = false
     orderListLoading.value = true
-    
+
     const { data } = await releaseOperationPlanPo({
       asinId: asinId.value,
       sku: releaseOrderForm.sku,
       number: releaseOrderForm.number,
       asin: copyRow.asin,
-      site: copyRow.site
+      site: copyRow.site,
     })
-    
+
     if (data) {
       $baseMessage('发布订货成功！', 'success')
       // fetchData()
@@ -626,7 +566,7 @@ const handleSwitchSku = async () => {
   // Object.assign(releaseOrderForm, data)
   const { data } = await getOperationOrderSku({
     id: copyRow.id!,
-    sku: releaseOrderForm.sku
+    sku: releaseOrderForm.sku,
   })
   // const { data } = await getSkuInfo({ sku: skuArray[0] })
   Object.assign(releaseOrderForm, data)
@@ -646,12 +586,12 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
     skuList.value = skuArray.map((item) => {
       return {
         label: item,
-        value: item
+        value: item,
       }
     })
     const { data } = await getOperationOrderSku({
       id: row.id!,
-      sku: skuArray[0]
+      sku: skuArray[0],
     })
     // const { data } = await getSkuInfo({ sku: skuArray[0] })
     Object.assign(releaseOrderForm, data)
@@ -660,7 +600,7 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
     orderListLoading.value = false
   } else {
     skuList.value = []
-    Object.keys(releaseOrderForm).forEach(key => {
+    Object.keys(releaseOrderForm).forEach((key) => {
       delete releaseOrderForm[key]
     })
   }
@@ -669,7 +609,7 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
 const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
   await updateOperationASINOperateTypeList({
     id: row.id!,
-    typeId: row.operationTypeId!
+    typeId: row.operationTypeId!,
   })
 }
 // 确认筛选
@@ -693,36 +633,36 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 30)
     }
     case '运营分类': {
-      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
     }
     case '站点': {
-      return flexColumnWidth(list.value, '站点', 'siteName'); // 处理运营分类列
+      return flexColumnWidth(list.value, '站点', 'siteName') // 处理运营分类列
     }
     case '今补': {
-      return flexColumnWidth(list.value, '今补', 'nowSupplementCalcu'); 
+      return flexColumnWidth(list.value, '今补', 'nowSupplementCalcu')
     }
     case '月销售额': {
-      return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 40); 
+      return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 40)
     }
     case '月净利润': {
-      return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40); 
+      return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40)
     }
     case '剩余库存': {
-      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0) + flexColumnWidth(list.value, '/', 'fbaCount', 10)}px`;
+      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0) + flexColumnWidth(list.value, '/', 'fbaCount', 10)}px`
     }
     case '原始今补': {
-      return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement'); 
+      return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement')
     }
     case '签收': {
-      return flexColumnWidth(list.value, '签收', 'quantityReceived', 40);
+      return flexColumnWidth(list.value, '签收', 'quantityReceived', 40)
     }
     case '最近入库': {
-      return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage');
+      return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
     }
     case '订货#': {
-      const width1 = flexColumnWidth(list.value, '订货#', 'orderCount');
-      const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber');
-      return Math.max(width1, width2);
+      const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
+      const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
+      return Math.max(width1, width2)
     }
     default: {
       return item.minWidth
@@ -753,10 +693,8 @@ const handleCheckAll = (val: CheckboxValueType) => {
   }
 }
 // 打开发货数检查
-const showQuantityCheck = async () => {
+const showQuantityCheck = () => {
   quantityCheckVisible.value = true
-  const { data } = await getOperationOrderShippingInspection()
-  shipList.value = data
 }
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
@@ -779,14 +717,14 @@ const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   fetchData()
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.columnIndex === 0) {
     return 'clear-padding'
-  } 
+  }
   return ''
 }
-const headerStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-if (data.column.label === '原始今补') {
+const headerStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '原始今补') {
     return 'column_caret'
   }
   return ''
@@ -801,8 +739,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     return {
       textAlign: 'right',
     }
-  } 
-  else {
+  } else {
     return {
       textAlign: 'center',
     }
@@ -886,7 +823,7 @@ onBeforeMount(() => {
 //     const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
 //     if (scrollBarRef?.wrapRef) {
 //       scrollBarRef.wrapRef.addEventListener('scroll', handleTableScroll)
-      
+
 //       // 恢复滚动位置
 //       const savedStatus = JSON.parse(localStorage.getItem('productOrderingScrollPosition') || '{}')
 //       if (savedStatus.scrollTop) {
@@ -910,10 +847,10 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .rate-wrapper {
-  display: flex; 
+  display: flex;
   gap: 8px;
-  align-items: center; 
-  
+  align-items: center;
+
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -936,11 +873,10 @@ onBeforeMount(() => {
         }
       }
     }
-
   }
   .rate-count {
     margin-left: -11px;
-    color: #36788C;
+    color: #36788c;
   }
 }
 .noneHoverTable :deep(.clear-padding) {
@@ -959,9 +895,9 @@ onBeforeMount(() => {
   :deep() {
     // 选中行样式优先级提高
     .warning-row > td {
-      background-color: #EDF1F7 !important;
+      background-color: #edf1f7 !important;
     }
-    
+
     // 普通行hover时保持白色
     .el-table__body tr:not(.warning-row) {
       &.hover-row > td,
@@ -969,13 +905,12 @@ onBeforeMount(() => {
         background-color: #ffffff !important;
       }
     }
-    
+
     // 选中行hover时保持黄色
     .warning-row {
-
       &.hover-row > td,
       &:hover > td {
-        background-color: #EDF1F7;
+        background-color: #edf1f7;
       }
     }
     .storage-list {

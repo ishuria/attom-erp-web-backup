@@ -10,7 +10,8 @@ import type {
   IGetOperationOrderSpringFestival,
   IGetOperationOrdersSmoothness,
   IReleaseOperationPlanPoReq,
-  IReleaseOperationPlanPoRes
+  IReleaseOperationPlanPoRes,
+  IUpdateOperationOrderShipmentQuantityReq,
 } from '/@/type/storeOperation/productOrdering'
 
 // 产品订货-查询列表
@@ -18,7 +19,7 @@ export function getOperationOrderList(data: IGetOperationOrderListReq): Promise<
   return request({
     url: `${BASE_API}/operation/order/list`,
     method: 'post',
-    data
+    data,
   })
 }
 // 产品订货-平滑指数设定获取
@@ -33,7 +34,7 @@ export function updateOperationOrderSmoothness(data: IGetOperationOrdersSmoothne
   return request({
     url: `${BASE_API}/operation/order/smoothness/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 产品订货-春节备货系数
@@ -48,7 +49,7 @@ export function updateOperationOrderSpringFestival(data: IGetOperationOrderSprin
   return request({
     url: `${BASE_API}/operation/order/spring/festival/update`,
     method: 'post',
-    data
+    data,
   })
 }
 // 产品订货-发货数列表查询
@@ -63,7 +64,7 @@ export function releaseOperationPlanPo(data: IReleaseOperationPlanPoReq): Promis
   return request({
     url: `${BASE_API}/operation/release/planPo`,
     method: 'post',
-    data
+    data,
   })
 }
 // 产品订货-发布订货查询
@@ -71,6 +72,18 @@ export function getOperationOrderSku(data: IGetOperationOrderSkuReq): Promise<IG
   return request({
     url: `${BASE_API}/operation/order/get/sku`,
     method: 'post',
-    data
+    data,
+  })
+}
+/**
+ * 产品订货-发货数检查-确认
+ * @param data
+ * @returns
+ */
+export function updateOperationOrderShipmentQuantity(data: IUpdateOperationOrderShipmentQuantityReq[]): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/order/shipment/quantity/update`,
+    method: 'post',
+    data,
   })
 }
