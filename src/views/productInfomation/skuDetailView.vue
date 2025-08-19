@@ -636,25 +636,10 @@
         <el-form-item label="采购单位" prop="componentUnit">
           <el-input v-model="modifyForm.componentUnit" clearable />
         </el-form-item>
-        <el-form-item
-          v-if="
-            currentRoleCode === ROLE_PURCHASER_CODE ||
-            currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-            currentRoleCode === ROLE_BOSS_CODE
-          "
-          label="开票单位"
-          prop="billingUnit"
-        >
+        <el-form-item v-if="ableToView" label="开票单位" prop="billingUnit">
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
-        <el-form-item
-          v-if="
-            currentRoleCode === ROLE_PURCHASER_CODE ||
-            currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-            currentRoleCode === ROLE_BOSS_CODE
-          "
-          label="采购单位和开票单位比例"
-        >
+        <el-form-item v-if="ableToView" label="采购单位和开票单位比例">
           <div style="display: flex; align-items: center; width: 100%">
             每【{{ modifyForm.componentUnit }}】采购单位对应
             <el-input v-model.trim="modifyForm.quantity" clearable placeholder="请输入比例" style="width: 120px; flex: 1; margin: 0 6px" />
@@ -662,18 +647,15 @@
           </div>
           <div style="color: var(--el-color-danger)">非整数需保留10位小数点</div>
         </el-form-item>
-        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="HS" prop="hsId">
+        <el-form-item v-if="ableToView" label="HS" prop="hsId">
           <el-select v-model="modifyForm.hsId">
             <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE" label="法定单位">
+        <el-form-item v-if="ableToView" label="法定单位">
           <el-input v-model="modifyForm.statutoryUnit" disabled />
         </el-form-item>
-        <el-form-item
-          v-if="currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE || currentRoleCode === ROLE_BOSS_CODE"
-          label="采购单位和法定第1单位比例"
-        >
+        <el-form-item v-if="ableToView" label="采购单位和法定第1单位比例">
           <div style="display: flex; align-items: center; width: 100%">
             每【{{ modifyForm.componentUnit }}】采购单位对应
             <el-input v-model.trim="modifyForm.quorum" clearable placeholder="请输入比例" style="width: 120px; margin: 0 6px; flex: 1" />
@@ -742,6 +724,14 @@ defineOptions({
 })
 
 const currentRoleCode = useAclStore().getRole[0]
+const ableToView = computed(() => {
+  return (
+    currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE ||
+    currentRoleCode === ROLE_BOSS_CODE ||
+    currentRoleCode === ROLE_PURCHASER_CODE ||
+    currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE
+  )
+})
 const updateVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({})
 const modifyFormRef = ref<FormInstance>()
