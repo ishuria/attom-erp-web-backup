@@ -60,6 +60,10 @@ const setSelectedList = (rows: any[]) => {
 }
 
 const handleConfirm = async () => {
+  if (selectedList.value.length === 0) {
+    $baseMessage('请选择需要检查的发货数！', 'warning')
+    return
+  }
   loading.value = true
   const { data } = await updateOperationOrderShipmentQuantity(selectedList.value)
   if (data) {
