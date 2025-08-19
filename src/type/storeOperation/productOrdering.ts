@@ -257,7 +257,6 @@ export interface IGetOperationOrderSkuRes {
   }
 }
 export interface IUpdateOperationOrderShipmentQuantityReq {
-  sku: string
+  shippingPlanDate: string
   planSite: number
-  skuNumber: number
 }

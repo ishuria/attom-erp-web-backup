@@ -7,7 +7,6 @@
         class="noneHoverTable"
         :data="list"
         :header-cell-style="{ textAlign: 'center' }"
-        :span-method="objectSpanMethod"
         @selection-change="setSelectedList"
       >
         <el-table-column type="selection" />
@@ -20,7 +19,7 @@
       </el-table>
       <template #footer>
         <el-button @click="visible = false">取消</el-button>
-        <el-button type="primary" @click="handleConfirm">确定</el-button>
+        <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
       </template>
     </vab-dialog>
   </div>
@@ -50,24 +49,18 @@ watch(visible, (newVal) => {
     fetchData()
   }
 })
+const loading = ref(false)
 const list = ref<any[]>([])
 const selectedList = ref<any[]>([])
 const setSelectedList = (rows: any[]) => {
-  selectedList.value = list.value
-    .filter((item) => {
-      // 检查当前item是否在选中的rows中
-      return rows.find((row) => row.shippingPlanDate + row.planSite === item.shippingPlanDate + item.planSite)
-    })
-    .map((item) => ({
-      sku: item.sku,
-      planSite: item.planSite,
-      skuNumber: item.skuNumber,
-      productCount: item.productCount,
-    }))
-  console.log(selectedList.value)
+  selectedList.value = rows.map((item) => ({
+    planSite: item.planSite,
+    shippingPlanDate: item.shippingPlanDate,
+  }))
 }
 
 const handleConfirm = async () => {
+  loading.value = true
   const { data } = await updateOperationOrderShipmentQuantity(selectedList.value)
   if (data) {
     $baseMessage('更新发货数成功！', 'success')
@@ -75,41 +68,7 @@ const handleConfirm = async () => {
   } else {
     $baseMessage('更新发货数失败！', 'error')
   }
-}
-
-// col合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
-  if (
-    columnIndex === 0 ||
-    columnIndex === 1 ||
-    columnIndex === 2 ||
-    columnIndex === 3 ||
-    columnIndex === 4 ||
-    columnIndex === 5 ||
-    columnIndex === 6
-  ) {
-    // 获取当前row的零件id
-    const id = row.shippingPlanDate + row.planSite
-    // 默认不跨行
-    let rowspan = 1
-
-    // 遍历后端返回的数据，计算相同ID的productCount总和
-    for (let i = rowIndex + 1; i < list.value.length; i++) {
-      if (list.value[i].shippingPlanDate + list.value[i].planSite === id) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-
-    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || list.value[rowIndex - 1].shippingPlanDate + list.value[rowIndex - 1].planSite !== id) {
-      return { rowspan, colspan: 1 }
-    } else {
-      return { rowspan: 0, colspan: 0 }
-    }
-  }
+  loading.value = false
 }
 
 // 打开发货数检查
