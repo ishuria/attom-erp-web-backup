@@ -56,14 +56,7 @@
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')">
           <template #default="{ row }">
             <div class="none">
-              <el-input
-                v-model="row.componentName"
-                autofocus
-                :autosize="{ minRows: 2, maxRows: 7 }"
-                type="textarea"
-                @blur="clickCancel($event, row)"
-                @keyup.enter="clickCancel($event, row)"
-              />
+              <el-input v-model="row.componentName" autofocus @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.componentName }}</span>
           </template>
@@ -1225,7 +1218,12 @@ const clickCancel = async (event: any, value: any) => {
     try {
       const actualTaxRate = (value.actualTaxRate ?? 0) / 100
       const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
-      await reviewStepNo3ComponentUpdate({ ...value, actualTaxRate, invoicingTaxRate })
+      const processedValue = {
+        ...value,
+        actualTaxRate,
+        invoicingTaxRate,
+      }
+      await reviewStepNo3ComponentUpdate(processedValue)
       await fetchDataComponent()
       await fetchVariantsData()
     } catch {

@@ -64,9 +64,14 @@
                     <el-input v-model="poDetailData.createTime" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                   <el-form-item label="产品经理">
                     <el-input v-model="poDetailData.productManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="产品设计">
+                    <el-input v-model="poDetailData.productDesign" disabled />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -662,9 +667,14 @@
                     <el-input v-model="poDetailData.createTime" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                   <el-form-item label="产品经理">
                     <el-input v-model="poDetailData.productManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="产品设计">
+                    <el-input v-model="poDetailData.productDesign" disabled />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -1271,9 +1281,14 @@
                     <el-input v-model="poDetailData.createTime" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                   <el-form-item label="产品经理">
                     <el-input v-model="poDetailData.productManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="产品设计">
+                    <el-input v-model="poDetailData.productDesign" disabled />
                   </el-form-item>
                 </el-col>
               </el-row>

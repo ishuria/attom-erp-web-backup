@@ -2818,7 +2818,7 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 50,
   keyWord: '',
-  status: 2, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
+  status: 0, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
   customsStatus: -1,
 })
 const handleSizeChange = (value: number) => {
