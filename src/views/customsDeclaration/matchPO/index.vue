@@ -123,7 +123,7 @@
       </el-table-column>
       <el-table-column label="货代渠道" min-width="180" prop="channelId">
         <template #default="{ row }">
-          <el-select v-model="row.channelId">
+          <el-select v-model="row.channelId" @change="handleUpdateChannel(row)">
             <el-option v-for="item in forwarderOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -540,6 +540,7 @@ import {
   updateBgShipmentLeg,
   updateQgShipmentLeg,
   updateShipment,
+  updateShipmentChannel,
   updateShipmentLeg,
   updateShipmentLegCurrency,
   updateShipmentLegPay,
@@ -602,6 +603,9 @@ const contractNumberForm = reactive<IContractNumberForm>({
   sourcePath: 'F:\\0云舟付款',
   shipmentId: '',
 })
+const handleUpdateChannel = async (row: any) => {
+  await updateShipmentChannel({ id: row.id, channelId: row.channelId })
+}
 
 const uploadPDF = async () => {
   let uploadForm = new FormData()

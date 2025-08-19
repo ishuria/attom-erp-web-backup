@@ -345,6 +345,19 @@ export const updateShipmentPay = (params: IUpdateShipmentPay): Promise<IBooleanR
   })
 }
 /**
+ * 匹配PO、报关资料-修改货代渠道可见
+ * @param params
+ * @returns
+ */
+export const updateShipmentChannel = (params: { id: number; channelId: number }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/update/channel`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
  * @description 头程运费-获取数据列表
  */
 export const getShipmentCostList = (params: IShipId) => {
