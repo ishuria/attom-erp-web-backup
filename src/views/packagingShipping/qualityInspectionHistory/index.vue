@@ -6,7 +6,13 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keydown.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -14,18 +20,14 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          border 
-          :cell-class-name="clearPadding" 
-          :data="list" 
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-        >
+        <el-table border :cell-class-name="clearPadding" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
           <el-table-column align="center" label="质检日期" prop="submitDate" />
           <el-table-column align="center" label="PO" prop="po" />
           <el-table-column label="SKU图片" prop="" width="75">
             <template #header>
-              SKU<br />图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.skuImgUrl)">
@@ -44,12 +46,14 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="产品经理" prop="productManager" />
-          <el-table-column align="center" label="质检结论" prop="status" >
+          <el-table-column align="center" label="留样数量" prop="retainedSampleCount" />
+          <el-table-column align="center" label="留样记录" prop="retainedSampleType" />
+          <el-table-column align="center" label="质检结论" prop="status">
             <template #default="{ row }">
               <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '通过' : '不通过' }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" prop="" >
+          <el-table-column align="center" label="操作" prop="">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleViewNewReport(row)">查看报告</el-button>
             </template>
@@ -71,7 +75,13 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline @submit.prevent>
               <el-form-item>
-                <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keydown.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -79,18 +89,14 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
-          border 
-          :cell-class-name="clearPadding" 
-          :data="list" 
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
-        >
+        <el-table border :cell-class-name="clearPadding" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
           <el-table-column align="center" label="质检日期" prop="submitDate" />
           <el-table-column align="center" label="PO" prop="po" />
           <el-table-column label="SKU图片" prop="" width="75">
             <template #header>
-              SKU<br />图片
+              SKU
+              <br />
+              图片
             </template>
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.skuImgUrl)">
@@ -109,12 +115,14 @@
             </template>
           </el-table-column>
           <el-table-column align="center" label="产品经理" prop="productManager" />
-          <el-table-column align="center" label="质检结论" prop="status" >
+          <el-table-column align="center" label="留样数量" prop="retainedSampleCount" />
+          <el-table-column align="center" label="留样记录" prop="retainedSampleType" />
+          <el-table-column align="center" label="质检结论" prop="status">
             <template #default="{ row }">
               <el-tag :type="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '通过' : '不通过' }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" prop="" >
+          <el-table-column align="center" label="操作" prop="">
             <template #default="{ row }">
               <el-button text type="primary" @click="handleViewPackingReport(row)">查看报告</el-button>
             </template>
@@ -148,7 +156,7 @@ import { getQualityInspectionList, getQualityInspectionNew, getQualityInspection
 import type { IGetQualityInspectionList, IGetQualityInspectionListReq } from '/@/type/packagingShipping/packagingType'
 
 defineOptions({
-  name: 'QualityInspectionHistory'
+  name: 'QualityInspectionHistory',
 })
 
 const activeName = ref<number>(0)
@@ -191,10 +199,10 @@ const handleViewPackingReport = async (row: any) => {
   packingReportVisible.value = true
   Object.assign(packingReportData, data)
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === 'SKU图片') {
     return 'clear-padding'
-  } 
+  }
   return ''
 }
 const handleCurrentChange = (val: number) => {
