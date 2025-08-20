@@ -402,10 +402,60 @@ const handleSave = async () => {
     console.error(error)
   }
 }
+// 校验
+const checkSupplier = () => {
+  for (const item of list.value) {
+    if (item.invoicing !== 0) continue
+    if (!item.taxNumber) {
+      $baseMessage(`${item.suppliser}的税号不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.address) {
+      $baseMessage(`${item.suppliser}的地址不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.telephone) {
+      $baseMessage(`${item.suppliser}的开票电话不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.bank) {
+      $baseMessage(`${item.suppliser}的开户银行不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.accountNumber) {
+      $baseMessage(`${item.suppliser}的开户账号不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.bankRoutingNumber) {
+      $baseMessage(`${item.suppliser}的联行号不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.contactPerson) {
+      $baseMessage(`${item.suppliser}的联系人不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.contactNumber) {
+      $baseMessage(`${item.suppliser}的联系人电话不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.weChatNumber) {
+      $baseMessage(`${item.suppliser}的联系人微信不能为空`, 'error', 'hey')
+      return false
+    }
+    if (!item.supplierWeChatNumber) {
+      $baseMessage(`${item.suppliser}的供应商微信号不能为空`, 'error', 'hey')
+      return false
+    }
+  }
+  return true
+}
 
 // 当点击保存并继续的时候
 const handleSaveAndContinue = async () => {
   try {
+    if (!checkSupplier()) {
+      return
+    }
     const { data } = await reviewStepNo4SaveFr({ reviewId: classReviewId! })
     if (data === true) {
       $baseMessage('当前信息已保存。', 'success', 'hey')
