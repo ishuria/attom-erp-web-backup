@@ -33,13 +33,8 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段" >
-                  <el-option 
-                    v-for="item in searchOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
+                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -79,30 +74,45 @@
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column fixed="left" label="合同编号" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" prop="contractNumber" sortable="custom" />
+          <el-table-column
+            fixed="left"
+            label="合同编号"
+            :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)"
+            prop="contractNumber"
+            sortable="custom"
+          />
           <el-table-column label="报关单出口日期" min-width="120" prop="exportDate" sortable="custom">
             <template #header>
-              报关单<br />出口日期
+              报关单
+              <br />
+              出口日期
             </template>
             <template #default="{ row }">
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="报关品名" :min-width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)" prop="customsDeclarationName" sortable="custom" />
-      
+          <el-table-column
+            label="报关品名"
+            :min-width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)"
+            prop="customsDeclarationName"
+            sortable="custom"
+          />
+
           <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-      
+
           <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-   
+
           <el-table-column label="CIF售价$" min-width="120" prop="cifPrice" />
           <el-table-column label="运费$" min-width="100" prop="freightFee" />
           <el-table-column label="FOB售价$" min-width="120" prop="fobPrice" />
           <el-table-column label="汇率" min-width="90" prop="rate" />
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
-          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal" >
+          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal">
             <template #header>
-              匹配发票<br />总金额￥
+              匹配发票
+              <br />
+              总金额￥
             </template>
             <template #default="{ row }">
               <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
@@ -111,37 +121,48 @@
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
           <el-table-column label="利润￥" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" prop="profit" />
-          <el-table-column label="利润率" min-width="100" prop="profitMargin" >
+          <el-table-column label="利润率" min-width="100" prop="profitMargin">
             <template #default="{ row }">
               {{ row.profitMargin ? row.profitMargin + '%' : '' }}
             </template>
           </el-table-column>
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" prop="suppliser" sortable="custom" />
-          <el-table-column label="供应商税号" :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')" prop="suppliserTaxNumber" />
+          <el-table-column
+            label="供应商"
+            :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)"
+            prop="suppliser"
+            sortable="custom"
+          />
+          <el-table-column
+            label="供应商税号"
+            :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')"
+            prop="suppliserTaxNumber"
+          />
           <el-table-column label="PO" min-width="100" prop="po" sortable="custom" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
+          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode" >
+          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom" >
+          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
                 <span>{{ item.invoiceNumber }}</span>
                 <div class="button-group">
                   <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
-                  <el-button v-if="item.invoiceFilePath" class="button-download" :icon="Download" size="small" @click="downloadInvoice(item.invoiceFilePath)" />
-                  <el-tooltip
-                    content=""
-                    effect="dark"
-                    placement="top"
-                  >
+                  <el-button
+                    v-if="item.invoiceFilePath"
+                    class="button-download"
+                    :icon="Download"
+                    size="small"
+                    @click="downloadInvoice(item.invoiceFilePath)"
+                  />
+                  <el-tooltip content="" effect="dark" placement="top">
                     <template #content>
                       <div class="custom-tooltip">删除匹配</div>
                     </template>
@@ -208,13 +229,8 @@
           <vab-query-form-right-panel :span="6">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-select  v-model="queryForm.searchFields" placeholder="请选择搜索字段">
-                  <el-option 
-                    v-for="item in searchOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
+                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -237,7 +253,7 @@
           border
           :cell-style="cellStyle2"
           class="noneHoveTable"
-         :data="list"
+          :data="list"
           :default-sort="{ prop: 'shipmentDate', order: 'descending' }"
           :header-cell-class-name="headerCell"
           :header-cell-style="headerCellStyle"
@@ -254,10 +270,18 @@
               {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column fixed="left" label="合同编号" :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)" prop="contractNumber" sortable="custom" />
+          <el-table-column
+            fixed="left"
+            label="合同编号"
+            :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)"
+            prop="contractNumber"
+            sortable="custom"
+          />
           <el-table-column label="报关单出口日期" min-width="120" prop="exportDate" sortable="custom">
             <template #header>
-              报关单<br />出口日期
+              报关单
+              <br />
+              出口日期
             </template>
             <template #default="{ row }">
               {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
@@ -272,9 +296,11 @@
           <el-table-column label="汇率" min-width="90" prop="rate" />
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost" />
-          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal" >
+          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal">
             <template #header>
-              匹配发票<br />总金额￥
+              匹配发票
+              <br />
+              总金额￥
             </template>
             <template #default="{ row }">
               <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
@@ -282,27 +308,36 @@
             </template>
           </el-table-column>
           <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" prop="profit"/>
-          <el-table-column label="利润率" min-width="100" prop="profitMargin" >
+          <el-table-column label="利润￥" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" prop="profit" />
+          <el-table-column label="利润率" min-width="100" prop="profitMargin">
             <template #default="{ row }">
               {{ row.profitMargin ? row.profitMargin + '%' : '' }}
             </template>
           </el-table-column>
           <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)" prop="suppliser" sortable="custom" />
-          <el-table-column label="供应商税号" :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')" prop="suppliserTaxNumber" />
+          <el-table-column
+            label="供应商"
+            :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)"
+            prop="suppliser"
+            sortable="custom"
+          />
+          <el-table-column
+            label="供应商税号"
+            :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')"
+            prop="suppliserTaxNumber"
+          />
           <el-table-column label="PO" min-width="100" prop="po" sortable="custom" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate" >
+          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode" >
+          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom" >
+          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom">
             <template #default="{ row }">
               <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
                 <span>{{ item.invoiceNumber }}</span>
@@ -369,7 +404,7 @@
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="供应商" >
+        <el-form-item label="供应商">
           <el-select
             v-model="ticketReminderForm.suppliser"
             clearable
@@ -380,12 +415,7 @@
             remote
             :remote-method="remoteMethod"
           >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <!-- <el-form-item label="仅已报关" prop="">
@@ -400,7 +430,7 @@
       </el-form>
       <template #footer>
         <el-button @click="closeTicketReminder">取消</el-button>
-        <el-button type="primary" @click="handleConfirmTicketReminder" :loading="generateLoading">确定</el-button>
+        <el-button :loading="generateLoading" type="primary" @click="handleConfirmTicketReminder">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 发票匹配导出 -->
@@ -477,11 +507,11 @@ const remoteMethod = async (query: string) => {
   if (query) {
     // 先获取供应商信息
     const { data } = await getProductAllSupplier({
-        suppliserName: query
+      suppliserName: query,
     })
 
     supplierList.value = data.map((item: any) => {
-        return { value: `${item}`, label: `${item}` }
+      return { value: `${item}`, label: `${item}` }
     })
     loading.value = true
     setTimeout(() => {
@@ -495,36 +525,48 @@ const remoteMethod = async (query: string) => {
   }
 }
 
-const handleSummaryMethod = ({ columns, data }: { columns: any[], data: any[] }): any[] => {
-
-  const sums: string[] = [];
+const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] }): any[] => {
+  const sums: string[] = []
 
   columns.forEach((column, index) => {
     if (index === 0) {
-      sums[index] = '合计'; // 第一列显示“合计”字样
-      return;
+      sums[index] = '合计' // 第一列显示“合计”字样
+      return
     }
 
     // 对特定字段执行求和
-    if (['customsDeclarationCount', 'cifPrice', 'freightFee', 'fobPrice', 'salePrice', 'taxInclusiveCost', 'includingTaxPriceTotal', 'taxRefundsCost', 'profit', 'taxRebate'].includes(column.property)) {
+    if (
+      [
+        'customsDeclarationCount',
+        'cifPrice',
+        'freightFee',
+        'fobPrice',
+        'salePrice',
+        'taxInclusiveCost',
+        'includingTaxPriceTotal',
+        'taxRefundsCost',
+        'profit',
+        'taxRebate',
+      ].includes(column.property)
+    ) {
       const total = data.reduce((sum, row) => {
-        const value = Number(row[column.property]);
-        return isNaN(value) ? sum : sum + value;
-      }, 0);
-      sums[index] = total.toFixed(2); // 保留两位小数
+        const value = Number(row[column.property])
+        return isNaN(value) ? sum : sum + value
+      }, 0)
+      sums[index] = total.toFixed(2) // 保留两位小数
     } else if (['invoiceTotal', 'componentCount'].includes(column.property)) {
       const total = data.reduce((sum, row) => {
-        const value = Number(row[column.property]);
-        return isNaN(value) ? sum : sum + value;
-      }, 0);
+        const value = Number(row[column.property])
+        return isNaN(value) ? sum : sum + value
+      }, 0)
       sums[index] = total
     } else {
       // 其他列不显示合计
-      sums[index] = '';
+      sums[index] = ''
     }
-  });
+  })
 
-  return sums;
+  return sums
 }
 /**
  * 下载发票信息
@@ -540,8 +582,8 @@ const downloadInvoice = (path: string) => {
   document.body.removeChild(link)
 }
 
-const handleSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   queryForm.orderByField = prop
   // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
   if (!order) {
@@ -550,8 +592,8 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
     } else if (queryForm.orderDirection === 'desc') {
       column.order = 'ascending'
     }
-  } 
-  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  }
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
 // 当 PDF 加载完成时获取宽度
@@ -595,7 +637,7 @@ const queryForm = reactive<IGetTaxRefundListQuery>({
   toDate: date.value[1],
   orderByField: 'shipmentDate',
   orderDirection: 'desc',
-  searchFields: 'shipmentId'
+  searchFields: 'shipmentId',
 })
 const queryDateData = () => {
   queryForm.fromDate = date.value[0]
@@ -611,13 +653,13 @@ const handleTabClick = (pane: TabsPaneContext) => {
     activeName.value = tabValue
     selectedRowIndex.value = -1 // 重置选中状态
     router.push({
-    query: {
+      query: {
         ...route.query,
-      tab: tabValue,
-      pageNo: '1',
-      pageSize: queryForm.pageSize,
-    },
-  })
+        tab: tabValue,
+        pageNo: '1',
+        pageSize: queryForm.pageSize,
+      },
+    })
     queryData()
   }
 }
@@ -658,7 +700,6 @@ const handleExportInvoiceMatch = async () => {
         //     $baseMessage(json?.msg, 'error')
         // }
       }
-     
     }
   })
 }
@@ -720,8 +761,8 @@ const handleConfirmTicketReminder = async () => {
             }
           })
           reader.readAsText(response)
-          generateLoading.value = false
         }
+        generateLoading.value = false
       } catch (error) {
         console.error(error)
         $baseMessage('下载失败，请稍后重试', 'error')
@@ -749,13 +790,7 @@ const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
 }
 
-const tableRowClassName = ({
-  row,
-  rowIndex,
-}: {
-  row: any
-  rowIndex: number
-}) => {
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.id === selectedRowIndex.value) {
     return 'warning-row'
   }
@@ -780,7 +815,7 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   }
 }
 
-const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (['报关单出口日期'].includes(data.column.label)) {
     return 'header-cell'
   }
@@ -832,7 +867,7 @@ const headerCellStyle = (): CSSProperties => {
   // }
   return {
     textAlign: 'center',
-    verticalAlign: 'top'
+    verticalAlign: 'top',
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -908,17 +943,16 @@ const fetchData = async () => {
     }
     // 处理发票匹配记录
     if (Array.isArray(item.matchInvoiceRecord)) {
-      
-      item.formattedMatchDate = item.matchInvoiceRecord.map(record => {
+      item.formattedMatchDate = item.matchInvoiceRecord.map((record) => {
         if (!record.invoiceMatchDate) return ''
         return formatDate(new Date(record.invoiceMatchDate))
       })
-      item.formattedInvoiceCode = item.matchInvoiceRecord.map(record => record.invoiceCode)
-      item.formattedInvoiceNumber = item.matchInvoiceRecord.map(record => ({
+      item.formattedInvoiceCode = item.matchInvoiceRecord.map((record) => record.invoiceCode)
+      item.formattedInvoiceNumber = item.matchInvoiceRecord.map((record) => ({
         invoiceNumber: record.invoiceNumber,
         invoiceFilePath: record.invoiceFilePath,
         invoiceDetailId: record.invoiceDetailId,
-        id: item.id
+        id: item.id,
       }))
     }
     // console.log(item.payRecord)
@@ -964,7 +998,7 @@ onBeforeMount(() => {
           }
           .el-form {
             .el-form-item:first-child {
-              margin: 0 10px 0 0  !important;
+              margin: 0 10px 0 0 !important;
             }
             .el-form-item:nth-child(2) {
               margin: 0 !important;
@@ -981,7 +1015,7 @@ onBeforeMount(() => {
             }
           }
         }
-      
+
         .el-checkbox {
           transform: scale(1.3);
           transform-origin: center;
@@ -998,7 +1032,7 @@ onBeforeMount(() => {
             align-items: center;
             justify-content: center;
             padding: 4px 0;
-            
+
             .button-group {
               display: flex;
               margin-left: 6px;
@@ -1015,21 +1049,20 @@ onBeforeMount(() => {
           .none {
             display: none;
           }
-           // 选中行样式优先级提高
-           .warning-row > td {
-              background-color: #7bddde !important;
-            }
-            
-            // 普通行hover时保持白色
-            .el-table__body tr:not(.warning-row) {
-              &.hover-row > td,
-              &:hover > td {
-                background-color: #ffffff !important;
-              }
-            }
-          
+          // 选中行样式优先级提高
+          .warning-row > td {
+            background-color: #7bddde !important;
           }
-        
+
+          // 普通行hover时保持白色
+          .el-table__body tr:not(.warning-row) {
+            &.hover-row > td,
+            &:hover > td {
+              background-color: #ffffff !important;
+            }
+          }
+        }
+
         .create-time {
           color: #4e88f3;
         }
@@ -1051,8 +1084,8 @@ onBeforeMount(() => {
   }
 }
 .noneHoveTable :deep(.header-cell .cell) {
-  display: flex;          /* 应用 Flexbox 布局 */
-  align-items: center;   /* 垂直居中 */
+  display: flex; /* 应用 Flexbox 布局 */
+  align-items: center; /* 垂直居中 */
   justify-content: center;
 }
 </style>
