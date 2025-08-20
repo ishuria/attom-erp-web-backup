@@ -958,6 +958,7 @@
         <el-form-item label="基础图片">
           <el-select
             v-model="assignTaskForm.baseImageUrlPerson"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"
@@ -970,6 +971,7 @@
         <el-form-item label="建模">
           <el-select
             v-model="assignTaskForm.moldingPerson"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"
@@ -982,6 +984,7 @@
         <el-form-item label="渲染">
           <el-select
             v-model="assignTaskForm.renderingPerson"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"
@@ -994,6 +997,7 @@
         <el-form-item label="A+">
           <el-select
             v-model="assignTaskForm.aPlus"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"
@@ -1006,6 +1010,7 @@
         <el-form-item label="视频">
           <el-select
             v-model="assignTaskForm.videoPerson"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"
@@ -1018,6 +1023,7 @@
         <el-form-item label="说明书">
           <el-select
             v-model="assignTaskForm.instructionPerson"
+            clearable
             collapse-tags
             collapse-tags-tooltip
             :max-collapse-tags="6"

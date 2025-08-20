@@ -288,7 +288,7 @@ export function queryArtDesignTaskDistribution(params: { taskId: number }): Prom
  * @param params
  * @returns
  */
-export function updateProofreadingStatus(params: { id: number, value: number }): Promise<{ data: boolean }> {
+export function updateProofreadingStatus(params: { id: number; value: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/artdesign/task/proofreading/update`,
     method: 'post',
