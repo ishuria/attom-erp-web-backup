@@ -630,7 +630,7 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 40)
     }
     case '可售含在途': {
-      return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 30)
+      return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 50)
     }
     case '运营分类': {
       return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
@@ -724,7 +724,8 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   return ''
 }
 const headerStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.column.label === '原始今补') {
+  const label = data.column.label
+  if (['原始今补', '可售含在途'].includes(label)) {
     return 'column_caret'
   }
   return ''

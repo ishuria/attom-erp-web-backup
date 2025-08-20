@@ -253,6 +253,7 @@ export const orderColumns = [
     label: '可售含在途',
     prop: 'esAvailableSaleDayTotal',
     minWidth: 80,
+    sortable: true,
   },
   {
     label: '断货',
@@ -302,7 +303,8 @@ export const orderColumns = [
   {
     label: '计划#',
     prop: 'planPoPurchaseSkuNumber',
-    minWidth: 70,
+    minWidth: 90,
+    sortable: true,
   },
   {
     label: '签收',
@@ -365,7 +367,8 @@ export const orderColumns = [
   {
     label: '月销量',
     prop: 'monthSalesVolume',
-    minWidth: 75,
+    minWidth: 100,
+    sortable: true,
   },
   {
     label: '月销售额',

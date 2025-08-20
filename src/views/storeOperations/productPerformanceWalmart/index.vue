@@ -28,12 +28,24 @@
             </el-select>
           </el-form-item>
           <el-form-item label="运营">
-            <el-select v-model="queryForm.operationUserId" :disabled="disabledOpe" placeholder="请选择运营人员" style="width: 5em" @change="queryData">
+            <el-select
+              v-model="queryForm.operationUserId"
+              :disabled="disabledOpe"
+              placeholder="请选择运营人员"
+              style="width: 5em"
+              @change="queryData"
+            >
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item label="开发人">
-            <el-select v-model="queryForm.developUserId" :disabled="disabledDev" placeholder="请选择开发人" style="width: 5em" @change="queryData">
+            <el-select
+              v-model="queryForm.developUserId"
+              :disabled="disabledDev"
+              placeholder="请选择开发人"
+              style="width: 5em"
+              @change="queryData"
+            >
               <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -43,11 +55,11 @@
           <el-form-item>
             <el-button type="primary" @click="showOpeClassify">运营分类设定</el-button>
           </el-form-item>
-          <el-form-item >
+          <el-form-item>
             <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
           </el-form-item>
-          <el-form-item >
-            <el-text style="margin-left: 10px; font-weight: 600;">数据更新时间：2024年12月22日14:02</el-text>
+          <el-form-item>
+            <el-text style="margin-left: 10px; font-weight: 600">数据更新时间：2024年12月22日14:02</el-text>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -62,15 +74,15 @@
             <div
               v-for="item in columns"
               :key="item.label"
-              :class="{'non-draggable': item.disableCheck}"
-              style="display: flex; align-items: center; font-size: var(--el-font-size-base);" 
+              :class="{ 'non-draggable': item.disableCheck }"
+              style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
             >
-              <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+              <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
               <span style="flex: 1">{{ item.label }}</span>
-              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
                 <vab-icon icon="eye-line" />
               </span>
-              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer;" @click="handleChecked(item)">
+              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
                 <vab-icon v-show="!item.checked" icon="eye-off-line" />
                 <vab-icon v-show="item.checked" icon="eye-line" />
               </span>
@@ -79,7 +91,13 @@
         </el-popover>
         <el-form inline :model="queryForm">
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -88,17 +106,17 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
+      v-loading="listLoading"
       border
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
       class="noneHoverTable"
       :data="list"
+      :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+      :header-cell-class-name="headerCell"
       :header-cell-style="{ textAlign: 'center' }"
       @cell-click="cellClick"
-      :header-cell-class-name="headerCell"
       @sort-change="walmartSortChange"
-      :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
-      v-loading="listLoading"
     >
       <el-table-column
         v-for="(item, index) in checkList"
@@ -107,45 +125,63 @@
         :label="item.label"
         :min-width="handleWidth(item)"
         :prop="item.prop"
-        :width="item.width"
         :sortable="item.sortable ? 'custom' : false"
+        :width="item.width"
       >
         <template #header>
           <span v-if="item.label === '销量趋势(点击看明细)'">
-            销量趋势<br />(点击看明细)
+            销量趋势
+            <br />
+            (点击看明细)
           </span>
           <span v-if="item.label === '库存可售'">
-            库存<br />可售
+            库存
+            <br />
+            可售
           </span>
           <span v-if="item.label === '月销售额'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+              <div class="questionIcon">
+                月销售额
+                <el-icon><question-filled /></el-icon>
+              </div>
               <template #content>
-                <div class="custom-tooltip" >过去30天的销售额</div>
+                <div class="custom-tooltip">过去30天的销售额</div>
               </template>
             </el-tooltip>
           </span>
           <span v-if="item.label === '月退款%'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+              <div class="questionIcon">
+                月退款%
+                <el-icon><question-filled /></el-icon>
+              </div>
               <template #content>
-                <div class="custom-tooltip" >过去30天的退款占比</div>
+                <div class="custom-tooltip">过去30天的退款占比</div>
               </template>
             </el-tooltip>
           </span>
           <span v-if="item.label === '月退货%'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+              <div class="questionIcon">
+                月退货%
+                <el-icon><question-filled /></el-icon>
+              </div>
               <template #content>
-                <div class="custom-tooltip" >过去30天的退货占比</div>
+                <div class="custom-tooltip">过去30天的退货占比</div>
               </template>
             </el-tooltip>
           </span>
           <span v-if="item.label === '可售含在途'">
             <el-tooltip content="" effect="dark" placement="top">
-              <div class="questionIcon">可售<br />含在途 <el-icon><question-filled /></el-icon> </div>
+              <div class="questionIcon">
+                可售
+                <br />
+                含在途
+                <el-icon><question-filled /></el-icon>
+              </div>
               <template #content>
-                <div class="custom-tooltip" >含在途数量的可售天数+断货天数</div>
+                <div class="custom-tooltip">含在途数量的可售天数+断货天数</div>
               </template>
             </el-tooltip>
           </span>
@@ -164,22 +200,18 @@
           <!-- SKU 展示-->
           <span v-if="item.label === 'SKU'">
             <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.sku }}</el-link>
-            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
               <vab-icon icon="file-copy-2-fill" />
             </span>
-            
-            <div
-              class="rate-wrapper"
-              style="cursor: pointer;"
-              @click="goToReview(row.itemNumber)"
-            >
+
+            <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.itemNumber)">
               <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
               <span>
                 <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
               </span>
               <span class="rate-count">{{ row.commentsNumbers }}</span>
-              <span style="margin-top: -2px" :class="{ 'japan-flag': row.flag === 'JP' }">
-                <country-flag :country='row.flag'/>
+              <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
+                <country-flag :country="row.flag" />
               </span>
             </div>
           </span>
@@ -197,7 +229,9 @@
             <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateStopStatus(row)" />
           </span>
           <span v-if="item.label === '自量FBA'">
-            {{ (row.currencyIcon + (row.selfAssessmentFba ?? '')) }} <br /> {{ (row.currencyIcon + (row.amazonFba ?? '')) }}
+            {{ row.currencyIcon + (row.selfAssessmentFba ?? '') }}
+            <br />
+            {{ row.currencyIcon + (row.amazonFba ?? '') }}
           </span>
           <span v-if="label1.includes(item.label)">
             {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
@@ -209,7 +243,7 @@
             <!-- 处理 天 -->
             {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
           </span>
-          
+
           <span v-if="item.label === '状态'">
             <el-tag v-if="row.walmartStatus === 'PUBLISHED'" type="success">{{ row.walmartStatus }}</el-tag>
             <el-tag v-if="row.walmartStatus === 'UNPUBLISHED'" type="danger">{{ row.walmartStatus }}</el-tag>
@@ -219,10 +253,10 @@
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
               </template>
-              <el-text style="vertical-align: middle;" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
+              <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
             </el-tooltip>
           </span>
-         
+
           <span v-if="item.label === '季节趋势'">
             <div style="width: 100%; height: 50px">
               <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
@@ -236,7 +270,9 @@
             <span v-html="row.storageAge"></span>
           </span>
           <span v-if="item.label === '订货#'">
-            {{ row.orderCount }}<br><span style="font-weight: bold;">{{ row.orderTotalNumber }}</span>
+            {{ row.orderCount }}
+            <br />
+            <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
           </span>
           <span v-if="item.label === '开发人员'">
             <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
@@ -249,10 +285,10 @@
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -266,35 +302,30 @@
       @update-visible="handleCloseFilterDialog"
     /> -->
     <!-- 运营分类 -->
-    <vab-operational-classify 
-      :ope-classify-visible="opeClassifyVisible"
-      @update-visible="closeOpeClassify"
-    />
-     <!-- 关键词排名趋势 -->
-     <vab-key-word-rank-trend 
-      :key-word-trend-visible="keyWordTrendVisible"
-      @update-visible="handleCloseKeyWordTrend"
-    />
+    <vab-operational-classify :ope-classify-visible="opeClassifyVisible" @update-visible="closeOpeClassify" />
+    <!-- 关键词排名趋势 -->
+    <vab-key-word-rank-trend :key-word-trend-visible="keyWordTrendVisible" @update-visible="handleCloseKeyWordTrend" />
     <!-- 运营备注 -->
-    <vab-dialog
-      v-model="remarkVisible"
-      title="运营备注"
-      width="20%"
-    >
+    <vab-dialog v-model="remarkVisible" title="运营备注" width="20%">
       <el-input v-model="remark" placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
-    
-     <!-- 季节趋势 -->
-     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
+
+    <!-- 季节趋势 -->
+    <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 筛选 -->
-    <vab-filter-walmart-dialog :filter-visible="filterVisible" :loading="filterLoading" @update-filter="handleConfirmFilter" @update-visible="handleCloseFilterDialog" />
+    <vab-filter-walmart-dialog
+      :filter-visible="filterVisible"
+      :loading="filterLoading"
+      @update-filter="handleConfirmFilter"
+      @update-visible="handleCloseFilterDialog"
+    />
   </div>
 </template>
 
@@ -307,13 +338,25 @@ import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
-import { filterWalmartList, getCurrencyWalmartOperation, getDevelopUserList, getOperationWalmartList, getUserAmazonOperation, getWalmartCurrencyList, getWalmartSiteList, updateCurrencyWalmartOperation, updateOperationSKUDisContinuedStatus, updateOperationWalmartOperateTypeList, updateRemarkWalmartOperation } from '/@/api/devlocal/productPerformance'
+import {
+  filterWalmartList,
+  getCurrencyWalmartOperation,
+  getDevelopUserList,
+  getOperationWalmartList,
+  getUserAmazonOperation,
+  getWalmartCurrencyList,
+  getWalmartSiteList,
+  updateCurrencyWalmartOperation,
+  updateOperationSKUDisContinuedStatus,
+  updateOperationWalmartOperateTypeList,
+  updateRemarkWalmartOperation,
+} from '/@/api/devlocal/productPerformance'
 import handleClipboard from '/@/utils/clipboard'
 import { getAmazonStars } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'ProductPerformanceWalmart'
+  name: 'ProductPerformanceWalmart',
 })
 
 let _row: any
@@ -328,7 +371,7 @@ const handleUpdateOpeType = async (row: any) => {
 const confirmUpdateRemark = async () => {
   const { data } = await updateRemarkWalmartOperation({
     id: _row.id,
-    remark: remark.value
+    remark: remark.value,
   })
   if (data) {
     $baseMessage('运营备注修改成功！', 'success')
@@ -340,12 +383,12 @@ const handleUpdateStopStatus = async (row: any) => {
   await updateOperationSKUDisContinuedStatus({
     skuId: row.skuId!,
     status: row.stopProductStatus!,
-    siteId: row.site
+    siteId: row.site,
   })
 }
 const changeCurrency = async () => {
   const { data } = await updateCurrencyWalmartOperation({
-    currency: selectCurrency.value!
+    currency: selectCurrency.value!,
   })
   if (data) {
     queryData()
@@ -354,29 +397,27 @@ const changeCurrency = async () => {
 const handleConfirmFilter = async (filterForm: any) => {
   filterLoading.value = true
   try {
-   
-      const { site, ...filterQueryForm } = queryForm
-      const siteIds = site.join(',')
-      const { data } = await filterWalmartList({
-        ...filterQueryForm,
-        ...filterForm,
-        siteIds,
-      })
-      if (data) {
-        $baseMessage('沃尔玛运营筛选成功！', 'success')
-        filterVisible.value = false
-        total.value = data.total
-        list.value = data.list
-      }
-   
+    const { site, ...filterQueryForm } = queryForm
+    const siteIds = site.join(',')
+    const { data } = await filterWalmartList({
+      ...filterQueryForm,
+      ...filterForm,
+      siteIds,
+    })
+    if (data) {
+      $baseMessage('沃尔玛运营筛选成功！', 'success')
+      filterVisible.value = false
+      total.value = data.total
+      list.value = data.list
+    }
   } catch {
     $baseMessage('筛选失败，请重试', 'error')
   } finally {
     filterLoading.value = false
   }
 }
-const walmartSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const walmartSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   // console.log(column, prop, order)
   if (queryForm.orderByField === prop) {
     if (!order) {
@@ -385,28 +426,28 @@ const walmartSortChange = (data: { column: any, prop: string, order: any }) => {
       } else if (queryForm.orderDirection === 'desc') {
         column.order = 'ascending'
       }
-    } 
+    }
   } else {
     column.order = 'descending'
   }
   queryForm.orderByField = prop
-  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   // console.log(order)
   queryData()
 }
-const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
-  if (['今销', '月销售额'].includes(data.column.label)) {
+const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (['今销', '月销售额', '上新', '库存可售', '可售含在途'].includes(data.column.label)) {
     return 'header-cell'
   }
   return ''
 }
 const goToReview = (itemNumber: string) => {
-  window.open(`https://www.walmart.com/reviews/product/${itemNumber}`, '_blank');
+  window.open(`https://www.walmart.com/reviews/product/${itemNumber}`, '_blank')
 }
 let _seasonalCoefficient = {
   actualList: [],
-  referenceList: []
-} 
+  referenceList: [],
+}
 const disabledOpe = ref<boolean>(false)
 const disabledDev = ref<boolean>(false)
 const checkAll = ref<boolean>(false)
@@ -488,7 +529,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'SKU',
@@ -496,7 +537,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   // {
   //   label: '站点',
@@ -515,14 +556,14 @@ const columns = ref<any>([
     prop: 'currentSalesNumber',
     checked: true,
     minWidth: 100,
-    sortable: true
+    sortable: true,
   },
   {
     label: '今单量',
     prop: 'currentSalesOrder',
     checked: true,
     minWidth: 100,
-    sortable: true
+    sortable: true,
   },
   {
     label: '季节趋势',
@@ -565,14 +606,14 @@ const columns = ref<any>([
     prop: 'monthSalesVolume',
     checked: true,
     minWidth: 100,
-    sortable: true
+    sortable: true,
   },
   {
     label: '月销售额',
     prop: 'monthSalesPrice',
     checked: true,
     minWidth: 150,
-    sortable: true
+    sortable: true,
   },
   {
     label: '月退货%',
@@ -591,6 +632,7 @@ const columns = ref<any>([
     prop: 'newArrivalDay',
     checked: true,
     minWidth: 90,
+    sortable: true,
   },
   {
     label: '库龄',
@@ -626,13 +668,15 @@ const columns = ref<any>([
     label: '库存可售',
     prop: 'esAvailableSaleDay',
     checked: true,
-    minWidth: 100,
+    minWidth: 120,
+    sortable: true,
   },
   {
     label: '可售含在途',
     prop: 'esAvailableSaleDayTotal',
     checked: true,
-    minWidth: 110,
+    minWidth: 130,
+    sortable: true,
   },
   {
     label: '断货',
@@ -800,8 +844,6 @@ const handleSeasonalOpened = () => {
 const cellClick = async (row: any, column: any) => {
   const label = column.label
   switch (label) {
-
-  
     case '运营备注': {
       showRemark()
       _row = row
@@ -813,7 +855,7 @@ const cellClick = async (row: any, column: any) => {
       _seasonalCoefficient = row.seasonalCoefficient
       break
     }
-    
+
     // No default
   }
 }
@@ -864,14 +906,14 @@ const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
 const handleMove = (event: any) => {
-  const { related  } = event
+  const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
   if (columns.value[targetIndex]?.disableCheck) {
-    return false; // 禁止移动到目标
+    return false // 禁止移动到目标
   }
 
-  return true; // 允许其他操作
+  return true // 允许其他操作
 }
 // 处理自适应宽度
 const handleWidth = (item: any) => {
@@ -886,10 +928,10 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
     }
     case '运营分类': {
-      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60); // 处理运营分类列
+      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
     }
     case '产品描述': {
-      return flexColumnWidth(list.value, '产品描述', 'productDesc');
+      return flexColumnWidth(list.value, '产品描述', 'productDesc')
     }
     case '开发人员': {
       return calculateBrColumnWidth(list.value, (row: any) => row._developName, 100)
@@ -909,7 +951,7 @@ const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
 
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
   }
@@ -964,7 +1006,7 @@ const fetchOperateUserList = async () => {
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
 const list = ref<any[]>([])
-  const getCurrentMonthIndex = () => {
+const getCurrentMonthIndex = () => {
   return new Date().getMonth() // 获取当前月份索引(0-11)
 }
 const seasonalXData = computed(() => {
@@ -1023,33 +1065,30 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   } else if (label === '运营备注') {
     return {
       textAlign: 'left',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
-  } 
-  else switch (label) {
-    
-   
-    case '月净利润': {
-      if (data.row.monthNetProfit > 0) {
-        return {
-          textAlign: 'center',
-          color: 'var(--el-color-success)'
+  } else
+    switch (label) {
+      case '月净利润': {
+        if (data.row.monthNetProfit > 0) {
+          return {
+            textAlign: 'center',
+            color: 'var(--el-color-success)',
+          }
+        } else {
+          return {
+            textAlign: 'center',
+            color: 'var(--el-color-danger)',
+          }
         }
-      } else {
+      }
+
+      default: {
         return {
           textAlign: 'center',
-          color: 'var(--el-color-danger)'
         }
       }
     }
-    
-   
-    default: {
-      return {
-        textAlign: 'center',
-      }
-    }
-  }
 }
 onBeforeMount(async () => {
   // 获取站点列表
@@ -1084,37 +1123,31 @@ onBeforeMount(async () => {
       transform-origin: center;
     }
     .storage-list {
-  display: grid;
-  .storage-item {
-    display: grid;
-    grid-template-columns: 70px 35px 60px; /* 设定固定列宽 */
-    text-align: left;
+      display: grid;
+      .storage-item {
+        display: grid;
+        grid-template-columns: 70px 35px 60px; /* 设定固定列宽 */
+        text-align: left;
 
-    .value2 {
-      font-weight: 550;
-      color: #000;
-    }
+        .value2 {
+          font-weight: 550;
+          color: #000;
+        }
 
-    .value3 {
-      font-weight: 550;
-      color: var(--el-color-danger);
+        .value3 {
+          font-weight: 550;
+          color: var(--el-color-danger);
+        }
+      }
     }
   }
 }
-  }
-}
 
-
-    
-
-    
-   
-  
 .rate-wrapper {
-  display: flex; 
+  display: flex;
   gap: 8px;
-  align-items: center; 
-  
+  align-items: center;
+
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -1138,11 +1171,10 @@ onBeforeMount(async () => {
         cursor: pointer;
       }
     }
-
   }
   .rate-count {
     margin-left: -11px;
-    color: #36788C;
+    color: #36788c;
   }
 }
 .icon-hover {
@@ -1171,8 +1203,8 @@ onBeforeMount(async () => {
   }
 }
 .noneHoverTable :deep(.header-cell .cell) {
-  display: flex;          /* 应用 Flexbox 布局 */
-  align-items: center;   /* 垂直居中 */
+  display: flex; /* 应用 Flexbox 布局 */
+  align-items: center; /* 垂直居中 */
   justify-content: center;
 }
 // 日本国旗样式增加边框
