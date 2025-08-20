@@ -479,12 +479,12 @@ const applyKeywordFilter = () => {
   if (keyword) {
     matchList.value = matchList.value.filter(
       (item: any) =>
-        item.contractNumber.toLowerCase().includes(keyword) ||
-        item.po.toLowerCase().includes(keyword) ||
-        item.sku.toLowerCase().includes(keyword) ||
-        item.customsDeclarationCount.toLowerCase().includes(keyword) ||
-        item.customsDeclarationName.toLowerCase().includes(keyword) ||
-        item.taxInclusiveCost.toLowerCase().includes(keyword)
+        (item.contractNumber?.toString()?.toLowerCase() || '').includes(keyword) ||
+        (item.po?.toString()?.toLowerCase() || '').includes(keyword) ||
+        (item.sku?.toString()?.toLowerCase() || '').includes(keyword) ||
+        (item.customsDeclarationCount?.toString()?.toLowerCase() || '').includes(keyword) ||
+        (item.customsDeclarationName?.toString()?.toLowerCase() || '').includes(keyword) ||
+        (item.taxInclusiveCost?.toString()?.toLowerCase() || '').includes(keyword)
     )
   } else {
     fetchMatchData()

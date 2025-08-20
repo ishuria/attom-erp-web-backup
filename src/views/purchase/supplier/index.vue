@@ -3,33 +3,42 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button type="primary">
-          <el-upload
-            v-model:file-list="fileList"
-            class="upload-demo"
-            :http-request="uploadExcelFile"
-            :limit="1"
-            :show-file-list="false"
-          >
-            <el-link style="color: #fff" type="primary" underline='never'>上传通用合同模板</el-link>
+          <el-upload v-model:file-list="fileList" class="upload-demo" :http-request="uploadExcelFile" :limit="1" :show-file-list="false">
+            <el-link style="color: #fff" type="primary" underline="never">上传通用合同模板</el-link>
           </el-upload>
         </el-button>
-          <el-button :loading="downloadLoading" type="primary" @click="handleDownLoad">下载通用合同模板</el-button>
+        <el-button :loading="downloadLoading" type="primary" @click="handleDownLoad">下载通用合同模板</el-button>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel >
+      <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe @cell-click="changeInput" @selection-change="setSelectRows" >
-      <el-table-column align="center" fixed="left" label="供应商ID" prop="suppliserId" width="75"/>
-      <el-table-column fixed="left" label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')" >
+    <el-table
+      ref="tableRef"
+      border
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @cell-click="changeInput"
+      @selection-change="setSelectRows"
+    >
+      <el-table-column align="center" fixed="left" label="供应商ID" prop="suppliserId" width="75" />
+      <el-table-column fixed="left" label="供应商名称" prop="suppliser" :width="flexColumnWidth(list, '供应商名称', 'suppliser')">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -38,76 +47,76 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="优先打包" prop="packing" width="100">
-        <template #default = "{ row }">
-            <el-checkbox v-model="row.packing" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingChange(row)"/>
+        <template #default="{ row }">
+          <el-checkbox v-model="row.packing" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingChange(row)" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="税号" min-width="200" prop="taxNumber" >
+      <el-table-column align="center" label="税号" min-width="200" prop="taxNumber">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.taxNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.taxNumber }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.taxNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.taxNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="地址" prop="address" :width="flexColumnWidth(list, '地址', 'address')" >
+      <el-table-column label="地址" prop="address" :width="flexColumnWidth(list, '地址', 'address')">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model="row.address" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.address }}</span>
+          <div class="none">
+            <el-input v-model="row.address" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.address }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="开票电话" min-width="150" prop="telephone" >
+      <el-table-column align="center" label="开票电话" min-width="150" prop="telephone">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.telephone" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.telephone }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.telephone" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.telephone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')" >
+      <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model="row.bank" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.bank }}</span>
+          <div class="none">
+            <el-input v-model="row.bank" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.bank }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="开户账号" min-width="230" prop="accountNumber" >
+      <el-table-column align="center" label="开户账号" min-width="230" prop="accountNumber">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.accountNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.accountNumber }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.accountNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.accountNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联行号" min-width="160" prop="bankRoutingNumber" >
+      <el-table-column align="center" label="联行号" min-width="160" prop="bankRoutingNumber">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.bankRoutingNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.bankRoutingNumber }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.bankRoutingNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.bankRoutingNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联系人" prop="contactPerson" width="100" >
+      <el-table-column align="center" label="联系人" prop="contactPerson" width="100">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model="row.contactPerson" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.contactPerson }}</span>
+          <div class="none">
+            <el-input v-model="row.contactPerson" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.contactPerson }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联系人电话" min-width="150" prop="contactNumber" >
+      <el-table-column align="center" label="联系人电话" min-width="150" prop="contactNumber">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.contactNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.contactNumber }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.contactNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.contactNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联系人微信" min-width="150" prop="weChatNumber" >
+      <el-table-column align="center" label="联系人微信" min-width="150" prop="weChatNumber">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model.trim="row.weChatNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
@@ -115,85 +124,108 @@
           <span>{{ row.weChatNumber }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="供应商微信号" min-width="150" prop="supplierWeChatNumber">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model.trim="row.supplierWeChatNumber" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.supplierWeChatNumber }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="实际税点专票" prop="actualZTaxRate" width="100">
         <template #header>
-          实际税点<br>专票
+          实际税点
+          <br />
+          专票
         </template>
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.actualZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.actualZTaxRate }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.actualZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.actualZTaxRate }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="开票税点专票" prop="invoicingZTaxRate" width="100">
-          <template #header>
-              开票税点<br>专票
-          </template>
-          <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.invoicingZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.invoicingZTaxRate }}</span>
+        <template #header>
+          开票税点
+          <br />
+          专票
+        </template>
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model.trim="row.invoicingZTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.invoicingZTaxRate }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="实际税点普票" prop="actualPTaxRate" width="100">
         <template #header>
-            实际税点<br>普票
+          实际税点
+          <br />
+          普票
         </template>
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.actualPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.actualPTaxRate }}</span>
+          <div class="none">
+            <el-input v-model.trim="row.actualPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.actualPTaxRate }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="开票税点普票" prop="invoicingPTaxRate" width="100">
-          <template #header>
-              开票税点<br>普票
-          </template>
-          <template #default="{ row }">
-            <div class="none">
-                <el-input v-model.trim="row.invoicingPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.invoicingPTaxRate }}</span>
+        <template #header>
+          开票税点
+          <br />
+          普票
+        </template>
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model.trim="row.invoicingPTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.invoicingPTaxRate }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="旺旺ID" prop="wwId" width="125">
         <template #default="{ row }">
-            <div class="none">
-                <el-input v-model="row.wwId" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-            </div>
-            <span>{{ row.wwId }}</span>
+          <div class="none">
+            <el-input v-model="row.wwId" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.wwId }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="使用特定合同模板" prop="templateStatus" width="100">
-        <template #default = "{ row }">
-            <el-checkbox v-model="row.templateStatus" class="custom-checkbox" :false-value="0" :true-value="1"  @change="handleTemplateStatus(row)"/>
+        <template #default="{ row }">
+          <el-checkbox
+            v-model="row.templateStatus"
+            class="custom-checkbox"
+            :false-value="0"
+            :true-value="1"
+            @change="handleTemplateStatus(row)"
+          />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="特定模板" min-width="100" prop="templateUrl" >
+      <el-table-column align="center" label="特定模板" min-width="100" prop="templateUrl">
         <template #default="{ row }">
-          <el-upload action="#" class="custom-upload" :class="{ hide: row.hide }" :file-list="row.fileList" :http-request="(file) => UploadRequestHandler(file, row)" list-type="picture-card">
+          <el-upload
+            action="#"
+            class="custom-upload"
+            :class="{ hide: row.hide }"
+            :file-list="row.fileList"
+            :http-request="(file) => UploadRequestHandler(file, row)"
+            list-type="picture-card"
+          >
             <el-icon><plus /></el-icon>
 
             <template #file="">
               <div class="file-item">
                 <el-icon class="file-icon"><document /></el-icon>
                 <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handleDownLoadSpecialFile(row)"
-                  >
+                  <span class="el-upload-list__item-preview" @click="handleDownLoadSpecialFile(row)">
                     <el-icon><download /></el-icon>
                   </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleDelFile(row)"
-                  >
+                  <span class="el-upload-list__item-delete" @click="handleDelFile(row)">
                     <el-icon><delete /></el-icon>
                   </span>
-              </span>
+                </span>
               </div>
             </template>
           </el-upload>
@@ -218,7 +250,12 @@ import { Delete, Document, Download, Plus, Search } from '@element-plus/icons-vu
 import type { TableInstance, UploadUserFile } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import { downloadFile } from '/@/api/devlocal/download'
-import { getProductSupplierList, updateProductSupplier, uploadProductSupplierFile, uploadProductSupplierSpecialFile } from '/@/api/devlocal/productInformation'
+import {
+  getProductSupplierList,
+  updateProductSupplier,
+  uploadProductSupplierFile,
+  uploadProductSupplierSpecialFile,
+} from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 // import * as XLSX from 'xlsx'
@@ -260,13 +297,15 @@ const UploadRequestHandler = async (params: any, row: any) => {
   }
 }
 const handleDownLoadSpecialFile = async (row: any) => {
-  await downloadFile("/product/suppliser/download",{
+  await downloadFile('/product/suppliser/download', {
     suppliserId: row.suppliserId,
-  }).then((res) => {
-    console.log(res);
-  }).catch((error) => {
-    console.error(error);
   })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 }
 const handleDelFile = async (row: any) => {
   row.hide = false
@@ -276,34 +315,33 @@ const handleDelFile = async (row: any) => {
 }
 let copyRow: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  copyRow = JSON.parse(JSON.stringify(row));
+  copyRow = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 
 // 零件table blur事件
-const clickCancel = async (event:any,value:any) =>{
-  const rootElement = getRootElement(event.srcElement, ".cell");
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -326,10 +364,10 @@ const handlePackingChange = async (row: any) => {
 }
 const handleTemplateStatus = async (row: any) => {
   if (row.templateStatus === 1 && row.fileList.length === 0) {
-      $baseMessage('未上传特定模板，无法勾选。', 'error')
-      row.templateStatus = 0
-      return
-    }
+    $baseMessage('未上传特定模板，无法勾选。', 'error')
+    row.templateStatus = 0
+    return
+  }
   await updateProductSupplier(row)
   fetchData()
 }
@@ -340,7 +378,7 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   list.value.forEach((item: any) => {
-    if(!item.templateUrl) {
+    if (!item.templateUrl) {
       item.hide = false
       item.fileList = []
     } else if (item.templateUrl) {
@@ -402,22 +440,19 @@ const setSelectRows = (value: string) => {
   selectRows.value = value
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }):any => {
-
-   if  (data.columnIndex === 0){
-
-       return {
-            color: '#bbb',
-            cursor: 'not-allowed',
-            textAlign:'center'
-        }
-   }
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
+  if (data.columnIndex === 0) {
+    return {
+      color: '#bbb',
+      cursor: 'not-allowed',
+      textAlign: 'center',
+    }
+  }
 }
 
 const handleDownLoad = async () => {
-  await downloadFile("/product/suppliser/download",{})
+  await downloadFile('/product/suppliser/download', {})
 }
-
 
 onActivated(() => {
   tableRef.value?.doLayout()
@@ -441,7 +476,7 @@ onBeforeMount(() => {
 }
 // 控制添加图片图标显示与隐藏
 .hide :deep(.el-upload--picture-card) {
-  display: none
+  display: none;
 }
 
 :deep(.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell) {
@@ -462,13 +497,12 @@ onBeforeMount(() => {
   height: 75px;
 }
 
-
 .file-item {
   display: flex;
   flex-direction: column; /* 垂直排列 */
-  align-items: center;    /* 水平居中 */
+  align-items: center; /* 水平居中 */
   justify-content: center; /* 垂直居中 */
-  width: 100%;            /* 确保容器宽度 */
+  width: 100%; /* 确保容器宽度 */
 }
 .file-icon {
   font-size: 50px; /* 调整大小 */
