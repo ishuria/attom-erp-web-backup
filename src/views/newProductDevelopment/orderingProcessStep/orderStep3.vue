@@ -1313,8 +1313,10 @@ const validateComponent = (item: any) => {
     $baseMessage('请先填写供应商！', 'warning', 'hey')
     return false
   } else if (item.invoicing !== '2' && !item.actualTaxRate) {
-    $baseMessage('请先填写实际税点！', 'warning', 'hey')
-    return false
+    if (item.actualTaxRate < 0) {
+      $baseMessage('请先填写实际税点！', 'warning', 'hey')
+      return false
+    }
   } else if (item.invoicing !== '2' && !item.invoicingTaxRate) {
     $baseMessage('请先填写开票税点！', 'warning', 'hey')
     return false
