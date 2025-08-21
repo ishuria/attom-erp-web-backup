@@ -9,7 +9,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="发放月份">
-            <el-select v-model="costQueryForm.month" placeholder="请选择发放月份" @change="costQueryData" />
+            <el-select v-model="costQueryForm.month" placeholder="请选择发放月份" @change="costQueryData">
+              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-text style="margin-left: 10px">提成总金额：</el-text>
@@ -189,7 +191,7 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { getCostReductionUserList, getReductionCostDetailList } from '/@/api/devlocal/commission'
+import { getCostReductionUserList, getReductionCostDetailList, getReductionCostDetailMonth } from '/@/api/devlocal/commission'
 import type { IGetReductionCostDetailList, IGetReductionCostDetailListReq } from '/@/type/commission/commissionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 import { formatDate } from '/@/utils/dateUtils'
@@ -217,15 +219,7 @@ const viewPricesVisible = ref<boolean>(false)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const costList = ref<IGetReductionCostDetailList[]>([])
-const amount4 = computed(() => {
-  let total = 0
-  costList.value.forEach((item) => {
-    if (item.currentPoCommission && !isNaN(Number(item.currentPoCommission))) {
-      total += Number(item.currentPoCommission)
-    }
-  })
-  return Math.round(total * 100) / 100
-})
+const amount4 = ref<number>(0)
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const costQueryForm = reactive<IGetReductionCostDetailListReq>({
@@ -290,6 +284,7 @@ const fetchCostData = async () => {
       }
     })
   }
+  amount4.value = data.totalBonus || 0
   listLoading.value = false
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -317,9 +312,17 @@ const fetchUserList = async () => {
     costQueryForm.userId = userList.value.find((item) => item.label === userName)?.id || -1
   }
 }
-onBeforeMount(() => {
-  fetchUserList()
-  fetchCostData()
+const monthList = ref<string[]>([])
+const fetchMonthList = async () => {
+  const { data } = await getReductionCostDetailMonth()
+  monthList.value = data
+
+  costQueryForm.month = monthList.value[0] || ''
+}
+onBeforeMount(async () => {
+  await fetchMonthList()
+  await fetchUserList()
+  await fetchCostData()
 })
 </script>
 

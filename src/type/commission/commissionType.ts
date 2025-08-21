@@ -695,6 +695,7 @@ export interface IGetReductionCostDetailListRes {
   data: {
     list: IGetReductionCostDetailList[]
     total: number
+    totalBonus?: number
   }
 }
 
@@ -787,4 +788,6 @@ export interface IGetReductionCostDetailList {
    * 用户名
    */
   userName?: string
+
+  totalBonus?: number
 }

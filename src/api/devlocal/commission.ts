@@ -319,6 +319,16 @@ export function getReductionCostDetailList(params: IGetReductionCostDetailListRe
 }
 
 /**
+ * 获取采购降本提成任务-月份列表
+ */
+export function getReductionCostDetailMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/cost/reduction/detail/month`,
+    method: 'get',
+  })
+}
+
+/**
  * 查询提成任务明细-产品开发设计-人员列表
  */
 export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number; label: string }[] }> {
