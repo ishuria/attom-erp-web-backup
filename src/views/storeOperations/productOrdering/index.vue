@@ -42,6 +42,38 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
+        <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+          <template #reference>
+            <el-button>
+              <vab-icon icon="settings-line" />
+            </el-button>
+          </template>
+          <vab-draggable
+            v-model="columns"
+            :animation="600"
+            filter=".non-draggable"
+            handle=".handle"
+            :on-end="handleEnd"
+            :on-move="handleMove"
+          >
+            <div
+              v-for="item in columns"
+              :key="item.label"
+              :class="{ 'non-draggable': item.disableCheck }"
+              style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+            >
+              <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+              <span style="flex: 1">{{ item.label }}</span>
+              <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                <vab-icon icon="eye-line" />
+              </span>
+              <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                <vab-icon v-show="item.checked" icon="eye-line" />
+              </span>
+            </div>
+          </vab-draggable>
+        </el-popover>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input
@@ -74,7 +106,7 @@
       @sort-change="handleSortChange"
     >
       <el-table-column
-        v-for="(item, index) in orderColumns"
+        v-for="(item, index) in checkList"
         :key="index"
         :fixed="item.isFixed"
         :label="item.label"
@@ -377,8 +409,9 @@
 import { Minus, Plus, QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { IGetOperationColumnList } from '~/src/type/storeOperation/productPerformanceType'
 import handleClipboard from '~/src/utils/clipboard'
-import { orderColumns } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
@@ -389,7 +422,12 @@ import {
   updateOperationOrderSmoothness,
   updateOperationOrderSpringFestival,
 } from '/@/api/devlocal/productOrdering'
-import { updateOperationASINOperateTypeList } from '/@/api/devlocal/productPerformance'
+import {
+  getOperationColumnList,
+  hideOrShowOperationColumn,
+  updateOperationASINOperateTypeList,
+  updateSortOperationColumn,
+} from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList } from '/@/type/storeOperation/productOrdering'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
@@ -455,6 +493,37 @@ const aclStore = useAclStore()
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
 
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: IGetOperationColumnList, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   queryForm.orderByField = prop
@@ -757,6 +826,30 @@ const fetchOperateUserList = async () => {
   operateUserList.value = data
   operateUserList.value.unshift({ id: -1, label: '全部' })
 }
+const columns = ref<any>([])
+const checkList = computed(() => {
+  return columns.value.filter((_: any) => _.checked)
+})
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 3 })
+  columns.value = data
+  columns.value.forEach((item: IGetOperationColumnList) => {
+    item.minWidth = item.width
+    if (item.prop !== 'asinImgUrl') {
+      delete item.width
+    }
+    if (
+      ['esAvailableSaleDayTotal', 'planPoPurchaseSkuNumber', 'recommendCount', 'originalNowSupplement', 'monthSalesVolume'].includes(
+        item.prop
+      )
+    ) {
+      item.sortable = true
+    }
+    if (['asinImgUrl', 'asin'].includes(item.prop)) {
+      item.isFixed = true
+    }
+  })
+}
 // 获取 table 数据
 const fetchData = async () => {
   listLoading.value = true
@@ -811,10 +904,11 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
+  await fetchColumn()
   fetchSiteList()
   fetchOperateUserList()
-  fetchData()
+  await fetchData()
   operationSelect()
 })
 
@@ -994,5 +1088,24 @@ onBeforeMount(() => {
 }
 .el-checkbox {
   transform: scale(1.3);
+}
+
+.handle {
+  cursor: grab;
+}
+.disabled-handle {
+  cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 </style>

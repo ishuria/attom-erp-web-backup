@@ -22,9 +22,8 @@ import type {
   IGetUserAmazonOperationRes,
   IHideOrShowOperationColumnReq,
   IUpdateRemarkAmazonOperationReq,
-  IUpdateSortOperationColumnReq
+  IUpdateSortOperationColumnReq,
 } from '/@/type/storeOperation/productPerformanceType'
-
 
 /**
  * @description 产品表现-亚马逊看板SKU列表
@@ -33,14 +32,14 @@ export function getOperationAmazonSKUList(data: IFilterAmazonSKUListReq): Promis
   return request({
     url: `${BASE_API}/operation/amazon/sku/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * @description 产品表现-货币下拉列表
  */
-export function getCurrencyList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getCurrencyList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/currency/list`,
     method: 'get',
@@ -49,7 +48,7 @@ export function getCurrencyList(): Promise<{ data: { id: number, label: string }
 /**
  * @description 产品表现-开发人员下拉列表
  */
-export function getDevelopUserList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getDevelopUserList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/develop/user/list`,
     method: 'get',
@@ -62,7 +61,7 @@ export function getOperationTypeList(params: IGetOperationTypeListReq): Promise<
   return request({
     url: `${BASE_API}/operation/type/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -72,7 +71,7 @@ export function addOperationTypeList(data: { typeName: string }): Promise<{ data
   return request({
     url: `${BASE_API}/operation/type/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -82,47 +81,47 @@ export function delOperationTypeList(data: { id: number }): Promise<{ data: bool
   return request({
     url: `${BASE_API}/operation/type/delete`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 产品表现-运营分类修改
  */
-export function updateOperationTypeList(data: { id: number, typeName: string }): Promise<{ data: boolean }> {
+export function updateOperationTypeList(data: { id: number; typeName: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/type/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 产品表现-SKU运营分类修改
  */
-export function updateOperationSKUOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+export function updateOperationSKUOperateTypeList(data: { id: number; typeId: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/sku/operateType/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 产品表现ASIN-运营分类修改
  */
-export function updateOperationASINOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+export function updateOperationASINOperateTypeList(data: { id: number; typeId: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/asin/operateType/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 产品表现-SKU停产状态修改
  */
-export function updateOperationSKUDisContinuedStatus(data: { skuId: number, siteId: number, status: number }): Promise<{ data: boolean }> {
+export function updateOperationSKUDisContinuedStatus(data: { skuId: number; siteId: number; status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/sku/discontinuedStatus/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -132,14 +131,14 @@ export function filterAmazonSKUList(data: IFilterAmazonSKUListReq): Promise<IGet
   return request({
     url: `${BASE_API}/operation/amazon/sku/screening/list`,
     method: 'post',
-    data
+    data,
   })
 }
-export function updateOperationASINDisContinuedStatus(data: { asin: string, siteId: number, status: number }): Promise<{ data: boolean }> {
+export function updateOperationASINDisContinuedStatus(data: { asin: string; siteId: number; status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/asin/discontinuedStatus/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -149,7 +148,7 @@ export function getOperationAsinList(data: IFilterAmazonSKUListReq): Promise<IGe
   return request({
     url: `${BASE_API}/operation/asin/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -159,7 +158,7 @@ export function filterOperationAmazonAsinList(data: IFilterAmazonSKUListReq): Pr
   return request({
     url: `${BASE_API}/operation/amazon/asin/screening/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -169,7 +168,7 @@ export function getOperationParentAsinList(data: IGetOperationAmazonSKUListReq):
   return request({
     url: `${BASE_API}/operation/parent/asin/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -180,7 +179,7 @@ export function getOperationAmazonArtDesignList(data: IGetOperationArtListReq): 
   return request({
     url: `${BASE_API}/operation/amazon/art/design/sku/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -190,7 +189,7 @@ export function getOperationColumnList(params: { type: number }): Promise<IGetOp
   return request({
     url: `${BASE_API}/operation/column/list`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -200,7 +199,7 @@ export function hideOrShowOperationColumn(data: IHideOrShowOperationColumnReq): 
   return request({
     url: `${BASE_API}/operation/column/hiddenOrShow`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -210,7 +209,7 @@ export function updateSortOperationColumn(data: IUpdateSortOperationColumnReq): 
   return request({
     url: `${BASE_API}/operation/column/update/sort`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -220,7 +219,7 @@ export function updateRemarkAmazonOperation(data: IUpdateRemarkAmazonOperationRe
   return request({
     url: `${BASE_API}/operation/amazon/remark/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -257,7 +256,7 @@ export function updateCurrencySKUAmazonOperation(data: { currency: number }): Pr
   return request({
     url: `${BASE_API}/operation/amazon/sku/currency/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -267,7 +266,7 @@ export function updateCurrencyASINAmazonOperation(data: { currency: number }): P
   return request({
     url: `${BASE_API}/operation/amazon/asin/currency/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -277,7 +276,7 @@ export function updateCurrencyParentASINAmazonOperation(data: { currency: number
   return request({
     url: `${BASE_API}/operation/amazon/parent/asin/currency/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -302,80 +301,84 @@ export function getUserAmazonArtDesignOperation(): Promise<IGetUserAmazonOperati
 
 /**
  * 产品表现SKU-查询小类排名
- * @returns 
+ * @returns
  */
 export function getOperationAmazonSkuRankList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/rank`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 产品表现SKU-查询大类排名
- * @returns 
+ * @returns
  */
 export function getOperationAmazonSkuRankCateList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/cateRank`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 产品表现ASIN-查询小类排名
- * @returns 
+ * @returns
  */
 export function getOperationAmazonAsinRankList(data: IGetOperationAmazonAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/asin/rank`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 产品表现ASIN-查询大类排名
- * @returns 
+ * @returns
  */
 export function getOperationAmazonAsinRankCateList(data: IGetOperationAmazonAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/asin/cateRank`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 产品表现ParentAsin-查询小类排名
- * @returns 
+ * @returns
  */
-export function getOperationAmazonParentAsinRankList(data: IGetOperationAmazonParentAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+export function getOperationAmazonParentAsinRankList(
+  data: IGetOperationAmazonParentAsinRankListReq
+): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/parent/asin/rank`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * 产品表现ParentAsin-查询大类排名
- * @returns 
+ * @returns
  */
-export function getOperationAmazonParentAsinRankCateList(data: IGetOperationAmazonParentAsinRankListReq): Promise<IGetOperationAmazonSkuRankListRes> {
+export function getOperationAmazonParentAsinRankCateList(
+  data: IGetOperationAmazonParentAsinRankListReq
+): Promise<IGetOperationAmazonSkuRankListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/parent/asin/cateRank`,
     method: 'post',
-    data
+    data,
   })
 }
 
 /**
  * 产品表现SKU-查询Voc满意度趋势
- * @returns 
+ * @returns
  */
 export function getOperationAmazonSkuVocList(data: IGetOperationAmazonSkuRankListReq): Promise<IGetOperationAmazonSkuVocListRes> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/voc`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -388,7 +391,7 @@ export function getOperationUpdateDate(params: { type: number }): Promise<{ data
   return request({
     url: `${BASE_API}/operation/update/date`,
     method: 'get',
-    params
+    params,
   })
 }
 
@@ -400,19 +403,18 @@ export function getOperationWalmartList(data: IGetOperationAmazonSKUListReq): Pr
   return request({
     url: `${BASE_API}/operation/walmart/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
-export function getWalmartSiteList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getWalmartSiteList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/walmart/site/list`,
     method: 'get',
   })
 }
 
-
-export function getWalmartCurrencyList(): Promise<{ data: { id: number, label: string }[] }> {
+export function getWalmartCurrencyList(): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/walmart/currency/list`,
     method: 'get',
@@ -430,23 +432,23 @@ export function updateCurrencyWalmartOperation(data: { currency: number }): Prom
   return request({
     url: `${BASE_API}/operation/walmart/currency/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
-export function updateOperationWalmartDisContinuedStatus(data: { id: number, status: number }): Promise<{ data: boolean }> {
+export function updateOperationWalmartDisContinuedStatus(data: { id: number; status: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/walmart/discontinuedStatus/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
-export function updateRemarkWalmartOperation(data: { id: number, remark: string }): Promise<{ data: boolean }> {
+export function updateRemarkWalmartOperation(data: { id: number; remark: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/walmart/remark/update`,
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -454,14 +456,14 @@ export function filterWalmartList(data: IFilterWalmartListReq): Promise<IGetOper
   return request({
     url: `${BASE_API}/operation/walmart/screening/list`,
     method: 'post',
-    data
+    data,
   })
 }
 
-export function updateOperationWalmartOperateTypeList(data: { id: number, typeId: number }): Promise<{ data: boolean }> {
+export function updateOperationWalmartOperateTypeList(data: { id: number; typeId: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/walmart/operateType/update`,
     method: 'post',
-    data
+    data,
   })
 }
