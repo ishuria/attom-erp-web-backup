@@ -19,6 +19,38 @@
             </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd"
+                :on-move="handleMove"
+              >
+                <div
+                  v-for="item in columns"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -52,6 +84,7 @@
           @selection-change="setSelectRows"
           @sort-change="handleSortChange"
         >
+          <el-table-column fixed="left" type="selection" />
           <el-table-column v-permissions="SignPermission.signOperationColume()" fixed="left" label="仓库操作" width="150">
             <template #default="{ row }">
               <el-space>
@@ -82,101 +115,90 @@
               </el-space>
             </template>
           </el-table-column>
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="外发" min-width="60" prop="outsourced">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po" sortable="custom">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
+          <el-table-column
+            v-for="(item, index) in checkList"
+            :key="index"
+            :fixed="item.isFixed"
+            :label="item.label"
+            :min-width="handleWidth(item)"
+            :prop="item.prop"
+            :sortable="item.sortable ? 'custom' : false"
+            :width="item.width"
+          >
+            <template #header>
+              <span v-if="item.label === '零件图片'">
+                零件
+                <br />
+                图片
+              </span>
+              <span v-if="item.label === 'SKU图片'">
+                SKU
+                <br />
+                图片
               </span>
             </template>
-          </el-table-column>
-          <el-table-column class="image-wall" label="零件图片" width="82">
-            <template #header>
-              零件
-              <br />
-              图片
-            </template>
             <template #default="{ row }">
-              <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
+              <div v-if="item.label === '外发'">
+                <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+              </div>
+              <div v-if="item.label === 'PO'">
+                <span class="copySku" @click="handleClipboard($event, row.po)">
+                  {{ row.po }}
+                  <vab-icon icon="file-copy-2-fill" />
+                </span>
+              </div>
+              <div v-if="item.label === '零件图片'">
+                <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
+                  <template #error>
+                    <el-icon />
+                  </template>
+                </el-image>
+              </div>
+
+              <div v-if="item.label === 'PO日期'">
+                {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
+              </div>
+              <div v-if="item.label === '付款日期'">
+                {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
+              </div>
+              <div v-if="item.label === 'SKU图片'">
+                <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+                  <template #error>
+                    <el-icon />
+                  </template>
+                </el-image>
+              </div>
+              <div v-if="item.label === 'SKU'">
+                <span class="copySku" @click="handleClipboard($event, row.sku)">
+                  {{ row.sku }}
+                  <vab-icon icon="file-copy-2-fill" />
+                </span>
+              </div>
+              <div v-if="item.label === '站点'">
+                {{ siteMap[row.site as siteValue] }}
+              </div>
+              <div v-if="item.label === '生产完成日期'">
+                <el-date-picker
+                  v-model="row.produceCompletionDate"
+                  placeholder="请选择日期"
+                  size="large"
+                  style="width: 100%"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  @change="changeProductDate(row)"
+                />
+              </div>
+              <div v-if="item.label === '跟单日志'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
+                  </template>
+                  <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
+                </el-tooltip>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
-          <el-table-column label="签收数量" min-width="100" prop="signCount" />
-          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
-          <el-table-column label="单位" min-width="60" prop="unit" />
-          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
-          <el-table-column label="PO日期" min-width="115" prop="poDate">
-            <template #default="{ row }">
-              {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款日期" min-width="115" prop="payDate" sortable="custom">
-            <template #default="{ row }">
-              {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column class="image-wall" label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="剩余可售" min-width="120" prop="sellableDay" sortable="custom" />
-          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')" />
-          <el-table-column label="站点" min-width="130" prop="site">
-            <template #default="{ row }">
-              {{ siteMap[row.site as siteValue] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="生产完成日期" min-width="170" prop="produceCompletionDate">
-            <template #default="{ row }">
-              <el-date-picker
-                v-model="row.produceCompletionDate"
-                placeholder="请选择日期"
-                size="large"
-                style="width: 100%"
-                type="date"
-                value-format="YYYY-MM-DD"
-                @change="changeProductDate(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="跟单日志" min-width="250" prop="log">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
-                </template>
-                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
+
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -224,6 +246,38 @@
             </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
+            <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+              <template #reference>
+                <el-button>
+                  <vab-icon icon="settings-line" />
+                </el-button>
+              </template>
+              <vab-draggable
+                v-model="columns2"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd2"
+                :on-move="handleMove2"
+              >
+                <div
+                  v-for="item in columns2"
+                  :key="item.label"
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                >
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                  <span style="flex: 1">{{ item.label }}</span>
+                  <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                    <vab-icon icon="eye-line" />
+                  </span>
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                    <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                    <vab-icon v-show="item.checked" icon="eye-line" />
+                  </span>
+                </div>
+              </vab-draggable>
+            </el-popover>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -253,6 +307,7 @@
           stripe
           @cell-click="changeInput"
           @row-click="handleRowClick"
+          @sort-change="handleSortChange"
         >
           <el-table-column v-permissions="SignPermission.signArchiveOperationColume()" fixed="left" label="操作" width="150">
             <template #default="{ row }">
@@ -265,13 +320,16 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_PRINT] }" @click="showPrint(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [SignPermission.SIGN_PRINT] })" @click="showPrint(row)">
                       <el-link type="primary" underline="never">打印面单</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_RECORD_LIST] }" @click="handleGetSignedRecord(row)">
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [SignPermission.SIGN_RECORD_LIST] })"
+                      @click="handleGetSignedRecord(row)"
+                    >
                       <el-link type="primary" underline="never">修改</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item v-permissions="{ permission: [SignPermission.SIGN_DELETE] }" @click="handleIfShowRecord(row)">
+                    <el-dropdown-item v-if="hasPermission({ permission: [SignPermission.SIGN_DELETE] })" @click="handleIfShowRecord(row)">
                       <el-link type="danger" underline="never">取消签收</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -279,107 +337,92 @@
               </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="签收人" min-width="90" prop="signName" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="外发" min-width="60" prop="outsourced">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.po)">
-                {{ row.po }}
-                <vab-icon icon="file-copy-2-fill" />
+          <el-table-column
+            v-for="(item, index) in checkList2"
+            :key="index"
+            :fixed="item.isFixed"
+            :label="item.label"
+            :min-width="handleWidth(item)"
+            :prop="item.prop"
+            :sortable="item.sortable ? 'custom' : false"
+            :width="item.width"
+          >
+            <template #header>
+              <span v-if="item.label === '零件图片'">
+                零件
+                <br />
+                图片
+              </span>
+              <span v-if="item.label === 'SKU图片'">
+                SKU
+                <br />
+                图片
               </span>
             </template>
-          </el-table-column>
-          <el-table-column label="零件图片" min-width="82">
-            <template #header>
-              零件
-              <br />
-              图片
-            </template>
             <template #default="{ row }">
-              <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" min-width="100" prop="purchaseCount" />
-          <el-table-column label="单位" min-width="60" prop="unit" />
-          <el-table-column label="收货仓库" min-width="120" prop="repositoryName" />
-          <el-table-column label="签收物流单号" prop="signOrder" :width="flexColumnWidth(list, '签收物流单号', 'signOrder')">
-            <template #default="{ row }">
-              <span class="overflow-text" v-html="row.signOrder"></span>
-            </template>
-          </el-table-column>
-          <el-table-column label="PO日期" min-width="115" prop="poDate">
-            <template #default="{ row }">
-              {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款日期" min-width="115" prop="payDate">
-            <template #default="{ row }">
-              {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column class="image-wall" label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
+              <div v-if="item.label === '签收日期'">
+                {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
+              </div>
+              <div v-if="item.label === '外发'">
+                <el-checkbox v-model="row.outsourced" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+              </div>
+              <div v-if="item.label === 'PO'">
+                <span class="copySku" @click="handleClipboard($event, row.po)">
+                  {{ row.po }}
+                </span>
                 <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliserName" :width="flexColumnWidth(list, '供应商', 'suppliserName')" />
-          <el-table-column label="站点" min-width="130" prop="site">
-            <template #default="{ row }">
-              {{ siteMap[row.site as siteValue] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="生产完成日期" min-width="170" prop="produceCompletionDate">
-            <template #default="{ row }">
-              <el-date-picker
-                v-model="row.produceCompletionDate"
-                placeholder="请选择日期"
-                size="large"
-                style="width: 100%"
-                type="date"
-                value-format="YYYY-MM-DD"
-                @change="changeProductDate(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="跟单日志" min-width="250" prop="log">
-            <template #default="{ row }">
-              <el-tooltip content=" " effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
-                </template>
-                <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
-              </el-tooltip>
+              </div>
+              <div v-if="item.label === '零件图片'">
+                <el-image fit="fill" :src="row.componentUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.componentUrl)">
+                  <template #error>
+                    <el-icon />
+                  </template>
+                </el-image>
+              </div>
+              <div v-if="item.label === '签收物流单号'">
+                <span class="overflow-text" v-html="row.signOrder"></span>
+              </div>
+              <div v-if="item.label === 'PO日期'">
+                {{ row.poDate ? row.poDate.split(' ')[0] : '' }}
+              </div>
+              <div v-if="item.label === '付款日期'">
+                {{ row.payDate ? row.payDate.split(' ')[0] : '' }}
+              </div>
+              <div v-if="item.label === 'SKU图片'">
+                <el-image fit="fill" :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
+                  <template #error>
+                    <el-icon />
+                  </template>
+                </el-image>
+              </div>
+              <div v-if="item.label === 'SKU'">
+                <span class="copySku" @click="handleClipboard($event, row.sku)">
+                  {{ row.sku }}
+                  <vab-icon icon="file-copy-2-fill" />
+                </span>
+              </div>
+              <div v-if="item.label === '站点'">
+                {{ siteMap[row.site as siteValue] }}
+              </div>
+              <div v-if="item.label === '生产完成日期'">
+                <el-date-picker
+                  v-model="row.produceCompletionDate"
+                  placeholder="请选择日期"
+                  size="large"
+                  style="width: 100%"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  @change="changeProductDate(row)"
+                />
+              </div>
+              <div v-if="item.label === '跟单日志'">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.log) }}</div>
+                  </template>
+                  <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
+                </el-tooltip>
+              </div>
             </template>
           </el-table-column>
 
@@ -547,7 +590,7 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import { CSSProperties, ref } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
@@ -567,9 +610,12 @@ import {
   updateRecordOrder,
   updateSignLog,
 } from '/@/api/devlocal/packagingShipping'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import SignPermission from '/@/permissions/sign'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
+import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { hasPermission } from '/@/utils/permission'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
@@ -577,6 +623,111 @@ defineOptions({
   name: 'PendingReceipt',
 })
 
+const columns = ref<any>([])
+const checkList = computed(() => {
+  return columns.value.filter((_: any) => _.checked)
+})
+const columns2 = ref<any>([])
+const checkList2 = computed(() => {
+  return columns2.value.filter((_: any) => _.checked)
+})
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 4 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 设置 最小宽度
+    if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
+      delete item.width
+    }
+    // 设置排序
+    if (['po', 'payDate', 'sellableDay'].includes(item.prop)) {
+      item.sortable = true
+    }
+  })
+}
+const fetchColumn2 = async () => {
+  const { data } = await getOperationColumnList({ type: 5 })
+  columns2.value = data
+  columns2.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 设置 最小宽度
+    if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
+      delete item.width
+    }
+  })
+}
+const handleWidth = (item: any) => {
+  switch (item.label) {
+    case 'SKU': {
+      return flexColumnWidth(list.value, 'SKU', 'sku', 60)
+    }
+    case '供应商': {
+      return flexColumnWidth(list.value, '供应商', 'suppliserName')
+    }
+    case '零件名': {
+      return flexColumnWidth(list.value, '零件名', 'componentName')
+    }
+    case '签收物流单号': {
+      return flexColumnWidth(list.value, '签收物流单号', 'signOrder')
+    }
+    default: {
+      return item.minWidth
+    }
+  }
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+const handleMove2 = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns2.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd2 = async () => {
+  const req = columns2.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.signId
@@ -918,6 +1069,11 @@ const handleTabClick = async (tab: TabsPaneContext) => {
       pageSize: 20,
     },
   })
+  if (queryForm.status === 0) {
+    fetchColumn()
+  } else {
+    fetchColumn2()
+  }
   await fetchData()
 }
 
@@ -1108,7 +1264,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
-onBeforeMount(() => {
+onBeforeMount(async () => {
   fetchUserList()
   fetchSignDateList()
   fetchDefaultPrinter()
@@ -1123,7 +1279,12 @@ onBeforeMount(() => {
     activeName.value = Number(tab)
     queryForm.status = Number(tab)
   }
-  fetchData()
+  if (queryForm.status === 0) {
+    await fetchColumn()
+  } else {
+    await fetchColumn2()
+  }
+  await fetchData()
 })
 </script>
 
@@ -1151,20 +1312,23 @@ onBeforeMount(() => {
           .left-panel {
             margin-bottom: 5px !important;
           }
-          .el-form {
-            .el-form-item:first-child {
-              margin: 0 !important;
-
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
-            .el-form-item:last-child {
-              margin: 0 !important;
-            }
+          .right-panel {
+            margin-bottom: 5px !important;
           }
+          // .el-form {
+          //   .el-form-item:first-child {
+          //     margin: 0 !important;
+
+          //     .el-check-tag,
+          //     .el-form-item__label {
+          //       margin: 0 10px 5px 0;
+          //       border-radius: 99px;
+          //     }
+          //   }
+          //   .el-form-item:last-child {
+          //     margin: 0 !important;
+          //   }
+          // }
         }
 
         .el-table {
@@ -1225,5 +1389,23 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+.handle {
+  cursor: grab;
+}
+.disabled-handle {
+  cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
 }
 </style>
