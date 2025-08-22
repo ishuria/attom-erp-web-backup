@@ -15,7 +15,7 @@ const clipboardError = (text: any) => {
 const handleClipboard = (event: Event, text: string) => {
   const { isSupported, copy } = useClipboard({ legacy: true })
   if (!isSupported) usePermission('clipboard-write')
-  
+
   const target = event.target as HTMLElement
   const skuElement = target.closest('.copySku') as HTMLElement
   if (!skuElement) return
@@ -25,8 +25,8 @@ const handleClipboard = (event: Event, text: string) => {
       const selection = window.getSelection()
       const range = document.createRange()
       range.selectNodeContents(skuElement)
-      selection?.removeAllRanges() 
-      selection?.addRange(range) 
+      selection?.removeAllRanges()
+      selection?.addRange(range)
       clipboardSuccess(text)
     })
     .catch(() => {
@@ -36,12 +36,12 @@ const handleClipboard = (event: Event, text: string) => {
 
 /**
  * 只复制
- * @param text 
+ * @param text
  */
 export const handleClip = (text: string) => {
   const { isSupported, copy } = useClipboard({ legacy: true })
   if (!isSupported) usePermission('clipboard-write')
-  
+
   copy(text)
     .then(() => {
       clipboardSuccess(text)

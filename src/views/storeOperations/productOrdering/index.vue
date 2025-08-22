@@ -158,9 +158,21 @@
           </span>
           <span v-if="item.label === 'ASIN'">
             <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
-            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
+            <!-- <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
               <vab-icon icon="file-copy-2-fill" />
-            </span>
+            </span> -->
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">复制ASIN</div>
+              </template>
+              <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
+            </el-tooltip>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">复制SKU</div>
+              </template>
+              <vab-icon icon="file-copy-2-fill" @click="handleClip(row.sku.split(',')[0])" />
+            </el-tooltip>
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
               <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
@@ -410,8 +422,6 @@ import { Minus, Plus, QuestionFilled, Search, Star } from '@element-plus/icons-v
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { IGetOperationColumnList } from '~/src/type/storeOperation/productPerformanceType'
-import handleClipboard from '~/src/utils/clipboard'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
@@ -430,6 +440,8 @@ import {
 } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList } from '/@/type/storeOperation/productOrdering'
+import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
+import { handleClip } from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
@@ -648,19 +660,28 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
   releaseOrderVisible.value = true
   if (row.sku) {
     orderListLoading.value = true
-    // const skuArray = row.sku.split(',')
+
     // 确保skuArray 是一个没有空值的数组
     const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
-    // console.log(skuArray)
+
     skuList.value = skuArray.map((item) => {
       return {
         label: item,
         value: item,
       }
     })
+
+    // 修复：检查SKU是否包含搜索关键词
+    const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
+
+    if (matchSkus.length > 0) {
+      // 如果有多个匹配，可以选择最匹配的或者第一个
+      releaseOrderForm.sku = matchSkus[0].value
+    }
+
     const { data } = await getOperationOrderSku({
       id: row.id!,
-      sku: skuArray[0],
+      sku: releaseOrderForm.sku,
     })
     // const { data } = await getSkuInfo({ sku: skuArray[0] })
     Object.assign(releaseOrderForm, data)
@@ -732,6 +753,9 @@ const handleWidth = (item: any) => {
       const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
       const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
       return Math.max(width1, width2)
+    }
+    case 'ASIN': {
+      return Number(item.minWidth) + 10
     }
     default: {
       return item.minWidth
