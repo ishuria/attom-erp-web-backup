@@ -1,6 +1,6 @@
 <template>
   <!-- 已发未报 -->
-  <vab-dialog v-model="visible" :draggable="false" class="dialog" title="已发未报" top="10vh" width="65%">
+  <vab-dialog v-model="visible" class="dialog" :draggable="false" title="已发未报" top="10vh" width="65%">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form inline :model="querySentForm" @submit.prevent>
@@ -114,9 +114,20 @@
         :data="aggregationList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
-        @selection-change="setSelectAggRows"
         style="height: calc(80vh - 230px); max-height: calc(80vh - 230px)"
+        @cell-click="handleAggChangeInput"
+        @selection-change="setSelectAggRows"
       >
+        <el-table-column label="备注" prop="remarks">
+          <template #default="{ row }">
+            <el-tooltip content=" " effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ removeHtmlTags(row.remarks) }}</div>
+              </template>
+              <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.remarks) }}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column v-if="shipId" align="center" type="selection" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(aggregationList, 'SKU', 'sku')" />
         <el-table-column label="描述" prop="desc" :width="flexColumnWidth(aggregationList, '描述', 'desc')" />
@@ -133,6 +144,11 @@
         <el-table-column align="center" label="待发货" min-width="100" prop="pendingShipment" />
         <el-table-column align="center" label="待报关" min-width="100" prop="pendingCustomsClearance" />
         <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(aggregationList, '采购方', 'purchase')" />
+        <el-table-column align="center" label="操作" prop="status">
+          <template #default="{ row }">
+            <el-link :disabled="row.status === 1" type="primary" :underline="false" @click="handleArchive(row)">归档</el-link>
+          </template>
+        </el-table-column>
       </el-table>
       <vab-pagination
         :current-page="aggregationReq.pageNo"
@@ -143,7 +159,7 @@
       />
     </div>
 
-    <template #footer v-if="shipId">
+    <template v-if="shipId" #footer>
       <div v-if="tab === 0" style="text-align: center">
         <el-button @click="visible = false">取消</el-button>
         <el-button type="primary" @click="handleConfirmAgg">确认</el-button>
@@ -151,6 +167,7 @@
     </template>
   </vab-dialog>
   <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
+  <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateAggRemark" />
 </template>
 
 <script lang="ts" setup>
@@ -204,6 +221,11 @@ const aggregationReq = reactive<IGetMatchPoListReq>({
 const remark = ref<string>('')
 const remarkVisible = ref<boolean>(false)
 
+const handleArchive = (row: IGetYfwbAggregationList) => {
+  $baseConfirm('确定要归档吗？', null, async () => {
+    //
+  })
+}
 // 已发未报-明细多选
 const selectRows = ref<IGetMatchSentList[]>([])
 const setSelectRows = (value: IGetMatchSentList[]) => {
@@ -226,6 +248,7 @@ const handleUpdateRemark = async (value: string) => {
     copyRow.remark = value
   }
 }
+const handleUpdateAggRemark = async (value: string) => {}
 const handleConfirmAgg = async () => {
   if (selectAggRows.value.length === 0) {
     $baseMessage('您未选中任何行!', 'warning')
@@ -298,6 +321,13 @@ const changeInput = (row: any, column: any) => {
     copyRow = row
     remarkVisible.value = true
     remark.value = row.remark
+  }
+}
+const handleAggChangeInput = (row: any, column: any) => {
+  if (column.label === '备注') {
+    copyRow = row
+    remarkVisible.value = true
+    remark.value = row.remarks
   }
 }
 const onChangeStatus = (value: number) => {
