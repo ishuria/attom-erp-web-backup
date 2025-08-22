@@ -243,6 +243,11 @@ export interface IFinishTaxRefundInvoiceRes {
   msg: string
 }
 
+export interface ITaxRefundInvoiceRes {
+  data: string
+  msg: string
+}
+
 export interface ICleanTaxRefundInvoice {
   detailId: number
 }

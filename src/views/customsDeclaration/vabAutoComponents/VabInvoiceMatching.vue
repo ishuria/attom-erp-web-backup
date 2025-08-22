@@ -202,7 +202,7 @@
     />
   </vab-dialog>
   <!-- 上传发票 -->
-  <vab-dialog v-model="uploadInvoiceVisible" title="上传发票" width="25%">
+  <vab-dialog v-model="uploadInvoiceVisible" :title="uploadType == 'import' ? '上传发票' : '上传重复发票'" width="25%">
     <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple :show-file-list="true">
       <el-icon class="el-icon--upload">
         <upload-filled />
@@ -309,6 +309,7 @@ import {
   cleanTaxRefundInvoice,
   deleteTaxRefundInvoice,
   finishTaxRefundInvoice,
+  finishTaxRefundInvoiceRepeat,
   getTaxRefundInvoiceList,
   getTaxRefundInvoiceMatch,
   submitConfirmTaxRefundInvoiceMatch,
@@ -398,7 +399,7 @@ const handleFinishUpload = async () => {
       const { data } = await uploadTaxRefund(formData)
 
       if (data) {
-        $baseMessage('上传成功', 'success')
+        $baseMessage('发票上传成功', 'success')
         const { data: resData, msg } = await finishTaxRefundInvoice(data)
         if (resData) {
           ElMessageBox({
@@ -406,13 +407,31 @@ const handleFinishUpload = async () => {
             confirmButtonText: '关闭',
             showClose: false,
             showCancelButton: false,
-            type: 'success',
+            type: 'warning',
             dangerouslyUseHTMLString: true,
-            message: () =>
-              h('div', {
-                default: () => (Array.isArray(resData) ? resData.join('\n') : resData),
-              }),
+            message: resData,
           })
+          await fetchData()
+        } else {
+          $baseMessage('发票导入成功', 'success')
+          uploadInvoiceVisible.value = false
+          await fetchData()
+        }
+      }
+    } catch {
+      $baseMessage('发票文件上传失败', 'error')
+    } finally {
+      finishLoading.value = false
+    }
+  } else {
+    // TODO 重复发票导入
+    try {
+      const { data } = await uploadTaxRefund(formData)
+      if (data) {
+        $baseMessage('发票上传成功', 'success')
+        const { data: resData, msg } = await finishTaxRefundInvoiceRepeat(data)
+        if (resData) {
+          $baseMessage('发票导入成功', 'success')
           await fetchData()
         } else {
           uploadInvoiceVisible.value = false
@@ -420,12 +439,10 @@ const handleFinishUpload = async () => {
         }
       }
     } catch {
-      $baseMessage('上传失败', 'error')
+      $baseMessage('发票文件上传失败', 'error')
     } finally {
       finishLoading.value = false
     }
-  } else {
-    //TODO 重复发票导入
   }
 }
 // 发票匹配清空

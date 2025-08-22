@@ -59,6 +59,7 @@ import type {
   IGetTaxRefundProfitMarginQuery,
   IGetTaxRefundProfitMarginRes,
   ISubmitTaxRefundInvoiceMatch,
+  ITaxRefundInvoiceRes,
   IUpdateTaxRefundBatchDate,
   IUpdateTaxRefundBatchFreightFee,
   IUpdateTaxRefundBatchRemark,
@@ -636,9 +637,20 @@ export const uploadTaxRefund = (data: FormData) => {
 /**
  * @description 退税管理-发票导入完成
  */
-export const finishTaxRefundInvoice = (data: string[]): Promise<IFinishTaxRefundInvoiceRes> => {
+export const finishTaxRefundInvoice = (data: string[]): Promise<ITaxRefundInvoiceRes> => {
   return request({
     url: `${BASE_API}/taxRefund/invoice/finish`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 退税管理-重复发票导入完成
+ */
+export const finishTaxRefundInvoiceRepeat = (data: string[]): Promise<IFinishTaxRefundInvoiceRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/repeat/invoice/finish`,
     method: 'post',
     data,
   })
