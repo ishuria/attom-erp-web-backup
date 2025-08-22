@@ -3,7 +3,8 @@
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary" @click="showUploadInvoice">发票导入</el-button>
+          <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>
+          <el-button type="primary" @click="showUploadInvoice('repeat')">重复发票导入</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
@@ -301,6 +302,7 @@
 
 <script lang="ts" setup>
 import { Search, UploadFilled } from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
@@ -375,8 +377,11 @@ const fileList = ref<any[]>([])
 const handleRowClick = (row: any, column: any, event: Event) => {
   matchStatus.value = row.uniqId
 }
+// 上传发票类型 import = 上传发票 repeat = 重复发票
+const uploadType = ref<string>('')
 // 展示上传发票
-const showUploadInvoice = () => {
+const showUploadInvoice = (type: string) => {
+  uploadType.value = type
   fileList.value = []
   uploadInvoiceVisible.value = true
 }
@@ -388,24 +393,39 @@ const handleFinishUpload = async () => {
   fileList.value.forEach((item: any) => {
     formData.append('files', item.raw)
   })
-  try {
-    const { data } = await uploadTaxRefund(formData)
+  if (uploadType.value === 'import') {
+    try {
+      const { data } = await uploadTaxRefund(formData)
 
-    if (data) {
-      $baseMessage('上传成功', 'success')
-      const { data: resData, msg } = await finishTaxRefundInvoice(data)
-      if (resData) {
-        $baseMessage(resData, 'error')
-        await fetchData()
-      } else {
-        uploadInvoiceVisible.value = false
-        await fetchData()
+      if (data) {
+        $baseMessage('上传成功', 'success')
+        const { data: resData, msg } = await finishTaxRefundInvoice(data)
+        if (resData) {
+          ElMessageBox({
+            title: '重复发票提示',
+            confirmButtonText: '关闭',
+            showClose: false,
+            showCancelButton: false,
+            type: 'success',
+            dangerouslyUseHTMLString: true,
+            message: () =>
+              h('div', {
+                default: () => (Array.isArray(resData) ? resData.join('\n') : resData),
+              }),
+          })
+          await fetchData()
+        } else {
+          uploadInvoiceVisible.value = false
+          await fetchData()
+        }
       }
+    } catch {
+      $baseMessage('上传失败', 'error')
+    } finally {
+      finishLoading.value = false
     }
-  } catch {
-    $baseMessage('上传失败', 'error')
-  } finally {
-    finishLoading.value = false
+  } else {
+    //TODO 重复发票导入
   }
 }
 // 发票匹配清空
