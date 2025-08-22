@@ -168,9 +168,11 @@ export interface IGetTaxRefundInvoiceListRes {
 
 export interface IGetTaxRefundInvoiceList {
   /**
-   * 报关数量
+   * 实际报关数量
    */
   customsDeclarationCount?: number
+  /** Po报关总数 */
+  customsDeclarationCountTotal?: number
   /**
    * 报关单位
    */

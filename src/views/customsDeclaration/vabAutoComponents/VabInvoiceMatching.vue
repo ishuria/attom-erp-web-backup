@@ -168,9 +168,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="报关数量"
+          label="实际报关数"
           prop="customsDeclarationCount"
-          :width="flexColumnWidth(list, '报关数量', 'customsDeclarationCount')"
+          :width="flexColumnWidth(list, '实际报关数', 'customsDeclarationCount')"
+        />
+        <el-table-column
+          label="PO总报关数"
+          prop="customsDeclarationCountTotal"
+          :width="flexColumnWidth(list, 'PO总报关数', 'customsDeclarationCountTotal')"
         />
         <el-table-column
           label="报关单位"
@@ -710,7 +715,16 @@ const handleSizeChange = (value: number) => {
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
 
-  const { invoiceCount, customsDeclarationCount, invoiceUnit, customsDeclarationUnit, includingTaxPrice, taxInclusiveCost } = data.row
+  const {
+    invoiceCount,
+    customsDeclarationCount,
+    invoiceUnit,
+    customsDeclarationUnit,
+    includingTaxPrice,
+    taxInclusiveCost,
+    matchPo,
+    matchContractNumber,
+  } = data.row
 
   // 只有当报关数量、报关单位、po零件含税价都不为空时才生效
   const canCompare =
@@ -724,9 +738,24 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     taxInclusiveCost !== null &&
     taxInclusiveCost !== ''
 
+  const flag = matchContractNumber == '' && matchPo !== '' && matchPo !== undefined
+  if (flag) {
+    if (label === 'PO总报关数' || label === '发票数量') {
+      if (data.row.invoiceCount !== data.row.customsDeclarationCountTotal) {
+        return {
+          backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
+          textAlign: 'center',
+        }
+      }
+      return {
+        textAlign: 'center',
+      }
+    }
+  }
+
   if (canCompare) {
     // 比较发票数量和报关数量
-    if (label === '发票数量' || label === '报关数量') {
+    if (label === '发票数量' || label === '实际报关数') {
       if (data.row.invoiceCount !== data.row.customsDeclarationCount) {
         return {
           backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
@@ -787,7 +816,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
     case '匹配合同号':
     case '匹配PO':
-    case '报关数量':
+    case '实际报关数':
     case '报关单位': {
       return {
         textAlign: 'center',
