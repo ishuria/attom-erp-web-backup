@@ -21,10 +21,43 @@
         <el-input v-model="qualityInspectionForm.packageTaskId" disabled style="margin-right: 0" />
       </el-form-item>
       <el-form-item label="PO" prop="productName">
-
         <el-input v-model="qualityInspectionForm.po" disabled style="margin-right: 0" />
       </el-form-item>
-      <el-divider ><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
+      <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="flex: 1; margin-right: 20px">
+          <el-form-item inline label="包装尺寸" prop="packingSize">
+            <el-row style="display: flex; gap: 8px; align-items: center; width: 100%">
+              <el-input v-model.trim="qualityInspectionForm.packageLength" disabled style="flex: 1; margin-right: 0">
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+              <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+              <el-input v-model.trim="qualityInspectionForm.packageWidth" disabled style="flex: 1; margin-right: 0">
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+              <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+              <el-input v-model.trim="qualityInspectionForm.packageHeight" disabled style="flex: 1; margin-right: 0">
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+            </el-row>
+          </el-form-item>
+        </div>
+        <div style="width: 27%; flex-shrink: 0">
+          <el-form-item label="包装重量" prop="packageWeight">
+            <el-input v-model.trim="qualityInspectionForm.packageWeight" disabled>
+              <template #suffix>
+                <el-icon class="el-input__icon" style="font-style: normal">g</el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+        </div>
+      </div>
+      <el-divider><span style="font-size: var(--el-font-size-base)">质检结果</span></el-divider>
       <el-table
         border
         :cell-style="qualityInspectionCellStyle"
@@ -50,18 +83,18 @@
             <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="上传图片" :width="getImageColumnWidth()" >
+        <el-table-column label="上传图片" :width="getImageColumnWidth()">
           <template #default="{ row }">
             <div v-if="row.isUploadImages === 1" style="display: flex; gap: 8px; align-items: center">
-                <div v-for="(image, index) in row.images" :key="index" class="image-cell">
-                  <div class="image-preview">
-                    <img :alt="image.id" :src="image.imgUrl" />
-                    <div class="image-actions">
-                      <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
-                    </div>
+              <div v-for="(image, index) in row.images" :key="index" class="image-cell">
+                <div class="image-preview">
+                  <img :alt="image.id" :src="image.imgUrl" />
+                  <div class="image-actions">
+                    <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
                   </div>
                 </div>
               </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="备注" min-width="150" prop="remark">
@@ -83,7 +116,13 @@
       </div> -->
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :initial-index="currentPreviewIndex"  :url-list="imagePreviewList" @close="imagePreviewClose" />
+  <el-image-viewer
+    v-if="imagePreviewVisible"
+    hide-on-click-modal
+    :initial-index="currentPreviewIndex"
+    :url-list="imagePreviewList"
+    @close="imagePreviewClose"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -108,13 +147,16 @@ const visible = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  }
+  },
 })
-watch(() => props.modelValue, (value) => {
-  if (value) {
-    initData()
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      initData()
+    }
   }
-})
+)
 const initData = () => {
   Object.assign(qualityInspectionForm, props.reportData)
   qualityInspectionForm.dete = qualityInspectionForm.dete ? qualityInspectionForm.dete.split(' ')[0] : ''
@@ -127,7 +169,11 @@ const qualityInspectionForm = reactive({
   id: '',
   po: '',
   packageTaskId: '',
-  dete: ''
+  dete: '',
+  packageLength: '',
+  packageWidth: '',
+  packageHeight: '',
+  packageWeight: '',
 })
 const inspectionList = ref<IInspectionList[]>([])
 const currentPreviewIndex = ref<number>(0)
@@ -140,7 +186,7 @@ const closeQualityInspection = () => {
   visible.value = false
 }
 const showPreviewImage = (images: any[], currentIndex: number) => {
-  imagePreviewList.value = images.map(img => img.imgUrl)
+  imagePreviewList.value = images.map((img) => img.imgUrl)
   imagePreviewVisible.value = true
   // 设置当前预览图片的索引
   currentPreviewIndex.value = currentIndex
@@ -151,7 +197,7 @@ const getImageColumnWidth = (): number => {
   inspectionList.value.forEach((row) => {
     const imageCount = row?.images?.length || 0
     let totalWidth = 0
-    totalWidth = (imageCount * imageWidth) + 24 + (imageCount - 1) * 8
+    totalWidth = imageCount * imageWidth + 24 + (imageCount - 1) * 8
     if (totalWidth > maxWidth) {
       maxWidth = totalWidth
     }
@@ -167,7 +213,7 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
     }
   } else if (label === '备注') {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   } else {
     return {
@@ -182,20 +228,20 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
 .image-cell {
   width: 75px;
   height: 75px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -209,21 +255,21 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
@@ -235,14 +281,14 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;

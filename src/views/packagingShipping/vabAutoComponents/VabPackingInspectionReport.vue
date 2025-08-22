@@ -1,6 +1,6 @@
 <template>
- <!-- 打包质检报告 -->
- <vab-dialog v-model="visible" title="打包质检报告" top="10vh" width="50%" @close="closeQualityInspection">
+  <!-- 打包质检报告 -->
+  <vab-dialog v-model="visible" title="打包质检报告" top="10vh" width="50%" @close="closeQualityInspection">
     <el-form
       ref="qualityInspectionFormRef"
       label-position="left"
@@ -25,10 +25,60 @@
       <el-form-item label="PO" prop="productName">
         <el-input v-model="qualityInspectionForm.po" disabled style="margin-right: 0" />
       </el-form-item>
-      <el-divider ><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
+      <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="flex: 1; margin-right: 20px">
+          <el-form-item inline label="包装尺寸" prop="packingSize">
+            <el-row style="display: flex; gap: 8px; align-items: center; width: 100%">
+              <el-input
+                v-model.trim="qualityInspectionForm.packageLength"
+                placeholder="长"
+                style="flex: 1; margin-right: 0"
+                @change="handleUpdateInspection"
+              >
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+              <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+              <el-input
+                v-model.trim="qualityInspectionForm.packageWidth"
+                placeholder="宽"
+                style="flex: 1; margin-right: 0"
+                @change="handleUpdateInspection"
+              >
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+              <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
+              <el-input
+                v-model.trim="qualityInspectionForm.packageHeight"
+                placeholder="高"
+                style="flex: 1; margin-right: 0"
+                @change="handleUpdateInspection"
+              >
+                <template #suffix>
+                  <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
+                </template>
+              </el-input>
+            </el-row>
+          </el-form-item>
+        </div>
+        <div style="width: 27%; flex-shrink: 0">
+          <el-form-item label="包装重量" prop="packageWeight">
+            <el-input v-model.trim="qualityInspectionForm.packageWeight" placeholder="克" @change="handleUpdateInspection">
+              <template #suffix>
+                <el-icon class="el-input__icon" style="font-style: normal">g</el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+        </div>
+      </div>
+      <el-divider style="margin-top: 30px; margin-bottom: 30px">
+        <span style="font-size: var(--el-font-size-base)">质检结果</span>
+      </el-divider>
       <el-table
         border
-        
         :cell-style="qualityInspectionCellStyle"
         class="quality-inspection"
         :data="inspectionList"
@@ -53,25 +103,25 @@
             <el-checkbox v-model="row.isUploadImages" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="上传图片" :width="getImageColumnWidth()" >
+        <el-table-column label="上传图片" :width="getImageColumnWidth()">
           <template #default="{ row }">
             <div v-if="row.isUploadImages === 1" style="display: flex; gap: 8px; align-items: center">
-                <div v-for="(image, index) in row.images" :key="index" class="image-cell">
-                  <div class="image-preview">
-                    <img :alt="image.id" :src="image.imgUrl" />
-                    <div class="image-actions">
-                      <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
-                      <el-icon @click="handleImageRemove(image, row)"><delete /></el-icon>
-                    </div>
-                  </div>
-                </div>
-                <!-- 添加按钮 -->
-                <div class="image-cell">
-                  <div class="upload-placeholder" @click="showUploadDialog(row)">
-                    <el-icon><plus /></el-icon>
+              <div v-for="(image, index) in row.images" :key="index" class="image-cell">
+                <div class="image-preview">
+                  <img :alt="image.id" :src="image.imgUrl" />
+                  <div class="image-actions">
+                    <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
+                    <el-icon @click="handleImageRemove(image, row)"><delete /></el-icon>
                   </div>
                 </div>
               </div>
+              <!-- 添加按钮 -->
+              <div class="image-cell">
+                <div class="upload-placeholder" @click="showUploadDialog(row)">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="备注" min-width="150" prop="remark">
@@ -101,7 +151,13 @@
       </div>
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :initial-index="currentPreviewIndex"  :url-list="imagePreviewList" @close="imagePreviewClose" />
+  <el-image-viewer
+    v-if="imagePreviewVisible"
+    hide-on-click-modal
+    :initial-index="currentPreviewIndex"
+    :url-list="imagePreviewList"
+    @close="imagePreviewClose"
+  />
   <!-- 上传图片 -->
   <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
 </template>
@@ -111,21 +167,28 @@ import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { deletePackageInspectionItemImage, getPackageInspection, submitPackageInspection, updateNewPackageInspection, updatePackageInspectionDetail, uploadPackageInspectionItemImage } from '/@/api/devlocal/packagingShipping'
+import {
+  deletePackageInspectionItemImage,
+  getPackageInspection,
+  submitPackageInspection,
+  updateNewPackageInspection,
+  updatePackageInspectionDetail,
+  uploadPackageInspectionItemImage,
+} from '/@/api/devlocal/packagingShipping'
 import type { IInspectionList } from '/@/type/packagingShipping/packagingType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: "VabPackingInspectionReport",
+  name: 'VabPackingInspectionReport',
 })
 
 const props = defineProps<{
-  modelValue: boolean,
-  taskId: number,
+  modelValue: boolean
+  taskId: number
   sku: string
 }>()
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void,
+  (e: 'update:modelValue', value: boolean): void
 }>()
 const visible = computed({
   get() {
@@ -135,16 +198,31 @@ const visible = computed({
     emit('update:modelValue', value)
   },
 })
-watch(() => props.modelValue, (value) => {
-  if (value) {
-    fetchData()
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      fetchData()
+    }
   }
-})
+)
 const qualityInspectionFormRef = ref<FormInstance>()
 const qualityInspectionFormRules = reactive({
-  status: [
-    { required: true, message: '请选择结论', trigger: 'change' },
+  status: [{ required: true, message: '请选择结论', trigger: 'change' }],
+  packingSize: [
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (!qualityInspectionForm.packageLength || !qualityInspectionForm.packageWidth || !qualityInspectionForm.packageHeight) {
+          callback(new Error('请填写完整包装尺寸'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+      required: true,
+    },
   ],
+  packageWeight: [{ required: true, message: '请输入包装重量', trigger: 'blur' }],
 })
 const inspectionList = ref<IInspectionList[]>([])
 const reportId = ref<number | undefined>(undefined)
@@ -160,7 +238,7 @@ const getImageColumnWidth = (): number => {
   inspectionList.value.forEach((row) => {
     const imageCount = row?.images?.length || 0
     let totalWidth = 0
-    totalWidth = ((imageCount + 1) * imageWidth) + 24 + imageCount * 8
+    totalWidth = (imageCount + 1) * imageWidth + 24 + imageCount * 8
     if (totalWidth > maxWidth) {
       maxWidth = totalWidth
     }
@@ -173,7 +251,7 @@ const showUploadDialog = (row: any) => {
   imageUploadVisible.value = true
 }
 const showPreviewImage = (images: any[], currentIndex: number) => {
-  imagePreviewList.value = images.map(img => img.imgUrl)
+  imagePreviewList.value = images.map((img) => img.imgUrl)
   imagePreviewVisible.value = true
   // 设置当前预览图片的索引
   currentPreviewIndex.value = currentIndex
@@ -191,7 +269,11 @@ const qualityInspectionForm = reactive({
   id: '',
   po: '',
   packageTaskId: '',
-  dete: ''
+  dete: '',
+  packageLength: '',
+  packageWidth: '',
+  packageHeight: '',
+  packageWeight: '',
 })
 
 const uploadImage = async (file: File) => {
@@ -201,7 +283,7 @@ const uploadImage = async (file: File) => {
     uploadImgForm.append('reportDetailId', String(id.value))
 
     const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
-    if (data) {   
+    if (data) {
       _row.images.push(data)
       $baseMessage('图片上传成功！', 'success')
       imageUploadVisible.value = false
@@ -214,12 +296,12 @@ const uploadImage = async (file: File) => {
 }
 const handleImageRemove = async (image: any, row: any) => {
   try {
-    $baseConfirm('确定删除图片吗？', null,  async () => {
-      const { data } = await deletePackageInspectionItemImage({ id: image.id  })
+    $baseConfirm('确定删除图片吗？', null, async () => {
+      const { data } = await deletePackageInspectionItemImage({ id: image.id })
       if (data) {
         const index = row.images.findIndex((item: any) => item.id === image.id)
         row.images.splice(index, 1)
-        $baseMessage('图片删除成功！','success')
+        $baseMessage('图片删除成功！', 'success')
       }
     })
   } catch (error) {
@@ -231,6 +313,10 @@ const handleUpdateInspection = async () => {
     await updateNewPackageInspection({
       reportId: reportId.value,
       status: qualityInspectionForm.status,
+      packageLength: Number(qualityInspectionForm.packageLength),
+      packageWidth: Number(qualityInspectionForm.packageWidth),
+      packageHeight: Number(qualityInspectionForm.packageHeight),
+      packageWeight: Number(qualityInspectionForm.packageWeight),
     })
   } catch (error) {
     console.log(error)
@@ -240,17 +326,15 @@ const handleUpdateInspection = async () => {
 const handleSubmitInspection = async () => {
   qualityInspectionFormRef.value?.validate(async (valid: boolean) => {
     if (valid) {
-      const unUploadedRows = inspectionList.value.filter(
-        row => row.isUploadImages === 1 && (!row.images || row.images.length === 0)
-      )
-      
+      const unUploadedRows = inspectionList.value.filter((row) => row.isUploadImages === 1 && (!row.images || row.images.length === 0))
+
       if (unUploadedRows.length > 0) {
         $baseMessage('存在需要上传图片的质检项目未上传图片', 'error')
         return
       }
       const { data } = await submitPackageInspection({
         reportId: reportId.value!,
-        type: 1
+        type: 1,
       })
       if (data) {
         $baseMessage('打包质检报告提交成功', 'success')
@@ -306,7 +390,7 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
   } else if (label === '备注') {
     return {
       cursor: 'pointer',
-      textAlign: 'left'
+      textAlign: 'left',
     }
   } else {
     return {
@@ -338,8 +422,40 @@ const changeQualityInspectionInput = async (row: any, column: any, cell: HTMLTab
 //   }
 //   return ''
 // }
+// 重置表单
+const resetForm = () => {
+  // 重置表单数据
+  Object.assign(qualityInspectionForm, {
+    sku: '',
+    status: 0,
+    productName: '',
+    id: '',
+    po: '',
+    packageTaskId: '',
+    dete: '',
+    packageLength: '',
+    packageWidth: '',
+    packageHeight: '',
+    packageWeight: '',
+  })
 
+  // 重置表单验证状态
+  if (qualityInspectionFormRef.value) {
+    qualityInspectionFormRef.value.resetFields()
+  }
+
+  // 重置质检列表
+  inspectionList.value = []
+
+  // 清除验证错误
+  nextTick(() => {
+    if (qualityInspectionFormRef.value) {
+      qualityInspectionFormRef.value.clearValidate()
+    }
+  })
+}
 const fetchData = async () => {
+  resetForm()
   const { data } = await getPackageInspection({
     taskId: props.taskId,
     sku: props.sku,
@@ -349,11 +465,11 @@ const fetchData = async () => {
     data.inspectionList.forEach((row: any) => {
       if (row.images.length === 0) {
         row.imgUrl = ''
-        } else {
+      } else {
         row.imgUrl = row.images[0].imgUrl
         row.imgId = row.images[0].id
-        }
-      })
+      }
+    })
     inspectionList.value = data.inspectionList
     // console.log(inspectionList.value)
     reportId.value = data.reportId
@@ -367,20 +483,20 @@ const fetchData = async () => {
 .image-cell {
   width: 75px;
   height: 75px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -394,21 +510,21 @@ const fetchData = async () => {
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
@@ -420,14 +536,14 @@ const fetchData = async () => {
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
