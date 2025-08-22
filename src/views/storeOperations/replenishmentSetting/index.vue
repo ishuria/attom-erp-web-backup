@@ -83,7 +83,7 @@
       <el-divider style="margin-top: 0" />
       <el-form class="demo-form" label-position="right" label-width="auto" :model="form" style="max-width: 340px; margin: 0 auto">
         <el-form-item label="产品分类" prop="kindId">
-          <el-select v-model="form.kindId" filterable placeholder="请选择产品类别">
+          <el-select v-model="form.kindId" clearable filterable placeholder="请选择产品类别">
             <el-option v-for="item in merchandiseTypeList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -175,9 +175,8 @@ const ids = ref<any>([]) // 产品补货计ids使用
 const handleSubmit = async () => {
   // formRef.value?.validate(async (isValid: boolean) => {
   //   if (isValid) {
-  selectRows.value.forEach((item: any) => {
-    ids.value.push(item.id)
-  })
+
+  ids.value = selectRows.value.map((item: any) => item.id)
   form.ids = `${ids.value}`
   const { data } = await updateProductReplenParams({
     ...form,
@@ -187,8 +186,7 @@ const handleSubmit = async () => {
     fetchData()
     $baseMessage('批量修改成功', 'success', 'hey')
   }
-  //   }
-  // })
+  selectRows.value = []
 }
 
 const handleChangeSite = (value: any) => {

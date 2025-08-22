@@ -1,169 +1,79 @@
 <template>
-  <vab-dialog
-    v-model="dflag"
-    :loading="props.loading"
-    title="筛选"
-    width="27%"
-    @close="handleClose"
-  >
-    <el-form
-      ref="filterFormRef"
-      label-position="right"
-      label-width="auto"
-      :model="filterForm"
-      style="width: 100%; margin-right: 10px"
-    >
+  <vab-dialog v-model="dflag" :loading="props.loading" title="筛选" width="27%" @close="handleClose">
+    <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="width: 100%; margin-right: 10px">
       <el-form-item label="上新天数">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.newArrivalMinDay"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.newArrivalMaxDay"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.newArrivalMinDay" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.newArrivalMaxDay" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item label="ES总新">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.esTotalMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.esTotalMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.esTotalMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.esTotalMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item label="上海签收">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.signCountMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.signCountMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.signCountMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.signCountMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item v-if="props.classify === 0" label="当前售价">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.sellPriceMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.sellPriceMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.sellPriceMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.sellPriceMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item label="30天净利润">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.monthProfitMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.monthProfitMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.monthProfitMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.monthProfitMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item label="30天净利率%">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.monthInterestRateMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.monthInterestRateMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.monthInterestRateMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.monthInterestRateMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
       <el-form-item label="月销售额">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.monthSalesVolumeMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.monthSalesVolumeMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.monthSalesVolumeMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.monthSalesVolumeMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
-    
+
       <el-form-item label="FBA差异">
         <div class="flex">
-          <el-input-number
-            v-model="filterForm.fbaMin"
-            :min="0"
-            placeholder="最小值"
-            style="flex: 1"
-          />
+          <el-input-number v-model="filterForm.fbaMin" :min="0" placeholder="最小值" style="flex: 1" />
           <!-- <el-input type="number" placeholder="最小值" /> -->
-          <span style=" color: #303133;white-space: nowrap">至</span>
-          <el-input-number
-            v-model="filterForm.fbaMax"
-            :min="0"
-            placeholder="最大值"
-            style="flex: 1"
-          />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.fbaMax" :min="0" placeholder="最大值" style="flex: 1" />
           <!-- <el-input type="number" v-model="filterForm.number6" placeholder="最大值" /> -->
         </div>
       </el-form-item>
       <el-form-item label="运营分类筛选">
-        <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类"/>
+        <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类" />
       </el-form-item>
       <el-form-item label="广告">
         <el-select v-model="filterForm.advStatus" placeholder="请选择广告状态">
-          <el-option 
-            v-for="item in adStatusOption"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <el-option v-for="item in adStatusOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="库龄筛选">
+        <el-checkbox-group v-model="filterForm.warehouseAge">
+          <el-checkbox :value="0">有库龄181+</el-checkbox>
+          <el-checkbox :value="1">有库龄271+</el-checkbox>
+          <el-checkbox :value="2">有库龄361+</el-checkbox>
+        </el-checkbox-group>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -174,7 +84,6 @@
       </div>
     </template>
   </vab-dialog>
-
 </template>
 
 <script lang="ts" setup>
@@ -182,7 +91,7 @@ import type { FormInstance } from 'element-plus'
 import { adStatusOption } from '../constantOption'
 
 defineOptions({
-  name: 'VabFilterDialog'
+  name: 'VabFilterDialog',
 })
 const dflag = ref<boolean>(false)
 const props = defineProps<{
@@ -212,10 +121,19 @@ const filterForm = reactive<any>({
   fbaMin: null,
   fbaMax: null,
   operationTypeId: null,
-  advStatus: null
+  advStatus: null,
+  warehouseAge: [],
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {
+  // 库龄有0的 只传0 有1的 只传1 有2的 只传2
+  if (filterForm.warehouseAge.includes(0)) {
+    filterForm.warehouseAge = 0
+  } else if (filterForm.warehouseAge.includes(1)) {
+    filterForm.warehouseAge = 1
+  } else if (filterForm.warehouseAge.includes(2)) {
+    filterForm.warehouseAge = 2
+  }
   emit('updateFilter', filterForm)
 }
 const clearFilterForm = () => {
@@ -235,7 +153,7 @@ const clearFilterForm = () => {
     fbaMin: null,
     fbaMax: null,
     operationTypeId: null,
-    advStatus: null
+    advStatus: null,
   })
 }
 const handleClose = () => {
