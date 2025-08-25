@@ -228,7 +228,16 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+const route = useRoute()
 onBeforeMount(() => {
+  const { tab, sku } = route.query
+  if (tab) {
+    activeName.value = Number(tab)
+    queryForm.type = activeName.value
+  }
+  if (sku) {
+    queryForm.keyWord = sku as string
+  }
   fetchData()
 })
 </script>
