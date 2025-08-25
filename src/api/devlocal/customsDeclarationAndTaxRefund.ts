@@ -200,6 +200,31 @@ export const updateShipmentYfwbRemark = (data: { id: number; remark: string }): 
   })
 }
 /**
+ * 匹配PO、报关资料已发未报-聚合列表修改备注
+ * @param data id: number, remark: string
+ * @returns boolean
+ */
+export const updateShipmentYfwbAggregationRemark = (data: { id: number; remark: string }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/yfwb/aggregation/remark/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 匹配PO、报关资料已发未报-聚合列表归档
+ * @param data id: number, remark: string
+ * @returns boolean
+ */
+export const updateShipmentYfwbAggregationArchiving = (params: { id: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/yfwb/aggregation/archiving/update`,
+    method: 'post',
+    params,
+  })
+}
+
+/**
  * 匹配PO、报关资料已发未报-聚合列表查询
  * @param data IGetMatchPoListReq
  * @returns IGetYfwbAggregationListRes

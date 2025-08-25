@@ -177,6 +177,8 @@ import {
   getMatchSentList,
   getShipmentYfwbAggregationList,
   submitMatchSentList,
+  updateShipmentYfwbAggregationArchiving,
+  updateShipmentYfwbAggregationRemark,
   updateShipmentYfwbRemark,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { IGetMatchPoListReq, IGetMatchSentList, IGetYfwbAggregationList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
@@ -223,7 +225,13 @@ const remarkVisible = ref<boolean>(false)
 
 const handleArchive = (row: IGetYfwbAggregationList) => {
   $baseConfirm('确定要归档吗？', null, async () => {
-    //
+    const { data } = await updateShipmentYfwbAggregationArchiving({
+      id: row.id,
+    })
+    if (data) {
+      $baseMessage('归档成功!', 'success')
+      queryAggregationData()
+    }
   })
 }
 // 已发未报-明细多选
@@ -248,7 +256,18 @@ const handleUpdateRemark = async (value: string) => {
     copyRow.remark = value
   }
 }
-const handleUpdateAggRemark = async (value: string) => {}
+const handleUpdateAggRemark = async (value: string) => {
+  const { data } = await updateShipmentYfwbAggregationRemark({
+    id: copyRow.id,
+    remark: value,
+  })
+  if (data) {
+    $baseMessage('修改备注成功!', 'success')
+    remarkVisible.value = false
+    copyRow.remarks = value
+  }
+}
+
 const handleConfirmAgg = async () => {
   if (selectAggRows.value.length === 0) {
     $baseMessage('您未选中任何行!', 'warning')
