@@ -2,9 +2,19 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button :loading="status1Loading" type="primary" @click="handleStatus1Change">{{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}</el-button>
-        <el-button :loading="status2Loading" type="primary" @click="handleStatus2Change">{{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}</el-button>
-        <el-button v-permissions="{ permission: [SkuPermission.CUSTOM_DECLARE_RATIO_QUERY] }" type="primary" @click="showPriceCoefficientSetting">价格系数设定</el-button>
+        <el-button :loading="status1Loading" type="primary" @click="handleStatus1Change">
+          {{ queryForm.status1 === 0 ? '展示停产' : '隐藏停产' }}
+        </el-button>
+        <el-button :loading="status2Loading" type="primary" @click="handleStatus2Change">
+          {{ queryForm.status2 === 0 ? '展示不报关' : '隐藏不报关' }}
+        </el-button>
+        <el-button
+          v-permissions="{ permission: [SkuPermission.CUSTOM_DECLARE_RATIO_QUERY] }"
+          type="primary"
+          @click="showPriceCoefficientSetting"
+        >
+          价格系数设定
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -57,12 +67,12 @@
       <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(list, '零件名', 'componentName')" />
       <el-table-column fixed="left" label="已有零件id" prop="componentId" :width="flexColumnWidth(list, '已有零件id', 'componentId')" />
       <el-table-column fixed="left" label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
-      <el-table-column  label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
+      <el-table-column label="属于SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row.sku, 80, 27)">
         <template #default="{ row }">
           <div v-html="row.sku"></div>
         </template>
       </el-table-column>
-      
+
       <el-table-column label="UPC" prop="upc" :width="calculateBrColumnWidth(list, (row: any) => row.upc, 40)">
         <template #default="{ row }">
           <div v-html="row.upc"></div>
@@ -203,12 +213,7 @@
       </el-table-column>
       <el-table-column label="HS" min-width="160" prop="hsId">
         <template #default="{ row }">
-          <el-select
-            v-model="row.hsId"
-            filterable
-            placeholder="请选择HS"
-            @change="handleCustomsChange(row)"
-          >
+          <el-select v-model="row.hsId" filterable placeholder="请选择HS" @change="handleCustomsChange(row)">
             <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -323,12 +328,7 @@
         </div>
       </template>
     </vab-dialog>
-    <vab-remark-dialog 
-      v-model="remarkVisible"
-      :remark="remark"
-      title="修改申报要素"
-      @update:remark="handleUpdateRemark"
-    />
+    <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改申报要素" @update:remark="handleUpdateRemark" />
   </div>
 </template>
 
@@ -358,7 +358,7 @@ const router = useRouter()
 const route = useRoute()
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
-const hsOption = ref<{ id: number, label: string }[]>([]) //搜索选项
+const hsOption = ref<{ id: number; label: string }[]>([]) //搜索选项
 
 const tableRef = ref<TableInstance>()
 const list = ref<any>([])
@@ -367,7 +367,7 @@ const total = ref<number>(0)
 const queryForm = reactive<any>({
   keyWord: '',
   status1: 0, //隐藏停产0，展示停产1
-  status2: 0, //隐藏不报关0，展示不报关1
+  status2: 1, //隐藏不报关0，展示不报关1
   pageNo: 1,
   pageSize: 20,
 })
@@ -487,19 +487,18 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       cursor: 'not-allowed',
       textAlign: 'left',
     }
-  } else if (label === "申报要素" || label === "申报要素缩写") {
+  } else if (label === '申报要素' || label === '申报要素缩写') {
     return {
       textAlign: 'left',
       cursor: 'pointer',
     }
-  } else if (label === '出口退税税率' || label === '法定第1单位' ) {
+  } else if (label === '出口退税税率' || label === '法定第1单位') {
     return {
       color: '#999',
       cursor: 'not-allowed',
       textAlign: 'center',
     }
-  }
-  else {
+  } else {
     return {
       textAlign: 'center',
       cursor: 'pointer',
@@ -516,7 +515,7 @@ let copyRow: any
 let _row: any
 // table单击修改
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-  if (column.label === "申报要素") {
+  if (column.label === '申报要素') {
     _row = row
     remarkVisible.value = true
     remark.value = row.declarationElements
@@ -561,12 +560,12 @@ const clickCancel2 = async (event: Event, value: any) => {
         placeOrigin: value.placeOrigin,
         customsDeclarationNameZh: value.customsDeclarationNameZh,
         count: value.count,
-        unit: value.unit, 
+        unit: value.unit,
         type: value.type,
         statutoryUnit: value.statutoryUnit,
         statutoryCount: value.statutoryCount,
         hsId: value.hsId,
-        bgWeightStatus: value.bgWeightStatus
+        bgWeightStatus: value.bgWeightStatus,
       })
       // await fetchData()
     } catch {
@@ -606,9 +605,9 @@ const processDeclarationElements = (declarationElements: string): string => {
   }
 
   const textReplacements: { [key: string]: string } = {
-    '无': '0',
-    '境内品牌': '1',
-    '境外贴牌': '3'
+    无: '0',
+    境内品牌: '1',
+    境外贴牌: '3',
   }
 
   let extractedTexts: string[] | null = extractText(declarationElements, '【', '】')
@@ -620,10 +619,12 @@ const processDeclarationElements = (declarationElements: string): string => {
     return ''
   }
 
-  const builder = extractedTexts.map((text: string, index: number) => {
-    const replacement = textReplacements[text]
-    return replacement !== undefined && (index === 0 || !extractedTexts.slice(0, index).join('|').includes('|')) ? replacement : text
-  }).join('|')
+  const builder = extractedTexts
+    .map((text: string, index: number) => {
+      const replacement = textReplacements[text]
+      return replacement !== undefined && (index === 0 || !extractedTexts.slice(0, index).join('|').includes('|')) ? replacement : text
+    })
+    .join('|')
 
   return builder
 }
@@ -641,7 +642,7 @@ const clickCancel = async (event: any, value: any) => {
   if (isEqual(copyRow, value)) {
     return
   }
-  
+
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
@@ -661,20 +662,20 @@ const clickCancel = async (event: any, value: any) => {
 // 云州采购价格系数
 const clickRatioCancel = async (event: any, value: any) => {
   // 获取根元素，避免重复调用 getRootElement
-  const rootElement = getRootElement(event.srcElement, ".cell");
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
     // 更新 t1 和 t2 的 class
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
 
   // 只有在数据变化时才处理更新
   if (isEqual(value, copyRow)) {
-    return; // 数据没有变化，不执行更新
+    return // 数据没有变化，不执行更新
   }
 
   if (event.type === 'blur') {
@@ -682,13 +683,13 @@ const clickRatioCancel = async (event: any, value: any) => {
     try {
       await updateProductAlreadyComponent({
         id: value.componentId,
-        ratio: value.ratio
+        ratio: value.ratio,
       })
     } catch {
-      Object.assign(value, copyRow); // 恢复原始数据
+      Object.assign(value, copyRow) // 恢复原始数据
     }
   }
-};
+}
 
 // 修改HS
 const handleCustomsChange = async (row: any) => {
@@ -772,13 +773,7 @@ const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.pId
 }
-const tableRowClassName = ({
-  row,
-  rowIndex,
-}: {
-  row: any
-  rowIndex: number
-}) => {
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.pId === selectedRowIndex.value) {
     return 'select-row'
   }
