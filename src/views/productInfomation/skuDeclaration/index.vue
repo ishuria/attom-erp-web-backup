@@ -339,27 +339,27 @@
     <vab-dialog v-model="htsVisible" :draggable="false" title="查看和修改HTS" width="20%">
       <el-form label-width="auto" style="margin-right: 0; margin-left: 0">
         <el-form-item label="HTS美国">
-          <el-select v-model="htsForm.us" filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
+          <el-select v-model="htsForm.us" clearable filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
             <el-option v-for="item in usaList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS英国">
-          <el-select v-model="htsForm.uk" filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
+          <el-select v-model="htsForm.uk" clearable filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
             <el-option v-for="item in ukHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS德国">
-          <el-select v-model="htsForm.de" filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
+          <el-select v-model="htsForm.de" clearable filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
             <el-option v-for="item in deHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS加拿大">
-          <el-select v-model="htsForm.ca" filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
+          <el-select v-model="htsForm.ca" clearable filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
             <el-option v-for="item in caHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="HTS日本">
-          <el-select v-model="htsForm.jp" filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
+          <el-select v-model="htsForm.jp" clearable filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
             <el-option v-for="item in jpHtsList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>

@@ -98,10 +98,58 @@ const props = defineProps<{
   filterVisible: boolean
   classify: number
   loading: boolean
+  savedFilterData?: any
 }>()
 watchEffect(() => {
   dflag.value = props.filterVisible
 })
+
+watch(
+  () => props.filterVisible,
+  (newVal) => {
+    if (newVal && props.savedFilterData) {
+      const savedData = { ...props.savedFilterData }
+
+      const numberFields = [
+        'newArrivalMinDay',
+        'newArrivalMaxDay',
+        'esTotalMin',
+        'esTotalMax',
+        'signCountMin',
+        'signCountMax',
+        'sellPriceMin',
+        'sellPriceMax',
+        'monthProfitMin',
+        'monthProfitMax',
+        'monthInterestRateMin',
+        'monthInterestRateMax',
+        'monthSalesVolumeMin',
+        'monthSalesVolumeMax',
+        'fbaMin',
+        'fbaMax',
+      ]
+
+      numberFields.forEach((field) => {
+        if (savedData[field] === '' || savedData[field] === undefined) {
+          savedData[field] = null
+        }
+      })
+
+      if (savedData.warehouseAge !== undefined && savedData.warehouseAge !== null) {
+        if (Array.isArray(savedData.warehouseAge)) {
+          savedData.warehouseAge = [...savedData.warehouseAge]
+        } else {
+          savedData.warehouseAge = [savedData.warehouseAge]
+        }
+      } else {
+        savedData.warehouseAge = []
+      }
+
+      Object.assign(filterForm, savedData)
+    }
+  },
+  { immediate: true }
+)
 const emit = defineEmits(['updateVisible', 'updateFilter'])
 const filterForm = reactive<any>({
   newArrivalMinDay: null,
@@ -154,7 +202,10 @@ const clearFilterForm = () => {
     fbaMax: null,
     operationTypeId: null,
     advStatus: null,
+    warehouseAge: [],
   })
+
+  emit('updateFilter', filterForm)
 }
 const handleClose = () => {
   emit('updateVisible', false)

@@ -1948,6 +1948,7 @@
       :classify="activeName"
       :filter-visible="filterVisible"
       :loading="filterLoading"
+      :saved-filter-data="activeName === 0 ? queryForm : asinQueryForm"
       @update-filter="handleConfirmFilter"
       @update-visible="handleCloseFilterDialog"
     />
@@ -2351,6 +2352,7 @@ const queryForm = reactive<any>({
   signCountMin: '',
   sellPriceMin: '',
   sellPriceMax: '',
+  warehouseAge: '',
 })
 const asinQueryForm = reactive<any>({
   keyword: '',
@@ -2377,6 +2379,7 @@ const asinQueryForm = reactive<any>({
   operationTypeId: '',
   signCountMax: '',
   signCountMin: '',
+  warehouseAge: '',
 })
 const pAsinQueryForm = reactive<any>({
   keyword: '',
@@ -2407,34 +2410,47 @@ const filterLoading = ref<boolean>(false)
 const handleConfirmFilter = async (filterForm: any) => {
   filterLoading.value = true
   try {
+    const processedFilterData = { ...filterForm }
+
+    const numberFields = [
+      'newArrivalMinDay',
+      'newArrivalMaxDay',
+      'esTotalMin',
+      'esTotalMax',
+      'signCountMin',
+      'signCountMax',
+      'sellPriceMin',
+      'sellPriceMax',
+      'monthProfitMin',
+      'monthProfitMax',
+      'monthInterestRateMin',
+      'monthInterestRateMax',
+      'monthSalesVolumeMin',
+      'monthSalesVolumeMax',
+      'fbaMin',
+      'fbaMax',
+    ]
+
+    numberFields.forEach((field) => {
+      if (processedFilterData[field] === null || processedFilterData[field] === undefined) {
+        processedFilterData[field] = ''
+      }
+    })
+
+    if (processedFilterData.warehouseAge === null || processedFilterData.warehouseAge === undefined) {
+      processedFilterData.warehouseAge = ''
+    }
+
     if (activeName.value === 0) {
-      Object.assign(queryForm, filterForm)
-      const { site, ...filterQueryForm } = queryForm
-      const siteIds = site.join(',')
-      const { data } = await getOperationAmazonSKUList({
-        ...filterQueryForm,
-        siteIds,
-      })
-      if (data) {
-        $baseMessage('SKU运营筛选成功！', 'success')
-        filterVisible.value = false
-        total.value = data.total
-        list.value = data.list
-      }
+      Object.assign(queryForm, processedFilterData)
+      fetchData()
+      filterVisible.value = false
+      $baseMessage('SKU运营筛选成功！', 'success')
     } else if (activeName.value === 1) {
-      Object.assign(asinQueryForm, filterForm)
-      const { site, ...filterQueryForm } = asinQueryForm
-      const siteIds = site.join(',')
-      const { data } = await getOperationAsinList({
-        ...filterQueryForm,
-        siteIds,
-      })
-      if (data) {
-        $baseMessage('ASIN运营筛选成功！', 'success')
-        filterVisible.value = false
-        asinTotal.value = data.total
-        asinList.value = data.list
-      }
+      Object.assign(asinQueryForm, processedFilterData)
+      fetchAsinData()
+      filterVisible.value = false
+      $baseMessage('ASIN运营筛选成功！', 'success')
     }
   } catch {
     $baseMessage('筛选失败，请重试', 'error')
