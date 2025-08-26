@@ -578,10 +578,7 @@ const clickCancel2 = async (event: Event, value: any) => {
 
     // 校验 unit 字段 - 必须为文字（不能为空，不能为纯数字）
     if (value.unit !== undefined && value.unit !== null) {
-      if (!value.unit.trim()) {
-        $baseMessage('开票单位不能为空', 'error')
-        hasValidationError = true
-      } else if (/^\d+$/.test(value.unit.trim())) {
+      if (/^\d+$/.test(value.unit.trim())) {
         $baseMessage('开票单位不能为纯数字', 'error')
         hasValidationError = true
       }
