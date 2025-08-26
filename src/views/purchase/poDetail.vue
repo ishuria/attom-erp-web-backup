@@ -2825,6 +2825,9 @@ const handleInvoicingChange = async (row: any) => {
     $baseMessage('采购方为attom，无法开票', 'error')
     row.invoicing = 2
   }
+  if (item!.label === '云舟' && row.invoicing === 1) {
+    row.customsDeclarationStatus = 1
+  }
   const { data } = await updatePoSkuComponent(row)
   if (data === true) {
     fetchSkuComponent()
@@ -2851,6 +2854,9 @@ const handleDefaultPurchase = async (row: any) => {
     //选择了attom，开票变成无法开票
     row.invoicing = 2
   }
+  if (item!.label === '云舟' && row.invoicing === 1) {
+    row.customsDeclarationStatus = 1
+  }
   try {
     const { data } = await updatePoSkuComponent(row)
     if (data === true) {
@@ -2869,6 +2875,9 @@ const handleUpdateInvoicing = (row: any) => {
     $baseMessage('采购方为attom，无法开票', 'error')
     row.invoicing = 2
   }
+  if (item!.label === '云舟' && row.invoicing === 1) {
+    row.customsDeclarationStatus = 1
+  }
   updateCreate()
 }
 // 创建修改采购方
@@ -2884,6 +2893,9 @@ const handleCreateDefaultPurchase = (row: any) => {
   } else if (item!.label === 'Attom') {
     //选择了attom，开票变成无法开票
     row.invoicing = 2
+  }
+  if (item!.label === '云舟' && row.invoicing === 1) {
+    row.customsDeclarationStatus = 1
   }
   updateCreate()
 }
@@ -2902,6 +2914,11 @@ const handleCreateCustoms = (row: any) => {
   ) {
     row.customsDeclarationStatus = 0
     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+  }
+  if (item!.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
+    row.customsDeclarationStatus = 1
+    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
+    return
   }
   updateCreate()
 }
@@ -2922,6 +2939,11 @@ const handleDeclareCustoms = async (row: any) => {
     }
   } else {
     // updateSkuComponent(row)
+  }
+  if (item!.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
+    row.customsDeclarationStatus = 1
+    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
+    return
   }
   try {
     const { data } = await updatePoSkuComponent(row)

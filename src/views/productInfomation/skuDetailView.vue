@@ -1703,6 +1703,10 @@ const handleDefaultPurchase = async (row: any) => {
     //选择了attom，开票变成无法开票
     row.invoicing = 2
   }
+  if (item.label === '云舟' && row.invoicing === 1) {
+    // 如果选择了采购方为云舟，开票类型为普票，自动勾选不报关
+    row.declareCustomsStatus = 1
+  }
   await updateProductComponent(row)
   fetchData()
   fetchComponentData()
@@ -1722,6 +1726,10 @@ const handleDeclareCustoms = async (row: any) => {
       row.declareCustomsStatus = 0
       $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
     }
+  } else if (item.label === '云舟' && row.invoicing === 1 && row.declareCustomsStatus === 0) {
+    row.declareCustomsStatus = 1
+    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
+    return
   } else {
     await updateProductComponent(row)
     fetchData()
@@ -1738,6 +1746,9 @@ const handleInvoicingChange = async (row: any) => {
   if (item.label === 'Attom' && row.invoicing !== 2) {
     $baseMessage('采购方为attom，无法开票', 'error')
     row.invoicing = 2
+  }
+  if (item.label === '云舟' && row.invoicing === 1) {
+    row.declareCustomsStatus = 1
   }
   const { data } = await updateProductComponent(row)
   if (data === true) {
