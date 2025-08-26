@@ -1,7 +1,7 @@
-import { useSkuOptionsStore } from "/@/store/modules/skuOptions"
+import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 
-const skuOptionsStore = useSkuOptionsStore();
+const skuOptionsStore = useSkuOptionsStore()
 
 export const _addData = (newData: any) => {
-  skuOptionsStore.addData(newData); 
-};
+  skuOptionsStore.addData(newData)
+}

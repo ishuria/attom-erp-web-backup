@@ -4,7 +4,7 @@
     <el-row :gutter="20">
       <!-- 左侧 -->
       <el-col :span="18">
-        <div style="position: relative;">
+        <div style="position: relative">
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
             <el-tab-pane label="趋势总览" :name="0">
               <vab-trend-overview />
@@ -21,35 +21,25 @@
             <el-tab-pane label="退货分析" :name="4">
               <vab-return-analysis />
             </el-tab-pane>
-            <el-tab-pane label="竞品" :name="5"/>
+            <el-tab-pane label="竞品" :name="5" />
           </el-tabs>
           <!-- tab右边的选项 -->
-          <div style="position: absolute; top: 0px; right: -9px;">
+          <div style="position: absolute; top: 0px; right: -9px">
             <el-form v-if="activeName === 0" inline>
               <el-form-item label="展示">
                 <el-select v-model="selectField">
-                  <el-option 
-                    v-for="item in levelOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in levelOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-radio-group>
-                  <el-radio style="margin-right: 10px;" value="0">同比</el-radio>
+                  <el-radio style="margin-right: 10px" value="0">同比</el-radio>
                   <el-radio value="1">环比</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item>
                 <el-select v-model="selectDate">
-                  <el-option 
-                    v-for="item in dateOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -60,19 +50,13 @@
                   range-separator="至"
                   start-placeholder="开始日期"
                   type="daterange"
-              
                 />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 1" inline>
               <el-form-item>
                 <el-select>
-                  <el-option 
-                    v-for="item in adOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in adOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -80,21 +64,11 @@
               </el-form-item>
               <el-form-item>
                 <el-select>
-                  <el-option 
-                    v-for="item in dayOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in dayOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-date-picker
-                  end-placeholder="结束日期"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                />
+                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 2" inline>
@@ -103,51 +77,26 @@
               </el-form-item>
               <el-form-item v-else label="SKU">
                 <el-select v-model="queryForm3.sku" placeholder="请选择SKU" @change="handleChangeSku">
-                  <el-option 
-                    v-for="item in skuOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
+                  <el-option v-for="item in skuOptions" :key="item" :label="item" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
                 <el-select>
-                  <el-option 
-                    v-for="item in dateOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-date-picker
-                  end-placeholder="结束日期"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                />
+                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 3" inline>
               <el-form-item>
                 <el-select>
-                  <el-option 
-                    v-for="item in dateOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-date-picker
-                  end-placeholder="结束日期"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                />
+                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 4" inline>
@@ -159,21 +108,11 @@
               </el-form-item>
               <el-form-item>
                 <el-select>
-                  <el-option 
-                    v-for="item in dayOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
+                  <el-option v-for="item in dayOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-date-picker
-                  end-placeholder="结束日期"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                />
+                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
               </el-form-item>
             </el-form>
           </div>
@@ -183,61 +122,58 @@
       <el-col :span="6">
         <div style="display: flex; flex-direction: column; height: 100%">
           <vab-card>
-            <el-container style="display: flex; gap: 10px; align-items: flex-start;">
+            <el-container style="display: flex; gap: 10px; align-items: flex-start">
               <!-- 左侧图片 -->
               <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
-                <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px;">
-                  <template #error><el-icon/></template>
+                <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px">
+                  <template #error><el-icon /></template>
                 </el-image>
               </el-aside>
               <!-- 右侧内容 -->
-              <el-main style="flex: 1; padding: 0; font-weight: 600;">
+              <el-main style="flex: 1; padding: 0; font-weight: 600">
                 <!-- 标题和描述 -->
-                <div style="margin-bottom: 15px;">
-                  <el-link class="custom-link" data-label="asin" style="font-weight: 600;" type="primary">
+                <div style="margin-bottom: 15px">
+                  <el-link class="custom-link" data-label="asin" style="font-weight: 600" type="primary">
                     {{ 'B08N5M7S6K' }}
                   </el-link>
-                  <div style="margin-top: 6px;">NiHome-0451-MshRmLightSmallBRN</div>
-                  <div style="margin-top: 6px;">蘑菇小夜灯-小号棕色底座款</div>
+                  <div style="margin-top: 6px">NiHome-0451-MshRmLightSmallBRN</div>
+                  <div style="margin-top: 6px">蘑菇小夜灯-小号棕色底座款</div>
                   <!-- 评分部分 -->
                   <div class="rate-wrapper">
                     <span class="rate-value">{{ 4.6 }}</span>
-                    <span><el-rate v-model="rate" class="custom-rate" disabled :void-icon="Star"  /></span>
+                    <span><el-rate v-model="rate" class="custom-rate" disabled :void-icon="Star" /></span>
                     <span class="rate-count">{{ 484 }}</span>
                   </div>
                 </div>
                 <!-- 买家之声和缺陷率 -->
-                <div style="font-weight: 600;">
-                  <el-link class="custom-link" style="margin-right: 10px; font-weight: 600;" type="primary">买家之声</el-link>
-                  <el-tag class="customTag customTag-good" >
-                    Good
-                  </el-tag>
-                  <div data-label="缺陷率" style="margin-top: 6px;">
-                    缺陷率：<span style="color: #bad411;">4.09%</span> | 缺陷订单：<span style="color: #bad411;">40</span>/1201
+                <div style="font-weight: 600">
+                  <el-link class="custom-link" style="margin-right: 10px; font-weight: 600" type="primary">买家之声</el-link>
+                  <el-tag class="customTag customTag-good">Good</el-tag>
+                  <div data-label="缺陷率" style="margin-top: 6px">
+                    缺陷率：
+                    <span style="color: #bad411">4.09%</span>
+                    | 缺陷订单：
+                    <span style="color: #bad411">40</span>
+                    /1201
                   </div>
                 </div>
               </el-main>
             </el-container>
           </vab-card>
           <!-- 运营备注 -->
-          <div style="margin-bottom: 20px;">
-            <div style="margin-bottom: 10px;">
+          <div style="margin-bottom: 20px">
+            <div style="margin-bottom: 10px">
               <el-text>运营备注</el-text>
-              <el-select style="width: 30%; margin-left: 10px;">
-                <el-option 
-                  v-for="item in opeClassOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select style="width: 30%; margin-left: 10px">
+                <el-option v-for="item in opeClassOption" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </div>
-            <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%;" type="textarea" />
+            <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%" type="textarea" />
           </div>
           <!-- 操作日志/事件清单 -->
           <div style="display: flex; flex: 1; flex-direction: column; height: 100%">
             <vab-query-form>
-              <vab-query-form-left-panel >
+              <vab-query-form-left-panel>
                 <el-form inline>
                   <el-form-item>
                     <el-text>操作日志/事件清单</el-text>
@@ -247,24 +183,19 @@
                   </el-form-item>
                 </el-form>
               </vab-query-form-left-panel>
-              <vab-query-form-right-panel >
+              <vab-query-form-right-panel>
                 <el-form inline>
                   <el-form-item label="筛选展示">
                     <el-select>
-                      <el-option 
-                        v-for="item in filterShowOption"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
+                      <el-option v-for="item in filterShowOption" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
                 </el-form>
               </vab-query-form-right-panel>
             </vab-query-form>
-            <el-table border :data="fakeData" :header-cell-style="{ textAlign: 'center' }" stripe style="flex: 1;">
-              <el-table-column align="center" label="日期" min-width="115" prop="date"/>
-              <el-table-column label="类型" min-width="130" prop="type"/>
+            <el-table border :data="fakeData" :header-cell-style="{ textAlign: 'center' }" stripe style="flex: 1">
+              <el-table-column align="center" label="日期" min-width="115" prop="date" />
+              <el-table-column label="类型" min-width="130" prop="type" />
               <el-table-column label="内容" min-width="170" prop="content">
                 <template #default="{ row }">
                   <el-link type="primary" @click="handleShowChange(row)">{{ row.content }}</el-link>
@@ -275,46 +206,37 @@
         </div>
       </el-col>
     </el-row>
-    <vab-dialog
-      v-model="titleChangeVisible"
-      title="标题变化详情"
-    >
+    <vab-dialog v-model="titleChangeVisible" title="标题变化详情">
       <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '标题' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"/>
-        <el-table-column label="变化后"/>
+        <el-table-column label="变化前" />
+        <el-table-column label="变化后" />
       </el-table>
     </vab-dialog>
-    <vab-dialog
-      v-model="descChangeVisible"
-      title="描述变化详情"
-    >
+    <vab-dialog v-model="descChangeVisible" title="描述变化详情">
       <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '描述' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"/>
-        <el-table-column label="变化后"/>
+        <el-table-column label="变化前" />
+        <el-table-column label="变化后" />
       </el-table>
     </vab-dialog>
-    <vab-dialog
-      v-model="imgChangeVisible"
-      title="图片变化详情"
-    >
+    <vab-dialog v-model="imgChangeVisible" title="图片变化详情">
       <el-table border :data="fakeChangeData">
         <el-table-column label="变化类型">
           <template #default="{ row }">
             {{ '图片' }}
           </template>
         </el-table-column>
-        <el-table-column label="变化前"/>
-        <el-table-column label="变化后"/>
+        <el-table-column label="变化前" />
+        <el-table-column label="变化后" />
       </el-table>
     </vab-dialog>
   </div>
@@ -357,40 +279,38 @@ const fakeData = [
   {
     date: '2024-12-31',
     type: '系统抓取',
-    content: '标题修改'
+    content: '标题修改',
   },
   {
     date: '2024-12-31',
     type: '系统抓取',
-    content: '描述修改'
+    content: '描述修改',
   },
   {
     date: '2024-12-31',
     type: '系统抓取',
-    content: '图片修改'
+    content: '图片修改',
   },
 ]
-const fakeChangeData = [
-  {}
-]
+const fakeChangeData = [{}]
 const handleShowChange = (row: any) => {
   switch (row.content) {
-  case '标题修改': {
-    titleChangeVisible.value = true
-  
-  break;
-  }
-  case '描述修改': {
-    descChangeVisible.value = true
-  
-  break;
-  }
-  case '图片修改': {
-    imgChangeVisible.value = true
-  
-  break;
-  }
-  // No default
+    case '标题修改': {
+      titleChangeVisible.value = true
+
+      break
+    }
+    case '描述修改': {
+      descChangeVisible.value = true
+
+      break
+    }
+    case '图片修改': {
+      imgChangeVisible.value = true
+
+      break
+    }
+    // No default
   }
 }
 const goBack = async () => {
@@ -401,13 +321,13 @@ const goBack = async () => {
 }
 // 动态设置图片列高度
 const setImageHeight = () => {
-  const dom1 = document.querySelector('.el-link[data-label="asin"]');
-  const dom2 = document.querySelector('div[data-label="缺陷率"]');
+  const dom1 = document.querySelector('.el-link[data-label="asin"]')
+  const dom2 = document.querySelector('div[data-label="缺陷率"]')
 
   if (dom1 && dom2) {
-    const height1 = dom1.getBoundingClientRect();
-    const height2 = dom2.getBoundingClientRect();
-    imageHeight.value = height2.bottom - height1.top;
+    const height1 = dom1.getBoundingClientRect()
+    const height2 = dom2.getBoundingClientRect()
+    imageHeight.value = height2.bottom - height1.top
   }
 }
 const handleTabClick = (tab: TabsPaneContext) => {
@@ -428,26 +348,52 @@ const handleChangeSku = () => {
   sku.value = queryForm3.sku
 }
 onBeforeMount(() => {
-  skuOptions.value = skuOptionsStore.data.sku.split(',')
-  // console.log('进入页面的数据：', skuOptions.value);
-  const length = skuOptions.value.length
-  if (length === 1) {
-    isSingle.value = true
-  } else if (length > 1) {
-    isSingle.value = false
+  // 检查 store 中是否已有数据
+  if (skuOptionsStore.data.sku) {
+    skuOptions.value = skuOptionsStore.data.sku.split(',')
+    // console.log('进入页面的数据：', skuOptions.value)
+    const length = skuOptions.value.length
+    if (length === 1) {
+      isSingle.value = true
+    } else if (length > 1) {
+      isSingle.value = false
+    }
+    queryForm3.sku = skuOptions.value[0]
+    sku.value = queryForm3.sku
   }
-  queryForm3.sku = skuOptions.value[0]
-  sku.value = queryForm3.sku
 })
+
+// 监听 store 数据变化
+watch(
+  () => skuOptionsStore.data.sku,
+  (newSku) => {
+    if (newSku) {
+      skuOptions.value = newSku.split(',')
+      // console.log('store 数据更新后的 skuOptions：', skuOptions.value)
+      const length = skuOptions.value.length
+      if (length === 1) {
+        isSingle.value = true
+      } else if (length > 1) {
+        isSingle.value = false
+      }
+      queryForm3.sku = skuOptions.value[0]
+      sku.value = queryForm3.sku
+    }
+  },
+  { immediate: true }
+)
 onMounted(() => {
   setImageHeight()
-  activeName.value = Number(route.query.activeName);  
+  activeName.value = Number(route.query.activeName)
 })
-watch(() => route.query.field, (newField) => {
-  if (newField) {
-    selectField.value = Number(newField);
+watch(
+  () => route.query.field,
+  (newField) => {
+    if (newField) {
+      selectField.value = Number(newField)
+    }
   }
-})
+)
 </script>
 
 <style lang="scss" scoped>
@@ -463,19 +409,19 @@ watch(() => route.query.field, (newField) => {
       min-width: 80px !important;
       text-align: right;
     }
-    
+
     .customTag {
       width: 7em;
       padding: 0 30px;
-      color: #fff; 
+      color: #fff;
       border: 0;
-      border-radius: 17px; 
-      
+      border-radius: 17px;
+
       &-veryPoor {
-        background-color: #e32e00; 
+        background-color: #e32e00;
       }
       &-good {
-        background-color: #bad411; 
+        background-color: #bad411;
       }
       &-fair {
         background-color: #ffc400;
@@ -496,10 +442,10 @@ watch(() => route.query.field, (newField) => {
       }
     }
     .rate-wrapper {
-      display: flex; 
+      display: flex;
       gap: 8px;
-      align-items: center; 
-      
+      align-items: center;
+
       .rate-value {
         width: 25px; /* 固定宽度，保证分数区域宽度一致 */
         text-align: left; /* 文本右对齐 */
@@ -523,7 +469,7 @@ watch(() => route.query.field, (newField) => {
       }
       .rate-count {
         margin-left: -11px;
-        color: #36788C;
+        color: #36788c;
       }
     }
     .custom-link.is-underline::after {
@@ -532,7 +478,7 @@ watch(() => route.query.field, (newField) => {
       bottom: 0;
       left: 0;
       height: 0;
-      content: "";
+      content: '';
       border-bottom: 1px solid var(--el-color-primary);
     }
     .top-card {
@@ -543,7 +489,7 @@ watch(() => route.query.field, (newField) => {
       &:hover {
         cursor: pointer;
       }
-    
+
       .el-card__body {
         padding-top: 0;
         padding-right: 10px;
@@ -553,7 +499,7 @@ watch(() => route.query.field, (newField) => {
       .el-tag {
         float: right;
       }
-    
+
       .parting-line {
         float: top;
         width: 100%;
@@ -570,7 +516,7 @@ watch(() => route.query.field, (newField) => {
           background: #ff99cc;
         }
         &-orange {
-          background: #E6A23C;
+          background: #e6a23c;
         }
         &-green {
           background: #34a9a9;
