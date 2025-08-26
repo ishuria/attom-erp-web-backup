@@ -362,6 +362,8 @@ const emit = defineEmits<{
   updateInvoiceMatchingVisible: [value: boolean]
 }>()
 const closeInvoiceMatching = () => {
+  // 清空 detailIds，避免重复提交
+  detailIds.value = []
   emit('updateInvoiceMatchingVisible', false)
 }
 
@@ -585,6 +587,8 @@ const handleSubmitConfirm = async () => {
     const { data } = await submitConfirmTaxRefundInvoiceMatch(Array.from(setIds))
     if (data) {
       $baseMessage('确认成功！', 'success')
+      // 清空 detailIds，避免重复提交
+      detailIds.value = []
       closeInvoiceMatching()
     }
   } else {
