@@ -638,6 +638,20 @@ export const archiveTaxRefundBatchOutbound = (data: { contractNumber: string }):
     data,
   })
 }
+
+/**
+ * 退税批次-发票归集
+ * @param data
+ * @returns
+ */
+export const archiveTaxRefundBatchInvoice = (data: { path: string; id: number }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/invoice/archive`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 退税管理 - 查询列表
  */

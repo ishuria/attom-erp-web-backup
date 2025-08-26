@@ -73,7 +73,7 @@
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showDetail(row)">明细</el-link>
               <span style="margin: 0 5px"></span>
-              <el-link type="primary" underline="never" @click="showInvoiceCollection()">发票归集</el-link>
+              <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="handleArchiveOutbound(row)">出库归档</el-link>
               <span style="margin: 0 5px"></span>
@@ -157,7 +157,7 @@
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="cancleToWaitTaxRefund(row)">撤销到待退税</el-link>
               <span style="margin: 0 5px"></span>
-              <el-link type="primary" underline="never" @click="showInvoiceCollection()">发票归集</el-link>
+              <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -222,6 +222,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import {
+  archiveTaxRefundBatchInvoice,
   archiveTaxRefundBatchOutbound,
   checkTaxRefundBatchAiTuoMuExport,
   getTaxRefundBatchList,
@@ -402,17 +403,25 @@ const closeDetail = (value: boolean) => {
 }
 
 // 发票归集显示
-const showInvoiceCollection = () => {
+const showInvoiceCollection = (row: IGetTaxRefundBatchList) => {
   invoiceCollectionVisible.value = true
+  _row = row
 }
 const closeInvoiceCollection = () => {
   invoiceCollectionVisible.value = false
   invoiceCollectionFormRef.value?.resetFields()
 }
-const confirmInvoiceCollection = () => {
-  invoiceCollectionFormRef.value?.validate((isValid: boolean) => {
+const confirmInvoiceCollection = async () => {
+  invoiceCollectionFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      /* empty */
+      const { data } = await archiveTaxRefundBatchInvoice({
+        path: invoiceCollectionForm.path,
+        id: _row.id!,
+      })
+      if (data) {
+        $baseMessage('发票归集成功！', 'success')
+        closeInvoiceCollection()
+      }
     }
   })
 }
