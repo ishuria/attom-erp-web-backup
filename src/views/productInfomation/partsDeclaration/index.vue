@@ -131,7 +131,15 @@
         </template>
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.count" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
+            <el-input
+              v-model="row.count"
+              min="0"
+              placeholder="请输入正数"
+              step="0.01"
+              type="number"
+              @blur="clickCancel2($event, row)"
+              @keypress.enter="clickCancel2($event, row)"
+            />
           </div>
           <span>{{ row.count }}</span>
         </template>
@@ -144,7 +152,12 @@
         </template>
         <template #default="{ row }">
           <div class="none">
-            <el-input v-model="row.unit" @blur="clickCancel2($event, row)" @keypress.enter="clickCancel2($event, row)" />
+            <el-input
+              v-model="row.unit"
+              placeholder="请输入文字，不能为纯数字"
+              @blur="clickCancel2($event, row)"
+              @keypress.enter="clickCancel2($event, row)"
+            />
           </div>
           <span>{{ row.unit }}</span>
         </template>
@@ -552,6 +565,34 @@ const clickCancel2 = async (event: Event, value: any) => {
     return
   }
   if (event.type === 'blur') {
+    // 添加类型校验
+    let hasValidationError = false
+
+    // 校验 count 字段 - 必须为数字
+    if (value.count !== undefined && value.count !== null && value.count !== '') {
+      if (isNaN(Number(value.count)) || Number(value.count) <= 0) {
+        $baseMessage('每零件单位数量必须为正数', 'error')
+        hasValidationError = true
+      }
+    }
+
+    // 校验 unit 字段 - 必须为文字（不能为空，不能为纯数字）
+    if (value.unit !== undefined && value.unit !== null) {
+      if (!value.unit.trim()) {
+        $baseMessage('开票单位不能为空', 'error')
+        hasValidationError = true
+      } else if (/^\d+$/.test(value.unit.trim())) {
+        $baseMessage('开票单位不能为纯数字', 'error')
+        hasValidationError = true
+      }
+    }
+
+    // 如果有校验错误，恢复原值并返回
+    if (hasValidationError) {
+      Object.assign(value, copyRow)
+      return
+    }
+
     // 执行失去焦点处理逻辑
     try {
       await updateProductCustomsClearanceSuppliserInfo({
