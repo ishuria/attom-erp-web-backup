@@ -180,7 +180,7 @@ export const flexColumnWidth = (list: any, label: string, prop: string, padding 
 const decodeHtmlEntities = (html: string): string => {
   const textarea = document.createElement('textarea')
   textarea.innerHTML = html
-  return textarea.value
+  return textarea.value.replace(/^"|"$/g, '') // 去掉开头和结尾的引号
 }
 
 /**
@@ -197,14 +197,14 @@ export const removeHtmlTags = (html: string): string => {
 
   // 替换换行相关标签为换行符
   textWithBreaks = textWithBreaks
-    .replaceAll(/<br\s*\/?>/gi, '\n') // 替换 <br> 标签为换行符
-    .replaceAll(/<\/(p|div|h[1-6]|li)>/gi, '\n') // 替换块级标签结束为换行符
-    .replaceAll(/<ul>|<ol>/gi, '\n') // 替换列表开始为换行符
-    .replaceAll(/<\/?[^>]+(>|$)/g, '') // 去除其他 HTML 标签
+    .replace(/<br\s*\/?>/gi, '\n') // 替换 <br> 标签为换行符
+    .replace(/<\/(p|div|h[1-6]|li)>/gi, '\n') // 替换块级标签结束为换行符
+    .replace(/<ul>|<ol>/gi, '\n') // 替换列表开始为换行符
+    .replace(/<\/?[^>]+(>|$)/g, '') // 去除其他 HTML 标签
 
   // 替换多余的换行符
   textWithBreaks = textWithBreaks
-    .replaceAll(/\n\s*\n/g, '\n') // 去除多余的连续换行符
+    .replace(/\n\s*\n/g, '\n') // 去除多余的连续换行符
     .trim() // 去掉首尾多余换行符
 
   return textWithBreaks

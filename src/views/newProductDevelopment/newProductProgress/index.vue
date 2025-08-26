@@ -392,6 +392,7 @@
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
+      :progress-id="progressId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -400,6 +401,7 @@
     <wang-editor
       :classify="classify"
       :content="remarkCopy"
+      :progress-id="progressId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorRemarkVisible"
       @click-boolean="clickRemarkBool"
@@ -988,6 +990,7 @@ const fetchData = async () => {
   listLoading.value = false
 }
 let _row: any = null
+const progressId = ref<number>(-1)
 /**
  * 当点击时切换输入框，修改输入
  */
@@ -1012,11 +1015,13 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     progressLogCopy.value = data
     wangEditorTitle.value = '编辑开发日志'
     classify.value = 'progressLog'
+    progressId.value = row.progressId
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else if (column.property == 'remark') {
     remarkCopy.value = progressList.value[tableClickIdx.value].remark
     wangEditorTitle.value = '编辑备注'
     classify.value = 'remark'
+    progressId.value = row.progressId
     wangEditorRemarkVisible.value = !wangEditorRemarkVisible.value
   }
   const firstChild = cell?.children[0]?.children[0]

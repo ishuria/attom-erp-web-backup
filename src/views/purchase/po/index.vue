@@ -91,7 +91,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
@@ -329,7 +337,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
@@ -567,7 +583,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
@@ -810,7 +834,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
@@ -1054,7 +1086,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
@@ -1298,7 +1338,15 @@
                 跨月调整金额：{{ procurementBonusCrossMonth }}
               </el-text>
             </div>
-            <div v-if="currentRoleCode === ROLE_ACCOUNTANT_CODE || currentRoleCode === ROLE_BOSS_CODE" style="margin: 0 10px 10px 0">
+            <div
+              v-if="
+                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
+                currentRoleCode === ROLE_BOSS_CODE ||
+                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+                currentRoleCode === ROLE_PURCHASER_CODE
+              "
+              style="margin: 0 10px 10px 0"
+            >
               <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
