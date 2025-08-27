@@ -4,7 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
-  IUpdateOperationAmazonCostReq
+  IUpdateOperationAmazonCostReq,
 } from '/@/type/storeOperation/productAnalysisType'
 
 /**
@@ -14,7 +14,7 @@ export function getOperationAmazonCostList(data: IGetOperationAmazonCostListReq)
   return request({
     url: `${BASE_API}/operation/amazon/cost/list`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -24,7 +24,7 @@ export function copyOperationAmazonCost(data: { id: number }): Promise<{ data: b
   return request({
     url: `${BASE_API}/operation/amazon/cost/copy`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -34,7 +34,7 @@ export function deleteOperationAmazonCost(data: { id: number }): Promise<{ data:
   return request({
     url: `${BASE_API}/operation/amazon/cost/delete`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -44,17 +44,17 @@ export function reverseCalcOperationAmazonCost(data: { id: number }): Promise<{ 
   return request({
     url: `${BASE_API}/operation/amazon/cost/reverse/calc`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
  * @description 运营-产品成本分析-成本核算新增
  */
-export function addOperationAmazonCost(data: { sku: string, site: number }): Promise<{ data: boolean }> {
+export function addOperationAmazonCost(data: { sku: string; site: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/amazon/cost/add`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -64,6 +64,6 @@ export function updateOperationAmazonCost(data: IUpdateOperationAmazonCostReq): 
   return request({
     url: `${BASE_API}/operation/amazon/cost/update`,
     method: 'post',
-    data
+    data,
   })
 }
