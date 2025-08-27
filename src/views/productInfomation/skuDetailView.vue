@@ -736,7 +736,21 @@ const updateVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({})
 const modifyFormRef = ref<FormInstance>()
 const modifyFormRules = reactive({
-  componentQuantity: [{ required: true, message: '请输入每套SKU采购数量', trigger: 'blur' }],
+  componentQuantity: [
+    { required: true, message: '请输入每套SKU采购数量', trigger: 'blur' },
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (value === 0 || value === '0') {
+          callback(new Error('零件数量不能为0'))
+        } else if (value < 0) {
+          callback(new Error('零件数量不能为负数'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 })
 const hsOption = ref<{ id: number; label: string }[]>([])
 const fetchHsSelectList = async () => {
