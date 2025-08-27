@@ -109,7 +109,14 @@
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
             <template #default="{ row }">
-              <el-text v-if="row.payRecordTotal !== row.taxInclusiveCost" tag="mark">{{ row.taxInclusiveCost }}</el-text>
+              <el-text
+                v-if="
+                  row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
+                "
+                tag="mark"
+              >
+                {{ row.taxInclusiveCost }}
+              </el-text>
               <span v-else>{{ row.taxInclusiveCost }}</span>
             </template>
           </el-table-column>
@@ -302,7 +309,14 @@
           <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
           <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
             <template #default="{ row }">
-              <el-text v-if="row.payRecordTotal !== row.taxInclusiveCost" tag="mark">{{ row.taxInclusiveCost }}</el-text>
+              <el-text
+                v-if="
+                  row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
+                "
+                tag="mark"
+              >
+                {{ row.taxInclusiveCost }}
+              </el-text>
               <span v-else>{{ row.taxInclusiveCost }}</span>
             </template>
           </el-table-column>
@@ -931,10 +945,12 @@ const fetchData = async () => {
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
     item.payRecord = []
     if (Array.isArray(item.payRecordList)) {
-      // 计算付款记录总金额
-      item.payRecordTotal = item.payRecordList.reduce((total: number, record: PayRecordList) => {
-        return total + (record.payPrice || 0)
-      }, 0)
+      if (item.payRecordList.length !== 0) {
+        // 计算付款记录总金额
+        item.payRecordTotal = item.payRecordList.reduce((total: number, record: PayRecordList) => {
+          return total + (record.payPrice || 0)
+        }, 0)
+      }
 
       item.payRecordList = item.payRecordList
         .map((record: PayRecordList) => {
