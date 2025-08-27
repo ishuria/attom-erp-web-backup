@@ -863,9 +863,14 @@ const fetchColumn = async () => {
       delete item.width
     }
     if (
-      ['esAvailableSaleDayTotal', 'planPoPurchaseSkuNumber', 'recommendCount', 'originalNowSupplement', 'monthSalesVolume'].includes(
-        item.prop
-      )
+      [
+        'esAvailableSaleDayTotal',
+        'planPoPurchaseSkuNumber',
+        'recommendCount',
+        'originalNowSupplement',
+        'monthSalesVolume',
+        'encasementCount',
+      ].includes(item.prop)
     ) {
       item.sortable = true
     }
