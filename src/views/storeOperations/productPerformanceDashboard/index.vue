@@ -3381,7 +3381,21 @@ const changeCurrencyPASIN = async () => {
 }
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const label = data.column.label
-  if (['今销', '月净利润', '结算月额', '结算月量', '2周广告转化', '2周总转化'].includes(data.column.label)) {
+  if (
+    [
+      '今销',
+      '月净利润',
+      '结算月额',
+      '结算月量',
+      '2周广告转化',
+      '2周总转化',
+      'FBA差异',
+      '月退货%',
+      'FBA仓储费',
+      '月ACOS',
+      'VOC满意度',
+    ].includes(data.column.label)
+  ) {
     return 'header-cell clearLR-padding'
   }
 
@@ -3674,9 +3688,22 @@ const fetchColumn = async () => {
       delete item.width
     }
     if (
-      ['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(
-        item.prop
-      )
+      [
+        'currentSalesNumber',
+        'currentSalesOrder',
+        'monthSalesVolume',
+        'monthNetProfit',
+        'monthSalesPrice',
+        'currentSalesPrice',
+        'outOfStock',
+        'vocSatisfaction',
+        'availableInventory',
+        'fbaStorageFee',
+        'differenceFba',
+        'monthReturnGoods',
+        'monthAcos',
+        'grossProfit',
+      ].includes(item.prop)
     ) {
       item.sortable = true
     }
@@ -3713,9 +3740,19 @@ const fetchAsinColumn = async () => {
       delete item.width
     }
     if (
-      ['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(
-        item.prop
-      )
+      [
+        'currentSalesNumber',
+        'currentSalesOrder',
+        'monthSalesVolume',
+        'monthNetProfit',
+        'monthSalesPrice',
+        'currentSalesPrice',
+        'outOfStock',
+        'availableInventory',
+        'fbaStorageFee',
+        'monthReturnGoods',
+        'monthAcos',
+      ].includes(item.prop)
     ) {
       item.sortable = true
     }
@@ -3733,9 +3770,19 @@ const fetchPAsinColumn = async () => {
       delete item.width
     }
     if (
-      ['currentSalesNumber', 'currentSalesOrder', 'monthSalesVolume', 'monthNetProfit', 'monthSalesPrice', 'currentSalesPrice'].includes(
-        item.prop
-      )
+      [
+        'currentSalesNumber',
+        'currentSalesOrder',
+        'monthSalesVolume',
+        'monthNetProfit',
+        'monthSalesPrice',
+        'currentSalesPrice',
+        'outOfStock',
+        'availableInventory',
+        'fbaStorageFee',
+        'monthReturnGoods',
+        'monthAcos',
+      ].includes(item.prop)
     ) {
       item.sortable = true
     }

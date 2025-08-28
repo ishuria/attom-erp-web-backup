@@ -318,6 +318,11 @@
             />
           </div>
         </el-form-item>
+        <el-form-item label="广告">
+          <el-select v-model="filterForm.advStatus" placeholder="请选择广告状态">
+            <el-option v-for="item in adStatusOption" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="filterVisible = false">取消</el-button>
@@ -420,6 +425,7 @@ import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { adStatusOption } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
@@ -704,10 +710,12 @@ const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
 const handleConfirmFilter = async () => {
   queryForm.startLatestDate = latestDate.value[0] || ''
   queryForm.endLatestDate = latestDate.value[1] || ''
+  queryForm.advStatus = filterForm.advStatus
   queryForm.pageNo = 1
   queryForm.pageSize = 20
-  fetchData()
+
   filterVisible.value = false
+  queryData()
 }
 const handleWidth = (item: any) => {
   switch (item.label) {
