@@ -2421,6 +2421,11 @@ const handleConfirmTotalPriceSharing = async () => {
   totalPriceSharingFormRef.value?.validate(async (valid: any) => {
     if (valid) {
       try {
+        const hasPay = selectedCompArray.value.some((item: any) => Number(item.payPrice) > 0)
+        if (hasPay) {
+          $baseMessage('已经付款的零件不能进行总价分摊', 'warning')
+          return
+        }
         priceSharingLoading.value = true
         let componentIds: string = selectedCompArray.value.map((item: any) => item.componentId).join(',')
         const { data } = await purchaseTotalAp({
