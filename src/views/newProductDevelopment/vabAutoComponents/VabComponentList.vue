@@ -278,19 +278,32 @@
 
       <el-table-column label="供应商" prop="supplier" width="240">
         <template #default="{ row }">
-          <div class="none">
+          <!-- <div class="none">
             <el-input
               v-model="row.supplier"
               autofocus
               @blur="componentClickCancel($event, row)"
               @keydown.enter="effectiveCountInputeHandle($event)"
             />
-          </div>
+          </div> -->
+          <el-select
+            v-model="row.supplier"
+            allow-create
+            clearable
+            default-first-option
+            filterable
+            :loading="loading"
+            placeholder="点击输入和搜索"
+            remote
+            :remote-method="remoteMethod"
+            @change="componentClickCancel($event, row)"
+          >
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
           <el-tooltip content="" effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip">{{ row.supplier }}</div>
             </template>
-            <div class="multi-line-ellipsis">{{ row.supplier }}</div>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -439,6 +452,7 @@ import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { getProductAllSupplier } from '~/src/api/devlocal/productInformation'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
 import { getProgressLog } from '/@/api/devlocal/progress'
@@ -481,6 +495,32 @@ const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
 const title = ref<string>('')
+
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+      suppliserName: query,
+    })
+
+    supplierList.value = data.map((item: any) => {
+      return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+
 let previous: any = null
 let currentGroupIndex = 0 // 当前组索引
 // 零件清单列表
