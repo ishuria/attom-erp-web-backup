@@ -360,7 +360,7 @@
       </template>
     </vab-dialog>
     <!-- 发布订货 -->
-    <vab-dialog v-model="releaseOrderVisible" :draggable="false" title="发布订货" width="65%">
+    <vab-dialog v-model="releaseOrderVisible" :draggable="false" title="发布订货" width="55%">
       <el-form v-loading="orderListLoading" class="release-order-form" label-position="top" :model="releaseOrderForm">
         <!-- 第一行：图片、SKU和描述 -->
         <div class="form-row">
@@ -1148,12 +1148,13 @@ onBeforeMount(async () => {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 8px;
+      padding: 4px 12px;
       background-color: #f5f7fa;
       border-radius: 6px;
       border: 1px solid #e4e7ed;
       height: 32px;
       box-sizing: border-box;
+      min-width: 120px;
 
       :deep(.el-checkbox) {
         transform: scale(1);
