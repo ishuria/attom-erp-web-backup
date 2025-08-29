@@ -499,6 +499,7 @@
                     </template>
                     <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
                   </el-tooltip>
+                  <el-tag class="order-tag" effect="dark">订</el-tag>
                 </div>
 
                 <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
@@ -2005,6 +2006,16 @@
       <div ref="chartContainer3" v-loading="chartLoading" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
+    <!-- 发布订货 -->
+    <!-- <vab-release-order-dialog
+      ref="releaseOrderDialogRef"
+      v-model="releaseOrderVisible"
+      :loading="orderListLoading"
+      :sku-list="skuList"
+      @confirm="handleReleaseOrder"
+      @image-preview="imagePreviewShow"
+      @switch-sku="handleSwitchSku"
+    /> -->
   </div>
 </template>
 
@@ -2066,6 +2077,48 @@ import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags }
 defineOptions({
   name: 'ProductPerformanceDashboard',
 })
+
+// 发布订货里面的sku列表
+const skuList = ref<{ value: string; label: string }[]>([])
+// 打开发布订货
+const handleShowReleaseOrder = async (row: any) => {
+  // currentRowId.value = row.id
+  // copyRow = row
+  // releaseOrderVisible.value = true
+  // if (row.sku) {
+  //   orderListLoading.value = true
+  //   // 确保skuArray 是一个没有空值的数组
+  //   const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
+  //   skuList.value = skuArray.map((item) => {
+  //     return {
+  //       label: item,
+  //       value: item,
+  //     }
+  //   })
+  //   // 修复：检查SKU是否包含搜索关键词
+  //   const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
+  //   if (matchSkus.length > 0) {
+  //     // 如果有多个匹配，可以选择最匹配的或者第一个
+  //     const selectedSku = matchSkus[0].value
+  //     const { data } = await getOperationOrderSku({
+  //       id: row.id!,
+  //       sku: selectedSku,
+  //     })
+  //     // 通过组件实例设置表单数据
+  //     if (releaseOrderDialogRef.value) {
+  //       releaseOrderDialogRef.value.setFormData(data)
+  //     }
+  //     asinId.value = row.id!
+  //   }
+  //   orderListLoading.value = false
+  // } else {
+  //   skuList.value = []
+  //   // 重置组件表单数据
+  //   if (releaseOrderDialogRef.value) {
+  //     releaseOrderDialogRef.value.resetForm()
+  //   }
+  // }
+}
 
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
@@ -2965,7 +3018,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return 255
+        return 280
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -3968,6 +4021,29 @@ onBeforeMount(() => {
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
+}
+
+/* 订货标签样式 */
+.order-tag {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 16px !important;
+  height: 16px !important;
+  padding: 0 !important;
+  margin: -2px 0px 0 4px;
+  border-radius: 4px !important;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+
+  :deep(.el-tag__content) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
 }
 .noneHoverTable :deep(.clear-padding) {
   padding-top: 0px;

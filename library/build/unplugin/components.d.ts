@@ -280,6 +280,7 @@ declare module 'vue' {
     VabQueryFormTopPanel: typeof import('./../../components/VabQueryForm/components/VabQueryFormTopPanel.vue')['default']
     VabQuickColor: typeof import('./../../components/VabQuickColor/index.vue')['default']
     VabRefresh: typeof import('./../../components/VabRefresh/index.vue')['default']
+    VabReleaseOrderDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabReleaseOrderDialog.vue')['default']
     VabRemarkDialog: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabRemarkDialog.vue')['default']
     VabReturnAnalysis: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabReturnAnalysis.vue')['default']
     VabRightTools: typeof import('./../../components/VabRightTools/index.vue')['default']

@@ -197,6 +197,18 @@ export function getPackageTaskList(params: IGetPackageTaskListQuery): Promise<IG
     params,
   })
 }
+/**
+ * 查询所有打包任务列表 - 未完成（除了已完成）
+ * @param params
+ * @returns
+ */
+export function getPackageAllTaskList(params: IGetPackageTaskListQuery): Promise<IGetPackageTaskListResp> {
+  return request({
+    url: `${BASE_API}/package/task/all/list`,
+    method: 'get',
+    params,
+  })
+}
 
 // 开始任务-初始人员数据获取
 export function getStartTaskList(): Promise<IGetStartTaskListResp> {

@@ -1,6 +1,197 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
+      <el-tab-pane label="未完成" :name="7">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item>
+                <el-button class="button-margin" type="primary">工作量预估</el-button>
+              </el-form-item>
+              <el-form-item label="站点" prop="site">
+                <el-select v-model="allTaskForm.site" class="button-margin" clearable placeholder="全部" @change="queryAllTaskData">
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="allTaskForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="allTaskForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryAllTaskData"
+                  @keyup.enter="queryAllTaskData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryAllTaskData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          ref="tableRef"
+          v-loading="listLoading"
+          border
+          :cell-class-name="cellClassName"
+          :cell-style="cellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="allTaskList"
+          :header-cell-style="headerCellStyle"
+          :row-class-name="tableRowClassName"
+          stripe
+          @cell-click="changeInput"
+          @row-click="handleRowClick"
+          @selection-change="setSelectRows"
+        >
+          <el-table-column fixed="left" type="selection" />
+          <el-table-column label="发货日期" prop="sendDate" width="115">
+            <template #default="{ row }">
+              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="PO" prop="po" width="100" />
+          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="站点" prop="sendSite" width="145" />
+          <el-table-column label="已签收天数" prop="signDay" width="110">
+            <template #default="{ row }">
+              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">{{ row.signDay }}天</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品图片" width="75">
+            <template #header>
+              产品
+              <br />
+              图片
+            </template>
+            <template #default="{ row }">
+              <el-image
+                fit="fill"
+                :src="row.skuImageUrl"
+                style="display: block; width: 75px; height: 75px"
+                @click="showPreviewImage(row.skuImageUrl)"
+              >
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(allTaskList, (row: any) => row._sku, 100, 60)">
+            <template #default="{ row }">
+              <span class="copySku" @click="handleClipboard($event, row.sku)">
+                {{ row.sku }}
+                <vab-icon icon="file-copy-2-fill" />
+              </span>
+              <br />
+              {{ row.desc }}
+            </template>
+          </el-table-column>
+          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
+          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+          <el-table-column label="已装箱数" prop="productCount" width="100" />
+          <el-table-column label="需拍照" width="90">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
+          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
+            <template #default="{ row }">
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+                </template>
+                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="产品经理" prop="productManager" width="100" />
+          <el-table-column fixed="right" label="操作" width="185">
+            <template #default="{ row }">
+              <el-dropdown>
+                <el-button text type="primary" @click="getPackageCodePath(row)">
+                  条码文件夹
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
+                      @click="getPackageCodePath(row)"
+                    >
+                      <el-link type="primary" underline="never">条码文件夹</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
+                      @click="handleShowPartsList(row)"
+                    >
+                      <el-link type="primary" underline="never">零件清单</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
+                      @click="handleShowQualityInspectionReport(row)"
+                    >
+                      <el-link type="primary" underline="never">打包质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
+                      @click="showNewInspectionReport(row)"
+                    >
+                      <el-link type="primary" underline="never">新品质检</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
+                      @click="showBarcode(row)"
+                    >
+                      <el-link type="primary" underline="never">生成条形码</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
+                      @click="showSplitTask(row)"
+                    >
+                      <el-link type="primary" underline="never">拆分</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
+                      @click="handleShowModify(row)"
+                    >
+                      <el-link type="primary" underline="never">站点修改</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
+                      @click="handleShowModifyTask(row)"
+                    >
+                      <el-link type="primary" underline="never">任务数修改</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="allTaskForm.pageNo"
+          :page-size="allTaskForm.pageSize"
+          :total="allTaskTotal"
+          @current-change="handleAllTaskCurrentChange"
+          @size-change="handleAllTaskSizeChange"
+        />
+      </el-tab-pane>
       <el-tab-pane label="待打包" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -1747,6 +1938,7 @@ import {
   getEndTaskList,
   getFreeList,
   getGoOffWorkList,
+  getPackageAllTaskList,
   getPackageComponentList,
   getPackageSiteList,
   getPackageTaskIsSplit,
@@ -1790,7 +1982,7 @@ const skuId = ref<number>(0)
 // 传递给打包质检报告的taskId
 const taskId = ref<number>(0)
 const newQualityInspectionReportVisible = ref<boolean>(false)
-const activeName = ref<number>(1)
+const activeName = ref<number>(7)
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
@@ -2522,7 +2714,19 @@ const queryTaskingData = () => {
   taskingForm.pageNo = 1
   fetchTaskingData()
 }
-
+const queryAllTaskData = () => {
+  allTaskForm.pageNo = 1
+  fetchAllTaskData()
+}
+const handleAllTaskSizeChange = (value: number) => {
+  allTaskForm.pageNo = 1
+  allTaskForm.pageSize = value
+  fetchAllTaskData()
+}
+const handleAllTaskCurrentChange = (value: number) => {
+  allTaskForm.pageNo = value
+  fetchAllTaskData()
+}
 const taskingForm = reactive<any>({
   keyWord: '',
   site: undefined,
@@ -2544,6 +2748,27 @@ const fetchTaskingData = async () => {
     listLoading.value = false
   }
 }
+const allTaskForm = reactive<any>({
+  keyWord: '',
+  site: undefined,
+  pageNo: 1,
+  pageSize: 20,
+})
+const allTaskList = ref<any>([])
+const allTaskTotal = ref<number>(0)
+const fetchAllTaskData = async () => {
+  listLoading.value = true
+  const { data } = await getPackageAllTaskList(allTaskForm)
+  if (data) {
+    allTaskList.value = data.list
+    allTaskTotal.value = data.total!
+    allTaskList.value.forEach((item: any) => {
+      item.packageRemarkList = item.packageRemarkList.join('<br>')
+      item._sku = `${item.sku}<br/>${item.desc}`
+    })
+    listLoading.value = false
+  }
+}
 const handleTabClick = (tab: TabsPaneContext) => {
   list.value = []
   // selectRows.value = []
@@ -2551,6 +2776,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
     // activeName.value = tab.props.name;
     queryForm.status = Number(tab.props.name)
   }
+  activeName.value = Number(tab.props.name)
   router.push({
     query: {
       ...route.query,
@@ -2559,10 +2785,12 @@ const handleTabClick = (tab: TabsPaneContext) => {
       pageSize: 20,
     },
   })
-  if (queryForm.status !== 5) {
+  if (queryForm.status !== 5 && activeName.value !== 7) {
     fetchData()
   } else if (queryForm.status === 5) {
     fetchTaskingData()
+  } else if (activeName.value === 7) {
+    fetchAllTaskData()
   }
 }
 // 表头样式
@@ -2690,17 +2918,23 @@ onBeforeMount(() => {
   if (tab) {
     queryForm.status = Number(tab)
     activeName.value = Number(tab)
+  } else {
+    activeName.value = 7
   }
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
+    allTaskForm.pageNo = Number(pageNo)
   }
   if (pageSize) {
     queryForm.pageSize = Number(pageSize)
+    allTaskForm.pageSize = Number(pageSize)
   }
-  if (queryForm.status !== 5) {
+  if (queryForm.status !== 5 && activeName.value !== 7) {
     fetchData()
   } else if (queryForm.status === 5) {
     fetchTaskingData()
+  } else if (activeName.value === 7) {
+    fetchAllTaskData()
   }
   getSiteList()
 })

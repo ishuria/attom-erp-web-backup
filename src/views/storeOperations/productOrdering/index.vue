@@ -365,58 +365,15 @@
       </template>
     </vab-dialog>
     <!-- 发布订货 -->
-    <vab-dialog v-model="releaseOrderVisible" :draggable="false" title="发布订货" width="55%">
-      <el-form v-loading="orderListLoading" class="release-order-form" label-position="top" :model="releaseOrderForm">
-        <!-- 第一行：图片、SKU和描述 -->
-        <div class="form-row">
-          <el-form-item class="image-item">
-            <el-image class="sku-image" :src="releaseOrderForm.skuImageUrl" @click="imagePreviewShow(releaseOrderForm.skuImageUrl)">
-              <template #error><el-icon /></template>
-            </el-image>
-          </el-form-item>
-
-          <el-form-item class="sku-item" label="SKU">
-            <el-select v-model="releaseOrderForm.sku" class="sku-select" placeholder="请选择SKU" @change="handleSwitchSku">
-              <el-option v-for="item in skuList" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-
-          <el-form-item class="description-item" label="描述">
-            <el-input v-model="releaseOrderForm.description" class="description-input" disabled />
-          </el-form-item>
-        </div>
-
-        <!-- 第二行：其他信息 -->
-        <div class="form-row">
-          <el-form-item class="number-item" label="订货数量">
-            <el-input-number v-model="releaseOrderForm.number" class="number-input" :min="0" />
-          </el-form-item>
-
-          <el-form-item class="split-item" label="拆分">
-            <div class="checkbox-wrapper">
-              <el-checkbox v-model="releaseOrderForm.split" disabled :false-value="0" :true-value="1" />
-              <span class="checkbox-label">{{ releaseOrderForm.split ? '是' : '否' }}</span>
-            </div>
-          </el-form-item>
-
-          <el-form-item class="moq-item" label="起订量">
-            <el-input v-model="releaseOrderForm.moq" class="info-input" disabled />
-          </el-form-item>
-
-          <el-form-item class="carton-item" label="整箱数">
-            <el-input v-model="releaseOrderForm.numberOfCartons" class="info-input" disabled />
-          </el-form-item>
-
-          <el-form-item class="manager-item" label="产品经理">
-            <el-input v-model="releaseOrderForm.productManagerName" class="info-input" disabled />
-          </el-form-item>
-        </div>
-      </el-form>
-      <template #footer>
-        <el-button @click="releaseOrderVisible = false">取消</el-button>
-        <el-button :loading="orderListLoading" type="primary" @click="handleReleaseOrder">发布</el-button>
-      </template>
-    </vab-dialog>
+    <vab-release-order-dialog
+      ref="releaseOrderDialogRef"
+      v-model="releaseOrderVisible"
+      :loading="orderListLoading"
+      :sku-list="skuList"
+      @confirm="handleReleaseOrder"
+      @image-preview="imagePreviewShow"
+      @switch-sku="handleSwitchSku"
+    />
   </div>
 </template>
 
@@ -498,7 +455,7 @@ const label3Map = new Map([
 ])
 const releaseOrderVisible = ref<boolean>(false)
 // 发布订货表单
-const releaseOrderForm = reactive<any>({})
+
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
 const asinId = ref<number>(-1)
@@ -607,12 +564,12 @@ const handleOpenSmooth = async () => {
   Object.assign(smoothForm, data)
 }
 // 确认发布订货
-const handleReleaseOrder = async () => {
-  if (!releaseOrderForm.sku) {
+const handleReleaseOrder = async (formData: any) => {
+  if (!formData.sku) {
     $baseMessage('请选择SKU', 'warning')
     return
   }
-  if (!releaseOrderForm.number) {
+  if (!formData.number) {
     $baseMessage('请填写订货数量', 'warning')
     return
   }
@@ -623,8 +580,8 @@ const handleReleaseOrder = async () => {
 
     const { data } = await releaseOperationPlanPo({
       asinId: asinId.value,
-      sku: releaseOrderForm.sku,
-      number: releaseOrderForm.number,
+      sku: formData.sku,
+      number: formData.number,
       asin: copyRow.asin,
       site: copyRow.site,
     })
@@ -646,22 +603,25 @@ const handleReleaseOrder = async () => {
   }
 }
 let copyRow: IGetOperationOrderList
-const handleSwitchSku = async () => {
-  // const { data } = await getSkuInfo({ sku: releaseOrderForm.sku })
-  // Object.assign(releaseOrderForm, data)
+const releaseOrderDialogRef = ref()
+
+const handleSwitchSku = async (sku: string) => {
   const { data } = await getOperationOrderSku({
     id: copyRow.id!,
-    sku: releaseOrderForm.sku,
+    sku: sku,
   })
-  // const { data } = await getSkuInfo({ sku: skuArray[0] })
-  Object.assign(releaseOrderForm, data)
-  releaseOrderForm.number = data.orderQuantity
+
+  // 更新组件中的表单数据
+  if (releaseOrderDialogRef.value) {
+    releaseOrderDialogRef.value.setFormData(data)
+  }
 }
 // 打开发布订货
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
   currentRowId.value = row.id
   copyRow = row
   releaseOrderVisible.value = true
+
   if (row.sku) {
     orderListLoading.value = true
 
@@ -680,23 +640,28 @@ const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
 
     if (matchSkus.length > 0) {
       // 如果有多个匹配，可以选择最匹配的或者第一个
-      releaseOrderForm.sku = matchSkus[0].value
+      const selectedSku = matchSkus[0].value
+
+      const { data } = await getOperationOrderSku({
+        id: row.id!,
+        sku: selectedSku,
+      })
+
+      // 通过组件实例设置表单数据
+      if (releaseOrderDialogRef.value) {
+        releaseOrderDialogRef.value.setFormData(data)
+      }
+
+      asinId.value = row.id!
     }
 
-    const { data } = await getOperationOrderSku({
-      id: row.id!,
-      sku: releaseOrderForm.sku,
-    })
-    // const { data } = await getSkuInfo({ sku: skuArray[0] })
-    Object.assign(releaseOrderForm, data)
-    releaseOrderForm.number = data.orderQuantity
-    asinId.value = row.id!
     orderListLoading.value = false
   } else {
     skuList.value = []
-    Object.keys(releaseOrderForm).forEach((key) => {
-      delete releaseOrderForm[key]
-    })
+    // 重置组件表单数据
+    if (releaseOrderDialogRef.value) {
+      releaseOrderDialogRef.value.resetForm()
+    }
   }
 }
 // 修改运营分类
@@ -1085,121 +1050,6 @@ onBeforeMount(async () => {
   }
 }
 
-/* 发布订货弹窗样式 */
-.release-order-form {
-  padding: 20px;
-
-  .form-row {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-    align-items: flex-start;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .image-item {
-    margin-bottom: 0;
-
-    .sku-image {
-      width: 100px;
-      height: 100px;
-      border: 2px solid #e4e7ed;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-
-      &:hover {
-        border-color: var(--el-color-primary);
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-    }
-  }
-
-  .sku-item {
-    flex: 1;
-    margin-bottom: 0;
-
-    .sku-select {
-      width: 100%;
-      min-width: 200px;
-    }
-  }
-
-  .description-item {
-    flex: 1;
-    margin-bottom: 0;
-
-    .description-input {
-      width: 100%;
-      min-width: 200px;
-    }
-  }
-
-  .number-item {
-    flex: 1;
-    margin-bottom: 0;
-
-    .number-input {
-      width: 100%;
-      min-width: 150px;
-    }
-  }
-
-  .split-item {
-    margin-bottom: 0;
-
-    .checkbox-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      background-color: #f5f7fa;
-      border-radius: 6px;
-      border: 1px solid #e4e7ed;
-      height: 32px;
-      box-sizing: border-box;
-      min-width: 120px;
-
-      :deep(.el-checkbox) {
-        transform: scale(1);
-        margin: 0;
-      }
-
-      .checkbox-label {
-        font-size: 14px;
-        color: #606266;
-        font-weight: 500;
-      }
-    }
-  }
-
-  .moq-item,
-  .carton-item,
-  .manager-item {
-    flex: 1;
-    margin-bottom: 0;
-
-    .info-input {
-      width: 100%;
-    }
-  }
-
-  :deep(.el-form-item__label) {
-    font-weight: 600;
-    color: #303133;
-    margin-bottom: 8px;
-  }
-
-  :deep(.el-input-number) {
-    .el-input__inner {
-      text-align: center;
-    }
-  }
-}
 .customTag {
   width: 7em;
   padding: 0 30px;
