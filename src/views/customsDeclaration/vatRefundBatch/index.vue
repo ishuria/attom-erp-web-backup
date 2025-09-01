@@ -288,6 +288,16 @@ const setSelectRows = (value: IGetTaxRefundBatchList[]) => {
 const handleArchiveOutbound = async (row: any) => {
   const { data } = await archiveTaxRefundBatchOutbound({ contractNumber: row.contractNumber })
   if (data) {
+    ElMessageBox({
+      title: '出库归档提示',
+      confirmButtonText: '关闭',
+      showClose: false,
+      showCancelButton: false,
+      type: 'warning',
+      dangerouslyUseHTMLString: true,
+      message: data,
+    })
+  } else {
     $baseMessage('出库归档成功!', 'success')
   }
 }

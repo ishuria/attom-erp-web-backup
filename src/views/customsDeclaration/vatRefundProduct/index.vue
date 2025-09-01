@@ -947,9 +947,16 @@ const fetchData = async () => {
     if (Array.isArray(item.payRecordList)) {
       if (item.payRecordList.length !== 0) {
         // 计算付款记录总金额
-        item.payRecordTotal = item.payRecordList.reduce((total: number, record: PayRecordList) => {
-          return total + (record.payPrice || 0)
-        }, 0)
+        item.payRecordTotal = Number(
+          item.payRecordList
+            .reduce((total: number, record: PayRecordList) => {
+              return total + (record.payPrice || 0)
+            }, 0)
+            .toFixed(2)
+        )
+        // console.log(item.payRecordTotal)
+        // console.log(item.taxInclusiveCost)
+        // console.log(item.payRecordTotal !== item.taxInclusiveCost)
       }
 
       item.payRecordList = item.payRecordList
