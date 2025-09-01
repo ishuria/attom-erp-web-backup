@@ -58,7 +58,7 @@
             </template>
           </el-table-column>
           <el-table-column label="任务ID" min-width="100" prop="taskId" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
+          <el-table-column label="站点" min-width="140" prop="siteName" />
           <el-table-column label="提成模式" min-width="100" prop="mold" />
           <el-table-column label="设计任务" min-width="110" prop="designTask" />
           <el-table-column label="提前完成天数" min-width="120" prop="advanceDays">
@@ -69,15 +69,16 @@
           </el-table-column>
           <el-table-column label="提成开始日期" min-width="120" prop="startDate">
             <template #default="{ row }">
-              {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
+              {{ row.startDate }}
             </template>
           </el-table-column>
           <el-table-column label="提成结束日期" min-width="120" prop="endDate">
             <template #default="{ row }">
-              {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
+              {{ row.endDate }}
             </template>
           </el-table-column>
-          <el-table-column label="断货补偿" min-width="100" prop="" />
+          <el-table-column label="断货补偿天数" min-width="120" prop="outOfStockDays" />
+
           <el-table-column label="要求完成日期" min-width="120" prop="dueDate">
             <template #default="{ row }">
               {{ row.dueDate ? formatDate(new Date(row.dueDate)) : '' }}
@@ -96,7 +97,7 @@
           </el-table-column>
           <el-table-column label="合作权重" min-width="100" prop="cooperationWeight" />
           <el-table-column label="合作加成" min-width="100" prop="cooperationBonus" />
-          <el-table-column label="最低要求转化率" min-width="130" prop="lowRate">
+          <el-table-column label="最低要求转化率" min-width="135" prop="lowRate">
             <template #default="{ row }">
               {{ row.lowRate ? row.lowRate + '%' : '' }}
             </template>
