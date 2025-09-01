@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-      <el-table 
-        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        :show-header="false" stripe style="width: auto; table-layout: fixed;"
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
+      <el-table
+        ref="tableRef"
+        border
+        :data="variantList"
+        :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed"
       >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="310">
@@ -14,9 +19,10 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
             <template v-if="row['column0'] === 'sku'">
-              <el-input 
-                v-model.trim="row[prop]" 
+              <el-input
+                v-model.trim="row[prop]"
                 class="center-input"
+                :disabled="editDisabled"
                 placeholder="请输入SKU"
                 @click="inputHandleMouseOver($event)"
                 @keydown.enter="handleEffectiveCountInpute($event)"
@@ -24,51 +30,61 @@
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="row[prop]" style="width: 75px;height: 75px;" @click="showPreviewImage(row[prop])">
+              <el-image fit="fill" :src="row[prop]" style="width: 75px; height: 75px" @click="showPreviewImage(row[prop])">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
 
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)"/>
+              <el-checkbox
+                v-model="row[prop]"
+                class="custom-checkbox"
+                :disabled="editDisabled"
+                :false-value="0"
+                :true-value="1"
+                @change="handleUpdateOEM(row, prop)"
+              />
             </template>
             <template v-if="row['column0'] === 'productPosition'">
-              <el-select v-model="row[prop]" class="center-select" placeholder="请选择产品定位" >
-                <el-option
-                  v-for="item in productPositionOption"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                />
+              <el-select v-model="row[prop]" class="center-select" :disabled="editDisabled" placeholder="请选择产品定位">
+                <el-option v-for="item in productPositionOption" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)"/>
+              <el-checkbox
+                v-model="row[prop]"
+                class="custom-checkbox"
+                :disabled="editDisabled"
+                :false-value="0"
+                :true-value="1"
+                @change="handleUpdateGraphicDesign(row, prop)"
+              />
             </template>
             <template v-if="row['column0'] === 'sampleRetention'">
-              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
-                <el-tag
-                  v-for="id in row[prop]"
-                  :key="id"
-                  style="font-size: var(--el-font-size-base);"
-                  type="info"
-                >
-                  {{ packageSampleOption.find(item => item.id === id)?.label }}
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center">
+                <el-tag v-for="id in row[prop]" :key="id" style="font-size: var(--el-font-size-base)" type="info">
+                  {{ packageSampleOption.find((item) => item.id === id)?.label }}
                 </el-tag>
               </div>
             </template>
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
-              {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : ''}}
+              {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : '' }}
             </template>
-            <template 
-              v-if="row['column0'] !== 'variantImg' && row['column0'] !== 'sku' && row['column0'] !== 'oem'
-              && row['column0'] !== 'sampleRetention' && row['column0'] !== 'purchaseTotalPrice'
-              && row['column0'] !== 'productPosition' && row['column0'] !== 'graphicDesign'">
+            <template
+              v-if="
+                row['column0'] !== 'variantImg' &&
+                row['column0'] !== 'sku' &&
+                row['column0'] !== 'oem' &&
+                row['column0'] !== 'sampleRetention' &&
+                row['column0'] !== 'purchaseTotalPrice' &&
+                row['column0'] !== 'productPosition' &&
+                row['column0'] !== 'graphicDesign'
+              "
+            >
               {{ row[prop] }}
             </template>
-            
           </template>
         </el-table-column>
         <template #empty>
@@ -114,16 +130,16 @@
     </div> -->
 
     <div class="pay-button-group">
-      <el-button type="danger" @click="goBackToStep1">不通过</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
+      <el-button :disabled="editDisabled" type="danger" @click="goBackToStep1">不通过</el-button>
+      <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">终审通过</el-button>
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { getSkuVariantList, reviewStepNo2Pass } from '/@/api/devlocal/orderingReview'
+import { getSkuVariantList, reviewStepNo2Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -138,21 +154,21 @@ const props = defineProps<{
   reviewStatus: string
   reviewStepNo: string
   reviewId: string
-}>();
+}>()
 
 defineOptions({
   name: 'OrderReviewStep2',
 })
 // 输入键盘enter失去焦点h
 const handleEffectiveCountInpute = (event: Event) => {
-    const targetElement = event.target as HTMLInputElement;
-    const sku = targetElement.value.trim()
-    if(sku.length > 40) {
-      $baseMessage('SKU长度不能超过40个字符', 'error', 'hey')
-      event.preventDefault(); // 防止提交或其他默认行为
-    } else {
-      targetElement.blur();
-    }
+  const targetElement = event.target as HTMLInputElement
+  const sku = targetElement.value.trim()
+  if (sku.length > 40) {
+    $baseMessage('SKU长度不能超过40个字符', 'error', 'hey')
+    event.preventDefault() // 防止提交或其他默认行为
+  } else {
+    targetElement.blur()
+  }
 }
 const router = useRouter()
 const route: any = useRoute()
@@ -188,14 +204,16 @@ const handleUpdateOEM = (row: any, prop: string) => {
   // console.log(row, prop)
   // console.log(variantList.value)
   // variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
-  if (variantList.value[5][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+  if (variantList.value[5][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
     row[prop] = 0
     $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
     return
   }
 }
 const handleUpdateGraphicDesign = (row: any, prop: string) => {
-  if (variantList.value[6][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+  if (variantList.value[6][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
     row[prop] = 0
     $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
     return
@@ -206,8 +224,8 @@ const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 
 const showPreviewImage = (url: string) => {
@@ -221,7 +239,7 @@ const buildParams = (): IReviewStep2Req => {
   for (let i = 1; i < variantSize.value + 1; i++) {
     let n: any = {}
     variantList.value.map((item) => {
-      n[item["column0"]] = item[i]
+      n[item['column0']] = item[i]
     })
     vArr.push(n)
   }
@@ -240,7 +258,7 @@ const buildParams = (): IReviewStep2Req => {
 
   const params: IReviewStep2Req = {
     reviewId: props.reviewId,
-    variantList: paramVArr
+    variantList: paramVArr,
   }
   return params
 }
@@ -248,25 +266,27 @@ const buildParams = (): IReviewStep2Req => {
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {
   const deleteVNode = h('div', {}, [
-    h('p', {
-      style: {
-        color: 'origin'
-      }
-    }, '请再次确认，是否通过最终审批！')
-  ]);
-  $baseConfirm(deleteVNode, "系统提示", async () => {
+    h(
+      'p',
+      {
+        style: {
+          color: 'origin',
+        },
+      },
+      '请再次确认，是否通过最终审批！'
+    ),
+  ])
+  $baseConfirm(deleteVNode, '系统提示', async () => {
     const params = buildParams()
     const { data } = await reviewStepNo2Pass(params)
     if (data === true) {
-      $baseMessage("最终审批已通过成功！", "success", "hey")
+      $baseMessage('最终审批已通过成功！', 'success', 'hey')
       await delVisitedRoute(handleActivePath(route, true))
       router.push({
-        path: '/newProductDevelopment/newProductApprovalAndRecords'
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
       })
       // 审核通过后需要将第一步的可填项标灰
-
     }
-
   })
 }
 // 当点击不通过
@@ -276,26 +296,26 @@ const goBackToStep1 = () => {
     // 跳回主界面
     await delVisitedRoute(handleActivePath(route, true))
     router.push({
-      path: '/newProductDevelopment/newProductApprovalAndRecords'
+      path: '/newProductDevelopment/newProductApprovalAndRecords',
     })
   })
 }
 const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await getSkuVariantList({ reviewId: props.reviewId })
-  variantSize.value = data.length;
+  variantSize.value = data.length
 
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
-      column0: `${index + 1  }`,
+      column0: `${index + 1}`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,
       sku: item.sku,
       productPosition: item.productPositon,
       graphicDesign: item.graphicDesign,
-      oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
+      oem: item.oem == undefined || item.oem == null ? 0 : item.oem,
       quantity: item.quantity,
       purchaseTotalPrice: item.purchaseTotalPrice,
       finalSellingPrice: item.finalSellingPrice,
@@ -323,8 +343,8 @@ const fetchData = async () => {
 //   const { data } = await getMoldInfoByReviewId({ reviewId: props.reviewId })
 //   moldData.value = data
 // }
-const productPositionOption = ref<{ id: number, label: string }[]>([])
-const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const productPositionOption = ref<{ id: number; label: string }[]>([])
+const packageSampleOption = ref<{ id: number; label: string }[]>([])
 const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
@@ -333,17 +353,23 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
-
+const editDisabled = ref<boolean>(false)
+const fetchSubmittedStatus = async () => {
+  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 2 })
+  if (data === 1) {
+    editDisabled.value = true
+  }
+}
 onMounted(async () => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   // fetchMoldData()
   fetchData()
+  fetchSubmittedStatus()
 })
 </script>
 
 <style lang="scss" scoped>
-
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);
@@ -361,7 +387,6 @@ onMounted(async () => {
   border-color: #fff;
 }
 
-
 .pay-button-group {
   display: block;
   margin: 20px auto;
@@ -372,7 +397,7 @@ onMounted(async () => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.center-input .el-input__inner ){
+:deep(.center-input .el-input__inner) {
   text-align: center;
 }
 :deep(.center-select) {

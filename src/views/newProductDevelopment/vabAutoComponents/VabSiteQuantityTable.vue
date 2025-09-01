@@ -1,8 +1,8 @@
 <template>
-  <div style="margin-top: 20px; margin-bottom: 20px;">
+  <div style="margin-top: 20px; margin-bottom: 20px">
     <el-table border :data="siteQuantityList" :header-cell-style="{ textAlign: 'center' }" stripe>
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(siteQuantityList, 'SKU', 'sku')" />
-      <el-table-column 
+      <el-table-column
         v-for="(item, index) in option"
         :key="index"
         :label="item.siteName"
@@ -10,7 +10,13 @@
         :prop="item.siteName"
       >
         <template #default="{ row }">
-          <el-input v-model="row[item.siteName].quantity" :min="0" type="number" @change="handleUpdateQuantity(row, item.siteName)" />
+          <el-input
+            v-model="row[item.siteName].quantity"
+            :disabled="editDisabled"
+            :min="0"
+            type="number"
+            @change="handleUpdateQuantity(row, item.siteName)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -25,12 +31,21 @@ defineOptions({
   name: 'VabSiteQuantityTable',
 })
 
-const props = defineProps<{
-  list: any[]
-}>()
-watch(() => props.list, () => {
-  initData()
-})
+const props = withDefaults(
+  defineProps<{
+    list: any[]
+    editDisabled?: boolean
+  }>(),
+  {
+    editDisabled: false,
+  }
+)
+watch(
+  () => props.list,
+  () => {
+    initData()
+  }
+)
 const siteQuantityList = ref<any[]>([])
 const option = ref<any[]>([])
 // const list = ref<any[]>([])
@@ -57,7 +72,7 @@ const initData = () => {
     }
     row.siteQuantityList.forEach((item: any) => {
       const key = item.siteName
-      row[`${key}`] = { quantity: item.quantity, id: item.id}
+      row[`${key}`] = { quantity: item.quantity, id: item.id }
     })
   })
   // console.log('siteQuantityList', siteQuantityList.value)

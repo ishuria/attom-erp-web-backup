@@ -130,6 +130,14 @@ export function reviewStepNo3Save(params?: IReviewCommonReq): Promise<IReviewSte
     params,
   })
 }
+// 查询步骤是否已提交
+export function reviewStepSubmittedStatus(params: { reviewId: number; step: number }): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/review/step/submitted/status`,
+    method: 'get',
+    params,
+  })
+}
 
 // 新品订货审批-产品经理审核查询接口
 export function reviewProductList(params?: IReviewCommonReq): Promise<IReviewCommonResp> {

@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
       <el-table
-        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }"
-        :show-header="false" stripe style="width: auto; table-layout: fixed;"
+        ref="tableRef"
+        border
+        :data="variantList"
+        :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed"
       >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="260">
@@ -14,20 +19,22 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="scope">
             <template v-if="scope.row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="scope.row[prop]" style="width: 75px; height: 75px;" @click="showPreviewImage(scope.row[prop])">
+              <el-image fit="fill" :src="scope.row[prop]" style="width: 75px; height: 75px" @click="showPreviewImage(scope.row[prop])">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
             <template v-if="scope.row['column0'] === 'vineSite'">
-              <el-select v-model="scope.row[prop]" class="center-select" clearable placeholder="请选择Vine站点" @change="handleUpdate(scope)">
-                <el-option
-                  v-for="item in siteList"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                />
+              <el-select
+                v-model="scope.row[prop]"
+                class="center-select"
+                clearable
+                :disabled="editDisabled"
+                placeholder="请选择Vine站点"
+                @change="handleUpdate(scope)"
+              >
+                <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
             </template>
             <template v-if="scope.row['column0'] === 'vineCount'">
@@ -42,17 +49,15 @@
               <el-input-number
                 v-model="scope.row[prop]"
                 controls-position="right"
-               :min="0"
+                :disabled="editDisabled"
+                :min="0"
                 placeholder="请输入Vine数量"
-                style="min-width: 100%;"
+                style="min-width: 100%"
                 @change="handleUpdate(scope)"
               />
             </template>
             <template v-if="scope.row['column0'] === 'vineFlag'">
-              <el-checkbox
-                v-model="scope.row[prop]"
-                class="center-input"
-                @change="handleUpdate(scope)"/>
+              <el-checkbox v-model="scope.row[prop]" class="center-input" :disabled="editDisabled" @change="handleUpdate(scope)" />
             </template>
             <!-- <template v-if="scope.row['column0'] === 'packagingSize'">
                 {{ scope.row[prop] }} cm
@@ -67,13 +72,17 @@
               />
             </template> -->
             <template
-              v-if="scope.row['column0'] !== 'variantImg' && scope.row['column0'] !== 'vineSite'
-              && scope.row['column0']!== 'vineCount' && scope.row['column0']!== 'vineFlag'
-              // && scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
-              // && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0']!== 'amazonCaOrderQuantity'
-              // && scope.row['column0'] !== 'amazonJpOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
-              // && scope.row['column0']!== 'tiktokUsOrderQuantity'
-              ">
+              v-if="
+                scope.row['column0'] !== 'variantImg' &&
+                scope.row['column0'] !== 'vineSite' &&
+                scope.row['column0'] !== 'vineCount' &&
+                scope.row['column0'] !== 'vineFlag'
+                // && scope.row['column0'] !== 'amazonUsOrderQuantity' && scope.row['column0'] !== 'amazonUkOrderQuantity'
+                // && scope.row['column0'] !== 'amazonDeOrderQuantity' && scope.row['column0']!== 'amazonCaOrderQuantity'
+                // && scope.row['column0'] !== 'amazonJpOrderQuantity' && scope.row['column0'] !== 'walmartUsOrderQuantity'
+                // && scope.row['column0']!== 'tiktokUsOrderQuantity'
+              "
+            >
               {{ scope.row[prop] }}
             </template>
           </template>
@@ -83,21 +92,20 @@
         </template>
       </el-table>
       <h3>站点分货</h3>
-      <vab-site-quantity-table :list="siteQuantityList" />
+      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" />
     </div>
     <vab-alert center="center" type="error">
       <h3>不分货则填0，不能留空</h3>
     </vab-alert>
     <div class="pay-button-group">
-      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
+      <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
-
-import { getDistributionList, reviewStepNo3Save, updateReviewStepNo3Vine } from '/@/api/devlocal/orderingReview'
+import { getDistributionList, reviewStepNo3Save, reviewStepSubmittedStatus, updateReviewStepNo3Vine } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IUpdateReviewStepNo3Vine } from '/@/type/review/review'
@@ -115,7 +123,7 @@ const props = defineProps<{
   reviewStatus: string
   reviewStepNo: string
   reviewId: string
-}>();
+}>()
 const route: any = useRoute()
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
@@ -148,8 +156,8 @@ const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
@@ -159,7 +167,7 @@ const showPreviewImage = (url: string) => {
 const buildParams = (idx: number): IUpdateReviewStepNo3Vine => {
   let n: any = {}
   variantList.value.map((item) => {
-    n[item["column0"]] = item[idx]
+    n[item['column0']] = item[idx]
   })
 
   const params: IUpdateReviewStepNo3Vine = {
@@ -190,7 +198,7 @@ const handleUpdate = async (scope: any) => {
 //     targetElement.blur()
 //     return
 //   }
-  
+
 //   targetElement.blur()
 //   if (event.type === 'blur') {
 //     const { data } = await updateStepNoQuantity(updateParams)
@@ -204,8 +212,8 @@ const handleUpdate = async (scope: any) => {
 const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await getDistributionList({ reviewId: props.reviewId })
-  variantSize.value = data.length;
-  
+  variantSize.value = data.length
+
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
@@ -252,39 +260,48 @@ const validate = (): boolean => {
 const handleSaveAndContinue = () => {
   const valid = validate()
   if (!valid) {
-    $baseMessage("Vine站点和数量必须成对填写，要么都填写，要么都不填！", "warning", "hey")
+    $baseMessage('Vine站点和数量必须成对填写，要么都填写，要么都不填！', 'warning', 'hey')
     return
   }
   const deleteVNode = h('div', {}, [
-    h('p', {
-      style: {
-        color: 'origin'
-      }
-    }, '请再次确认，只有所有的站点都分货后才能进行提交！')
-  ]);
-  $baseConfirm(deleteVNode, "系统提示", async () => {
-
-    const { data } = await reviewStepNo3Save({reviewId:props.reviewId})
+    h(
+      'p',
+      {
+        style: {
+          color: 'origin',
+        },
+      },
+      '请再次确认，只有所有的站点都分货后才能进行提交！'
+    ),
+  ])
+  $baseConfirm(deleteVNode, '系统提示', async () => {
+    const { data } = await reviewStepNo3Save({ reviewId: props.reviewId })
     if (data === true) {
-      $baseMessage("分货提交成功！", "success", "hey")
+      $baseMessage('分货提交成功！', 'success', 'hey')
       await delVisitedRoute(handleActivePath(route, true))
       router.push({
-        path: '/newProductDevelopment/newProductApprovalAndRecords'
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
       })
     }
-
   })
 }
-const siteList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const fetchSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
+const editDisabled = ref<boolean>(false)
+const fetchSubmittedStatus = async () => {
+  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 3 })
+  if (data === 1) {
+    editDisabled.value = true
+  }
+}
 onMounted(() => {
   fetchSiteList()
   fetchData()
+  fetchSubmittedStatus()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -293,8 +310,8 @@ onMounted(() => {
   margin: 20px auto;
   text-align: center;
 }
-:deep(.center-input .el-input__inner ){
-    text-align: center;
+:deep(.center-input .el-input__inner) {
+  text-align: center;
 }
 :deep(.center-select) {
   text-align: center;

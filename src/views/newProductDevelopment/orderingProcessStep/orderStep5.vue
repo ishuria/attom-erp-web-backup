@@ -246,11 +246,11 @@ const handleUpdateGraphicDesign = async (row: any, prop: string) => {
 }
 const handleInsertSku = async (row: any, prop: string) => {
   try {
-    // console.log(exchangeList.value);
+    // console.log(exchangeList.value)
     // console.log(row)
     // console.log(prop)
     // console.log(index)
-    const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[16][prop] })
+    const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[17][prop] })
     if (data) {
       exchangeList.value[4][prop] = data.productLength
       exchangeList.value[5][prop] = data.productWidth

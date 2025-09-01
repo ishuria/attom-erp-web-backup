@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
       <el-table
-        ref="tableRef" border :data="variantList" :header-cell-style="{ 'text-align': 'right' }" :show-header="false"
-        stripe style="width: auto; table-layout: fixed;" 
+        ref="tableRef"
+        border
+        :data="variantList"
+        :header-cell-style="{ 'text-align': 'right' }"
+        :show-header="false"
+        stripe
+        style="width: auto; table-layout: fixed"
       >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="310">
@@ -14,41 +19,41 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
             <template v-if="row['column0'] === 'variantImg'">
-              <el-image fit="fill" :src="row[prop]" style="width: 75px;height: 75px;" @click="showPreviewImage(row[prop])">
+              <el-image fit="fill" :src="row[prop]" style="width: 75px; height: 75px" @click="showPreviewImage(row[prop])">
                 <template #error>
-                  <el-icon/>
+                  <el-icon />
                 </template>
               </el-image>
             </template>
             <template v-if="row['column0'] === 'productPosition'">
-                <el-select
-                  v-model="row[prop]"
-                  class="center-select"
-                  placeholder="请选择产品定位"
-                >
-                  <el-option
-                    v-for="item in productPositionOption"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.id"
-                  />
-                </el-select>
+              <el-select v-model="row[prop]" class="center-select" :disabled="editDisabled" placeholder="请选择产品定位">
+                <el-option v-for="item in productPositionOption" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
             </template>
             <template v-if="row['column0'] === 'oem'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateOEM(row, prop)" />
+              <el-checkbox
+                v-model="row[prop]"
+                class="custom-checkbox"
+                :disabled="editDisabled"
+                :false-value="0"
+                :true-value="1"
+                @change="handleUpdateOEM(row, prop)"
+              />
             </template>
             <template v-if="row['column0'] === 'graphicDesign'">
-              <el-checkbox v-model="row[prop]" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateGraphicDesign(row, prop)" />
+              <el-checkbox
+                v-model="row[prop]"
+                class="custom-checkbox"
+                :disabled="editDisabled"
+                :false-value="0"
+                :true-value="1"
+                @change="handleUpdateGraphicDesign(row, prop)"
+              />
             </template>
             <template v-if="row['column0'] === 'sampleRetention'">
-              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
-                <el-tag
-                  v-for="id in row[prop]"
-                  :key="id"
-                  style="font-size: var(--el-font-size-base);"
-                  type="info"
-                >
-                  {{ packageSampleOption.find(item => item.id === id)?.label }}
+              <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center">
+                <el-tag v-for="id in row[prop]" :key="id" style="font-size: var(--el-font-size-base)" type="info">
+                  {{ packageSampleOption.find((item) => item.id === id)?.label }}
                 </el-tag>
               </div>
             </template>
@@ -56,10 +61,15 @@
               {{ Number(row[prop]).toFixed(2) }}
             </template>
             <template
-              v-if="row['column0'] !== 'oem'
-              && row['column0'] !== 'variantImg' && row['column0'] !== 'sampleRetention'
-              && row['column0'] !== 'purchaseTotalPrice' && row['column0'] !== 'graphicDesign'
-              && row['column0'] !== 'productPosition'">
+              v-if="
+                row['column0'] !== 'oem' &&
+                row['column0'] !== 'variantImg' &&
+                row['column0'] !== 'sampleRetention' &&
+                row['column0'] !== 'purchaseTotalPrice' &&
+                row['column0'] !== 'graphicDesign' &&
+                row['column0'] !== 'productPosition'
+              "
+            >
               {{ row[prop] }}
             </template>
           </template>
@@ -106,12 +116,18 @@
       </el-table>
     </div> -->
 
-    <div style="padding-top:50px;">
-      <el-table border :cell-style="{ textAlign: 'center' }" :data="variantDetialList" :header-cell-style="{ 'text-align': 'center' }" stripe>
+    <div style="padding-top: 50px">
+      <el-table
+        border
+        :cell-style="{ textAlign: 'center' }"
+        :data="variantDetialList"
+        :header-cell-style="{ 'text-align': 'center' }"
+        stripe
+      >
         <el-table-column label="变体" min-width="100" prop="variant" />
         <el-table-column label="站点" min-width="135" prop="site">
           <template #default="{ row }">
-            {{ siteList.find(item => item.id === row.site)?.label  }}
+            {{ siteList.find((item) => item.id === row.site)?.label }}
           </template>
         </el-table-column>
         <el-table-column label="外汇币种" min-width="100" prop="currencyType" />
@@ -124,13 +140,13 @@
         <el-table-column label="尾程$" min-width="70" prop="lastMile" />
         <el-table-column label="头程￥" prop="firstMile" width="90" />
         <el-table-column label="打包￥" prop="packagingPrice" width="90" />
-        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel" >
+        <el-table-column label="头程渠道" min-width="140" prop="firstMileChannel">
           <template #default="{ row }">
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div class="custom-tooltip">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
+                <div class="custom-tooltip">{{ channelList.find((item) => item.id === row.firstMileChannel)?.label }}</div>
               </template>
-              <div class="multi-line-ellipsis">{{ channelList.find(item => item.id === row.firstMileChannel)?.label }}</div>
+              <div class="multi-line-ellipsis">{{ channelList.find((item) => item.id === row.firstMileChannel)?.label }}</div>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -140,10 +156,12 @@
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
-            <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+            <el-text v-if="row.grossMarginRate < 20" type="danger">
+              {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
+            </el-text>
           </template>
         </el-table-column>
-        <el-table-column label="ROI" prop="roi" >
+        <el-table-column label="ROI" prop="roi">
           <template #default="{ row }">
             {{ row.roi != null ? row.roi + '%' : '' }}
           </template>
@@ -161,21 +179,21 @@
           </template>
         </el-table-column>
         <el-table-column label="平台佣金$" min-width="100" prop="platformCommission" />
-        <el-table-column label="仓储费2个月$" min-width="140" prop="storageFee" >
+        <el-table-column label="仓储费2个月$" min-width="140" prop="storageFee">
           <template #default="{ row }">
-            {{ row.storageFee ? row.storageFee.toFixed(2): '' }}
+            {{ row.storageFee ? row.storageFee.toFixed(2) : '' }}
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;" />
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>
       </el-table>
     </div>
     <div class="pay-button-group">
-      <el-button type="danger" @click="handleGoback">不通过</el-button>
-      <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">通过</el-button>
+      <el-button :disabled="editDisabled" type="danger" @click="handleGoback">不通过</el-button>
+      <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">通过</el-button>
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -184,7 +202,13 @@ import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { getReviewByReviewId, getVariantList, reviewStepNo1Fail, reviewStepNo1Pass } from '/@/api/devlocal/orderingReview'
+import {
+  getReviewByReviewId,
+  getVariantList,
+  reviewStepNo1Fail,
+  reviewStepNo1Pass,
+  reviewStepSubmittedStatus,
+} from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -194,7 +218,7 @@ const props = defineProps<{
   reviewStatus: string
   reviewStepNo: string
   reviewId: string
-}>();
+}>()
 
 defineOptions({
   name: 'OrderReviewStep1',
@@ -210,8 +234,8 @@ const variantList = ref<any[]>([])
 // 原始数组的长度
 const variantSize = ref<number>(0)
 // const moldData = ref<IReviewMoldItem[]>()
-const channelList = ref<{ id: number, label: string }[]>([])
-const siteList = ref<{ id: number, label: string }[]>([])
+const channelList = ref<{ id: number; label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const fetchChannelData = async () => {
   const { data } = await getChannelList()
   channelList.value = data
@@ -248,14 +272,16 @@ const handleUpdateOEM = (row: any, prop: string) => {
   // console.log(row, prop)
   // console.log(variantList.value)
   // variantList.value[4][prop] = row[prop] === 1 ? 0 : 1
-  if (variantList.value[4][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+  if (variantList.value[4][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
     row[prop] = 0
     $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
     return
   }
 }
 const handleUpdateGraphicDesign = (row: any, prop: string) => {
-  if (variantList.value[5][prop] === 1 && row[prop] === 1) { // o 1 g 1 
+  if (variantList.value[5][prop] === 1 && row[prop] === 1) {
+    // o 1 g 1
     row[prop] = 0
     $baseMessage('OEM和平面设计只能选一个', 'error', 'hey')
     return
@@ -266,8 +292,8 @@ const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 
 const showPreviewImage = (url: string) => {
@@ -281,7 +307,7 @@ const buildParams = (): IReviewStepNo1Req => {
   for (let i = 1; i < variantSize.value + 1; i++) {
     let n: any = {}
     variantList.value.map((item) => {
-        n[item["column0"]] = item[i]
+      n[item['column0']] = item[i]
     })
     vArr.push(n)
   }
@@ -299,31 +325,34 @@ const buildParams = (): IReviewStepNo1Req => {
 
   const params: IReviewStepNo1Req = {
     reviewId: props.reviewId,
-    variantList: paramVArr
+    variantList: paramVArr,
   }
 
   return params
 }
 
-
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {
   try {
     const deleteVNode = h('div', {}, [
-      h('p', {
-        style: {
-          color: 'origin'
-        }
-      }, '请再次确认，是否需要通过审批！')
-    ]);
-    $baseConfirm(deleteVNode, "系统提示", async () => {
+      h(
+        'p',
+        {
+          style: {
+            color: 'origin',
+          },
+        },
+        '请再次确认，是否需要通过审批！'
+      ),
+    ])
+    $baseConfirm(deleteVNode, '系统提示', async () => {
       const params = buildParams()
       const { data } = await reviewStepNo1Pass(params)
       if (data === true) {
-        $baseMessage("审批通过成功！", "success", "hey")
+        $baseMessage('审批通过成功！', 'success', 'hey')
         await delVisitedRoute(handleActivePath(route, true))
         router.push({
-          path: '/newProductDevelopment/newProductApprovalAndRecords'
+          path: '/newProductDevelopment/newProductApprovalAndRecords',
         })
       }
     })
@@ -335,18 +364,22 @@ const handleSaveAndContinue = async () => {
 const handleGoback = () => {
   try {
     const deleteVNode = h('div', {}, [
-      h('p', {
-        style: {
-          color: 'red'
-        }
-      }, '确认要点击审核不通过吗？')
-    ]);
-    $baseConfirm(deleteVNode, "系统提示", async () => {
+      h(
+        'p',
+        {
+          style: {
+            color: 'red',
+          },
+        },
+        '确认要点击审核不通过吗？'
+      ),
+    ])
+    $baseConfirm(deleteVNode, '系统提示', async () => {
       const params = buildParams()
       const { data } = await reviewStepNo1Fail(params)
       if (data === true) {
         await delVisitedRoute(handleActivePath(route, true))
-        $baseMessage("审核不通过提交成功", "success", "hey")
+        $baseMessage('审核不通过提交成功', 'success', 'hey')
         await updateBulkGoodsStatusByReviewId({ reviewId: Number(props.reviewId), status: 1 })
       }
     })
@@ -358,18 +391,18 @@ const handleGoback = () => {
 const { initData, columns } = useTableDataLineToColumn()
 const fetchData = async () => {
   const { data } = await getReviewByReviewId({ reviewId: props.reviewId })
-  variantSize.value = data.length;
+  variantSize.value = data.length
 
   let arr: IReviewCommonItem[] = []
   data.forEach((item: IReviewCommonItem, index: number) => {
     let n: IReviewCommonItem = {
-      column0: `${index + 1  }`,
+      column0: `${index + 1}`,
       orderEntryId: item.orderEntryId,
       variantImg: item.variantImg,
       productName: item.productName,
       productPosition: item.productPositon,
       graphicDesign: item.graphicDesign,
-      oem: (item.oem == undefined || item.oem == null) ? 0 : item.oem,
+      oem: item.oem == undefined || item.oem == null ? 0 : item.oem,
       quantity: item.quantity,
       purchaseTotalPrice: item.purchaseTotalPrice,
       finalSellingPrice: item.finalSellingPrice,
@@ -399,10 +432,10 @@ const fetchData = async () => {
 
 const fetchVariantData = async () => {
   const { data } = await getVariantList({ reviewId: props.reviewId })
-  variantDetialList.value = data;
+  variantDetialList.value = data
 }
-const productPositionOption = ref<{ id: number, label: string }[]>([])
-const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const productPositionOption = ref<{ id: number; label: string }[]>([])
+const packageSampleOption = ref<{ id: number; label: string }[]>([])
 const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
@@ -410,6 +443,13 @@ const fetchProductPositionOption = async () => {
 const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
+}
+const editDisabled = ref<boolean>(false)
+const fetchSubmittedStatus = async () => {
+  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 1 })
+  if (data === 1) {
+    editDisabled.value = true
+  }
 }
 onMounted(() => {
   fetchProductPositionOption()
@@ -419,6 +459,7 @@ onMounted(() => {
   fetchChannelData()
   fetchSalesSiteList()
   fetchVariantData()
+  fetchSubmittedStatus()
 })
 </script>
 
@@ -433,7 +474,7 @@ onMounted(() => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.center-input .el-input__inner ){
+:deep(.center-input .el-input__inner) {
   text-align: center;
 }
 :deep(.center-select) {

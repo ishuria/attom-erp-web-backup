@@ -26,19 +26,13 @@
               </el-image>
             </template>
             <template v-if="scope.row['column0'] === 'oem'">
-              <el-checkbox
-                v-model="scope.row[prop]"
-                class="custom-checkbox"
-                disabled
-                :false-value="0"
-                :true-value="1"
-              />
+              <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
             <template v-if="scope.row['column0'] === 'vineSite'">
-              {{ siteList.find(item => item.id === scope.row[prop])?.label }}
+              {{ siteList.find((item) => item.id === scope.row[prop])?.label }}
             </template>
             <template v-if="scope.row['column0'] === 'productPosition'">
-              {{ productPositionOption.find(item => item.id === scope.row[prop])?.label }}
+              {{ productPositionOption.find((item) => item.id === scope.row[prop])?.label }}
             </template>
             <template v-if="scope.row['column0'] === 'graphicDesign'">
               <el-checkbox v-model="scope.row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
@@ -49,8 +43,8 @@
                 scope.row['column0'] !== 'oem' &&
                 scope.row['column0'] !== 'variantImg' &&
                 scope.row['column0'] !== 'productPosition' &&
-                scope.row['column0']!== 'graphicDesign' &&
-                scope.row['column0']!== 'vineSite'
+                scope.row['column0'] !== 'graphicDesign' &&
+                scope.row['column0'] !== 'vineSite'
               "
             >
               {{ scope.row[prop] }}
@@ -61,10 +55,12 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
-      <vab-site-quantity-table :list="siteQuantityList" />
+      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" />
     </div>
     <div class="pay-button-group">
-      <el-button :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">归档新品进度管理并发布采购计划</el-button>
+      <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">
+        归档新品进度管理并发布采购计划
+      </el-button>
     </div>
   </div>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
@@ -72,7 +68,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { releasePo, reviewProductList } from '/@/api/devlocal/orderingReview'
+import { releasePo, reviewProductList, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem } from '/@/type/review/review'
@@ -121,7 +117,7 @@ const labelMap: Record<string, string> = {
   graphicDesign: '平面设计',
   oem: 'OEM',
   vineSite: 'Vine站点',
-  vineCount: 'Vine数量'
+  vineCount: 'Vine数量',
 }
 
 // const buildParams = (idx: number): IReviewStepUpdateReq => {
@@ -227,13 +223,13 @@ const fetchData = async () => {
   siteQuantityList.value = data
   variantList.value = initData(arr)
 }
-const siteList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 const fetchSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
-const productPositionOption = ref<{ id: number, label: string }[]>([])
-const packageSampleOption = ref<{ id: number, label: string }[]>([])
+const productPositionOption = ref<{ id: number; label: string }[]>([])
+const packageSampleOption = ref<{ id: number; label: string }[]>([])
 const fetchProductPositionOption = async () => {
   const { data } = await getProductPositionList()
   productPositionOption.value = data
@@ -242,12 +238,19 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
-
+const editDisabled = ref<boolean>(false)
+const fetchSubmittedStatus = async () => {
+  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 4 })
+  if (data === 1) {
+    editDisabled.value = true
+  }
+}
 onMounted(() => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchSiteList()
   fetchData()
+  fetchSubmittedStatus()
 })
 </script>
 
