@@ -3018,7 +3018,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return 270
+        return 275
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')

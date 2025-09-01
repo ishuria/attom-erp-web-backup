@@ -67,6 +67,17 @@
               <el-text v-if="row.advanceDays < 0" type="danger">{{ row.advanceDays }}</el-text>
             </template>
           </el-table-column>
+          <el-table-column label="提成开始日期" min-width="120" prop="startDate">
+            <template #default="{ row }">
+              {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="提成结束日期" min-width="120" prop="endDate">
+            <template #default="{ row }">
+              {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="断货补偿" min-width="100" prop="" />
           <el-table-column label="要求完成日期" min-width="120" prop="dueDate">
             <template #default="{ row }">
               {{ row.dueDate ? formatDate(new Date(row.dueDate)) : '' }}

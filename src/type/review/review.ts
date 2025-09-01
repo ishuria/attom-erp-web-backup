@@ -7,6 +7,7 @@ export interface IReviewQueryReq {
   pageNo: number
   // 每页大小
   pageSize: number
+  status: number
 }
 
 /**
@@ -25,7 +26,7 @@ export interface IReviewQuery {
 export interface IReviewQueryItem {
   difference?: string
   oem?: number
-  effectiveCount?:number
+  effectiveCount?: number
   po?: string
   productDesign?: string
   productManager?: string
@@ -393,8 +394,7 @@ export interface IReviewStep2Item {
   [key: string]: any
 }
 
-
-export interface IReviewStepUpdateReq{
+export interface IReviewStepUpdateReq {
   id: number
   quantity: number
   orderEntryId: number

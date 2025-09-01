@@ -1,187 +1,393 @@
 <template>
-  <div class="comprehensive-table-container auto-height-container">
-    <vab-query-form>
-      <vab-query-form-right-panel :span="24">
-        <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="queryData"
-              @keyup.enter="queryData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-right-panel>
-    </vab-query-form>
-
-    <el-table
-      ref="tableRef"
-      border
-      :cell-class-name="clearPadding"
-      :cell-style="cellStyle"
-      class="noneHoveTable custom-table-hover"
-      :data="dataList"
-      :header-cell-style="{ 'text-align': 'center' }"
-      :row-class-name="stripedRowClass"
-      :span-method="objectSpanMethod"
-      @row-click="handleRowClick"
-    >
-      <el-table-column label="提交日期" min-width="115" prop="createTime">
-        <template #default="{ row }">
-          <span>{{ formatDate(new Date(row.createTime)) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="图片" width="75">
-        <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImage" style="display: block; width: 75px; height: 75px" @click="setPreviewList(row.skuImage)">
-            <template #error>
-              <el-icon />
+  <div class="tabs-table-container no-background-container">
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
+      <el-tab-pane label="进行中" :name="7">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item label="审批状态">
+                <el-select v-model="queryForm.status" @change="queryData">
+                  <el-option v-for="item in reviewStatusOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          ref="tableRef"
+          border
+          :cell-class-name="clearPadding"
+          :cell-style="cellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="dataList"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="stripedRowClass"
+          :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
+        >
+          <el-table-column label="提交日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.createTime)) }}</span>
             </template>
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column label="SKU" :min-width="columnWidths.sku + 30" prop="sku">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.sku + 'px', 'text-align': 'left' }">
-            {{ formattedProgressLog(row.sku) }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="产品" :min-width="columnWidths.productName + 30" prop="productName">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.productName + 'px', 'text-align': 'left' }">
-            {{ formattedProgressLog(row.productName) }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="主站点" min-width="130" prop="siteName" />
-      <el-table-column label="主站首单Po" min-width="100" prop="po" />
-      <el-table-column label="首单实际成本" prop="poCost" width="125" />
-      <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
-      <el-table-column label="相差" min-width="100" prop="difference" />
-      <el-table-column label="产品定位" :min-width="columnWidths.productPosition + 30" prop="productPosition" />
-      <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
-      <el-table-column label="平面设计" min-width="90" prop="graphicDesign">
-        <template #default="{ row }">
-          <el-checkbox v-model="row.graphicDesign" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
-        </template>
-      </el-table-column>
-      <el-table-column label="OEM" prop="oem" width="80">
-        <template #default="{ row }">
-          <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="有效计数" min-width="100" prop="effectiveCount">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
-            {{ row.effectiveCount }}
-          </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="产品经理" min-width="100" prop="productManager">
-        <template #default="{ row }">
-          <span
-            :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }"
-            v-html="row.productManager"
-          ></span>
-        </template>
-      </el-table-column>
-      <el-table-column label="产品设计" min-width="100" prop="productDesign">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.productDesign + 'px', 'text-align': 'left' }">
-            {{ row.productDesign }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
-        <template #default="{ row }">
-          <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="审批日期" min-width="115" prop="reviewDate">
-        <template #default="{ row }">
-          <span>{{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="耗时" min-width="100" prop="timeConsuming">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.timeConsuming + 'px', 'text-align': 'right' }">
-            {{ row.timeConsuming }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="审批状态" min-width="130" prop="reviewStatus">
-        <template #default="{ row }">
-          <span
-            :class="generateStatus(row.reviewStatus).color"
-            :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }"
-          >
-            {{ generateStatus(row.reviewStatus).text }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
-        <template #default="{ row }">
-          <span :style="{ display: 'inline-block', 'min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
-            {{ row.reviewPersonName }}
-          </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column fixed="right" label="操作" width="130">
-        <template #default="{ row }">
-          <el-dropdown>
-            <el-button text type="primary" @click="handleOrderProcess(row)">
-              {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="handleOrderProcess(row)">
-                  <el-link type="primary" underline="never">
-                    {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
-                  </el-link>
-                </el-dropdown-item>
-                <el-dropdown-item
-                  v-if="
-                    row.reviewStatus === 1 ||
-                    row.reviewStatus === 2 ||
-                    row.reviewStatus === 3 ||
-                    row.reviewStatus === 4 ||
-                    row.reviewStatus === 5
-                  "
-                  @click="handleOrderReview(row)"
-                >
-                  <el-link type="primary" underline="never">审批和PO发布</el-link>
-                </el-dropdown-item>
-                <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
-                  <el-link type="primary" underline="never">分数明细</el-link>
-                </el-dropdown-item>
-              </el-dropdown-menu>
+          </el-table-column>
+          <el-table-column label="图片" width="75">
+            <template #default="{ row }">
+              <el-image
+                fit="fill"
+                :src="row.skuImage"
+                style="display: block; width: 75px; height: 75px"
+                @click="setPreviewList(row.skuImage)"
+              >
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
             </template>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
-      </template>
-    </el-table>
-    <vab-pagination
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
-    />
+          </el-table-column>
+          <el-table-column label="SKU" :min-width="Math.max(columnWidths.sku + 30, columnWidths.productName + 30)" prop="sku">
+            <template #default="{ row }">
+              {{ row.sku }}
+              <br />
+              {{ row.productName }}
+            </template>
+          </el-table-column>
+          <el-table-column label="主站点" min-width="130" prop="siteName" />
+          <el-table-column label="主站首单Po" min-width="115" prop="po" />
+          <el-table-column label="首单实际成本" prop="poCost" width="125" />
+          <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
+          <el-table-column label="相差" min-width="100" prop="difference" />
+          <el-table-column label="产品定位" :min-width="columnWidths.productPosition + 30" prop="productPosition" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
+          <el-table-column label="平面设计" min-width="90" prop="graphicDesign">
+            <template #default="{ row }">
+              <el-checkbox
+                v-model="row.graphicDesign"
+                class="custom-checkbox"
+                :disabled="true"
+                :false-value="0"
+                size="large"
+                :true-value="1"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" prop="oem" width="80">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
+            </template>
+          </el-table-column>
+
+          <el-table-column label="有效计数" min-width="100" prop="effectiveCount">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
+                {{ row.effectiveCount }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="产品经理" min-width="100" prop="productManager">
+            <template #default="{ row }">
+              <span
+                :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }"
+                v-html="row.productManager"
+              ></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品设计" min-width="100" prop="productDesign">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.productDesign + 'px', 'text-align': 'left' }">
+                {{ row.productDesign }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批日期" min-width="115" prop="reviewDate">
+            <template #default="{ row }">
+              <span>{{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="耗时" min-width="100" prop="timeConsuming">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.timeConsuming + 'px', 'text-align': 'right' }">
+                {{ row.timeConsuming }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批状态" min-width="130" prop="reviewStatus">
+            <template #default="{ row }">
+              <span
+                :class="generateStatus(row.reviewStatus).color"
+                :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }"
+              >
+                {{ generateStatus(row.reviewStatus).text }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
+                {{ row.reviewPersonName }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column fixed="right" label="操作" width="130">
+            <template #default="{ row }">
+              <el-dropdown>
+                <el-button text type="primary" @click="handleOrderProcess(row)">
+                  {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="handleOrderProcess(row)">
+                      <el-link type="primary" underline="never">
+                        {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
+                      </el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="
+                        row.reviewStatus === 1 ||
+                        row.reviewStatus === 2 ||
+                        row.reviewStatus === 3 ||
+                        row.reviewStatus === 4 ||
+                        row.reviewStatus === 5
+                      "
+                      @click="handleOrderReview(row)"
+                    >
+                      <el-link type="primary" underline="never">审批和PO发布</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
+                      <el-link type="primary" underline="never">分数明细</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="已完成" :name="6">
+        <vab-query-form>
+          <vab-query-form-right-panel :span="24">
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          ref="tableRef"
+          border
+          :cell-class-name="clearPadding"
+          :cell-style="cellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="dataList"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="stripedRowClass"
+          :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
+        >
+          <el-table-column label="提交日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.createTime)) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="图片" width="75">
+            <template #default="{ row }">
+              <el-image
+                fit="fill"
+                :src="row.skuImage"
+                style="display: block; width: 75px; height: 75px"
+                @click="setPreviewList(row.skuImage)"
+              >
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" :min-width="Math.max(columnWidths.sku + 30, columnWidths.productName + 30)" prop="sku">
+            <template #default="{ row }">
+              {{ row.sku }}
+              <br />
+              {{ row.productName }}
+            </template>
+          </el-table-column>
+          <el-table-column label="主站点" min-width="130" prop="siteName" />
+          <el-table-column label="主站首单Po" min-width="115" prop="po" />
+          <el-table-column label="首单实际成本" prop="poCost" width="125" />
+          <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
+          <el-table-column label="相差" min-width="100" prop="difference" />
+          <el-table-column label="产品定位" :min-width="columnWidths.productPosition + 30" prop="productPosition" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
+          <el-table-column label="平面设计" min-width="90" prop="graphicDesign">
+            <template #default="{ row }">
+              <el-checkbox
+                v-model="row.graphicDesign"
+                class="custom-checkbox"
+                :disabled="true"
+                :false-value="0"
+                size="large"
+                :true-value="1"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" prop="oem" width="80">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
+            </template>
+          </el-table-column>
+
+          <el-table-column label="有效计数" min-width="100" prop="effectiveCount">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
+                {{ row.effectiveCount }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="产品经理" min-width="100" prop="productManager">
+            <template #default="{ row }">
+              <span
+                :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }"
+                v-html="row.productManager"
+              ></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品设计" min-width="100" prop="productDesign">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.productDesign + 'px', 'text-align': 'left' }">
+                {{ row.productDesign }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批日期" min-width="115" prop="reviewDate">
+            <template #default="{ row }">
+              <span>{{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="耗时" min-width="100" prop="timeConsuming">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.timeConsuming + 'px', 'text-align': 'right' }">
+                {{ row.timeConsuming }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批状态" min-width="130" prop="reviewStatus">
+            <template #default="{ row }">
+              <span
+                :class="generateStatus(row.reviewStatus).color"
+                :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }"
+              >
+                {{ generateStatus(row.reviewStatus).text }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
+                {{ row.reviewPersonName }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column fixed="right" label="操作" width="130">
+            <template #default="{ row }">
+              <el-dropdown>
+                <el-button text type="primary" @click="handleOrderProcess(row)">
+                  {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="handleOrderProcess(row)">
+                      <el-link type="primary" underline="never">
+                        {{ row.reviewStatus === 0 || row.reviewStatus === 2 ? '编辑' : '查看' }}
+                      </el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
+                      v-if="
+                        row.reviewStatus === 1 ||
+                        row.reviewStatus === 2 ||
+                        row.reviewStatus === 3 ||
+                        row.reviewStatus === 4 ||
+                        row.reviewStatus === 5
+                      "
+                      @click="handleOrderReview(row)"
+                    >
+                      <el-link type="primary" underline="never">审批和PO发布</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
+                      <el-link type="primary" underline="never">分数明细</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
+    </el-tabs>
+
     <!-- 新款评估 -->
     <vab-dialog v-model="newScoreVisible" :before-close="handlerScoreCloseDialog" class="moldDialog" title="分数明细" width="90%">
       <el-divider style="margin-top: 0; margin-bottom: 20px" />
@@ -229,7 +435,7 @@
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
-import type { TableColumnCtx, TableInstance } from 'element-plus'
+import type { TableColumnCtx, TableInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { indexColumns } from '../newProductProgress/indexColumns'
 import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
@@ -245,6 +451,20 @@ defineOptions({
   name: 'NewProductApprovalAndRecords',
 })
 
+const activeName = ref<number>(7)
+const handleTabClick = (tab: TabsPaneContext) => {
+  queryForm.status = Number(tab.props.name)
+  queryData()
+}
+const reviewStatusOption = ref<{ label: string; value: number }[]>([
+  { label: '全部', value: 7 },
+  { label: '编辑中', value: 0 },
+  { label: '待审核', value: 1 },
+  { label: '主管审批未通过', value: 2 },
+  { label: 'SKU创建', value: 3 },
+  { label: '运营分货', value: 4 },
+  { label: '待发布PO', value: 5 },
+])
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
 const handleRowClick = (row: any, column: any, event: Event) => {
@@ -277,6 +497,7 @@ const queryForm = reactive<IReviewQueryReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  status: 7,
 })
 
 const dataList = ref<IReviewQueryItem[]>([])
@@ -402,6 +623,7 @@ const handleSizeChange = (value: number) => {
       ...route.query,
       pageNo: '1',
       pageSize: value,
+      status: queryForm.status,
     },
   })
   fetchData()
@@ -414,6 +636,7 @@ const handleCurrentChange = (value: number) => {
       ...route.query,
       pageNo: value,
       pageSize: queryForm.pageSize,
+      status: queryForm.status,
     },
   })
   fetchData()
@@ -425,6 +648,7 @@ const queryData = () => {
     query: {
       ...route.query,
       pageNo: '1',
+      status: queryForm.status,
     },
   })
   fetchData()
@@ -495,7 +719,12 @@ const stripedRowClass = (_row: any) => {
   return [stripedClass, selectedClass].filter(Boolean).join(' ')
 }
 
-const cellStyle = (): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  if (['SKU'].includes(data.column.label)) {
+    return {
+      textAlign: 'left',
+    }
+  }
   return {
     textAlign: 'center',
   }
@@ -506,18 +735,67 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
-  const { pageNo, pageSize } = route.query
+  const { pageNo, pageSize, status } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
   }
   if (pageSize) {
     queryForm.pageSize = Number(pageSize)
   }
+  if (status) {
+    queryForm.status = Number(status)
+  }
   fetchData()
 })
 </script>
 
 <style lang="scss" scoped>
+.tabs-table-container {
+  :deep() {
+    .el-tabs {
+      border-radius: var(--el-border-radius-base);
+
+      &__header {
+        border-top-left-radius: var(--el-border-radius-base);
+        border-top-right-radius: var(--el-border-radius-base);
+      }
+
+      &__nav-wrap {
+        border-radius: var(--el-border-radius-base);
+      }
+
+      .el-tab-pane {
+        display: flex;
+        flex-direction: column;
+        height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
+
+        .vab-query-form {
+          .left-panel {
+            margin-bottom: 5px !important;
+          }
+          .el-form {
+            .el-form-item:first-child {
+              margin-bottom: 5px !important;
+
+              .el-check-tag,
+              .el-form-item__label {
+                margin: 0 10px 5px 0;
+                border-radius: 99px;
+              }
+            }
+            .el-form-item:last-child {
+              margin-bottom: 5px !important;
+            }
+          }
+        }
+
+        .el-table {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);
