@@ -280,9 +280,9 @@
       <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="width: 100%; margin-right: 10px">
         <el-form-item label="交期">
           <div class="flex">
-            <el-input-number v-model="queryForm.minDeliveryDate" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="queryForm.minAvgTime" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxDeliveryDate" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="queryForm.maxAvgTime" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上新天数">
@@ -673,9 +673,10 @@ const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
 }
 // 确认筛选
 const handleConfirmFilter = async () => {
+  Object.assign(queryForm, filterForm)
   queryForm.startLatestDate = latestDate.value[0] || ''
   queryForm.endLatestDate = latestDate.value[1] || ''
-  queryForm.advStatus = filterForm.advStatus
+
   queryForm.pageNo = 1
   queryForm.pageSize = 20
 
