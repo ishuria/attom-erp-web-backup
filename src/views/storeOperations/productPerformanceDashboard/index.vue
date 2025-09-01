@@ -3018,7 +3018,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return 280
+        return 270
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -3585,6 +3585,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 const fetchCurrencyList = async () => {
   const { data } = await getCurrencyList()
   currencyList.value = data
+  currencyList.value.unshift({ id: -1, label: '原币种' })
 }
 const fetchCurrency = async () => {
   const { data: sku } = await getCurrencySKUAmazonOperation()
