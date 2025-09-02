@@ -615,10 +615,10 @@ defineOptions({
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
 const handleRowClick = (row: any, column: any, event: Event) => {
-  selectedRowIndex.value = row.evaluationId
+  selectedRowIndex.value = row.progressId
 }
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
-  if (row.evaluationId === selectedRowIndex.value) {
+  if (row.progressId === selectedRowIndex.value) {
     return 'select-row'
   }
   return ''
@@ -1244,10 +1244,8 @@ const handleCopyProgress = (row: any) => {
     async () => {
       const { data } = await copyProgress({ progressId: row.progressId })
       if (data === true) {
-        copyRow.value = JSON.parse(JSON.stringify(row))
-        const index = progressList.value.indexOf(row)
-        progressList.value.splice(index + 1, 0, copyRow.value)
         $baseMessage(`复制成功！`, 'success', 'hey')
+        fetchData()
       }
     },
     null
