@@ -91,6 +91,9 @@ const editorConfig = reactive<any>({
       allowedFileTypes: ['image/*'],
       headers: {}, // 如需传递token请写到在这里
     },
+    fontSize: {
+      fontSizeList: ['16px', '18px', '20px', '22px', '24px', '28px', '32px', '36px', '48px', '72px'],
+    },
   },
 })
 const toolbarConfig: Partial<IToolbarConfig> = {
