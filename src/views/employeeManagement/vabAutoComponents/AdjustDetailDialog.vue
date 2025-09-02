@@ -25,10 +25,13 @@
       <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="800" stripe>
         <el-table-column label="月份" prop="month" width="100" />
         <el-table-column label="被调整人" prop="userName" width="100" />
-        <el-table-column column-key="type" :filter-method="filterHandler" :filters="[
+        <el-table-column
+          column-key="type"
+          :filter-method="filterHandler"
+          :filters="[
             { text: '考核数', value: '0' },
             { text: '完成数', value: '1' },
-          ]" 
+          ]"
           label="类型"
           prop="type"
           width="110"
@@ -49,14 +52,14 @@
         <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column label="操作" width="100">
           <template #default="{ row }">
-            <el-link type="danger" underline='never' @click="deleteDetail(row)">删除</el-link>
+            <el-link type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" style="min-height: 200px" />
         </template>
       </el-table>
-      <vab-pagination 
+      <vab-pagination
         :current-page="queryForm.pageNo"
         :page-size="queryForm.pageSize"
         :total="total"
@@ -66,12 +69,12 @@
     </vab-dialog>
     <!-- 新增 -->
     <vab-dialog v-model="addVisible" title="新增" width="20%" @close="closeAdd">
-      <el-form ref="addFormRef" label-width="auto" :model="addForm" :rules="addRules" style="margin-left: 0; margin-right: 0;">
+      <el-form ref="addFormRef" label-width="auto" :model="addForm" :rules="addRules" style="margin-left: 0; margin-right: 0">
         <el-form-item label="月份" prop="month">
           <el-date-picker v-model="addForm.month" placeholder="请选择月份" type="month" value-format="YYYY-MM" />
         </el-form-item>
         <el-form-item label="被调整人" prop="userId">
-          <el-select v-model="addForm.userId" placeholder="请选择被调整人" >
+          <el-select v-model="addForm.userId" filterable placeholder="请选择被调整人">
             <el-option v-for="item in productManagerList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -82,7 +85,7 @@
         </el-form-item>
         <el-form-item label="调整数量" prop="adjustQuantity">
           <el-input v-model.trim="addForm.adjustQuantity" placeholder="请输入调整数量" />
-        </el-form-item> 
+        </el-form-item>
         <el-form-item label="OEM" prop="oem">
           <el-checkbox v-model="addForm.oem" :false-value="0" :true-value="1" />
         </el-form-item>
@@ -90,7 +93,7 @@
           <el-input v-model="addForm.parent" placeholder="请输入父体" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="addForm.remark" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入备注" :rows="2" type="textarea"/>
+          <el-input v-model="addForm.remark" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入备注" :rows="2" type="textarea" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -108,7 +111,7 @@ import { addAdjustDetail, deleteAdjustDetail, getAdjustDetail, getProductManager
 import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
 
 defineOptions({
-  name: 'AdjustDetailDialog'
+  name: 'AdjustDetailDialog',
 })
 
 const props = defineProps<{
@@ -121,13 +124,16 @@ const visible = computed({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
-watch(() => props.modelValue, (val) => {
-  if (val) {
-    fetchData()
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      fetchData()
+    }
   }
-})
+)
 const addFormRef = ref<FormInstance>()
 const addVisible = ref<boolean>(false)
 const addForm = reactive({
@@ -137,7 +143,7 @@ const addForm = reactive({
   adjustQuantity: undefined,
   oem: 0,
   parent: '',
-  remark: ''
+  remark: '',
 })
 const addRules = reactive<any>({
   month: [{ required: true, message: '请选择月份', trigger: 'change' }],
@@ -147,36 +153,31 @@ const addRules = reactive<any>({
 })
 const typeOption = [
   { label: '考核数', value: 0 },
-  { label: '完成数', value: 1 }
+  { label: '完成数', value: 1 },
 ]
 const queryForm = reactive<IGetAdjustDetailReq>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetAdjustDetail[]>([])
-const productManagerList = ref<{ id: number, label: string }[]>([])
-          
-          
-const filterHandler = (
-  value: string,
-  row: IGetAdjustDetail,
-  column: TableColumnCtx<IGetAdjustDetail>
-) => {
+const productManagerList = ref<{ id: number; label: string }[]>([])
+
+const filterHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
   const property = column['property']
   return row[property] === Number(value)
 }
-const cellStyle = (data: {row: any, column: any, rowIndex: number, columnIndex: number}): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '类型') {
     return {
       color: data.row.type === 0 ? 'var(--el-color-primary)' : '#6C3483',
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 const showAdd = async () => {
@@ -214,10 +215,10 @@ const submitAddForm = async () => {
         adjustQuantity: addForm.adjustQuantity!,
         oem: addForm.oem,
         parent: addForm.parent,
-        remark: addForm.remark
+        remark: addForm.remark,
       })
       if (data) {
-        $baseMessage("新增成功！", 'success')
+        $baseMessage('新增成功！', 'success')
         closeAdd()
         queryData()
         emit('query-data')
@@ -232,12 +233,12 @@ const closeAdd = () => {
 const deleteDetail = async (row: IGetAdjustDetail) => {
   const { data } = await deleteAdjustDetail(row)
   if (data) {
-    $baseMessage("删除成功！", 'success')
+    $baseMessage('删除成功！', 'success')
     queryData()
     emit('query-data')
   }
 }
-</script> 
+</script>
 
 <style lang="scss" scoped>
 .el-checkbox {
