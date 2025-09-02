@@ -2,7 +2,14 @@
   <el-dialog v-model="dflag" :before-close="handlerCloseDialog" class="wangEditorDialog" :title="props.title" width="60%">
     <div class="wang-editor-container">
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
-      <editor v-model="html" class="wang-editor-content" :default-config="editorConfig" @click="handleClick" @on-created="handleCreated" />
+      <editor
+        v-model="html"
+        class="wang-editor-content"
+        :default-config="editorConfig"
+        mode="default"
+        @click="handleClick"
+        @on-created="handleCreated"
+      />
     </div>
     <template #footer>
       <span>
@@ -18,8 +25,7 @@
 import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
-import { removeHtmlTags } from '~/src/utils/tableColum'
-import { removeLocalStorage, setLocalStorage } from '/@/utils/localStorage'
+import { removeLocalStorage } from '/@/utils/localStorage'
 
 defineOptions({
   name: 'WangEditor',
@@ -55,23 +61,22 @@ watch(
 
       // 判断逻辑：
       // 1. 有缓存内容
-      // 2. 去掉HTML标签后不为空
+      // 2. 缓存内容不是空的HTML标签（如 <p><br></p>、<p></p> 等）
       // 满足以上条件则使用缓存，否则使用后端返回的内容
-      const cleanContent = removeHtmlTags(tempContent || '')
-      const finalContent = cleanContent.replace(/\s/g, '')
-
-      // console.log('原始缓存内容:', tempContent)
-      // console.log('removeHtmlTags后:', cleanContent)
-      // console.log('去掉空白后:', finalContent)
-      // console.log('去掉空白后长度:', finalContent.length)
-
-      if (tempContent && finalContent !== '') {
-        // console.log('使用缓存内容:', tempContent)
+      if (tempContent && !isEmptyHtml(tempContent)) {
+        // 使用缓存内容
         html.value = tempContent
       } else {
-        // console.log('使用后端内容:', content.value)
+        // 使用后端内容
         html.value = content.value || ''
       }
+
+      // 确保编辑器内容同步
+      nextTick(() => {
+        if (editorRef.value) {
+          editorRef.value.setHtml(html.value)
+        }
+      })
     }
   },
   { immediate: true }
@@ -89,8 +94,37 @@ const editorConfig = reactive<any>({
   },
 })
 const toolbarConfig: Partial<IToolbarConfig> = {
-  // TS 语法
   excludeKeys: ['group-video', 'codeBlock'],
+}
+
+// 检查HTML内容是否为空
+const isEmptyHtml = (html: string): boolean => {
+  if (!html) return true
+
+  // 创建临时DOM元素来解析HTML
+  const div = document.createElement('div')
+  div.innerHTML = html
+
+  // 获取纯文本内容
+  const textContent = div.textContent || div.innerText || ''
+
+  // 检查是否只包含空白字符
+  const isEmpty = textContent.trim() === ''
+
+  // 额外检查常见的空HTML标签
+  const emptyPatterns = [
+    /^<p><br\s*\/?><\/p>$/i,
+    /^<p><\/p>$/i,
+    /^<p>\s*<\/p>$/i,
+    /^<div><br\s*\/?><\/div>$/i,
+    /^<div><\/div>$/i,
+    /^<div>\s*<\/div>$/i,
+    /^<br\s*\/?>$/i,
+  ]
+
+  const isOnlyEmptyTags = emptyPatterns.some((pattern) => pattern.test(html.trim()))
+
+  return isEmpty || isOnlyEmptyTags
 }
 // 插入日期
 const insertDate = () => {
@@ -128,7 +162,8 @@ const handleClick = () => {
 
   intervalTimerLog = setInterval(() => {
     const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-    setLocalStorage(key, html.value)
+    // 直接使用 localStorage.setItem 保存 HTML 内容，避免 JSON.stringify 添加引号
+    localStorage.setItem(key, html.value)
     // console.log(key, html.value);
   }, 1000)
 }
