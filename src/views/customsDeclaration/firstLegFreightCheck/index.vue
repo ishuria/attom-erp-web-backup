@@ -5,17 +5,25 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button :disabled="startCheckDisabled" type="primary" @click="startCheckVisible = true">开始核对</el-button>
-            <el-button :disabled="finishCheckDisabled" :loading="exportLoading" type="primary" @click="exportRecord">核对记录导出</el-button>
+            <el-button :disabled="finishCheckDisabled" :loading="exportLoading" type="primary" @click="exportRecord">
+              核对记录导出
+            </el-button>
             <el-button :disabled="finishCheckDisabled" type="success" @click="handleCheckComplete">核对完成</el-button>
             <el-button :disabled="finishCheckDisabled" type="danger" @click="deleteCheck">取消核对</el-button>
             <el-button :disabled="finishCheckDisabled" type="success" @click="handleApproved">审批通过</el-button>
             <el-button type="primary" @click="showErrorAllowRange">误差允许范围</el-button>
-            <el-button type="primary" @click="showStatistics">付款统计</el-button>
+            <el-button type="primary" @click="showStatistics(0)">付款统计</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -24,7 +32,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <check-freight-table :list="list" :loading="listLoading" :tab="0" />
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -36,11 +44,18 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="handleUpdatePaid">已付款</el-button>
+            <el-button type="primary" @click="showStatistics(1)">付款统计</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -49,7 +64,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <check-freight-table ref="freightTableRef" :list="list" :loading="listLoading" :tab="1" />
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -62,7 +77,13 @@
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -70,8 +91,8 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <check-freight-table :list="list" :loading="listLoading" :tab="2"/>
-        <vab-pagination 
+        <check-freight-table :list="list" :loading="listLoading" :tab="2" />
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -82,19 +103,15 @@
     </el-tabs>
     <!-- 开始核对 -->
     <vab-dialog v-model="startCheckVisible" title="开始核对" width="25%">
-      <el-upload
-        v-model:file-list="fileList"
-        :auto-upload="false"
-        class="upload-demo"
-        drag
-      >
+      <el-upload v-model:file-list="fileList" :auto-upload="false" class="upload-demo" drag>
         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
         <div class="el-upload__text">
-          将文件拖拽至此处或 <em>点击上传</em>
+          将文件拖拽至此处或
+          <em>点击上传</em>
         </div>
       </el-upload>
       <template #footer>
-        <div style="text-align: center;">
+        <div style="text-align: center">
           <el-button :loading="uploadLoading" type="success" @click="uploadExcelFile">上传</el-button>
         </div>
       </template>
@@ -115,18 +132,26 @@
 import { Search, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, TabsPaneContext } from 'element-plus'
 import { downloadFileN } from '/@/api/devlocal/download'
-import { approvedFreightCheck, deleteFreightCheck, getFreightCheckList, getFreightCheckPaymentStatisticsList, sendFreightCheckEmail, updateFreightCheckPaid, uploadFreightCheckFile } from '/@/api/devlocal/freightCheck'
+import {
+  approvedFreightCheck,
+  deleteFreightCheck,
+  getFreightCheckList,
+  getFreightCheckPaymentStatisticsList,
+  sendFreightCheckEmail,
+  updateFreightCheckPaid,
+  uploadFreightCheckFile,
+} from '/@/api/devlocal/freightCheck'
 import { IFreightCheckItem, IPaymentStatistics } from '/@/type/freightCheck/freightCheckType'
 
 defineOptions({
-  name: 'FirstLegFreightCheck'
+  name: 'FirstLegFreightCheck',
 })
 
 // 付款统计
 const statisticsVisible = ref<boolean>(false)
 const statisticsList = ref<IPaymentStatistics[]>([])
-const showStatistics = async () => {
-  const { data } = await getFreightCheckPaymentStatisticsList()
+const showStatistics = async (status: number) => {
+  const { data } = await getFreightCheckPaymentStatisticsList({ status })
   if (data) {
     statisticsList.value = data
   }
@@ -146,7 +171,7 @@ const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  status: 0
+  status: 0,
 })
 const list = ref<IFreightCheckItem[]>([])
 const fileList = ref<any>([])
@@ -154,31 +179,31 @@ const uploadLoading = ref<boolean>(false)
 const exportLoading = ref<boolean>(false)
 const exportRecord = async () => {
   exportLoading.value = true
-  const res = await downloadFileN("/freight/check/record/export")
+  const res = await downloadFileN('/freight/check/record/export')
   if (res) {
     exportLoading.value = false
   }
 }
 const handleUpdatePaid = async () => {
-  const selectedRows = freightTableRef.value?.getSelectedRows?.();
+  const selectedRows = freightTableRef.value?.getSelectedRows?.()
   // console.log(selectedRows)
   if (!selectedRows || selectedRows.length === 0) {
-    $baseMessage("请先选择需要设置为已付款的项", 'warning')
-    return;
+    $baseMessage('请先选择需要设置为已付款的项', 'warning')
+    return
   }
   const ids = selectedRows.map((item: IFreightCheckItem) => item.id)
   const { data } = await updateFreightCheckPaid(ids)
   if (data) {
-    $baseMessage("头程运费已付款成功！", 'success')
+    $baseMessage('头程运费已付款成功！', 'success')
     fetchData()
   }
 }
 // 审批通过
 const handleApproved = async () => {
-  $baseConfirm("确定要审批通过吗？", null, async () => {
+  $baseConfirm('确定要审批通过吗？', null, async () => {
     const { data } = await approvedFreightCheck()
     if (data) {
-      $baseMessage("头程运费核对审批通过成功！", 'success')
+      $baseMessage('头程运费核对审批通过成功！', 'success')
       fetchData()
     }
   })
@@ -186,20 +211,16 @@ const handleApproved = async () => {
 // 核对完成
 const handleCheckComplete = async () => {
   await sendFreightCheckEmail()
-  ElMessageBox.confirm(
-    '已提交给上级进行审核！',
-    '系统提示',
-    {
-      confirmButtonText: '确定',
-      showCancelButton: false,
-      showClose: false,
-      type: 'success',
-      // customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
-    }
-  )
+  ElMessageBox.confirm('已提交给上级进行审核！', '系统提示', {
+    confirmButtonText: '确定',
+    showCancelButton: false,
+    showClose: false,
+    type: 'success',
+    // customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+  })
 }
 const deleteCheck = async () => {
-  $baseConfirm("确定要取消核对吗？", null, async () => {
+  $baseConfirm('确定要取消核对吗？', null, async () => {
     const { data } = await deleteFreightCheck()
     if (data) {
       $baseMessage('取消核对成功！', 'success', 'hey')
@@ -233,11 +254,9 @@ const uploadExcelFile = async () => {
   } catch (error) {
     uploadLoading.value = false
   }
-  
 }
 const showErrorAllowRange = () => {
   allowRangeVisible.value = true
-
 }
 const handleCurrentChange = (val: number) => {
   queryForm.pageNo = val
@@ -264,7 +283,8 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   listLoading.value = false
-  if (list.value.length === 0) { // 如果获取数据是空 可以开始核对 否则 无法核对
+  if (list.value.length === 0) {
+    // 如果获取数据是空 可以开始核对 否则 无法核对
     startCheckDisabled.value = false
     finishCheckDisabled.value = true
   } else {
@@ -276,7 +296,6 @@ onBeforeMount(() => {
   fetchData()
 })
 </script>
-
 
 <style lang="scss" scoped>
 .tabs-table-container {
@@ -323,6 +342,4 @@ onBeforeMount(() => {
     }
   }
 }
-
 </style>
-

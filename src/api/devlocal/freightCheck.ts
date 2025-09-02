@@ -90,9 +90,10 @@ export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data:
  * 运费核对-付款统计
  * @returns
  */
-export function getFreightCheckPaymentStatisticsList(): Promise<{ data: IPaymentStatistics[] }> {
+export function getFreightCheckPaymentStatisticsList(params: { status: number }): Promise<{ data: IPaymentStatistics[] }> {
   return request({
     url: `${BASE_API}/freight/check/bill/payment/statistics`,
     method: 'get',
+    params,
   })
 }
