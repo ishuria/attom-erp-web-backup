@@ -55,7 +55,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
-      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" />
+      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" :step="4" />
     </div>
     <div class="pay-button-group">
       <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">

@@ -92,7 +92,7 @@
         </template>
       </el-table>
       <h3>站点分货</h3>
-      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" />
+      <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" :step="3" @update:list="fetchData" />
     </div>
     <vab-alert center="center" type="error">
       <h3>不分货则填0，不能留空</h3>
@@ -257,10 +257,24 @@ const validate = (): boolean => {
   return true
 }
 // 当点击通过的时候
-const handleSaveAndContinue = () => {
+const handleSaveAndContinue = async () => {
   const valid = validate()
   if (!valid) {
     $baseMessage('Vine站点和数量必须成对填写，要么都填写，要么都不填！', 'warning', 'hey')
+    return
+  }
+  // 是否需要重新获取数据
+  await fetchData()
+  // 需要检验分货完成状态
+  const distributionCompleted = siteQuantityList.value[0].distributionCompletedList
+  const notFinished = distributionCompleted.some((item: any) => item.distributionCompleted === 0)
+  if (notFinished) {
+    $baseMessage('所有站点分货完成后才能提交！', 'warning', 'hey')
+    return
+  }
+  await fetchSubmittedStatus()
+  if (editDisabled.value) {
+    $baseMessage('此记录已提交过，请勿重复提交！', 'warning', 'hey')
     return
   }
   const deleteVNode = h('div', {}, [

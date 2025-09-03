@@ -113,6 +113,18 @@ export function updateStepNoQuantity(data?: IReviewStepUpdateReq): Promise<IRevi
     data,
   })
 }
+/**
+ * 新品订货审批-运营分货完成状态修改
+ * @param params
+ * @returns
+ */
+export function updateDistributionCompleted(params: { id: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/distribution/completed/update`,
+    method: 'post',
+    params,
+  })
+}
 // 新品订货审批流程-运营修改Vine
 export function updateReviewStepNo3Vine(data?: IUpdateReviewStepNo3Vine): Promise<IReviewStepResp> {
   return request({
