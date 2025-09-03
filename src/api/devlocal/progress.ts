@@ -163,7 +163,7 @@ export function updateProgressManage(data?: IProgress) {
 /**
  * 新品进度-复制
  */
-export function copyProgress(params?: IProgressId) {
+export function copyProgress(params: { progressId: number; copyOption: number }) {
   return request({
     url: `${BASE_API}/progress/copy`,
     method: 'post',

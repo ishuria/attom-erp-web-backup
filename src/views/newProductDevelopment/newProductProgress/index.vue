@@ -238,7 +238,13 @@
             <div class="custom-table-right-tools">
               <el-form inline :model="queryForm" @submit.prevent>
                 <el-form-item>
-                  <el-input v-model.trim="queryForm.productKeyWord" clearable placeholder="请输入搜索关键词" @keyup.enter="queryData" />
+                  <el-input
+                    v-model.trim="queryForm.productKeyWord"
+                    clearable
+                    placeholder="请输入搜索关键词"
+                    @input="queryData"
+                    @keyup.enter="queryData"
+                  />
                 </el-form-item>
                 <el-form-item>
                   <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
@@ -570,6 +576,20 @@
       title="修改调研报告链接"
       @update:remark="updateResearchReportLink"
     />
+    <!-- 复制打开的弹窗 -->
+    <vab-dialog v-model="copyProgressVisible" title="复制" width="15%">
+      <el-radio-group v-model="copyOptions">
+        <el-radio :value="0">仅保留零件清单</el-radio>
+        <el-radio :value="1">仅保留成本核算</el-radio>
+        <el-radio :value="2">同时保留零件清单和成本核算</el-radio>
+        <el-radio :value="3">都不保留</el-radio>
+      </el-radio-group>
+
+      <template #footer>
+        <el-button @click="copyProgressVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleConfirmCopyProgress">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -679,6 +699,10 @@ const handleOrderProcess = async (row: IProgress) => {
 }
 const updateResearchReportLinkVisible = ref<boolean>(false)
 const researchReportLink = ref<string>('')
+
+// 复制进度相关变量
+const copyProgressVisible = ref<boolean>(false)
+const copyOptions = ref<number>(2) // 默认选择"同时保留零件清单和成本核算"
 const updateResearchReportLink = async (val: string) => {
   const { data } = await updateProgressManage({ ..._row, researchReportLink: val })
   if (data) {
@@ -1238,31 +1262,33 @@ const copyRow = ref<any>(null)
 // 订大货申请
 // 复制
 const handleCopyProgress = (row: any) => {
-  $baseConfirm(
-    '是否要复制本条新品进度信息？',
-    '复制',
-    async () => {
-      const { data } = await copyProgress({ progressId: row.progressId })
-      if (data === true) {
-        $baseMessage(`复制成功！`, 'success', 'hey')
-        fetchData()
-      }
-    },
-    null
-  )
+  copyRow.value = row
+  copyProgressVisible.value = true
+}
+
+// 确认复制进度
+const handleConfirmCopyProgress = async () => {
+  if (!copyRow.value) return
+
+  try {
+    const { data } = await copyProgress({
+      progressId: copyRow.value.progressId,
+      copyOption: copyOptions.value,
+    })
+    if (data === true) {
+      $baseMessage(`复制成功！`, 'success', 'hey')
+      fetchData()
+      copyProgressVisible.value = false
+      copyRow.value = null
+    }
+  } catch (error) {
+    console.error('复制失败:', error)
+    $baseMessage('复制失败，请重试', 'error')
+  }
 }
 const handleCopyAchivedProgress = (row: any) => {
-  $baseConfirm(
-    '是否要复制本条新品进度信息？',
-    '复制',
-    async () => {
-      const { data } = await copyProgress({ progressId: row.progressId })
-      if (data === true) {
-        $baseMessage(`复制成功！`, 'success', 'hey')
-      }
-    },
-    null
-  )
+  copyRow.value = row
+  copyProgressVisible.value = true
 }
 
 // 共享
