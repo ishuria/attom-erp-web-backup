@@ -528,7 +528,7 @@
         </el-table-column>
         <el-table-column label="操作" width="130">
           <template #default="{ row }">
-            <el-link type="primary" underline='never' @click="showViewDetail(row)">查看调整明细</el-link>
+            <el-link type="primary" underline="never" @click="showViewDetail(row)">查看调整明细</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -544,16 +544,16 @@
     <adjust-detail-dialog v-model="adjustDetailVisible" @query-data="fetchAssessmentData" />
     <!-- 对应月份 对应人员调整明细 -->
     <vab-dialog v-model="viewDetailVisible" title="调整明细">
-         <el-table border :cell-style="{ textAlign: 'center' }" :data="detailList" :header-cell-style="{ textAlign: 'center' }" stripe>
+      <el-table border :cell-style="{ textAlign: 'center' }" :data="detailList" :header-cell-style="{ textAlign: 'center' }" stripe>
         <el-table-column label="月份" prop="month" />
         <el-table-column label="被调整人" prop="userName" />
-        <el-table-column label="类型" prop="type" >
+        <el-table-column label="类型" prop="type">
           <template #default="{ row }">
             {{ row.type === 0 ? '考核数' : '完成数' }}
           </template>
         </el-table-column>
         <el-table-column label="调整数量" prop="adjustQuantity" />
-        <el-table-column label="OEM" >
+        <el-table-column label="OEM">
           <template #default="{ row }">
             <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
           </template>
@@ -573,13 +573,18 @@
       <el-form label-position="top">
         <el-form-item label="请选择结账人员">
           <el-select v-model="userIdList" multiple placeholder="请选择结账人员">
-            <el-option
-              v-for="item in productManagerList"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+            <el-option v-for="item in productManagerList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="请选择结账月份">
+          <el-date-picker
+            v-model="checkoutDate"
+            end-placeholder="结束月份"
+            range-separator="至"
+            start-placeholder="开始月份"
+            type="monthrange"
+            value-format="YYYY-MM"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -601,7 +606,7 @@ import {
   getProductManager,
   getProductManagerAssessmentList,
   getUserAttendanceList,
-  updateProductManagerAssessment
+  updateProductManagerAssessment,
 } from '/@/api/devlocal/performanceStatistics'
 import type {
   IGetAdjustDetail,
@@ -629,7 +634,7 @@ const showViewDetail = async (row: IGetProductManagerAssessmentList) => {
 }
 // 考核数结账
 const checkoutVisible = ref<boolean>(false)
-const productManagerList = ref<{ id: number, label: string }[]>([])
+const productManagerList = ref<{ id: number; label: string }[]>([])
 const showCheckout = async () => {
   const { data } = await getProductManager()
   productManagerList.value = data
@@ -641,16 +646,27 @@ const closeCheckout = () => {
 }
 const handleCheckout = async () => {
   if (userIdList.value.length === 0) {
-    $baseMessage("您未选择任何人员进行结账！", 'warning')
+    $baseMessage('您未选择任何人员进行结账！', 'warning')
     return
   }
+  // console.log(checkoutDate.value)
+
+  // 检查结账日期是否有效
+  if (!checkoutDate.value || checkoutDate.value.length !== 2 || !checkoutDate.value[0] || !checkoutDate.value[1]) {
+    $baseMessage('请选择结账月份！', 'warning')
+    return
+  }
+
+  // console.log(checkoutDate.value[0])
+  // console.log(checkoutDate.value[1])
+
   const { data } = await checkoutAssessmentNumber({
     userIdList: userIdList.value,
-    startMonth: date.value[0],
-    endMonth: date.value[1],
+    startMonth: checkoutDate.value[0],
+    endMonth: checkoutDate.value[1],
   })
   if (data) {
-    $baseMessage("考核数结账成功且发送邮件成功！", 'success')
+    $baseMessage('考核数结账成功且发送邮件成功！', 'success')
     checkoutVisible.value = false
     fetchAssessmentData()
   }
@@ -691,6 +707,8 @@ const settingList = ref<IGetProductManagerAssessmentList[]>([])
 let copyRow: any
 /* ============================== 产品经理考核变量 ============================== */
 const assessmentDate = ref<[string, string]>(['', ''])
+// 结账月份
+const checkoutDate = ref<[string, string] | null>(null)
 const assessmentQueryForm = reactive<IGetAssessmentListReq>({
   keyWord: '',
   pageNo: 1,
