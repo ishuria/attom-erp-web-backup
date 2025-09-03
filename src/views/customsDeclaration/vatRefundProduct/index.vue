@@ -10,8 +10,10 @@
             <!-- <el-button type="primary">云舟开票导出</el-button> -->
             <!-- <el-button :loading="exportLoading" type="primary" @click="handleExportATM">埃托姆开票导出</el-button> -->
             <el-button type="primary" @click="invoiceMatchExportVisible = true">发票匹配导出</el-button>
+            <el-button :loading="exportLoading" type="primary" @click="handleExportCustomsDeclaration">已报关数据导出</el-button>
             <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
               <el-date-picker
+                :key="datePickerKey"
                 v-model="date"
                 :clearable="false"
                 :disabled-date="(time: Date) => time.getTime() > Date.now()"
@@ -652,6 +654,7 @@ const exportLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetTaxRefundBatchDetailList[]>([])
 const date = ref<[string, string]>(getDefaultStringTime())
+const datePickerKey = ref<number>(0)
 const queryForm = reactive<IGetTaxRefundListQuery>({
   keyWord: '',
   pageNo: 1,
@@ -667,6 +670,11 @@ const queryDateData = () => {
   queryForm.fromDate = date.value[0]
   queryForm.toDate = date.value[1]
   queryData()
+
+  // 强制重新渲染日期选择器，解决选择后无法再次打开的问题
+  nextTick(() => {
+    datePickerKey.value++
+  })
 }
 let copyRow: any
 
@@ -693,6 +701,15 @@ const closeInvoiceMatching = (value: boolean) => {
 }
 const closeBatchProfitMargin = (value: boolean) => {
   batchProfitMarginVisible.value = value
+}
+const handleExportCustomsDeclaration = async () => {
+  exportLoading.value = true
+  await downloadFilePD('/taxRefund/declared/data/export', {
+    fromDate: date.value[0],
+    toDate: date.value[1],
+  }).then(() => {
+    exportLoading.value = false
+  })
 }
 // 埃托姆发票导出
 const handleExportATM = async () => {
