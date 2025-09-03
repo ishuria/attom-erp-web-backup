@@ -499,7 +499,7 @@
                     </template>
                     <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
                   </el-tooltip>
-                  <el-tag class="order-tag" effect="dark">订</el-tag>
+                  <el-tag class="order-tag" effect="dark" @click="handleShowReleaseOrder(row)">订</el-tag>
                 </div>
 
                 <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
@@ -2007,15 +2007,14 @@
       <template #footer></template>
     </vab-dialog>
     <!-- 发布订货 -->
-    <!-- <vab-release-order-dialog
+    <vab-release-order-dialog
       ref="releaseOrderDialogRef"
       v-model="releaseOrderVisible"
       :loading="orderListLoading"
       :sku-list="skuList"
       @confirm="handleReleaseOrder"
       @image-preview="imagePreviewShow"
-      @switch-sku="handleSwitchSku"
-    /> -->
+    />
   </div>
 </template>
 
@@ -2028,6 +2027,7 @@ import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -2080,46 +2080,88 @@ defineOptions({
 
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
+const releaseOrderVisible = ref<boolean>(false)
+const orderListLoading = ref<boolean>(false)
+const releaseOrderDialogRef = ref()
+const asinId = ref<number | undefined>(undefined)
+let skuRow: any
 // 打开发布订货
 const handleShowReleaseOrder = async (row: any) => {
   // currentRowId.value = row.id
-  // copyRow = row
-  // releaseOrderVisible.value = true
-  // if (row.sku) {
-  //   orderListLoading.value = true
-  //   // 确保skuArray 是一个没有空值的数组
-  //   const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
-  //   skuList.value = skuArray.map((item) => {
-  //     return {
-  //       label: item,
-  //       value: item,
-  //     }
-  //   })
-  //   // 修复：检查SKU是否包含搜索关键词
-  //   const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
-  //   if (matchSkus.length > 0) {
-  //     // 如果有多个匹配，可以选择最匹配的或者第一个
-  //     const selectedSku = matchSkus[0].value
-  //     const { data } = await getOperationOrderSku({
-  //       id: row.id!,
-  //       sku: selectedSku,
-  //     })
-  //     // 通过组件实例设置表单数据
-  //     if (releaseOrderDialogRef.value) {
-  //       releaseOrderDialogRef.value.setFormData(data)
-  //     }
-  //     asinId.value = row.id!
-  //   }
-  //   orderListLoading.value = false
-  // } else {
-  //   skuList.value = []
-  //   // 重置组件表单数据
-  //   if (releaseOrderDialogRef.value) {
-  //     releaseOrderDialogRef.value.resetForm()
-  //   }
-  // }
-}
+  skuRow = row
+  releaseOrderVisible.value = true
 
+  if (row.sku) {
+    orderListLoading.value = true
+    // 确保skuArray 是一个没有空值的数组
+
+    skuList.value = [
+      {
+        label: row.sku,
+        value: row.sku,
+      },
+    ]
+
+    const { data } = await getOperationOrderSku({
+      id: null,
+      sku: row.sku,
+      asin: row.asin,
+      site: row.site,
+    })
+    // 通过组件实例设置表单数据
+    if (releaseOrderDialogRef.value) {
+      releaseOrderDialogRef.value.setFormData(data)
+    }
+    asinId.value = data.asinId
+
+    orderListLoading.value = false
+  } else {
+    skuList.value = []
+    // 重置组件表单数据
+    if (releaseOrderDialogRef.value) {
+      releaseOrderDialogRef.value.resetForm()
+    }
+  }
+}
+// 确认发布订货
+const handleReleaseOrder = async (formData: any) => {
+  if (!formData.sku) {
+    $baseMessage('请选择SKU', 'warning')
+    return
+  }
+  if (!formData.number) {
+    $baseMessage('请填写订货数量', 'warning')
+    return
+  }
+  try {
+    // 先关闭弹窗,提升体验
+    releaseOrderVisible.value = false
+    orderListLoading.value = true
+
+    const { data } = await releaseOperationPlanPo({
+      asinId: asinId.value!,
+      sku: formData.sku,
+      number: formData.number,
+      asin: skuRow.asin,
+      site: skuRow.site,
+    })
+
+    if (data) {
+      $baseMessage('发布订货成功！', 'success')
+      // fetchData()
+      // skuRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
+      // skuRow.nowSupplementCalcu = data.nowSupplementCalcu
+      // skuRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
+    }
+  } catch (error) {
+    console.error('发布订货失败:', error)
+    $baseMessage('发布订货失败，请重试', 'error')
+    // 失败时重新打开弹窗
+    releaseOrderVisible.value = true
+  } finally {
+    orderListLoading.value = false
+  }
+}
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
@@ -4044,6 +4086,9 @@ onBeforeMount(() => {
     justify-content: center;
     width: 100%;
     height: 100%;
+  }
+  &:hover {
+    cursor: pointer;
   }
 }
 .noneHoverTable :deep(.clear-padding) {

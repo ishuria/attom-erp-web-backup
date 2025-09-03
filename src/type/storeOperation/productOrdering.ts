@@ -242,8 +242,10 @@ export interface IReleaseOperationPlanPoRes {
   }
 }
 export interface IGetOperationOrderSkuReq {
-  id: number
+  id: number | null
   sku: string
+  asin?: string
+  site?: number
 }
 export interface IGetOperationOrderSkuRes {
   data: {
@@ -254,6 +256,7 @@ export interface IGetOperationOrderSkuRes {
     numberOfCartons: number
     productManagerName: string
     orderQuantity: number
+    asinId?: number
   }
 }
 export interface IUpdateOperationOrderShipmentQuantityReq {
