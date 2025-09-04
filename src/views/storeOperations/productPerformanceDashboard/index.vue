@@ -622,6 +622,11 @@
 
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
               </span>
+              <span v-if="item.label === '断货'">
+                <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
+                <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
+                <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
+              </span>
               <span v-if="label4.includes(item.label)">
                 {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
               </span>
@@ -1267,6 +1272,11 @@
               <span v-if="label3.includes(item.label)">
                 <!-- 处理 天 -->
                 {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
+              </span>
+              <span v-if="item.label === '断货'">
+                <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
+                <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
+                <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
               </span>
               <span v-if="label4.includes(item.label)">
                 {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
@@ -2645,7 +2655,7 @@ const label2 = [
   '月退货%',
   '月退款%',
 ]
-const label3 = ['上新', '可售', '可售总', '断货']
+const label3 = ['上新', '可售', '可售总']
 const label4 = ['今广', '半年有货率', '月广%']
 const label1Map = new Map([
   ['今销', 'currentSalesPrice'],
@@ -2677,7 +2687,6 @@ const label3Map = new Map([
   ['上新', 'newArrivalDay'],
   ['可售', 'esAvailableSaleDay'],
   ['可售总', 'esAvailableSaleDayTotal'],
-  ['断货', 'outOfStock'],
 ])
 const label4Map = new Map([
   ['今广', 'currentAdvertisement'],

@@ -163,15 +163,15 @@
             </span> -->
             <el-tooltip effect="dark" placement="top">
               <template #content>
-                <div class="custom-tooltip">复制ASIN</div>
-              </template>
-              <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
-            </el-tooltip>
-            <el-tooltip effect="dark" placement="top">
-              <template #content>
                 <div class="custom-tooltip">复制SKU</div>
               </template>
               <vab-icon icon="file-copy-2-fill" @click="handleClip(row.sku.split(',')[0])" />
+            </el-tooltip>
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">复制ASIN</div>
+              </template>
+              <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
             </el-tooltip>
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
