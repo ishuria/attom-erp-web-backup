@@ -151,7 +151,7 @@
             </el-table-column>
             <el-table-column v-else :label="col.label" :prop="col.prop" :width="flexColumnWidth(list, '发布人', 'publisherPersonName')" />
           </template>
-          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
+          <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
                 v-if="ableCheck"
@@ -375,7 +375,7 @@
             </el-table-column>
             <el-table-column v-else :label="col.label" :prop="col.prop" :width="flexColumnWidth(list, '发布人', 'publisherPersonName')" />
           </template>
-          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
+          <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
                 v-if="ableCheck"
@@ -598,7 +598,7 @@
             </el-table-column>
             <el-table-column v-else :label="col.label" :prop="col.prop" :width="flexColumnWidth(list, '发布人', 'publisherPersonName')" />
           </template>
-          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
+          <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
                 v-if="ableCheck"
@@ -793,7 +793,7 @@
             </el-table-column>
             <el-table-column v-else :label="col.label" :prop="col.prop" :width="flexColumnWidth(list, '发布人', 'publisherPersonName')" />
           </template>
-          <el-table-column label="陈峥校对" min-width="100" prop="proofreadingStatus">
+          <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
               {{ '' }}

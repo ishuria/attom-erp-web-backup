@@ -447,6 +447,7 @@ const fetchData = async () => {
   list.value.forEach((item: any) => {
     item.fnSkuUpc = item.fnSkuUpc.replaceAll(',', '<br>')
     item._sku = item.sku.split('<br/>')
+    item.magnetic = item.magnetic === null ? 0 : item.magnetic
   })
   listLoading.value = false
 }
