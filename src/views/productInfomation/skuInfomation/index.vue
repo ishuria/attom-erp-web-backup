@@ -105,7 +105,12 @@
           <el-switch v-model="row.packagePhotograph" :active-value="1" :inactive-value="0" style="--el-switch-on-color: #13ce66;" @change="handleUpdateStatus(row)"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="总实际成本" min-width="80" prop="procurementCost">
+      <el-table-column label="带磁" min-width="70" prop="magnetic">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.magnetic" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
+        </template>
+      </el-table-column>
+      <el-table-column label="总实际成本" min-width="90" prop="procurementCost">
         <template #header>
           总实际
           <br />
@@ -357,6 +362,7 @@ const handleUpdateStatus = async (row: IgetProductList) => {
     haltStatus: row.productionHaltStatus,
     photographStatus: row.packagePhotograph,
     priorityStatus: row.priorityPacking,
+    magnetic: row.magnetic,
   })
 }
 const queryForm = reactive<any>({

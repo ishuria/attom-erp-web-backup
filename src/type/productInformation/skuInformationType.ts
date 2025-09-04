@@ -30,6 +30,7 @@ export interface IgetProductList {
   customsDeclaration: string
   invoiceIssuType: string
   productManager: string
+  magnetic: number
 }
 export interface IgetProductListResp {
   code: number
@@ -46,6 +47,7 @@ export interface IupdateProductStatus {
   haltStatus: number
   photographStatus: number
   priorityStatus: number
+  magnetic: number
 }
 export interface ISkuId {
   skuId: number

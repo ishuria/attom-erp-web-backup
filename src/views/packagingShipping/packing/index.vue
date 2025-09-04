@@ -128,6 +128,12 @@
         </template>
       </el-table-column>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description--', 'description')" />
+      <el-table-column label="带磁" min-width="70" prop="magnetic">
+        <template #default="{ row }">
+          <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+          <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+        </template>
+      </el-table-column>
       <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
         <template #default="{ row }">
           <el-input-number
@@ -1269,7 +1275,7 @@ const stripedRowClass = (_row: any) => {
 // 装箱合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 14 && columnIndex !== 15) {
+  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 13 && columnIndex !== 15 && columnIndex !== 16) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
