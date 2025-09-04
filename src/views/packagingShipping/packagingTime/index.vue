@@ -87,7 +87,7 @@
           />
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="7" style="height: 100%">
         <vab-query-form>
           <vab-query-form-left-panel :span="18" style="margin-bottom: 10px">
             <el-date-picker
@@ -137,6 +137,23 @@
             <el-table-column label="餐补次数" min-width="60" prop="mealSupplement" />
             <template #empty>
               <el-empty class="vab-data-empty" />
+            </template>
+            <template #append>
+              <div v-if="rightTotal <= queryRightForm.pageSize" class="data-end-tip">
+                <el-divider>
+                  <el-icon><check /></el-icon>
+                  <span>数据已全部显示</span>
+                </el-divider>
+              </div>
+              <div
+                v-if="rightTotal > queryRightForm.pageSize && queryRightForm.pageNo < rightTotal / queryRightForm.pageSize"
+                class="data-more-tip"
+              >
+                <el-divider>
+                  <el-icon><arrow-down /></el-icon>
+                  <span>还有更多数据，请翻页查看</span>
+                </el-divider>
+              </div>
             </template>
           </el-table>
           <vab-pagination
@@ -246,7 +263,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { ArrowDown, Check, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import type { FormInstance } from 'element-plus'
 import {
@@ -532,5 +549,49 @@ onBeforeMount(() => {
 
 .pagination {
   flex: none; /* 不让分页器扩展 */
+}
+
+/* 数据结束提示样式 */
+.data-end-tip {
+  margin: 8px 0;
+}
+
+.data-end-tip .el-divider {
+  margin: 0;
+}
+
+.data-end-tip .el-icon {
+  margin-right: 4px;
+}
+
+/* 还有更多数据提示样式 */
+.data-more-tip {
+  margin: 8px 0;
+}
+
+.data-more-tip .el-divider {
+  margin: 0;
+}
+
+.data-more-tip .el-icon {
+  margin-right: 4px;
+  animation: bounce 2s infinite;
+}
+
+/* 箭头动画 */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
 }
 </style>
