@@ -168,6 +168,10 @@ export interface IcreateProductComponent {
    * 采购链接
    */
   purchaseLink?: string
+  /**
+   * 报关状态 0报关  1不报关
+   */
+  declareCustomsStatus?: number
 }
 
 export interface IcomponentId {

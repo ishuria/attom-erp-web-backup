@@ -138,10 +138,10 @@
         </monthly-assessment-table>
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月均新品提成排行">
+        <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
           <template #select>
-            <el-select v-model="selectFinishMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            <el-select v-model="selectNewProductMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
+              <el-option v-for="item in newProductMonthList" :key="item" :label="item" :value="item" />
             </el-select>
           </template>
         </rank>
@@ -485,7 +485,7 @@ const fetchRankNewProductOneYearCommission = async () => {
   rank3List.value = data
 }
 const fetchRankNewProductCommission = async () => {
-  const { data } = await getFrontPageRankNewProductCommission({ month: selectFinishMonth.value! })
+  const { data } = await getFrontPageRankNewProductCommission({ month: selectNewProductMonth.value! })
   rank5List.value = data
 }
 // 获取当月产品利润分
@@ -512,8 +512,10 @@ const fetchMonthlyMinusAssessment = async () => {
   }
 }
 const historyMonthList = ref<string[]>([])
+const newProductMonthList = ref<string[]>([])
 const selectAchievedMonth = ref<string>()
 const selectFinishMonth = ref<string>()
+const selectNewProductMonth = ref<string>()
 const monthList = ref<string[]>([])
 const selectProfitMonth = ref<string>()
 const selectAssessmentPlusMonth = ref<string>()
@@ -522,8 +524,23 @@ const selectAssessmentMinusMonth = ref<string>()
 const fetchHistoryMonthList = async () => {
   const { data } = await getFrontPageHistoryMonthList()
   historyMonthList.value = data
+
+  // newProductMonthList 从 2025-08 开始（包含 2025-08 及更新的月份）
+  const targetMonth = '2025-08'
+  const targetIndex = data.findIndex((month) => month === targetMonth)
+
+  if (targetIndex !== -1) {
+    // 从 2025-08 开始，只取到数组开头（最新的月份）
+    // 因为数据是按时间倒序排列的，所以取从 targetIndex 到 0 的数据
+    newProductMonthList.value = data.slice(0, targetIndex + 1)
+  } else {
+    // 如果找不到 2025-08，则使用所有数据
+    newProductMonthList.value = data
+  }
+
   selectAchievedMonth.value = data[0]
   selectFinishMonth.value = data[0]
+  selectNewProductMonth.value = newProductMonthList.value[0] || data[0]
 }
 const fetchAdjustDetailMonthList = async () => {
   const { data } = await getFrontPageAdjustDetailMonth()

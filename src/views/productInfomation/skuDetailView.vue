@@ -542,6 +542,9 @@
             <el-option v-for="dict in invoicingNumList" :key="dict.value" :label="dict.label" :value="dict.value" />
           </el-select>
         </el-form-item>
+        <el-form-item v-if="form.type === 0" label="不报关" prop="declareCustomsStatus">
+          <el-checkbox v-model="form.declareCustomsStatus" :false-value="0" :true-value="1" />
+        </el-form-item>
         <el-form-item v-show="taxVisible" label="实际税点" prop="actualTaxRate">
           <el-input v-model="form.actualTaxRate" clearable :disabled="taxDisabled" placeholder="税点如果是13个点则输入0.13" />
         </el-form-item>
@@ -829,6 +832,7 @@ const form = reactive<any>({
   actualTaxRate: '',
   invoicingTaxRate: '',
   purchaseLink: '',
+  declareCustomsStatus: 0,
 })
 const tableData = ref<any>([])
 const imageColumnHeight = ref<number>(0)
@@ -1407,6 +1411,7 @@ const rules = reactive({
     { required: true, message: '请输入供应商', trigger: 'blur' },
     { validator: validateNoSpaces, trigger: 'blur' },
   ],
+  declareCustomsStatus: [{ required: true, message: '请选择不报关', trigger: 'change' }],
   invoicing: [{ required: true, message: '请选择开票类型', trigger: 'change' }],
   actualTaxRate: [
     {
@@ -1507,9 +1512,10 @@ const handleSubmit = async () => {
           type: form.type,
           status: form.isSinglePurchase,
           purchaseLink: form.type === 0 ? '' : form.purchaseLink,
+          declareCustomsStatus: form.type === 0 ? form.declareCustomsStatus : -1,
         })
         if (data) {
-          tableData.value.push(newComponent)
+          // tableData.value.push(newComponent)
           fetchComponentData()
           fetchData()
           addComponentVisible.value = false
