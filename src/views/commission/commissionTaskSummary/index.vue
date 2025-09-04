@@ -369,7 +369,16 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table border :cell-style="cellStyle" :data="costList" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          border
+          :cell-style="cellStyle"
+          class="custom-table-hover"
+          :data="costList"
+          :header-cell-style="{ textAlign: 'center' }"
+          :row-class-name="tableRowClassName"
+          stripe
+          @row-click="handleRowClick"
+        >
           <el-table-column label="提成开始日期" min-width="120" prop="startDate">
             <template #default="{ row }">
               {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
@@ -630,6 +639,17 @@ defineOptions({
   name: 'CommissionTaskSummary',
 })
 
+const selectedRowIndex = ref<number>(-1)
+// 行点击处理函数
+const handleRowClick = (row: any, column: any, event: Event) => {
+  selectedRowIndex.value = row.id
+}
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
+  if (row.id === selectedRowIndex.value) {
+    return 'select-row'
+  }
+  return ''
+}
 const activeName = ref<number>(0)
 const list = ref<IGetCommissionTaskPictureList[]>([])
 const longList = ref<IGetLongCommissionTaskList[]>([])
