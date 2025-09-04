@@ -853,6 +853,7 @@ export interface ICheckingPackagingTimeErrorReq {
   keyWord: string
   pageNo: number
   pageSize: number
+  userId: number
 }
 export interface ICheckingPackagingTimeErrorRes {
   data: {
