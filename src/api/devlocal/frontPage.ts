@@ -102,13 +102,23 @@ export function getFrontPageRankOverAchieved(params: { month: string }): Promise
  * 首页-排行新品提成
  * @returns
  */
-export function getFrontPageRankNewProductCommission(): Promise<{ data: IRankItem[] }> {
+export function getFrontPageRankNewProductOneYearCommission(): Promise<{ data: IRankItem[] }> {
   return request({
-    url: `${BASE_API}/front_page/rank/new_product_commission`,
+    url: `${BASE_API}/front_page/rank/new_product_one_year_commission`,
     method: 'get',
   })
 }
-
+/**
+ * 首页-排行新品提成(过去6个月月均)
+ * @returns
+ */
+export function getFrontPageRankNewProductCommission(params: { month: string }): Promise<{ data: IRankItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/rank/new_product_commission`,
+    method: 'get',
+    params,
+  })
+}
 /**
  * 首页-考核数调整查询
  * @returns

@@ -1,5 +1,5 @@
 <template>
-  <vab-card :body-style="{ height: '422px' }" skeleton class="rank-card">
+  <vab-card :body-style="{ height: '422px' }" class="rank-card" skeleton>
     <template #header>
       <vab-icon icon="align-top" />
       {{ title }}
@@ -25,6 +25,7 @@ const option = reactive<any>({
   tooltip: {
     trigger: 'axis',
     extraCssText: 'z-index:1',
+    confine: true,
   },
   grid: {
     top: '0%',
@@ -70,7 +71,7 @@ const option = reactive<any>({
       itemStyle: {
         borderRadius: 10,
         borderWidth: 2,
-          color: (params: any) => {
+        color: (params: any) => {
           return params.name === props.myName ? '#67C23A' : '#409EFF'
         },
       },
@@ -91,19 +92,18 @@ watch(
 <style lang="scss" scoped>
 .rank-card {
   position: relative;
-  
+
   :deep(.el-card__header) {
     position: relative;
-   
- 
+
     display: flex;
     align-items: center;
   }
-  
+
   .right-select {
     position: absolute;
     top: 50%;
-    right: 20px;
+    right: 10px;
     width: auto;
     height: 60px;
     line-height: 60px;
@@ -113,9 +113,6 @@ watch(
     justify-content: flex-end;
     gap: 10px;
     z-index: 10;
-  
   }
-  
 }
- 
 </style>
