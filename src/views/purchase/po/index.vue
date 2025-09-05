@@ -5,30 +5,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: [PoPermission.PAY] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -104,6 +80,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
@@ -251,30 +251,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: [PoPermission.PAY] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -350,6 +326,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
@@ -497,30 +497,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -596,6 +572,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: ['purchase:pay'] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
@@ -748,30 +748,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -847,6 +823,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: ['purchase:pay'] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
@@ -1000,30 +1000,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -1099,6 +1075,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: ['purchase:pay'] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
@@ -1252,30 +1252,6 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
-            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -1351,6 +1327,30 @@
                 含税价格合计：{{ taxIncludedTotalPrice }}
               </el-text>
             </div>
+            <el-button
+              v-permissions="{ permission: ['purchase:pay'] }"
+              :loading="fullPaymentLoading"
+              type="success"
+              @click="handlePaymentPaid"
+            >
+              已付全款/尾款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
+              :loading="installmentLoading"
+              type="warning"
+              @click="handleShowInstallment"
+            >
+              分批付款
+            </el-button>
+            <el-button
+              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
+              :loading="refundLoading"
+              type="danger"
+              @click="handleShowRefund"
+            >
+              退款
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
