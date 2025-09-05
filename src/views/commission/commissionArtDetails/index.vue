@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="美工图片" :name="0">
         <vab-query-form>
-          <vab-query-form-top-panel>
+          <!-- <vab-query-form-top-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item label="分类">
                 <el-check-tag :checked="queryForm.status === 0" @change="onChangeStatus(0)">未上架</el-check-tag>
@@ -12,10 +12,10 @@
                 <el-check-tag :checked="queryForm.status === 3" @change="onChangeStatus(3)">已结束</el-check-tag>
               </el-form-item>
             </el-form>
-          </vab-query-form-top-panel>
+          </vab-query-form-top-panel> -->
           <vab-query-form-left-panel>
             <el-form inline>
-              <template  v-if="currentRoleCode === ROLE_BOSS_CODE">
+              <template v-if="currentRoleCode === ROLE_BOSS_CODE">
                 <el-form-item label="人员">
                   <el-select v-model="queryForm.userId" placeholder="请选择人员" @change="queryData">
                     <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
@@ -28,13 +28,8 @@
                 </el-form-item>
               </template>
               <el-form-item label="发放月份">
-                <el-select v-model="queryForm.month" placeholder="请选择发放月份" @change="queryData" >
-                  <el-option
-                    v-for="item in monthOption"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.label"
-                  />
+                <el-select v-model="queryForm.month" placeholder="请选择发放月份" @change="queryData">
+                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -42,7 +37,7 @@
                 <el-text type="success">{{ bonus }}元</el-text>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
+                <el-text style="margin-left: 10px" type="info">(更新时间：{{ updateDate }})</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -64,7 +59,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-        v-loading="listLoading"
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -87,12 +82,13 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
-              </span><br />
+              </span>
+              <br />
               {{ row.desc }}
             </template>
           </el-table-column>
@@ -168,7 +164,7 @@
       </el-tab-pane>
       <el-tab-pane label="美工长期" :name="1">
         <vab-query-form>
-          <vab-query-form-top-panel>
+          <!-- <vab-query-form-top-panel>
             <el-form inline :model="longQueryForm" @submit.prevent>
               <el-form-item label="分类">
                 <el-check-tag :checked="longQueryForm.status === 0" @change="onChangeLongStatus(0)">进行中</el-check-tag>
@@ -176,29 +172,24 @@
                 <el-check-tag :checked="longQueryForm.status === 2" @change="onChangeLongStatus(2)">已结束</el-check-tag>
               </el-form-item>
             </el-form>
-          </vab-query-form-top-panel>
+          </vab-query-form-top-panel> -->
           <vab-query-form-left-panel>
             <el-form inline>
-             <template   v-if="currentRoleCode === ROLE_BOSS_CODE">
-               <el-form-item label="人员">
-                 <el-select v-model="longQueryForm.userId" placeholder="请选择人员" @change="longQueryData">
-                   <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
-                 </el-select>
-               </el-form-item>
-               <el-form-item label="站点">
-                 <el-select v-model="longQueryForm.site" placeholder="请选择站点" @change="longQueryData">
-                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                 </el-select>
-               </el-form-item>
-             </template>
+              <template v-if="currentRoleCode === ROLE_BOSS_CODE">
+                <el-form-item label="人员">
+                  <el-select v-model="longQueryForm.userId" placeholder="请选择人员" @change="longQueryData">
+                    <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="站点">
+                  <el-select v-model="longQueryForm.site" placeholder="请选择站点" @change="longQueryData">
+                    <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+              </template>
               <el-form-item label="发放月份">
-                <el-select v-model="longQueryForm.month" placeholder="请选择发放月份" @change="longQueryData" >
-                  <el-option
-                    v-for="item in monthOption"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.label"
-                  />
+                <el-select v-model="longQueryForm.month" placeholder="请选择发放月份" @change="longQueryData">
+                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -206,7 +197,7 @@
                 <el-text type="success">{{ bonus }}元</el-text>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px" type="info">(更新时间：{{updateDate}})</el-text>
+                <el-text style="margin-left: 10px" type="info">(更新时间：{{ updateDate }})</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -228,7 +219,7 @@
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-        v-loading="listLoading"
+          v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
           :cell-style="cellStyle"
@@ -251,12 +242,13 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(longList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
-              </span><br />
+              </span>
+              <br />
               {{ row.desc }}
             </template>
           </el-table-column>
@@ -341,7 +333,7 @@ import { useAclStore } from '/@/store/modules/acl'
 import type {
   IGetCommissionDetailLongList,
   IGetCommissionDetailPictureList,
-  IGetCommissionDetailPictureListReq
+  IGetCommissionDetailPictureListReq,
 } from '/@/type/commission/commissionType'
 import handleClipboard from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
@@ -354,7 +346,7 @@ defineOptions({
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
-const currentRoleCode = useAclStore().getRole[0];
+const currentRoleCode = useAclStore().getRole[0]
 const option = ref<any>({})
 const pieList = ref<any[]>([])
 const sitePieVisible = ref<boolean>(false)
@@ -370,7 +362,7 @@ const queryForm = reactive<IGetCommissionDetailPictureListReq>({
   site: -1,
   userId: -1,
   month: '',
-  status: 1,
+  status: -1,
   pageNo: 1,
   pageSize: 20,
 })
@@ -379,7 +371,7 @@ const longQueryForm = reactive<IGetCommissionDetailPictureListReq>({
   site: -1,
   userId: -1,
   month: '',
-  status: 0,
+  status: -1,
   pageNo: 1,
   pageSize: 20,
 })
@@ -390,13 +382,13 @@ const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const handleMonth = () => {
   switch (activeName.value) {
-  case 0: {
-    return queryForm.month
-  }
-  case 1: {
-    return longQueryForm.month
-  }
-  // No default
+    case 0: {
+      return queryForm.month
+    }
+    case 1: {
+      return longQueryForm.month
+    }
+    // No default
   }
 }
 const initChart = () => {
@@ -490,7 +482,7 @@ const initChart = () => {
           }
         },
         data: pieList.value.slice().sort((a: any, b: any) => b.value - a.value),
-        color: colorList
+        color: colorList,
       },
     ],
   }
@@ -667,24 +659,24 @@ const fetchLongData = async () => {
 
 const updateDate = ref<string | undefined>('')
 const fetchUpdateDate = async () => {
-  const { data } = await getOperationUpdateDate({ type: activeName.value + 3})
+  const { data } = await getOperationUpdateDate({ type: activeName.value + 3 })
   updateDate.value = data
 }
-const monthOption = ref<{ id: number, label: string }[]>([])
+const monthOption = ref<{ id: number; label: string }[]>([])
 const fetchCommissionTypeMonth = async () => {
   const { data } = await getCommissionTypeMonth({ type: activeName.value })
   monthOption.value = data
   const now = new Date()
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
-  switch(activeName.value) {
+  switch (activeName.value) {
     case 0: {
       queryForm.month = currentMonth
-      
+
       break
     }
     case 1: {
       longQueryForm.month = currentMonth
-      
+
       break
     }
   }
@@ -693,7 +685,7 @@ onBeforeMount(async () => {
   await fetchSiteList()
   await fetchUpdateDate()
   await fetchCommissionTypeMonth()
-  switch(activeName.value) {
+  switch (activeName.value) {
     case 0: {
       fetchUserList()
       queryData()
