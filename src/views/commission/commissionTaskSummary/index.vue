@@ -1045,7 +1045,7 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     if (item.cooperationProportion) {
-      item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
+      item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(6))
     }
     if (item.singleProportion) {
       item.singleProportion = parseFloat((item.singleProportion * 100).toFixed(2))
@@ -1064,7 +1064,7 @@ const fetchLongData = async () => {
     longList.value = data.list
     longList.value.forEach((item) => {
       if (item.cooperationProportion) {
-        item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
+        item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(6))
       }
       if (item.singleProportion) {
         item.singleProportion = parseFloat((item.singleProportion * 100).toFixed(2))

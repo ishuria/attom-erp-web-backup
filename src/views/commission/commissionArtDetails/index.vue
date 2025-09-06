@@ -636,7 +636,7 @@ const fetchLongData = async () => {
     bonus.value = data.bonus
     longList.value.forEach((item) => {
       if (item.cooperationProportion) {
-        item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(2))
+        item.cooperationProportion = parseFloat((item.cooperationProportion * 100).toFixed(6))
       }
       item.pieList = item.pieList.map((item: any, index: number) => {
         const trueValue = item.value
