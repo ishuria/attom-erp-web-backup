@@ -102,6 +102,7 @@
       :header-cell-class-name="headerStyle"
       :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
+      @cell-click="cellClick"
       @row-click="handleRowClick"
       @sort-change="handleSortChange"
     >
@@ -258,6 +259,11 @@
               极好 {{ formatPercentage(row.vocDefect, 2) }}
             </el-tag>
           </span>
+          <span v-if="item.label === '季节趋势'">
+            <div style="width: 100%; height: 50px">
+              <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
+            </div>
+          </span>
           <!-- <span v-if="item.label === 'VOC缺陷%'" >
             {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
           </span> -->
@@ -374,15 +380,21 @@
       @image-preview="imagePreviewShow"
       @switch-sku="handleSwitchSku"
     />
+    <!-- 季节趋势 -->
+    <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
+      <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
+      <template #footer></template>
+    </vab-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { adStatusOption } from '../constantOption'
+import { adStatusOption, months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
   getOperationOrderList,
@@ -437,6 +449,15 @@ const site = ref<number[]>([])
 const siteList = ref<{ id: number; label: string }[]>([])
 const operateUserList = ref<{ id: number; label: string }[]>([])
 const list = ref<IGetOperationOrderList[]>([])
+const getCurrentMonthIndex = () => {
+  return new Date().getMonth() // 获取当前月份索引(0-11)
+}
+const seasonalXData = computed(() => {
+  const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+  const currentMonthIndex = getCurrentMonthIndex()
+  // 从当前月份开始重新排列月份数组
+  return [...months.slice(currentMonthIndex), ...months.slice(0, currentMonthIndex)]
+})
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const latestDate = ref<string[]>([])
 const label = ['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%']
@@ -513,6 +534,87 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
 }
 const handleRowClick = (row: any, column: any, event: Event) => {
   currentRowId.value = row.id
+}
+const seasonalVisible = ref<boolean>(false)
+let _seasonalCoefficient = {
+  actualList: [],
+  referenceList: [],
+}
+const option1 = ref<any>({})
+const cellClick = async (row: any, column: any) => {
+  const label = column.label
+  switch (label) {
+    case '季节趋势': {
+      seasonalVisible.value = true
+      _seasonalCoefficient = row.seasonalCoefficient
+      break
+    }
+    // No default
+  }
+}
+const initChart1 = () => {
+  option1.value = {
+    legend: {
+      left: '40%',
+      top: 0,
+    },
+    tooltip: {
+      trigger: 'axis',
+      confine: true,
+    },
+    grid: {
+      top: 50,
+      bottom: 30,
+      left: 50,
+      right: 50,
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: months.map((item) => item.label),
+      axisTick: {
+        alignWithLabel: true,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    yAxis: {
+      name: '系数',
+      type: 'value',
+      boundaryGap: [0, 0.1],
+      axisLine: {
+        show: true,
+        lineStyle: {
+          color: '#999',
+        },
+      },
+    },
+    series: [
+      {
+        name: '实际值',
+        type: 'line',
+        data: _seasonalCoefficient.actualList,
+        itemStyle: {
+          color: '#52bfff',
+        },
+        smooth: true,
+      },
+      {
+        name: '参考值',
+        type: 'line',
+        data: _seasonalCoefficient.referenceList,
+        itemStyle: {
+          color: '#ff8fa5',
+        },
+        smooth: true,
+      },
+    ],
+  }
+
+  chartInstance1?.setOption(option1.value)
 }
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.id === currentRowId.value) {
@@ -851,6 +953,11 @@ const fetchColumn = async () => {
     }
   })
 }
+const reorderSeasonalData = (data: number[]) => {
+  if (data.length !== 12) return data
+  const currentMonthIndex = getCurrentMonthIndex()
+  return [...data.slice(currentMonthIndex), ...data.slice(0, currentMonthIndex)]
+}
 // 获取 table 数据
 const fetchData = async () => {
   listLoading.value = true
@@ -860,6 +967,7 @@ const fetchData = async () => {
   list.value = data.list
   list.value.forEach((item) => {
     processField(item, 'sku', 2)
+    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
     if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
     item.storageAge = `
@@ -901,6 +1009,24 @@ const tableRef = ref<TableInstance>()
 // const handleTableScroll = () => {
 //   saveScrollPosition()
 // }
+const chartContainer1 = ref<HTMLElement | null>(null)
+let chartInstance1: echarts.ECharts | null = null
+let chartObserver1: ResizeObserver
+
+const handleSeasonalOpened = () => {
+  nextTick(() => {
+    if (chartContainer1.value) {
+      chartInstance1 = echarts.init(chartContainer1.value)
+      chartObserver1 = new ResizeObserver(() => {
+        if (chartInstance1) {
+          chartInstance1.resize()
+        }
+      })
+      chartObserver1.observe(chartContainer1.value)
+      initChart1()
+    }
+  })
+}
 onActivated(() => {
   tableRef.value?.doLayout()
 })
