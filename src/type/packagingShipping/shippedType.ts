@@ -31,75 +31,75 @@ export interface IEncasementList {
   /**
    * 装箱日期
    */
-  createTime?: string;
+  createTime?: string
   /**
    * 描述
    */
-  description?: string;
+  description?: string
   /**
    * 明细id
    */
-  encasementDetailId?: number;
+  encasementDetailId?: number
   /**
    * 箱规号
    */
-  encasementNo?: string;
+  encasementNo?: string
   /**
    * 毛重
    */
-  grossWeight?: string;
+  grossWeight?: string
   /**
    * 高
    */
-  height?: string;
+  height?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 长
    */
-  length?: string;
+  length?: string
   /**
    * 数量
    */
-  number?: number;
+  number?: number
   /**
    * 箱数
    */
-  numberOfBoxes?: number;
+  numberOfBoxes?: number
   /**
    * 产品总数
    */
-  productTotalNumber?: number;
+  productTotalNumber?: number
   /**
    * 备注
    */
-  remarks?: string;
+  remarks?: string
   /**
    * 发货计划日期
    */
-  shipmentDate?: string;
+  shipmentDate?: string
   /**
    * 站点
    */
-  site?: string;
+  site?: string
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * 总体积
    */
-  totalVolume?: string;
+  totalVolume?: string
   /**
    * 总重量kg
    */
-  totalWeight?: string;
+  totalWeight?: string
   /**
    * 宽
    */
-  width?: string;
+  width?: string
 }
 /**
  * @description 装箱列表返回
@@ -158,38 +158,42 @@ export interface ISubmitEncasementSkuReq {
   /**
    * 装箱数
    */
-  encaseCount?: number;
+  encaseCount?: number
   /**
    * 装箱产品明细
    */
-  encasementDetailList?: EncasementDetailList[];
+  encasementDetailList?: EncasementDetailList[]
   /**
    * 装箱号
    */
-  encasementNo?: number;
+  encasementNo?: number
   /**
    * 站点
    */
-  planSite?: number;
+  planSite?: number
+  /**
+   * 是否回插 0否 1是
+   */
+  isReinsert?: number
 }
 
 export interface EncasementDetailList {
   /**
    * 数量
    */
-  count?: number;
+  count?: number
   /**
    * FNSKU
    */
-  fnSkuOrUpc?: string;
+  fnSkuOrUpc?: string
   /**
    * 产品名
    */
-  productName?: string;
+  productName?: string
   /**
    * SKU
    */
-  sku?: string;
+  sku?: string
 }
 export interface IBooleanRes {
   data: boolean
@@ -208,7 +212,7 @@ export interface IUpdateEncasementReq {
   height?: number
   site?: number
   boxNumber?: number
-  skuList?: EncasementDetailList[];
+  skuList?: EncasementDetailList[]
 }
 /**
  * @description 装箱-修改页面-新增新的明细
@@ -239,7 +243,7 @@ export interface IGetEncasementUpdateRes {
 
     height?: number
 
-    length?: number;
+    length?: number
     /**
      * sku明细列表
      */
@@ -256,23 +260,23 @@ export interface ISkuDetailList {
   /**
    * 数量
    */
-  count?: number;
+  count?: number
   /**
    * FNSKU
    */
-  fnSkuOrUpc?: string;
+  fnSkuOrUpc?: string
   /**
    * 主键
    */
-  id?: number;
+  id?: number
   /**
    * 产品名
    */
-  productName?: string;
+  productName?: string
   /**
    * SKU
    */
-  sku?: string;
+  sku?: string
 }
 
 export interface IGetEncasementInspectionReq {
@@ -327,39 +331,39 @@ export interface IConfirmEncasementShipmentsReq {
   /**
    * 货代渠道id
    */
-  channel?: number;
+  channel?: number
   /**
    * 合同号
    */
-  contractNumber?: string;
+  contractNumber?: string
   /**
    * 装箱id
    */
-  encasementIds?: string;
+  encasementIds?: string
   /**
    * 发货号
    */
-  shipmentId?: string;
+  shipmentId?: string
   /**
    * 发货的站点
    */
-  site?: number;
+  site?: number
   /**
    * 模板文件1的名称
    */
-  templateFile1Name?: string;
+  templateFile1Name?: string
   /**
    * 模板文件2的名称
    */
-  templateFile2Name?: string;
+  templateFile2Name?: string
   /**
    * 模板文件3的名称
    */
-  templateFile3Name?: string;
+  templateFile3Name?: string
   /**
    * 类型 1cm/kg 2in/ln
    */
-  type?: number;
+  type?: number
 }
 
 export interface IFileName {
@@ -390,84 +394,84 @@ export interface IGetShippedEncasementList {
   /**
    * 装箱日期
    */
-  createTime?: string;
+  createTime?: string
   /**
    * 描述
    */
-  description?: string;
+  description?: string
   /**
    * 箱规号
    */
-  encasementNo?: string;
+  encasementNo?: string
   /**
    * 装箱人员
    */
-  encasementUser?: string;
+  encasementUser?: string
   /**
    * 毛重
    */
-  grossWeight?: number;
+  grossWeight?: number
   /**
    * 高
    */
-  height?: number;
+  height?: number
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 长
    */
-  length?: number;
+  length?: number
   /**
    * 数量
    */
-  number?: number;
+  number?: number
   /**
    * 箱数
    */
-  numberOfBoxes?: number;
+  numberOfBoxes?: number
   /**
    * 计划站点名称
    */
-  planSiteName?: string;
+  planSiteName?: string
   /**
    * 发货的平台
    */
-  platform?: string;
+  platform?: string
   /**
    * 产品总数
    */
-  productTotalNumber?: number;
+  productTotalNumber?: number
   /**
    * 备注
    */
-  remarks?: string;
-  shipmentId?: string;
+  remarks?: string
+  shipmentId?: string
   /**
    * 发货计划日期
    */
-  shipmentPlanDate?: string;
+  shipmentPlanDate?: string
   /**
    * 实际站点名称
    */
-  siteName?: string;
+  siteName?: string
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * 总体积
    */
-  totalVolume?: number;
+  totalVolume?: number
   /**
    * 总重量kg
    */
-  totalWeight?: number;
+  totalWeight?: number
   /**
    * 宽
    */
-  width?: number;
+  width?: number
 }
 
 export interface IAddFreightForwarderType {
@@ -492,27 +496,27 @@ export interface IUpdateCostFreightForwarderReq {
   /**
    * 报关合并状态 0不合并 1合并
    */
-  bgStatus?: number;
+  bgStatus?: number
   /**
    * 账单费用名
    */
-  billCostName?: string;
+  billCostName?: string
   /**
    * 费用名
    */
-  costName?: string;
+  costName?: string
   /**
    * 运费核对默认状态 0不展示 1展示
    */
-  costShowStatus?: number;
+  costShowStatus?: number
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 清关合并 0不合并 1合并
    */
-  qgStatus?: number;
+  qgStatus?: number
   settlementObject?: number
   error?: number
 }
@@ -521,139 +525,139 @@ export interface IAddChannelFreightForwarderReq {
   /**
    * 渠道名
    */
-  channelName?: string;
+  channelName?: string
   /**
    * 买单每续页个数
    */
-  countBill?: number;
+  countBill?: number
   /**
    * 当前价格(体积)
    */
-  currentPriceVolume?: number;
+  currentPriceVolume?: number
   /**
    * 当前价格(重量)
    */
-  currentPriceWeight?: number;
+  currentPriceWeight?: number
   /**
    * 清关币种
    */
-  customsClearanceCurrency?: number;
+  customsClearanceCurrency?: number
   /**
    * 清关费
    */
-  customsClearanceFee?: number;
+  customsClearanceFee?: number
   /**
    * 清关免费个数
    */
-  customsClearanceFreeCount?: number;
+  customsClearanceFreeCount?: number
   /**
    * 清关每续页个数费用
    */
-  customsClearancePageCost?: number;
+  customsClearancePageCost?: number
   /**
    * 清关每续页个数
    */
-  customsClearancePageCount?: number;
+  customsClearancePageCount?: number
   /**
    * 买单报关费
    */
-  customsDeclarationFeeBill?: number;
+  customsDeclarationFeeBill?: number
   /**
    * 目的地
    */
-  destination?: string;
+  destination?: string
   /**
    * DOT申报(USD)
    */
-  dot?: number;
+  dot?: number
   /**
    * EPA申报(USD)
    */
-  epa?: number;
+  epa?: number
   /**
    * FDA申报(USD)
    */
-  fad?: number;
+  fad?: number
   /**
    * 买单免费品名个数
    */
-  freeCountBill?: number;
+  freeCountBill?: number
   /**
    * 货代类型id
    */
-  freightForwarderId?: number;
+  freightForwarderId?: number
   /**
    * 货代主键id
    */
-  id?: number;
+  id?: number
   /**
    * 是否包含关税 0不包含 1包含
    */
-  includeTariffs?: number;
+  includeTariffs?: number
   /**
    * 名义时效
    */
-  nominalLimitation?: number;
+  nominalLimitation?: number
   /**
    * 买单每续页费用
    */
-  purchaseOrderCostPerRenewal?: number;
+  purchaseOrderCostPerRenewal?: number
   /**
    * 最大单箱计费重量
    */
-  singleBoxBillingWeightMax?: number;
+  singleBoxBillingWeightMax?: number
   /**
    * 最低单箱计费重量
    */
-  singleBoxBillingWeightMin?: number;
+  singleBoxBillingWeightMin?: number
   /**
    * 状态 0正常 1归档
    */
-  status?: number;
+  status?: number
   /**
    * 单票最大运量(体积)
    */
-  takeOffQuantityMaxVolume?: number;
+  takeOffQuantityMaxVolume?: number
   /**
    * 单票最大运量(重量)
    */
-  takeOffQuantityMaxWeight?: number;
+  takeOffQuantityMaxWeight?: number
   /**
    * 起运量(体积)
    */
-  takeOffQuantityVolume?: number;
+  takeOffQuantityVolume?: number
   /**
    * 起运量(重量)
    */
-  takeOffQuantityWeight?: number;
+  takeOffQuantityWeight?: number
   /**
    * 退税每续页个数
    */
-  taxRefundCustomsCount?: number;
+  taxRefundCustomsCount?: number
   /**
    * 退税报关费
    */
-  taxRefundCustomsFee?: number;
+  taxRefundCustomsFee?: number
   /**
    * 退税免费品名个数
    */
-  taxRefundCustomsFreeCount?: number;
+  taxRefundCustomsFreeCount?: number
   /**
    * 退税每续页费用
    */
-  taxRefundPerRenewalPageFee?: number;
+  taxRefundPerRenewalPageFee?: number
   /**
    * 货代类型
    */
-  types?: string;
+  types?: string
   /**
    * 体积系数
    */
-  volumeFactor?: number;
+  volumeFactor?: number
   /**
    * 重量系数
    */
-  weightFactor?: number;
+  weightFactor?: number
 }
 
 export interface IUpdateSafeDaysFreightForwarder {
@@ -673,35 +677,35 @@ export interface IGetForwarderCostList {
   /**
    * 合并报关状态 1勾选
    */
-  bgStatus: number;
+  bgStatus: number
   /**
    * 账单费用名
    */
-  billCostName: string;
+  billCostName: string
   /**
    * 费用名
    */
-  costName: string;
+  costName: string
   /**
    * 运费核对默认状态 0不展示 1展示
    */
-  costShowStatus: number;
+  costShowStatus: number
   /**
    * 主键id
    */
-  id: number;
+  id: number
   /**
    * 清关合并 0不合并 1合并
    */
-  qgStatus: number;
+  qgStatus: number
   /**
    * 是否可以删除 0不可以 1可以
    */
-  status: number;
+  status: number
   /**
    * 货代类型id
    */
-  typeId: number;
+  typeId: number
   settlementObject: number
 }
 
@@ -722,43 +726,43 @@ export interface IGetForwarderList {
   /**
    * 渠道名
    */
-  channelName?: string;
+  channelName?: string
   /**
    * 累计次数
    */
-  cumulativeCount?: number;
+  cumulativeCount?: number
   /**
    * 目的地
    */
-  destination?: string;
+  destination?: string
   /**
    * 主键id
    */
-  id?: number;
+  id?: number
   /**
    * 货代简称
    */
-  name?: string;
+  name?: string
   /**
    * 名义时效
    */
-  nominalLimitation?: number;
+  nominalLimitation?: number
   /**
    * 当前价格
    */
-  price?: string;
+  price?: string
   /**
    * 安全天数
    */
-  safeDays?: number;
+  safeDays?: number
   /**
    * 近10次时效
    */
-  tenCountTime?: number;
+  tenCountTime?: number
   /**
    * 货代类型
    */
-  types?: string;
+  types?: string
   fullName?: string
 }
 
@@ -772,7 +776,7 @@ export interface IGetShipmentArrivedListReq {
 
 export interface IGetShipmentArrivedListRes {
   data?: {
-    list?:  IGetShipmentArrivedList[]
+    list?: IGetShipmentArrivedList[]
     total?: number
   }
 }
@@ -838,7 +842,7 @@ export interface IGetShipmentArrivedList {
    * 站点
    */
   site?: string
-  /** 
+  /**
    * sku
    */
   sku?: string
@@ -858,7 +862,7 @@ export interface IGetShipmentArrivedList {
 export interface IUpdateLostGoodsStatus {
   id: number
   // 丢货状态 0没丢货 1丢货
-  status: number 
+  status: number
 }
 
 export interface IGetShipmentFbaListReq {
@@ -988,74 +992,74 @@ export interface IGetShipmentFbaDetailList {
   /**
    * 已接收天数
    */
-  acceptDays?: number;
+  acceptDays?: number
   /**
    * 实际数量
    */
-  actualCount?: number;
+  actualCount?: number
   /**
    * sku的描述
    */
-  description?: string;
+  description?: string
   /**
    * 缺数
    */
-  lackCount?: number;
+  lackCount?: number
   /**
    * po号
    */
-  po?: string;
+  po?: string
   /**
    * 已接收数
    */
-  receiptsCount?: number;
+  receiptsCount?: number
   /**
    * sku发货总数
    */
-  shipmentTotalCount?: number;
+  shipmentTotalCount?: number
   /**
    * sku
    */
-  sku?: string;
+  sku?: string
   /**
    * sku图片地址
    */
-  skuImgUrl?: string;
+  skuImgUrl?: string
 }
 
 export interface IFilterShipmentFbaList {
   /**
    * 上架日期结束
    */
-  arrivalDateEnd?: string;
+  arrivalDateEnd?: string
   /**
    * 上架日期开始
    */
-  arrivalDateStart?: string;
+  arrivalDateStart?: string
   /**
    * 缺数结束
    */
-  lackCountEnd?: number;
+  lackCountEnd?: number
   /**
    * 缺数开始
    */
-  lackCountStart?: number;
+  lackCountStart?: number
   /**
    * 当前页 默认1
    */
-  pageNo?: number;
+  pageNo?: number
   /**
    * 每页大小 默认20
    */
-  pageSize?: number;
+  pageSize?: number
   /**
    * 发货日期结束
    */
-  shipmentDateEnd?: string;
+  shipmentDateEnd?: string
   /**
    * 发货日期开始
    */
-  shipmentDateStart?: string;
+  shipmentDateStart?: string
 }
 
 /**

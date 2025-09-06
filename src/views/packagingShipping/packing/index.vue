@@ -248,6 +248,7 @@
     <!-- 装箱 -->
     <vab-packing-dialog
       :encasement-no="encasementNo"
+      :is-reinsert="isReinsert"
       :packing-visible="packingVisible"
       :site="passSite"
       @update:finish="handleFinish"
@@ -1070,17 +1071,27 @@ const closeModify = (value: boolean) => {
   modifyVisible.value = value
   fetchData()
 }
-
+// 是回插还是递增
+const isReinsert = ref<boolean>(false)
 // 展示箱号
 const showBoxNumber = async () => {
-  const { data } = await getIncrementBoxNo()
-  if (data) {
-    boxNumberForm.boxNumber = data
-    boxNumberVisible.value = true
+  if (isReinsert.value) {
+    const { data } = await getReinsertionBoxNo()
+    if (data) {
+      boxNumberForm.boxNumber = data
+      boxNumberVisible.value = true
+    }
+  } else {
+    const { data } = await getIncrementBoxNo()
+    if (data) {
+      boxNumberForm.boxNumber = data
+      boxNumberVisible.value = true
+    }
   }
 }
 // 点击递增
 const increaseBoxNumber = async () => {
+  isReinsert.value = false
   const { data } = await getIncrementBoxNo()
   if (data) {
     boxNumberForm.boxNumber = data
@@ -1089,6 +1100,7 @@ const increaseBoxNumber = async () => {
 }
 // 点击回插
 const reinsertBoxNumber = async () => {
+  isReinsert.value = true
   const { data } = await getReinsertionBoxNo()
   if (data) {
     boxNumberForm.boxNumber = data

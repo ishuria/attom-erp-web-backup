@@ -118,6 +118,7 @@ let props = defineProps<{
   packingVisible: boolean
   site: number | undefined
   encasementNo: number
+  isReinsert: boolean
 }>()
 const dflag = ref<boolean>(false)
 const upcOrFnSku = ref<string>('FNSKU')
@@ -263,6 +264,7 @@ const saveAndPrint = async () => {
         encasementNo: props.encasementNo,
         planSite: props.site,
         encasementDetailList: packingStore.packingData,
+        isReinsert: props.isReinsert === true ? 1 : 0,
       })
       if (data) {
         const req = `${getCurrentFormatDate()}-${props.encasementNo}-${confirmForm.encaseCount}`
@@ -288,6 +290,7 @@ const save = async () => {
         encasementNo: props.encasementNo,
         planSite: props.site,
         encasementDetailList: packingStore.packingData,
+        isReinsert: props.isReinsert === true ? 1 : 0,
       })
       if (data) {
         $baseMessage('保存成功', 'success')
