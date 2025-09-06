@@ -139,7 +139,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { getSkuVariantList, reviewStepNo2Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { getSkuVariantList, reviewStepNo2Fail, reviewStepNo2Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStep2Item, IReviewStep2Req } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -285,7 +285,6 @@ const handleSaveAndContinue = async () => {
       router.push({
         path: '/newProductDevelopment/newProductApprovalAndRecords',
       })
-      // 审核通过后需要将第一步的可填项标灰
     }
   })
 }
@@ -293,11 +292,14 @@ const handleSaveAndContinue = async () => {
 const goBackToStep1 = () => {
   $baseConfirm('确定要点击审核不通过吗？', null, async () => {
     // 发送链接不通过
-    // 跳回主界面
-    await delVisitedRoute(handleActivePath(route, true))
-    router.push({
-      path: '/newProductDevelopment/newProductApprovalAndRecords',
-    })
+    const { data } = await reviewStepNo2Fail({ reviewId: Number(props.reviewId) })
+    if (data === true) {
+      $baseMessage('审核不通过提交成功', 'success', 'hey')
+      await delVisitedRoute(handleActivePath(route, true))
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
+      })
+    }
   })
 }
 const { initData, columns } = useTableDataLineToColumn()

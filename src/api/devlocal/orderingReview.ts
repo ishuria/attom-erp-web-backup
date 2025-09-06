@@ -95,6 +95,18 @@ export function reviewStepNo2Pass(data?: IReviewStep2Req): Promise<IReviewStepRe
     data,
   })
 }
+/**
+ * 新品订货审批-SKU创建审批不通过
+ * @param params
+ * @returns
+ */
+export function reviewStepNo2Fail(params: { reviewId: number }): Promise<IReviewStepResp> {
+  return request({
+    url: `${BASE_API}/review/stepNo2/failed`,
+    method: 'post',
+    params,
+  })
+}
 
 // 新品订货审批-运营分货查询接口
 export function getDistributionList(params?: IReviewCommonReq): Promise<IReviewCommonResp> {
@@ -160,6 +172,18 @@ export function reviewProductList(params?: IReviewCommonReq): Promise<IReviewCom
   })
 }
 
+/**
+ * 新品订货审批-运营重新分货
+ * @param params
+ * @returns
+ */
+export function reviewStepNo4Fail(params: { reviewId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/stepNo4/failed`,
+    method: 'post',
+    params,
+  })
+}
 // 新品订货审批-发布PO
 export function releasePo(params?: IReviewCommonReq): Promise<IReviewStepResp> {
   return request({

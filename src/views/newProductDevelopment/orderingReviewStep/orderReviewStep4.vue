@@ -58,6 +58,9 @@
       <vab-site-quantity-table :edit-disabled="editDisabled" :list="siteQuantityList" :step="4" />
     </div>
     <div class="pay-button-group">
+      <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="danger" @click="handleGoback">
+        运营重新分货
+      </el-button>
       <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">
         归档新品进度管理并发布采购计划
       </el-button>
@@ -68,7 +71,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { releasePo, reviewProductList, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { releasePo, reviewProductList, reviewStepNo4Fail, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem } from '/@/type/review/review'
@@ -165,6 +168,19 @@ const labelMap: Record<string, string> = {
 //   }
 // }
 
+// 当点击运营重新分货的时候
+const handleGoback = async () => {
+  $baseConfirm('确定要点击运营重新分货吗？', null, async () => {
+    const { data } = await reviewStepNo4Fail({ reviewId: Number(props.reviewId) })
+    if (data === true) {
+      $baseMessage('回退到运营分货成功', 'success', 'hey')
+      await delVisitedRoute(handleActivePath(route, true))
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
+      })
+    }
+  })
+}
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {
   const deleteVNode = h('div', {}, [
