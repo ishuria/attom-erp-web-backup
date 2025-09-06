@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import {
   IAssessAdjustRes,
   IGetFrontPageAssessmentDataRes,
@@ -205,6 +206,16 @@ export function getFrontPageHistoryMonthList(): Promise<{ data: string[] }> {
 export function getFrontPageAdjustDetailMonth(): Promise<{ data: string[] }> {
   return request({
     url: `${BASE_API}/front_page/adjust/detail/month`,
+    method: 'get',
+  })
+}
+/**
+ * 首页-TOP30新品销售额排行
+ * @returns
+ */
+export function getFrontPageTop30ProductSale(): Promise<{ data: IGetOperationAmazonSKUList[] }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/top30/list`,
     method: 'get',
   })
 }

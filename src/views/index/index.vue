@@ -186,6 +186,15 @@
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
       <!-- 第五层 -->
+      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <top30-product-sale-table :list="top30ProductSaleList">
+          <!-- <template #select>
+            <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
+              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template> -->
+        </top30-product-sale-table>
+      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -205,6 +214,7 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
+import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import {
@@ -220,6 +230,7 @@ import {
   getFrontPageRankNewProductCommission,
   getFrontPageRankNewProductOneYearCommission,
   getFrontPageRankOverAchieved,
+  getFrontPageTop30ProductSale,
   getMonthlyAssessmentMinus,
   getMonthlyAssessmentPlus,
   getMonthlyProductProfit,
@@ -559,6 +570,11 @@ const fetchRankAssessmentFinish = async () => {
   const { data } = await getFrontPageRankAssessmentFinish({ month: selectFinishMonth.value! })
   rank4List.value = data
 }
+const top30ProductSaleList = ref<IGetOperationAmazonSKUList[]>([])
+const fetchTop30ProductSale = async () => {
+  const { data } = await getFrontPageTop30ProductSale()
+  top30ProductSaleList.value = data
+}
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -581,6 +597,7 @@ onBeforeMount(async () => {
     await fetchRankAssessmentFinish()
     await fetchRankNewProductCommission()
   }
+  fetchTop30ProductSale()
   // if (ableProductManagerViewCard) {
 
   // }
@@ -621,6 +638,7 @@ onBeforeMount(async () => {
         }
       }
     }
+    margin-bottom: 20px;
   }
 }
 </style>

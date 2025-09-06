@@ -343,7 +343,7 @@ export interface IGetOperationTypeListReq {
 }
 export interface IGetOperationTypeListRes {
   data: {
-    list: { id: number, typeName: string }[]
+    list: { id: number; typeName: string }[]
     total: number
   }
 }
@@ -696,8 +696,8 @@ export interface IGetOperationAsinList {
    */
   yearTacos?: number
   /**
- * 库龄181-270数量
- */
+   * 库龄181-270数量
+   */
   inventoryAgeLevel1Days?: number
 
   /**
@@ -728,13 +728,11 @@ export interface IGetOperationAsinList {
 }
 
 export interface IGetOperationParentAsinRes {
-
   data: {
     list: IGetOperationParentAsinList[]
     total: number
   }
 }
-
 
 export interface IGetOperationParentAsinList {
   /**
@@ -912,7 +910,6 @@ export interface IGetOperationArtListReq {
 }
 
 export interface IGetOperationArtListRes {
-
   data: {
     list: IGetOperationArtList[]
     total: number
@@ -1246,7 +1243,7 @@ export interface IHideOrShowOperationColumnReq {
 export interface IUpdateSortOperationColumnReq {
   userId: number
   columnId: number
-  sort: number 
+  sort: number
 }
 /**
  * 产品表现-运营备注修改
@@ -1300,19 +1297,16 @@ export interface IGetOperationAmazonSkuVocListRes {
 }
 
 export interface IFilterWalmartListReq {
-
   /**
    * 开发人员 全部：-1
    */
   developUserId?: number
- 
 
   /**
    * 关键词
    */
   keyword?: string
- 
-  
+
   /**
    * 月销售额大
    */
@@ -1365,5 +1359,5 @@ export interface IFilterWalmartListReq {
    * 当前售价最大值
    */
   sellPriceMax?: number
-  [property: string]: any;
+  [property: string]: any
 }
