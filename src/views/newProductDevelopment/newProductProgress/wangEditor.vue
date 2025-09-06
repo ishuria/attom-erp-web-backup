@@ -207,6 +207,12 @@ onBeforeUnmount(() => {
   clearTimer()
   const editor = editorRef.value
   if (editor) editor.destroy()
+  // 只有在对话框打开状态下才清理localStorage缓存
+  // 这样可以避免路由切换时误清理缓存
+  if (dflag.value) {
+    const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
+    removeLocalStorage(key)
+  }
 })
 onUnmounted(() => {
   clearTimer()

@@ -374,6 +374,7 @@
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -816,10 +817,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
-
+const detailId = ref<number>(-1)
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property == 'purchaseMatters') {
     clickRow.value = row
+    detailId.value = row.componentId
     const { data } = await getPoPurchaseMatters({ id: row.componentId })
     progressLogCopy.value = data
     row.purchaseMatters = data

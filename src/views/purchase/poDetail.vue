@@ -1626,6 +1626,7 @@
     <wang-editor
       :classify="classify"
       :content="editorContent"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickEditorCancel"
@@ -2511,11 +2512,13 @@ const clickEditorCancel = (val: any) => {
  */
 const clickRow = ref<any>()
 let copyRow: any
+const detailId = ref<number>(-1)
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   switch (column.property) {
     case 'purchaseMatters': {
       // 查询零件采购注意事项
       clickRow.value = row
+      detailId.value = row.id
       const { data } = await getPoPurchaseMatters({ id: row.id })
       editorContent.value = data
       row.purchaseMatters = data
@@ -2569,18 +2572,21 @@ const changeCreateInput = async (row: any, column: any, cell: HTMLTableCellEleme
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
     clickRow.value = row
+    detailId.value = row.id
     editorContent.value = row.purchaseMatters
     wangEditorTitle.value = '零件采购注意事项'
     classify.value = 'purchaseMatters'
     wangEditorVisible.value = true
   } else if (column.property == 'contractTerms') {
     clickRow.value = row
+    detailId.value = row.id
     editorContent.value = row.contractTerms
     wangEditorTitle.value = '合同条款'
     classify.value = 'contractTerms'
     wangEditorVisible.value = true
   } else if (column.property == 'componentSuitDetail') {
     clickRow.value = row
+    detailId.value = row.id
     editorContent.value = row.componentSuitDetail
     wangEditorTitle.value = '零件明细'
     classify.value = 'componentSuitDetail'

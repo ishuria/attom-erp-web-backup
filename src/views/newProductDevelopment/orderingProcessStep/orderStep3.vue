@@ -300,6 +300,7 @@
       <wang-editor
         :classify="classify"
         :content="editorContent"
+        :progress-id="detailId"
         :title="wangEditorTitle"
         :wang-editor-visible="wangEditorVisible"
         @click-boolean="clickEditorCancel"
@@ -1104,7 +1105,7 @@ const handleComponentCopy = (row: IreviewStepNo3ComponentList) => {
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>()
-
+const detailId = ref<number>(-1)
 let _row: any
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   const { property } = column
@@ -1115,6 +1116,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       const { data } = await reviewStepNo3PurchaseMatters({ reviewComponentId: row.reviewComponentId })
       editorContent.value = data
       row.purchaseMatters = data
+      detailId.value = row.reviewComponentId!
       wangEditorTitle.value = '零件采购注意事项'
       classify.value = 'purchaseMatters'
       wangEditorVisible.value = true
@@ -1126,6 +1128,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       const { data } = await reviewStepNo3ContractTerms({ reviewComponentId: row.reviewComponentId })
       editorContent.value = data
       row.contractTerms = data
+      detailId.value = row.reviewComponentId!
       wangEditorTitle.value = '合同条款'
       classify.value = 'contractTerms'
       wangEditorVisible.value = true
@@ -1138,6 +1141,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
       editorContent.value = data
       row.componentSuitDetail = data
       wangEditorTitle.value = '零件明细'
+      detailId.value = row.reviewComponentId!
       classify.value = 'componentSuitDetail'
       wangEditorVisible.value = true
 

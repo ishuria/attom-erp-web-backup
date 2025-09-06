@@ -423,6 +423,7 @@
     <wang-editor
       :classify="classify"
       :content="progressLog"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickLogBool"
@@ -920,12 +921,14 @@ const copyComponentInfo = async (row: IProgressProdcutComponent) => {
 }
 
 // 零件清单table单击修改
+const detailId = ref<number>(-1)
 const componentTableInputChange = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '备注') {
     rowCopy = row
     title.value = '修改备注'
     remarkVisible.value = true
     remark.value = row.remarks
+    detailId.value = row.componentId!
     return
   }
   // // 不能被修改cell的下标

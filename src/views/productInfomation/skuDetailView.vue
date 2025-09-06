@@ -459,6 +459,7 @@
     <wang-editor
       :classify="classify"
       :content="editorContent"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorVisible"
       @click-boolean="clickEditorCancel"
@@ -1597,6 +1598,7 @@ const handleDel = async (row: any, index: number) => {
  */
 const clickRow = ref<any>()
 let copyRow: any
+const detailId = ref<number>(-1)
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   // 解构 row 和 column 属性，便于后续使用
   const { purchaseMatters, contractTerms, componentSuitDetail } = row
@@ -1604,6 +1606,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
   // 根据 column 的属性执行不同的逻辑
   switch (property) {
     case 'purchaseMatters': {
+      detailId.value = row.id
       clickRow.value = row
       editorContent.value = purchaseMatters
       wangEditorTitle.value = '零件采购注意事项'
@@ -1613,6 +1616,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     }
     case 'contractTerms': {
       clickRow.value = row
+      detailId.value = row.id
       editorContent.value = contractTerms
       wangEditorTitle.value = '合同条款'
       classify.value = 'contractTerms'

@@ -443,6 +443,7 @@
     <wang-editor
       :classify="classify"
       :content="progressLogCopy"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="clickLogBool"
@@ -1123,10 +1124,12 @@ const cellStyle4 = (data: { row: any; column: any; rowIndex: number; columnIndex
  * 当点击时切换输入框，修改输入
  */
 const clickRow = ref<any>() // 当点击零件采购注意事项时候的行
+const detailId = ref<number>(-1)
 const changeInput = async (row: any, column: any) => {
   if (column.property === 'log') {
     clickRow.value = row
     const { data } = await getSignLog({ signId: row.signId })
+    detailId.value = row.signId
     progressLogCopy.value = data
     row.log = data
     wangEditorTitle.value = '编辑跟单日志'

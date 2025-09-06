@@ -809,6 +809,7 @@
     <wang-editor
       :classify="classify"
       :content="LogCopy"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorLogVisible"
       @click-boolean="cancelEditorLog"
@@ -1113,6 +1114,7 @@ const imagePreviewClose = () => {
 //   }
 // }
 const clickRow = ref<any>()
+const detailId = ref<number>(-1)
 const contactedInputChange = async (row: any, column: any) => {
   if (column.property === 'salesLog') {
     clickRow.value = row
@@ -1120,6 +1122,7 @@ const contactedInputChange = async (row: any, column: any) => {
     LogCopy.value = row.salesLog
     row.salesLog = data
     wangEditorTitle.value = '编辑售后日志'
+    detailId.value = row.id
     classify.value = 'salesLog'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }

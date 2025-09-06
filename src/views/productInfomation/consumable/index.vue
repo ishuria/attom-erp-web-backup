@@ -234,6 +234,7 @@
     <wang-editor
       :classify="classify"
       :content="attentionCopy"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorAttentionVisible"
       @click-boolean="clickAttentionCancel"
@@ -242,6 +243,7 @@
     <wang-editor
       :classify="classify"
       :content="contractCopy"
+      :progress-id="detailId"
       :title="wangEditorTitle"
       :wang-editor-visible="wangEditorContractVisible"
       @click-boolean="clickContractCancel"
@@ -702,6 +704,7 @@ const handleRemove = async (row: any) => {
  */
 let copyRow: any
 const clickRow = ref<any>()
+const detailId = ref<number>(-1)
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property == 'purchaseMatters') {
     // 查询零件采购注意事项
@@ -710,6 +713,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     attentionCopy.value = row.purchaseMatters
     // row.purchaseMatters = data
     wangEditorTitle.value = '零件采购注意事项'
+    detailId.value = row.id
     classify.value = 'purchaseMatters'
     wangEditorAttentionVisible.value = !wangEditorAttentionVisible.value
   } else if (column.property == 'contractTerms') {
@@ -718,6 +722,7 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     contractCopy.value = row.contractTerms
     // row.contractTerms = data
     wangEditorTitle.value = '合同条款'
+    detailId.value = row.id
     classify.value = 'contractTerms'
     wangEditorContractVisible.value = !wangEditorContractVisible.value
   }

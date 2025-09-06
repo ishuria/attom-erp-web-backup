@@ -1,31 +1,37 @@
 <template>
   <!-- 拿样清单成本试算 -->
-  <el-row style="flex-grow: 1; padding-top: 25px;">
+  <el-row style="flex-grow: 1; padding-top: 25px">
     <!-- <el-col :span="1" class="sample">
         <div><strong>拿样清单成本试算</strong></div>
     </el-col> -->
     <el-col :span="24">
-      <el-table 
+      <el-table
         ref="trialTableRef"
         border
-        :cell-style="cellStyle" :data="sampleList"
-        :header-cell-style="{ 'text-align': 'center' }" :span-method="objectSpanMethod"
+        :cell-style="cellStyle"
+        :data="sampleList"
+        :header-cell-style="{ 'text-align': 'center' }"
+        :span-method="objectSpanMethod"
         stripe
         @cell-click="sampelTrialTableInputChage"
       >
         <el-table-column prop="firstColumn" width="125">
-          <span style="font-size: var(--el-font-size-base); font-weight: 600; color: var(--el-table-header-text-color);">产品实际<br>利润核算</span>
+          <span style="font-size: var(--el-font-size-base); font-weight: 600; color: var(--el-table-header-text-color)">
+            产品实际
+            <br />
+            利润核算
+          </span>
         </el-table-column>
         <el-table-column label="站点" prop="site" width="180">
           <template #default="{ row }">
-            <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%;" @change="handleUpdateChannel(row)">
-              <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id"/>
+            <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%" @change="handleUpdateChannel(row)">
+              <el-option v-for="dict in props.siteList" :key="dict.id" :label="dict.label" :value="dict.id" />
             </el-select>
           </template>
         </el-table-column>
 
-        <el-table-column label="外汇币种" prop="currencyType" width="95"/>
-        <el-table-column label="汇率" prop="foreignExchange" width="80"/>
+        <el-table-column label="外汇币种" prop="currencyType" width="95" />
+        <el-table-column label="汇率" prop="foreignExchange" width="80" />
 
         <el-table-column label="产品描述" prop="desc" width="200">
           <template #default="{ row, $index }">
@@ -105,7 +111,13 @@
         </el-table-column>
         <el-table-column label="头程渠道" prop="firstMileChannel" width="160">
           <template #default="{ row }">
-            <el-select v-model="row.firstMileChannel" filterable placeholder="请选择头程渠道" style="min-width: 100%" @change="handleUpdateChannel(row)">
+            <el-select
+              v-model="row.firstMileChannel"
+              filterable
+              placeholder="请选择头程渠道"
+              style="min-width: 100%"
+              @change="handleUpdateChannel(row)"
+            >
               <el-option v-for="dict in props.channelList" :key="dict.id" :label="dict.label" :value="dict.id" />
             </el-select>
           </template>
@@ -113,7 +125,11 @@
         <el-table-column label="售价" prop="sellingPrice" width="80">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.sellingPrice" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+              <el-input
+                v-model="row.sellingPrice"
+                @blur="clickSaleCancel($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
+              />
             </div>
             <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
@@ -124,7 +140,9 @@
             <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
-            <el-text v-if="row.grossMarginRate < 20" type="danger">{{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}</el-text>
+            <el-text v-if="row.grossMarginRate < 20" type="danger">
+              {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
+            </el-text>
           </template>
         </el-table-column>
 
@@ -137,7 +155,11 @@
         <el-table-column label="重量系数" prop="weightCoefficient" width="100">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.weightCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+              <el-input
+                v-model="row.weightCoefficient"
+                @blur="clickCancel($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
+              />
             </div>
             <span>{{ row.weightCoefficient }}</span>
           </template>
@@ -146,7 +168,11 @@
         <el-table-column label="体积系数" prop="volumeCoefficient" width="100">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.volumeCoefficient" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
+              <el-input
+                v-model="row.volumeCoefficient"
+                @blur="clickCancel($event, row)"
+                @keydown.enter="effectiveCountInputHandle($event)"
+              />
             </div>
             <span>{{ row.volumeCoefficient }}</span>
           </template>
@@ -163,7 +189,7 @@
 
         <el-table-column label="关税" prop="tariffPrice" width="80">
           <template #default="{ row }">
-            <span>{{ row.tariffPrice != null && row.tariffPrice != '' ? '￥' + row.tariffPrice: '' }}</span>
+            <span>{{ row.tariffPrice != null && row.tariffPrice != '' ? '￥' + row.tariffPrice : '' }}</span>
           </template>
         </el-table-column>
 
@@ -182,8 +208,8 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="{ row }">
             <el-space :size="15">
-              <el-link type="primary" underline='never' @click="handleCalculate(row)">逆算</el-link>
-              <el-link type="success" underline='never'  @click="saveTrialCalculationHandler(row)">保存</el-link>
+              <el-link type="primary" underline="never" @click="handleCalculate(row)">逆算</el-link>
+              <el-link type="success" underline="never" @click="saveTrialCalculationHandler(row)">保存</el-link>
             </el-space>
           </template>
         </el-table-column>
@@ -191,13 +217,14 @@
     </el-col>
   </el-row>
   <!-- 产品描述显示 -->
-  <wang-editor 
-    :classify='classify' 
-    :content="progressLogCopy" 
+  <wang-editor
+    :classify="classify"
+    :content="progressLogCopy"
+    :progress-id="detailId"
     :title="wangEditorTitle"
-    :wang-editor-visible="wangEditorLogVisible" 
-    @click-boolean="clickLogBool" 
-    @click-child="clickLog" 
+    :wang-editor-visible="wangEditorLogVisible"
+    @click-boolean="clickLogBool"
+    @click-child="clickLog"
   />
 </template>
 
@@ -206,7 +233,15 @@ import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import wangEditor from '../newProductProgress/wangEditor.vue'
-import { addTrialCalculation, getTrialCalculation, getTrialCalculationProductDesc, reverseCalculateProgressSample, saveTrialCalculation, updateTrialCalculation, updateTrialcalculationProductdesc } from '/@/api/devlocal/progressSample'
+import {
+  addTrialCalculation,
+  getTrialCalculation,
+  getTrialCalculationProductDesc,
+  reverseCalculateProgressSample,
+  saveTrialCalculation,
+  updateTrialCalculation,
+  updateTrialcalculationProductdesc,
+} from '/@/api/devlocal/progressSample'
 import type { IProgressEstimatedCostAccounting, IProgressSample } from '/@/type/progress/sampleAndComponentType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -217,12 +252,12 @@ const trialTableRef = ref<TableInstance>()
 
 const props = defineProps<{
   progressId: string
-  siteList: { id: number, label: string }[]
-  channelList: { id: number, label: string }[]
+  siteList: { id: number; label: string }[]
+  channelList: { id: number; label: string }[]
   costScroll: (() => void) | undefined
   costAccountingData: IProgressEstimatedCostAccounting[] | undefined
   costAccountingFetch: (() => Promise<void>) | undefined
-}>();
+}>()
 
 // 弹出框的标题
 const wangEditorTitle = ref<string>('')
@@ -235,7 +270,7 @@ const classify = ref<string>('')
 const _index = ref<number>(0)
 
 const isValueAllInput = (row: IProgressSample) => {
-  if (row.site == null) { 
+  if (row.site == null) {
     $baseMessage('站点不能为空，请选择后再进行逆算！', 'warning')
     return false
   } else if (row.length == null) {
@@ -289,36 +324,32 @@ const clickLog = async (val: any) => {
   progressLogCopy.value = val
   await updateTrialcalculationProductdesc({
     id: Number(sampleList.value[_index.value].id!),
-    productDesc: sampleList.value[_index.value].desc!
-  }) 
+    productDesc: sampleList.value[_index.value].desc!,
+  })
 }
 
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
-const clickLogBool = ( val: any) => {
+const clickLogBool = (val: any) => {
   wangEditorLogVisible.value = val
 }
 
 defineComponent({
-  name: "VabTrialCalculation"
+  name: 'VabTrialCalculation',
 })
 
 // 列表col合并方法
-const objectSpanMethod = ({
-  column,
-  rowIndex,
-}: any) => {
-  
+const objectSpanMethod = ({ column, rowIndex }: any) => {
   // 表头合并
   if (column.property === 'firstColumn') {
     if (rowIndex === 0) {
-      return { rowspan: 2, colspan: 1 }; // 合并表头与第一行数据
+      return { rowspan: 2, colspan: 1 } // 合并表头与第一行数据
     } else if (rowIndex === 1) {
-      return { rowspan: 0, colspan: 0 }; // 隐藏第二行的单元格
+      return { rowspan: 0, colspan: 0 } // 隐藏第二行的单元格
     }
   }
-  return { rowspan: 1, colspan: 1 }; // 其他列正常显示
+  return { rowspan: 1, colspan: 1 } // 其他列正常显示
 }
 
 // 拿样清单列表
@@ -326,7 +357,12 @@ const sampleList = ref<IProgressSample[]>([])
 
 // 修改站点和渠道
 const handleUpdateChannel = async (row: any) => {
-  await updateTrialCalculation({ ...row, tariff: `${Number(row.tariff!) / 100}`, grossMarginRate: `${Number(row.grossMarginRate) / 100}`, roi: `${Number(row.roi) / 100}` })
+  await updateTrialCalculation({
+    ...row,
+    tariff: `${Number(row.tariff!) / 100}`,
+    grossMarginRate: `${Number(row.grossMarginRate) / 100}`,
+    roi: `${Number(row.roi) / 100}`,
+  })
   fetchData()
 }
 // 鼠标enter事件
@@ -335,13 +371,13 @@ const effectiveCountInputHandle = (event: Event) => {
   targetElement.blur()
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (['外汇币种', '汇率', '实际总成本￥', '头程￥', '毛利率', 'ROI', '平台佣金', '仓储费2个月'].includes(label)) {
     return {
       color: '#999',
       cursor: 'not-allowed',
-      textAlign:'center'
+      textAlign: 'center',
     }
   } else if (label === '产品描述') {
     return {
@@ -357,68 +393,68 @@ const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex:
 }
 
 // 保存拿样清单成本试算
-const saveTrialCalculationHandler = async (row:IProgressSample) => {
+const saveTrialCalculationHandler = async (row: IProgressSample) => {
   const { data } = await saveTrialCalculation({ progressId: Number(props.progressId), id: row.id! })
-  if (data === true){
-    $baseMessage("拿样清单成本试算添加到成本核算成功！", "success", "hey")
-      // 获取最新添加的元素
-      const newInfo: IProgressSample = await getTrialCalculationHandler()
-      let newValue: IProgressEstimatedCostAccounting = {
-        createTime:formatDate(),
-        id:newInfo.id!,
-        site:Number(newInfo.site),
-        currencyType:newInfo.currencyType,
-        foreignExchange:newInfo.foreignExchange,
-        desc:newInfo.desc,
-        length:newInfo.length,
-        width:newInfo.width,
-        height:newInfo.height,
-        weight:newInfo.weight,
-        lastMile:newInfo.lastMile,
-        firstMile:newInfo.firstMile,
-        packaging:newInfo.packaging,
-        firstMileChannel:newInfo.firstMileChannel,
-        sellingPrice:newInfo.sellingPrice,
-        grossMarginRate:newInfo.grossMarginRate,
-        roi:newInfo.roi,
-        weightCoefficient:newInfo.weightCoefficient,
-        volumeCoefficient:newInfo.volumeCoefficient,
-        tariff:newInfo.tariff,
-        platformCommission:newInfo.platformCommission,
-        storageFee:newInfo.storageFee
+  if (data === true) {
+    $baseMessage('拿样清单成本试算添加到成本核算成功！', 'success', 'hey')
+    // 获取最新添加的元素
+    const newInfo: IProgressSample = await getTrialCalculationHandler()
+    let newValue: IProgressEstimatedCostAccounting = {
+      createTime: formatDate(),
+      id: newInfo.id!,
+      site: Number(newInfo.site),
+      currencyType: newInfo.currencyType,
+      foreignExchange: newInfo.foreignExchange,
+      desc: newInfo.desc,
+      length: newInfo.length,
+      width: newInfo.width,
+      height: newInfo.height,
+      weight: newInfo.weight,
+      lastMile: newInfo.lastMile,
+      firstMile: newInfo.firstMile,
+      packaging: newInfo.packaging,
+      firstMileChannel: newInfo.firstMileChannel,
+      sellingPrice: newInfo.sellingPrice,
+      grossMarginRate: newInfo.grossMarginRate,
+      roi: newInfo.roi,
+      weightCoefficient: newInfo.weightCoefficient,
+      volumeCoefficient: newInfo.volumeCoefficient,
+      tariff: newInfo.tariff,
+      platformCommission: newInfo.platformCommission,
+      storageFee: newInfo.storageFee,
     }
-    
-    if (newInfo.totalCost){
+
+    if (newInfo.totalCost) {
       newValue.price = convertString(newInfo.totalCost!)
     }
 
-     
     props.costAccountingData?.push(newValue)
 
     // 重新加载成本核算
     props.costAccountingFetch?.()
-    // 自动滚动到新增加行位置    
-    props.costScroll?.()        
+    // 自动滚动到新增加行位置
+    props.costScroll?.()
   }
 }
 
 // 添加拿样清单成本试算
 const addTrialCalculationHandler = async (): Promise<number> => {
-  const { data } = await addTrialCalculation({ progressId:props.progressId })
+  const { data } = await addTrialCalculation({ progressId: props.progressId })
   return data
 }
 
-
 // 获取拿样清单成本试算
 const getTrialCalculationHandler = async (): Promise<IProgressSample> => {
-  const { data } = await getTrialCalculation({ progressId:props.progressId })
+  const { data } = await getTrialCalculation({ progressId: props.progressId })
   return data
 }
 
 let copyRow: any
 // 拿样清单成本试算修改
+const detailId = ref<number>(-1)
 const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.property === 'desc') {
+    detailId.value = row.id
     const { data } = await getTrialCalculationProductDesc({ id: row.id })
     row.desc = data
     progressLogCopy.value = data
@@ -426,109 +462,118 @@ const sampelTrialTableInputChage = async (row: any, column: any, cell: HTMLTable
     classify.value = 'desc'
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   }
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  copyRow = JSON.parse(JSON.stringify(row));
+  copyRow = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 
 // 输入input blur事件
-const clickCancel = async (event:any,value:IProgressSample) =>{  
-  const rootElement = getRootElement(event.srcElement, ".cell");
+const clickCancel = async (event: any, value: IProgressSample) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
   }
-  await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  await updateTrialCalculation({
+    ...value,
+    tariff: `${Number(value.tariff) / 100}`,
+    grossMarginRate: `${Number(value.grossMarginRate!) / 100}`,
+    roi: `${Number(value.roi) / 100}`,
+  })
   await fetchData()
 }
 
 // 修改售价 重新刷新
-const clickSaleCancel = async (event:any,value:IProgressSample) =>{  
-  const rootElement = getRootElement(event.srcElement, ".cell");
+const clickSaleCancel = async (event: any, value: IProgressSample) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
-    const t1 = rootElement.children[0];
-    const t2 = rootElement.children[1];
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none");
-    if (t2) t2.classList.remove("none");
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
   }
-  await updateTrialCalculation({ ...value, tariff: `${Number(value.tariff!) / 100}`, grossMarginRate: `${Number(value.grossMarginRate!) / 100}`, roi: `${Number(value.roi) / 100}` })
+  await updateTrialCalculation({
+    ...value,
+    tariff: `${Number(value.tariff!) / 100}`,
+    grossMarginRate: `${Number(value.grossMarginRate!) / 100}`,
+    roi: `${Number(value.roi) / 100}`,
+  })
   await fetchData()
 }
 const fetchData = async () => {
   sampleList.value = []
 
   let first: IProgressSample = {
-    site:"0",
-    currencyType:"0",
-    foreignExchange:'',
-    desc:'',
-    length:'',
-    width:'',
-    height:'',
+    site: '0',
+    currencyType: '0',
+    foreignExchange: '',
+    desc: '',
+    length: '',
+    width: '',
+    height: '',
     totalCost: null,
-    weight:'',
-    lastMile:'',
-    firstMile:'',
-    packaging:'',
-    firstMileChannel:'0',
-    sellingPrice:'',
-    roi:'',
-    weightCoefficient:'',
-    volumeCoefficient:'',
-    tariff:'',
-    platformCommission:'',
-    storageFee:'',
+    weight: '',
+    lastMile: '',
+    firstMile: '',
+    packaging: '',
+    firstMileChannel: '0',
+    sellingPrice: '',
+    roi: '',
+    weightCoefficient: '',
+    volumeCoefficient: '',
+    tariff: '',
+    platformCommission: '',
+    storageFee: '',
   }
 
-    // const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
-    // const {data} = await getExchangeRate({currency:currencyType})
-    // first.foreignExchange = data
+  // const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
+  // const {data} = await getExchangeRate({currency:currencyType})
+  // first.foreignExchange = data
 
   const dbInfo: IProgressSample = await getTrialCalculationHandler()
-  if (dbInfo){
+  if (dbInfo) {
     first.id = dbInfo.id!
     sampleList.value.push(dbInfo)
-  } else{
+  } else {
     // 创建拿样清单成本试算
     const id = await addTrialCalculationHandler()
     // -1 代表对应的拿样清单成本试算已经存在
-    if (id !== -1){
+    if (id !== -1) {
       first.id = convertString(id)
     }
     sampleList.value.push(first)
   }
 }
 defineExpose({
-  fetchData
+  fetchData,
 })
-onMounted(async ()=>{
+onMounted(async () => {
   fetchData()
 })
-
 </script>
 
 <style lang="scss" scoped>
