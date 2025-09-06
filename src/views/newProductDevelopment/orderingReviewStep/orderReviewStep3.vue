@@ -98,6 +98,7 @@
       <h3>不分货则填0，不能留空</h3>
     </vab-alert>
     <div class="pay-button-group">
+      <el-button :disabled="editDisabled" type="danger" @click="goBackToStep2">不通过</el-button>
       <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">提交</el-button>
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
@@ -105,7 +106,13 @@
 </template>
 
 <script lang="ts" setup>
-import { getDistributionList, reviewStepNo3Save, reviewStepSubmittedStatus, updateReviewStepNo3Vine } from '/@/api/devlocal/orderingReview'
+import {
+  getDistributionList,
+  reviewStepNo3Fail,
+  reviewStepNo3Save,
+  reviewStepSubmittedStatus,
+  updateReviewStepNo3Vine,
+} from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IUpdateReviewStepNo3Vine } from '/@/type/review/review'
@@ -255,6 +262,18 @@ const validate = (): boolean => {
   }
   // 所有数据都检查完毕，都符合要求（要么都填了，要么都没填）
   return true
+}
+const goBackToStep2 = async () => {
+  $baseConfirm('确定要点击不通过吗？', null, async () => {
+    const { data } = await reviewStepNo3Fail({ reviewId: Number(props.reviewId) })
+    if (data === true) {
+      $baseMessage('运营分货不通过成功', 'success', 'hey')
+      await delVisitedRoute(handleActivePath(route, true))
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
+      })
+    }
+  })
 }
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {

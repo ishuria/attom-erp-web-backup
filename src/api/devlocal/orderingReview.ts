@@ -146,6 +146,19 @@ export function updateReviewStepNo3Vine(data?: IUpdateReviewStepNo3Vine): Promis
   })
 }
 
+/**
+ * 新品订货审批-运营分货不通过
+ * @param params
+ * @returns
+ */
+export function reviewStepNo3Fail(params: { reviewId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/stepNo3/failed`,
+    method: 'post',
+    params,
+  })
+}
+
 // 新品订货审批-运营分货提交
 export function reviewStepNo3Save(params?: IReviewCommonReq): Promise<IReviewStepResp> {
   return request({
