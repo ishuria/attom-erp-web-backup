@@ -1,8 +1,12 @@
 <template>
-  <!-- 考核数设定 -->
+  <div>
+    <!-- 考核数设定 -->
     <vab-dialog v-model="visible" :draggable="false" title="历史考核记录" top="10vh">
       <vab-query-form>
-        <vab-query-form-right-panel :span="24">
+        <vab-query-form-left-panel>
+          <el-button type="primary" @click="adjustDetailVisible = true">调整明细</el-button>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
             <el-form-item>
               <el-input
@@ -22,8 +26,8 @@
       <el-table
         v-loading="loading"
         border
-        :data="list"
         :cell-style="{ textAlign: 'center' }"
+        :data="list"
         :header-cell-style="{ textAlign: 'center' }"
         max-height="700"
         stripe
@@ -47,13 +51,16 @@
         @size-change="$emit('size-change', $event)"
       />
     </vab-dialog>
+    <!-- 调整明细 -->
+    <adjust-detail-dialog v-model="adjustDetailVisible" :edit-disabled="true" />
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 
 defineOptions({
-  name: 'HistoryAssessmentRecords'
+  name: 'HistoryAssessmentRecords',
 })
 
 const props = defineProps<{
@@ -70,6 +77,7 @@ const visible = computed({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
+const adjustDetailVisible = ref<boolean>(false)
 </script>

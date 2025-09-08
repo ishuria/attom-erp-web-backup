@@ -541,7 +541,7 @@
       />
     </vab-dialog>
     <!-- 调整明细-->
-    <adjust-detail-dialog v-model="adjustDetailVisible" @query-data="fetchAssessmentData" />
+    <adjust-detail-dialog v-model="adjustDetailVisible" :edit-disabled="false" @query-data="fetchAssessmentData" />
     <!-- 对应月份 对应人员调整明细 -->
     <vab-dialog v-model="viewDetailVisible" title="调整明细">
       <el-table border :cell-style="{ textAlign: 'center' }" :data="detailList" :header-cell-style="{ textAlign: 'center' }" stripe>

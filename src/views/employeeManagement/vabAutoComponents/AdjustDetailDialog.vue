@@ -1,9 +1,9 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="调整明细" top="5%" width="45%">
+    <vab-dialog v-model="visible" title="调整明细" top="5%" width="55%">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-button type="primary" @click="showAdd">新增</el-button>
+          <el-button v-if="!editDisabled" type="primary" @click="showAdd">新增</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
@@ -40,6 +40,24 @@
             {{ row.type === 0 ? '考核数' : '完成数' }}
           </template>
         </el-table-column>
+        <el-table-column
+          column-key="detailType"
+          :filter-method="filterDetailHandler"
+          :filters="[
+            { text: '产品利润分', value: '0' },
+            { text: '其他计分项', value: '1' },
+            { text: '考核数加回', value: '2' },
+          ]"
+          label="细分类型"
+          prop="detailType"
+          width="105"
+        >
+          <template #default="{ row }">
+            <span v-show="row.detailType === 0">产品利润分</span>
+            <span v-show="row.detailType === 1">其他计分项</span>
+            <span v-show="row.detailType === 2">考核数加回</span>
+          </template>
+        </el-table-column>
         <el-table-column label="调整数量" prop="adjustQuantity" width="100" />
         <el-table-column label="OEM" width="100">
           <template #default="{ row }">
@@ -48,9 +66,9 @@
         </el-table-column>
         <el-table-column label="父体" prop="parent" width="100" />
         <el-table-column label="备注" prop="remark" />
-        <el-table-column label="来源" prop="source" />
+        <el-table-column label="来源" prop="source" width="125" />
         <el-table-column label="创建时间" prop="createTime" width="130" />
-        <el-table-column label="操作" width="100">
+        <el-table-column v-if="!editDisabled" label="操作" width="100">
           <template #default="{ row }">
             <el-link type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
           </template>
@@ -81,6 +99,11 @@
         <el-form-item label="类型" prop="type">
           <el-select v-model="addForm.type" placeholder="请选择类型">
             <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="细分类型" prop="detailType">
+          <el-select v-model="addForm.detailType" placeholder="请选择类型">
+            <el-option v-for="item in detailTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="调整数量" prop="adjustQuantity">
@@ -116,6 +139,7 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: boolean
+  editDisabled: boolean
 }>()
 const emit = defineEmits(['update:modelValue', 'query-data'])
 const visible = computed({
@@ -132,7 +156,8 @@ watch(
     if (val) {
       fetchData()
     }
-  }
+  },
+  { immediate: true }
 )
 const addFormRef = ref<FormInstance>()
 const addVisible = ref<boolean>(false)
@@ -144,16 +169,23 @@ const addForm = reactive({
   oem: 0,
   parent: '',
   remark: '',
+  detailType: 0,
 })
 const addRules = reactive<any>({
   month: [{ required: true, message: '请选择月份', trigger: 'change' }],
   userId: [{ required: true, message: '请选择被调整人', trigger: 'change' }],
   type: [{ required: true, message: '请选择类型', trigger: 'change' }],
+  detailType: [{ required: true, message: '请选择细分类型', trigger: 'change' }],
   adjustQuantity: [{ required: true, message: '请输入调整数量', trigger: 'blur' }],
 })
 const typeOption = [
   { label: '考核数', value: 0 },
   { label: '完成数', value: 1 },
+]
+const detailTypeOption = [
+  { label: '产品利润分', value: 0 },
+  { label: '其他计分项', value: 1 },
+  { label: '考核数加回', value: 2 },
 ]
 const queryForm = reactive<IGetAdjustDetailReq>({
   keyWord: '',
@@ -166,6 +198,10 @@ const list = ref<IGetAdjustDetail[]>([])
 const productManagerList = ref<{ id: number; label: string }[]>([])
 
 const filterHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
+  const property = column['property']
+  return row[property] === Number(value)
+}
+const filterDetailHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
   const property = column['property']
   return row[property] === Number(value)
 }
@@ -193,14 +229,17 @@ const fetchData = async () => {
   listLoading.value = false
 }
 const queryData = async () => {
+  console.log('查询数据')
   queryForm.pageNo = 1
   fetchData()
 }
 const handleCurrentChange = (val: number) => {
+  console.log('页码变化:', val)
   queryForm.pageNo = val
   fetchData()
 }
 const handleSizeChange = (val: number) => {
+  console.log('每页条数变化:', val)
   queryForm.pageNo = 1
   queryForm.pageSize = val
   fetchData()
@@ -216,6 +255,7 @@ const submitAddForm = async () => {
         oem: addForm.oem,
         parent: addForm.parent,
         remark: addForm.remark,
+        detailType: addForm.detailType,
       })
       if (data) {
         $baseMessage('新增成功！', 'success')

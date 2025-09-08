@@ -254,6 +254,7 @@ export interface IAddAdjustDetailReq {
   parent?: string
   source?: string
   remark?: string
+  detailType: number
 }
 export interface IGetAdjustDetailReq {
   keyWord: string

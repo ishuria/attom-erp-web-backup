@@ -120,7 +120,7 @@
         </monthly-product-profit-table>
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
-        <monthly-assessment-table :list="listSub" title="考核数减免">
+        <monthly-assessment-table :list="listSub" title="其他计分项">
           <template #select>
             <el-select v-model="selectAssessmentMinusMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyMinusAssessment">
               <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
@@ -186,7 +186,7 @@
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
       <!-- 第五层 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
+      <el-col v-if="ableViewTop30ProductSaleCard" :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList">
           <!-- <template #select>
             <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
@@ -290,6 +290,11 @@ const commissionRole = [
   ROLE_PURCHASER_CODE,
   ROLE_PURCHASINGASSISTANT_CODE,
 ]
+const ableViewTop30ProductSaleCard =
+  currentRoleCode === ROLE_BOSS_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+  currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE
 const ableViewCommissionCard = commissionRole.includes(currentRoleCode)
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE
 const type = ref<number>(0)
@@ -608,10 +613,9 @@ onBeforeMount(async () => {
     await fetchRankAssessmentFinish()
     await fetchRankNewProductCommission()
   }
-  fetchTop30ProductSale()
-  // if (ableProductManagerViewCard) {
-
-  // }
+  if (ableViewTop30ProductSaleCard) {
+    fetchTop30ProductSale()
+  }
   if (ableBossViewCard) {
     fetchInventoryProductsTotalValue()
   }

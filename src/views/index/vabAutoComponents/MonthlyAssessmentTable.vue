@@ -30,7 +30,7 @@ const props = defineProps<{
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '总调整' || data.column.label === '调整数') {
-    if (props.title === '考核数减免') {
+    if (props.title === '其他计分项') {
       return {
         color: 'var(--el-color-success)',
         textAlign: 'center',

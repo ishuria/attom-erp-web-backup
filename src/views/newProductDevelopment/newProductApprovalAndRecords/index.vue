@@ -181,6 +181,9 @@
                     <el-dropdown-item @click="handleGetScoreById(row.reviewMainId)">
                       <el-link type="primary" underline="never">分数明细</el-link>
                     </el-dropdown-item>
+                    <el-dropdown-item @click="handleArchived(row.reviewMainId)">
+                      <el-link type="primary" underline="never">归档</el-link>
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -578,6 +581,12 @@ const generateStatus = (value: number) => {
       return { text: '未知', color: 'status-editing' }
     }
   }
+}
+const handleArchived = (reviewMainId: number) => {
+  // const { data } = await updateReviewArchived({ reviewMainId })
+  // if (data === true) {
+  //   $baseMessage('此条新品进度信息已归档成功!', 'success', 'hey')
+  // }
 }
 
 const fetchData = async () => {
