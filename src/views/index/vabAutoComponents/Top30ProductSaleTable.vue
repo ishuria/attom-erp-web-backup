@@ -24,23 +24,28 @@
         <template #default="{ row }">
           {{ row.sku }}
           <br />
-          {{ row.productDesc }}
+          <div class="product-desc-container">
+            <span class="product-desc">{{ row.productDesc }}</span>
+            <span class="flag-container" :class="{ 'japan-flag': row.flag === 'JP' }">
+              <country-flag :country="row.flag" />
+            </span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="ASIN" min-width="110" prop="asin">
         <template #default="{ row }">
-          <el-link :href="row.amazonUrl" target="_blank">{{ row.asin }}</el-link>
+          <el-link class="always-underline" :href="row.amazonUrl" target="_blank" type="primary" :underline="false">{{ row.asin }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="销售额" min-width="90" prop="currentSalesPrice">
-        <template #default="{ row }">${{ row.currentSalesPrice }}</template>
+      <el-table-column label="近30天销售额" min-width="110" prop="monthOrderSales">
+        <template #default="{ row }">${{ row.monthOrderSales }}</template>
       </el-table-column>
-      <el-table-column label="销量" min-width="90" prop="currentSalesNumber" />
-      <el-table-column label="上新天数" min-width="100" prop="newArrivalDay">
+      <el-table-column label="近30天销量" min-width="100" prop="monthOrderVolume" />
+      <el-table-column label="上新天数" min-width="95" prop="newArrivalDay">
         <template #default="{ row }">{{ row.newArrivalDay }}天</template>
       </el-table-column>
-      <el-table-column label="产品经理" min-width="100" prop="productManager" />
-      <el-table-column label="产品设计" min-width="100" prop="productDesign" />
+      <el-table-column label="产品经理" min-width="95" prop="productManager" />
+      <el-table-column label="产品设计" min-width="95" prop="productDesign" />
     </el-table>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
   </vab-card>
@@ -48,8 +53,9 @@
 
 <script lang="ts" setup>
 import { CSSProperties } from 'vue'
-import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import CountryFlag from 'vue-country-flag-next'
+import { IGetOperationAmazonSKUList } from '/@/type/storeOperation/productPerformanceType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Top30ProductSaleTable',
@@ -79,6 +85,10 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   if (data.column.label === 'SKU') {
     return {
       textAlign: 'left',
+    }
+  } else if (data.column.label === '近30天销售额') {
+    return {
+      textAlign: 'right',
     }
   }
   return {
@@ -126,5 +136,34 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 .top30ProductSaleTable :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+
+/* 确保链接下划线一直显示 */
+.always-underline {
+  text-decoration: underline !important;
+}
+
+.always-underline:hover {
+  text-decoration: underline !important;
+}
+// 产品描述和国旗容器样式
+.product-desc-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flag-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: -4px;
+}
+
+// 日本国旗样式增加边框
+.japan-flag {
+  :deep(.flag) {
+    border: 1px solid #ddd;
+  }
 }
 </style>

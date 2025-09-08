@@ -186,7 +186,7 @@
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
       <!-- 第五层 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList">
           <!-- <template #select>
             <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
@@ -195,7 +195,7 @@
           </template> -->
         </top30-product-sale-table>
       </el-col>
-      <el-col v-if="ableBossViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
       </el-col>
     </el-row>
