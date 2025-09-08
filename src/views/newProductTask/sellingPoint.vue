@@ -323,8 +323,13 @@ onBeforeMount(async () => {
     sku.value = querySku
     const savedForm = localStorage.getItem(`${sku.value}_sellingPointForm`)
     if (savedForm) {
+      // 没缓存 get数据
+      const { data } = await getArtDesignSellingPoint({
+        sku: sku.value,
+      })
       Object.assign(form, JSON.parse(savedForm))
-      _id.value = form.id!
+      _id.value = data.id
+      form.id = data.id
     } else {
       // 没缓存 get数据
       const { data } = await getArtDesignSellingPoint({
