@@ -9,6 +9,7 @@ import {
   IGetFrontPageBonusRes,
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageHistoryAssessmentRecordsRes,
+  IGetFrontPageInventoryProductsTotalValue,
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPagePerformanceHistoryReq,
@@ -217,5 +218,25 @@ export function getFrontPageTop30ProductSale(): Promise<{ data: IGetOperationAma
   return request({
     url: `${BASE_API}/operation/amazon/sku/top30/list`,
     method: 'get',
+  })
+}
+/**
+ * 首页-库存货值统计
+ * @returns
+ */
+export function getFrontPageInventoryProductsTotalValue(): Promise<{ data: IGetFrontPageInventoryProductsTotalValue[] }> {
+  return request({
+    url: `${BASE_API}/front_page/inventory_value/get`,
+    method: 'get',
+  })
+}
+/**
+ * 首页-库存货值统计-更新
+ * @returns
+ */
+export function updateFrontPageInventoryProductsTotalValue(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/front_page/inventory_value/update`,
+    method: 'post',
   })
 }

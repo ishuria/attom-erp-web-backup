@@ -195,9 +195,9 @@
           </template> -->
         </top30-product-sale-table>
       </el-col>
-      <!-- <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <inventory-products-total-value />
-      </el-col> -->
+      <el-col v-if="ableBossViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
+      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -226,6 +226,7 @@ import {
   getFrontPageBonus,
   getFrontPageHistoryAssessmentRecords,
   getFrontPageHistoryMonthList,
+  getFrontPageInventoryProductsTotalValue,
   getFrontPagePerformanceHistory,
   getFrontPageProductManagerSelectOption,
   getFrontPageProgressProjects,
@@ -256,6 +257,7 @@ import { useUserStore } from '/@/store/modules/user'
 import {
   IGetFrontPageHistoryAssessmentRecordsItem,
   IGetFrontPageHistoryAssessmentRecordsReq,
+  IGetFrontPageInventoryProductsTotalValue,
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPageProductProfitRes,
@@ -289,6 +291,7 @@ const commissionRole = [
   ROLE_PURCHASINGASSISTANT_CODE,
 ]
 const ableViewCommissionCard = commissionRole.includes(currentRoleCode)
+const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -578,6 +581,11 @@ const fetchTop30ProductSale = async () => {
   const { data } = await getFrontPageTop30ProductSale()
   top30ProductSaleList.value = data
 }
+const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalValue[]>([])
+const fetchInventoryProductsTotalValue = async () => {
+  const { data } = await getFrontPageInventoryProductsTotalValue()
+  inventoryProductsTotalValueList.value = data
+}
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -604,6 +612,9 @@ onBeforeMount(async () => {
   // if (ableProductManagerViewCard) {
 
   // }
+  if (ableBossViewCard) {
+    fetchInventoryProductsTotalValue()
+  }
 })
 </script>
 

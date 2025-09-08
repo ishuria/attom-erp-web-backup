@@ -17,41 +17,41 @@ export interface IGetFrontPageAssessmentDataRes {
 }
 export interface IGetFrontPageAssessmentData {
   /**
-     * 总考核数
-     */
-  assessmentNumber: number;
+   * 总考核数
+   */
+  assessmentNumber: number
   /**
    * 总考核完成数
    */
-  assessmentNumberFinish: number;
+  assessmentNumberFinish: number
   /**
    * OEM考核数
    */
-  oem: number;
+  oem: number
   /**
    * OEM完成数
    */
-  oemFinish: number;
+  oemFinish: number
 
   /**
    * 较上月考核完成数
    */
-  assessmentFinishMonthDiff: number;
+  assessmentFinishMonthDiff: number
 
   /**
    * 较去年考核完成数
    */
-  assessmentFinishYearDiff: number;
+  assessmentFinishYearDiff: number
 
   /**
    * 较上月OEM
    */
-  oemFinishMonthDiff: number;
+  oemFinishMonthDiff: number
 
   /**
    * 较去年OEM
    */
-  oemFinishYearDiff: number;
+  oemFinishYearDiff: number
 
   assessmentFinishPercent: number
   oemFinishPercent: number
@@ -78,30 +78,30 @@ export interface IGetFrontPageHistoryAssessmentRecordsItem {
   oem: number
 }
 export interface IGetFrontPageBonusRes {
-   /**
-     * 当月总提成
-     */
-    currentMonthBonus: number;
+  /**
+   * 当月总提成
+   */
+  currentMonthBonus: number
 
-    /**
-     * 较上月
-     */
-    bonusMonthDiff: number;
+  /**
+   * 较上月
+   */
+  bonusMonthDiff: number
 
-    /**
-     * 较去年同月
-     */
-    bonusYearMonthDiff: number;
+  /**
+   * 较去年同月
+   */
+  bonusYearMonthDiff: number
 
-    /**
-     * 按类型 饼图列表
-     */
-    commissionTypePieList: IPieItem[];
+  /**
+   * 按类型 饼图列表
+   */
+  commissionTypePieList: IPieItem[]
 
-    /**
-     * 按站点 饼图列表
-     */
-    commissionSitePieList: IPieItem[];
+  /**
+   * 按站点 饼图列表
+   */
+  commissionSitePieList: IPieItem[]
 }
 export interface IPieItem {
   name: string
@@ -150,4 +150,10 @@ export interface IGetFrontPageMonthlyAssessment {
   number: number
   totalNumber: number
   remark: string
+}
+
+export interface IGetFrontPageInventoryProductsTotalValue {
+  date: string
+  totalValue: number
+  unpaidGoods: number
 }

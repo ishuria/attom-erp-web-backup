@@ -103,6 +103,12 @@
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -309,6 +315,12 @@
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
           <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -540,6 +552,12 @@
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -751,6 +769,12 @@
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
@@ -966,6 +990,12 @@
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -1178,6 +1208,12 @@
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -1381,6 +1417,12 @@
           <el-table-column label="需拍照" width="90">
             <template #default="{ row }">
               <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
+          <el-table-column label="带磁" min-width="70" prop="magnetic">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
