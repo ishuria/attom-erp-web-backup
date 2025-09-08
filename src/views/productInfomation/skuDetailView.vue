@@ -682,7 +682,15 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { ROLE_BOSS_CODE, ROLE_LOGISTISCSPECIALIST_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '~/src/const/role'
+import {
+  ROLE_BOSS_CODE,
+  ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_LOGISTISCSPECIALIST_CODE,
+  ROLE_PRODUCTMANAGER_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE,
+  ROLE_PURCHASER_CODE,
+  ROLE_PURCHASINGASSISTANT_CODE,
+} from '~/src/const/role'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
   addProductComponentOtherSku,
@@ -733,7 +741,10 @@ const ableToView = computed(() => {
     currentRoleCode === ROLE_LOGISTISCSPECIALIST_CODE ||
     currentRoleCode === ROLE_BOSS_CODE ||
     currentRoleCode === ROLE_PURCHASER_CODE ||
-    currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE
+    currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
+    currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+    currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+    currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE
   )
 })
 const updateVisible = ref<boolean>(false)
