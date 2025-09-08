@@ -202,6 +202,7 @@ const form = reactive<IGetSellingPoint>({
   title2: '',
   linkKeywordsTs: '',
   sellingPointContentTs: '',
+  id: null,
 })
 
 const formRules1 = reactive<FormRules>({
@@ -220,7 +221,7 @@ const formRef1 = ref<FormInstance>()
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<{ value: string; label: string }[]>([]) //搜索选项
 const skuList = ref<{ value: string; label: string }[]>([]) //搜索列表
-const _id = ref<number>(0)
+const _id = ref<number | null>(null)
 const handleConfirmSelectedSKU = async () => {
   const { data } = await confirmOtherSkuArtDesignSellingPoint({
     sku: selectedSKUForm.sku,
@@ -228,7 +229,7 @@ const handleConfirmSelectedSKU = async () => {
   if (data) {
     $baseMessage('导入成功！', 'success')
     Object.assign(form, data)
-    form.id = _id.value
+    form.id = _id.value!
 
     setLocalStorageData()
     selectSKUVisible.value = false
@@ -252,6 +253,8 @@ const handleConfirmSave = async () => {
           $baseMessage('保存成功！', 'success')
           localStorage.removeItem(`${sku.value}_sellingPointForm`)
           goBack()
+        } else {
+          $baseMessage('保存失败！', 'error')
         }
       } else {
         const { summary, ...filteredForm } = form
@@ -264,6 +267,8 @@ const handleConfirmSave = async () => {
           $baseMessage('保存成功！', 'success')
           localStorage.removeItem(`${sku.value}_sellingPointForm`)
           goBack()
+        } else {
+          $baseMessage('保存失败！', 'error')
         }
       }
     }

@@ -195,6 +195,9 @@
           </template> -->
         </top30-product-sale-table>
       </el-col>
+      <!-- <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <inventory-products-total-value />
+      </el-col> -->
     </el-row>
 
     <history-assessment-records

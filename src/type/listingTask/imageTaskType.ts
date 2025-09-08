@@ -162,7 +162,7 @@ export interface IGetSellingPoint {
   /**
    * 主键id
    */
-  id?: number
+  id: number | null
   /**
    * 链接关键词
    */
@@ -259,6 +259,7 @@ export interface IConfirmOtherSkuArtDesignSellingPoint {
    * 产品使用场景
    */
   usageScenario?: string
+  id: number | null
 }
 export interface IGetCopywritingRes {
   data: IGetCopywriting
