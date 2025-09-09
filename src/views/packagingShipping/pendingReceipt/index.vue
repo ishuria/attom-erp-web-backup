@@ -1079,10 +1079,14 @@ const handleTabClick = async (tab: TabsPaneContext) => {
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 9 && data.columnIndex !== 13 && data.columnIndex !== 15) {
+  const label = data.column.label
+  if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
     return {
-      textAlign: 'center',
+      textAlign: 'left',
     }
+  }
+  return {
+    textAlign: 'center',
   }
 }
 const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -1224,7 +1228,7 @@ const fetchData = async () => {
   listLoading.value = false
 }
 const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 4 || data.columnIndex === 12) {
+  if (data.column.label === '零件图片' || data.column.label === 'SKU图片') {
     return 'clear-padding'
   }
   return ''

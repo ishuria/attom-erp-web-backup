@@ -162,7 +162,7 @@
         </performance-history>
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank :list="rank1List" :my-name="myName" name="超额完成数" title="超额完成排行">
+        <rank :list="rank1List" :my-name="myName" name="超额完成数" :show-medal="true" title="超额完成排行">
           <template #select>
             <el-select v-model="selectAchievedMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankOverAchieved">
               <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
@@ -501,6 +501,7 @@ const rank2List = ref<IRankItem[]>([])
 const rank3List = ref<IRankItem[]>([])
 const rank4List = ref<IRankItem[]>([])
 const rank5List = ref<IRankItem[]>([])
+const rank1FinishList = ref<IRankItem[]>([])
 
 const fetchRankNewProductOneYearCommission = async () => {
   const { data } = await getFrontPageRankNewProductOneYearCommission()

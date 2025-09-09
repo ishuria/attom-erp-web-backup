@@ -125,6 +125,7 @@ export interface IGetFrontPagePerformanceHistory {
 export interface IRankItem {
   name: string
   value: number
+  assessmentNumberFinish?: number
 }
 
 export interface IAssessAdjustRes {

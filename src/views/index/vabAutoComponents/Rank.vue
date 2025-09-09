@@ -19,6 +19,7 @@ const props = defineProps<{
   list: IRankItem[]
   name: string
   myName: string
+  showMedal?: boolean // 是否显示奖牌图标
 }>()
 
 const option = reactive<any>({
@@ -56,6 +57,22 @@ const option = reactive<any>({
         show: false,
       },
       data: [],
+      axisLabel: {
+        formatter: (value: string, index: number) => {
+          return value
+        },
+        rich: {
+          medal: {
+            fontSize: 18,
+            color: '#FFD700',
+            padding: [-5, 5, 0, 0],
+          },
+          name: {
+            fontSize: 12,
+            color: '#333',
+          },
+        },
+      },
     },
   ],
   series: [
@@ -85,6 +102,29 @@ watch(
   (newVal) => {
     option.yAxis[0].data = newVal.map((item: IRankItem) => item.name)
     option.series[0].data = newVal.map((item: IRankItem) => item.value)
+
+    // 更新奖牌显示
+    if (props.showMedal) {
+      option.yAxis[0].axisLabel.formatter = (value: string, index: number) => {
+        const totalCount = newVal.length
+
+        if (
+          index >= totalCount - 3 &&
+          newVal[index].value >= 3 &&
+          newVal[index].assessmentNumberFinish &&
+          newVal[index].assessmentNumberFinish >= 5
+        ) {
+          const medalIcons = ['🥉', '🥈', '🥇'] // 倒序：铜牌、银牌、金牌
+          const medalIndex = index - (totalCount - 3)
+          return `{medal|${medalIcons[medalIndex]}} {name|${value}}`
+        }
+        return value
+      }
+    } else {
+      option.yAxis[0].axisLabel.formatter = (value: string, index: number) => {
+        return value
+      }
+    }
   }
 )
 </script>
