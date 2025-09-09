@@ -2636,7 +2636,10 @@ const lackCount = computed<number>({
     let good = Number(packingCountForm.goodCount)
     let bad = Number(packingCountForm.badCount)
     let taskCount = Number(packingCountForm.packageTaskCount)
-    return taskCount - good - bad
+    if (good <= taskCount) {
+      return taskCount - good - bad
+    }
+    return 0
   },
   set() {},
 })

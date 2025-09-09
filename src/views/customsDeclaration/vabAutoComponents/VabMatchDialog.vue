@@ -1,8 +1,16 @@
 <template>
   <div>
     <vab-dialog
-      v-model="dflag" class="dialog" :class="{ fullscreenDialog: isFullscreen, normalDialog: !isFullscreen }" :draggable="false" 
-      :fullscreen="isFullscreen" title="匹配" top="5vh" :width="isFullscreen ? '100%' : 'fit-content'" @close="handleCloseCheck">
+      v-model="dflag"
+      class="dialog"
+      :class="{ fullscreenDialog: isFullscreen, normalDialog: !isFullscreen }"
+      :draggable="false"
+      :fullscreen="isFullscreen"
+      title="匹配"
+      top="5vh"
+      :width="isFullscreen ? '100%' : 'fit-content'"
+      @close="handleCloseCheck"
+    >
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button v-if="!disabled3" :disabled="disabled1 || (!disabled1 && !disabled2)" type="primary" @click="handleStartMatch">
@@ -40,9 +48,9 @@
         @row-click="handleRowClick"
       >
         <el-table-column label="SKU">
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)" >
+          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)">
             <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)" >
+              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
@@ -50,9 +58,9 @@
           </el-table-column>
           <el-table-column label="装箱总数" prop="encasementCount" width="95" />
           <el-table-column label="站点" prop="site" width="140" />
-          <el-table-column label="匹配的PO" prop="po" width="115" >
+          <el-table-column label="匹配的PO" prop="po" width="115">
             <template #default="{ row }">
-              <span class="copySku"  @click="handleClipboard($event, row.po)" >
+              <span class="copySku" @click="handleClipboard($event, row.po)">
                 {{ row.po }}
                 <vab-icon v-if="row.po" icon="file-copy-2-fill" />
               </span>
@@ -74,7 +82,7 @@
           <el-table-column label="有已发未报" prop="flag" width="110">
             <template #default="{ row }">
               <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
-              <el-checkbox v-model="row.flag" disabled  />
+              <el-checkbox v-model="row.flag" disabled />
             </template>
           </el-table-column>
           <el-table-column label="有HS" width="70">
@@ -85,19 +93,26 @@
           </el-table-column>
           <el-table-column label="零件操作" width="95">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="showModifyHS(row)" :disabled="!row.poComponentId || row.customsDeclarationStatus === 1" >修改HS</el-link>
+              <el-link
+                :disabled="!row.poComponentId || row.customsDeclarationStatus === 1"
+                type="primary"
+                underline="never"
+                @click="showModifyHS(row)"
+              >
+                修改HS
+              </el-link>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column v-if="!disabled3 && !disabled1 && !disabled2" fixed="right" label="操作" width="150">
           <template #default="{ row }">
-            <el-link v-if="row.delStatus === 0" type="primary" underline='never' @click="handleShowMatch2(row)">匹配</el-link>
-            <el-link v-if="row.delStatus === 0" type="danger" underline='never' @click="handleCheckClear(row)">清空</el-link>
-            <el-link v-if="row.delStatus === 1" type="danger" underline='never' @click="handleDelCheckMatch(row)">删除</el-link>
+            <el-link v-if="row.delStatus === 0" type="primary" underline="never" @click="handleShowMatch2(row)">匹配</el-link>
+            <el-link v-if="row.delStatus === 0" type="danger" underline="never" @click="handleCheckClear(row)">清空</el-link>
+            <el-link v-if="row.delStatus === 1" type="danger" underline="never" @click="handleDelCheckMatch(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
-          <el-empty class="vab-data-empty"/>
+          <el-empty class="vab-data-empty" />
         </template>
       </el-table>
       <!-- <vab-pagination
@@ -123,7 +138,7 @@
         </div>
       </template>
     </vab-dialog>
-    <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" title="匹配" top="7vh" width="fit-content" :draggable="false">
+    <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" :draggable="false" title="匹配" top="7vh" width="fit-content">
       <div style="width: fit-content; margin: 0 auto">
         <vab-query-form>
           <vab-query-form-left-panel>
@@ -140,13 +155,18 @@
           <vab-query-form-right-panel>
             <el-form inline>
               <el-form-item>
-                <el-input v-model.trim="keyWord" clearable placeholder="请输入搜索关键词" @keydown.enter="fetchMatchData" @input="fetchMatchData" />
+                <el-input
+                  v-model.trim="keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="fetchMatchData"
+                  @keydown.enter="fetchMatchData"
+                />
               </el-form-item>
               <el-form-item>
-                <el-button :loading="match2ListLoading" :icon="Search" type="primary" @click="fetchMatchData" />
+                <el-button :icon="Search" :loading="match2ListLoading" type="primary" @click="fetchMatchData" />
               </el-form-item>
             </el-form>
-
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
@@ -164,9 +184,13 @@
           <el-table-column label="SKU">
             <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
             <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
-            <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')"/>
-            <el-table-column label="打包任务数" prop="packageTaskCount" :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"/>
-            <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')"/>
+            <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')" />
+            <el-table-column
+              label="打包任务数"
+              prop="packageTaskCount"
+              :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"
+            />
+            <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')" />
             <el-table-column label="SKU实际数量" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
               <template #default="{ row }">
                 <el-input
@@ -183,8 +207,16 @@
           </el-table-column>
           <el-table-column label="零件">
             <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-            <el-table-column label="实际数量" prop="componentActualCount" :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"/>
-            <el-table-column label="退税报关数量" prop="customsDeclarationCount" :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')">
+            <el-table-column
+              label="实际数量"
+              prop="componentActualCount"
+              :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"
+            />
+            <el-table-column
+              label="退税报关数量"
+              prop="customsDeclarationCount"
+              :width="flexColumnWidth(matchList, '退税报关数量', 'customsDeclarationCount')"
+            >
               <template #default="{ row }">
                 <el-input
                   v-model="row.customsDeclarationCount"
@@ -197,22 +229,26 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')"/>
-            <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')"/>
-            <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')"/>
-            <el-table-column label="不报关" prop="customsDeclarationStatus" :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')">
+            <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')" />
+            <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')" />
+            <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')" />
+            <el-table-column
+              label="不报关"
+              prop="customsDeclarationStatus"
+              :width="flexColumnWidth(matchList, '不报关', 'customsDeclarationStatus')"
+            >
               <template #default="{ row }">
                 <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
               </template>
             </el-table-column>
-            <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')"/>
-            <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')"/>
+            <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')" />
+            <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')" />
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="230">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="handleShowPackingCount(row)">修正质检</el-link>
-              <el-link type="primary" underline='never' @click="handleInsertAll(row)">填入全部</el-link>
-              <el-link type="danger" underline='never' @click="handleClear(row)">清空</el-link>
+              <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
+              <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link>
+              <el-link type="danger" underline="never" @click="handleClear(row)">清空</el-link>
             </template>
           </el-table-column>
         </el-table>
@@ -307,20 +343,15 @@
       </template>
     </vab-dialog>
     <!-- 修改HS -->
-    <vab-dialog title="修改HS" width="20%" v-model="modifyHSVisible">
-      <el-form :model="modifyHsForm" label-width="auto" label-position="left" style="margin-left: 0; margin-right: 0">
+    <vab-dialog v-model="modifyHSVisible" title="修改HS" width="20%">
+      <el-form label-position="left" label-width="auto" :model="modifyHsForm" style="margin-left: 0; margin-right: 0">
         <el-form-item label="HS">
-          <el-select placeholder="请选择HS" v-model="modifyHsForm.hsId" filterable clearable>
-            <el-option 
-              v-for="item in hsOption"
-              :label="item.label"
-              :key="item.id"
-              :value="item.id"
-            />
+          <el-select v-model="modifyHsForm.hsId" clearable filterable placeholder="请选择HS">
+            <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="法定单位">
-          <el-input v-model="modifyHsForm.statutoryUnit" disabled clearable />
+          <el-input v-model="modifyHsForm.statutoryUnit" clearable disabled />
         </el-form-item>
         <el-form-item label="每零件单位有多少个法定第1单位">
           <el-input v-model="modifyHsForm.quorum" clearable />
@@ -355,13 +386,10 @@ import {
   updateMatchComponentCustomCount,
   updateMatchQuality,
   updateMatchSkuActualCount,
-  updatePurchaseComponentHs
+  updatePurchaseComponentHs,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
-import type {
-  IGetCheckMatchList,
-  IGetMatchPackageList
-} from '/@/type/customsDeclarationAndTaxRefund/matchPo'
+import type { IGetCheckMatchList, IGetMatchPackageList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -373,16 +401,14 @@ const handleRowClick = (row: any, column: any, event: Event) => {
 }
 
 const modifyHSVisible = ref<boolean>(false)
-const modifyHsForm = reactive<any>({
-
-})
-const hsOption = ref<{ id: number, label: string }[]>([]) 
+const modifyHsForm = reactive<any>({})
+const hsOption = ref<{ id: number; label: string }[]>([])
 const showModifyHS = async (row: any) => {
   modifyHSVisible.value = true
   // 获取hs下拉列表
   await fetchHsSelectList()
   const { data } = await getPurchaseComponentHsInfo({
-    id: row.poComponentId
+    id: row.poComponentId,
   })
   Object.assign(modifyHsForm, data)
 }
@@ -391,15 +417,15 @@ const handleConfirmModify = async () => {
     const { data } = await updatePurchaseComponentHs({
       id: modifyHsForm.id,
       hsId: modifyHsForm.hsId,
-      quorum: modifyHsForm.quorum
-    })            
+      quorum: modifyHsForm.quorum,
+    })
     if (data) {
-      $baseMessage("修改HS成功！", 'success')
+      $baseMessage('修改HS成功！', 'success')
       modifyHSVisible.value = false
       fetchData()
     }
   } catch (error) {
-    $baseMessage("修改HS失败！", 'error')
+    $baseMessage('修改HS失败！', 'error')
   }
 }
 const fetchHsSelectList = async () => {
@@ -423,11 +449,11 @@ const isFullscreen = ref<boolean>(false)
 // const remarkVisible = ref<boolean>(false)
 const dflag = ref<boolean>(false)
 const match2Visible = ref<boolean>(false)
-// eslint-disable-next-line vue/no-dupe-keys
+
 const disabled1 = ref<boolean>(false)
-// eslint-disable-next-line vue/no-dupe-keys
+
 const disabled2 = ref<boolean>(true)
-// eslint-disable-next-line vue/no-dupe-keys
+
 const disabled3 = ref<boolean>(false)
 let props = defineProps<{
   matchVisible: boolean
@@ -633,7 +659,10 @@ const lackCount = computed<number>({
     let good = Number(packingCountForm.goodCount)
     let bad = Number(packingCountForm.badCount)
     let taskCount = Number(packingCountForm.packageTaskCount)
-    return taskCount - good - bad
+    if (good <= taskCount) {
+      taskCount - good - bad
+    }
+    return 0
   },
   set() {},
 })
@@ -1020,7 +1049,7 @@ const handleClear = async (row: IGetMatchPackageList) => {
       //   }
       // })
       // if (Number(row.skuActualCount) === 0 && list.length === 0) {
-        
+
       //   return
       // }
       const { data } = await clearMatchComponent({
@@ -1063,13 +1092,13 @@ const handleClearCheckAll = async () => {
 // 清空全部
 const handleClearAll = async () => {
   const setMids = new Set()
-  let list: { mid: number, poComponentId: number}[]  = []
+  let list: { mid: number; poComponentId: number }[] = []
   matchList.value.forEach((row: IGetMatchPackageList) => {
-    // const exists = list.some(item => 
+    // const exists = list.some(item =>
     //   item.mid === row.mId && item.poComponentId === row.poComponentId
     // );
     if (row.skuActualCount && row.customsDeclarationStatus === 0) {
-      list.push({ mid: row.mId, poComponentId: row.poComponentId });
+      list.push({ mid: row.mId, poComponentId: row.poComponentId })
     }
     if (row.skuActualCount) {
       setMids.add(row.mId)
@@ -1081,7 +1110,7 @@ const handleClearAll = async () => {
       const { data } = await clearAllMatchComponent({
         list,
         id: _id.value,
-        mIds
+        mIds,
       })
       if (data) {
         $baseMessage('清空全部成功', 'success')
@@ -1152,9 +1181,9 @@ const handleConfirmCheckMatch = async () => {
   }
 }
 interface PIdInfo {
-  pIds: number[];  // 存储不同的pId
-  encasementCount: number;  // 装箱总数
-  skuActualCount: number[];  // SKU实际数量
+  pIds: number[] // 存储不同的pId
+  encasementCount: number // 装箱总数
+  skuActualCount: number[] // SKU实际数量
 }
 
 // 创建一个Map来存储id与对应的信息
@@ -1173,18 +1202,18 @@ const fetchData = async () => {
     }
     if (idMap.value.has(item.id)) {
       // 如果id已存在，更新pIds数组
-      const info = idMap.value.get(item.id);
+      const info = idMap.value.get(item.id)
       if (info && !info.pIds.includes(item.pId)) {
-        info.pIds.push(item.pId);
-        info.skuActualCount.push(item.skuActualCount);
+        info.pIds.push(item.pId)
+        info.skuActualCount.push(item.skuActualCount)
       }
     } else {
-    // 如果是新的id，创建新的记录
+      // 如果是新的id，创建新的记录
       idMap.value.set(item.id, {
-        pIds: [item.pId], 
+        pIds: [item.pId],
         encasementCount: item.encasementCount,
-        skuActualCount: [item.skuActualCount]
-      });
+        skuActualCount: [item.skuActualCount],
+      })
     }
   })
   // console.log(idMap)
@@ -1312,72 +1341,69 @@ const stripedRowClass2 = (_row: any) => {
   return currentGroupIndex2 % 2 === 0 ? 'el-table__row--striped' : ''
 }
 
-
 const match1Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   switch (label) {
-    case '装箱总数': 
-    case '站点': 
-    case '匹配的PO': 
+    case '装箱总数':
+    case '站点':
+    case '匹配的PO':
     case 'SKU实际数量': {
       if (idMap.value.has(data.row.id)) {
-        const info = idMap.value.get(data.row.id);
+        const info = idMap.value.get(data.row.id)
         if (info) {
-          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0);
+          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0)
           // console.log(totalSkuActualCount)
           if (totalSkuActualCount === info.encasementCount) {
             return {
               color: '',
-              textAlign: 'center'
+              textAlign: 'center',
             }
           } else {
             return {
               color: 'var(--el-color-danger)',
-              textAlign: 'center'
+              textAlign: 'center',
             }
           }
-
         }
       } else {
         return {
-          textAlign: 'center'
+          textAlign: 'center',
         }
       }
 
-      break;
+      break
     }
     case 'SKU': {
       if (idMap.value.has(data.row.id)) {
-        const info = idMap.value.get(data.row.id);
+        const info = idMap.value.get(data.row.id)
         if (info) {
-          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0);
+          const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0)
           if (totalSkuActualCount === info.encasementCount) {
             return {
               color: '',
-              textAlign: 'left'
+              textAlign: 'left',
             }
           } else {
             return {
               color: 'var(--el-color-danger)',
-              textAlign: 'left'
+              textAlign: 'left',
             }
           }
-
         }
       } else {
         return {
-          textAlign: 'left'
+          textAlign: 'left',
         }
       }
 
-      break;
+      break
     }
     case '零件名': {
       return {
         textAlign: 'left',
       }
     }
-    case '采购方': 
+    case '采购方':
     case 'PO总数': {
       const purchase = data.row.purchase
       if (purchase === '云舟') {
@@ -1401,7 +1427,7 @@ const match1Style = (data: { row: any; column: any; rowIndex: number; columnInde
   }
   return {
     textAlign: 'center',
-    color: ''
+    color: '',
   }
 }
 const match2Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -1414,13 +1440,7 @@ const match2Style = (data: { row: any; column: any; rowIndex: number; columnInde
     textAlign: 'left',
   }
 }
-const tableRowClassName = ({
-  row,
-  rowIndex,
-}: {
-  row: any
-  rowIndex: number
-}) => {
+const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   // if (!row.shipmentId) {
   //   return 'danger-row'
   // }
@@ -1432,20 +1452,18 @@ const tableRowClassName = ({
 </script>
 
 <style lang="scss" scoped>
-
 .noneHoveTable {
   :deep() {
     .danger-row > td {
       background-color: var(--el-color-danger-light-9) !important;
     }
-    
+
     td {
       background-color: #ffffff !important;
     }
     .select-row > td {
       background-color: #7bddde !important;
     }
-    
   }
 }
 :deep(.striped) {
@@ -1474,7 +1492,7 @@ const tableRowClassName = ({
       }
     }
   }
-  
+
   .fixed-header {
     position: sticky;
     top: 0;

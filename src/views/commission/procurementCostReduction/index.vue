@@ -45,15 +45,16 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
     >
-      <el-table-column label="提成结束日期" min-width="125" prop="endDate">
+      <el-table-column label="PO日期" min-width="120" prop="poReleaseDate">
         <template #default="{ row }">
-          {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
+          {{ row.poReleaseDate ? formatDate(new Date(row.poReleaseDate)) : '' }}
         </template>
       </el-table-column>
+
       <el-table-column label="降本人员" prop="userName" width="100" />
-      <el-table-column label="图片" prop="skuImageUrl" width="75">
+      <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
+          <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
             <template #error><el-icon /></template>
           </el-image>
         </template>
@@ -104,11 +105,7 @@
           {{ row.currentPoCommission ? '￥' + row.currentPoCommission : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="PO日期" min-width="120" prop="poReleaseDate">
-        <template #default="{ row }">
-          {{ row.poReleaseDate ? formatDate(new Date(row.poReleaseDate)) : '' }}
-        </template>
-      </el-table-column>
+
       <el-table-column label="零件付款日期" min-width="125" prop="compnentPayDate">
         <template #default="{ row }">
           {{ row.compnentPayDate ? formatDate(new Date(row.compnentPayDate)) : '' }}
@@ -130,6 +127,11 @@
       <el-table-column label="提成开始日期" min-width="125" prop="startDate">
         <template #default="{ row }">
           {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="提成结束日期" min-width="125" prop="endDate">
+        <template #default="{ row }">
+          {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
         </template>
       </el-table-column>
       <el-table-column label="剩余提成天数" min-width="130">
@@ -339,10 +341,12 @@ onBeforeMount(async () => {
   .clear-padding {
     padding-top: 0;
     padding-bottom: 0;
-    :deep(.cell) {
-      padding-right: 0;
-      padding-left: 0;
-    }
+  }
+}
+.noneHoverTable {
+  :deep(.cell) {
+    padding-right: 0;
+    padding-left: 0;
   }
 }
 </style>

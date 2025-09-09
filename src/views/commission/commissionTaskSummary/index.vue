@@ -455,6 +455,7 @@
               <el-link
                 v-if="row.status === '进行中' || row.status === '暂停'"
                 v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_UPDATE] }"
+                :disabled="!isCurrentMonth(row.startDate)"
                 type="primary"
                 underline="never"
                 @click="showCostUpdate(row)"
@@ -659,6 +660,24 @@ const costList = ref<IGetReductionCostList[]>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const siteList = ref<{ id: number; label: string }[]>([])
+
+// 获取当前月份 (YYYY-MM 格式)
+const currentMonth = computed(() => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+})
+
+// 判断提成开始日期是否为当前月份
+const isCurrentMonth = (startDate: string) => {
+  if (!startDate) return false
+  const date = new Date(startDate)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const startMonth = `${year}-${month}`
+  return startMonth === currentMonth.value
+}
 const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   site: -1,
   keyWord: '',
