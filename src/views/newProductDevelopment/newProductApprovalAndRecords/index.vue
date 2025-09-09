@@ -389,6 +389,158 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="已归档" :name="8">
+        <vab-query-form>
+          <vab-query-form-right-panel :span="24">
+            <el-form inline :model="queryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          ref="tableRef"
+          border
+          :cell-class-name="clearPadding"
+          :cell-style="cellStyle"
+          class="noneHoveTable custom-table-hover"
+          :data="dataList"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="stripedRowClass"
+          :span-method="objectSpanMethod"
+          @row-click="handleRowClick"
+        >
+          <el-table-column label="提交日期" min-width="115" prop="createTime">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.createTime)) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="图片" width="75">
+            <template #default="{ row }">
+              <el-image
+                fit="fill"
+                :src="row.skuImage"
+                style="display: block; width: 75px; height: 75px"
+                @click="setPreviewList(row.skuImage)"
+              >
+                <template #error>
+                  <el-icon />
+                </template>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column label="SKU" :min-width="Math.max(columnWidths.sku + 30, columnWidths.productName + 30)" prop="sku">
+            <template #default="{ row }">
+              {{ row.sku }}
+              <br />
+              {{ row.productName }}
+            </template>
+          </el-table-column>
+          <el-table-column label="主站点" min-width="130" prop="siteName" />
+          <el-table-column label="主站首单Po" min-width="115" prop="po" />
+          <el-table-column label="首单实际成本" prop="poCost" width="125" />
+          <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
+          <el-table-column label="相差" min-width="100" prop="difference" />
+          <el-table-column label="产品定位" :min-width="columnWidths.productPosition + 30" prop="productPosition" />
+          <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
+          <el-table-column label="平面设计" min-width="90" prop="graphicDesign">
+            <template #default="{ row }">
+              <el-checkbox
+                v-model="row.graphicDesign"
+                class="custom-checkbox"
+                :disabled="true"
+                :false-value="0"
+                size="large"
+                :true-value="1"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="OEM" prop="oem" width="80">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.oem" class="custom-checkbox" :disabled="true" :false-value="0" size="large" :true-value="1" />
+            </template>
+          </el-table-column>
+
+          <el-table-column label="有效计数" min-width="100" prop="effectiveCount">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.effectiveCount + 'px', 'text-align': 'right' }">
+                {{ row.effectiveCount }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column label="产品经理" min-width="100" prop="productManager">
+            <template #default="{ row }">
+              <span
+                :style="{ display: 'inline-block', 'min-width': columnWidths.productManager + 'px', 'text-align': 'left' }"
+                v-html="row.productManager"
+              ></span>
+            </template>
+          </el-table-column>
+          <el-table-column label="产品设计" min-width="100" prop="productDesign">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.productDesign + 'px', 'text-align': 'left' }">
+                {{ row.productDesign }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="立项日期" min-width="115" prop="projectInitiationDate">
+            <template #default="{ row }">
+              <span>{{ formatDate(new Date(row.projectInitiationDate)) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批日期" min-width="115" prop="reviewDate">
+            <template #default="{ row }">
+              <span>{{ row.reviewDate != null ? formatDate(new Date(row.reviewDate)) : '' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="耗时" min-width="100" prop="timeConsuming">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.timeConsuming + 'px', 'text-align': 'right' }">
+                {{ row.timeConsuming }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批状态" min-width="100" prop="reviewStatus">
+            <template #default="{ row }">
+              <el-tag type="info">已归档</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
+            <template #default="{ row }">
+              <span :style="{ display: 'inline-block', 'min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
+                {{ row.reviewPersonName }}
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column fixed="right" label="操作" width="130">
+            <template #default="{ row }">
+              <el-link type="primary" underline="never" @click="handleGetScoreById(row.reviewMainId)">分数明细</el-link>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" description="暂无数据" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
+          :total="total"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 新款评估 -->
@@ -441,7 +593,7 @@ import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableInstance, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { indexColumns } from '../newProductProgress/indexColumns'
-import { getReviewEvaluationId, getReviewList } from '/@/api/devlocal/orderingReview'
+import { getReviewEvaluationId, getReviewList, updateReviewArchived } from '/@/api/devlocal/orderingReview'
 import { getByIdQueryEvaluation } from '/@/api/devlocal/progress'
 import type { IKeyWordTrend } from '/@/type/evaluation/evaluationType'
 import type { IGetByIdQueryEvaluation } from '/@/type/progress/progressType'
@@ -583,10 +735,13 @@ const generateStatus = (value: number) => {
   }
 }
 const handleArchived = (reviewMainId: number) => {
-  // const { data } = await updateReviewArchived({ reviewMainId })
-  // if (data === true) {
-  //   $baseMessage('此条新品进度信息已归档成功!', 'success', 'hey')
-  // }
+  $baseConfirm('确定要归档吗？', null, async () => {
+    const { data } = await updateReviewArchived({ reviewId: reviewMainId })
+    if (data === true) {
+      $baseMessage('此条新品审核信息已归档成功!', 'success', 'hey')
+      fetchData()
+    }
+  })
 }
 
 const fetchData = async () => {

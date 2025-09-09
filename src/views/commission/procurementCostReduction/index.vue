@@ -45,12 +45,12 @@
       :header-cell-style="{ textAlign: 'center' }"
       stripe
     >
-      <el-table-column label="提成结束日期" min-width="120" prop="endDate">
+      <el-table-column label="提成结束日期" min-width="125" prop="endDate">
         <template #default="{ row }">
           {{ row.endDate ? formatDate(new Date(row.endDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="降本人员" prop="userName" :width="flexColumnWidth(costList, '人员', 'userName')" />
+      <el-table-column label="降本人员" prop="userName" width="100" />
       <el-table-column label="图片" prop="skuImageUrl" width="75">
         <template #default="{ row }">
           <el-image :src="row.skuImageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImageUrl)">
@@ -58,14 +58,22 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku')">
+      <el-table-column
+        label="SKU"
+        prop="sku"
+        :width="Math.max(flexColumnWidth(costList, 'SKU', 'sku'), flexColumnWidth(costList, '零件名', 'componentName'))"
+      >
+        <template #header>
+          SKU
+          <br />
+          零件名
+        </template>
         <template #default="{ row }">
           {{ row.sku }}
           <br />
-          {{ row.desc }}
+          {{ row.componentName }}
         </template>
       </el-table-column>
-      <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(costList, '零件名', 'componentName')" />
       <el-table-column label="零件图片" prop="componentImgUrl" width="75">
         <template #header>
           零件
@@ -91,7 +99,7 @@
         </template>
       </el-table-column>
       <el-table-column label="PO" min-width="100" prop="po" />
-      <el-table-column label="本PO提成￥" min-width="110" prop="currentPoCommission">
+      <el-table-column label="本PO提成￥" min-width="120" prop="currentPoCommission">
         <template #default="{ row }">
           {{ row.currentPoCommission ? '￥' + row.currentPoCommission : '' }}
         </template>
@@ -101,7 +109,7 @@
           {{ row.poReleaseDate ? formatDate(new Date(row.poReleaseDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="零件付款日期" min-width="120" prop="compnentPayDate">
+      <el-table-column label="零件付款日期" min-width="125" prop="compnentPayDate">
         <template #default="{ row }">
           {{ row.compnentPayDate ? formatDate(new Date(row.compnentPayDate)) : '' }}
         </template>
@@ -119,7 +127,7 @@
           {{ row.commissionProportion ? row.commissionProportion + '%' : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="提成开始日期" min-width="120" prop="startDate">
+      <el-table-column label="提成开始日期" min-width="125" prop="startDate">
         <template #default="{ row }">
           {{ row.startDate ? formatDate(new Date(row.startDate)) : '' }}
         </template>
@@ -127,12 +135,12 @@
       <el-table-column label="剩余提成天数" min-width="130">
         <template #default="{ row }">{{ row.remainingDays }} / {{ row.commissionDays }}</template>
       </el-table-column>
-      <el-table-column label="优化前单价￥" min-width="120" prop="optimizationBefore">
+      <el-table-column label="优化前单价￥" min-width="125" prop="optimizationBefore">
         <template #default="{ row }">
           {{ row.optimizationBefore ? '￥' + row.optimizationBefore : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="优化后单价￥" min-width="120" prop="optimizationAfter">
+      <el-table-column label="优化后单价￥" min-width="125" prop="optimizationAfter">
         <template #default="{ row }">
           {{ row.optimizationAfter ? '￥' + row.optimizationAfter : '' }}
         </template>

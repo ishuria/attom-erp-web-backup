@@ -392,6 +392,7 @@
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '待审核'" type="primary">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '未通过'" type="danger">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(costList, 'SKU', 'sku', 50)">

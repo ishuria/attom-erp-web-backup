@@ -205,3 +205,15 @@ export function releasePo(params?: IReviewCommonReq): Promise<IReviewStepResp> {
     params,
   })
 }
+/**
+ * 新品订货审批-归档
+ * @param params
+ * @returns
+ */
+export function updateReviewArchived(params: { reviewId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/archive`,
+    method: 'post',
+    params,
+  })
+}
