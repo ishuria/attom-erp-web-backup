@@ -64,12 +64,17 @@
       stripe
       @row-click="handleRowClick"
     >
-      <el-table-column align="left" label="渠道全名" prop="fullName" :width="flexColumnWidth(list, '渠道全名', 'fullName')" />
+      <el-table-column align="left" label="渠道全名" prop="fullName" :width="flexColumnWidth(list, '渠道全名', 'fullName', 30)" />
       <el-table-column align="center" label="当前价格(kg)" prop="kgPrice" />
       <el-table-column align="center" label="当前价格(m3)" prop="m3Price" />
       <el-table-column align="center" label="近10次时效" prop="tenCountTime" />
       <el-table-column align="center" label="名义时效" prop="nominalLimitation" />
       <el-table-column align="center" label="累计发货次数" prop="cumulativeCount" />
+      <el-table-column align="center" label="成本核算展示" prop="dropdownListDisplay">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.dropdownListDisplay" :false-value="0" :true-value="1" @change="updateDropdownListDisplay(row)" />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="安全天数" prop="safeDays">
         <template #default="{ row }">
           <el-input v-model="row.safeDays" class="input-center" @change="modifySafeDays(row)" />
@@ -540,6 +545,7 @@ import {
   updateChannelFreightForwarder,
   updateChannelSiteList,
   updateCostFreightForwarder,
+  updateDropdownListDisplayFreightForwarder,
   updateFreightForwarderType,
   updateSafeDaysFreightForwarder,
 } from '/@/api/devlocal/encasement'
@@ -636,6 +642,12 @@ const handleChangeChannel = async (row: IGetChannelSiteList) => {
   await updateChannelSiteList({
     id: row.id,
     channelId: row.channelId,
+  })
+}
+const updateDropdownListDisplay = async (row: IGetForwarderList) => {
+  await updateDropdownListDisplayFreightForwarder({
+    id: row.id!,
+    status: row.dropdownListDisplay,
   })
 }
 // 展示发货站点渠道设定
@@ -1041,5 +1053,8 @@ onBeforeMount(() => {
 :deep(.listTable .el-table__body .cell) {
   min-height: 35px;
   line-height: 35px;
+}
+.el-checkbox {
+  transform: scale(1.3);
 }
 </style>

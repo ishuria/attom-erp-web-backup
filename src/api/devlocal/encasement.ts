@@ -444,6 +444,18 @@ export const updateSafeDaysFreightForwarder = (params: IUpdateSafeDaysFreightFor
   })
 }
 /**
+ * @description 货代费用渠道成本核算展示修改
+ * @param params
+ * @returns
+ */
+export const updateDropdownListDisplayFreightForwarder = (params: { id: number; status: number }): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/freight/forwarder/channel/display/update`,
+    method: 'post',
+    params,
+  })
+}
+/**
  * @description 渠道安全天数
  */
 export const safeDaysChannelFreightForwarder = (params: IId): Promise<IBooleanRes> => {
