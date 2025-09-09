@@ -4,7 +4,7 @@
       <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>
-          <el-button type="primary" @click="showUploadInvoice('repeat')">重复发票导入</el-button>
+          <el-button type="primary" @click="showUploadInvoice('repeat')">多页发票导入</el-button>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
