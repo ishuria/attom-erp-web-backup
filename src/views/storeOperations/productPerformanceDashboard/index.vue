@@ -2542,7 +2542,11 @@ const handleConfirmFilter = async (filterForm: any) => {
       }
     })
 
-    if (processedFilterData.warehouseAge === null || processedFilterData.warehouseAge === undefined) {
+    if (
+      processedFilterData.warehouseAge === null ||
+      processedFilterData.warehouseAge === undefined ||
+      (processedFilterData.warehouseAge.length > 0 && processedFilterData.warehouseAge.includes(''))
+    ) {
       processedFilterData.warehouseAge = ''
     }
 
