@@ -647,7 +647,7 @@ const handleChangeChannel = async (row: IGetChannelSiteList) => {
 const updateDropdownListDisplay = async (row: IGetForwarderList) => {
   await updateDropdownListDisplayFreightForwarder({
     id: row.id!,
-    status: row.dropdownListDisplay,
+    status: row.dropdownListDisplay!,
   })
 }
 // 展示发货站点渠道设定

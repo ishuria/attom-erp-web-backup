@@ -764,6 +764,7 @@ export interface IGetForwarderList {
    */
   types?: string
   fullName?: string
+  dropdownListDisplay?: number
 }
 
 export interface IGetShipmentArrivedListReq {

@@ -114,6 +114,7 @@
             材质构成（用于报关，需要精确填写）
             <span style="color: var(--el-color-danger)">*</span>
           </template>
+          <el-button type="primary" @click="handleShareWeight">次要零件重量均摊</el-button>
         </el-form-item>
         <el-table
           border
@@ -512,6 +513,68 @@ const imagePreviewList = ref<string[]>([])
 const imageUploadVisible = ref(false)
 const qualityInspectionForm = reactive<any>({})
 const qualityInspectionFormRef = ref<FormInstance>()
+
+const handleShareWeight = async () => {
+  if (!qualityInspectionForm.packageWeight) {
+    $baseMessage('请先填写包装重量', 'error')
+    return
+  }
+  // 1. 先判断零件的材质1名称是否都已填
+  const hasEmptyMaterial = componentList.value.some((item) => !item.material1)
+  if (hasEmptyMaterial) {
+    $baseMessage('每个零件的 材质1名称 都填写了，才能进行均摊操作', 'error')
+    return
+  }
+  // 2. 找材质名称填了的，但是重量没填的
+  let count = 0
+  componentList.value.forEach((item) => {
+    if (item.material1 && !item.weight1) {
+      count++
+    }
+    if (item.material2 && !item.weight2) {
+      count++
+    }
+    if (item.material3 && !item.weight3) {
+      count++
+    }
+    if (item.material4 && !item.weight4) {
+      count++
+    }
+  })
+  if (count === 0) {
+    $baseMessage('每个零件的重量都已填写，没有零件可以进行均摊', 'error')
+    return
+  }
+  // 3. 计算已填入的重量
+  const totalWeight = componentList.value.reduce(
+    (acc, item) => acc + Number(item.weight1 || 0) + Number(item.weight2 || 0) + Number(item.weight3 || 0) + Number(item.weight4 || 0),
+    0
+  )
+  // 4. 比较 已填入的重量 和 0.8 * sku的包装重量，如果已填入的重量小于 0.8 * sku的包装重量，则无法进行均摊
+  if (totalWeight < 0.8 * qualityInspectionForm.packageWeight) {
+    $baseMessage('已填入的重量小于 sku的包装重量的80%，无法进行均摊', 'error')
+    return
+  }
+  // 5. 满足条件后，获取差值，找到零件的材质名称填了但是重量没填的零件，有几个重量没填就均摊几个
+  const diff = qualityInspectionForm.packageWeight - totalWeight
+  const diffWeight = Number((diff / count).toFixed(2))
+  for (const item of componentList.value) {
+    if (item.material1 && !item.weight1) {
+      item.weight1 = diffWeight
+    }
+    if (item.material2 && !item.weight2) {
+      item.weight2 = diffWeight
+    }
+    if (item.material3 && !item.weight3) {
+      item.weight3 = diffWeight
+    }
+    if (item.material4 && !item.weight4) {
+      item.weight4 = diffWeight
+    }
+    await updatePackageInspectionComponent(item)
+  }
+  $baseMessage('均摊成功', 'success')
+}
 
 const showPrecautions = () => {
   precautionsVisible.value = true
