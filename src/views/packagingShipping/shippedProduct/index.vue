@@ -496,7 +496,7 @@ const cellClassName2 = (data: { row: any; column: any; rowIndex: number; columnI
 // 未到货col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 13) {
+  if (columnIndex !== 12 && columnIndex !== 13) {
     const id = row.id
     // 默认不跨行
     let rowspan = 1
