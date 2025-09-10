@@ -234,7 +234,7 @@
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod2"
+          :span-method="objectSpanMethod3"
           @row-click="handleRowClick"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
@@ -519,6 +519,31 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 }
 // 已发货（接收中）col合并方法
 const objectSpanMethod2 = ({ row, rowIndex, columnIndex }: any) => {
+  // 设置需要合并的列
+  if (columnIndex !== 7 && columnIndex !== 6) {
+    const id = row.id
+    // 默认不跨行
+    let rowspan = 1
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (list.value[i].id === id) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 }
+    } else {
+      return { rowspan: 0, colspan: 0 }
+    }
+  }
+}
+
+// 已发货（接收完毕）col合并方法
+const objectSpanMethod3 = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
   if (columnIndex !== 7 && columnIndex !== 8) {
     const id = row.id
