@@ -243,6 +243,7 @@ export interface IGetUserAttendanceList {
   xWorkCount?: number
   // 总奖金
   totalBonus?: number
+  noAssessment?: number
 }
 
 export interface IAddAdjustDetailReq {

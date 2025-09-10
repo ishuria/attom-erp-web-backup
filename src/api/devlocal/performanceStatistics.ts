@@ -27,6 +27,19 @@ export function getProductManagerAssessmentList(data: IGetProductManagerAssessme
     data,
   })
 }
+
+/**
+ * 更新用户免考核状态
+ * @param params
+ * @returns
+ */
+export function updateProductManagerNoAssessment(params: { id: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/user/attendance/no_assessment/update`,
+    method: 'post',
+    params,
+  })
+}
 /**
  * 修改产品经理考核数设定参数
  * @param data

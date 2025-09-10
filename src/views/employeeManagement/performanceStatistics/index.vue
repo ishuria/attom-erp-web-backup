@@ -212,6 +212,11 @@
           <el-table-column label="OEM完成数" min-width="110">
             <template #default="{ row }">{{ row.oemFinish }} / {{ row.oem }}</template>
           </el-table-column>
+          <el-table-column label="免考核" min-width="100" prop="noAssessment">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.noAssessment" :false-value="0" :true-value="1" @change="handleChangeNoAssessment(row)" />
+            </template>
+          </el-table-column>
           <el-table-column label="新款采购额" min-width="110" prop="purchaseAmount" />
           <el-table-column label="新款评估跑分次数" min-width="145" prop="runsNumbers" />
           <el-table-column label="新品进度记录数" min-width="130" prop="progressNumbers" />
@@ -607,6 +612,7 @@ import {
   getProductManagerAssessmentList,
   getUserAttendanceList,
   updateProductManagerAssessment,
+  updateProductManagerNoAssessment,
 } from '/@/api/devlocal/performanceStatistics'
 import type {
   IGetAdjustDetail,
@@ -844,6 +850,12 @@ const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
+}
+const handleChangeNoAssessment = async (row: IGetUserAttendanceList) => {
+  await updateProductManagerNoAssessment({
+    id: row.id!,
+    status: row.noAssessment!,
+  })
 }
 // 计算每行总奖金
 const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
