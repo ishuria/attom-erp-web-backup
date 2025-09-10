@@ -40,6 +40,11 @@
       @selection-change="setSelectRows"
     >
       <el-table-column type="selection" />
+      <el-table-column label="发货日期" min-width="120" prop="shipmentDate">
+        <template #default="{ row }">
+          {{ row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
       <el-table-column label="发货计划" min-width="120" prop="shipmentPlanDate">
         <template #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
@@ -177,7 +182,7 @@ const setSelectRows = (value: any) => {
 // 装箱历史列合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 14 && columnIndex !== 15 && columnIndex !== 16 && columnIndex !== 17) {
+  if (columnIndex !== 15 && columnIndex !== 16 && columnIndex !== 17 && columnIndex !== 18) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
@@ -272,13 +277,13 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 5 && data.columnIndex !== 12 && data.columnIndex !== 13 && data.columnIndex !== 14 && data.columnIndex !== 15) {
+  if (['SHIPMENT ID', '箱规号', '站点', 'SKU', 'Description', '备注'].includes(data.column.label)) {
     return {
-      textAlign: 'center',
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'left',
+    textAlign: 'center',
   }
 }
 const fetchData = async () => {
