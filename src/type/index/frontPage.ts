@@ -126,6 +126,7 @@ export interface IRankItem {
   name: string
   value: number
   assessmentNumberFinish?: number
+  noAssessment?: number
 }
 
 export interface IAssessAdjustRes {

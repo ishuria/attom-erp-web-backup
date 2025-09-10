@@ -63,13 +63,22 @@ const option = reactive<any>({
         },
         rich: {
           medal: {
-            fontSize: 18,
+            fontSize: 20,
             color: '#FFD700',
             padding: [-5, 5, 0, 0],
           },
           name: {
             fontSize: 12,
             color: '#333',
+          },
+          exempt: {
+            fontSize: 14,
+            color: '#67C23A',
+            backgroundColor: '#F0F9FF',
+            border: '1px solid #67C23A',
+            borderRadius: 4,
+            padding: [2, 4, 2, 4],
+            margin: [0, 0, 0, 4],
           },
         },
       },
@@ -116,8 +125,18 @@ watch(
         ) {
           const medalIcons = ['🥉', '🥈', '🥇'] // 倒序：铜牌、银牌、金牌
           const medalIndex = index - (totalCount - 3)
-          return `{medal|${medalIcons[medalIndex]}} {name|${value}}`
+          if (newVal[index].noAssessment === 1) {
+            return `{medal|${medalIcons[medalIndex]}} {name|${value}} {exempt|免}`
+          } else {
+            return `{medal|${medalIcons[medalIndex]}} {name|${value}}`
+          }
         }
+
+        // 免去考核标识
+        if (newVal[index].noAssessment === 1) {
+          return `{name|${value}} {exempt|免}`
+        }
+
         return value
       }
     } else {

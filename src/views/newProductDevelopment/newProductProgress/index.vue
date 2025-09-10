@@ -601,6 +601,7 @@ import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
+import { updateProgressLog } from '~/src/api/devlocal/progressSample'
 import { indexColumns } from './indexColumns'
 import moldProgress from './moldProgress.vue'
 import sampleProgress from './sampleProgress.vue'
@@ -1125,7 +1126,7 @@ const clickLog = async (val: any) => {
   progressList.value[tableClickIdx.value].progressLog = val
   progressLogCopy.value = val
   // console.log('点击log执行了');
-  await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+  await updateProgressLog({ progressId: progressList.value[tableClickIdx.value].progressId, progressLog: val }) //发送更新数据请求
 }
 const clickRemark = async (val: any) => {
   progressList.value[tableClickIdx.value].remark = val

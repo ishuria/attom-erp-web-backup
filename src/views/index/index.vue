@@ -501,7 +501,6 @@ const rank2List = ref<IRankItem[]>([])
 const rank3List = ref<IRankItem[]>([])
 const rank4List = ref<IRankItem[]>([])
 const rank5List = ref<IRankItem[]>([])
-const rank1FinishList = ref<IRankItem[]>([])
 
 const fetchRankNewProductOneYearCommission = async () => {
   const { data } = await getFrontPageRankNewProductOneYearCommission()
