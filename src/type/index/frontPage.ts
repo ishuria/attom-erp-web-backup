@@ -103,6 +103,51 @@ export interface IGetFrontPageBonusRes {
    */
   commissionSitePieList: IPieItem[]
 }
+
+export interface IGetFrontPageDestroyValueRes {
+  totalAmount: number
+  destroySitePieList: IPieItem[]
+  destroyPieList: IPieItem[]
+  lastMonthDiff: number
+  lastYearSameMonthDiff: number
+}
+export interface IGetFrontPageDestroyValueDetailRes {
+  total: number
+  list: IGetFrontPageDestroyValueDetailItem[]
+}
+export interface IGetFrontPageDestroyValueDetailItem {
+  id: number
+  /** 库存动作日期 */
+  streamDate: string
+
+  /** msku */
+  msku: string
+
+  asin: string
+
+  siteName: string
+
+  /** 仓库名称 */
+  whName: string
+
+  /** 库存属性 */
+  dispositionType: string
+
+  /** 出入库类型名称 */
+  businessTypeDesc: string
+
+  /** 变动采购成本 */
+  changePurchaseAmount: string
+
+  /** 变动头程成本 */
+  changeLogisticsAmount: string
+
+  /** 变动其他成本 */
+  changeOtherAmount: string
+
+  /** 总金额 */
+  totalAmount: number
+}
 export interface IPieItem {
   name: string
   value: number
