@@ -108,7 +108,43 @@
           </template>
         </top-bar-card>
       </el-col>
-      <el-col v-if="ableViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24" />
+      <el-col v-if="ableViewDestroyValueCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <top-card
+          background="white"
+          :count-config="countConfig5"
+          :month-diff="countConfig5.monthDiff"
+          title="本月销毁货值"
+          :year-diff="countConfig5.yearDiff"
+          @open-table="handleOpenDestroyDetail"
+        >
+          <template #select>
+            <el-select v-model="selectDestroyValueType" size="small" @change="handleChangeDestroyPieList">
+              <el-option v-for="item in selectDestroyValueOption" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </template>
+          <template #chart>
+            <commission-site-pie v-if="selectDestroyValueType === 0" :data="displayDestroyPieList" @click="handleOpenDestroyDetail" />
+            <commission-type-pie v-if="selectDestroyValueType === 1" :data="displayDestroyPieList" @click="handleOpenDestroyDetail" />
+          </template>
+        </top-card>
+      </el-col>
+      <!-- <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <top-card
+          background="white"
+          :count-config="countConfig1"
+          :month-diff="countConfig1.monthDiff"
+          title="本月销毁货值"
+          :year-diff="countConfig1.yearDiff"
+          @open-table="handleJumpTo"
+        >
+          <template #select>
+            <el-select v-model="type" size="small" @change="handleChangePieList">
+              <el-option v-for="item in selectPersonOption" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </template>
+          <template #chart></template>
+        </top-card>
+      </el-col> -->
       <!-- 第二层 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <monthly-product-profit-table :list="profitList">
@@ -212,6 +248,8 @@
     />
     <!-- 考核数调整 -->
     <assessment-number-adjust v-model="assessmentAdjustVisible" @update:front-page="fetchAssessmentData" />
+    <!-- 销毁货值详情 -->
+    <destroy-value-detail-table v-model="destroyValueDetailVisible" :list="destroyValueDetailList" />
   </div>
 </template>
 
@@ -224,6 +262,8 @@ import {
   getFrontPageAdjustDetailMonth,
   getFrontPageAssessmentData,
   getFrontPageBonus,
+  getFrontPageDestroyValue,
+  getFrontPageDestroyValueDetail,
   getFrontPageHistoryAssessmentRecords,
   getFrontPageHistoryMonthList,
   getFrontPageInventoryProductsTotalValue,
@@ -255,6 +295,7 @@ import {
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import {
+  IGetFrontPageDestroyValueDetailItem,
   IGetFrontPageHistoryAssessmentRecordsItem,
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageInventoryProductsTotalValue,
@@ -295,6 +336,10 @@ const ableViewTop30ProductSaleCard =
   currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
   currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
   currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE
+const ableViewDestroyValueCard =
+  currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewCommissionCard = commissionRole.includes(currentRoleCode)
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE
 const type = ref<number>(0)
@@ -302,6 +347,12 @@ const selectOption = [
   { label: '站点', value: 0 },
   { label: '类型', value: 1 },
 ]
+const selectDestroyValueType = ref<number>(0)
+const selectDestroyValueOption = [
+  { label: '站点', value: 0 },
+  { label: '新老品', value: 1 },
+]
+const selectPersonOption = [{ label: '人员', value: 0 }]
 const pieList = ref<any[]>([])
 
 const countConfig1 = reactive<any>({
@@ -358,7 +409,19 @@ const countConfig4 = reactive<any>({
   separator: ',',
   duration: 1000,
 })
+// 销毁货值
+const countConfig5 = reactive<any>({
+  startValue: -3000,
+  endValue: 0,
+  decimals: 2,
+  prefix: '￥',
+  suffix: '',
+  separator: ',',
+  duration: 1000,
+})
 
+const destroyValueDetailVisible = ref<boolean>(false)
+const destroyValueDetailList = ref<IGetFrontPageDestroyValueDetailItem[]>([])
 const inProgressProjectsData = ref<IGetFrontPageProgressProjectsItem[]>([])
 const monthDiff = ref<number>(0)
 const yearDiff = ref<number>(0)
@@ -434,6 +497,11 @@ const handleJumpTo = () => {
   }
   router.push(url)
 }
+const handleOpenDestroyDetail = async () => {
+  const { data } = await getFrontPageDestroyValueDetail()
+  destroyValueDetailVisible.value = true
+  destroyValueDetailList.value = data.list
+}
 const commissionSitePieList = ref<IPieItem[]>([])
 const commissionTypePieList = ref<IPieItem[]>([])
 const fetchTotalBonus = async () => {
@@ -445,26 +513,90 @@ const fetchTotalBonus = async () => {
   commissionTypePieList.value = data.commissionTypePieList
   handleChangePieList()
 }
+const destroySitePieList = ref<IPieItem[]>([])
+const destroyPieList = ref<IPieItem[]>([])
+const displayDestroyPieList = ref<IPieItem[]>([])
+const fetchDestroyValue = async () => {
+  const { data } = await getFrontPageDestroyValue()
+  countConfig5.endValue = data.totalAmount
+  destroySitePieList.value = data.destroySitePieList
+  destroyPieList.value = data.destroyPieList
+  countConfig5.monthDiff = data.lastMonthDiff
+  countConfig5.yearDiff = data.lastYearSameMonthDiff
+  handleChangeDestroyPieList()
+}
 const handleChangePieList = () => {
   if (type.value === 0) {
     let i = 0
     pieList.value = commissionSitePieList.value.map((item: any, index: number) => {
       const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
       const itemStyle = { color: colorList[index] }
       if (item.value < 0) {
-        item.value = Math.abs(item.value)
         itemStyle.color = redColorList[i]
         i++
       }
       return {
         name: item.name,
-        value: item.value,
+        value: displayValue,
         trueValue,
         itemStyle,
       }
     })
   } else if (type.value === 1) {
-    pieList.value = commissionTypePieList.value
+    let i = 0
+    pieList.value = commissionTypePieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: displayValue,
+        trueValue,
+        itemStyle,
+      }
+    })
+  }
+}
+const handleChangeDestroyPieList = () => {
+  if (selectDestroyValueType.value === 0) {
+    let i = 0
+    displayDestroyPieList.value = destroySitePieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: displayValue,
+        trueValue,
+        itemStyle,
+      }
+    })
+  } else if (selectDestroyValueType.value === 1) {
+    let i = 0
+    displayDestroyPieList.value = destroyPieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: displayValue,
+        trueValue,
+        itemStyle,
+      }
+    })
   }
 }
 const date = ref('')
@@ -618,6 +750,9 @@ onBeforeMount(async () => {
   }
   if (ableBossViewCard) {
     fetchInventoryProductsTotalValue()
+  }
+  if (ableViewDestroyValueCard) {
+    fetchDestroyValue()
   }
 })
 </script>

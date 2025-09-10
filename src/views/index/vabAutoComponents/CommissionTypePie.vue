@@ -1,28 +1,32 @@
 <template>
-  <vab-chart
-    :option="option"
-  />
+  <vab-chart :option="option" />
 </template>
-  
+
 <script lang="ts" setup>
 import { colorList } from '/@/views/commission/constantOption'
 
 defineOptions({
   name: 'CommissionTypePie',
 })
-  
+
 const props = defineProps({
   data: {
     type: Array,
   },
 })
-  
 
 const option = reactive<any>({
   tooltip: {
     show: true,
     confine: true,
-    formatter: '{b}: ￥{c}',
+    formatter: (params: any) => {
+      const titleStr = `<div>${params.data.name}</div>`
+      const contentHtmlStr = `<div>
+          ￥${params.data.trueValue}
+        </div>`
+
+      return titleStr + contentHtmlStr
+    },
     textStyle: {
       fontSize: 14, // 设置字体大小
     },
@@ -34,7 +38,7 @@ const option = reactive<any>({
       type: 'pie',
       radius: '100%',
       emphasis: {
-        scale: false
+        scale: false,
       },
       startAngle: 90, //起始角度
       label: {
@@ -53,18 +57,15 @@ watch(
   () => {
     // 先排序数据
     const sortedData = props.data?.slice().sort((a: any, b: any) => b.value - a.value)
-    
+
     // 为每个数据项分配固定的颜色
     option.series[0].data = sortedData?.map((item: any, index: number) => ({
       ...item,
       itemStyle: {
-        color: colorList[index % colorList.length]
-      }
+        color: colorList[index % colorList.length],
+      },
     }))
   },
   { immediate: true, deep: true }
 )
 </script>
-
-
-

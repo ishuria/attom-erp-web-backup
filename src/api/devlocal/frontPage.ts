@@ -7,6 +7,8 @@ import {
   IAssessAdjustRes,
   IGetFrontPageAssessmentDataRes,
   IGetFrontPageBonusRes,
+  IGetFrontPageDestroyValueDetailRes,
+  IGetFrontPageDestroyValueRes,
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageHistoryAssessmentRecordsRes,
   IGetFrontPageInventoryProductsTotalValue,
@@ -65,7 +67,26 @@ export function getFrontPageBonus(): Promise<{ data: IGetFrontPageBonusRes }> {
     method: 'get',
   })
 }
-
+/**
+ * 首页-销毁货值
+ * @returns
+ */
+export function getFrontPageDestroyValue(): Promise<{ data: IGetFrontPageDestroyValueRes }> {
+  return request({
+    url: `${BASE_API}/front_page/destroy_value`,
+    method: 'get',
+  })
+}
+/**
+ * 首页-销毁货值-详情
+ * @returns
+ */
+export function getFrontPageDestroyValueDetail(): Promise<{ data: IGetFrontPageDestroyValueDetailRes }> {
+  return request({
+    url: `${BASE_API}/front_page/destroy_value/detail`,
+    method: 'get',
+  })
+}
 /**
  * 首页-绩效历史
  * @returns
