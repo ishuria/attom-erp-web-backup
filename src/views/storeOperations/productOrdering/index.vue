@@ -264,6 +264,11 @@
               <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
             </div>
           </span>
+          <span v-if="item.label === '断货'">
+            <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
+            <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
+            <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
+          </span>
           <!-- <span v-if="item.label === 'VOC缺陷%'" >
             {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
           </span> -->
@@ -282,7 +287,7 @@
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 筛选 -->
-    <vab-dialog v-model="filterVisible" title="筛选" width="20%">
+    <vab-dialog v-model="filterVisible" title="筛选" width="25%">
       <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="width: 100%; margin-right: 10px">
         <el-form-item label="交期">
           <div class="flex">
@@ -303,6 +308,13 @@
             <el-input-number v-model="queryForm.minEs" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
             <el-input-number v-model="queryForm.maxEs" :min="0" placeholder="最大值" style="flex: 1" />
+          </div>
+        </el-form-item>
+        <el-form-item label="库存可售含在途">
+          <div class="flex">
+            <el-input-number v-model="queryForm.minEsAvailableSaleDayTotal" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="queryForm.maxEsAvailableSaleDayTotal" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上海签收">
@@ -461,7 +473,7 @@ const seasonalXData = computed(() => {
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const latestDate = ref<string[]>([])
 const label = ['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%']
-const label3 = ['库存可售', '可售含在途', '断货']
+const label3 = ['库存可售', '可售含在途']
 const labelMap = new Map([
   ['毛利率', 'grossProfit'],
   ['月广告%', 'monthAdv'],
@@ -472,7 +484,6 @@ const labelMap = new Map([
 const label3Map = new Map([
   ['库存可售', 'esAvailableSaleDay'],
   ['可售含在途', 'esAvailableSaleDayTotal'],
-  ['断货', 'outOfStock'],
 ])
 const releaseOrderVisible = ref<boolean>(false)
 // 发布订货表单

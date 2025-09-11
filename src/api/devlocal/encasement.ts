@@ -313,6 +313,16 @@ export const getChannelList = (): Promise<IGetChannelListRes> => {
   })
 }
 /**
+ * @description 成本核算渠道下拉列表
+ * @returns IGetChannelListRes
+ */
+export const getCostAccountingChannelList = (): Promise<IGetChannelListRes> => {
+  return request({
+    url: `${BASE_API}/cost/accounting/channel/list`,
+    method: 'get',
+  })
+}
+/**
  * @description 已发货装箱列表查询列表查询
  */
 export const getShippedEncasementList = (data: IGetEncasementListReq): Promise<IGetShippedEncasementListRes> => {

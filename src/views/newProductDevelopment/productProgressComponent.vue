@@ -1,26 +1,30 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header  style="margin-bottom: 0px;" @back="goBack">
+    <el-page-header style="margin-bottom: 0px" @back="goBack">
       <template #content>
         <div class="flex items-center">
-          <span> <strong> {{ route.query.title }} </strong><el-divider direction="vertical"/> <strong>{{ route.query.product }}</strong></span>
+          <span>
+            <strong>{{ route.query.title }}</strong>
+            <el-divider direction="vertical" />
+            <strong>{{ route.query.product }}</strong>
+          </span>
         </div>
       </template>
     </el-page-header>
-    <el-divider style="margin:10px 0"/>
+    <el-divider style="margin: 10px 0" />
     <div class="container">
-      <vab-component-list 
+      <vab-component-list
         :progress-id="route.query.progressId"
         :trial-calculation-data="trialCalculationRef?.fetchData"
         @update:image-preview-visible="updateUploadPreviewVisible"
         @update:preview-list-value="setPreviewList"
       />
 
-      <vab-trial-calculation 
+      <vab-trial-calculation
         ref="trialCalculationRef"
-        :channel-list="channelList"
-        :cost-accounting-data = "costAccountingRef?.estimatedCostList"
-        :cost-accounting-fetch = "costAccountingRef?.fetchDataCostAccounting"
+        :channel-list="costAccountingList"
+        :cost-accounting-data="costAccountingRef?.estimatedCostList"
+        :cost-accounting-fetch="costAccountingRef?.fetchDataCostAccounting"
         :cost-scroll="costAccountingRef?.autoScrollButtom"
         :progress-id="route.query.progressId"
         :site-list="siteList"
@@ -35,14 +39,14 @@
         @update:preview-list-value="setPreviewList"
       />
     </div>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import VabCostAccounting from './vabAutoComponents/VabCostAccounting.vue'
 import VabTrialCalculation from './vabAutoComponents/VabTrialCalculation.vue'
-import { getChannelList } from '/@/api/devlocal/encasement'
+import { getChannelList, getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -57,11 +61,12 @@ const trialCalculationRef = ref<InstanceType<typeof VabTrialCalculation> | null>
 // route
 const route: any = useRoute()
 const tabsStore = useTabsStore()
-const {delVisitedRoute } = tabsStore
+const { delVisitedRoute } = tabsStore
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
-const channelList = ref<{ id: number, label: string }[]>([])
-const siteList = ref<{ id: number, label: string }[]>([])
+const channelList = ref<{ id: number; label: string }[]>([])
+const costAccountingList = ref<{ id: number; label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
 
 // back
 const goBack = async () => {
@@ -69,15 +74,15 @@ const goBack = async () => {
   history.back()
 }
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 // 控制图片是否预览
-const updateUploadPreviewVisible = (newV: boolean) =>{
+const updateUploadPreviewVisible = (newV: boolean) => {
   imagePreviewVisible.value = newV
 }
 // 修改图片预览列表
-const setPreviewList = (imageUrl: string) =>{
+const setPreviewList = (imageUrl: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(imageUrl)
 }
@@ -86,12 +91,17 @@ const fetchChannelData = async () => {
   const { data } = await getChannelList()
   channelList.value = data
 }
+const fetchCostAccountingChannelData = async () => {
+  const { data } = await getCostAccountingChannelList()
+  costAccountingList.value = data
+}
 const fetchSalesSiteList = async () => {
   const { data } = await getSalesSiteList()
   siteList.value = data
 }
 onBeforeMount(async () => {
   fetchChannelData()
+  fetchCostAccountingChannelData()
   fetchSalesSiteList()
   trialCalculationRef.value?.fetchData()
 })
