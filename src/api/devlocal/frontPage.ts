@@ -78,12 +78,32 @@ export function getFrontPageDestroyValue(): Promise<{ data: IGetFrontPageDestroy
   })
 }
 /**
+ * 首页-销毁货值-负责人
+ * @returns
+ */
+export function getFrontPageLeadDestroyValue(): Promise<{ data: IGetFrontPageDestroyValueRes }> {
+  return request({
+    url: `${BASE_API}/front_page/lead/destroy_value`,
+    method: 'get',
+  })
+}
+/**
  * 首页-销毁货值-详情
  * @returns
  */
 export function getFrontPageDestroyValueDetail(): Promise<{ data: IGetFrontPageDestroyValueDetailRes }> {
   return request({
     url: `${BASE_API}/front_page/destroy_value/detail`,
+    method: 'get',
+  })
+}
+/**
+ * 首页-销毁货值-负责人详情
+ * @returns
+ */
+export function getFrontPageDestroyValueLeadDetail(): Promise<{ data: IGetFrontPageDestroyValueDetailRes }> {
+  return request({
+    url: `${BASE_API}/front_page/destroy_value/lead/detail`,
     method: 'get',
   })
 }

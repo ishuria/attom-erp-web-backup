@@ -128,23 +128,26 @@
           </template>
         </top-card>
       </el-col>
-      <!-- <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <top-card
           background="white"
-          :count-config="countConfig1"
-          :month-diff="countConfig1.monthDiff"
+          :count-config="countConfig6"
+          :month-diff="countConfig6.monthDiff"
           title="本月销毁货值"
-          :year-diff="countConfig1.yearDiff"
-          @open-table="handleJumpTo"
+          :year-diff="countConfig6.yearDiff"
+          @open-table="handleOpenDestroyLeadDetail"
         >
           <template #select>
-            <el-select v-model="type" size="small" @change="handleChangePieList">
+            <el-select v-model="selectDestroyLeadValueType" size="small" @change="handleChangeDestroyLeadPieList">
               <el-option v-for="item in selectPersonOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </template>
-          <template #chart></template>
+          <template #chart>
+            <commission-site-pie v-if="type === 0" :data="displayDestroyLeadPieList" @click="handleOpenDestroyLeadDetail" />
+            <commission-type-pie v-if="type === 1" :data="displayDestroyLeadPieList" @click="handleOpenDestroyLeadDetail" />
+          </template>
         </top-card>
-      </el-col> -->
+      </el-col>
       <!-- 第二层 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <monthly-product-profit-table :list="profitList">
@@ -249,7 +252,7 @@
     <!-- 考核数调整 -->
     <assessment-number-adjust v-model="assessmentAdjustVisible" @update:front-page="fetchAssessmentData" />
     <!-- 销毁货值详情 -->
-    <destroy-value-detail-table v-model="destroyValueDetailVisible" :list="destroyValueDetailList" />
+    <destroy-value-detail-table v-model="destroyValueDetailVisible" :list="destroyValueDetailList" :show-user-name="showUserName" />
   </div>
 </template>
 
@@ -264,9 +267,11 @@ import {
   getFrontPageBonus,
   getFrontPageDestroyValue,
   getFrontPageDestroyValueDetail,
+  getFrontPageDestroyValueLeadDetail,
   getFrontPageHistoryAssessmentRecords,
   getFrontPageHistoryMonthList,
   getFrontPageInventoryProductsTotalValue,
+  getFrontPageLeadDestroyValue,
   getFrontPagePerformanceHistory,
   getFrontPageProductManagerSelectOption,
   getFrontPageProgressProjects,
@@ -312,13 +317,14 @@ defineOptions({
   name: 'Index',
 })
 
+const showUserName = ref<boolean>(false)
 const assessmentAdjustVisible = ref<boolean>(false)
 const router = useRouter()
 const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableProductManagerViewCard =
   currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
-const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
+const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const commissionRole = [
   ROLE_GRAPHICDESIGNLEAD_CODE,
@@ -352,7 +358,11 @@ const selectDestroyValueOption = [
   { label: '站点', value: 0 },
   { label: '新老品', value: 1 },
 ]
-const selectPersonOption = [{ label: '人员', value: 0 }]
+const selectDestroyLeadValueType = ref<number>(0)
+const selectPersonOption = [
+  { label: '人员', value: 0 },
+  { label: '站点', value: 1 },
+]
 const pieList = ref<any[]>([])
 
 const countConfig1 = reactive<any>({
@@ -419,7 +429,16 @@ const countConfig5 = reactive<any>({
   separator: ',',
   duration: 1000,
 })
-
+// 销毁货值
+const countConfig6 = reactive<any>({
+  startValue: 0,
+  endValue: 0,
+  decimals: 2,
+  prefix: '￥',
+  suffix: '',
+  separator: ',',
+  duration: 1000,
+})
 const destroyValueDetailVisible = ref<boolean>(false)
 const destroyValueDetailList = ref<IGetFrontPageDestroyValueDetailItem[]>([])
 const inProgressProjectsData = ref<IGetFrontPageProgressProjectsItem[]>([])
@@ -501,6 +520,13 @@ const handleOpenDestroyDetail = async () => {
   const { data } = await getFrontPageDestroyValueDetail()
   destroyValueDetailVisible.value = true
   destroyValueDetailList.value = data.list
+  showUserName.value = false
+}
+const handleOpenDestroyLeadDetail = async () => {
+  const { data } = await getFrontPageDestroyValueLeadDetail()
+  destroyValueDetailVisible.value = true
+  destroyValueDetailList.value = data.list
+  showUserName.value = true
 }
 const commissionSitePieList = ref<IPieItem[]>([])
 const commissionTypePieList = ref<IPieItem[]>([])
@@ -516,6 +542,9 @@ const fetchTotalBonus = async () => {
 const destroySitePieList = ref<IPieItem[]>([])
 const destroyPieList = ref<IPieItem[]>([])
 const displayDestroyPieList = ref<IPieItem[]>([])
+const destroyPersonPieList = ref<IPieItem[]>([])
+const destroyLeadSitePieList = ref<IPieItem[]>([])
+const displayDestroyLeadPieList = ref<IPieItem[]>([])
 const fetchDestroyValue = async () => {
   const { data } = await getFrontPageDestroyValue()
   countConfig5.endValue = data.totalAmount
@@ -524,6 +553,15 @@ const fetchDestroyValue = async () => {
   countConfig5.monthDiff = data.lastMonthDiff
   countConfig5.yearDiff = data.lastYearSameMonthDiff
   handleChangeDestroyPieList()
+}
+const fetchLeadDestroyValue = async () => {
+  const { data } = await getFrontPageLeadDestroyValue()
+  countConfig6.endValue = data.totalAmount
+  destroyLeadSitePieList.value = data.destroySitePieList
+  destroyPersonPieList.value = data.destroyPersonPieList
+  countConfig6.monthDiff = data.lastMonthDiff
+  countConfig6.yearDiff = data.lastYearSameMonthDiff
+  handleChangeDestroyLeadPieList()
 }
 const handleChangePieList = () => {
   if (type.value === 0) {
@@ -583,6 +621,43 @@ const handleChangeDestroyPieList = () => {
   } else if (selectDestroyValueType.value === 1) {
     let i = 0
     displayDestroyPieList.value = destroyPieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: displayValue,
+        trueValue,
+        itemStyle,
+      }
+    })
+  }
+}
+const handleChangeDestroyLeadPieList = () => {
+  if (selectDestroyLeadValueType.value === 0) {
+    let i = 0
+    displayDestroyLeadPieList.value = destroyPersonPieList.value.map((item: any, index: number) => {
+      const trueValue = item.value
+      const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
+      const itemStyle = { color: colorList[index] }
+      if (item.value < 0) {
+        itemStyle.color = redColorList[i]
+        i++
+      }
+      return {
+        name: item.name,
+        value: displayValue,
+        trueValue,
+        itemStyle,
+      }
+    })
+  } else if (selectDestroyLeadValueType.value === 1) {
+    let i = 0
+    displayDestroyLeadPieList.value = destroyLeadSitePieList.value.map((item: any, index: number) => {
       const trueValue = item.value
       const displayValue = item.value < 0 ? Math.abs(item.value) : item.value
       const itemStyle = { color: colorList[index] }
@@ -753,6 +828,9 @@ onBeforeMount(async () => {
   }
   if (ableViewDestroyValueCard) {
     fetchDestroyValue()
+  }
+  if (ableProductManagerLeadViewCard) {
+    fetchLeadDestroyValue()
   }
 })
 </script>

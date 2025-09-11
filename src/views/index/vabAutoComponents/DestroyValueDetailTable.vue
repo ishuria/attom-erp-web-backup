@@ -27,15 +27,16 @@
         max-height="70vh"
         stripe
       >
-        <el-table-column label="库存动作日期" min-width="130" prop="streamDate" />
-        <el-table-column label="SKU" prop="msku" :width="flexColumnWidth(currentPageData, 'sku', 'msku')" />
-        <el-table-column label="ASIN" min-width="120" prop="asin" />
+        <el-table-column label="库存动作日期" min-width="125" prop="streamDate" />
+        <el-table-column align="left" label="SKU" prop="msku" :width="flexColumnWidth(currentPageData, 'sku', 'msku')" />
+        <el-table-column label="ASIN" min-width="110" prop="asin" />
         <el-table-column label="站点" min-width="130" prop="siteName" />
+        <el-table-column v-if="showUserName" label="人员" min-width="95" prop="userName" />
         <el-table-column label="库存属性" prop="dispositionType" />
         <el-table-column label="出入库类型名称" min-width="130" prop="businessTypeDesc" />
-        <el-table-column label="变动采购成本" prop="changePurchaseAmount" />
-        <el-table-column label="变动头程成本" prop="changeLogisticsAmount" />
-        <el-table-column label="变动其他成本" prop="changeOtherAmount" />
+        <el-table-column label="变动采购成本" min-width="120" prop="changePurchaseAmount" />
+        <el-table-column label="变动头程成本" min-width="120" prop="changeLogisticsAmount" />
+        <el-table-column label="变动其他成本" min-width="120" prop="changeOtherAmount" />
         <el-table-column label="变动总金额" prop="totalAmount" />
       </el-table>
       <vab-pagination
@@ -61,6 +62,7 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 const props = defineProps<{
   list: IGetFrontPageDestroyValueDetailItem[]
   modelValue: boolean
+  showUserName: boolean
 }>()
 const emit = defineEmits(['update:modelValue'])
 const visible = computed({
@@ -79,7 +81,6 @@ const queryForm = reactive<any>({
 })
 const listLoading = ref<boolean>(false)
 // 前端分页和搜索
-const list = ref<any>([])
 const total = ref<number>(0)
 const filteredList = ref<any>([])
 const currentPageData = ref<any>([])
@@ -93,7 +94,8 @@ const handleSearch = () => {
       (item: any) =>
         item.msku?.toLowerCase().includes(queryForm.keyWord.toLowerCase()) ||
         item.asin?.toString().includes(queryForm.keyWord) ||
-        item.siteName?.toString().includes(queryForm.keyWord)
+        item.siteName?.toString().includes(queryForm.keyWord) ||
+        item.userName?.toString().includes(queryForm.keyWord)
     )
   }
   total.value = filteredList.value.length

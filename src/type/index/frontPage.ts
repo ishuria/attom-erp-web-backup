@@ -110,6 +110,7 @@ export interface IGetFrontPageDestroyValueRes {
   destroyPieList: IPieItem[]
   lastMonthDiff: number
   lastYearSameMonthDiff: number
+  destroyPersonPieList: IPieItem[]
 }
 export interface IGetFrontPageDestroyValueDetailRes {
   total: number
@@ -147,6 +148,7 @@ export interface IGetFrontPageDestroyValueDetailItem {
 
   /** 总金额 */
   totalAmount: number
+  userName?: string
 }
 export interface IPieItem {
   name: string
