@@ -432,56 +432,57 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
-              <el-link
-                v-if="row.status === '待审核'"
-                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PASS] }"
-                type="success"
-                underline="never"
-                @click="handlePassCost(row)"
-              >
-                审核通过
-              </el-link>
-              <span style="margin: 0 3px"></span>
-              <el-link
-                v-if="row.status === '待审核'"
-                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_NOT_PASS] }"
-                type="danger"
-                underline="never"
-                @click="handleNotPassCost(row)"
-              >
-                不通过
-              </el-link>
-              <span style="margin: 0 3px"></span>
-              <el-link
-                v-if="row.status === '进行中' || row.status === '暂停'"
-                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_UPDATE] }"
-                :disabled="!isCurrentMonth(row.startDate)"
-                type="primary"
-                underline="never"
-                @click="showCostUpdate(row)"
-              >
-                修改
-              </el-link>
-              <span style="margin: 0 3px"></span>
-              <el-link
-                v-if="row.status === '进行中' || row.status === '暂停'"
-                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PAUSE] }"
-                type="warning"
-                underline="never"
-                @click="handlePauseCost(row)"
-              >
-                暂停
-              </el-link>
-              <span style="margin: 0 3px"></span>
-              <el-link
-                v-if="row.status === '进行中' || row.status === '暂停'"
-                v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_CONTINUE] }"
-                type="success"
-                underline="never"
-                @click="handleContinueCost(row)"
-              >
-                继续
-              </el-link>
+              <div>
+                <el-link type="primary" underline="never" @click="showPrices(row)">历史价格</el-link>
+              </div>
+              <div class="action-buttons">
+                <el-link
+                  v-if="row.status === '待审核'"
+                  v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PASS] }"
+                  type="success"
+                  underline="never"
+                  @click="handlePassCost(row)"
+                >
+                  审核通过
+                </el-link>
+                <el-link
+                  v-if="row.status === '待审核'"
+                  v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_NOT_PASS] }"
+                  type="danger"
+                  underline="never"
+                  @click="handleNotPassCost(row)"
+                >
+                  不通过
+                </el-link>
+                <el-link
+                  v-if="row.status === '进行中' || row.status === '暂停'"
+                  v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_UPDATE] }"
+                  :disabled="!isCurrentMonth(row.startDate)"
+                  type="primary"
+                  underline="never"
+                  @click="showCostUpdate(row)"
+                >
+                  修改
+                </el-link>
+                <el-link
+                  v-if="row.status === '进行中' || row.status === '暂停'"
+                  v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_PAUSE] }"
+                  type="warning"
+                  underline="never"
+                  @click="handlePauseCost(row)"
+                >
+                  暂停
+                </el-link>
+                <el-link
+                  v-if="row.status === '进行中' || row.status === '暂停'"
+                  v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_CONTINUE] }"
+                  type="success"
+                  underline="never"
+                  @click="handleContinueCost(row)"
+                >
+                  继续
+                </el-link>
+              </div>
             </template>
           </el-table-column>
           <template #empty>
@@ -594,6 +595,13 @@
         <el-button type="primary" @click="handleConfirmCostUpdate">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 历史价格 -->
+    <history-price-table
+      v-model="historyPriceVisible"
+      :after-price="historyPriceAfterPrice"
+      :before-price="historyPriceBeforePrice"
+      :list="historyPriceList"
+    />
   </div>
 </template>
 
@@ -611,6 +619,7 @@ import {
   continueLongCommissionTask,
   continueReductionCostTask,
   getCommissionTaskPictureList,
+  getCostReductionHistoryPriceList,
   getDevelopDesignTaskList,
   getLongCommissionTaskList,
   getReductionCostList,
@@ -629,6 +638,7 @@ import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoeffici
 import type {
   IGetCommissionTaskPictureList,
   IGetCommissionTaskPictureListReq,
+  IGetCostReductionHistoryPriceList,
   IGetDevelopDesignTaskList,
   IGetLongCommissionTaskList,
   IGetLongCommissionTaskListReq,
@@ -640,6 +650,8 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'CommissionTaskSummary',
 })
+
+const historyPriceVisible = ref<boolean>(false)
 
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
@@ -740,6 +752,18 @@ const costFormRules = reactive<FormRules>({
   commissionProportion: [{ required: true, message: '请填写提成比例', trigger: 'blur' }],
   commissionDays: [{ required: true, message: '请填写提成天数', trigger: 'blur' }],
 })
+const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
+const historyPriceBeforePrice = ref<number>(0)
+const historyPriceAfterPrice = ref<number>(0)
+const showPrices = async (row: IGetReductionCostList) => {
+  historyPriceVisible.value = true
+  historyPriceBeforePrice.value = row.optimizationBefore!
+  historyPriceAfterPrice.value = row.optimizationAfter!
+  const { data } = await getCostReductionHistoryPriceList({ id: row.id! })
+  if (data) {
+    historyPriceList.value = data
+  }
+}
 const handleConfirmCostUpdate = async () => {
   costFormRef.value?.validate(async (isValid) => {
     if (isValid) {
@@ -1208,6 +1232,16 @@ onBeforeMount(() => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+
+.action-buttons {
+  .el-link {
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 </style>

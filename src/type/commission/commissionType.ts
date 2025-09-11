@@ -791,3 +791,26 @@ export interface IGetReductionCostDetailList {
 
   totalBonus?: number
 }
+
+export interface IGetCostReductionHistoryPriceList {
+  /**
+   * 实际单价
+   */
+  actualUnitPrice: number
+  /**
+   * 开票
+   */
+  invoicing: string
+  /**
+   * 采购方
+   */
+  purchase: string
+  /**
+   * PO
+   */
+  po: string
+  /**
+   * PO日期
+   */
+  releaseDate: string
+}

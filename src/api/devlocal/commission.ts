@@ -13,6 +13,7 @@ import type {
   IGetCommissionSettingRes,
   IGetCommissionTaskPictureListReq,
   IGetCommissionTaskPictureListRes,
+  IGetCostReductionHistoryPriceList,
   IGetDevelopDesignTaskListRes,
   IGetLongCommissionTaskListReq,
   IGetLongCommissionTaskListRes,
@@ -366,5 +367,17 @@ export function getCostReductionUserList(): Promise<{ data: { id: number; label:
   return request({
     url: `${BASE_API}/cost/reduction/user/list`,
     method: 'get',
+  })
+}
+/**
+ * 获取采购降本提成任务-历史价格列表
+ * @param params
+ * @returns
+ */
+export function getCostReductionHistoryPriceList(params: { id: number }): Promise<{ data: IGetCostReductionHistoryPriceList[] }> {
+  return request({
+    url: `${BASE_API}/cost/reduction/history/price`,
+    method: 'get',
+    params,
   })
 }

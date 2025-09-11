@@ -121,6 +121,7 @@ declare module 'vue' {
     ErrorContainer: typeof import('./../../../src/views/error/vabAutoComponents/ErrorContainer.vue')['default']
     GoodsManagementEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsManagementEdit.vue')['default']
     HistoryAssessmentRecords: typeof import('./../../../src/views/index/vabAutoComponents/HistoryAssessmentRecords.vue')['default']
+    HistoryPriceTable: typeof import('./../../../src/views/commission/vabAutoComponents/HistoryPriceTable.vue')['default']
     IconList: typeof import('./../../../src/views/portal/vabAutoComponents/IconList.vue')['default']
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']
     ImageLoadFailed: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageLoadFailed.vue')['default']
