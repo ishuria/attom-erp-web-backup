@@ -3014,9 +3014,11 @@ const getCellClass = (data: { row: any; column: any; rowIndex: number; columnInd
     const payPrice = Number(data.row.payPrice)
     const taxIncludedPrice = Number(data.row.taxIncludedPrice)
 
-    if (payPrice === 0) {
+    if (payPrice === 0 && taxIncludedPrice !== payPrice) {
       return 'red'
-    } else if (payPrice === taxIncludedPrice) {
+    } else if (payPrice === 0 && taxIncludedPrice === payPrice && data.row.paymentRecord.length === 0) {
+      return 'red'
+    } else if (payPrice === taxIncludedPrice && data.row.paymentRecord.length > 0) {
       return 'green'
     } else if (payPrice > 0 && payPrice < taxIncludedPrice) {
       return 'yellow'
