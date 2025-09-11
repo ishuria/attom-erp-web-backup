@@ -411,7 +411,7 @@ const countConfig4 = reactive<any>({
 })
 // 销毁货值
 const countConfig5 = reactive<any>({
-  startValue: -3000,
+  startValue: 0,
   endValue: 0,
   decimals: 2,
   prefix: '￥',
