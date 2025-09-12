@@ -521,9 +521,19 @@
     <vab-dialog v-model="shareSelectVisible" :before-close="handleShareSelectClose" title="参与人员筛选" width="480">
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
-          <el-select v-model="shareSelect" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择参与人员">
-            <el-option v-for="item in optionShare" :key="item.userID" :label="item.userName" :value="item.userID" />
-          </el-select>
+          <el-tree-select
+            v-model="shareSelect"
+            check-strictly
+            clearable
+            :data="treeShareData"
+            filterable
+            multiple
+            placeholder="请选择参与人员"
+            :props="treeProps"
+            :render-after-expand="false"
+            show-checkbox
+            style="width: 100%"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -534,9 +544,19 @@
     <vab-dialog v-model="shareArchivedSelectVisible" :before-close="handleArchivedShareSelectClose" title="参与人员筛选" width="480">
       <el-form style="margin: 0">
         <el-form-item label="参与人员列表">
-          <el-select v-model="shareArchivedSelect" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择参与人员">
-            <el-option v-for="item in optionArchivedShare" :key="item.userID" :label="item.userName" :value="item.userID" />
-          </el-select>
+          <el-tree-select
+            v-model="shareArchivedSelect"
+            check-strictly
+            clearable
+            :data="treeArchivedShareData"
+            filterable
+            multiple
+            placeholder="请选择参与人员"
+            :props="treeProps"
+            :render-after-expand="false"
+            show-checkbox
+            style="width: 100%"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -837,8 +857,72 @@ const optionArchivedShare = ref<any>([])
 const shareSelect = ref<ISelectShare[]>([])
 const shareArchivedSelect = ref<ISelectShare[]>([])
 
+// 树形选择器数据
+const treeShareData = ref<any[]>([])
+const treeArchivedShareData = ref<any[]>([])
+
+// 树形选择器配置
+const treeProps = {
+  children: 'children',
+  label: 'label',
+  value: 'value',
+  disabled: 'disabled',
+}
+
 const userNameList = ref<string[]>([])
 const userNameArchivedList = ref<string[]>([])
+
+// 将平铺数据转换为树形结构
+const convertToTreeData = (data: any[]) => {
+  // 如果没有数据，返回空数组
+  if (!data || data.length === 0) {
+    return []
+  }
+
+  // 检查是否有部门字段，如果没有则按角色或其他字段分组
+  const hasDepartment = data.some((item) => item.department)
+  const hasRoleName = data.some((item) => item.roleName)
+
+  let groupField = 'department'
+  if (!hasDepartment && hasRoleName) {
+    groupField = 'roleName'
+  } else if (!hasDepartment && !hasRoleName) {
+    // 如果都没有，直接返回平铺结构
+    return data.map((item) => ({
+      label: item.userName,
+      value: item.userID,
+      disabled: false,
+    }))
+  }
+
+  // 按指定字段分组
+  const groupMap = new Map()
+
+  data.forEach((item) => {
+    const groupValue = item[groupField] || '未分组'
+    if (!groupMap.has(groupValue)) {
+      groupMap.set(groupValue, [])
+    }
+    groupMap.get(groupValue).push({
+      label: item.userName,
+      value: item.userID,
+      disabled: false,
+    })
+  })
+
+  // 转换为树形结构
+  const treeData: any[] = []
+  groupMap.forEach((users, groupName) => {
+    treeData.push({
+      label: groupName,
+      value: groupName,
+      disabled: true, // 分组节点不可选择
+      children: users,
+    })
+  })
+
+  return treeData
+}
 
 const getImageColumnWidth = (): number => {
   const imageWidth = 75 // 每张图片宽度
@@ -1330,12 +1414,17 @@ const handlePersonSelect = async () => {
   // console.log(activeName.value);
 
   optionShare.value = data
+  // 转换为树形数据
+  treeShareData.value = convertToTreeData(data)
+  // console.log(treeShareData.value)
 }
 const handleArchivedPersonselect = async () => {
   shareArchivedSelectVisible.value = true
   const { data } = await getProgressPersonList()
 
   optionArchivedShare.value = data
+  // 转换为树形数据
+  treeArchivedShareData.value = convertToTreeData(data)
 }
 // 确认筛选
 const handleShareSelectConfirm = async () => {

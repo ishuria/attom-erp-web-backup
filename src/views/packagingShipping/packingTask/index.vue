@@ -6,12 +6,23 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="allTaskForm.site" class="button-margin" clearable placeholder="全部" @change="queryAllTaskData">
+                <el-select v-model="allTaskForm.site" clearable placeholder="全部" @change="queryAllTaskData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
+              </el-form-item>
+              <el-form-item label="订货日期" prop="releaseDate">
+                <el-date-picker
+                  v-model="allTaskForm.releaseDate"
+                  clearable
+                  end-placeholder="结束日期"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  type="daterange"
+                  @change="queryAllTaskData"
+                />
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -217,7 +228,6 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowStartTask"
                 >
@@ -225,17 +235,16 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
-                <!-- <el-button class="button-margin" type="warning" @click="handleOpenTest">测试模拟打卡</el-button> -->
+                <el-button type="primary">工作量预估</el-button>
+                <!-- <el-button type="warning" @click="handleOpenTest">测试模拟打卡</el-button> -->
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -447,7 +456,6 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowStartTask"
                 >
@@ -455,7 +463,6 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_ADD_PERSON] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowCurrentTask"
                 >
@@ -463,7 +470,6 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_END] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowFinishTask"
                 >
@@ -471,16 +477,15 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="taskingForm.site" class="button-margin" clearable placeholder="全部" @change="queryTaskingData">
+                <el-select v-model="taskingForm.site" clearable placeholder="全部" @change="queryTaskingData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -687,7 +692,6 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowStartTask"
                 >
@@ -695,16 +699,15 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -911,7 +914,6 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowStartTask"
                 >
@@ -919,16 +921,15 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -1134,7 +1135,6 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_START] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowStartTask"
                 >
@@ -1142,16 +1142,15 @@
                 </el-button>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -1358,16 +1357,15 @@
               <el-form-item>
                 <el-button
                   v-permissions="{ permission: [PackingTaskPermission.PACKING_TASK_GET_OFF_WORK] }"
-                  class="button-margin"
                   type="primary"
                   @click="handleShowGetOffWork"
                 >
                   下班
                 </el-button>
-                <el-button class="button-margin" type="primary">工作量预估</el-button>
+                <el-button type="primary">工作量预估</el-button>
               </el-form-item>
               <el-form-item label="站点" prop="site">
-                <el-select v-model="queryForm.site" class="button-margin" clearable placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -2838,6 +2836,7 @@ const fetchTaskingData = async () => {
 const allTaskForm = reactive<any>({
   keyWord: '',
   site: undefined,
+  releaseDate: null, // 日期范围，格式为 [startDate, endDate]
   pageNo: 1,
   pageSize: 20,
 })
@@ -2845,7 +2844,17 @@ const allTaskList = ref<any>([])
 const allTaskTotal = ref<number>(0)
 const fetchAllTaskData = async () => {
   listLoading.value = true
-  const { data } = await getPackageAllTaskList(allTaskForm)
+
+  // 处理日期范围数据
+  const requestData = { ...allTaskForm }
+  if (allTaskForm.releaseDate && Array.isArray(allTaskForm.releaseDate) && allTaskForm.releaseDate.length === 2) {
+    // 将日期范围转换为开始和结束日期
+    requestData.startDate = formatDate(allTaskForm.releaseDate[0])
+    requestData.endDate = formatDate(allTaskForm.releaseDate[1])
+    delete requestData.releaseDate // 删除原始日期范围字段
+  }
+
+  const { data } = await getPackageAllTaskList(requestData)
   if (data) {
     allTaskList.value = data.list
     allTaskTotal.value = data.total!
@@ -3051,18 +3060,20 @@ onBeforeMount(() => {
           .left-panel {
             margin-bottom: 5px !important;
           }
-          .el-form {
-            .el-form-item:first-child {
-              margin: 0 !important;
+          .right-panel {
+            .el-form {
+              .el-form-item:first-child {
+                margin: 0 !important;
 
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
+                .el-check-tag,
+                .el-form-item__label {
+                  margin: 0 10px 5px 0;
+                  border-radius: 99px;
+                }
               }
-            }
-            .el-form-item:last-child {
-              margin: 0 !important;
+              .el-form-item:last-child {
+                margin: 0 !important;
+              }
             }
           }
         }
@@ -3093,9 +3104,6 @@ onBeforeMount(() => {
         }
         .none {
           display: none;
-        }
-        .button-margin {
-          margin-bottom: 10px;
         }
       }
     }
