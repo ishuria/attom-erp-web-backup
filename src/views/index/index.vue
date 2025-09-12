@@ -148,6 +148,14 @@
           </template>
         </top-card>
       </el-col>
+
+      <!-- 老板用户独占行 - 当只有老板权限时，销毁货值卡片独占一行 -->
+      <template v-if="currentRoleCode === ROLE_BOSS_CODE">
+        <el-col :lg="20" :md="12" :sm="0" :xl="20" :xs="0">
+          <!-- 空白占位，让销毁货值卡片独占一行 -->
+        </el-col>
+      </template>
+
       <!-- 第二层 -->
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <monthly-product-profit-table :list="profitList">
@@ -324,7 +332,7 @@ const myName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableProductManagerViewCard =
   currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
-const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+const ableProductManagerLeadViewCard = currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE || currentRoleCode === ROLE_BOSS_CODE
 const ableViewCard = currentRoleCode === ROLE_PRODUCTMANAGER_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const commissionRole = [
   ROLE_GRAPHICDESIGNLEAD_CODE,
