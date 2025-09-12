@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="未完成" :name="7">
+      <el-tab-pane label="全部" :name="7">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
@@ -55,6 +55,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="已签收天数" prop="signDay" width="110">
             <template #default="{ row }">
@@ -90,6 +95,7 @@
               {{ row.desc }}
             </template>
           </el-table-column>
+          <el-table-column label="到货状态" prop="arrivalStatus" width="100" />
           <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
               <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
@@ -269,6 +275,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="已签收天数" prop="signDay" width="110">
             <template #default="{ row }">
@@ -509,6 +520,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
@@ -728,6 +744,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
@@ -947,6 +968,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
@@ -1165,6 +1191,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>
@@ -1376,6 +1407,11 @@
           </el-table-column>
           <el-table-column label="PO" prop="po" width="100" />
           <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
+          <el-table-column label="订货日期" prop="releaseDate" width="120">
+            <template #default="{ row }">
+              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="站点" prop="sendSite" width="145" />
           <el-table-column label="产品图片" width="75">
             <template #header>

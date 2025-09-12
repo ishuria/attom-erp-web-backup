@@ -33,7 +33,7 @@
           </template>
         </el-table-column>
         <el-table-column label="PO" min-width="110" prop="po" />
-        <el-table-column label="实际单价" min-width="100" prop="actualUnitPrice" />
+        <el-table-column label="出厂单价" min-width="100" prop="unitPrice" />
         <el-table-column label="开票" min-width="100" prop="invoicing" />
         <el-table-column label="采购方" min-width="100" prop="purchase" />
         <template #empty>
