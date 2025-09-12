@@ -216,7 +216,7 @@ steps:
           }
         }
     when:
-      branch: main
+      branch: prod
 
 # 挂载卷
 volumes:

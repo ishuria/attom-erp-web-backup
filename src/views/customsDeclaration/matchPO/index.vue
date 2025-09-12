@@ -132,8 +132,8 @@
       <el-table-column label="产品总数" min-width="100" prop="totalNumber" />
       <el-table-column label="重量" min-width="70" prop="weight" />
       <el-table-column label="体积" min-width="70" prop="volume" />
-      <el-table-column label="预估运费" min-width="100" prop="" />
-      <el-table-column label="实际运费" min-width="100" prop="" />
+      <el-table-column label="预估运费" min-width="100" prop="estimatedShippingCosts" />
+      <el-table-column label="实际运费" min-width="100" prop="actualShippingCosts" />
       <el-table-column label="已付运费" min-width="100" prop="payStatus">
         <template #default="{ row }">
           <el-checkbox v-model="row.payStatus" :class="handleColorSwitch(row)" @change="handleUpdatePayStatus(row)" />
@@ -1283,7 +1283,11 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
         const values = data.map((item) => {
           // 计算每一行的合计值：预估总费用 * 暂估汇率
           const estimateCost = Number(item['estimateCost'])
-          const estimateExchangeRate = Number(item['estimateExchangeRate'])
+          let estimateExchangeRate = Number(item['estimateExchangeRate'])
+          // 如果币种是人民币 那么暂估汇率就是1
+          if (item['currency'] === 0) {
+            estimateExchangeRate = 1
+          }
           return estimateCost * estimateExchangeRate
         })
 
