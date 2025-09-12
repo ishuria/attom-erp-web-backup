@@ -5,12 +5,7 @@
         <el-form inline>
           <el-form-item label="站点">
             <el-select v-model="queryForm.siteId" placeholder="请选择站点" @change="handleChangeSite">
-              <el-option 
-                v-for="item in siteList"
-                :key="item.id"
-                :label="item.label"
-                :value="item.id"
-              />
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -24,7 +19,13 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keydown.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -32,15 +33,18 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
+    <el-table
       v-loading="listLoading"
-      border  
-      :cell-style="cellStyle" 
-      class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe 
+      border
+      :cell-style="cellStyle"
+      class="noneHoverTable"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
       @cell-click="changeInput"
     >
-      <el-table-column label="品名" >
-        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')"/>
+      <el-table-column label="品名">
+        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')" />
       </el-table-column>
       <el-table-column label="1月">
         <el-table-column label="实际值" prop="janActual">
@@ -51,7 +55,7 @@
             <span>{{ row.janActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="janReference"/>
+        <el-table-column label="参考值" prop="janReference" />
       </el-table-column>
       <el-table-column label="2月">
         <el-table-column label="实际值" prop="febActual">
@@ -62,7 +66,7 @@
             <span>{{ row.febActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="febReference"/>
+        <el-table-column label="参考值" prop="febReference" />
       </el-table-column>
       <el-table-column label="3月">
         <el-table-column label="实际值" prop="marActual">
@@ -73,7 +77,7 @@
             <span>{{ row.marActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="marReference"/>
+        <el-table-column label="参考值" prop="marReference" />
       </el-table-column>
       <el-table-column label="4月">
         <el-table-column label="实际值" prop="aprActual">
@@ -84,7 +88,7 @@
             <span>{{ row.aprActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="aprReference"/>
+        <el-table-column label="参考值" prop="aprReference" />
       </el-table-column>
       <el-table-column label="5月">
         <el-table-column label="实际值" prop="mayActual">
@@ -95,7 +99,7 @@
             <span>{{ row.mayActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="mayReference"/>
+        <el-table-column label="参考值" prop="mayReference" />
       </el-table-column>
       <el-table-column label="6月">
         <el-table-column label="实际值" prop="junActual">
@@ -106,7 +110,7 @@
             <span>{{ row.junActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="junReference"/>
+        <el-table-column label="参考值" prop="junReference" />
       </el-table-column>
       <el-table-column label="7月">
         <el-table-column label="实际值" prop="julActual">
@@ -117,7 +121,7 @@
             <span>{{ row.julActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="julReference"/>
+        <el-table-column label="参考值" prop="julReference" />
       </el-table-column>
       <el-table-column label="8月">
         <el-table-column label="实际值" prop="augActual">
@@ -128,7 +132,7 @@
             <span>{{ row.augActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="augReference"/>
+        <el-table-column label="参考值" prop="augReference" />
       </el-table-column>
       <el-table-column label="9月">
         <el-table-column label="实际值" prop="sepActual">
@@ -139,7 +143,7 @@
             <span>{{ row.sepActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="sepReference"/>
+        <el-table-column label="参考值" prop="sepReference" />
       </el-table-column>
       <el-table-column label="10月">
         <el-table-column label="实际值" prop="octActual">
@@ -150,7 +154,7 @@
             <span>{{ row.octActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="octReference"/>
+        <el-table-column label="参考值" prop="octReference" />
       </el-table-column>
       <el-table-column label="11月">
         <el-table-column label="实际值" prop="novActual">
@@ -161,7 +165,7 @@
             <span>{{ row.novActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="novReference"/>
+        <el-table-column label="参考值" prop="novReference" />
       </el-table-column>
       <el-table-column label="12月">
         <el-table-column label="实际值" prop="decActual">
@@ -172,43 +176,34 @@
             <span>{{ row.decActual }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参考值" prop="decReference"/>
+        <el-table-column label="参考值" prop="decReference" />
       </el-table-column>
       <el-table-column label="操作" width="120">
         <template #default="{ row }">
-          <el-link type="primary" underline='never' @click="viewChart(row)">查看</el-link>
-          <el-link type="danger" underline='never' @click="handleDel(row)">删除</el-link>
+          <el-link type="primary" underline="never" @click="viewChart(row)">查看</el-link>
+          <span style="margin: 0 5px"></span>
+          <el-link type="danger" underline="never" @click="handleDel(row)">删除</el-link>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty"/>
+        <el-empty class="vab-data-empty" />
       </template>
     </el-table>
-    <vab-pagination 
+    <vab-pagination
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <vab-dialog
-      v-model="viewVisible"
-      title="查看"
-      width="40%"
-      @open="handleDialogOpened"
-    >
-      <div ref="chartContainer" style="width: 100%; height: 400px;"></div>
+    <vab-dialog v-model="viewVisible" title="查看" width="40%" @open="handleDialogOpened">
+      <div ref="chartContainer" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 添加季节系数 -->
-    <vab-dialog
-      v-model="addVisible"
-      title="新增季节系数"
-      width="20%"
-      @close="handleCloseAdd"
-    >
+    <vab-dialog v-model="addVisible" title="新增季节系数" width="20%" @close="handleCloseAdd">
       <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 10px">
-        <el-form-item label="品名" prop="kindName" >
+        <el-form-item label="品名" prop="kindName">
           <el-input v-model="form.kindName" clearable />
         </el-form-item>
         <el-form-item label="1月实际系数" prop="janActual">
@@ -263,13 +258,19 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { months } from '../constantOption'
-import { addSeasonalCoefficient, delSeasonalCoefficient, getSeasonalCoefficientList, getSeasonalCoefficientSiteList, updateSeasonalCoefficient } from '/@/api/devlocal/seasonalCoefficient'
+import {
+  addSeasonalCoefficient,
+  delSeasonalCoefficient,
+  getSeasonalCoefficientList,
+  getSeasonalCoefficientSiteList,
+  updateSeasonalCoefficient,
+} from '/@/api/devlocal/seasonalCoefficient'
 import type { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'SeasonalCoefficient'
+  name: 'SeasonalCoefficient',
 })
 
 const listLoading = ref<boolean>(false)
@@ -278,7 +279,7 @@ const queryForm = reactive<IGetSeasonalCoefficientListReq>({
   siteId: 0,
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const viewVisible = ref<boolean>(false)
 const chartContainer = ref<HTMLElement | null>(null)
@@ -295,25 +296,169 @@ const form = reactive<any>({})
 const formRef = ref<FormInstance>()
 const formRules = reactive<FormRules>({
   kindName: [{ required: true, message: '请输入品类名称', trigger: 'blur' }],
-  janActual: [{ required: true, message: '请输入1月实际系数', trigger: 'blur' }],
-  febActual: [{ required: true, message: '请输入2月实际系数', trigger: 'blur' }],
-  marActual: [{ required: true, message: '请输入3月实际系数', trigger: 'blur' }],
-  aprActual: [{ required: true, message: '请输入4月实际系数', trigger: 'blur' }],
-  mayActual: [{ required: true, message: '请输入5月实际系数', trigger: 'blur' }],
-  junActual: [{ required: true, message: '请输入6月实际系数', trigger: 'blur' }],
-  julActual: [{ required: true, message: '请输入7月实际系数', trigger: 'blur' }],
-  augActual: [{ required: true, message: '请输入8月实际系数', trigger: 'blur' }],
-  sepActual: [{ required: true, message: '请输入9月实际系数', trigger: 'blur' }],
-  octActual: [{ required: true, message: '请输入10月实际系数', trigger: 'blur' }],
-  novActual: [{ required: true, message: '请输入11月实际系数', trigger: 'blur' }],
-  decActual: [{ required: true, message: '请输入12月实际系数', trigger: 'blur' }],
+  janActual: [
+    { required: true, message: '请输入1月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  febActual: [
+    { required: true, message: '请输入2月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  marActual: [
+    { required: true, message: '请输入3月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  aprActual: [
+    { required: true, message: '请输入4月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  mayActual: [
+    { required: true, message: '请输入5月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  junActual: [
+    { required: true, message: '请输入6月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  julActual: [
+    { required: true, message: '请输入7月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  augActual: [
+    { required: true, message: '请输入8月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  sepActual: [
+    { required: true, message: '请输入9月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  octActual: [
+    { required: true, message: '请输入10月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  novActual: [
+    { required: true, message: '请输入11月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  decActual: [
+    { required: true, message: '请输入12月实际系数', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value <= 0) {
+          callback(new Error('季节系数必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
 })
 const handleConfirmAdd = async () => {
   formRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       const { data } = await addSeasonalCoefficient({
         site: queryForm.siteId,
-        ...form
+        ...form,
       })
       if (data) {
         $baseMessage('新增季节系数成功！', 'success')
@@ -362,9 +507,34 @@ const handleDialogOpened = () => {
 }
 const viewChart = (row: IGetSeasonalCoefficientList) => {
   viewVisible.value = true
-  actualData = [row.janActual, row.febActual, row.marActual, row.aprActual, row.mayActual, row.junActual, row.julActual, row.augActual, row.sepActual, row.octActual, row.novActual, row.decActual]
-  referenceData = [row.janReference, row.febReference, row.marReference, row.aprReference, row.mayReference, row.junReference, row.julReference, row.augReference, row.sepReference, row.octReference, row.novReference, row.decReference]
-  
+  actualData = [
+    row.janActual,
+    row.febActual,
+    row.marActual,
+    row.aprActual,
+    row.mayActual,
+    row.junActual,
+    row.julActual,
+    row.augActual,
+    row.sepActual,
+    row.octActual,
+    row.novActual,
+    row.decActual,
+  ]
+  referenceData = [
+    row.janReference,
+    row.febReference,
+    row.marReference,
+    row.aprReference,
+    row.mayReference,
+    row.junReference,
+    row.julReference,
+    row.augReference,
+    row.sepReference,
+    row.octReference,
+    row.novReference,
+    row.decReference,
+  ]
 }
 // const updateChart = () => {
 //   chartInstance?.setOption(option.value, true)
@@ -377,14 +547,14 @@ const initChart = () => {
     },
     tooltip: {
       trigger: 'axis',
-      confine: true
+      confine: true,
     },
     grid: {
       top: 50,
       bottom: 30,
       left: 50,
       right: 50,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -394,8 +564,8 @@ const initChart = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
     },
     yAxis: {
@@ -406,9 +576,9 @@ const initChart = () => {
       axisLine: {
         show: true,
         lineStyle: {
-          color: '#999'
-        }
-      }
+          color: '#999',
+        },
+      },
     },
     series: [
       {
@@ -416,7 +586,7 @@ const initChart = () => {
         type: 'line',
         data: actualData,
         itemStyle: {
-          color: '#52bfff'
+          color: '#52bfff',
         },
         smooth: true,
       },
@@ -425,19 +595,19 @@ const initChart = () => {
         type: 'line',
         data: referenceData,
         itemStyle: {
-          color: '#ff8fa5'
+          color: '#ff8fa5',
         },
         smooth: true,
       },
-    ]
+    ],
   }
-  
+
   chartInstance?.setOption(option.value)
 }
 const handleDel = async (row: IGetSeasonalCoefficientList) => {
   $baseConfirm('确定要删除季节系数吗？', null, async () => {
     const { data } = await delSeasonalCoefficient({
-      id: row.id
+      id: row.id,
     })
     if (data) {
       $baseMessage('删除季节系数成功！', 'success')
@@ -446,7 +616,6 @@ const handleDel = async (row: IGetSeasonalCoefficientList) => {
   })
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -462,20 +631,57 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 
     focusAndSelectInput(cell)
   }
-
 }
 
 // table blur事件
-const clickCancel = async (event:any, value:any) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
+
+  // 检查是否有值被删除或设为0
+  const monthlyFields = [
+    'janActual',
+    'febActual',
+    'marActual',
+    'aprActual',
+    'mayActual',
+    'junActual',
+    'julActual',
+    'augActual',
+    'sepActual',
+    'octActual',
+    'novActual',
+    'decActual',
+  ]
+
+  let hasInvalidValue = false
+  let invalidFields: string[] = []
+
+  for (const field of monthlyFields) {
+    const currentValue = value[field]
+    const originalValue = copyRow[field]
+
+    // 检查是否为空、null、undefined或0
+    if (currentValue === '' || currentValue === null || currentValue === undefined || currentValue === 0 || currentValue === '0') {
+      hasInvalidValue = true
+      invalidFields.push(field)
+    }
+  }
+
+  // 如果有无效值，恢复原值并提示
+  if (hasInvalidValue) {
+    Object.assign(value, copyRow)
+    $baseMessage('季节系数不能为空或0，请重新输入！', 'warning')
+    return
+  }
+
   if (isEqual(copyRow, value)) {
     return
   }
@@ -489,20 +695,21 @@ const clickCancel = async (event:any, value:any) => {
   }
 }
 
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const index = data.columnIndex
   if (index === 0) {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   } else if (index % 2 === 0) {
     return {
       textAlign: 'center',
-      color: '#999'
+      color: '#999',
     }
-  } return {
+  }
+  return {
     cursor: 'pointer',
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 const fetchSiteList = async () => {
@@ -524,7 +731,6 @@ onBeforeMount(() => {
   fetchSiteList()
   fetchData()
 })
-
 </script>
 
 <style lang="scss" scoped>
@@ -535,8 +741,8 @@ onBeforeMount(() => {
 
   .value {
     display: flex;
-    align-items: center; 
-    justify-content: center; 
+    align-items: center;
+    justify-content: center;
     width: 50%; /* 每个值占一半的空间 */
   }
   .value2 {
