@@ -31,7 +31,7 @@ const props = defineProps<{
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '总调整' || data.column.label === '调整数') {
     if (props.title === '其他计分项') {
-      if (data.row.totalNumber > 0) {
+      if (data.row.number > 0) {
         return {
           color: 'var(--el-color-success)',
           textAlign: 'center',
