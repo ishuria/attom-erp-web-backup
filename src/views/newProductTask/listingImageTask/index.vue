@@ -1384,7 +1384,7 @@ const queryForm = reactive<IGetArtDesignTaskListReq>({
   keyword: '',
   pageNo: 1,
   pageSize: 20,
-  status: 0,
+  status: 3,
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)

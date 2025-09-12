@@ -23,7 +23,7 @@ steps:
     commands:
       - pwd
       - ls -alt
-      
+
       - npm config set registry https://registry.npmmirror.com
       - npm i -g pnpm
       - pnpm store prune
@@ -89,8 +89,8 @@ steps:
       mount:
         - ./node_modules
 
-    # webhook通知
-  - name: feishu-notify
+      # 开始部署通知
+  - name: feishu-notify-test-start
     pull: if-not-exists
     image: plugins/webhook
     settings:
@@ -101,25 +101,153 @@ steps:
       debug: true
       template: |
         {
-          "msg_type": "interactive",
-          "card": {
-            "elements": [
-              {
-                "tag": "div",
-                "text": {
-                  "content": "**构建的项目名称：{{repo.name}}**，分支：{{build.branch}},构建编号：{{build.number}},{{build.author}}提交的代码内容为：{{build.message}},项目构建状态为：{{build.status}}。",
-                  "tag": "lark_md"
-                }
-              }
-            ],
-            "header": {
-              "title": {
-                "content": "CI/CD项目部署通知",
-                "tag": "plain_text"
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "content": [
+                  [{
+                    "tag": "at",
+                    "user_id": "all"
+                  },{
+                    "tag": "text",
+                    "text": "test环境系统部署通知:项目开始部署中.... "
+                  }]
+                ]
               }
             }
           }
         }
+    when:
+      branch: local-dev
+
+  # 部署测试环境
+  - name: deploy-run-test
+    image: appleboy/drone-ssh
+    pull: if-not-exists
+    settings:
+      host: 192.168.6.14
+      port: 22
+      username: attom-14
+      password:
+        from_secret: ssh_password
+      # 使用docker compose拉去对应的镜像，并运行
+      script:
+        - cd /home/attom-14/app/erp/backend && docker compose pull && docker compose up -d && docker image prune -f
+    when:
+      branch: local-dev
+
+  # prod 开始通知
+  - name: feishu-notify-prod-start
+    pull: if-not-exists
+    image: plugins/webhook
+    settings:
+      urls: 'https://open.feishu.cn/open-apis/bot/v2/hook/8abd8f3c-4550-4d44-9729-22e772b80181'
+      method: 'POST'
+      content_type: application/json
+      skip_verify: true
+      debug: true
+      template: |
+        {
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "content": [
+                  [{
+                    "tag": "at",
+                    "user_id": "all"
+                  },{
+                    "tag": "text",
+                    "text": "新系统部署通知:项目开始部署中.... "
+                  }]
+                ]
+              }
+            }
+          }
+        }
+    when:
+      branch: prod
+
+  # 部署开发环境
+  - name: deploy-run-prod
+    image: appleboy/drone-ssh
+    pull: if-not-exists
+    settings:
+      host: 192.168.6.12
+      port: 22
+      username: attom-12
+      password:
+        from_secret: ssh_password
+      # 使用docker compose拉去对应的镜像，并运行
+      script:
+        - cd /home/attom-12/app/erp/backend && docker compose pull && docker compose up -d && docker image prune -f
+    when:
+      branch: prod
+
+  # 项目部署结束通知
+  - name: feishu-notify-test-end
+    pull: if-not-exists
+    image: plugins/webhook
+    settings:
+      urls: 'https://open.feishu.cn/open-apis/bot/v2/hook/0855b6bf-0a5c-4a97-8b83-5efd8e84d09d'
+      method: 'POST'
+      content_type: application/json
+      skip_verify: true
+      debug: true
+      template: |
+        {
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "content": [
+                  [{
+                    "tag": "at",
+                    "user_id": "all"
+                  },{
+                    "tag": "text",
+                    "text": "test环境系统部署通知:项目部署完成 "
+                  }]
+                ]
+              }
+            }
+          }
+        }
+    when:
+      branch: local-dev
+
+  # prod 结束通知
+  - name: feishu-notify-prod-end
+    pull: if-not-exists
+    image: plugins/webhook
+    settings:
+      urls: 'https://open.feishu.cn/open-apis/bot/v2/hook/8abd8f3c-4550-4d44-9729-22e772b80181'
+      method: 'POST'
+      content_type: application/json
+      skip_verify: true
+      debug: true
+      template: |
+        {
+          "msg_type": "post",
+          "content": {
+            "post": {
+              "zh_cn": {
+                "content": [
+                  [{
+                    "tag": "at",
+                    "user_id": "all"
+                  },{
+                    "tag": "text",
+                    "text": "新系统部署通知:系统部署完成 "
+                  }]
+                ]
+              }
+            }
+          }
+        }
+    when:
+      branch: main
 
 # 挂载卷
 volumes:
