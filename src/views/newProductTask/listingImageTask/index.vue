@@ -657,9 +657,10 @@
                     </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })"
+                      :disabled="!canFinishTask(row)"
                       @click="handleFinish(row)"
                     >
-                      <el-link type="success" underline="never">完成</el-link>
+                      <el-link :disabled="!canFinishTask(row)" type="success" underline="never">完成</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
@@ -1154,6 +1155,25 @@ defineOptions({
 const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_BOSS_CODE || ROLE_PARTNER_CODE
+
+// 检查用户是否有权限完成任务
+const canFinishTask = (row: any) => {
+  if (!userName) return false
+
+  // 检查是否是产品经理
+  const productManagers = row.productManager?.split(',').map((name: string) => name.trim()) || []
+  const isProductManager = productManagers.includes(userName)
+
+  // 检查是否是产品设计
+  const productDesigns = row.productDesign?.split(',').map((name: string) => name.trim()) || []
+  const isProductDesign = productDesigns.includes(userName)
+
+  // 检查是否是上级
+  const supervisors = row.supervisorNames?.split(',').map((name: string) => name.trim()) || []
+  const isSupervisor = supervisors.includes(userName)
+
+  return isProductManager || isProductDesign || isSupervisor
+}
 
 // // 检查用户是否有权限完成该任务
 // const isUserAuthorized = (row: any) => {

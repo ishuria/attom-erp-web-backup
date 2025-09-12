@@ -1246,7 +1246,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
     // 第一列显示'合计'
     switch (index) {
       case 0: {
-        sums[index] = h('div', { style: { fontWeight: '600' } }, ['总计'])
+        sums[index] = h('div', { style: { fontWeight: '600' } }, ['总计（RMB）'])
         return
       }
       // case 6: {
