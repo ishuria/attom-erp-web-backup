@@ -1151,9 +1151,24 @@ import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'ListingImageTask',
 })
-
+const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_BOSS_CODE || ROLE_PARTNER_CODE
+
+// // 检查用户是否有权限完成该任务
+// const isUserAuthorized = (row: any) => {
+//   if (!userName) return false
+
+//   // 检查产品经理字段
+//   const productManagers = row.productManager?.split(',').map((name: string) => name.trim()) || []
+//   const isProductManager = productManagers.includes(userName)
+
+//   // 检查产品设计字段
+//   const productDesigns = row.productDesign?.split(',').map((name: string) => name.trim()) || []
+//   const isProductDesign = productDesigns.includes(userName)
+
+//   return isProductManager || isProductDesign
+// }
 const router = useRouter()
 const route = useRoute()
 interface ColumnConfig {

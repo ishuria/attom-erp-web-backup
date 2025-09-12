@@ -95,7 +95,13 @@
               {{ row.desc }}
             </template>
           </el-table-column>
-          <el-table-column label="到货状态" prop="arrivalStatus" width="100" />
+          <el-table-column label="到货状态" prop="status" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.status === 0 ? 'warning' : 'success'">
+                {{ row.status === 0 ? '未到货' : '已到货' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="优先打包" prop="priorityPackaging" width="100">
             <template #default="{ row }">
               <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
