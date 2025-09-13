@@ -457,7 +457,6 @@
                 <el-link
                   v-if="row.status === '进行中' || row.status === '暂停'"
                   v-permissions="{ permission: [CommissionPermission.COMMISSION_TASK_REDUCTION_UPDATE] }"
-                  :disabled="!isCurrentMonth(row.startDate)"
                   type="primary"
                   underline="never"
                   @click="showCostUpdate(row)"

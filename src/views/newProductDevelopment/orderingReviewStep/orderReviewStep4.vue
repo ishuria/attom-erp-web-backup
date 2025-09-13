@@ -194,8 +194,8 @@ const handleSaveAndContinue = async () => {
       '请再次确认，是否要真的发布PO！'
     ),
   ])
-  try {
-    $baseConfirm(deleteVNode, '系统提示', async () => {
+  $baseConfirm(deleteVNode, '系统提示', async () => {
+    try {
       releasePoLoading.value = true
       const { data } = await releasePo({ reviewId: props.reviewId })
       if (data === true) {
@@ -206,12 +206,12 @@ const handleSaveAndContinue = async () => {
         })
       }
       releasePoLoading.value = false
-    })
-  } catch {
-    releasePoLoading.value = false
-  } finally {
-    releasePoLoading.value = false
-  }
+    } catch {
+      releasePoLoading.value = false
+    } finally {
+      releasePoLoading.value = false
+    }
+  })
 }
 const siteQuantityList = ref<any[]>([])
 const { initData, columns } = useTableDataLineToColumn()
