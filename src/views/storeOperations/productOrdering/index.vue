@@ -143,6 +143,17 @@
             <br />
             今补
           </span>
+          <span v-if="item.label === '剩余库存'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">
+                剩余库存
+                <el-icon><question-filled /></el-icon>
+              </div>
+              <template #content>
+                <div class="custom-tooltip">总库存+接收中/可售库存</div>
+              </template>
+            </el-tooltip>
+          </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
@@ -158,7 +169,7 @@
             </el-image>
           </span>
           <span v-if="item.label === 'ASIN'">
-            <el-link style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
+            <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
             <!-- <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
               <vab-icon icon="file-copy-2-fill" />
             </span> -->
@@ -224,7 +235,13 @@
           <span v-if="label.includes(item.label)">
             {{ row[labelMap.get(item.label)!] !== null ? row[labelMap.get(item.label)!].toFixed(2) + '%' : '' }}
           </span>
-          <span v-if="item.label === '剩余库存'">{{ row.availableInventory }} / {{ row.fbaCount }}</span>
+          <span v-if="item.label === '剩余库存'">
+            {{ row.fbaCount }}
+            <span style="color: var(--el-color-warning)">
+              {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+            </span>
+            / {{ row.availableInventory }}
+          </span>
           <span v-if="item.label === '订货#'">
             {{ row.orderCount }}
             <br />
@@ -823,7 +840,7 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40)
     }
     case '剩余库存': {
-      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 0) + flexColumnWidth(list.value, '/', 'fbaCount', 10)}px`
+      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 10) + flexColumnWidth(list.value, '/', 'acceptingCount', 10) + flexColumnWidth(list.value, '/', 'fbaCount', 0)}px`
     }
     case '原始今补': {
       return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement')
@@ -903,7 +920,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 }
 const headerStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const label = data.column.label
-  if (['原始今补', '可售含在途'].includes(label)) {
+  if (['原始今补', '可售含在途', '剩余库存'].includes(label)) {
     return 'column_caret'
   }
   return ''

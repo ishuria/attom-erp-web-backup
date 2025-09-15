@@ -464,6 +464,17 @@
                 <br />
                 亚马逊FBA
               </span>
+              <span v-if="item.label === '剩余库存'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">
+                    剩余库存
+                    <el-icon><question-filled /></el-icon>
+                  </div>
+                  <template #content>
+                    <div class="custom-tooltip">总库存+接收中/可售库存</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -735,7 +746,13 @@
                   </el-space>
                 </div>
               </span>
-              <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
+              <span v-if="item.label === '剩余库存'">
+                {{ row.fbaCount }}
+                <span style="color: var(--el-color-warning)">
+                  {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+                </span>
+                / {{ row.availableInventory }}
+              </span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
               </span>
@@ -1210,6 +1227,17 @@
                   </template>
                 </el-tooltip>
               </span>
+              <span v-if="item.label === '剩余库存'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">
+                    剩余库存
+                    <el-icon><question-filled /></el-icon>
+                  </div>
+                  <template #content>
+                    <div class="custom-tooltip">总库存+接收中/可售库存</div>
+                  </template>
+                </el-tooltip>
+              </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
@@ -1368,7 +1396,13 @@
                   </el-space>
                 </div>
               </span>
-              <span v-if="item.label === '剩余库存'">{{ row.availableInventory }}/{{ row.fbaCount }}</span>
+              <span v-if="item.label === '剩余库存'">
+                {{ row.fbaCount }}
+                <span style="color: var(--el-color-warning)">
+                  {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+                </span>
+                / {{ row.availableInventory }}
+              </span>
               <span v-if="item.label === '库龄'">
                 <span v-html="row.storageAge"></span>
               </span>
@@ -3093,7 +3127,7 @@ const handleWidth = (item: any) => {
       case '剩余库存': {
         const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
         const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
-        return `${Number(availableWidth) + Number(fbaWidth) - 20}px`
+        return `${Number(availableWidth) + Number(fbaWidth) + 30}px`
       }
       case '最近入库': {
         return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
@@ -3124,6 +3158,11 @@ const handleWidth = (item: any) => {
       }
       case '最近入库': {
         return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
+      }
+      case '剩余库存': {
+        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
+        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
+        return `${Number(availableWidth) + Number(fbaWidth) + 30}px`
       }
       default: {
         return item.minWidth
@@ -3502,6 +3541,7 @@ const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex
       'FBA仓储费',
       '月ACOS',
       'VOC满意度',
+      '剩余库存',
     ].includes(data.column.label)
   ) {
     return 'header-cell clearLR-padding'
