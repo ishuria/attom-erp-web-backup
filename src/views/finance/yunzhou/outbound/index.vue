@@ -38,7 +38,7 @@
       class="noneHoveTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      row-class-name="tableRowClassName"
+      :row-class-name="tableRowClassName"
       stripe
     >
       <el-table-column label="报关单出库日期" min-width="130" prop="outboundDate">
