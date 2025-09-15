@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="本月销毁货值详情" top="7vh" width="70%">
+    <vab-dialog v-model="visible" title="本月销毁货值详情" top="7vh" width="67%">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="queryForm" @submit.prevent>
@@ -27,16 +27,21 @@
         max-height="70vh"
         stripe
       >
-        <el-table-column label="库存动作日期" min-width="125" prop="streamDate" />
+        <el-table-column label="月份" min-width="90">
+          <template #default="{ row }">
+            <!-- 展示当月月份 -->
+            {{ formatDate(new Date(row.streamDate), 'yyyy-MM') }}
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="SKU" prop="msku" :width="flexColumnWidth(currentPageData, 'sku', 'msku')" />
         <el-table-column label="ASIN" min-width="110" prop="asin" />
         <el-table-column label="站点" min-width="130" prop="siteName" />
         <el-table-column v-if="showUserName" label="人员" min-width="95" prop="userName" />
         <el-table-column label="库存属性" prop="dispositionType" />
         <el-table-column label="出入库类型名称" min-width="130" prop="businessTypeDesc" />
-        <el-table-column label="变动采购成本" min-width="120" prop="changePurchaseAmount" />
-        <el-table-column label="变动头程成本" min-width="120" prop="changeLogisticsAmount" />
-        <el-table-column label="变动其他成本" min-width="120" prop="changeOtherAmount" />
+        <el-table-column label="变动采购成本" min-width="110" prop="changePurchaseAmount" />
+        <el-table-column label="变动头程成本" min-width="110" prop="changeLogisticsAmount" />
+        <el-table-column label="变动其他成本" min-width="110" prop="changeOtherAmount" />
         <el-table-column label="变动总金额" prop="totalAmount" />
       </el-table>
       <vab-pagination
@@ -56,6 +61,7 @@ defineOptions({
 })
 
 import { Search } from '@element-plus/icons-vue'
+import { formatDate } from '~/src/utils/dateUtils'
 import type { IGetFrontPageDestroyValueDetailItem } from '/@/type/index/frontPage'
 import { flexColumnWidth } from '/@/utils/tableColum'
 

@@ -859,6 +859,9 @@ const handleWidth = (item: any) => {
     case 'ASIN': {
       return Number(item.minWidth) + 10
     }
+    case '产品描述': {
+      return flexColumnWidth(list.value, '产品描述', 'productDesc')
+    }
     default: {
       return item.minWidth
     }
@@ -927,7 +930,7 @@ const headerStyle = (data: { row: any; column: any; rowIndex: number; columnInde
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['SKU', 'ASIN', '库龄'].includes(label)) {
+  if (['SKU', 'ASIN', '库龄', '产品描述'].includes(label)) {
     return {
       textAlign: 'left',
     }

@@ -2229,6 +2229,7 @@ const handlePaymentPaid = async () => {
     if (data === true) {
       $baseMessage('已付尾款/全款成功', 'success', 'hey')
       fetchData() //重新刷新表格
+      clearTableSelect()
     }
   } catch (error) {
     console.error(error)
@@ -2276,11 +2277,15 @@ const clearTableSelect = () => {
     item.selectedPoRow = false
   })
   selectedPORow.value.clear()
+  selectedPOArray.value = []
 
   selectedCompArray.value.forEach((item: any) => {
     item.selectedCompRow = false
   })
   selectedCompArray.value = []
+
+  // 重置含税价格合计
+  taxIncludedTotalPrice.value = 0
 }
 const installmentLoading = ref<boolean>(false)
 // 确认分批付款
@@ -2303,7 +2308,7 @@ const handleConfirmInstallment = async () => {
           $baseMessage('分批付款成功', 'success', 'hey')
           handleCloseInstallmentDialog()
           fetchData() //重新刷新表格
-          // clearTableSelect()
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -2391,7 +2396,7 @@ const handleConfirmRefund = async () => {
           $baseMessage('退款提交成功', 'success', 'hey')
           handleCloseRefundDialog()
           fetchData() //重新刷新表格
-          // clearTableSelect()
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -2437,7 +2442,7 @@ const handleConfirmTotalPriceSharing = async () => {
           $baseMessage('总价分摊提交成功', 'success')
           handleCloseTotalPriceSharingDialog()
           fetchData() //重新刷新表格
-          // clearTableSelect()
+          clearTableSelect()
         }
       } catch (error) {
         console.error(error)
@@ -2655,7 +2660,7 @@ const handleDelPo = async () => {
       if (data === true) {
         $baseMessage('删除该条PO成功', 'success', 'hey')
         fetchData() //重新刷新表格
-        // clearTableSelect()
+        clearTableSelect()
       }
     } catch (error) {
       console.error(error)
