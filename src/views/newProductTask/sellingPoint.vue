@@ -322,24 +322,24 @@ onBeforeMount(async () => {
     // 有缓存 读缓存, 每个sku的卖点和文案是不一样的，
     sku.value = querySku
     const savedForm = localStorage.getItem(`${sku.value}_sellingPointForm`)
-    if (savedForm) {
-      // 没缓存 get数据
-      const { data } = await getArtDesignSellingPoint({
-        sku: sku.value,
-      })
-      Object.assign(form, JSON.parse(savedForm))
-      _id.value = data.id
-      form.id = data.id
-    } else {
-      // 没缓存 get数据
-      const { data } = await getArtDesignSellingPoint({
-        sku: sku.value,
-      })
-      _id.value = data.id!
-      Object.assign(form, data)
-      // 获取到的数据存储到localStorage
-      setLocalStorageData()
-    }
+    // if (savedForm) {
+    //   // 没缓存 get数据
+    //   const { data } = await getArtDesignSellingPoint({
+    //     sku: sku.value,
+    //   })
+    //   Object.assign(form, JSON.parse(savedForm))
+    //   _id.value = data.id
+    //   form.id = data.id
+    // } else {
+    // 没缓存 get数据
+    const { data } = await getArtDesignSellingPoint({
+      sku: sku.value,
+    })
+    _id.value = data.id!
+    Object.assign(form, data)
+    // 获取到的数据存储到localStorage
+    setLocalStorageData()
+    // }
   } else {
     // 批量修改，按照skus排序后的进行缓存，进来先排序，查找有缓存，获取缓存的数据；没缓存，请求数据；然后导入其他sku后，修改这个skus对应的数据，
     const querySkus = route.query.skus

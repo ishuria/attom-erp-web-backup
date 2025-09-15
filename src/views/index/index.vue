@@ -700,6 +700,9 @@ const fetchUserList = async () => {
   if (userList.value.length > 0) {
     userId.value = userList.value.find((item) => item.label === myName)?.id
   }
+  if (!userId.value) {
+    userId.value = userList.value[0].id
+  }
   fetchData()
 }
 const fetchData = async () => {

@@ -1,7 +1,7 @@
 <template>
-  <vab-card :body-style="{ height: '422px' }" skeleton class="performance-card">
+  <vab-card :body-style="{ height: '422px' }" class="performance-card" skeleton>
     <template #header>
-      绩效历史
+      产品经理绩效历史
       <div class="right-select">
         <slot name="select"></slot>
       </div>
@@ -23,7 +23,7 @@ const props = defineProps<{
 
 const option = reactive<any>({
   legend: {
-    bottom: '4%'
+    bottom: '4%',
   },
   tooltip: {
     trigger: 'axis',
@@ -39,7 +39,7 @@ const option = reactive<any>({
       let groupItems: any[] = []
       let otherItems: any[] = []
 
-      params.forEach(item => {
+      params.forEach((item) => {
         if (groupedNames.includes(item.seriesName)) {
           groupTotal += Number(item.value || 0)
           groupItems.push(item)
@@ -66,17 +66,21 @@ const option = reactive<any>({
             <span style="font-weight: bold; color: #333;">${groupTotal}</span>
           </div>
           <div style="margin-top: 2px; padding-left: 10px;">
-            ${groupItems.map(item => `
+            ${groupItems
+              .map(
+                (item) => `
               <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 1px;">
                 <div style="display: flex; align-items: center;">${item.marker}<span style="margin-left: 5px;">${item.seriesName}</span></div>
                 <span>${item.value}</span>
               </div>
-            `).join('')}
+            `
+              )
+              .join('')}
           </div>
         </div>
       `
 
-      const otherHtmlArr = otherItems.map(item => {
+      const otherHtmlArr = otherItems.map((item) => {
         const name = item.seriesName
         const value = item.value
         return `
@@ -107,24 +111,24 @@ const option = reactive<any>({
           ${groupHtml}
         </div>
       `
-    }
+    },
   },
   grid: {
     left: '1%',
     bottom: '15%',
     right: '1%',
     top: '0',
-    containLabel: true
+    containLabel: true,
   },
   xAxis: {
     type: 'category',
     data: [],
     axisTick: {
       alignWithLabel: true,
-      color: '#86909c'
+      color: '#86909c',
     },
     axisLabel: {
-      color: '#86909c'
+      color: '#86909c',
     },
   },
   yAxis: [
@@ -138,9 +142,9 @@ const option = reactive<any>({
         show: true,
         lineStyle: {
           color: '#e5e8ef',
-        }
+        },
       },
-      boundaryGap: [0, 0.1]  // 为顶部留出空间
+      boundaryGap: [0, 0.1], // 为顶部留出空间
     },
     {
       type: 'value',
@@ -149,7 +153,7 @@ const option = reactive<any>({
       axisLine: { show: false },
       splitLine: { show: false },
       axisTick: { show: false },
-      boundaryGap: [0, 0.1]  // 为顶部留出空间
+      boundaryGap: [0, 0.1], // 为顶部留出空间
     },
   ],
   series: [
@@ -160,7 +164,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#4D96FF' }, 
+      itemStyle: { color: '#4D96FF' },
     },
     {
       name: '精铺',
@@ -187,7 +191,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#FF6B6B' }, 
+      itemStyle: { color: '#FF6B6B' },
     },
     {
       name: '提成',
@@ -254,14 +258,13 @@ watch(
     }
   }
 
-
   .bottom {
     padding-top: 20px;
     margin-top: 5px;
     text-align: left;
     border-top: 1px solid var(--el-border-color);
   }
-  
+
   .line-two {
     span {
       color: var(--el-color-success);
@@ -279,7 +282,7 @@ watch(
 
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
   }
 }
 </style>

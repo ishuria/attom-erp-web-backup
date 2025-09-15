@@ -156,18 +156,18 @@ const setLocalStorageData = () => {
 }
 onBeforeMount(async () => {
   sku.value = route.query.sku
-  // 有缓存读缓存，没缓存获取数据
-  const savedForm = localStorage.getItem(`${sku.value}_sellingPointForm`)
-  if (savedForm) {
-    Object.assign(form, JSON.parse(savedForm))
-  } else {
-    const { data } = await getArtDesignCopywriting({
-      sku: sku.value,
-    })
-    Object.assign(form, data)
-    // 获取到的数据存储到localStorage
-    setLocalStorageData()
-  }
+  // // 有缓存读缓存，没缓存获取数据
+  // const savedForm = localStorage.getItem(`${sku.value}_sellingPointForm`)
+  // if (savedForm) {
+  //   Object.assign(form, JSON.parse(savedForm))
+  // } else {
+  const { data } = await getArtDesignCopywriting({
+    sku: sku.value,
+  })
+  Object.assign(form, data)
+  // 获取到的数据存储到localStorage
+  setLocalStorageData()
+  // }
 })
 </script>
 

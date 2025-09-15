@@ -164,7 +164,7 @@
     </vab-dialog> -->
 
     <!-- 入库核对 -->
-    <vab-dialog v-model="whVerifyVisible" title="入库核对">
+    <vab-dialog v-model="whVerifyVisible" title="入库核对" width="60%">
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
           <el-form inline :model="whVerifyForm" @submit.prevent>
@@ -236,7 +236,7 @@ const whVerifyVisible = ref<boolean>(false)
 const whVerifyForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 10,
 })
 const filteredList = computed(() => {
   // 如果有关键词则过滤数据
