@@ -1689,7 +1689,7 @@
       </el-form>
       <template #footer>
         <el-button @click="handleCloseAddSku">取消</el-button>
-        <el-button type="primary" @click="handleConfirmAddSKU">确认</el-button>
+        <el-button :loading="addSkuLoading" type="primary" @click="handleConfirmAddSKU">确认</el-button>
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
@@ -1779,6 +1779,7 @@ import { currencyNumList, invoicingNumList } from '/@/views/purchase/constantOpt
 defineOptions({
   name: 'PoDetail',
 })
+const addSkuLoading = ref<boolean>(false)
 
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({})
@@ -2156,6 +2157,7 @@ const afterGetSku = async (_sku: string) => {
 }
 // 确认添加sku
 const handleConfirmAddSKU = async () => {
+  addSkuLoading.value = true
   try {
     // 如果是创建，就是和上面一样的接口
     if (route.query.from === 'plannedPoCreate') {
@@ -2178,6 +2180,7 @@ const handleConfirmAddSKU = async () => {
   } catch (error) {
     console.error(error)
   }
+  addSkuLoading.value = false
 }
 // 更新采购方是否可见
 const updatePurchaserVisible = ref<boolean>(false)

@@ -284,7 +284,7 @@
       <vab-pagination
         :current-page="matchQueryForm.pageNo"
         :page-size="matchQueryForm.pageSize"
-        :total="matchTotal"
+        :total="matchList.length"
         @current-change="handleMatchCurrentChange"
         @size-change="handleMatchSizeChange"
       />
@@ -507,6 +507,8 @@ const matchQueryForm = reactive<IGetTaxRefundInvoiceMatchQuery>({
 const matchTotal = ref<number>(0)
 const matchListLoading = ref<boolean>(false)
 const matchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
+// 保存原始数据，用于搜索过滤
+const originalMatchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
 const queryMatchData = () => {
   matchQueryForm.pageNo = 1
   applyKeywordFilter()
@@ -521,7 +523,8 @@ const pagedData = computed(() => {
 const applyKeywordFilter = () => {
   const keyword = matchQueryForm.keyWord.trim().toLowerCase()
   if (keyword) {
-    matchList.value = matchList.value.filter(
+    // 基于原始数据进行过滤
+    matchList.value = originalMatchList.value.filter(
       (item: any) =>
         (item.contractNumber?.toString()?.toLowerCase() || '').includes(keyword) ||
         (item.po?.toString()?.toLowerCase() || '').includes(keyword) ||
@@ -531,7 +534,8 @@ const applyKeywordFilter = () => {
         (item.taxInclusiveCost?.toString()?.toLowerCase() || '').includes(keyword)
     )
   } else {
-    fetchMatchData()
+    // 如果关键词为空，显示所有原始数据
+    matchList.value = [...originalMatchList.value]
   }
 }
 const handleMatchCurrentChange = (value: number) => {
@@ -620,8 +624,10 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _invoiceUnit.value = row.invoiceUnit!
     _invoiceCount.value = row.invoiceCount!
     _includingTaxPrice.value = row.includingTaxPrice!
-    matchTotal.value = data?.total!
-    matchList.value = data?.list!
+    // 保存原始数据
+    originalMatchList.value = data?.list! || []
+    // 显示过滤后的数据
+    matchList.value = [...originalMatchList.value]
     matchVisible.value = true
     matchListLoading.value = false
   } else {
@@ -895,7 +901,10 @@ const fetchMatchData = async () => {
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
   matchTotal.value = data?.total!
-  matchList.value = data?.list!
+  // 保存原始数据
+  originalMatchList.value = data?.list! || []
+  // 显示过滤后的数据
+  matchList.value = [...originalMatchList.value]
   matchListLoading.value = false
 }
 const fetchData = async () => {
