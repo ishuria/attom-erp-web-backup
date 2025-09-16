@@ -170,10 +170,34 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="showSetting">考核数设定</el-button>
-                <el-button type="primary" @click="showParameterSettings">参数设定</el-button>
-                <el-button type="primary" @click="adjustDetailVisible = true">调整明细</el-button>
-                <el-button type="primary" @click="showCheckout">考核数结账</el-button>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.ASSESSMENT_SETTING] }"
+                  type="primary"
+                  @click="showSetting"
+                >
+                  考核数设定
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.PARAMETER_SETTING] }"
+                  type="primary"
+                  @click="showParameterSettings"
+                >
+                  参数设定
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.ADJUST_DETAIL] }"
+                  type="primary"
+                  @click="adjustDetailVisible = true"
+                >
+                  调整明细
+                </el-button>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.ASSESSMENT_CHECKOUT] }"
+                  type="primary"
+                  @click="showCheckout"
+                >
+                  考核数结账
+                </el-button>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -604,6 +628,7 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import PerformanceStatisticsPermission from '~/src/permissions/performanceStatistics'
 import {
   checkoutAssessmentNumber,
   getAdjustDetailByUser,

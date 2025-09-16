@@ -5,12 +5,7 @@
         <el-form inline>
           <el-form-item>
             <el-select v-model="typeId" clearable filterable placeholder="请选择或搜索分类名" style="min-width: 300px">
-              <el-option 
-                v-for="item in typeList"
-                :label="item.label"
-                :key="item.id"
-                :value="item.id"
-              />
+              <el-option v-for="item in typeList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
           <el-form-item style="margin-left: 0">
@@ -24,7 +19,13 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -32,11 +33,23 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" border :cell-class-name="clearPadding" class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }" @selection-change="handleSelectionChange" >
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      class="noneHoverTable"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column align="center" type="selection" />
-      <el-table-column label="图片" width="75" >
+      <el-table-column label="图片" width="75">
         <template #default="{ row }">
-          <el-image :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px" @click="showImagePreview(row.componentImgUrl)">
+          <el-image
+            :src="row.componentImgUrl"
+            style="display: block; width: 75px; height: 75px"
+            @click="showImagePreview(row.componentImgUrl)"
+          >
             <template #error><el-icon /></template>
           </el-image>
         </template>
@@ -59,7 +72,7 @@
       @size-change="handleSizeChange"
     />
     <vab-classification-code-settings v-model="dialogVisible" />
-    <el-image-viewer v-if="imagePreviewVisible" :url-list="imagePreviewList" @close="closeImageViewer" hide-on-click-modal />
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImageViewer" />
   </div>
 </template>
 
@@ -67,7 +80,7 @@
 import { Search } from '@element-plus/icons-vue'
 import { getComponentInvoiceTypeList, getComponentTypeList, updateBatchComponentType } from '/@/api/devlocal/productInformation'
 defineOptions({
-  name: 'PartsInvoicingClassification'
+  name: 'PartsInvoicingClassification',
 })
 
 const imagePreviewVisible = ref<boolean>(false)
@@ -83,7 +96,7 @@ const typeId = ref<number | undefined>(undefined)
 const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total = ref<number>(0)
 const list = ref<any[]>([])
@@ -95,20 +108,20 @@ const handleSelectionChange = (val: any) => {
 }
 const handleApply = async () => {
   if (selectionList.value.length === 0) {
-    $baseMessage("您未选择任何行！", 'warning')
+    $baseMessage('您未选择任何行！', 'warning')
     return
   }
   if (typeId.value == undefined) {
-    $baseMessage("请选择分类名！", 'warning')
+    $baseMessage('请选择分类名！', 'warning')
     return
   }
   // console.log(selectionList.value)
   const { data } = await updateBatchComponentType({
-    ids: selectionList.value.map(item => item.id).join(','),
+    ids: selectionList.value.map((item) => item.id).join(','),
     typeEncodingId: typeId.value,
   })
   if (data) {
-    $baseMessage("修改分类成功！", 'success')
+    $baseMessage('修改分类成功！', 'success')
     queryData()
   }
 }
@@ -130,13 +143,12 @@ const fetchData = async () => {
   total.value = data.total
   list.value = data.list
   listLoading.value = false
-
 }
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const clearPadding = (data: {row: any, column: any, rowIndex: number, columnIndex: number}) => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.column.label === '图片') {
     return 'clear-padding'
   }

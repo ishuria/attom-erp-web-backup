@@ -547,6 +547,15 @@ const formattedPrice = (price: string) => {
   return Number(price).toFixed(2)
 }
 
+// 处理浮点数精度问题的工具函数
+const toPercentage = (value: number) => {
+  return Math.round(value * 100 * 100) / 100
+}
+
+const toDecimal = (value: number) => {
+  return Math.round(value * 100) / 10000
+}
+
 watchEffect(() => {
   progressId.value = props.progressId
 })
@@ -567,10 +576,10 @@ const handleUpdateRemark = async (value: string) => {
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (rowCopy.actualTaxRate !== null && rowCopy.actualTaxRate !== undefined) {
-    actualTaxRate = rowCopy.actualTaxRate / 100
+    actualTaxRate = toDecimal(rowCopy.actualTaxRate)
   }
   if (rowCopy.invoicingTaxRate !== null && rowCopy.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = rowCopy.invoicingTaxRate / 100
+    invoicingTaxRate = toDecimal(rowCopy.invoicingTaxRate)
   }
   await updateComponenet({ ...rowCopy, invoicingTaxRate, actualTaxRate, remarks: value })
 
@@ -701,10 +710,10 @@ const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (row.actualTaxRate !== null && row.actualTaxRate !== undefined) {
-    actualTaxRate = row.actualTaxRate / 100
+    actualTaxRate = toDecimal(row.actualTaxRate)
   }
   if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = row.invoicingTaxRate / 100
+    invoicingTaxRate = toDecimal(row.invoicingTaxRate)
   }
   await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate })
   fetchDataComponent()
@@ -716,10 +725,10 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (row.actualTaxRate !== null && row.actualTaxRate !== undefined) {
-    actualTaxRate = row.actualTaxRate / 100
+    actualTaxRate = toDecimal(row.actualTaxRate)
   }
   if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = row.invoicingTaxRate / 100
+    invoicingTaxRate = toDecimal(row.invoicingTaxRate)
   }
   await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate })
   props.trialCalculationData?.()
@@ -968,10 +977,10 @@ const componentClickCancel = async (event: any, value: IProgressProdcutComponent
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (value.actualTaxRate !== null && value.actualTaxRate !== undefined) {
-    actualTaxRate = value.actualTaxRate / 100
+    actualTaxRate = toDecimal(value.actualTaxRate)
   }
   if (value.invoicingTaxRate !== null && value.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = value.invoicingTaxRate / 100
+    invoicingTaxRate = toDecimal(value.invoicingTaxRate)
   }
   await updateComponenet({ ...value, invoicingTaxRate, actualTaxRate })
   fetchDataComponent()
@@ -983,10 +992,10 @@ const includedInCostChange = async (row: IProgressProdcutComponent) => {
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (row.actualTaxRate !== null && row.actualTaxRate !== undefined) {
-    actualTaxRate = row.actualTaxRate / 100
+    actualTaxRate = toDecimal(row.actualTaxRate)
   }
   if (row.invoicingTaxRate !== null && row.invoicingTaxRate !== undefined) {
-    invoicingTaxRate = row.invoicingTaxRate / 100
+    invoicingTaxRate = toDecimal(row.invoicingTaxRate)
   }
   await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate })
   props.trialCalculationData?.()
@@ -1024,8 +1033,8 @@ const fetchDataComponent = async () => {
     progressProductList.value.forEach((item: any) => {
       item.unitPrice = formattedPrice(item.unitPrice)
       item.totalPrice = formattedPrice(item.totalPrice)
-      item.invoicingTaxRate = item.invoicingTaxRate * 100
-      item.actualTaxRate = item.actualTaxRate * 100
+      item.invoicingTaxRate = toPercentage(item.invoicingTaxRate)
+      item.actualTaxRate = toPercentage(item.actualTaxRate)
     })
     progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
     previous = null

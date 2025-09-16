@@ -263,3 +263,11 @@ export interface IUpdateOperationOrderShipmentQuantityReq {
   shippingPlanDate: string
   planSite: number
 }
+export interface IGetOperationOrderTable {
+  releaseDate: string
+  po: string
+  packageTaskCount: number
+  sendSite: string
+  status: number
+  arrivalDate: string
+}

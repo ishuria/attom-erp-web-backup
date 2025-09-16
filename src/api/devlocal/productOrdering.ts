@@ -9,6 +9,7 @@ import type {
   IGetOperationOrderSkuRes,
   IGetOperationOrderSpringFestival,
   IGetOperationOrdersSmoothness,
+  IGetOperationOrderTable,
   IReleaseOperationPlanPoReq,
   IReleaseOperationPlanPoRes,
   IUpdateOperationOrderShipmentQuantityReq,
@@ -85,5 +86,17 @@ export function updateOperationOrderShipmentQuantity(data: IUpdateOperationOrder
     url: `${BASE_API}/operation/order/shipment/quantity/update`,
     method: 'post',
     data,
+  })
+}
+/**
+ * 产品订货-订货表查询
+ * @param params
+ * @returns
+ */
+export function getOperationOrderTable(params: { sku: string; site: number }): Promise<{ data: IGetOperationOrderTable[] }> {
+  return request({
+    url: `${BASE_API}/package/task/order/detail`,
+    method: 'get',
+    params,
   })
 }

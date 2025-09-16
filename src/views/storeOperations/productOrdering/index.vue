@@ -414,6 +414,8 @@
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
       <template #footer></template>
     </vab-dialog>
+    <!-- 订货表 -->
+    <vab-product-order-table v-model="productOrderTableVisible" :list="productOrderTableList" />
   </div>
 </template>
 
@@ -430,6 +432,7 @@ import {
   getOperationOrderSku,
   getOperationOrderSmoothness,
   getOperationOrderSpringFestival,
+  getOperationOrderTable,
   releaseOperationPlanPo,
   updateOperationOrderSmoothness,
   updateOperationOrderSpringFestival,
@@ -441,7 +444,7 @@ import {
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
-import type { IGetOperationOrderList } from '/@/type/storeOperation/productOrdering'
+import type { IGetOperationOrderList, IGetOperationOrderTable } from '/@/type/storeOperation/productOrdering'
 import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import { handleClip } from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
@@ -450,6 +453,8 @@ import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/
 defineOptions({
   name: 'ProductOrdering',
 })
+
+const productOrderTableList = ref<IGetOperationOrderTable[]>([])
 const router = useRouter()
 const route = useRoute()
 const smoothSettingVisible = ref<boolean>(false)
@@ -568,6 +573,7 @@ let _seasonalCoefficient = {
   actualList: [],
   referenceList: [],
 }
+const productOrderTableVisible = ref<boolean>(false)
 const option1 = ref<any>({})
 const cellClick = async (row: any, column: any) => {
   const label = column.label
@@ -575,6 +581,15 @@ const cellClick = async (row: any, column: any) => {
     case '季节趋势': {
       seasonalVisible.value = true
       _seasonalCoefficient = row.seasonalCoefficient
+      break
+    }
+    case '订货#': {
+      productOrderTableVisible.value = true
+      const { data } = await getOperationOrderTable({
+        sku: row.sku,
+        site: row.site,
+      })
+      productOrderTableList.value = data
       break
     }
     // No default
@@ -937,6 +952,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   } else if (label === '剩余库存' || label === '最晚补货') {
     return {
       textAlign: 'right',
+    }
+  } else if (label === '订货#') {
+    return {
+      textAlign: 'right',
+      cursor: 'pointer',
     }
   } else {
     return {
