@@ -12,7 +12,16 @@
         <el-table-column label="站点" min-width="125" prop="sendSite" />
         <el-table-column label="原始预计到货时间" min-width="130" prop="arrivalDate">
           <template #default="{ row }">
-            {{ row.arrivalDate !== null ? row.arrivalDate.split(' ')[0] : '-' }}
+            <!-- 如果到货时间小于今天并且未到货 则标红 -->
+            <el-text
+              :type="
+                row.arrivalDate !== null && row.arrivalDate.split(' ')[0] < new Date().toISOString().split('T')[0] && row.status === 0
+                  ? 'danger'
+                  : ''
+              "
+            >
+              {{ row.arrivalDate !== null ? row.arrivalDate.split(' ')[0] : '-' }}
+            </el-text>
           </template>
         </el-table-column>
         <el-table-column label="到货状态" min-width="100" prop="status">

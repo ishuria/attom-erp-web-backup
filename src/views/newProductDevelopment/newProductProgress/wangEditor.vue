@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dflag" :before-close="handlerCloseDialog" class="wangEditorDialog" :title="props.title" width="60%">
-    <div class="wang-editor-container">
+    <div v-if="dflag" class="wang-editor-container">
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
       <editor
         v-model="html"
@@ -59,6 +59,9 @@ watch(
       const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
       const tempContent = localStorage.getItem(key)
 
+      // console.log('tempContent', tempContent)
+      // console.log('content', content.value)
+
       // 判断逻辑：
       // 1. 有缓存内容
       // 2. 缓存内容不是空的HTML标签（如 <p><br></p>、<p></p> 等）
@@ -100,34 +103,26 @@ const toolbarConfig: Partial<IToolbarConfig> = {
   excludeKeys: ['group-video', 'codeBlock'],
 }
 
-// 检查HTML内容是否为空
+// 检查HTML内容是否为空 - 使用 WangEditor 官方 API
 const isEmptyHtml = (html: string): boolean => {
   if (!html) return true
 
-  // 创建临时DOM元素来解析HTML
-  const div = document.createElement('div')
-  div.innerHTML = html
+  // 创建临时编辑器实例
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = html
 
-  // 获取纯文本内容
-  const textContent = div.textContent || div.innerText || ''
-
-  // 检查是否只包含空白字符
-  const isEmpty = textContent.trim() === ''
-
-  // 额外检查常见的空HTML标签
-  const emptyPatterns = [
-    /^<p><br\s*\/?><\/p>$/i,
-    /^<p><\/p>$/i,
-    /^<p>\s*<\/p>$/i,
-    /^<div><br\s*\/?><\/div>$/i,
-    /^<div><\/div>$/i,
-    /^<div>\s*<\/div>$/i,
-    /^<br\s*\/?>$/i,
-  ]
-
-  const isOnlyEmptyTags = emptyPatterns.some((pattern) => pattern.test(html.trim()))
-
-  return isEmpty || isOnlyEmptyTags
+  // 判断是否为空
+  if (editorRef.value) {
+    // 如果编辑器已存在，使用 getText() 方法
+    const tempEditor = editorRef.value
+    tempEditor.setHtml(html)
+    const text = tempEditor.getText()
+    return text.trim() === ''
+  } else {
+    // 如果编辑器不存在，使用简单的文本检查
+    const textContent = tempDiv.textContent || tempDiv.innerText || ''
+    return textContent.trim() === ''
+  }
 }
 // 插入日期
 const insertDate = () => {
@@ -201,7 +196,7 @@ const handleConfirmDialog = () => {
 }
 
 const handleCreated = (editor: IDomEditor) => {
-  editorRef.value = editor
+  editorRef.value = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
 }
 onBeforeUnmount(() => {
   clearTimer()
