@@ -251,7 +251,7 @@
           <span v-html="row.nextGear"></span>
         </template>
       </el-table-column>
-      <el-table-column label="尺寸来源" min-width="120" prop="sizeSource">
+      <el-table-column label="尺寸/尾程来源" min-width="150" prop="sizeSource">
         <template #default="{ row }">
           <el-select v-model="row.sizeSource" style="min-width: 100%" @change="handleUpdateList(row)">
             <el-option v-for="item in sizeSourceOption" :key="item.value" :label="item.label" :value="item.value" />
@@ -260,7 +260,7 @@
       </el-table-column>
       <el-table-column label="尾程" min-width="80" prop="lastMile">
         <template #default="{ row }">
-          <div class="none">
+          <div v-if="row.sizeSource == 0" class="none">
             <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
