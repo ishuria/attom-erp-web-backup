@@ -39,6 +39,7 @@
         >
           关税单上传
         </el-button>
+        <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件校验上传</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -512,6 +513,24 @@
     <sent-but-not-reported v-model="sentButNotReportedVisible" />
     <!-- 关税单上传 -->
     <tariff-bill-upload v-model="tariffBillUploadVisible" :shipmentIdList="shipmentIdList" />
+
+    <!-- 报关文件上传 -->
+    <vab-dialog v-model="uploadTaxRefundVisible" title="报关文件校验上传" width="25%">
+      <el-upload v-model:file-list="taxRefundFileList" :auto-upload="false" drag multiple :show-file-list="true">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          将文件拖拽至此处或
+          <em>点击上传</em>
+        </div>
+      </el-upload>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button :loading="taxRefundLoadingVisible" type="success" @click="handleTaxRefundUpload">上传</el-button>
+        </div>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -545,6 +564,7 @@ import {
   updateShipmentLegCurrency,
   updateShipmentLegPay,
   updateShipmentPay,
+  uploadTaxRefundCheckFile,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
 import { getChannelList, getSettlementObjectList } from '/@/api/devlocal/encasement'
@@ -592,6 +612,41 @@ const uploadPDFVisible = ref<boolean>(false)
 const contractNumberImportVisible = ref<boolean>(false)
 const fileList = ref<any[]>([])
 const uploadLoading = ref<boolean>(false)
+// 退税报关文件校验
+const uploadTaxRefundVisible = ref<boolean>(false)
+const taxRefundLoadingVisible = ref<boolean>(false)
+const taxRefundFileList = ref<any[]>([])
+const uploadTaxRefundFielCheck = () => {
+  taxRefundFileList.value = []
+  uploadTaxRefundVisible.value = true
+}
+const handleTaxRefundUpload = async () => {
+  taxRefundLoadingVisible.value = true
+  const formData = new FormData()
+  taxRefundFileList.value.forEach((item: any) => {
+    formData.append('files', item.raw)
+  })
+  try {
+    const { data } = await uploadTaxRefundCheckFile(formData)
+    if (data) {
+      data.forEach(async (fileName: string) => {
+        try {
+          await downloadFileP('/shipment/download', {
+            fileName,
+          })
+          taxRefundLoadingVisible.value = false
+          taxRefundFileList.value = []
+        } catch {
+          $baseMessage('校验报关文件下载失败！', 'error')
+        }
+      })
+    }
+  } catch {
+    $baseMessage('退税报关文件上传失败', 'error')
+  } finally {
+    taxRefundLoadingVisible.value = false
+  }
+}
 
 interface IContractNumberForm {
   targetPath: string

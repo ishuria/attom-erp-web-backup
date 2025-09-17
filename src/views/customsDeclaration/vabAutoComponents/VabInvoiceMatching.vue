@@ -207,7 +207,7 @@
     />
   </vab-dialog>
   <!-- 上传发票 -->
-  <vab-dialog v-model="uploadInvoiceVisible" :title="uploadType == 'import' ? '上传发票' : '上传重复发票'" width="25%">
+  <vab-dialog v-model="uploadInvoiceVisible" :title="uploadType == 'import' ? '上传发票' : '上传多页发票'" width="25%">
     <el-upload v-model:file-list="fileList" :auto-upload="false" drag multiple :show-file-list="true">
       <el-icon class="el-icon--upload">
         <upload-filled />

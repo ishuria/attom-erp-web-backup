@@ -985,3 +985,16 @@ export function importContractNumber(data: { sourcePath: string; targetPath: str
     data,
   })
 }
+
+/**
+ * 退税报关资料上传
+ * @returns
+ */
+export function uploadTaxRefundCheckFile(data: FormData) {
+  return request({
+    url: `${BASE_API}/taxRefund/check`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
