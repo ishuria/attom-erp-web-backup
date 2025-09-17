@@ -419,6 +419,8 @@ const handleFinishUpload = async () => {
             message: resData,
           })
           await fetchData()
+          // 清空发票上传文件
+          fileList.value = []
         } else {
           $baseMessage('发票导入成功', 'success')
           uploadInvoiceVisible.value = false

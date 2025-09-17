@@ -193,7 +193,14 @@
                   <vab-icon icon="settings-line" />
                 </el-button>
               </template>
-              <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+              <vab-draggable
+                v-model="columns"
+                :animation="600"
+                filter=".non-draggable"
+                handle=".handle"
+                :on-end="handleEnd"
+                :on-move="handleMove"
+              >
                 <div
                   v-for="item in columns"
                   :key="item.label"
@@ -226,12 +233,32 @@
         stripe
         @cell-click="changeInput"
       >
+        <el-table-column fixed="left" label="图片" prop="componentImage" width="77">
+          <template #default="{ row }">
+            <div class="image-cell">
+              <!-- 有图片时显示 -->
+              <div v-if="row.componentImage" class="image-preview">
+                <img alt="" :src="row.componentImage" />
+                <div class="image-actions">
+                  <el-icon @click="handlePreview(row.componentImage)"><zoom-in /></el-icon>
+                  <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
+                </div>
+              </div>
+              <!-- 无图片时显示 -->
+              <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="left" label="零件名" prop="componentName" :width="flexColumnWidth(tableData, '零件名', 'componentName')" />
+
         <el-table-column
           v-for="(item, index) in checkList"
           :key="index"
           :fixed="item.isFixed"
           :label="item.label"
-          :min-width="item.minWidth || flexColumnWidth(tableData, '零件名', 'componentName')"
+          :min-width="item.minWidth"
           :prop="item.prop"
           :width="item.width"
         >
@@ -273,22 +300,6 @@
             </span>
           </template>
           <template #default="{ row }">
-            <span v-if="item.label === '图片'">
-              <div class="image-cell">
-                <!-- 有图片时显示 -->
-                <div v-if="row.componentImage" class="image-preview">
-                  <img alt="" :src="row.componentImage" />
-                  <div class="image-actions">
-                    <el-icon @click="handlePreview(row.componentImage)"><zoom-in /></el-icon>
-                    <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
-                  </div>
-                </div>
-                <!-- 无图片时显示 -->
-                <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
-                  <el-icon><plus /></el-icon>
-                </div>
-              </div>
-            </span>
             <span v-if="item.label === '数量'">
               <span>{{ row.quantity }}</span>
             </span>
@@ -682,6 +693,7 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import {
   ROLE_BOSS_CODE,
   ROLE_INDUSTRIAL_DESIGN_CODE,
@@ -876,156 +888,30 @@ const handleMove = (event: any) => {
 
   return true // 允许其他操作
 }
-const columns = ref<any>([
-  {
-    label: '图片',
-    prop: 'componentImage',
-    disableCheck: true,
-    checked: true,
-    width: 77,
-    isFixed: 'left',
-  },
-  {
-    label: '零件名',
-    prop: 'componentName',
-    disableCheck: true,
-    checked: true,
-    minWidth: null,
-    isFixed: 'left',
-  },
-  {
-    label: '零件明细',
-    prop: 'componentSuitDetail',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '零件ID',
-    prop: 'existingPartsListId',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '数量',
-    prop: 'quantity',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '采购单位',
-    prop: 'componentUnit',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '出厂单价',
-    prop: 'unitPrice',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '出厂总价',
-    prop: 'totalPrice',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '总未税价',
-    prop: 'preTaxPrice',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '总含税价',
-    prop: 'taxIncludedPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '货币',
-    prop: 'currency',
-    checked: true,
-    minWidth: 105,
-  },
-  {
-    label: '起订量',
-    prop: 'minimumOrderQuantity',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '整箱数',
-    prop: 'numberFullCartons',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '默认供应商',
-    prop: 'defaultSuppliserId',
-    checked: true,
-    minWidth: 205,
-  },
-  {
-    label: '开票',
-    prop: 'invoicing',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '实际税点',
-    prop: 'actualTaxRate',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '开票税点',
-    prop: 'invoicingTaxRate',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '默认采购方',
-    prop: 'purchaseId',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '不报关',
-    prop: 'declareCustomsStatus',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '采购链接',
-    prop: 'purchaseLink',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '默认收货仓库',
-    prop: 'defaultRepositoryId',
-    checked: true,
-    minWidth: 160,
-  },
-  {
-    label: '零件采购注意事项',
-    prop: 'purchaseMatters',
-    checked: true,
-    minWidth: 200,
-  },
-  {
-    label: '合同条款',
-    prop: 'contractTerms',
-    checked: true,
-    minWidth: 200,
-  },
-])
-
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
 })
-const handleChecked = (item: any) => {
+
+const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
 }
 // 关闭添加零件对话框
 const handleCloseCreateComponent = (value: boolean) => {
@@ -1927,7 +1813,23 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 6 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // // 设置 最小宽度
+    // if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
+    //   delete item.width
+    // }
+    // // 设置排序
+    // if (['po', 'payDate', 'sellableDay'].includes(item.prop)) {
+    //   item.sortable = true
+    // }
+  })
+}
 onBeforeMount(() => {
+  fetchColumn()
   fetchData()
   fetchComponentData()
   fetchPurchaseAndRepository()
