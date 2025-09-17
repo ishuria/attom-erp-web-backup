@@ -92,7 +92,11 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType" />
+          <el-table-column label="任务类型" min-width="100" prop="taskType">
+            <template #default="{ row }">
+              <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
@@ -316,7 +320,11 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType" />
+          <el-table-column label="任务类型" min-width="100" prop="taskType">
+            <template #default="{ row }">
+              <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
@@ -540,7 +548,11 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType" />
+          <el-table-column label="任务类型" min-width="100" prop="taskType">
+            <template #default="{ row }">
+              <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
@@ -749,7 +761,11 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType" />
+          <el-table-column label="任务类型" min-width="100" prop="taskType">
+            <template #default="{ row }">
+              <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="产品定位" min-width="100" prop="positioning" />
           <el-table-column label="要求完成日期" min-width="125" prop="finishDate">
             <template #default="{ row }">
@@ -1155,6 +1171,19 @@ defineOptions({
 const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_BOSS_CODE || ROLE_PARTNER_CODE
+
+const getTaskTypeColor = (taskType: string) => {
+  switch (taskType) {
+    case '新品任务':
+      return 'success' // 绿色
+    case '老品任务':
+      return 'primary' // 蓝色
+    case '临时任务':
+      return 'warning' // 橙色
+    default:
+      return 'info' // 灰色
+  }
+}
 
 // 检查用户是否有权限完成任务
 const canFinishTask = (row: any) => {

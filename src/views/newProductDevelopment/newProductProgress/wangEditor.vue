@@ -257,6 +257,25 @@ onUnmounted(() => {
         overflow: auto;
         background-color: var(--el-color-white);
         border: 0;
+        font-size: 22px !important; /* 直接设置字号 */
+      }
+
+      // 针对 WangEditor 内部元素设置字号
+      :deep(.w-e-text-container) {
+        font-size: 22px !important;
+      }
+
+      :deep(.w-e-text) {
+        font-size: 22px !important;
+      }
+
+      :deep(.w-e-text-placeholder) {
+        font-size: 22px !important;
+      }
+
+      // 针对编辑器内容区域
+      :deep(.w-e-text-container .w-e-text) {
+        font-size: 22px !important;
       }
 
       #w-e-textarea-1 {
@@ -281,5 +300,18 @@ onUnmounted(() => {
   img {
     max-width: 100%;
   }
+}
+
+// 全局强制设置 WangEditor 字号
+:global(.w-e-text-container) {
+  font-size: 22px !important;
+}
+
+:global(.w-e-text) {
+  font-size: 22px !important;
+}
+
+:global(.w-e-text-placeholder) {
+  font-size: 22px !important;
 }
 </style>

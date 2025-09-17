@@ -260,7 +260,7 @@
       </el-table-column>
       <el-table-column label="尾程" min-width="80" prop="lastMile">
         <template #default="{ row }">
-          <div class="none">
+          <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
@@ -1003,11 +1003,18 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
   }
   const label = data.column.label
-  if (data.row.sizeSource === 1 && (label === '长(cm)' || label === '宽(cm)' || label === '高(cm)' || label === '重量(g)')) {
+  if (
+    data.row.sizeSource === 1 &&
+    (label === '长(cm)' || label === '宽(cm)' || label === '高(cm)' || label === '重量(g)' || label === '尾程')
+  ) {
     return {
       fontWeight: 600,
       textAlign: 'center',
       cursor: 'not-allowed',
+      backgroundColor: 'rgba(245, 108, 108, 0.1)', // 浅红色背景
+      // color: 'var(--el-color-danger)', // 红色文字
+      // border: '1px solid rgba(245, 108, 108, 0.3)', // 淡红色边框
+      // borderRadius: '4px', // 圆角
     }
   }
   return {
