@@ -206,3 +206,10 @@ export interface IGetFrontPageInventoryProductsTotalValue {
   totalValue: number
   unpaidGoods: number
 }
+
+export interface IGetFrontPageJobLevelCommission {
+  userName: string
+  monthlyLevel: string
+  newProductCommission: number
+  commissionRatio: number
+}

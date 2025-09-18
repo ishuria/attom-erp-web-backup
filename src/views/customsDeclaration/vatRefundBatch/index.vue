@@ -67,6 +67,13 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="出库归档" min-width="100" prop="outboundStatus">
+            <template #default="{ row }">
+              <el-tag :type="row.outboundStatus === 1 ? 'success' : 'danger'">
+                {{ row.outboundStatus === 1 ? '已出库归档' : '未出库归档' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column fixed="right" label="操作" width="380">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showFreightFee(row)">退税运费</el-link>

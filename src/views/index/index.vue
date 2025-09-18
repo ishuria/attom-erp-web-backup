@@ -245,6 +245,16 @@
       <el-col v-if="ableBossViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
       </el-col>
+      <!-- 第六层 -->
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+        <job-level-commission-table :list="jobLevelCommissionList">
+          <template #select>
+            <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
+              <el-option v-for="item in newProductMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </job-level-commission-table>
+      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -279,6 +289,7 @@ import {
   getFrontPageHistoryAssessmentRecords,
   getFrontPageHistoryMonthList,
   getFrontPageInventoryProductsTotalValue,
+  getFrontPageJobLevelCommission,
   getFrontPageLeadDestroyValue,
   getFrontPagePerformanceHistory,
   getFrontPageProductManagerSelectOption,
@@ -312,6 +323,7 @@ import {
   IGetFrontPageHistoryAssessmentRecordsItem,
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageInventoryProductsTotalValue,
+  IGetFrontPageJobLevelCommission,
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPageProductProfitRes,
@@ -781,6 +793,7 @@ const fetchHistoryMonthList = async () => {
   selectAchievedMonth.value = data[0]
   selectFinishMonth.value = data[0]
   selectNewProductMonth.value = newProductMonthList.value[0] || data[0]
+  selectJobLevelMonth.value = newProductMonthList.value[0] || data[0]
 }
 const fetchAdjustDetailMonthList = async () => {
   const { data } = await getFrontPageAdjustDetailMonth()
@@ -808,6 +821,12 @@ const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalV
 const fetchInventoryProductsTotalValue = async () => {
   const { data } = await getFrontPageInventoryProductsTotalValue()
   inventoryProductsTotalValueList.value = data
+}
+const jobLevelCommissionList = ref<IGetFrontPageJobLevelCommission[]>([])
+const selectJobLevelMonth = ref<string>()
+const fetchJobLevelCommission = async () => {
+  const { data } = await getFrontPageJobLevelCommission({ month: selectJobLevelMonth.value! })
+  jobLevelCommissionList.value = data
 }
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {
@@ -842,6 +861,7 @@ onBeforeMount(async () => {
   }
   if (ableProductManagerLeadViewCard) {
     fetchLeadDestroyValue()
+    fetchJobLevelCommission()
   }
 })
 </script>

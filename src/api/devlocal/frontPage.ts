@@ -12,6 +12,7 @@ import {
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageHistoryAssessmentRecordsRes,
   IGetFrontPageInventoryProductsTotalValue,
+  IGetFrontPageJobLevelCommission,
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPagePerformanceHistoryReq,
@@ -279,5 +280,18 @@ export function updateFrontPageInventoryProductsTotalValue(): Promise<{ data: bo
   return request({
     url: `${BASE_API}/front_page/inventory_value/update`,
     method: 'post',
+  })
+}
+
+/**
+ * 首页-职级提成展示
+ * @param params
+ * @returns
+ */
+export function getFrontPageJobLevelCommission(params: { month: string }): Promise<{ data: IGetFrontPageJobLevelCommission[] }> {
+  return request({
+    url: `${BASE_API}/front_page/job_level/commission`,
+    method: 'get',
+    params,
   })
 }

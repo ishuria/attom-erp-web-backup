@@ -128,6 +128,7 @@ declare module 'vue' {
     ImagePlaceholder: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImagePlaceholder.vue')['default']
     InProgressProjectsBar: typeof import('./../../../src/views/index/vabAutoComponents/InProgressProjectsBar.vue')['default']
     InventoryProductsTotalValue: typeof import('./../../../src/views/index/vabAutoComponents/InventoryProductsTotalValue.vue')['default']
+    JobLevelCommissionTable: typeof import('./../../../src/views/index/vabAutoComponents/JobLevelCommissionTable.vue')['default']
     LoginContainer: typeof import('./../../../src/views/login/vabAutoComponents/LoginContainer.vue')['default']
     MenuEdit: typeof import('./../../../src/views/system/menu/vabAutoComponents/MenuEdit.vue')['default']
     MonthlyAssessmentTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyAssessmentTable.vue')['default']
