@@ -186,7 +186,7 @@
           <template #default="{ row }">
             <div class="none">
               <el-input
-                v-model="row.supplier"
+                v-model.trim="row.supplier"
                 autofocus
                 @blur="clickSupplierCancel($event, row)"
                 @keyup.enter="clickSupplierCancel($event, row)"
@@ -215,7 +215,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.actualTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.actualTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.actualTaxRate != null ? row.actualTaxRate + '%' : '' }}</span>
           </template>
@@ -229,7 +229,7 @@
           </template>
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.invoicingTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.invoicingTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.invoicingTaxRate != null ? row.invoicingTaxRate + '%' : '' }}</span>
           </template>

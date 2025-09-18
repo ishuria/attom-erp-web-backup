@@ -85,7 +85,7 @@
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
         <template #default="{ row }">
           <div v-if="invoiceFlag" class="none">
-            <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            <el-input v-model.trim="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.suppliser }}</span>
         </template>
@@ -160,7 +160,7 @@
 
       <el-table-column v-if="invoiceFlag" fixed="right" label="操作" width="70">
         <template #default="{ row }">
-          <el-link type="danger" underline='never' @click="handleDeleteInvoice(row)">删除</el-link>
+          <el-link type="danger" underline="never" @click="handleDeleteInvoice(row)">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -211,13 +211,13 @@ import type { CSSProperties } from 'vue'
 import VabPdf from '/@/plugins/VabPdf'
 
 import {
-    aiTuoMuInvoiceMatch,
-    deleteAiTuoMuInvoice,
-    finishAiTuoMuInvoice,
-    getAiTuoMuInvoiceList,
-    updateAiTuoMuInvoice,
-    updateAiTuoMuInvoiceDetail,
-    uploadAiTuoInvoice,
+  aiTuoMuInvoiceMatch,
+  deleteAiTuoMuInvoice,
+  finishAiTuoMuInvoice,
+  getAiTuoMuInvoiceList,
+  updateAiTuoMuInvoice,
+  updateAiTuoMuInvoiceDetail,
+  uploadAiTuoInvoice,
 } from '/@/api/devlocal/aiTuoMu'
 import { IAiTuoMuInvoiceItem, IAiTuoMuInvoiceReq } from '/@/type/aiTuoMu/aiTuoMuInvoice'
 

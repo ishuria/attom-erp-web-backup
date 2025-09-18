@@ -82,7 +82,7 @@
         <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.suppliser" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.suppliser }}</span>
           </template>

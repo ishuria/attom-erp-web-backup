@@ -609,6 +609,15 @@ const handleCard4Select = () => {
   }
 }
 const handleCard4DateSelect = () => {}
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => card4DateRange.value,
+  () => {
+    handleCard4DateSelect()
+  },
+  { deep: true }
+)
 const handleClickCancel = () => {
   card4Select.value = 0
   dateRangeSelectVisible.value = false

@@ -502,6 +502,16 @@ const queryRightData = () => {
   queryRightForm.startTime = date.value[0]
   queryRightForm.endTime = date.value[1]
   fetchRightData()
+}
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => date.value,
+  () => {
+    queryRightData()
+  },
+  { deep: true }
+)
 
   // 强制重新渲染日期选择器，解决选择后无法再次打开的问题
   nextTick(() => {

@@ -18,9 +18,7 @@
                   @change="queryData"
                 >
                   <template #header>
-                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
-                      所有
-                    </el-checkbox>
+                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
                   </template>
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
@@ -31,14 +29,20 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="美工人员">
-                <el-select v-model="queryForm.artDesignUserId" clearable placeholder="请选择美工人员" @change="queryData" :disabled="disableArtDesign">
+                <el-select
+                  v-model="queryForm.artDesignUserId"
+                  clearable
+                  :disabled="disableArtDesign"
+                  placeholder="请选择美工人员"
+                  @change="queryData"
+                >
                   <el-option v-for="item in artDesignUserList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-text style="margin-left: 10px; font-weight: bold;" >今销更新时间: 2025-05-23 17:27:11</el-text>
+                <el-text style="margin-left: 10px; font-weight: bold">今销更新时间: 2025-05-23 17:27:11</el-text>
                 <el-divider direction="vertical" />
-                <el-text style="font-weight: bold;" >月数据更新时间: 2025-05-23 17:27:11</el-text>
+                <el-text style="font-weight: bold">月数据更新时间: 2025-05-23 17:27:11</el-text>
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
@@ -53,24 +57,30 @@
                 <div
                   v-for="item in columns"
                   :key="item.label"
-                  :class="{'non-draggable': item.disableCheck}"
-                  style="display: flex; align-items: center; font-size: var(--el-font-size-base); " 
+                  :class="{ 'non-draggable': item.disableCheck }"
+                  style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
                 >
-                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px"/>
+                  <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                   <span style="flex: 1">{{ item.label }}</span>
-                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center;">
+                  <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
                     <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
-                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer; " @click="handleChecked(item)">
+                  <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
                     <vab-icon v-show="!item.checked" icon="eye-off-line" />
                     <vab-icon v-show="item.checked" icon="eye-line" />
                   </span>
                 </div>
               </vab-draggable>
             </el-popover>
-            <el-form inline :model="queryForm" @submit.prevent >
+            <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyword" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+                <el-input
+                  v-model="queryForm.keyword"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keyup.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -78,17 +88,17 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table 
+        <el-table
           v-loading="listLoading"
           border
           :cell-class-name="clearPadding"
-          :cell-style="cellStyle" 
-          class="noneHoverTable" 
-          @cell-click="cellClick"
+          :cell-style="cellStyle"
+          class="noneHoverTable"
           :data="list"
-          :header-cell-style="{ textAlign: 'center' }"
-          :header-cell-class-name="headerCell"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+          :header-cell-class-name="headerCell"
+          :header-cell-style="{ textAlign: 'center' }"
+          @cell-click="cellClick"
           @sort-change="artSortChange"
         >
           <el-table-column
@@ -98,8 +108,8 @@
             :label="item.label"
             :min-width="handleWidth(item)"
             :prop="item.prop"
-            :width="item.width"
             :sortable="item.sortable ? 'custom' : false"
+            :width="item.width"
           >
             <template #header>
               <span v-if="item.label === '销量趋势(点击看明细)'">
@@ -134,7 +144,10 @@
               </span>
               <span v-if="item.label === '今销'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">今销 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">
+                    今销
+                    <el-icon><question-filled /></el-icon>
+                  </div>
                   <template #content>
                     <div class="custom-tooltip">今日销售额</div>
                   </template>
@@ -142,50 +155,59 @@
               </span>
               <span v-if="item.label === '月销售额'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月销售额 <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">
+                    月销售额
+                    <el-icon><question-filled /></el-icon>
+                  </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的销售额</div>
+                    <div class="custom-tooltip">过去30天的销售额</div>
                   </template>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '月退款%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月退款% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">
+                    月退款%
+                    <el-icon><question-filled /></el-icon>
+                  </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的退款占比</div>
+                    <div class="custom-tooltip">过去30天的退款占比</div>
                   </template>
                 </el-tooltip>
               </span>
               <span v-if="item.label === '月退货%'">
                 <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">月退货% <el-icon><question-filled /></el-icon> </div>
+                  <div class="questionIcon">
+                    月退货%
+                    <el-icon><question-filled /></el-icon>
+                  </div>
                   <template #content>
-                    <div class="custom-tooltip" >过去30天的退货占比</div>
+                    <div class="custom-tooltip">过去30天的退货占比</div>
                   </template>
                 </el-tooltip>
               </span>
             </template>
             <template #default="{ row }">
               <span v-if="item.label === '图片'">
-                <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)" >
-                  <template #error><el-icon/></template>
+                <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+                  <template #error><el-icon /></template>
                 </el-image>
               </span>
-           
+
               <span v-if="item.label === 'SKU'" class="sku-container">
                 <div>
-                  <span class="copySku" @click="handleClipboard($event, row.sku)" >
+                  <span class="copySku" @click="handleClipboard($event, row.sku)">
                     <el-tooltip effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">{{ row.sku }}</div>
                       </template>
-                      <el-link :href="row.amazonUrl" class="sku-text"  target="_blank">{{ row.sku }}</el-link>
+                      <el-link class="sku-text" :href="row.amazonUrl" target="_blank">{{ row.sku }}</el-link>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="top">
                       <template #content>
                         <div class="custom-tooltip">复制SKU</div>
                       </template>
-                      <vab-icon icon="file-copy-2-fill"/>
+                      <vab-icon icon="file-copy-2-fill" />
                     </el-tooltip>
                   </span>
                   <el-tooltip effect="dark" placement="top">
@@ -195,19 +217,15 @@
                     <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
                   </el-tooltip>
                 </div>
-                  
-                <div
-                  class="rate-wrapper"
-                  style="cursor: pointer"
-                  @click=""
-                >
+
+                <div class="rate-wrapper" style="cursor: pointer" @click="">
                   <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
                   <span>
                     <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
                   </span>
                   <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span style="margin-top: -2px" :class="{ 'japan-flag': row.flag === 'JP' }">
-                    <country-flag :country='row.flag'/>
+                  <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
+                    <country-flag :country="row.flag" />
                   </span>
                 </div>
               </span>
@@ -218,7 +236,7 @@
                 <el-link type="primary" >{{ row.parentAsin }}</el-link>
               </span> -->
               <span v-if="item.label === '销量趋势(点击看明细)'">
-                <div style="width: 100%; height: 50px;">
+                <div style="width: 100%; height: 50px">
                   <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
                 </div>
               </span>
@@ -226,7 +244,7 @@
                 {{ row.newArrivalDay != null ? row.newArrivalDay + '天' : '' }}
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox disabled v-model="row.stopProductStatus" :false-value="0" :true-value="1" />
+                <el-checkbox v-model="row.stopProductStatus" disabled :false-value="0" :true-value="1" />
               </span>
               <span v-if="item.label === '运营分类'">
                 <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="">
@@ -236,37 +254,75 @@
 
               <span v-if="item.label === 'VOC满意度'">
                 {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
-                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">一般 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">良好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
-                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好 {{ formatPercentage(row.vocDefect, 2) }}</el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">
+                  极差 {{ formatPercentage(row.vocDefect, 2) }}
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">
+                  一般 {{ formatPercentage(row.vocDefect, 2) }}
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">
+                  不合格 {{ formatPercentage(row.vocDefect, 2) }}
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">
+                  良好 {{ formatPercentage(row.vocDefect, 2) }}
+                </el-tag>
+                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">
+                  极好 {{ formatPercentage(row.vocDefect, 2) }}
+                </el-tag>
               </span>
               <span v-if="item.label === '小类排名'">
-                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0">
+                <div
+                  v-if="
+                    row.nowSubcategoryRanking !== null &&
+                    row.beforeSubcategoryRanking !== null &&
+                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0
+                  "
+                >
                   <div>{{ row.nowSubcategoryRanking }}</div>
                   <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
                   <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
                   <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
                 </div>
-                <div v-if="row.nowSubcategoryRanking !== null && row.beforeSubcategoryRanking !== null && row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0">
+                <div
+                  v-if="
+                    row.nowSubcategoryRanking !== null &&
+                    row.beforeSubcategoryRanking !== null &&
+                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0
+                  "
+                >
                   <el-space>
                     {{ row.nowSubcategoryRanking }}
-                    <span style="font-weight: 600;">-</span>
+                    <span style="font-weight: 600">-</span>
                   </el-space>
                 </div>
               </span>
               <span v-if="item.label === '大类排名'">
-                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0">
+                <div
+                  v-if="
+                    row.nowMajorCategoryRanking !== null &&
+                    row.beforeMajorCategoryRanking !== null &&
+                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0
+                  "
+                >
                   <div>{{ row.nowMajorCategoryRanking }}</div>
                   <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0" class="arrow-down" icon="arrow-down-fill"/>
+                  <vab-icon
+                    v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0"
+                    class="arrow-down"
+                    icon="arrow-down-fill"
+                  />
                   <span style="color: #999">{{ Math.abs(row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking) }}</span>
                 </div>
-                <div v-if="row.nowMajorCategoryRanking !== null && row.beforeMajorCategoryRanking !== null && row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0">
+                <div
+                  v-if="
+                    row.nowMajorCategoryRanking !== null &&
+                    row.beforeMajorCategoryRanking !== null &&
+                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0
+                  "
+                >
                   <el-space>
                     {{ row.nowMajorCategoryRanking }}
-                    <span style="font-weight: 600;">-</span>
+                    <span style="font-weight: 600">-</span>
                   </el-space>
                 </div>
               </span>
@@ -284,10 +340,10 @@
                   <span v-html="row._developName"></span>
                 </el-tooltip>
               </span>
-              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center;">
-                <div style=" width: fit-content;text-align: left;">
+              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center">
+                <div style="width: fit-content; text-align: left">
                   <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
-                  <div >({{ row.tWksClicks }})</div>
+                  <div>({{ row.tWksClicks }})</div>
                 </div>
               </span>
               <span v-if="label1.includes(item.label)">
@@ -299,10 +355,10 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"/>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -316,7 +372,7 @@
     <!-- 小类排名/大类排名 -->
     <vab-dialog v-model="rankVisible" :title="title" width="40%" @open="handleRankOpened">
       <div style="text-align: center">
-        <el-date-picker 
+        <el-date-picker
           v-model="rankDate"
           :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
@@ -335,7 +391,7 @@
     <!-- VOC满意度 -->
     <vab-dialog v-model="vocVisible" title="VOC满意度" width="40%" @open="handleVocOpened">
       <div style="text-align: center">
-        <el-date-picker 
+        <el-date-picker
           v-model="rankDate"
           :clearable="false"
           :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)]"
@@ -361,7 +417,18 @@ import { dayjs, type CheckboxValueType } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { getCurrencyList, getCurrencySKUAmazonOperation, getOperationAmazonArtDesignList, getOperationAmazonAsinRankList, getOperationAmazonParentAsinRankList, getOperationAmazonSkuRankCateList, getOperationAmazonSkuRankList, getOperationAmazonSkuVocList, getUserAmazonArtDesignOperation, updateCurrencySKUAmazonOperation } from '/@/api/devlocal/productPerformance'
+import {
+  getCurrencyList,
+  getCurrencySKUAmazonOperation,
+  getOperationAmazonArtDesignList,
+  getOperationAmazonAsinRankList,
+  getOperationAmazonParentAsinRankList,
+  getOperationAmazonSkuRankCateList,
+  getOperationAmazonSkuRankList,
+  getOperationAmazonSkuVocList,
+  getUserAmazonArtDesignOperation,
+  updateCurrencySKUAmazonOperation,
+} from '/@/api/devlocal/productPerformance'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { flexColumnWidth, processField } from '/@/utils/tableColum'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
@@ -373,7 +440,7 @@ import { useAclStore } from '/@/store/modules/acl'
 import { ROLE_BOSS_CODE, ROLE_GRAPHICDESIGNLEAD_CODE } from '/@/const/role.ts'
 
 defineOptions({
-  name: 'ProductPerformanceArt'
+  name: 'ProductPerformanceArt',
 })
 
 const currentRoleCode = useAclStore().getRole[0]
@@ -397,7 +464,7 @@ const title = ref<string>('')
 const rankVisible = ref<boolean>(false)
 const rankDate = ref<[Date, Date]>([
   new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
-  new Date() // 今天
+  new Date(), // 今天
 ])
 const shortcuts = [
   {
@@ -556,7 +623,7 @@ const initChart3 = () => {
         // 最终html字符串
         const resHtmlStr = titleHtmlStr + contentHtmlStr
         return resHtmlStr
-      }
+      },
     },
     grid: {
       top: 50,
@@ -606,10 +673,19 @@ const initChart3 = () => {
 const handleRankChange = () => {
   if (title.value === '小类排名') {
     fetchSkuRankData()
-  } else if(title.value === '大类排名') {
+  } else if (title.value === '大类排名') {
     fetchSkuCateRankData()
   }
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => rankDate.value,
+  () => {
+    handleRankChange()
+  },
+  { deep: true }
+)
 // 获取小类排名数据
 const fetchSkuRankData = async () => {
   chartLoading.value = true
@@ -617,22 +693,21 @@ const fetchSkuRankData = async () => {
   const formatStartDate = dayjs(startDate).format('YYYY-MM-DD')
   const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
   // console.log('日期范围：', formatStartDate, formatEndDate)
-  
-    const { data } = await getOperationAmazonSkuRankList({
-      sku: copyRow.sku,
-      siteId: copyRow.site,
-      startDate: formatStartDate,
-      endDate: formatEndDate,
-    })
-    rankValue.value = data
-  
-  
+
+  const { data } = await getOperationAmazonSkuRankList({
+    sku: copyRow.sku,
+    siteId: copyRow.site,
+    startDate: formatStartDate,
+    endDate: formatEndDate,
+  })
+  rankValue.value = data
+
   // 更新图表数据
   if (chartInstance2) {
     option2.value.yAxis.name = '小类排名'
     option2.value.series[0].name = '小类排名'
-    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
-    option2.value.series[0].data = rankValue.value.map(item => item.rank)
+    option2.value.xAxis.data = rankValue.value.map((item) => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map((item) => item.rank)
     chartInstance2.setOption(option2.value)
   }
   chartLoading.value = false
@@ -644,21 +719,20 @@ const fetchSkuCateRankData = async () => {
   const formatEndDate = dayjs(endDate).format('YYYY-MM-DD')
   // console.log('日期范围：', formatStartDate, formatEndDate)
 
-    const { data } = await getOperationAmazonSkuRankCateList({
-      sku: copyRow.sku,
-      siteId: copyRow.site,
-      startDate: formatStartDate,
-      endDate: formatEndDate,
-    })
-    rankValue.value = data
-  
-  
+  const { data } = await getOperationAmazonSkuRankCateList({
+    sku: copyRow.sku,
+    siteId: copyRow.site,
+    startDate: formatStartDate,
+    endDate: formatEndDate,
+  })
+  rankValue.value = data
+
   // 更新图表数据
   if (chartInstance2) {
     option2.value.yAxis.name = '大类排名'
     option2.value.series[0].name = '大类排名'
-    option2.value.xAxis.data = rankValue.value.map(item => item.updateDate)
-    option2.value.series[0].data = rankValue.value.map(item => item.rank)
+    option2.value.xAxis.data = rankValue.value.map((item) => item.updateDate)
+    option2.value.series[0].data = rankValue.value.map((item) => item.rank)
     chartInstance2.setOption(option2.value)
   }
   chartLoading.value = false
@@ -678,8 +752,8 @@ const fetchSkuVocData = async () => {
   vocValue.value = data
   // 更新图表数据
   if (chartInstance3) {
-    option3.value.xAxis.data = vocValue.value.map(item => item.eventDate)
-    option3.value.series[0].data = vocValue.value.map(item => item.ncxRate)
+    option3.value.xAxis.data = vocValue.value.map((item) => item.eventDate)
+    option3.value.series[0].data = vocValue.value.map((item) => item.ncxRate)
     chartInstance3?.setOption(option3.value)
   }
   chartLoading.value = false
@@ -692,7 +766,7 @@ const cellClick = async (row: any, column: any) => {
       // 默认打开是近30天
       rankDate.value = [
         new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
-        new Date() // 今天
+        new Date(), // 今天
       ]
       copyRow = row
       title.value = '小类排名'
@@ -703,7 +777,7 @@ const cellClick = async (row: any, column: any) => {
       rankVisible.value = true
       rankDate.value = [
         new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
-        new Date() // 今天
+        new Date(), // 今天
       ]
       copyRow = row
       title.value = '大类排名'
@@ -714,7 +788,7 @@ const cellClick = async (row: any, column: any) => {
       vocVisible.value = true
       rankDate.value = [
         new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 30天前
-        new Date() // 今天
+        new Date(), // 今天
       ]
       copyRow = row
       title.value = 'VOC满意度'
@@ -724,8 +798,8 @@ const cellClick = async (row: any, column: any) => {
     // No default
   }
 }
-const artSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const artSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   // console.log(column, prop, order)
   if (queryForm.orderByField === prop) {
     if (!order) {
@@ -734,12 +808,12 @@ const artSortChange = (data: { column: any, prop: string, order: any }) => {
       } else if (queryForm.orderDirection === 'desc') {
         column.order = 'ascending'
       }
-    } 
+    }
   } else {
     column.order = 'descending'
   }
   queryForm.orderByField = prop
-  queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   // console.log(order)
   queryData()
 }
@@ -749,8 +823,8 @@ const activeName = ref<number>(0)
 const currency = ref<number | undefined>(0)
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)
-const siteList = ref<{ id: number, label: string }[]>([])
-const currencyList = ref<{ id: number, label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
+const currencyList = ref<{ id: number; label: string }[]>([])
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const list = ref<any>([])
@@ -763,7 +837,7 @@ const queryForm = reactive<any>({
   pageSize: 20,
   orderByField: 'currentSalesNumber',
   orderDirection: 'desc',
-  artDesignUserId: ''
+  artDesignUserId: '',
 })
 const { site } = toRefs(queryForm)
 const checkList = computed(() => {
@@ -776,7 +850,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     width: 75,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'SKU',
@@ -784,7 +858,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: 'ASIN',
@@ -792,7 +866,7 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 100,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '父体ASIN',
@@ -800,14 +874,14 @@ const columns = ref<any>([
     disableCheck: true,
     checked: true,
     minWidth: 110,
-    isFixed: 'left'
+    isFixed: 'left',
   },
   {
     label: '今销量',
     prop: 'currentSalesNumber',
     checked: true,
     minWidth: 100,
-    sortable: true
+    sortable: true,
   },
   {
     label: '销量趋势(点击看明细)',
@@ -820,7 +894,7 @@ const columns = ref<any>([
     prop: 'currentSalesPrice',
     checked: true,
     minWidth: 110,
-    sortable: true
+    sortable: true,
   },
   {
     label: '状态',
@@ -893,14 +967,14 @@ const columns = ref<any>([
     prop: 'monthSalesVolume',
     checked: true,
     minWidth: 100,
-    sortable: true
+    sortable: true,
   },
   {
     label: '月销售额',
     prop: 'monthSalesPrice',
     checked: true,
     minWidth: 140,
-    sortable: true
+    sortable: true,
   },
   {
     label: '最近入库',
@@ -958,18 +1032,7 @@ const label1Map = new Map([
   ['盈亏售价', 'profitLossSellingPrice'],
   ['30毛利售价', 'grossSellingPrice'],
 ])
-const label2 = [
-  '试算毛利',
-  '2周广告转化',
-  '2周总转化',
-  '月净利率',
-  '月ACOS',
-  '月TACOS',
-  '1年ACOS',
-  '1年TACOS',
-  '月退货%',
-  '月退款%',
-]
+const label2 = ['试算毛利', '2周广告转化', '2周总转化', '月净利率', '月ACOS', '月TACOS', '1年ACOS', '1年TACOS', '月退货%', '月退款%']
 const label2Map = new Map([
   ['试算毛利', 'grossProfit'],
   ['2周广告转化', 'tWksAdvRate'],
@@ -1024,7 +1087,6 @@ const imagePreviewShow = (url: string) => {
 }
 // 处理自适应宽度
 const handleWidth = (item: any) => {
-  
   switch (item.label) {
     case 'SKU': {
       return 255
@@ -1047,15 +1109,14 @@ const handleChecked = (item: any) => {
   item.checked = !item.checked
 }
 const handleMove = (event: any) => {
-  
-  const { related  } = event
+  const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
   if (columns.value[targetIndex]?.disableCheck) {
-    return false; // 禁止移动到目标
+    return false // 禁止移动到目标
   }
 
-  return true; // 允许其他操作
+  return true // 允许其他操作
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
@@ -1066,25 +1127,25 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   } else if (label === '运营备注') {
     return {
       textAlign: 'left',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
   } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
     return {
       textAlign: 'center',
-      cursor: 'pointer'
+      cursor: 'pointer',
     }
   }
   return {
     textAlign: 'center',
   }
 }
-const headerCell = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (['今销', '月销售额'].includes(data.column.label)) {
     return 'header-cell'
   }
   return ''
 }
-const clearPadding = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): string => {
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
   }
@@ -1118,14 +1179,14 @@ const fetchData = async () => {
   const siteIds = site.join(',')
   const { data } = await getOperationAmazonArtDesignList({
     ...filterQueryForm,
-    siteIds
+    siteIds,
   })
   if (data) {
     total.value = data.total
     list.value = data.list
     list.value.forEach((item: any) => {
       if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
-      item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers));
+      item.displayRating = computed(() => getAmazonStars(item.rating!, item.commentsNumbers))
       processField(item, 'developName', 2)
     })
   }
@@ -1195,7 +1256,7 @@ onBeforeMount(async () => {
 
           .copySku {
             display: inline-block; /* 使宽度适应内容，方便点击 */
-            padding: 0; 
+            padding: 0;
             cursor: pointer;
             -webkit-user-select: text;
             user-select: text;
@@ -1240,10 +1301,10 @@ onBeforeMount(async () => {
   }
 }
 .rate-wrapper {
-  display: flex; 
+  display: flex;
   gap: 8px;
-  align-items: center; 
-  
+  align-items: center;
+
   .rate-value {
     width: 25px; /* 固定宽度，保证分数区域宽度一致 */
     text-align: left; /* 文本右对齐 */
@@ -1266,11 +1327,10 @@ onBeforeMount(async () => {
         }
       }
     }
-
   }
   .rate-count {
     margin-left: -11px;
-    color: #36788C;
+    color: #36788c;
   }
 }
 .customTag {
@@ -1300,15 +1360,14 @@ onBeforeMount(async () => {
 .arrow-up {
   margin-left: 3px;
   font-weight: 600;
-  color: #ff3f48; 
-  transform: scale(0.9, 1.4);  
-  
+  color: #ff3f48;
+  transform: scale(0.9, 1.4);
 }
 .arrow-down {
   margin-left: 3px;
   font-weight: 600;
-  color: #67C23A;
-  transform: scale(0.9, 1.4);  
+  color: #67c23a;
+  transform: scale(0.9, 1.4);
 }
 .questionIcon {
   display: flex;
@@ -1321,7 +1380,7 @@ onBeforeMount(async () => {
 }
 
 .sku-text {
-  :deep(.el-link__inner){
+  :deep(.el-link__inner) {
     display: inline-block;
     max-width: 190px;
     margin-right: 3px;
@@ -1336,7 +1395,7 @@ onBeforeMount(async () => {
     display: flex;
     align-items: center;
     margin-top: -6px;
-   
+
     .el-tooltip {
       margin-right: 6px;
     }
@@ -1361,8 +1420,8 @@ onBeforeMount(async () => {
 }
 
 .noneHoverTable :deep(.header-cell .cell) {
-  display: flex;          /* 应用 Flexbox 布局 */
-  align-items: center;   /* 垂直居中 */
+  display: flex; /* 应用 Flexbox 布局 */
+  align-items: center; /* 垂直居中 */
   justify-content: center;
 }
 // 日本国旗样式增加边框

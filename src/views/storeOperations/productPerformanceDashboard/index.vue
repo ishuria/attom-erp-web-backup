@@ -2545,6 +2545,15 @@ const handleRankChange = () => {
     fetchSkuCateRankData()
   }
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => rankDate.value,
+  () => {
+    handleRankChange()
+  },
+  { deep: true }
+)
 const filterLoading = ref<boolean>(false)
 const handleConfirmFilter = async (filterForm: any) => {
   filterLoading.value = true

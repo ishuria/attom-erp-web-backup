@@ -20,10 +20,8 @@
       </el-tab-pane>
       <el-tab-pane label="已匹配" :name="1">
         <ai-tuo-mu-table
-        
           :list="list"
           :loading="listLoading"
-          
           :query-form="queryForm"
           :showActions="true"
           :showButtons="false"
@@ -36,25 +34,24 @@
       </el-tab-pane>
     </el-tabs>
     <!-- 发票导入 -->
-    <ai-tuo-mu-invoice-import from="import" :invoice-matching-visible="importVisible" @update-invoice-matching-visible="updateImportVisible" />
+    <ai-tuo-mu-invoice-import
+      from="import"
+      :invoice-matching-visible="importVisible"
+      @update-invoice-matching-visible="updateImportVisible"
+    />
     <!-- 发票匹配 -->
     <ai-tuo-mu-invoice-import
       from="match"
       :idList="selectChildIdList"
       :invoice-matching-visible="matchVisible"
-       @refresh="queryData"
+      @refresh="queryData"
       @update-invoice-matching-visible="updateMatchVisible"
     />
     <!-- 催票文件导出 -->
-    <vab-dialog  v-model="atmExportVisible" title="催票文件导出" width="20%">
+    <vab-dialog v-model="atmExportVisible" title="催票文件导出" width="20%">
       <el-form label-position="top">
         <el-form-item label="发货日期">
-          <el-date-picker 
-           v-model="date" 
-           :clearable="false" 
-           :disabled-date="(time: Date) => time.getTime() > Date.now()"  
-           type="daterange" 
-        />
+          <el-date-picker v-model="date" :clearable="false" :disabled-date="(time: Date) => time.getTime() > Date.now()" type="daterange" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -99,13 +96,13 @@ const handleTabChange = (tab: TabsPaneContext) => {
   queryData()
 }
 const deleteMatch = (row: any) => {
-  $baseConfirm("确定要删除匹配吗？", null, async () => {
+  $baseConfirm('确定要删除匹配吗？', null, async () => {
     const { data } = await aiTuoMuInvoiceMatchDelete({
       id: row.id,
-      invoiceDetailId: row.invoiceDetailId
+      invoiceDetailId: row.invoiceDetailId,
     })
     if (data) {
-      $baseMessage("删除匹配成功！", 'success')
+      $baseMessage('删除匹配成功！', 'success')
       queryData()
     }
   })

@@ -962,7 +962,20 @@ const handleTabChange = () => {
     queryData()
   }
 }
-
+watch(
+  () => date.value,
+  () => {
+    queryData()
+  },
+  { deep: true }
+)
+watch(
+  () => assessmentDate.value,
+  () => {
+    queryAssessmentData()
+  },
+  { deep: true }
+)
 onBeforeMount(() => {
   // 设置默认月份为当月
   const now = dayjs()

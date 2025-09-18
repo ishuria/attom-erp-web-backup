@@ -339,10 +339,18 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const queryDateData = () => {
-  queryForm.fromDate = formatDate(new Date(date.value[0]))
-  queryForm.toDate = formatDate(new Date(date.value[1]))
+  queryForm.pageNo = 1
   fetchData()
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => date.value,
+  () => {
+    queryDateData()
+  },
+  { deep: true }
+)
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()

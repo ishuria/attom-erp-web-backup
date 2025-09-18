@@ -2803,6 +2803,15 @@ const queryAllTaskData = () => {
   allTaskForm.pageNo = 1
   fetchAllTaskData()
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => allTaskForm.releaseDate,
+  () => {
+    queryAllTaskData()
+  },
+  { deep: true }
+)
 const handleAllTaskSizeChange = (value: number) => {
   allTaskForm.pageNo = 1
   allTaskForm.pageSize = value

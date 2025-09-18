@@ -921,6 +921,15 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => latestDate.value,
+  () => {
+    queryData()
+  },
+  { deep: true }
+)
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()

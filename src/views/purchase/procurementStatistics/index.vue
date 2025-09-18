@@ -1,15 +1,27 @@
 <template>
   <div class="tabs-table-container no-background-container">
-    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick" >
+    <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="供应商" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel :span="4">
-            <el-date-picker v-model="date" :clearable="false" :disabled-date="(time: Date) => time.getTime() > Date.now()" type="daterange" @change="queryData" />
+            <el-date-picker
+              v-model="date"
+              :clearable="false"
+              :disabled-date="(time: Date) => time.getTime() > Date.now()"
+              type="daterange"
+              @change="queryData"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="20">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keydown.enter="queryData" />
+                <el-input
+                  v-model="queryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryData"
+                  @keydown.enter="queryData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
@@ -20,16 +32,16 @@
         <el-table v-loading="listLoading" border :data="list" stripe>
           <el-table-column label="供应商" prop="supplierName" />
           <el-table-column label="总采购金额(￥)" prop="totalPurchaseAmount" />
-          <el-table-column label="操作" >
+          <el-table-column label="操作">
             <template #default="{ row }">
-              <el-link type="primary" underline='never' @click="showProductDetail(row)">产品明细</el-link>
+              <el-link type="primary" underline="never" @click="showProductDetail(row)">产品明细</el-link>
             </template>
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :total="total"
@@ -40,12 +52,24 @@
       <el-tab-pane label="产品" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel :span="4">
-            <el-date-picker v-model="productDate" :clearable="false" :disabled-date="(time: Date) => time.getTime() > Date.now()" type="daterange" @change="queryProductData"  />
+            <el-date-picker
+              v-model="productDate"
+              :clearable="false"
+              :disabled-date="(time: Date) => time.getTime() > Date.now()"
+              type="daterange"
+              @change="queryProductData"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="20">
             <el-form inline :model="productQueryForm" @submit.prevent>
               <el-form-item>
-                <el-input v-model="productQueryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryProductData" @keydown.enter="queryProductData" />
+                <el-input
+                  v-model="productQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="queryProductData"
+                  @keydown.enter="queryProductData"
+                />
               </el-form-item>
               <el-form-item>
                 <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryProductData" />
@@ -53,10 +77,14 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table v-loading="listLoading" border :data="productList" stripe >
-          <el-table-column label="零件图片" prop="amount" width="91" >
+        <el-table v-loading="listLoading" border :data="productList" stripe>
+          <el-table-column label="零件图片" prop="amount" width="91">
             <template #default="{ row }">
-              <el-image :src="row.componentImgUrl" style="width: 65px; height: 65px; display: block" @click="showImagePreview(row.componentImgUrl)">
+              <el-image
+                :src="row.componentImgUrl"
+                style="width: 65px; height: 65px; display: block"
+                @click="showImagePreview(row.componentImgUrl)"
+              >
                 <template #error><el-icon /></template>
               </el-image>
             </template>
@@ -64,7 +92,11 @@
           <el-table-column label="零件ID" prop="id" />
           <el-table-column label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" prop="componentName" />
           <el-table-column label="零件采购总额(￥)" min-width="120" prop="componentPurchaseAmount" />
-          <el-table-column label="供应商" :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)" prop="supplierName" >
+          <el-table-column
+            label="供应商"
+            :min-width="calculateBrColumnWidth(productList, (row: any) => row._supplierName)"
+            prop="supplierName"
+          >
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_supplierName" effect="dark" placement="top">
                 <template #content>
@@ -74,7 +106,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="采购总额(￥)" min-width="110" prop="totalPurchaseAmount" >
+          <el-table-column label="采购总额(￥)" min-width="110" prop="totalPurchaseAmount">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_totalPurchaseAmount" effect="dark" placement="top">
                 <template #content>
@@ -84,7 +116,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="采购总数" min-width="100" prop="purchaseCount" >
+          <el-table-column label="采购总数" min-width="100" prop="purchaseCount">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_purchaseCount" effect="dark" placement="top">
                 <template #content>
@@ -94,7 +126,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="单位" prop="unit" >
+          <el-table-column label="单位" prop="unit">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_unit" effect="dark" placement="top">
                 <template #content>
@@ -104,7 +136,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" prop="sku" >
+          <el-table-column label="SKU" :min-width="calculateBrColumnWidth(productList, (row: any) => row._sku)" prop="sku">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
                 <template #content>
@@ -114,7 +146,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="产品经理" prop="productManagerName" >
+          <el-table-column label="产品经理" prop="productManagerName">
             <template #default="{ row }">
               <el-tooltip content=" " :disabled="!row.overflow_productManagerName" effect="dark" placement="top">
                 <template #content>
@@ -124,12 +156,12 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          
+
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
         </el-table>
-        <vab-pagination 
+        <vab-pagination
           :current-page="productQueryForm.pageNo"
           :page-size="productQueryForm.pageSize"
           :total="productTotal"
@@ -139,7 +171,13 @@
       </el-tab-pane>
     </el-tabs>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
-    <product-statistics-detail :id="detailId" :key="`${date[0]}-${date[1]}`" v-model="detailVisible" :end-date="date[1]" :start-date="date[0]" />
+    <product-statistics-detail
+      :id="detailId"
+      :key="`${date[0]}-${date[1]}`"
+      v-model="detailVisible"
+      :end-date="date[1]"
+      :start-date="date[0]"
+    />
   </div>
 </template>
 
@@ -147,7 +185,11 @@
 import { Search } from '@element-plus/icons-vue'
 import { TabsPaneContext } from 'element-plus'
 import { getPurchaseStatisticsProductList, getPurchaseStatisticsSupplierList } from '/@/api/devlocal/purchaseStatistics'
-import { IGetPurchaseStatisticsProductItem, IGetPurchaseStatisticsSupplierItem, IGetPurchaseStatisticsSupplierListReq } from '/@/type/purchase/statistics'
+import {
+  IGetPurchaseStatisticsProductItem,
+  IGetPurchaseStatisticsSupplierItem,
+  IGetPurchaseStatisticsSupplierListReq,
+} from '/@/type/purchase/statistics'
 import { getThisYearStringTime } from '/@/utils/dateUtils'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
@@ -175,14 +217,14 @@ const queryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   pageNo: 1,
   pageSize: 20,
   startDate: '',
-  endDate: ''
+  endDate: '',
 })
 const productQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
   startDate: '',
-  endDate: ''
+  endDate: '',
 })
 
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])
@@ -203,6 +245,15 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
+
+// 监听日期变化，确保数据及时更新
+watch(
+  () => date.value,
+  () => {
+    queryData()
+  },
+  { deep: true }
+)
 const handleProductCurrentChange = (val: number) => {
   productQueryForm.pageNo = val
   fetchProductData()
@@ -216,6 +267,15 @@ const queryProductData = () => {
   productQueryForm.pageNo = 1
   fetchProductData()
 }
+
+// 监听产品日期变化，确保数据及时更新
+watch(
+  () => productDate.value,
+  () => {
+    queryProductData()
+  },
+  { deep: true }
+)
 const handleTabClick = (tab: TabsPaneContext) => {
   activeName.value = Number(tab.props.name)
   if (activeName.value === 0) {
@@ -318,5 +378,4 @@ onBeforeMount(() => {
     }
   }
 }
-
 </style>
