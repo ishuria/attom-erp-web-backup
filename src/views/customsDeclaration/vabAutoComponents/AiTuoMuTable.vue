@@ -29,18 +29,18 @@
     <el-table
       v-loading="loading"
       border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
       class="noneHoverTable"
       :data="list"
       :header-cell-style="{ textAlign: 'center' }"
-      :cell-class-name="clearPadding"
-      :cell-style="cellStyle"
       @selection-change="setSelectRows"
     >
-      <el-table-column label="selection" fixed="left" type="selection" />
-      <el-table-column label="PO" prop="po" min-width="100" />
-      <el-table-column label="采购日期" prop="poPurchaseDate" min-width="115" >
+      <el-table-column fixed="left" label="selection" type="selection" />
+      <el-table-column label="PO" min-width="100" prop="po" />
+      <el-table-column label="采购日期" min-width="115" prop="poPurchaseDate">
         <template #default="{ row }">
-          {{  row.poPurchaseDate ? row.poPurchaseDate.split(' ')[0] : '' }}
+          {{ row.poPurchaseDate ? row.poPurchaseDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
       <el-table-column label="SKU图片" prop="skuImageUrl" width="75">
@@ -55,7 +55,11 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU/品名" prop="sku" :min-width="Math.max(flexColumnWidth(list, 'SKU/品名', 'productName'), flexColumnWidth(list, 'SKU/品名', 'sku'))" >
+      <el-table-column
+        label="SKU/品名"
+        :min-width="Math.max(flexColumnWidth(list, 'SKU/品名', 'productName'), flexColumnWidth(list, 'SKU/品名', 'sku'))"
+        prop="sku"
+      >
         <template #default="{ row }">
           {{ row.sku }}
           <br />
@@ -74,42 +78,42 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="零件名" prop="componentName" :min-width="flexColumnWidth(list, '零件名', 'componentName')" />
-      <el-table-column label="PO零件总数" prop="purchaseCount" min-width="100">
+      <el-table-column label="零件名" :min-width="flexColumnWidth(list, '零件名', 'componentName')" prop="componentName" />
+      <el-table-column label="PO零件总数" min-width="100" prop="purchaseCount">
         <template #header>
           PO零件
           <br />
           总数
         </template>
       </el-table-column>
-      <el-table-column label="PO零件单位" prop="unit" min-width="100">
+      <el-table-column label="PO零件单位" min-width="100" prop="unit">
         <template #header>
           PO零件
           <br />
           单位
         </template>
       </el-table-column>
-      <el-table-column label="PO总含税价" prop="taxIncludedPrice" min-width="120" />
-      <el-table-column label="订单号" prop="orderNo" min-width="" />
-      <el-table-column label="供应商" prop="suppliser" :min-width="flexColumnWidth(list, '供应商', 'suppliser')" />
-      <el-table-column label="发货日期" prop="shipmentDate" min-width="115" />
-      <el-table-column label="合同编号" prop="contractNumber" min-width="100" />
-      <el-table-column label="报关品名" prop="customsDeclarationName" min-width="100" />
-      <el-table-column label="报关数量" prop="customsDeclarationCount" min-width="100" />
-      <el-table-column label="报关单位" prop="customsDeclarationUnit" min-width="100" />
-      <el-table-column label="该批次零件数量" prop="componentCount" min-width="100">
+      <el-table-column label="PO总含税价" min-width="120" prop="taxIncludedPrice" />
+      <el-table-column label="订单号" min-width="" prop="orderNo" />
+      <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'suppliser')" prop="suppliser" />
+      <el-table-column label="发货日期" min-width="115" prop="shipmentDate" />
+      <el-table-column label="合同编号" min-width="100" prop="contractNumber" />
+      <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" />
+      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
+      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
+      <el-table-column label="该批次零件数量" min-width="100" prop="componentCount">
         <template #header>
           该批次
           <br />
           零件数量
         </template>
       </el-table-column>
-      <el-table-column label="发票代码" prop="invoiceCode" min-width="100" />
-      <el-table-column label="发票号码" prop="invoiceNumber" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" />
-      <el-table-column label="开票数量" prop="invoiceCount" min-width="100" />
-      <el-table-column label="发票单位" prop="invoiceUnit" min-width="100" />
-      <el-table-column label="发票金额" prop="includingTaxPrice" min-width="100" />
-      <el-table-column align="center" v-if="showActions" label="操作" width="120">
+      <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
+      <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
+      <el-table-column label="开票数量" min-width="100" prop="invoiceCount" />
+      <el-table-column label="发票单位" min-width="100" prop="invoiceUnit" />
+      <el-table-column label="发票金额" min-width="100" prop="includingTaxPrice" />
+      <el-table-column v-if="showActions" align="center" label="操作" width="120">
         <template #default="{ row }">
           <el-button text type="danger" @click="$emit('delete-match', row)">删除匹配</el-button>
         </template>
@@ -172,11 +176,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   const label = data.column.label
   if (['selection', 'PO', '采购日期', 'PO零件单位', '发票单位'].includes(label)) {
     return {
-      textAlign: 'center'
+      textAlign: 'center',
     }
   }
   return {
-    textAlign: 'left'
+    textAlign: 'left',
   }
 }
 const setSelectRows = (value: IAiTuoMuItem[]) => {
@@ -230,5 +234,4 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
     }
   }
 }
-
 </style>

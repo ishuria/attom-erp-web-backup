@@ -855,6 +855,21 @@ const handleDownload = async () => {
         ids,
       })
       if (data) {
+        // for (let i = 0; i < data.length; i++) {
+        //   const fileName = data[i]
+        //   try {
+        //     await downloadFileP('/shipment/download', {
+        //       fileName,
+        //     })
+        //     $baseMessage('生成清关资料成功！', 'success')
+        //   } catch (error) {
+        //     console.error(error)
+        //     $baseMessage('生成清关资料失败！', 'error')
+        //   }
+        //   if (i < data.length - 1) {
+        //     await new Promise((resolve) => setTimeout(resolve, 100))
+        //   }
+        // }
         data.forEach(async (fileName: string) => {
           try {
             await downloadFileP('/shipment/download', {

@@ -126,14 +126,20 @@
       </el-table-column>
       <el-table-column align="center" label="默认供应商" min-width="200" prop="suppliserId">
         <template #default="{ row }">
-          <el-select
-            v-model="row.suppliserId"
-            placeholder="请选择默认供应商"
-            style="min-width: 100%"
-            @change="handleConsumablesUpdate(row)"
-          >
-            <el-option v-for="item in row.suppliserList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select v-model="row.suppliserId" placeholder="请选择默认供应商" @change="handleConsumablesUpdate(row)">
+              <el-option v-for="item in row.suppliserList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="row.suppliserId && getSupplierName(row)"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getSupplierName(row))"
+            />
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="开票" prop="oem" width="130">
@@ -308,7 +314,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, CopyDocument, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import wangEditor from '../../newProductDevelopment/newProductProgress/wangEditor.vue'
@@ -327,11 +333,19 @@ import {
   updateConsumablesSupplier,
   uploadComponentImage,
 } from '/@/api/devlocal/productInformation'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'Consumable',
 })
+
+// 获取供应商名称的辅助函数
+const getSupplierName = (row: any) => {
+  if (!row.suppliserId || !row.suppliserList) return ''
+  const supplier = row.suppliserList.find((item: any) => item.id === row.suppliserId)
+  return supplier ? supplier.label : ''
+}
 
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
@@ -809,6 +823,26 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .none {
   display: none;
 }

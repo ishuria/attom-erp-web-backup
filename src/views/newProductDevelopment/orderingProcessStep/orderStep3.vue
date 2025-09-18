@@ -480,23 +480,33 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="HTS" min-width="150" prop="volumeCoefficient">
+        <el-table-column label="HTS" min-width="170" prop="volumeCoefficient">
           <template #default="{ row }">
-            <el-select
-              v-model="row.hts"
-              clearable
-              default-first-option
-              filterable
-              :loading="htsLoading"
-              placeholder="点击输入和搜索HTS"
-              remote
-              :remote-method="(query: string) => remoteHTSMethod(query, row)"
-              style="min-width: 100%"
-              @change="handleUpdateHts(row)"
-              @clear="handleClearHts(row)"
-            >
-              <el-option v-for="item in htsOptions" :key="item.value" :label="item.label" :value="item" />
-            </el-select>
+            <div class="hts-select-container">
+              <el-select
+                v-model="row.hts"
+                clearable
+                default-first-option
+                filterable
+                :loading="htsLoading"
+                placeholder="点击输入和搜索HTS"
+                remote
+                :remote-method="(query: string) => remoteHTSMethod(query, row)"
+                @change="handleUpdateHts(row)"
+                @clear="handleClearHts(row)"
+              >
+                <el-option v-for="item in htsOptions" :key="item.value" :label="item.label" :value="item" />
+              </el-select>
+              <el-button
+                v-if="row.hts && getHtsName(row)"
+                circle
+                class="copy-btn"
+                :icon="CopyDocument"
+                size="small"
+                type="primary"
+                @click="handleClip(getHtsName(row))"
+              />
+            </div>
           </template>
         </el-table-column>
 
@@ -549,7 +559,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
@@ -583,6 +593,7 @@ import { getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
 import { convertString } from '/@/utils/stringUtils'
@@ -590,6 +601,12 @@ import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'OrderStep3',
 })
+
+// 获取HTS名称的辅助函数
+const getHtsName = (row: any) => {
+  if (!row.hts) return ''
+  return typeof row.hts === 'string' ? row.hts : row.hts.label || ''
+}
 
 const repositoryAddVisible = ref<boolean>(false)
 const route: any = useRoute()
@@ -1510,6 +1527,26 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+// HTS选择框容器样式
+.hts-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .pay-button-group {
   display: block;
   margin: 20px auto;

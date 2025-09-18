@@ -286,20 +286,31 @@
               @keydown.enter="effectiveCountInputeHandle($event)"
             />
           </div> -->
-          <el-select
-            v-model="row.supplier"
-            allow-create
-            clearable
-            default-first-option
-            filterable
-            :loading="loading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remoteMethod"
-            @change="componentClickCancel($event, row)"
-          >
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select
+              v-model="row.supplier"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              :loading="loading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteMethod"
+              @change="componentClickCancel($event, row)"
+            >
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button
+              v-if="row.supplier"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(row.supplier)"
+            />
+          </div>
           <el-tooltip content="" effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip">{{ row.supplier }}</div>
@@ -449,13 +460,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, CopyDocument, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableColumnCtx, TableRefs } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { getProductAllSupplier } from '~/src/api/devlocal/productInformation'
 import { currencyList, invoicingList } from '../indexCommon'
 import wangEditor from '../newProductProgress/wangEditor.vue'
+import { getProductAllSupplier } from '/@/api/devlocal/productInformation'
 import { getProgressLog } from '/@/api/devlocal/progress'
 import {
   addComponent,
@@ -472,6 +483,7 @@ import {
 } from '/@/api/devlocal/progressSample'
 import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progress/sampleAndComponentType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -1149,6 +1161,26 @@ onMounted(() => {
   padding-right: 0;
   padding-left: 0;
 }
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 // 图片样式
 .image-cell {
   width: 100%;

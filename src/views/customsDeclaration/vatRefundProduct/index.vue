@@ -187,6 +187,16 @@
             </template>
           </el-table-column>
           <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
+          <el-table-column label="备注" prop="remarks">
+            <template #default="{ row }">
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.remarks }}</div>
+                </template>
+                <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku" />
           <el-table-column label="PO零件名" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" prop="poComponentName" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
@@ -374,6 +384,16 @@
             </template>
           </el-table-column>
           <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
+          <el-table-column label="备注" prop="remarks">
+            <template #default="{ row }">
+              <el-tooltip content="" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row.remarks }}</div>
+                </template>
+                <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku" />
           <el-table-column label="PO零件名" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" prop="poComponentName" />
           <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
@@ -431,18 +451,29 @@
           />
         </el-form-item>
         <el-form-item label="供应商">
-          <el-select
-            v-model="ticketReminderForm.suppliser"
-            clearable
-            default-first-option
-            filterable
-            :loading="loading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remoteMethod"
-          >
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select
+              v-model="ticketReminderForm.suppliser"
+              clearable
+              default-first-option
+              filterable
+              :loading="loading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteMethod"
+            >
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button
+              v-if="ticketReminderForm.suppliser"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(ticketReminderForm.suppliser)"
+            />
+          </div>
         </el-form-item>
         <!-- <el-form-item label="仅已报关" prop="">
           <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
@@ -489,7 +520,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Document, Download, Search } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
@@ -498,6 +529,7 @@ import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
 import { getProductAllSupplier } from '/@/api/devlocal/productInformation'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
+import { handleClip } from '/@/utils/clipboard'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -1027,6 +1059,26 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .tabs-table-container {
   :deep() {
     .el-tabs {

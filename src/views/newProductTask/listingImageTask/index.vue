@@ -890,17 +890,28 @@
         style="margin: 0 60px"
       >
         <el-form-item label="sku" prop="sku">
-          <el-select
-            v-model="postTaskForm.sku"
-            default-first-option
-            filterable
-            :loading="skuLoading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remoteSKUMethod"
-          >
-            <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div class="sku-select-container">
+            <el-select
+              v-model="postTaskForm.sku"
+              default-first-option
+              filterable
+              :loading="skuLoading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteSKUMethod"
+            >
+              <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button
+              v-if="postTaskForm.sku"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(postTaskForm.sku)"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="任务类型" prop="taskType">
           <el-select v-model="postTaskForm.taskType" placeholder="请选择任务类型">
@@ -1122,7 +1133,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Search } from '@element-plus/icons-vue'
+import { ArrowDown, CopyDocument, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
@@ -1160,6 +1171,7 @@ import type {
   IGetArtDesignTaskList,
   IGetArtDesignTaskListReq,
 } from '/@/type/listingTask/imageTaskType'
+import { handleClip } from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
@@ -1884,6 +1896,26 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// SKU选择框容器样式
+.sku-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .tabs-table-container {
   :deep() {
     .el-tabs {

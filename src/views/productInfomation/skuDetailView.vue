@@ -354,9 +354,20 @@
               <span>{{ row.numberFullCartons }}</span>
             </span>
             <span v-if="item.label === '默认供应商'">
-              <el-select v-model="row.defaultSuppliserId" @change="handleSuppliserChange(row)">
-                <el-option v-for="a in row.suppliserList" :key="a.id" :label="a.label" :value="a.id" />
-              </el-select>
+              <div class="supplier-select-container">
+                <el-select v-model="row.defaultSuppliserId" @change="handleSuppliserChange(row)">
+                  <el-option v-for="a in row.suppliserList" :key="a.id" :label="a.label" :value="a.id" />
+                </el-select>
+                <el-button
+                  v-if="row.defaultSuppliserId && getSupplierName(row)"
+                  circle
+                  class="copy-btn"
+                  :icon="CopyDocument"
+                  size="small"
+                  type="primary"
+                  @click="handleClip(getSupplierName(row))"
+                />
+              </div>
             </span>
             <span v-if="item.label === '开票'">
               <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleInvoicingChange(row)">
@@ -533,21 +544,32 @@
           <el-input v-model="form.componentUnit" clearable placeholder="套, 个, 只, 片等" />
         </el-form-item>
         <el-form-item label="供应商" prop="supplier">
-          <el-select
-            v-model="form.supplier"
-            allow-create
-            clearable
-            default-first-option
-            filterable
-            :loading="loading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remoteMethod"
-            @blur="handleInput"
-            @change="handleTaxDisabled"
-          >
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select
+              v-model="form.supplier"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              :loading="loading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteMethod"
+              @blur="handleInput"
+              @change="handleTaxDisabled"
+            >
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button
+              v-if="form.supplier"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(form.supplier)"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="开票" prop="invoicing">
           <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleInvoicingTaxChange">
@@ -688,7 +710,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CirclePlusFilled, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, CirclePlusFilled, CopyDocument, Delete, Edit, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -739,6 +761,7 @@ import SkuPermission from '/@/permissions/sku'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -746,6 +769,13 @@ import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 defineOptions({
   name: 'SkuDetailView',
 })
+
+// 获取供应商名称的辅助函数
+const getSupplierName = (row: any) => {
+  if (!row.defaultSuppliserId || !row.suppliserList) return ''
+  const supplier = row.suppliserList.find((item: any) => item.id === row.defaultSuppliserId)
+  return supplier ? supplier.label : ''
+}
 
 const currentRoleCode = useAclStore().getRole[0]
 const ableToView = computed(() => {
@@ -1847,6 +1877,26 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 :deep(.el-form-item) {
   margin-right: 10px;
 }

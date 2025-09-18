@@ -439,14 +439,25 @@
                 </el-tooltip>
               </span>
               <span v-if="item.label === '供应商'">
-                <el-select
-                  v-model="row.suppliserId"
-                  placeholder=""
-                  @change="handleSupplierAndInvoicingChange(row)"
-                  @focus="handleGetRow(row)"
-                >
-                  <el-option v-for="s in row.suppliserList" :key="s.id" :label="s.label" :value="s.id" />
-                </el-select>
+                <div class="supplier-select-container">
+                  <el-select
+                    v-model="row.suppliserId"
+                    placeholder=""
+                    @change="handleSupplierAndInvoicingChange(row)"
+                    @focus="handleGetRow(row)"
+                  >
+                    <el-option v-for="s in row.suppliserList" :key="s.id" :label="s.label" :value="s.id" />
+                  </el-select>
+                  <el-button
+                    v-if="row.suppliserId && getSupplierName(row)"
+                    circle
+                    class="copy-btn"
+                    :icon="CopyDocument"
+                    size="small"
+                    type="primary"
+                    @click="handleClip(getSupplierName(row))"
+                  />
+                </div>
               </span>
               <span v-if="item.label === '开票'">
                 <el-select
@@ -1067,9 +1078,20 @@
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
             <template #default="{ row }">
-              <el-select v-model="row.suppliserId" @change="updateCreate">
-                <el-option v-for="item in row.suppliserList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
+              <div class="supplier-select-container">
+                <el-select v-model="row.suppliserId" @change="updateCreate">
+                  <el-option v-for="item in row.suppliserList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+                <el-button
+                  v-if="row.suppliserId && getSupplierName(row)"
+                  circle
+                  class="copy-btn"
+                  :icon="CopyDocument"
+                  size="small"
+                  type="primary"
+                  @click="handleClip(getSupplierName(row))"
+                />
+              </div>
             </template>
           </el-table-column>
           <el-table-column align="center" label="开票" prop="oem" width="130">
@@ -1537,9 +1559,18 @@
           </el-table-column>
           <el-table-column align="center" label="供应商" min-width="205" prop="suppliserId">
             <template #default="{ row }">
-              <el-select v-model="row.suppliserId" disabled>
-                <el-option v-for="item in row.suppliserList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
+              <div class="supplier-display-container">
+                <span class="supplier-name">{{ getSupplierName(row) }}</span>
+                <el-button
+                  v-if="getSupplierName(row)"
+                  circle
+                  class="copy-btn"
+                  :icon="CopyDocument"
+                  size="small"
+                  type="primary"
+                  @click="handleClip(getSupplierName(row))"
+                />
+              </div>
             </template>
           </el-table-column>
           <el-table-column align="center" label="开票" prop="oem" width="130">
@@ -1719,7 +1750,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { ArrowDown, CopyDocument, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -1769,6 +1800,7 @@ import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IPurchaseOption, IRepositoryOption, ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath, handleMatched, handleTabs } from '/@/utils/routes'
 import { _addSku, _clearSKUs, _deleteSku, _updateSku } from '/@/utils/sku'
@@ -1779,6 +1811,14 @@ import { currencyNumList, invoicingNumList } from '/@/views/purchase/constantOpt
 defineOptions({
   name: 'PoDetail',
 })
+
+// 获取供应商名称的辅助函数
+const getSupplierName = (row: any) => {
+  if (!row.suppliserId || !row.suppliserList) return ''
+  const supplier = row.suppliserList.find((item: any) => item.id === row.suppliserId)
+  return supplier ? supplier.label : ''
+}
+
 const addSkuLoading = ref<boolean>(false)
 
 const modifyVisible = ref<boolean>(false)
@@ -3662,6 +3702,50 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+// 供应商显示容器样式
+.supplier-display-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+
+  .supplier-name {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    color: var(--el-text-color-regular);
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .poDetail-container {
   :deep() {
     .product-details-card {

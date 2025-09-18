@@ -177,35 +177,37 @@
       </template>
     </el-table>
     <!-- 创建零件 -->
-    <vab-dialog v-model="addSupplierVisible" :before-close="handlerCloseDialog" class="moldDialog" title="新增供应商" width="450">
-      <el-divider style="margin-top: 0" />
-      <el-form
-        ref="formRef"
-        class="demo-form"
-        label-position="right"
-        label-width="auto"
-        :model="form"
-        :rules="rules"
-        style="max-width: 340px; margin: 0 auto"
-      >
+    <vab-dialog v-model="addSupplierVisible" :before-close="handlerCloseDialog" title="新增供应商" width="450">
+      <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="rules" style="margin-left: 0; margin-right: 0">
         <el-form-item label="零件单位" prop="unit">
           <el-input v-model="form.unit" clearable placeholder="套, 个, 只, 片等" />
         </el-form-item>
         <el-form-item label="供应商名称" prop="suppliser">
-          <el-select
-            v-model="form.suppliser"
-            allow-create
-            clearable
-            default-first-option
-            filterable
-            :loading="loading"
-            placeholder="点击输入和搜索"
-            remote
-            :remote-method="remoteMethod"
-            @change="handleTaxDisabled"
-          >
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select
+              v-model="form.suppliser"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              :loading="loading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteMethod"
+              @change="handleTaxDisabled"
+            >
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+            <el-button
+              v-if="form.suppliser"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(form.suppliser)"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="开票" prop="invoicing">
           <el-select v-model="form.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleInvoicingTaxChange">
@@ -251,7 +253,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -271,6 +273,7 @@ import {
   uploadComponentImage,
 } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -677,6 +680,26 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
 .none {
   display: none;
 }
