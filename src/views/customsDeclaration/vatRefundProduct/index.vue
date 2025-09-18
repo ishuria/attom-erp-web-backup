@@ -708,15 +708,6 @@ const queryDateData = () => {
     datePickerKey.value++
   })
 }
-
-// 监听日期变化，确保数据及时更新
-watch(
-  () => date.value,
-  () => {
-    queryDateData()
-  },
-  { deep: true }
-)
 let copyRow: any
 
 const handleTabClick = (pane: TabsPaneContext) => {
