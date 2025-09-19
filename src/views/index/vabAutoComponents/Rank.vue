@@ -117,18 +117,27 @@ watch(
       option.yAxis[0].axisLabel.formatter = (value: string, index: number) => {
         const totalCount = newVal.length
 
+        // 筛选出符合奖牌条件的项目（排除免除考核的），并按排名排序
+        const eligibleItems = newVal
+          .filter(
+            (item: IRankItem) =>
+              item.value >= 3 && item.assessmentNumberFinish && item.assessmentNumberFinish >= 5 && item.noAssessment !== 1
+          )
+          .sort((a, b) => b.value - a.value) // 按value降序排序
+
+        // 如果当前项目符合奖牌条件且在前三名内
         if (
           index >= totalCount - 3 &&
           newVal[index].value >= 3 &&
           newVal[index].assessmentNumberFinish &&
-          newVal[index].assessmentNumberFinish >= 5
+          newVal[index].assessmentNumberFinish >= 5 &&
+          newVal[index].noAssessment !== 1
         ) {
-          const medalIcons = ['🥉', '🥈', '🥇'] // 倒序：铜牌、银牌、金牌
-          const medalIndex = index - (totalCount - 3)
-          if (newVal[index].noAssessment === 1) {
-            return `{medal|${medalIcons[medalIndex]}} {name|${value}} {exempt|免}`
-          } else {
-            return `{medal|${medalIcons[medalIndex]}} {name|${value}}`
+          // 计算在符合条件项目中的排名
+          const eligibleIndex = eligibleItems.findIndex((item) => item.name === newVal[index].name)
+          if (eligibleIndex >= 0 && eligibleIndex < 3) {
+            const medalIcons = ['🥇', '🥈', '🥉'] // 正序：金牌、银牌、铜牌
+            return `{medal|${medalIcons[eligibleIndex]}} {name|${value}}`
           }
         }
 

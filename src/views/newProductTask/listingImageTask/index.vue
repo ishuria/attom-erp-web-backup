@@ -108,7 +108,7 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
+          <el-table-column label="剩余工作日" min-width="110" prop="naturalDay">
             <template #default="{ row }">
               <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
@@ -336,7 +336,7 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
+          <el-table-column label="剩余工作日" min-width="110" prop="naturalDay">
             <template #default="{ row }">
               <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
@@ -564,7 +564,7 @@
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="剩余自然日" min-width="110" prop="naturalDay">
+          <el-table-column label="剩余工作日" min-width="110" prop="naturalDay">
             <template #default="{ row }">
               <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
               <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
