@@ -790,6 +790,9 @@ export interface IGetReductionCostDetailList {
   userName?: string
 
   totalBonus?: number
+
+  actualStart?: number
+  actualEnd?: number
 }
 
 export interface IGetCostReductionHistoryPriceList {

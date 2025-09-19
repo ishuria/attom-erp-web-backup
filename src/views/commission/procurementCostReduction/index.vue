@@ -147,6 +147,16 @@
           {{ row.optimizationAfter ? '￥' + row.optimizationAfter : '' }}
         </template>
       </el-table-column>
+      <el-table-column label="计算开始价格￥" min-width="125" prop="actualStart">
+        <template #default="{ row }">
+          {{ row.actualStart ? '￥' + row.actualStart : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="计算结束价格￥" min-width="125" prop="actualEnd">
+        <template #default="{ row }">
+          {{ row.actualEnd ? '￥' + row.actualEnd : '' }}
+        </template>
+      </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
