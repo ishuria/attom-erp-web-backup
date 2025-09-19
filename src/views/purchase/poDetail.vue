@@ -178,7 +178,14 @@
                     <vab-icon icon="settings-line" />
                   </el-button>
                 </template>
-                <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+                <vab-draggable
+                  v-model="columns"
+                  :animation="600"
+                  filter=".non-draggable"
+                  handle=".handle"
+                  :on-end="handleEnd"
+                  :on-move="handleMove"
+                >
                   <div
                     v-for="item in columns"
                     :key="item.label"
@@ -187,7 +194,7 @@
                   >
                     <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
                     <span style="flex: 1">{{ item.label }}</span>
-                    <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+                    <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
                       <vab-icon icon="eye-line" />
                     </span>
                     <span
@@ -216,6 +223,32 @@
           stripe
           @cell-click="changeInput"
         >
+          <el-table-column label="图片" prop="componentUrl">
+            <template #default="{ row }">
+              <div class="image-cell">
+                <!-- 有图片时显示 -->
+                <div v-if="row.componentUrl" class="image-preview">
+                  <img alt="" :src="row.componentUrl" />
+                  <div class="image-actions">
+                    <el-icon @click="handlePreview(row.componentUrl)"><zoom-in /></el-icon>
+                    <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
+                  </div>
+                </div>
+                <!-- 无图片时显示 -->
+                <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+                  <el-icon><plus /></el-icon>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(skuComponentList, '零件名', 'componentName')">
+            <template #default="{ row }">
+              <div class="none">
+                <el-input v-model="row.componentName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              </div>
+              <span>{{ row.componentName }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             v-for="(item, index) in checkList"
             :key="index"
@@ -293,28 +326,8 @@
               </span>
             </template>
             <template #default="{ row }">
-              <span v-if="item.label === '图片'">
-                <div class="image-cell">
-                  <!-- 有图片时显示 -->
-                  <div v-if="row.componentUrl" class="image-preview">
-                    <img alt="" :src="row.componentUrl" />
-                    <div class="image-actions">
-                      <el-icon @click="handlePreview(row.componentUrl)"><zoom-in /></el-icon>
-                      <el-icon @click="handleComponentRemove(row)"><delete /></el-icon>
-                    </div>
-                  </div>
-                  <!-- 无图片时显示 -->
-                  <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
-                    <el-icon><plus /></el-icon>
-                  </div>
-                </div>
-              </span>
-              <span v-if="item.label === '零件名'">
-                <div class="none">
-                  <el-input v-model="row.componentName" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
-                </div>
-                <span>{{ row.componentName }}</span>
-              </span>
+              <span v-if="item.label === '图片'"></span>
+              <span v-if="item.label === '零件名'"></span>
               <span v-if="item.label === '零件明细'">
                 <el-tooltip content=" " effect="dark" placement="top">
                   <template #content>
@@ -1757,6 +1770,7 @@ import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
   addPoSKU,
   createPlanPo,
@@ -1862,200 +1876,35 @@ const handleMove = (event: any) => {
 
   return true // 允许其他操作
 }
-const columns = ref<any>([
-  {
-    label: '图片',
-    prop: 'componentImage',
-    disableCheck: true,
-    checked: true,
-    width: 75,
-    isFixed: 'left',
-  },
-  {
-    label: '零件名',
-    prop: 'componentName',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  {
-    label: '零件明细',
-    prop: 'componentSuitDetail',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '零件ID',
-    prop: 'existingPartsListId',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '订货总数',
-    prop: 'purchaseCount',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '多订数量',
-    prop: 'moreCount',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '使用已有库存',
-    prop: 'useStockCount',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '已有库存',
-    prop: 'stock',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '采购单位',
-    prop: 'unit',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '出厂单价',
-    prop: 'unitPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '出厂总价',
-    prop: 'totalPrice',
-    checked: true,
-    minWidth: 105,
-  },
-  {
-    label: '含税运费',
-    prop: 'freight',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '模具费含税',
-    prop: 'moldCost',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '总未税价',
-    prop: 'preTaxPrice',
-    checked: true,
-    minWidth: 205,
-  },
-  {
-    label: '总含税价',
-    prop: 'taxIncludedPrice',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '货币',
-    prop: 'currency',
-    checked: true,
-    minWidth: 105,
-  },
-  {
-    label: '订单号',
-    prop: 'orderNo',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '零件采购注意事项',
-    prop: 'purchaseMatters',
-    checked: true,
-    minWidth: 200,
-  },
-  {
-    label: '供应商',
-    prop: 'suppliserId',
-    checked: true,
-    minWidth: 205,
-  },
-  {
-    label: '开票',
-    prop: 'invoicing',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '实际税点',
-    prop: 'actualPTaxRate',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '开票税点',
-    prop: 'invoicingTaxRate',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '采购方',
-    prop: 'purchaseId',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '不报关',
-    prop: 'customsDeclarationStatus',
-    checked: true,
-    minWidth: 75,
-  },
-  {
-    label: '采购链接',
-    prop: 'purchaseLink',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '起订量',
-    prop: 'minQuantity',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '整箱数',
-    prop: 'numCartons',
-    checked: true,
-    minWidth: 80,
-  },
-  {
-    label: '收货仓库',
-    prop: 'repositoryId',
-    checked: true,
-    minWidth: 160,
-  },
-  {
-    label: '合同条款',
-    prop: 'contractTerms',
-    checked: true,
-    minWidth: 200,
-  },
-])
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+const columns = ref<any>([])
 
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
 })
 // 是否显示或隐藏列
-const handleChecked = (item: any) => {
+const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
 }
 // 计算某些列的自适应宽度
 const handleCalculateWidth = (item: any) => {
   switch (item.label) {
-    case '零件名': {
-      return flexColumnWidth(skuComponentList.value, '零件名', 'componentName')
-    }
     case '订货总数': {
       return flexColumnWidth(skuComponentList.value, '订货', 'purchaseCount')
     }
@@ -3658,6 +3507,9 @@ onBeforeMount(async () => {
       detailsNone.value = false
     }
     createNone.value = true
+    if (deleteNone.value && createNone.value && !detailsNone.value) {
+      fetchColumn()
+    }
     await fetchPoSkuIdList()
     await fetchPurchaseAndRepository()
     await fetchData()
@@ -3674,7 +3526,13 @@ onBeforeMount(async () => {
     handleShowCreatePreviousOrNext()
   }
 })
-
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 7 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+  })
+}
 onMounted(() => {
   let title = ''
   if (route.query.from === 'plannedPoCreate') {
@@ -3845,17 +3703,21 @@ onMounted(() => {
 :deep(input[type='number']) {
   -moz-appearance: textfield;
 }
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
+}
 .icon-hover {
   padding: 6px;
   border-radius: 4px; /* 圆角 */
   transition: background-color 0.3s; /* 动画过渡效果 */
 }
-
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
 }
-
 .disabled-handle {
   cursor: not-allowed;
 }

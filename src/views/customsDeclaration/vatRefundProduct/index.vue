@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="待退税" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="15">
             <el-button type="primary" @click="showInvoiceMatching">发票匹配</el-button>
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <el-button type="primary" @click="ticketReminderVisible = true">云舟催票文件</el-button>
@@ -32,7 +32,46 @@
               </el-text>
             </span>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="9">
+            <div class="custom-table-right-tools">
+              <el-popover popper-style="max-height: 500px; overflow: auto;" :width="220">
+                <template #reference>
+                  <el-button>
+                    <vab-icon icon="settings-line" />
+                  </el-button>
+                </template>
+                <vab-draggable
+                  v-model="columns"
+                  :animation="600"
+                  filter=".non-draggable"
+                  handle=".handle"
+                  :on-end="handleEnd"
+                  :on-move="handleMove"
+                >
+                  <div
+                    v-for="item in columns"
+                    :key="item.label"
+                    :class="{ 'non-draggable': item.disableCheck }"
+                    style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                  >
+                    <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                    <span style="flex: 1">{{ item.label }}</span>
+                    <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                      <vab-icon icon="eye-line" />
+                    </span>
+                    <span
+                      v-else
+                      class="icon-hover"
+                      style="display: flex; align-items: center; cursor: pointer"
+                      @click="handleChecked(item)"
+                    >
+                      <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                      <vab-icon v-show="item.checked" icon="eye-line" />
+                    </span>
+                  </div>
+                </vab-draggable>
+              </el-popover>
+            </div>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
@@ -71,141 +110,93 @@
           @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" label="selection" type="selection" width="60" />
-          <el-table-column fixed="left" label="发货日期" min-width="120" prop="shipmentDate" sortable="custom">
-            <template #default="{ row }">
-              {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
-            </template>
-          </el-table-column>
           <el-table-column
-            fixed="left"
-            label="合同编号"
-            :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)"
-            prop="contractNumber"
-            sortable="custom"
-          />
-          <el-table-column label="报关单出口日期" min-width="120" prop="exportDate" sortable="custom">
+            v-for="(item, index) in checkList"
+            :key="index"
+            :fixed="item.isFixed"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+            :sortable="item.sortable ? 'custom' : false"
+          >
             <template #header>
-              报关单
-              <br />
-              出口日期
+              <span v-if="item.label === '报关单出口日期'">
+                报关单
+                <br />
+                出口日期
+              </span>
+              <span v-if="item.label === '匹配发票总金额￥'">
+                匹配发票
+                <br />
+                总金额￥
+              </span>
             </template>
             <template #default="{ row }">
-              {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="报关品名"
-            :min-width="flexColumnWidth(list, '报关品名', 'customsDeclarationName', 50)"
-            prop="customsDeclarationName"
-            sortable="custom"
-          />
-
-          <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-
-          <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-
-          <el-table-column label="CIF售价$" min-width="120" prop="cifPrice" />
-          <el-table-column label="运费$" min-width="100" prop="freightFee" />
-          <el-table-column label="FOB售价$" min-width="120" prop="fobPrice" />
-          <el-table-column label="汇率" min-width="90" prop="rate" />
-          <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
-          <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
-            <template #default="{ row }">
-              <el-text
-                v-if="
-                  row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
-                "
-                tag="mark"
-              >
-                {{ row.taxInclusiveCost }}
-              </el-text>
-              <span v-else>{{ row.taxInclusiveCost }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal">
-            <template #header>
-              匹配发票
-              <br />
-              总金额￥
-            </template>
-            <template #default="{ row }">
-              <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
-              <span v-else>{{ row.includingTaxPriceTotal }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" prop="profit" />
-          <el-table-column label="利润率" min-width="100" prop="profitMargin">
-            <template #default="{ row }">
-              {{ row.profitMargin ? row.profitMargin + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column
-            label="供应商"
-            :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)"
-            prop="suppliser"
-            sortable="custom"
-          />
-          <el-table-column
-            label="供应商税号"
-            :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')"
-            prop="suppliserTaxNumber"
-          />
-          <el-table-column label="PO" min-width="100" prop="po" sortable="custom" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
-                <span>{{ item.invoiceNumber }}</span>
-                <div class="button-group">
-                  <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
-                  <el-button
-                    v-if="item.invoiceFilePath"
-                    class="button-download"
-                    :icon="Download"
-                    size="small"
-                    @click="downloadInvoice(item.invoiceFilePath)"
-                  />
-                  <el-tooltip content="" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">删除匹配</div>
-                    </template>
-                    <el-button class="button-delete" :icon="Delete" plain size="small" type="danger" @click="handleDeleteMatch(item)" />
-                  </el-tooltip>
+              <span v-if="item.label === '发货日期'">
+                {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
+              </span>
+              <span v-if="item.label === '报关单出口日期'">
+                {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
+              </span>
+              <span v-if="item.label === '含税成本￥'">
+                <el-text
+                  v-if="
+                    row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
+                  "
+                  tag="mark"
+                >
+                  {{ row.taxInclusiveCost }}
+                </el-text>
+                <span v-else>{{ row.taxInclusiveCost }}</span>
+              </span>
+              <span v-if="item.label === '匹配发票总金额￥'">
+                <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
+                <span v-else>{{ row.includingTaxPriceTotal }}</span>
+              </span>
+              <span v-if="item.label === '利润率'">
+                {{ row.profitMargin ? row.profitMargin + '%' : '' }}
+              </span>
+              <span v-if="item.label === '发票匹配日期'">
+                <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
+              <span v-if="item.label === '发票代码'">
+                <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
+              <span v-if="item.label === '发票号码'">
+                <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
+                  <span>{{ item.invoiceNumber }}</span>
+                  <div class="button-group">
+                    <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+                    <el-button
+                      v-if="item.invoiceFilePath"
+                      class="button-download"
+                      :icon="Download"
+                      size="small"
+                      @click="downloadInvoice(item.invoiceFilePath)"
+                    />
+                    <el-tooltip content="" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">删除匹配</div>
+                      </template>
+                      <el-button class="button-delete" :icon="Delete" plain size="small" type="danger" @click="handleDeleteMatch(item)" />
+                    </el-tooltip>
+                  </div>
                 </div>
-              </div>
+              </span>
+              <span v-if="item.label === '备注'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row.remarks }}</div>
+                  </template>
+                  <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '付款记录'">
+                <span v-html="row.payRecordList"></span>
+              </span>
             </template>
           </el-table-column>
-          <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
-          <el-table-column label="备注" prop="remarks">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.remarks }}</div>
-                </template>
-                <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku" />
-          <el-table-column label="PO零件名" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" prop="poComponentName" />
-          <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
-          <el-table-column label="shipmentID" :min-width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" prop="shipmentId" />
-          <el-table-column label="付款记录" :min-width="flexColumnWidth(list, '付款记录', 'payRecord', 60)" prop="payRecordList">
-            <template #default="{ row }">
-              <span v-html="row.payRecordList"></span>
-            </template>
-          </el-table-column>
+
           <!-- <el-table-column fixed="right" label="操作" width="100">
             <template #default="{ row }">
               <div v-if="row.formattedInvoiceNumber.length > 0">
@@ -232,7 +223,7 @@
       </el-tab-pane>
       <el-tab-pane label="已退税" :name="1">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="15">
             <el-button type="primary" @click="showBatchProfitMargin">批次利润率</el-button>
             <!-- <el-button type="primary">云舟开票导出</el-button> -->
             <!-- <el-button type="primary">埃托姆开票导出</el-button> -->
@@ -250,7 +241,46 @@
               />
             </span>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="9">
+            <div class="custom-table-right-tools">
+              <el-popover popper-style="max-height: 500px; overflow: auto;" :width="220">
+                <template #reference>
+                  <el-button>
+                    <vab-icon icon="settings-line" />
+                  </el-button>
+                </template>
+                <vab-draggable
+                  v-model="columns"
+                  :animation="600"
+                  filter=".non-draggable"
+                  handle=".handle"
+                  :on-end="handleEnd"
+                  :on-move="handleMove"
+                >
+                  <div
+                    v-for="item in columns"
+                    :key="item.label"
+                    :class="{ 'non-draggable': item.disableCheck }"
+                    style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                  >
+                    <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                    <span style="flex: 1">{{ item.label }}</span>
+                    <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                      <vab-icon icon="eye-line" />
+                    </span>
+                    <span
+                      v-else
+                      class="icon-hover"
+                      style="display: flex; align-items: center; cursor: pointer"
+                      @click="handleChecked(item)"
+                    >
+                      <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                      <vab-icon v-show="item.checked" icon="eye-line" />
+                    </span>
+                  </div>
+                </vab-draggable>
+              </el-popover>
+            </div>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
@@ -289,118 +319,90 @@
           @sort-change="handleSortChange"
         >
           <el-table-column fixed="left" label="selection" type="selection" width="60" />
-          <el-table-column fixed="left" label="发货日期" min-width="120" prop="shipmentDate" sortable="custom">
-            <template #default="{ row }">
-              {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
-            </template>
-          </el-table-column>
           <el-table-column
-            fixed="left"
-            label="合同编号"
-            :min-width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)"
-            prop="contractNumber"
-            sortable="custom"
-          />
-          <el-table-column label="报关单出口日期" min-width="120" prop="exportDate" sortable="custom">
+            v-for="(item, index) in checkList"
+            :key="index"
+            :fixed="item.isFixed"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+            :sortable="item.sortable ? 'custom' : false"
+          >
             <template #header>
-              报关单
-              <br />
-              出口日期
+              <span v-if="item.label === '报关单出口日期'">
+                报关单
+                <br />
+                出口日期
+              </span>
+              <span v-if="item.label === '匹配发票总金额￥'">
+                匹配发票
+                <br />
+                总金额￥
+              </span>
             </template>
             <template #default="{ row }">
-              {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="报关品名" min-width="120" prop="customsDeclarationName" sortable="custom" />
-          <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-          <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-          <el-table-column label="CIF售价$" min-width="120" prop="cifPrice" />
-          <el-table-column label="运费$" min-width="100" prop="freightFee" />
-          <el-table-column label="FOB售价$" min-width="120" prop="fobPrice" />
-          <el-table-column label="汇率" min-width="90" prop="rate" />
-          <el-table-column label="人民币售价￥" min-width="130" prop="salePrice" />
-          <el-table-column label="含税成本￥" min-width="110" prop="taxInclusiveCost">
-            <template #default="{ row }">
-              <el-text
-                v-if="
-                  row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
-                "
-                tag="mark"
-              >
-                {{ row.taxInclusiveCost }}
-              </el-text>
-              <span v-else>{{ row.taxInclusiveCost }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="" min-width="100" prop="includingTaxPriceTotal">
-            <template #header>
-              匹配发票
-              <br />
-              总金额￥
-            </template>
-            <template #default="{ row }">
-              <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
-              <span v-else>{{ row.includingTaxPriceTotal }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="退税后成本￥" min-width="130" prop="taxRefundsCost" />
-          <el-table-column label="利润￥" :min-width="flexColumnWidth(list, '利润￥', 'profit', 50)" prop="profit" />
-          <el-table-column label="利润率" min-width="100" prop="profitMargin">
-            <template #default="{ row }">
-              {{ row.profitMargin ? row.profitMargin + '%' : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="退税额￥" min-width="100" prop="taxRebate" />
-          <el-table-column
-            label="供应商"
-            :min-width="flexColumnWidth(list, '供应商', 'suppliser', 50)"
-            prop="suppliser"
-            sortable="custom"
-          />
-          <el-table-column
-            label="供应商税号"
-            :min-width="flexColumnWidth(list, '供应商税号', 'suppliserTaxNumber')"
-            prop="suppliserTaxNumber"
-          />
-          <el-table-column label="PO" min-width="100" prop="po" sortable="custom" />
-          <el-table-column label="发票匹配日期" min-width="130" prop="formattedMatchDate">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column label="发票代码" min-width="100" prop="formattedInvoiceCode">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column label="发票号码" min-width="330" prop="invoiceNumber" sortable="custom">
-            <template #default="{ row }">
-              <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
-                <span>{{ item.invoiceNumber }}</span>
-                <div class="button-group">
-                  <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+              <span v-if="item.label === '发货日期'">
+                {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
+              </span>
+              <span v-if="item.label === '报关单出口日期'">
+                {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
+              </span>
+              <span v-if="item.label === '含税成本￥'">
+                <el-text
+                  v-if="
+                    row.suppliser !== '上海埃托姆贸易商行' && row.payRecordList.length !== 0 && row.payRecordTotal !== row.taxInclusiveCost
+                  "
+                  tag="mark"
+                >
+                  {{ row.taxInclusiveCost }}
+                </el-text>
+                <span v-else>{{ row.taxInclusiveCost }}</span>
+              </span>
+              <span v-if="item.label === '匹配发票总金额￥'">
+                <el-text v-if="row.includingTaxPriceTotal !== row.taxInclusiveCost" type="danger">{{ row.includingTaxPriceTotal }}</el-text>
+                <span v-else>{{ row.includingTaxPriceTotal }}</span>
+              </span>
+              <span v-if="item.label === '利润率'">
+                {{ row.profitMargin ? row.profitMargin + '%' : '' }}
+              </span>
+              <span v-if="item.label === '发票匹配日期'">
+                <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
+              <span v-if="item.label === '发票代码'">
+                <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
+              <span v-if="item.label === '发票号码'">
+                <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
+                  <span>{{ item.invoiceNumber }}</span>
+                  <div class="button-group">
+                    <el-button v-if="item.invoiceNumber" :icon="Document" size="small" @click="showPdf(item.invoiceFilePath)" />
+                    <el-button
+                      v-if="item.invoiceFilePath"
+                      class="button-download"
+                      :icon="Download"
+                      size="small"
+                      @click="downloadInvoice(item.invoiceFilePath)"
+                    />
+                    <el-tooltip content="" effect="dark" placement="top">
+                      <template #content>
+                        <div class="custom-tooltip">删除匹配</div>
+                      </template>
+                      <el-button class="button-delete" :icon="Delete" plain size="small" type="danger" @click="handleDeleteMatch(item)" />
+                    </el-tooltip>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="发票数量" min-width="100" prop="invoiceTotal" />
-          <el-table-column label="备注" prop="remarks">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ row.remarks }}</div>
-                </template>
-                <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku')" prop="sku" />
-          <el-table-column label="PO零件名" :min-width="flexColumnWidth(list, 'PO零件名', 'poComponentName')" prop="poComponentName" />
-          <el-table-column label="PO零件数" min-width="100" prop="componentCount" />
-          <el-table-column label="shipmentID" :min-width="flexColumnWidth(list, 'shipmentID-', 'shipmentId')" prop="shipmentId" />
-          <el-table-column label="付款记录" :min-width="flexColumnWidth(list, '付款记录', 'payRecord', 60)" prop="payRecordList">
-            <template #default="{ row }">
-              <span v-html="row.payRecordList"></span>
+              </span>
+              <span v-if="item.label === '备注'">
+                <el-tooltip content="" effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ row.remarks }}</div>
+                  </template>
+                  <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
+                </el-tooltip>
+              </span>
+              <span v-if="item.label === '付款记录'">
+                <span v-html="row.payRecordList"></span>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -527,16 +529,90 @@ import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } f
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import { getProductAllSupplier } from '/@/api/devlocal/productInformation'
 import type { IGetTaxRefundBatchDetailList, IGetTaxRefundListQuery, PayRecordList } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
 import { handleClip } from '/@/utils/clipboard'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'VatRefundProduct',
 })
 
+const columns = ref<any>([])
+
+const checkList = computed(() => {
+  return columns.value.filter((item: any) => item.checked)
+})
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+// 是否显示或隐藏列
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+// 计算某些列的自适应宽度
+const handleCalculateWidth = (item: any) => {
+  switch (item.label) {
+    case '合同编号': {
+      return flexColumnWidth(list.value, '合同编号', 'contractNumber', 50)
+    }
+    case '报关品名': {
+      return flexColumnWidth(list.value, '报关品名', 'customsDeclarationName', 50)
+    }
+    case '利润￥': {
+      return flexColumnWidth(list.value, '利润￥', 'profit', 50)
+    }
+    case '供应商': {
+      return flexColumnWidth(list.value, '供应商', 'suppliser', 50)
+    }
+    case '供应商税号': {
+      return flexColumnWidth(list.value, '供应商税号', 'suppliserTaxNumber', 50)
+    }
+    case 'SKU': {
+      return flexColumnWidth(list.value, 'SKU', 'sku')
+    }
+    case 'PO零件名': {
+      return flexColumnWidth(list.value, 'PO零件名', 'poComponentName')
+    }
+    case 'shipmentID': {
+      return flexColumnWidth(list.value, 'shipmentID-', 'shipmentId')
+    }
+    case '付款记录': {
+      return flexColumnWidth(list.value, '付款记录', 'payRecord', 60)
+    }
+    default: {
+      return item.minWidth
+    }
+  }
+}
 const searchOptions = [
   { label: 'ShipmentId', value: 'shipmentId' },
   { label: 'PO', value: 'po' },
@@ -1046,7 +1122,28 @@ const fetchData = async () => {
   })
   listLoading.value = false
 }
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 8 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 设置 最小宽度
+    // if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
+    //   delete item.width
+    // }
+    if (['shipmentDate', 'contractNumber'].includes(item.prop)) {
+      item.isFixed = true
+    }
+    // 设置排序
+    if (
+      ['shipmentDate', 'contractNumber', 'exportDate', 'customsDeclarationName', 'suppliser', 'po', 'invoiceNumber'].includes(item.prop)
+    ) {
+      item.sortable = true
+    }
+  })
+}
 onBeforeMount(() => {
+  fetchColumn()
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) queryForm.pageNo = Number(pageNo)
   if (pageSize) queryForm.pageSize = Number(pageSize)
@@ -1105,14 +1202,14 @@ onBeforeMount(() => {
           }
           .el-form {
             .el-form-item:first-child {
-              margin: 0 10px 0 0 !important;
+              margin: 0 5px 0 0 !important;
             }
             .el-form-item:nth-child(2) {
               margin: 0 !important;
 
               .el-check-tag,
               .el-form-item__label {
-                margin: 0 10px 5px 0;
+                margin: 0 5px 5px 0;
                 border-radius: 99px;
               }
             }
@@ -1194,5 +1291,24 @@ onBeforeMount(() => {
   display: flex; /* 应用 Flexbox 布局 */
   align-items: center; /* 垂直居中 */
   justify-content: center;
+}
+
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>
