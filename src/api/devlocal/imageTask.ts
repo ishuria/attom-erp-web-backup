@@ -164,6 +164,13 @@ export function saveArtDesignSellingPoint(data: IGetSellingPoint): Promise<{ dat
     data,
   })
 }
+export function saveArtDesignSellingPointRealtime(data: IGetSellingPoint): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/sell/point/save/realtime`,
+    method: 'post',
+    data,
+  })
+}
 /**
  * @description 美工任务-卖点下拉列表
  */

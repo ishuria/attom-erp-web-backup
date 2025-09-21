@@ -92,7 +92,7 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType">
+          <el-table-column label="任务类型" min-width="110" prop="taskType">
             <template #default="{ row }">
               <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
             </template>
@@ -200,12 +200,12 @@
                     >
                       <el-link type="primary" underline="never">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
+                    <!-- <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })"
                       @click="handleShowCopywriting(row)"
                     >
                       <el-link type="primary" underline="never">文案</el-link>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
@@ -320,7 +320,7 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType">
+          <el-table-column label="任务类型" min-width="110" prop="taskType">
             <template #default="{ row }">
               <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
             </template>
@@ -428,12 +428,12 @@
                     >
                       <el-link type="primary" underline="never">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
+                    <!-- <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })"
                       @click="handleShowCopywriting(row)"
                     >
                       <el-link type="primary" underline="never">文案</el-link>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
@@ -548,7 +548,7 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType">
+          <el-table-column label="任务类型" min-width="110" prop="taskType">
             <template #default="{ row }">
               <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
             </template>
@@ -655,12 +655,12 @@
                     >
                       <el-link type="primary" underline="never">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
+                    <!-- <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })"
                       @click="handleShowCopywriting(row)"
                     >
                       <el-link type="primary" underline="never">文案</el-link>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_LONG_TERM] })"
                       @click="handleLongTerm(row)"
@@ -761,7 +761,7 @@
               </el-tooltip>
             </template>
           </el-table-column> -->
-          <el-table-column label="任务类型" min-width="100" prop="taskType">
+          <el-table-column label="任务类型" min-width="110" prop="taskType">
             <template #default="{ row }">
               <el-tag :type="getTaskTypeColor(row.taskType)">{{ row.taskType }}</el-tag>
             </template>
@@ -848,12 +848,12 @@
                     >
                       <el-link type="primary" underline="never">卖点</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item
+                    <!-- <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_COPYWRITING_FILL] })"
                       @click="handleShowCopywriting(row)"
                     >
                       <el-link type="primary" underline="never">文案</el-link>
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_LONG_TERM] })"
                       @click="handleLongTerm(row)"

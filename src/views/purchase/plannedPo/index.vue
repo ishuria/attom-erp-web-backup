@@ -38,6 +38,142 @@
             </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
+            <!-- 列设置面板 -->
+            <div class="column-settings">
+              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
+                <template #reference>
+                  <el-button>
+                    <vab-icon icon="settings-line" />
+                  </el-button>
+                </template>
+
+                <!-- 第一组：站点 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">PO</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="poOperationColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'po-operation-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handlePoOperationEnd"
+                    >
+                      <div
+                        v-for="item in poOperationColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+
+                <!-- 第二组：SKU相关 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">SKU</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="skuColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'sku-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handleSkuEnd"
+                    >
+                      <div
+                        v-for="item in skuColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+
+                <!-- 第三组：零件和其他信息 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">零件</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="componentColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'component-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handleComponentEnd"
+                    >
+                      <div
+                        v-for="item in componentColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+              </el-popover>
+            </div>
             <el-form inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -78,7 +214,8 @@
           @selection-change="setSelectRows"
         >
           <el-table-column class="custom-checkbox" fixed="left" type="selection" />
-          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
+
+          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="100">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
@@ -103,54 +240,62 @@
               </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="创建日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
+          <!-- 第一组：PO操作到站点 (支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in poOperationColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === '创建日期'" #default="{ row }">
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column label="请购人" prop="userName" />
-          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
+
+          <!-- 第二组：SKU相关 (支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in skuColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === 'SKU图片'" #header>
               SKU
               <br />
               图片
             </template>
-            <template #default="{ row }">
+            <template v-if="item.label === 'SKU图片'" #default="{ row }">
               <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon />
                 </template>
               </el-image>
             </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
-            <template #default="{ row }">
+            <template v-if="item.label === 'SKU'" #default="{ row }">
               <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" width="60" />
-          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')" />
-          <el-table-column label="货币" prop="currency" width="80">
-            <template #default="{ row }">
+
+          <!-- 第三组：零件和其他信息 (不支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in componentColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === '货币'" #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
+            <template v-else-if="item.label === '不报关'" #default="{ row }">
               <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
-          </el-table-column>
-          <el-table-column label="零件采购注意事项" min-width="250" prop="purchaseMatters">
-            <template #default="{ row }">
+            <template v-else-if="item.label === '零件采购注意事项'" #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
@@ -159,7 +304,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150">
+
+          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="120">
             <template #default="{ row }">
               <el-space>
                 <el-button
@@ -214,6 +360,142 @@
             </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
+            <!-- 列设置面板 -->
+            <div class="column-settings">
+              <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
+                <template #reference>
+                  <el-button>
+                    <vab-icon icon="settings-line" />
+                  </el-button>
+                </template>
+
+                <!-- 第一组：站点 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">站点</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="poOperationColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'po-operation-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handlePoOperationEnd"
+                    >
+                      <div
+                        v-for="item in poOperationColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+
+                <!-- 第二组：SKU相关 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">SKU</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="skuColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'sku-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handleSkuEnd"
+                    >
+                      <div
+                        v-for="item in skuColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+
+                <!-- 第三组：零件和其他信息 -->
+                <div class="drag-group">
+                  <h4 style="margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--el-text-color-primary)">零件</h4>
+                  <div style="border: 1px solid var(--el-border-color-light); border-radius: 6px; margin-bottom: 12px; padding: 6px">
+                    <vab-draggable
+                      v-model="componentColumns"
+                      :animation="200"
+                      filter=".non-draggable"
+                      :group="{ name: 'component-group', pull: true, put: false }"
+                      handle=".handle"
+                      :on-end="handleComponentEnd"
+                    >
+                      <div
+                        v-for="item in componentColumns"
+                        :key="item.label"
+                        :class="{ 'non-draggable': item.disableCheck }"
+                        style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+                      >
+                        <vab-icon
+                          class="handle"
+                          :class="{ 'disabled-handle': item.disableCheck }"
+                          icon="draggable"
+                          style="margin-right: 5px"
+                        />
+                        <span style="flex: 1">{{ item.label }}</span>
+                        <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                          <vab-icon icon="eye-line" />
+                        </span>
+                        <span
+                          v-else
+                          class="icon-hover"
+                          style="display: flex; align-items: center; cursor: pointer"
+                          @click="handleChecked(item)"
+                        >
+                          <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                          <vab-icon v-show="item.checked" icon="eye-line" />
+                        </span>
+                      </div>
+                    </vab-draggable>
+                  </div>
+                </div>
+              </el-popover>
+            </div>
             <el-form inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -254,7 +536,8 @@
           @selection-change="setSelectRows"
         >
           <el-table-column class="custom-checkbox" fixed="left" type="selection" />
-          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="105">
+
+          <el-table-column v-permissions="PlanPoPermission.poOperationColumnPermission()" fixed="left" label="PO操作" width="100">
             <template #default="{ row }">
               <el-dropdown>
                 <el-button v-permissions="{ permission: [PlanPoPermission.RELEASE_PO] }" text type="primary" @click="handlePublishPo(row)">
@@ -279,54 +562,63 @@
               </el-dropdown>
             </template>
           </el-table-column>
-          <el-table-column label="创建日期" min-width="115" prop="createTime">
-            <template #default="{ row }">
+
+          <!-- 第一组：PO操作到站点 (支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in poOperationColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === '创建日期'" #default="{ row }">
               {{ row.createTime.split(' ')[0] }}
             </template>
           </el-table-column>
-          <el-table-column label="请购人" prop="userName" />
-          <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(plannedPoList, '站点', 'siteName')" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
+
+          <!-- 第二组：SKU相关 (支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in skuColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === 'SKU图片'" #header>
               SKU
               <br />
               图片
             </template>
-            <template #default="{ row }">
+            <template v-if="item.label === 'SKU图片'" #default="{ row }">
               <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
                 <template #error>
                   <el-icon />
                 </template>
               </el-image>
             </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(plannedPoList, 'SKU', 'sku', 60)">
-            <template #default="{ row }">
+            <template v-if="item.label === 'SKU'" #default="{ row }">
               <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
                 {{ row.sku }}
                 <vab-icon icon="file-copy-2-fill" />
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(plannedPoList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(plannedPoList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(plannedPoList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" width="60" />
-          <el-table-column label="含税价" prop="taxIncludedPrice" :width="flexColumnWidth(plannedPoList, '含税价', 'taxIncludedPrice')" />
-          <el-table-column label="货币" prop="currency" width="80">
-            <template #default="{ row }">
+
+          <!-- 第三组：零件和其他信息 (不支持合并单元格) -->
+          <el-table-column
+            v-for="(item, index) in componentColumns.filter((col: any) => col.checked)"
+            :key="item.label"
+            :label="item.label"
+            :min-width="handleCalculateWidth(item)"
+            :prop="item.prop"
+          >
+            <template v-if="item.label === '货币'" #default="{ row }">
               {{ currencyMap[row.currency as CurrencyCode] }}
             </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(plannedPoList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
+            <template v-else-if="item.label === '不报关'" #default="{ row }">
               <el-checkbox v-model="row.customsDeclarationStatus" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
-          </el-table-column>
-          <el-table-column label="零件采购注意事项" min-width="250" prop="purchaseMatters">
-            <template #default="{ row }">
+            <template v-else-if="item.label === '零件采购注意事项'" #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">
                 <template #content>
                   <div class="custom-tooltip">{{ removeHtmlTags(row.purchaseMatters) }}</div>
@@ -335,7 +627,8 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="150">
+
+          <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="120">
             <template #default="{ row }">
               <el-space>
                 <el-button
@@ -357,6 +650,7 @@
               </el-space>
             </template>
           </el-table-column>
+
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -387,6 +681,8 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { TableInstance, TabsPaneContext } from 'element-plus'
 import { ref } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import {
   deleteAllPlanPo,
   deletePlanPo,
@@ -425,6 +721,110 @@ const { changeTabsMeta } = tabsStore
 const selectRows = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
+}
+
+// 列配置数据 - 三组设计
+// 第一组：PO操作到站点 (支持合并单元格)
+const poOperationColumns = ref<any>([])
+
+// 第二组：SKU相关 (支持合并单元格)
+const skuColumns = ref<any>([])
+
+// 第三组：零件和其他信息 (不支持合并单元格)
+const componentColumns = ref<any>([])
+
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 9 })
+  poOperationColumns.value = data
+  poOperationColumns.value.forEach((item: any) => {
+    item.minWidth = item.width
+  })
+  const { data: skuData } = await getOperationColumnList({ type: 10 })
+  skuColumns.value = skuData
+  skuColumns.value.forEach((item: any) => {
+    item.minWidth = item.width
+  })
+  const { data: componentData } = await getOperationColumnList({ type: 11 })
+  componentColumns.value = componentData
+  componentColumns.value.forEach((item: any) => {
+    item.minWidth = item.width
+  })
+}
+// 拖拽结束处理 - 发送请求保存列顺序
+const handlePoOperationEnd = async () => {
+  try {
+    const req = poOperationColumns.value.map((item: any, index: number) => {
+      return {
+        userId: item.userId,
+        columnId: item.columnId,
+        sort: index,
+        // label: item.label
+      }
+    })
+    await updateSortOperationColumn(req)
+  } catch (error) {
+    console.error('保存PO操作组列顺序失败:', error)
+  }
+}
+
+const handleSkuEnd = async () => {
+  try {
+    const req = skuColumns.value.map((item: any, index: number) => {
+      return {
+        userId: item.userId,
+        columnId: item.columnId,
+        sort: index,
+        // label: item.label
+      }
+    })
+    await updateSortOperationColumn(req)
+  } catch (error) {
+    console.error('保存SKU组列顺序失败:', error)
+  }
+}
+
+const handleComponentEnd = async () => {
+  try {
+    const req = componentColumns.value.map((item: any, index: number) => {
+      return {
+        userId: item.userId,
+        columnId: item.columnId,
+        sort: index,
+        // label: item.label
+      }
+    })
+    await updateSortOperationColumn(req)
+  } catch (error) {
+    console.error('保存零件组列顺序失败:', error)
+  }
+}
+
+// 列显示/隐藏切换
+// 是否显示或隐藏列
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
+const handleCalculateWidth = (item: any) => {
+  switch (item.label) {
+    case 'SKU': {
+      return flexColumnWidth(plannedPoList.value, 'SKU', 'sku')
+    }
+    case '零件名': {
+      return flexColumnWidth(plannedPoList.value, '零件名', 'componentName')
+    }
+    case '供应商': {
+      return flexColumnWidth(plannedPoList.value, '供应商', 'suppliser')
+    }
+    default: {
+      return item.minWidth
+    }
+  }
 }
 const tableRef = ref<TableInstance>()
 const tableRef2 = ref<TableInstance>()
@@ -476,16 +876,17 @@ const queryData = () => {
   fetchData()
 }
 const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 5 || data.columnIndex === 1) {
+  const label = data.column.label
+  if (label === 'SKU图片' || label === 'PO操作') {
     return 'clear-padding'
   }
   return ''
 }
 //采购计划col合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
-
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+  const label = column.label
+  if (columnIndex === 0 || label === 'PO操作' || label === '创建日期' || label === '请购人' || label === '站点') {
     const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
@@ -502,7 +903,7 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   }
 
   // 合并 SKU 行
-  if (columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 17) {
+  if (label === 'SKU' || label === '数量' || label === 'SKU图片' || label === 'SKU操作') {
     const poSkuId = row.poSkuId
 
     // 遍历后面的行，检查相同的 SKU ID
@@ -806,7 +1207,8 @@ const handleTabClick = (tab: TabsPaneContext) => {
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
-  if (data.columnIndex !== 6 && data.columnIndex !== 8 && data.columnIndex !== 13 && data.columnIndex !== 16) {
+  const label = data.column.label
+  if (label !== 'SKU' && label !== '零件名' && label !== '零件采购注意事项' && label !== '供应商') {
     return {
       textAlign: 'center',
     }
@@ -884,6 +1286,7 @@ onActivated(() => {
   tableRef.value?.doLayout()
 })
 onBeforeMount(() => {
+  fetchColumn()
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -1054,8 +1457,48 @@ onUnmounted(() => {
   border-color: var(--el-checkbox-checked-input-border-color);
 }
 
-// 选中后中间的 “✔” 的样式
+// 选中后中间的 "✔" 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+
+// 列设置面板样式
+.column-settings {
+  margin-right: 10px;
+}
+
+.drag-group {
+  margin-bottom: 16px;
+
+  h4 {
+    margin: 0 0 8px 0;
+    color: var(--el-text-color-primary);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.column-label {
+  flex: 1;
+  color: var(--el-text-color-primary);
+}
+
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>
