@@ -50,7 +50,7 @@
           ]"
           label="细分类型"
           prop="detailType"
-          width="105"
+          width="120"
         >
           <template #default="{ row }">
             <span v-show="row.detailType === 0">产品利润分</span>
@@ -64,13 +64,13 @@
             <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="父体" prop="parent" width="100" />
+        <el-table-column label="父体" prop="parent" width="130" />
         <el-table-column label="备注" prop="remark" />
-        <el-table-column label="来源" prop="source" width="125" />
+        <el-table-column label="来源" prop="source" width="135" />
         <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column v-if="!editDisabled" label="操作" width="100">
           <template #default="{ row }">
-            <el-link type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
+            <el-link :disabled="row.ableDelete === 0" type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
