@@ -119,20 +119,11 @@ watch(
 
         // 筛选出符合奖牌条件的项目（排除免除考核的），并按排名排序
         const eligibleItems = newVal
-          .filter(
-            (item: IRankItem) =>
-              item.value >= 3 && item.assessmentNumberFinish && item.assessmentNumberFinish >= 5 && item.noAssessment !== 1
-          )
+          .filter((item: IRankItem) => item.value > 0 && (item.noAssessment === 0 || item.noAssessment == null))
           .sort((a, b) => b.value - a.value) // 按value降序排序
 
-        // 如果当前项目符合奖牌条件且在前三名内
-        if (
-          index >= totalCount - 3 &&
-          newVal[index].value >= 3 &&
-          newVal[index].assessmentNumberFinish &&
-          newVal[index].assessmentNumberFinish >= 5 &&
-          newVal[index].noAssessment !== 1
-        ) {
+        // 如果当前项目符合奖牌条件
+        if (newVal[index].value > 0 && (newVal[index].noAssessment === 0 || newVal[index].noAssessment == null)) {
           // 计算在符合条件项目中的排名
           const eligibleIndex = eligibleItems.findIndex((item) => item.name === newVal[index].name)
           if (eligibleIndex >= 0 && eligibleIndex < 3) {
