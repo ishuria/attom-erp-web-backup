@@ -59,33 +59,13 @@
       </el-col>
       <el-col :span="8">
         <vab-card class="card3" style="height: 150px">
-          <el-container style="display: flex; gap: 10px; align-items: center">
+          <el-container v-loading="packagingLoading" style="display: flex; gap: 10px; align-items: center">
             <el-aside style="width: 2.5em">
               <el-text style="letter-spacing: 0.3em; writing-mode: vertical-lr">包装信息</el-text>
             </el-aside>
             <!-- 内容 -->
             <el-main style="flex: 1; padding: 0">
               <div class="grid-container">
-                <div class="grid-item">
-                  <el-tooltip
-                    content="亚马逊产品包装尺寸"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">亚马逊产品包装尺寸</div>
-                  </el-tooltip>
-                  <el-tooltip
-                    content="20×10×2.0 cm"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">20×10×2.0 cm</div>
-                  </el-tooltip>
-                </div>
                 <div class="grid-item" data-label="amazon">
                   <el-tooltip
                     content="自量产品包装尺寸"
@@ -97,15 +77,43 @@
                     <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">自量产品包装尺寸</div>
                   </el-tooltip>
                   <el-tooltip
-                    content="20×10×1.0 cm"
+                    :content="`${packagingInformation?.length}×${packagingInformation?.width}×${packagingInformation?.height} cm`"
                     :disabled="isOverflow"
                     effect="dark"
                     placement="top"
                     popper-style="font-size: var(--el-font-size-base)"
                   >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">20×10×1.0 cm</div>
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
+                      {{ packagingInformation?.length }}×{{ packagingInformation?.width }}×{{ packagingInformation?.height }} cm
+                    </div>
                   </el-tooltip>
                 </div>
+                <div class="grid-item">
+                  <el-tooltip
+                    content="亚马逊产品包装尺寸"
+                    :disabled="isOverflow"
+                    effect="dark"
+                    placement="top"
+                    popper-style="font-size: var(--el-font-size-base)"
+                  >
+                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">亚马逊产品包装尺寸</div>
+                  </el-tooltip>
+                  <el-tooltip
+                    :content="`${packagingInformation?.amazonLength}×${packagingInformation?.amazonWidth}×${packagingInformation?.amazonHeight} cm`"
+                    :disabled="isOverflow"
+                    effect="dark"
+                    placement="top"
+                    popper-style="font-size: var(--el-font-size-base)"
+                  >
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
+                      {{ packagingInformation?.amazonLength }}×{{ packagingInformation?.amazonWidth }}×{{
+                        packagingInformation?.amazonHeight
+                      }}
+                      cm
+                    </div>
+                  </el-tooltip>
+                </div>
+
                 <div class="grid-item">
                   <el-tooltip
                     content="重量 (自量/亚马逊)"
@@ -117,13 +125,15 @@
                     <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">重量 (自量/亚马逊)</div>
                   </el-tooltip>
                   <el-tooltip
-                    content="200g / 300g"
+                    :content="`${packagingInformation?.weight}g / ${packagingInformation?.amazonWeight}g`"
                     :disabled="isOverflow"
                     effect="dark"
                     placement="top"
                     popper-style="font-size: var(--el-font-size-base)"
                   >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">200g / 300g</div>
+                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
+                      {{ packagingInformation?.weight }}g / {{ packagingInformation?.amazonWeight }}g
+                    </div>
                   </el-tooltip>
                 </div>
                 <div class="grid-item" data-label="fba">
@@ -137,16 +147,16 @@
                     <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">FBA (自量/亚马逊)</div>
                   </el-tooltip>
                   <el-tooltip
-                    content="$5.4 / $4.9"
+                    :content="`${packagingInformation?.selfAssessmentFba} / ${packagingInformation?.amazonFba}`"
                     :disabled="isOverflow"
                     effect="dark"
                     placement="top"
                     popper-style="font-size: var(--el-font-size-base)"
                   >
                     <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
-                      <span class="grid-value-green">$5.4</span>
+                      <span class="grid-value-green">${{ packagingInformation?.selfAssessmentFba }}</span>
                       /
-                      <span>$4.9</span>
+                      <span>${{ packagingInformation?.amazonFba }}</span>
                     </div>
                   </el-tooltip>
                 </div>
@@ -154,7 +164,7 @@
             </el-main>
             <!-- 右侧图片 -->
             <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
-              <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px">
+              <el-image :src="packagingInformation?.imgUrl" style="display: block; border-radius: 10px">
                 <template #error><el-icon /></template>
               </el-image>
             </el-aside>
@@ -423,10 +433,15 @@ import {
   copyOperationAmazonCost,
   deleteOperationAmazonCost,
   getOperationAmazonCostList,
+  getOperationAmazonPackagingInformation,
   reverseCalcOperationAmazonCost,
   updateOperationAmazonCost,
 } from '/@/api/devlocal/productAnalysis'
-import type { IGetOperationAmazonCostList, IGetOperationAmazonCostListReq } from '/@/type/storeOperation/productAnalysisType'
+import type {
+  IGetOperationAmazonCostList,
+  IGetOperationAmazonCostListReq,
+  IGetOperationAmazonPackagingInformationRes,
+} from '/@/type/storeOperation/productAnalysisType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -438,6 +453,7 @@ watch(
   () => props.sku,
   () => {
     fetchData()
+    fetchPackagingInformation()
   },
   { immediate: false }
 )
@@ -1059,7 +1075,20 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
 }
+const packagingInformation = ref<IGetOperationAmazonPackagingInformationRes>()
+const packagingLoading = ref<boolean>(false)
+const route = useRoute()
+const fetchPackagingInformation = async () => {
+  packagingLoading.value = true
+  try {
+    const { data } = await getOperationAmazonPackagingInformation({ sku: props.sku, site: Number(route.query.site) })
+    packagingInformation.value = data
+  } finally {
+    packagingLoading.value = false
+  }
+}
 onBeforeMount(() => {
+  fetchPackagingInformation()
   fetchChannelData()
   fetchSalesSiteList()
   percentageAgeData = data2.value.map((item) => ({

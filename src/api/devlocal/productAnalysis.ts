@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
+  IGetOperationAmazonPackagingInformationRes,
   IUpdateOperationAmazonCostReq,
 } from '/@/type/storeOperation/productAnalysisType'
 
@@ -65,5 +66,20 @@ export function updateOperationAmazonCost(data: IUpdateOperationAmazonCostReq): 
     url: `${BASE_API}/operation/amazon/cost/update`,
     method: 'post',
     data,
+  })
+}
+/**
+ * @description 运营-产品成本分析-包装信息获取
+ * @param params
+ * @returns
+ */
+export function getOperationAmazonPackagingInformation(params: {
+  sku: string
+  site: number
+}): Promise<{ data: IGetOperationAmazonPackagingInformationRes }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/packaging/information`,
+    method: 'get',
+    params,
   })
 }

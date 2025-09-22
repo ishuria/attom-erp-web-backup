@@ -204,3 +204,17 @@ export interface IUpdateOperationAmazonCostReq {
    */
   width?: number
 }
+
+export interface IGetOperationAmazonPackagingInformationRes {
+  amazonFba: number
+  selfAssessmentFba: number
+  amazonLength: number
+  amazonWidth: number
+  amazonHeight: number
+  amazonWeight: number
+  length: number
+  width: number
+  height: number
+  weight: number
+  imgUrl: string
+}

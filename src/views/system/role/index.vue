@@ -3,7 +3,9 @@
     <vab-query-form>
       <vab-query-form-left-panel :span="12">
         <el-button v-permissions="{ permission: [RolePermission.ADD] }" :icon="Plus" type="primary" @click="handleEdit()">添加</el-button>
-        <el-button v-permissions="{ permission: [RolePermission.MORE_DELETE] }" :icon="Delete" type="danger" @click="handleDelete()">批量删除</el-button>
+        <el-button v-permissions="{ permission: [RolePermission.MORE_DELETE] }" :icon="Delete" type="danger" @click="handleDelete()">
+          批量删除
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="12">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -30,6 +32,7 @@
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="激励政策" prop="incentivePolicy" show-overflow-tooltip />
       <el-table-column v-permissions="RolePermission.operationColPermission()" align="center" label="操作" width="200">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: [RolePermission.EDIT] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
