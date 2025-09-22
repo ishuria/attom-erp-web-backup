@@ -1783,9 +1783,21 @@ const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
 const imagePreviewShow = (url: string) => {
-  imagePreviewVisible.value = true
-  imagePreviewList.value = []
-  imagePreviewList.value.push(url)
+  // 需要对url做处理 https://m.media-amazon.com/images/I/71uZi8MxJiL._SL75_.jpg 需要去掉url的_SL75_
+  const processedUrl = url.replace('_SL75_', '')
+
+  // 预加载图片
+  const img = new Image()
+  img.onload = () => {
+    imagePreviewVisible.value = true
+    imagePreviewList.value = [processedUrl]
+  }
+  img.onerror = () => {
+    // 如果大图加载失败，回退到原图
+    imagePreviewVisible.value = true
+    imagePreviewList.value = [url]
+  }
+  img.src = processedUrl
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label

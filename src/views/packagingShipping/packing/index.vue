@@ -146,6 +146,8 @@
       </el-table-column>
       <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')" />
       <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')" />
+      <el-table-column label="推荐数量" prop="recommendCount" width="100" />
+      <el-table-column label="最晚补货" prop="latestRestock" width="120" />
       <el-table-column label="备注" min-width="100" prop="remarks">
         <template #default="{ row }">
           <el-tooltip effect="dark" placement="top">

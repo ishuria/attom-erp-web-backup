@@ -1989,6 +1989,13 @@
     />
     <!-- 降本提成申请 -->
     <vab-dialog v-model="reductionCostVisible" title="降本提成申请" width="20%" @close="closeReductionCost">
+      <vab-alert show-icon type="info">
+        <div class="alert-content">
+          <div class="rule-item">
+            <span>本月及下月4号之前完成降本提成申请</span>
+          </div>
+        </div>
+      </vab-alert>
       <el-form ref="reductionCostFormRef" :model="reductionCostForm" :rules="reductionCostFormRules" style="margin: 0">
         <el-form-item label="优化前价格" prop="beforePrice">
           <el-input v-model="reductionCostForm.beforePrice" type="number" />
@@ -3694,5 +3701,27 @@ onUnmounted(() => {
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+
+// 警告框样式
+.alert-content {
+  .rule-item {
+    display: flex;
+    align-items: center;
+
+    font-size: 16px;
+    color: #606266;
+
+    margin-top: 4px;
+
+    // &:last-child {
+    //   margin-bottom: 0;
+    // }
+
+    // .rule-icon {
+    //   color: var(--el-color-primary);
+    //   font-size: 18px;
+    // }
+  }
 }
 </style>

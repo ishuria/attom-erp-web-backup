@@ -1371,7 +1371,7 @@ const validateComponent = (item: any) => {
     $baseMessage('请先填写出厂单价！', 'warning', 'hey')
     return false
   } else if (!item.totalPrice) {
-    $baseMessage('请先填写出场总价！', 'warning', 'hey')
+    $baseMessage('请先填写出厂总价！', 'warning', 'hey')
     return false
   } else if (!item.freight) {
     $baseMessage('请先填写运费含税！', 'warning', 'hey')
