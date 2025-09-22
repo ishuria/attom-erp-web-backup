@@ -64,6 +64,9 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
+            <el-select v-model="queryForm.site" clearable placeholder="全部发货站点" @change="queryData">
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
             <el-input
               v-model.trim="queryForm.keyWord"
               clearable
@@ -86,7 +89,7 @@
       :data="list"
       :default-sort="{ prop: 'createTime', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
-      height="calc(100vh - 200px)"
+      max-height="calc(100vh - 300px)"
       :row-class-name="stripedRowClass"
       :span-method="objectSpanMethod"
       @cell-click="handleCellClick"
@@ -128,7 +131,7 @@
         </template>
       </el-table-column>
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description--', 'description')" />
-      <el-table-column label="带磁" min-width="70" prop="magnetic">
+      <el-table-column label="带磁" prop="magnetic" width="70">
         <template #default="{ row }">
           <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
           <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
@@ -619,6 +622,7 @@ const queryForm = reactive<IGetEncasementListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  site: undefined,
 })
 const exportSizeVisible = ref<boolean>(false)
 const exportSizeLoading = ref<boolean>(false)
