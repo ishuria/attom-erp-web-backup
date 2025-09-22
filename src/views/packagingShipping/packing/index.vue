@@ -1289,7 +1289,15 @@ const stripedRowClass = (_row: any) => {
 // 装箱合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 11 && columnIndex !== 12 && columnIndex !== 13 && columnIndex !== 15 && columnIndex !== 16) {
+  if (
+    columnIndex !== 11 &&
+    columnIndex !== 12 &&
+    columnIndex !== 13 &&
+    columnIndex !== 15 &&
+    columnIndex !== 16 &&
+    columnIndex !== 17 &&
+    columnIndex !== 18
+  ) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
