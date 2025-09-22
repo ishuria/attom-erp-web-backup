@@ -8,14 +8,28 @@
       </div>
     </template>
 
-    <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" :span-method="objectSpanMethod">
+    <el-table
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      :span-method="objectSpanMethod"
+    >
       <el-table-column label="人员" prop="userName" width="100" />
       <el-table-column label="总利润分" prop="totalNumber" width="100" />
       <el-table-column label="利润分" prop="number" width="100" />
-      <el-table-column label="图片" prop="imageUrl" width="100" />
-      <el-table-column label="父体ASIN" prop="parentASIN" />
+      <el-table-column label="图片" prop="imageUrl" width="75">
+        <template #default="{ row }">
+          <el-image :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.imageUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="父体ASIN" min-width="130" prop="parentASIN" />
       <el-table-column label="产品总分" prop="productTotalScore" width="100" />
     </el-table>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </vab-card>
 </template>
 
@@ -31,6 +45,22 @@ const props = defineProps<{
   list: IGetFrontPageProductProfitRes[]
 }>()
 
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const imagePreviewShow = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '总利润分' || data.column.label === '利润分') {
     return {
@@ -99,6 +129,14 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 
   :deep(.el-table) {
     height: 100%;
+    .clear-padding {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      .cell {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+      }
+    }
   }
 }
 </style>

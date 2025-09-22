@@ -182,22 +182,47 @@
             <span>{{ row.numberFullCartons }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="供应商" min-width="140" prop="supplier">
+        <el-table-column align="center" label="供应商" min-width="200" prop="supplier">
           <template #default="{ row }">
-            <div class="none">
+            <div class="supplier-select-container">
+              <el-select
+                v-model="row.supplier"
+                allow-create
+                clearable
+                default-first-option
+                filterable
+                :loading="loading"
+                placeholder="点击输入和搜索"
+                remote
+                :remote-method="remoteMethod"
+                @change="clickSupplierCancel($event, row)"
+              >
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <el-button
+                v-if="row.supplier"
+                circle
+                class="copy-btn"
+                :icon="CopyDocument"
+                size="small"
+                type="primary"
+                @click="handleClip(row.supplier)"
+              />
+            </div>
+            <!-- <div class="none">
               <el-input
                 v-model.trim="row.supplier"
                 autofocus
                 @blur="clickSupplierCancel($event, row)"
                 @keyup.enter="clickSupplierCancel($event, row)"
               />
-            </div>
-            <el-tooltip content=" " effect="dark" placement="top">
+            </div> -->
+            <!-- <el-tooltip content=" " effect="dark" placement="top">
               <template #content>
                 <div class="custom-tooltip">{{ removeHtmlTags(row.supplier) }}</div>
               </template>
               <div class="multi-line-ellipsis">{{ removeHtmlTags(row.supplier) }}</div>
-            </el-tooltip>
+            </el-tooltip> -->
           </template>
         </el-table-column>
         <el-table-column align="center" label="开票" prop="oem" width="140">
@@ -589,7 +614,7 @@ import {
   submitReviewConsumable,
   updateReviewStepNo3ComponentSuitDetail,
 } from '/@/api/devlocal/orderProcess'
-import { getProductComponentStore } from '/@/api/devlocal/productInformation'
+import { getProductAllSupplier, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { addPurchaseRepository } from '/@/api/devlocal/purchase'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
@@ -1182,6 +1207,31 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     focusAndSelectInput(cell)
   }
 }
+const loading = ref(false) //供应商搜索loading
+const options = ref<any[]>([]) //供应商搜索选项
+const supplierList = ref<any[]>([]) //供应商搜索列表
+const remoteMethod = async (query: string) => {
+  if (query) {
+    // 先获取供应商信息
+    const { data } = await getProductAllSupplier({
+      suppliserName: query,
+    })
+
+    supplierList.value = data.map((item: any) => {
+      return { value: `${item}`, label: `${item}` }
+    })
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      options.value = supplierList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    options.value = []
+  }
+}
+
 // 修改供应商判断
 const clickSupplierCancel = async (event: any, value: any) => {
   // 判断新输入的供应商是否和其余的一样
@@ -1193,30 +1243,29 @@ const clickSupplierCancel = async (event: any, value: any) => {
     }
   })
 
-  // 获取根元素，避免重复调用 getRootElement
-  const rootElement = getRootElement(event.srcElement, '.cell')
+  // // 获取根元素，避免重复调用 getRootElement
+  // const rootElement = getRootElement(event.srcElement, '.cell')
 
-  if (rootElement) {
-    const t1 = rootElement.children[0]
-    const t2 = rootElement.children[1]
+  // if (rootElement) {
+  //   const t1 = rootElement.children[0]
+  //   const t2 = rootElement.children[1]
 
-    // 更新 t1 和 t2 的 class
-    if (t1) t1.classList.add('none')
-    if (t2) t2.classList.remove('none')
-  }
+  //   // 更新 t1 和 t2 的 class
+  //   if (t1) t1.classList.add('none')
+  //   if (t2) t2.classList.remove('none')
+  // }
   if (isEqual(_row, value)) {
     return
   }
-  if (event.type === 'blur') {
-    try {
-      const actualTaxRate = (value.actualTaxRate ?? 0) / 100
-      const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
-      await reviewStepNo3ComponentUpdate({ ...value, actualTaxRate, invoicingTaxRate })
-      await fetchDataComponent()
-      await fetchVariantsData()
-    } catch {
-      Object.assign(value, _row)
-    }
+
+  try {
+    const actualTaxRate = (value.actualTaxRate ?? 0) / 100
+    const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
+    await reviewStepNo3ComponentUpdate({ ...value, actualTaxRate, invoicingTaxRate })
+    await fetchDataComponent()
+    await fetchVariantsData()
+  } catch {
+    Object.assign(value, _row)
   }
 }
 // 零件table blur事件
@@ -1648,5 +1697,24 @@ onMounted(() => {
 .noneHoverTable :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+// 供应商选择框容器样式
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+
+  .el-select {
+    flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
 }
 </style>

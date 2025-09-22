@@ -157,7 +157,7 @@
       </template>
 
       <!-- 第二层 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="7" :md="24" :sm="24" :xl="7" :xs="24">
         <monthly-product-profit-table :list="profitList">
           <template #select>
             <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
@@ -166,7 +166,7 @@
           </template>
         </monthly-product-profit-table>
       </el-col>
-      <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="7" :md="24" :sm="24" :xl="7" :xs="24">
         <monthly-assessment-table :list="listSub" title="其他计分项">
           <template #select>
             <el-select v-model="selectAssessmentMinusMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyMinusAssessment">

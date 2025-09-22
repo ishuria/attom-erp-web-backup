@@ -311,11 +311,11 @@
               @click="handleClip(row.supplier)"
             />
           </div>
-          <el-tooltip content="" effect="dark" placement="top">
+          <!-- <el-tooltip content="" effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip">{{ row.supplier }}</div>
             </template>
-          </el-tooltip>
+          </el-tooltip> -->
         </template>
       </el-table-column>
 
