@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import type { IRoleAddOrUpdateReq, IRoleDeleteReq, IRoleMenuReq, IRoleQuery } from '/@/type/role/roleType'
+import type { IRoleAddOrUpdateReq, IRoleDeleteReq, IRoleMenuReq, IRoleQuery, IRoleUpdateIncentivePolicyReq } from '/@/type/role/roleType'
 
 /**
  * 角色列表
@@ -74,6 +74,19 @@ export const doDelete = (data: IRoleDeleteReq) => {
 export const doDeleteList = (data: IRoleDeleteReq) => {
   return request({
     url: `${BASE_API}/role/doDeleteList`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 更新激励政策
+ * @param data
+ * @returns
+ */
+export const updateIncentivePolicy = (data: IRoleUpdateIncentivePolicyReq) => {
+  return request({
+    url: `${BASE_API}/role/incentive/policy/update`,
     method: 'post',
     data,
   })

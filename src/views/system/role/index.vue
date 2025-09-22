@@ -20,20 +20,29 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table ref="tableRef" v-loading="listLoading" border :data="list" @selection-change="setSelectRows">
+    <el-table
+      ref="tableRef"
+      v-loading="listLoading"
+      border
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      @cell-click="cellClick"
+      @selection-change="setSelectRows"
+    >
       <el-table-column type="selection" width="38" />
-      <el-table-column align="center" label="角色id" prop="roleId" show-overflow-tooltip width="100" />
-      <el-table-column align="center" label="角色代码" prop="roleCode" show-overflow-tooltip />
-      <el-table-column align="center" label="角色名称" prop="roleName" show-overflow-tooltip />
-      <el-table-column align="center" label="角色英文" prop="roleNameEn" show-overflow-tooltip />
-      <el-table-column align="center" label="状态" prop="status" show-overflow-tooltip width="120">
+      <el-table-column label="角色id" prop="roleId" show-overflow-tooltip width="100" />
+      <el-table-column label="角色代码" prop="roleCode" show-overflow-tooltip />
+      <el-table-column label="角色名称" prop="roleName" show-overflow-tooltip />
+      <el-table-column label="角色英文" prop="roleNameEn" show-overflow-tooltip />
+      <el-table-column label="状态" prop="status" show-overflow-tooltip width="120">
         <template #default="{ row }">
           <el-tag v-if="row.status == 0" type="success">正常</el-tag>
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="激励政策" prop="incentivePolicy" show-overflow-tooltip />
-      <el-table-column v-permissions="RolePermission.operationColPermission()" align="center" label="操作" width="200">
+      <el-table-column label="激励政策" prop="incentivePolicy" show-overflow-tooltip />
+      <el-table-column v-permissions="RolePermission.operationColPermission()" label="操作" width="200">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: [RolePermission.EDIT] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
           <el-button v-permissions="{ permission: [RolePermission.DELETE] }" text type="danger" @click="handleDelete(row)">删除</el-button>
@@ -51,13 +60,21 @@
       @size-change="handleSizeChange"
     />
     <role-edit ref="editRef" @fetch-data="fetchData" />
+    <!-- 激励政策弹窗 -->
+    <vab-remark-dialog
+      v-model="incentivePolicyVisible"
+      :remark="incentivePolicy"
+      title="修改激励政策"
+      @update:remark="handleUpdateIncentivePolicy"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
-import { doDelete, doDeleteList, getAllList } from '/@/api/devlocal/role'
+import { CSSProperties } from 'vue'
+import { doDelete, doDeleteList, getAllList, updateIncentivePolicy } from '/@/api/devlocal/role'
 import RolePermission from '/@/permissions/role'
 import type { IRole, IRoleQuery } from '/@/type/role/roleType'
 
@@ -69,7 +86,8 @@ const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
 const list = ref<IRole[]>([])
 const listLoading = ref<boolean>(true)
-
+const incentivePolicyVisible = ref<boolean>(false)
+const incentivePolicy = ref<string>('')
 const total = ref<number>(0)
 const selectRows = ref<any>([])
 const queryForm = reactive<IRoleQuery>({
@@ -77,7 +95,28 @@ const queryForm = reactive<IRoleQuery>({
   pageSize: 20,
   role: '',
 })
-
+const _row = ref<any>(null)
+const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+  if (column.label === '激励政策') {
+    incentivePolicyVisible.value = true
+    incentivePolicy.value = row.incentivePolicy
+    _row.value = row
+    return
+  }
+  return
+}
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (label === '激励政策') {
+    return {
+      textAlign: 'left',
+      cursor: 'pointer',
+    }
+  }
+  return {
+    textAlign: 'center',
+  }
+}
 const setSelectRows = (value: any) => {
   selectRows.value = value
 }
@@ -118,6 +157,17 @@ const handleSizeChange = (value: number) => {
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
+}
+
+const handleUpdateIncentivePolicy = async (val: string) => {
+  const { data } = await updateIncentivePolicy({ id: Number(_row.value.roleId), incentivePolicy: val })
+  if (data) {
+    $baseMessage('修改激励政策成功！', 'success')
+    _row.value.incentivePolicy = val
+    incentivePolicyVisible.value = false
+  } else {
+    $baseMessage('修改激励政策失败！', 'error')
+  }
 }
 
 const queryData = () => {
