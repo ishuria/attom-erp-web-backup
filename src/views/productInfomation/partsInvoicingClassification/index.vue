@@ -43,6 +43,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column align="center" type="selection" />
+      <el-table-column label="已有零件id" prop="componentId" width="110" />
       <el-table-column label="图片" width="75">
         <template #default="{ row }">
           <el-image
