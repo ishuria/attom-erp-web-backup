@@ -18,6 +18,17 @@
           </el-button>
           <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="showSentButNotReported">已发未报</el-button>
           <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="handleClearCheckAll">清空全部</el-button>
+          <el-switch
+            v-model="displayMatch1Customs"
+            active-text="隐藏不报关"
+            class="display-site-switch"
+            inactive-text="展示不报关"
+            inline-prompt
+            size="large"
+            style="--el-switch-on-color: var(--el-color-success); --el-switch-off-color: var(--el-color-danger)"
+            width="130"
+            @change="queryData"
+          />
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
@@ -42,7 +53,7 @@
         class="noneHoveTable"
         :class="isFullscreen ? 'fullscreenTable' : 'normalTable'"
         :data="list"
-        :header-cell-style="{ textAlign: 'center' }"
+        :header-cell-style="headerCellStyle"
         :row-class-name="tableRowClassName"
         :span-method="objectSpanMethod1"
         @row-click="handleRowClick"
@@ -143,9 +154,30 @@
     <vab-dialog v-model="match2Visible" :before-close="handleCloseMatch2" :draggable="false" title="匹配" top="7vh" width="fit-content">
       <div style="width: fit-content; margin: 0 auto">
         <vab-query-form>
-          <vab-query-form-left-panel>
+          <vab-query-form-left-panel :span="18">
             <el-button style="margin-right: 10px" type="primary" @click="handleClearAll">清空全部</el-button>
-            <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+            <el-button v-if="!disabled3 && !disabled1 && !disabled2" type="primary" @click="showSentButNotReported">已发未报</el-button>
+            <el-switch
+              v-model="displaySite"
+              active-text="只展示匹配站点"
+              class="display-site-switch"
+              inactive-text="展示全部站点"
+              inline-prompt
+              size="large"
+              style="--el-switch-on-color: var(--el-color-success); --el-switch-off-color: var(--el-color-danger)"
+              width="145"
+            />
+            <el-switch
+              v-model="displayCustoms"
+              active-text="隐藏不报关"
+              class="display-site-switch"
+              inactive-text="展示不报关"
+              inline-prompt
+              size="large"
+              style="--el-switch-on-color: var(--el-color-success); --el-switch-off-color: var(--el-color-danger); margin-right: 10px"
+              width="130"
+            />
+            <el-text style="font-size: var(--el-font-size-base); font-weight: 600; margin-top: -10px">
               SKU：
               <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
               品名：
@@ -154,7 +186,7 @@
               <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
             </el-text>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel :span="6">
             <el-form inline>
               <el-form-item>
                 <el-input
@@ -176,8 +208,8 @@
           border
           :cell-style="match2Style"
           class="noneHoveTable"
-          :data="matchList"
-          :header-cell-style="{ textAlign: 'center' }"
+          :data="filteredMatchList"
+          :header-cell-style="headerCellStyle2"
           max-height="70vh"
           :row-class-name="stripedRowClass2"
           :span-method="objectSpanMethod2"
@@ -185,14 +217,32 @@
         >
           <el-table-column label="SKU">
             <el-table-column label="匹配的PO" prop="po" :width="flexColumnWidth(matchList, '匹配的PO', 'po')" />
+            <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')">
+              <template #default="{ row }">
+                <el-tag :type="getStatusType(row.status)">{{ row.status }}</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(matchList, '站点', 'siteName')" />
-            <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')" />
+            <!-- <el-table-column label="打包完成数(好)" prop="goodCount" :width="flexColumnWidth(matchList, '打包完成数(好)', 'goodCount')" />
             <el-table-column
               label="打包任务数"
               prop="packageTaskCount"
               :width="flexColumnWidth(matchList, '打包任务数', 'packageTaskCount')"
-            />
-            <el-table-column label="打包任务状态" prop="status" :width="flexColumnWidth(matchList, '打包任务状态', 'status')" />
+            /> -->
+            <el-table-column label="打包完成数(好)" :width="flexColumnWidth(matchList, '打包完成数(好)', 'packageTaskCount', 50)">
+              <template #header>
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">
+                    打包完成数(好)
+                    <el-icon><question-filled /></el-icon>
+                  </div>
+                  <template #content>
+                    <div class="custom-tooltip">打包完成数(好) / 打包任务数</div>
+                  </template>
+                </el-tooltip>
+              </template>
+              <template #default="{ row }">{{ row.goodCount }} / {{ row.packageTaskCount }}</template>
+            </el-table-column>
             <el-table-column label="SKU实际数量" prop="skuActualCount" :width="flexColumnWidth(matchList, 'SKU实际数量', 'skuActualCount')">
               <template #default="{ row }">
                 <el-input
@@ -208,12 +258,6 @@
             </el-table-column>
           </el-table-column>
           <el-table-column label="零件">
-            <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
-            <el-table-column
-              label="实际数量"
-              prop="componentActualCount"
-              :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"
-            />
             <el-table-column
               label="退税报关数量"
               prop="customsDeclarationCount"
@@ -231,8 +275,32 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')" />
-            <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')" />
+            <el-table-column
+              label="实际数量"
+              prop="componentActualCount"
+              :width="flexColumnWidth(matchList, '实际数量', 'componentActualCount')"
+            />
+            <!-- <el-table-column label="剩余可报" prop="reportable" :width="flexColumnWidth(matchList, '剩余可报', 'reportable')" />
+            <el-table-column label="PO总数" prop="purchaseCount" :width="flexColumnWidth(matchList, 'PO总数', 'purchaseCount')" /> -->
+            <el-table-column label="剩余可报" :width="flexColumnWidth(matchList, '剩余可报', 'purchaseCount', 50)">
+              <template #header>
+                <el-tooltip content="" effect="dark" placement="top">
+                  <div class="questionIcon">
+                    剩余可报
+                    <el-icon><question-filled /></el-icon>
+                  </div>
+                  <template #content>
+                    <div class="custom-tooltip">剩余可报 / PO总数</div>
+                  </template>
+                </el-tooltip>
+              </template>
+              <template #default="{ row }">{{ row.reportable }} / {{ row.purchaseCount }}</template>
+            </el-table-column>
+
+            <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')" />
+            <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')" />
+            <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(matchList, '零件名', 'componentName')" />
+
             <el-table-column label="采购方" prop="purchase" :width="flexColumnWidth(matchList, '采购方', 'purchase')" />
             <el-table-column
               label="不报关"
@@ -243,8 +311,6 @@
                 <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
               </template>
             </el-table-column>
-            <el-table-column label="已发未报" prop="yfwbCount" :width="flexColumnWidth(matchList, '已发未报', 'yfwbCount')" />
-            <el-table-column label="已报未发" prop="ybwfCount" :width="flexColumnWidth(matchList, '已报未发', 'ybwfCount')" />
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="230">
             <template #default="{ row }">
@@ -370,7 +436,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CirclePlus, Search } from '@element-plus/icons-vue'
+import { CirclePlus, QuestionFilled, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { getHsSelectList } from '~/src/api/devlocal/productInformation'
@@ -403,7 +469,60 @@ const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
 }
-
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column?.label
+  // 顶层分组列“SKU/零件”的背景色
+  if (['SKU', '装箱总数', '站点', '匹配的PO', 'SKU实际数量'].includes(label)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-primary-light-9)',
+      color: 'var(--el-color-primary)',
+      fontWeight: 600,
+    }
+  }
+  if (['零件', '零件名', '实际数量', '退税报关数量', 'PO总数', '采购方', '不报关', '有已发未报', '有HS', '零件操作'].includes(label)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-warning-light-9)',
+      color: 'var(--el-color-warning)',
+      fontWeight: 600,
+    }
+  }
+  return { textAlign: 'center' }
+}
+const headerCellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column?.label
+  // 顶层分组列“SKU/零件”的背景色
+  if (['SKU', '匹配的PO', '打包任务状态', '站点', '打包完成数(好)', 'SKU实际数量'].includes(label)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-primary-light-9)',
+      color: 'var(--el-color-primary)',
+      fontWeight: 600,
+    }
+  }
+  if (['零件', '零件名', '实际数量', '退税报关数量', '剩余可报', '已发未报', '已报未发', '采购方', '不报关'].includes(label)) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-warning-light-9)',
+      color: 'var(--el-color-warning)',
+      fontWeight: 600,
+    }
+  }
+  return { textAlign: 'center' }
+}
+const getStatusType = (status: string) => {
+  switch (status) {
+    case '已完成':
+      return 'success'
+    case '未到货':
+      return 'warning'
+    case '售后':
+      return 'danger'
+    default:
+      return 'info'
+  }
+}
 const modifyHSVisible = ref<boolean>(false)
 const modifyHsForm = reactive<any>({})
 const hsOption = ref<{ id: number; label: string }[]>([])
@@ -437,6 +556,45 @@ const fetchHsSelectList = async () => {
   hsOption.value = data
 }
 const match2ListLoading = ref<boolean>(false)
+// 切换：展示匹配站点/全部站点
+const displaySite = ref<boolean>(true)
+// 切换：展示不报关/隐藏不报关
+const displayCustoms = ref<boolean>(true)
+// 匹配1 的 展示不报关/隐藏不报关
+const displayMatch1Customs = ref<boolean>(true)
+// 根据开关对 matchList 进行过滤（站点 + 报关）
+const filteredMatchList = computed(() => {
+  let list = matchList.value
+  // 站点过滤：只展示匹配站点
+  if (displaySite.value && _siteName.value) {
+    list = list.filter((item: any) => item.siteName === _siteName.value)
+  }
+  // 报关过滤：隐藏不报关(customsDeclarationStatus=1)
+  if (displayCustoms.value) {
+    // 先按 mId 分组，判断是否整组都是不报关
+    const groupMap = new Map<number, any[]>()
+    for (const it of list) {
+      const key = it.mId as number
+      if (!groupMap.has(key)) groupMap.set(key, [])
+      groupMap.get(key)!.push(it)
+    }
+    const result: any[] = []
+    groupMap.forEach((items, mId) => {
+      const allNoCustoms = items.every((x: any) => Number(x.customsDeclarationStatus) === 1)
+      if (allNoCustoms) {
+        // 整组全部不报关：只保留一个（保留第一个）
+        result.push(items[0])
+      } else {
+        // 否则，过滤掉不报关的，保留报关项
+        items.forEach((x: any) => {
+          if (Number(x.customsDeclarationStatus) !== 1) result.push(x)
+        })
+      }
+    })
+    list = result
+  }
+  return list
+})
 const isFullscreen = ref<boolean>(false)
 
 // const aggregationTotal = ref<number>(0)
@@ -720,6 +878,7 @@ const fetchMatchData = async () => {
       customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
     }
   })
+  // 默认只展示匹配站点，需要对 matchList 做处理 筛选出和_siteName一样的数据
   match2ListLoading.value = false
 }
 // 上一个显示
@@ -739,6 +898,7 @@ const fetchPreviousMatchData = async () => {
   _sku.value = item!.sku
   _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
+  _siteName.value = item?.site!
   Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
   Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
   const { data } = await getMatchPackageList({
@@ -768,6 +928,7 @@ const fetchNextMatchData = async () => {
   _sku.value = item!.sku
   _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
+  _siteName.value = item?.site!
   Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
   Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
   const { data } = await getMatchPackageList({
@@ -804,12 +965,15 @@ const handleShowPreviousOrNext = (id: number) => {
     nextVisible.value = true
   }
 }
+const _siteName = ref<string>('')
 const handleShowMatch2 = (row: any) => {
   match2Visible.value = true
   _sku.value = row.sku
   _desc.value = row.desc
   _id.value = row.id
   _originalCount.value = Number(row.encasementCount)
+  _siteName.value = row.site
+  displaySite.value = true
 
   handleShowPreviousOrNext(row.id)
   fetchMatchData()
@@ -1196,7 +1360,7 @@ const idMap = ref(new Map<number, PIdInfo>())
 const idList = ref<any[]>([])
 const fetchData = async () => {
   listLoading.value = true
-  const { data } = await getCheckMatchList({ ...queryForm, shipId: props.shipId })
+  const { data } = await getCheckMatchList({ ...queryForm, shipId: props.shipId, customsStatus: displayMatch1Customs.value ? 0 : 1 })
   list.value = data
   let idSet = new Set()
   idMap.value.clear() // 每次必须先清空
@@ -1241,10 +1405,10 @@ const queryData = () => {
 //   fetchData()
 // }
 
-const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
-
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 14) {
+  const label = column.label
+  if (label === 'SKU' || label === '装箱总数' || label === '操作') {
     const id = row.id
 
     for (let i = rowIndex + 1; i < list.value.length; i++) {
@@ -1260,7 +1424,7 @@ const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
     return rowIndex === 0 || list.value[rowIndex - 1].id !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
   }
 
-  if (columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+  if (label === '站点' || label === '匹配的PO' || label === 'SKU实际数量') {
     const pId = row.pId
     const id = row.id
 
@@ -1283,17 +1447,10 @@ const objectSpanMethod1 = ({ row, rowIndex, columnIndex }: any) => {
 }
 
 //匹配2合并
-const objectSpanMethod2 = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod2 = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (
-    columnIndex === 0 ||
-    columnIndex === 1 ||
-    columnIndex === 2 ||
-    columnIndex === 3 ||
-    columnIndex === 4 ||
-    columnIndex === 5 ||
-    columnIndex === 15
-  ) {
+  const label = column.label
+  if (['匹配的PO', '站点', '打包完成数(好)', '打包任务状态', 'SKU实际数量', '操作'].includes(label)) {
     // 获取当前row的零件id
     const id = row.mId
     // 默认不跨行
@@ -1435,7 +1592,7 @@ const match1Style = (data: { row: any; column: any; rowIndex: number; columnInde
   }
 }
 const match2Style = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex !== 6) {
+  if (data.column.label !== '零件名') {
     return {
       textAlign: 'center',
     }
@@ -1456,6 +1613,28 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
 </script>
 
 <style lang="scss" scoped>
+.display-site-switch {
+  margin: -10px 8px 0 5px;
+  vertical-align: middle;
+
+  /* inline-prompt 模式下文字在 inner 内部，这里单独处理 */
+  :deep(.el-switch__inner .is-text) {
+    font-size: 15px;
+    font-weight: 700;
+  }
+}
+.group-header {
+  padding: 4px 8px;
+  color: #fff;
+  border-radius: 6px;
+  display: inline-block;
+}
+.group-header-sku {
+  background-color: #409eff; /* 蓝色 */
+}
+.group-header-component {
+  background-color: #67c23a; /* 绿色 */
+}
 .noneHoveTable {
   :deep() {
     .danger-row > td {
@@ -1566,5 +1745,14 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
 .normalTable {
   height: calc(90vh - 190px);
   max-height: calc(90vh - 190px);
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
 }
 </style>
