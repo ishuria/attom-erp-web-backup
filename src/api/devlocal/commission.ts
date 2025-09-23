@@ -340,6 +340,17 @@ export function getDevelopDesignDetailUserList(): Promise<{ data: { id: number; 
 }
 
 /**
+ * 提成-产品明细-人员列表
+ * @returns
+ */
+export function getDevelopDesignDetailPersonList() {
+  return request({
+    url: `${BASE_API}/commission/product/detail/user/list`,
+    method: 'get',
+  })
+}
+
+/**
  * 查询提成任务明细-产品开发设计-角色列表
  */
 export function getDevelopDesignDetailRoleList(): Promise<{ data: { id: number; label: string }[] }> {

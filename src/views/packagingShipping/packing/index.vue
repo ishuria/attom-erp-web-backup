@@ -1,7 +1,7 @@
 <template>
   <div class="blog-container">
     <vab-query-form>
-      <vab-query-form-left-panel>
+      <vab-query-form-left-panel :span="16">
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_CREATE] }" type="primary" @click="showBoxNumber">
           开始装箱
         </el-button>
@@ -57,7 +57,41 @@
           </el-space>
         </div>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-right-panel :span="8">
+        <div class="custom-table-right-tools">
+          <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+            <template #reference>
+              <el-button>
+                <vab-icon icon="settings-line" />
+              </el-button>
+            </template>
+            <vab-draggable
+              v-model="columns"
+              :animation="600"
+              filter=".non-draggable"
+              handle=".handle"
+              :on-end="handleEnd"
+              :on-move="handleMove"
+            >
+              <div
+                v-for="item in columns"
+                :key="item.label"
+                :class="{ 'non-draggable': item.disableCheck }"
+                style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
+              >
+                <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
+                <span style="flex: 1">{{ item.label }}</span>
+                <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+                  <vab-icon icon="eye-line" />
+                </span>
+                <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
+                  <vab-icon v-show="!item.checked" icon="eye-off-line" />
+                  <vab-icon v-show="item.checked" icon="eye-line" />
+                </span>
+              </div>
+            </vab-draggable>
+          </el-popover>
+        </div>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-select v-model="queryForm.site" clearable placeholder="全部发货站点" @change="queryData">
@@ -99,51 +133,35 @@
       @sort-change="handleSortChange"
     >
       <el-table-column fixed="left" type="selection" />
-      <el-table-column label="发货计划" prop="shipmentPlanDate" sortable="custom" width="120">
-        <template #default="{ row }">
+      <el-table-column
+        v-for="(item, index) in checkList"
+        :key="index"
+        :fixed="item.isFixed"
+        :label="item.label"
+        :min-width="handleCalculateWidth(item)"
+        :prop="item.prop"
+        :sortable="item.sortable ? 'custom' : false"
+      >
+        <template v-if="item.label === '发货计划'" #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
-      </el-table-column>
-      <el-table-column label="装箱日期" prop="createTime" sortable="custom" width="115">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '装箱日期'" #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
-      </el-table-column>
-      <el-table-column
-        label="毛重(kg)"
-        min-width="100"
-        prop="grossWeight"
-        sortable="custom"
-        :width="flexColumnWidth(list, '毛重(kg)-----', 'grossWeight')"
-      />
-      <el-table-column label="长(cm)" prop="length" :width="flexColumnWidth(list, '长(cm)-', 'length')" />
-      <el-table-column label="宽(cm)" prop="width" :width="flexColumnWidth(list, '宽(cm)-', 'width')" />
-      <el-table-column label="高(cm)" prop="height" :width="flexColumnWidth(list, '高(cm)-', 'height')" />
-      <el-table-column label="总重量(kg)" prop="totalWeight" :width="flexColumnWidth(list, '总重量(kg)', 'totalWeight')" />
-      <el-table-column label="总体积(m3)" prop="totalVolume" :width="flexColumnWidth(list, '总体积(m3)', 'totalVolume')" />
-      <el-table-column label="箱规号" prop="encasementNo" :width="flexColumnWidth(list, '箱规号', 'encasementNo')" />
-      <el-table-column label="发往站点" prop="planSiteName" width="150">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '发往站点'" #default="{ row }">
           <el-tag size="default" :style="getSiteTagStyle(row.planSiteName)">{{ row.planSiteName }}</el-tag>
         </template>
-      </el-table-column>
-      <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
-        <template #default="{ row }">
+        <template v-else-if="item.label === 'SKU'" #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
             {{ row.sku }}
             <vab-icon icon="file-copy-2-fill" />
           </span>
         </template>
-      </el-table-column>
-      <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description--', 'description')" />
-      <el-table-column label="带磁" prop="magnetic" width="70">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '带磁'" #default="{ row }">
           <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
           <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
         </template>
-      </el-table-column>
-      <el-table-column label="箱数" prop="numberOfBoxes" :width="flexColumnWidth(list, '箱数', 'numberOfBoxes', 130)">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '箱数'" #default="{ row }">
           <el-input-number
             v-model="row.numberOfBoxes"
             style="width: 100%"
@@ -151,27 +169,17 @@
             @keydown.prevent="handleKeyDown"
           />
         </template>
-      </el-table-column>
-      <el-table-column label="数量" prop="number" :width="flexColumnWidth(list, '数量', 'number')" />
-      <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')" />
-      <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-      <el-table-column label="最晚补货" prop="latestRestock" width="120" />
-      <el-table-column label="总可售" prop="esAvailableSaleDayTotal" width="90">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '总可售'" #default="{ row }">
           {{ row.esAvailableSaleDayTotal != null ? row.esAvailableSaleDayTotal + '天' : '' }}
         </template>
-      </el-table-column>
-      <el-table-column label="断货" prop="outOfStock" width="90">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '断货'" #default="{ row }">
           <template v-if="row.outOfStock != null">
             <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
             <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
             <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
           </template>
         </template>
-      </el-table-column>
-      <el-table-column label="备注" min-width="100" prop="remarks">
-        <template #default="{ row }">
+        <template v-else-if="item.label === '备注'" #default="{ row }">
           <el-tooltip effect="dark" placement="top">
             <template #content>
               <div class="custom-tooltip">{{ row.remarks }}</div>
@@ -179,8 +187,23 @@
             <div class="multi-line-ellipsis-1">{{ row.remarks }}</div>
           </el-tooltip>
         </template>
+        <template v-else-if="item.label === '箱数展示'" #default="{ row }">
+          {{ row.numberOfBoxes }}
+        </template>
       </el-table-column>
-      <el-table-column v-permissions="{ permission: EncasementPermission.operationColume() }" fixed="right" label="操作" width="180">
+      <el-table-column
+        v-permissions="{
+          permission: [
+            EncasementPermission.ENCASEMENT_UPDATE,
+            EncasementPermission.ENCASEMENT_COUNT_SPLIT,
+            EncasementPermission.ENCASEMENT_DELETE,
+            EncasementPermission.ENCASEMENT_PRINT,
+          ],
+        }"
+        fixed="right"
+        label="操作"
+        width="180"
+      >
         <template #default="{ row, $index }">
           <div class="operation-buttons">
             <el-link
@@ -559,6 +582,9 @@
 import { CopyDocument, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
@@ -594,12 +620,90 @@ import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import EncasementPermission from '/@/permissions/encasement'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
-import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Packing',
 })
 
+const columns = ref<any>([])
+const checkList = computed(() => {
+  return columns.value.filter((item: any) => item.checked)
+})
+// 计算某些列的自适应宽度
+const handleCalculateWidth = (item: any) => {
+  switch (item.label) {
+    case '毛重(kg)': {
+      return flexColumnWidth(list.value, '毛重(kg)------', 'grossWeight')
+    }
+    case '长(cm)': {
+      return flexColumnWidth(list.value, '长(cm)-', 'length')
+    }
+    case '宽(cm)': {
+      return flexColumnWidth(list.value, '宽(cm)-', 'width')
+    }
+    case '高(cm)': {
+      return flexColumnWidth(list.value, '高(cm)-', 'height')
+    }
+    case '总重量(kg)': {
+      return flexColumnWidth(list.value, '总重量(kg)', 'totalWeight')
+    }
+    case '总体积(m3)': {
+      return flexColumnWidth(list.value, '总体积(m3)', 'totalVolume')
+    }
+    case '箱规号': {
+      return flexColumnWidth(list.value, '箱规号', 'encasementNo')
+    }
+    case 'SKU': {
+      return flexColumnWidth(list.value, 'SKU', 'sku', 50)
+    }
+    case 'Description': {
+      return flexColumnWidth(list.value, 'Description-', 'description')
+    }
+    case '箱数': {
+      return flexColumnWidth(list.value, '箱数', 'numberOfBoxes', 150)
+    }
+    case '数量': {
+      return flexColumnWidth(list.value, '数量', 'number')
+    }
+    case '产品总数': {
+      return flexColumnWidth(list.value, '产品总数', 'productTotalNumber')
+    }
+    default: {
+      return item.minWidth
+    }
+  }
+}
+const handleMove = (event: any) => {
+  const { related } = event
+  const targetIndex = Array.from(related.parentNode.children).indexOf(related)
+
+  if (columns.value[targetIndex]?.disableCheck) {
+    return false // 禁止移动到目标
+  }
+
+  return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+      // label: item.label
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+// 是否显示或隐藏列
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
+}
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.id
@@ -1447,7 +1551,18 @@ const fetchDefaultPrinter = async () => {
   const { data } = await getEncasementUserPrinter()
   printer.value = data
 }
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 15 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    if (['shipmentPlanDate', 'createTime', 'grossWeight'].includes(item.prop)) {
+      item.sortable = true
+    }
+  })
+}
 onBeforeMount(() => {
+  fetchColumn()
   const { pageNo, pageSize } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)
@@ -1517,5 +1632,29 @@ onBeforeMount(() => {
 
 .copy-btn {
   flex-shrink: 0;
+}
+.custom-table-right-tools {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -6px; /* 往上提一点 */
+  margin-bottom: 6px;
+}
+.handle {
+  cursor: grab;
+}
+.icon-dis {
+  padding: 6px;
+}
+.icon-hover {
+  padding: 6px;
+  border-radius: 4px; /* 圆角 */
+  transition: background-color 0.3s; /* 动画过渡效果 */
+}
+.icon-hover:hover {
+  color: var(--el-color-primary);
+  background-color: #f2f2f2; /* 浅灰色背景 */
+}
+.disabled-handle {
+  cursor: not-allowed;
 }
 </style>

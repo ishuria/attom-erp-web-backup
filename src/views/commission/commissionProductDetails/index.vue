@@ -4,15 +4,26 @@
       <vab-query-form-left-panel>
         <el-form inline>
           <template v-if="currentRoleCode === ROLE_BOSS_CODE">
-            <el-form-item label="角色">
+            <!-- 角色（如需） -->
+            <!-- <el-form-item label="角色">
               <el-select v-model="developQueryForm.roleId" placeholder="请选择角色" @change="developQueryData">
                 <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
+            <!-- 人员（树形单选） -->
             <el-form-item label="人员">
-              <el-select v-model="developQueryForm.userId" placeholder="请选择人员" @change="developQueryData">
-                <el-option v-for="item in developUserList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
+              <el-tree-select
+                v-model="developQueryForm.userId"
+                check-strictly
+                clearable
+                :data="treeShareData"
+                filterable
+                placeholder="全部人员"
+                :props="treeProps"
+                :render-after-expand="false"
+                style="min-width: 220px"
+                @change="developQueryData"
+              />
             </el-form-item>
             <el-form-item label="站点">
               <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
@@ -58,11 +69,11 @@
       :cell-style="cellStyle"
       class="noneHoverTable"
       :data="developList"
+      :default-sort="{ prop: 'currentMonthBonus', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
+      sortable="custom"
       stripe
       @cell-click="cellClick"
-      :default-sort="{ prop: 'currentMonthBonus', order: 'descending' }"
-      sortable="custom"
       @sort-change="handleSortChange"
     >
       <el-table-column label="发布日期" min-width="130" prop="releaseDate">
@@ -180,7 +191,12 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionTypeMonth, getDevelopDesignDetailRoleList, getDevelopDesignDetailUserList } from '/@/api/devlocal/commission'
+import {
+  getCommissionDetailDevelopList,
+  getCommissionTypeMonth,
+  getDevelopDesignDetailPersonList,
+  getDevelopDesignDetailRoleList,
+} from '/@/api/devlocal/commission'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role.ts'
@@ -206,17 +222,23 @@ const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
 const siteList = ref<{ id: number; label: string }[]>([])
 const roleList = ref<{ id: number; label: string }[]>([])
+// 人员树形数据（单选）
+const treeShareData = ref<any[]>([])
+const treeProps = reactive({
+  value: 'value',
+  label: 'label',
+  children: 'children',
+})
 
 const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
   keyWord: '',
   site: -1,
-  userId: -1,
-  roleId: -1,
+  userId: undefined,
   month: '',
   pageNo: 1,
   pageSize: 20,
   orderByField: 'currentMonthBonus',
-  orderDirection: 'desc'
+  orderDirection: 'desc',
 })
 
 const listLoading = ref<boolean>(false)
@@ -224,8 +246,8 @@ const total = ref<number>(0)
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 
-const handleSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
   if (developQueryForm.orderByField === prop) {
     if (!order) {
       if (developQueryForm.orderDirection === 'asc') {
@@ -233,12 +255,12 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
       } else if (developQueryForm.orderDirection === 'desc') {
         column.order = 'ascending'
       }
-    } 
+    }
   } else {
     column.order = 'descending'
   }
   developQueryForm.orderByField = prop
-  developQueryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
+  developQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   developQueryData()
 }
 
@@ -409,12 +431,67 @@ const fetchSiteList = async () => {
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部' })
 }
+
 const developUserList = ref<{ id: number; label: string }[]>([])
 const fetchDevelopUserList = async () => {
-  const { data } = await getDevelopDesignDetailUserList()
-  developUserList.value = data
-  developUserList.value.unshift({ id: -1, label: '全部' })
+  const { data } = await getDevelopDesignDetailPersonList()
+
+  // 转换为树形数据
+  treeShareData.value = convertToTreeData(data)
 }
+
+// 将平铺数据转换为树形结构
+const convertToTreeData = (data: any[]) => {
+  // 如果没有数据，返回空数组
+  if (!data || data.length === 0) {
+    return []
+  }
+
+  // 检查是否有部门字段，如果没有则按角色或其他字段分组
+  const hasDepartment = data.some((item) => item.department)
+  const hasRoleName = data.some((item) => item.roleName)
+
+  let groupField = 'department'
+  if (!hasDepartment && hasRoleName) {
+    groupField = 'roleName'
+  } else if (!hasDepartment && !hasRoleName) {
+    // 如果都没有，直接返回平铺结构
+    return data.map((item) => ({
+      label: item.userName,
+      value: item.userID,
+      disabled: false,
+    }))
+  }
+
+  // 按指定字段分组
+  const groupMap = new Map()
+
+  data.forEach((item) => {
+    const groupValue = item[groupField] || '未分组'
+    if (!groupMap.has(groupValue)) {
+      groupMap.set(groupValue, [])
+    }
+    groupMap.get(groupValue).push({
+      label: item.userName,
+      value: item.userID,
+      disabled: false,
+    })
+  })
+
+  // 转换为树形结构
+  const treeData: any[] = []
+  groupMap.forEach((users, groupName) => {
+    treeData.push({
+      label: groupName,
+      value: groupName,
+      disabled: true, // 分组节点不可选择
+      children: users,
+    })
+  })
+
+  return treeData
+}
+
 const fetchDevelopRoleList = async () => {
   const { data } = await getDevelopDesignDetailRoleList()
   roleList.value = data
@@ -483,7 +560,7 @@ onBeforeMount(async () => {
   fetchUpdateDate()
   fetchCommissionTypeMonth()
   fetchDevelopUserList()
-  fetchDevelopRoleList()
+  // fetchDevelopRoleList()
   await developQueryData()
 })
 </script>
@@ -524,7 +601,6 @@ onBeforeMount(async () => {
 
         .noneHoverTable {
           flex: 1;
-         
         }
       }
     }

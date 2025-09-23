@@ -106,9 +106,11 @@
         </el-table-column>
         <el-table-column v-if="!disabled3 && !disabled1 && !disabled2" fixed="right" label="操作" width="150">
           <template #default="{ row }">
-            <el-link v-if="row.delStatus === 0" type="primary" underline="never" @click="handleShowMatch2(row)">匹配</el-link>
-            <el-link v-if="row.delStatus === 0" type="danger" underline="never" @click="handleCheckClear(row)">清空</el-link>
-            <el-link v-if="row.delStatus === 1" type="danger" underline="never" @click="handleDelCheckMatch(row)">删除</el-link>
+            <el-space alignment="center" :size="10">
+              <el-link v-if="row.delStatus === 0" type="primary" underline="never" @click="handleShowMatch2(row)">匹配</el-link>
+              <el-link v-if="row.delStatus === 0" type="danger" underline="never" @click="handleCheckClear(row)">清空</el-link>
+              <el-link v-if="row.delStatus === 1" type="danger" underline="never" @click="handleDelCheckMatch(row)">删除</el-link>
+            </el-space>
           </template>
         </el-table-column>
         <template #empty>
@@ -246,9 +248,11 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="230">
             <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
-              <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link>
-              <el-link type="danger" underline="never" @click="handleClear(row)">清空</el-link>
+              <el-space alignment="center" :size="10">
+                <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
+                <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link>
+                <el-link type="danger" underline="never" @click="handleClear(row)">清空</el-link>
+              </el-space>
             </template>
           </el-table-column>
         </el-table>

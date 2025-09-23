@@ -583,8 +583,7 @@ export interface IGetCommissionDetailLongList {
 export interface IGetCommissionDetailDevelopListReq {
   keyWord: string
   site: number
-  userId: number
-  roleId: number
+  userId?: number
   month: string
   pageNo: number
   pageSize: number
