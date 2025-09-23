@@ -163,7 +163,7 @@
               </div>
             </el-main>
             <!-- 右侧图片 -->
-            <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
+            <el-aside :style="{ maxWidth: imageHeight + 'px', maxHeight: imageHeight + 'px', padding: '0' }">
               <el-image :src="packagingInformation?.imgUrl" style="display: block; border-radius: 10px">
                 <template #error><el-icon /></template>
               </el-image>

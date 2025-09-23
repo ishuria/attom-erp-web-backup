@@ -308,42 +308,43 @@
       <el-form ref="filterFormRef" label-position="right" label-width="auto" :model="filterForm" style="width: 100%; margin-right: 10px">
         <el-form-item label="交期">
           <div class="flex">
-            <el-input-number v-model="queryForm.minAvgTime" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="filterForm.minAvgTime" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxAvgTime" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="filterForm.maxAvgTime" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上新天数">
           <div class="flex">
-            <el-input-number v-model="queryForm.minNewArrivalDay" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="filterForm.minNewArrivalDay" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxNewArrivalDay" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="filterForm.maxNewArrivalDay" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="库存可售">
           <div class="flex">
-            <el-input-number v-model="queryForm.minEs" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="filterForm.minEs" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxEs" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="filterForm.maxEs" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="库存可售含在途">
           <div class="flex">
-            <el-input-number v-model="queryForm.minEsAvailableSaleDayTotal" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="filterForm.minEsAvailableSaleDayTotal" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxEsAvailableSaleDayTotal" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="filterForm.maxEsAvailableSaleDayTotal" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="上海签收">
           <div class="flex">
-            <el-input-number v-model="queryForm.minSign" :min="0" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="filterForm.minSign" :min="0" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="queryForm.maxSign" :min="0" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="filterForm.maxSign" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
             <el-date-picker
+              :key="latestDateKey"
               v-model="latestDate"
               end-placeholder="结束日期"
               range-separator="至"
@@ -354,12 +355,13 @@
           </div>
         </el-form-item>
         <el-form-item label="广告">
-          <el-select v-model="filterForm.advStatus" placeholder="请选择广告状态">
+          <el-select v-model="filterForm.advStatus" clearable placeholder="请选择广告状态">
             <el-option v-for="item in adStatusOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
+        <el-button type="danger" @click="handleResetFilter">清空</el-button>
         <el-button @click="filterVisible = false">取消</el-button>
         <el-button type="primary" @click="handleConfirmFilter">确定</el-button>
       </template>
@@ -494,6 +496,7 @@ const seasonalXData = computed(() => {
 })
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const latestDate = ref<string[]>([])
+const latestDateKey = computed(() => (latestDate.value && latestDate.value.length ? latestDate.value.join('|') : 'empty'))
 const label = ['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%']
 const label3 = ['库存可售', '可售含在途']
 const labelMap = new Map([
@@ -816,8 +819,25 @@ const handleUpdateAsinOpeType = async (row: IGetOperationOrderList) => {
     typeId: row.operationTypeId!,
   })
 }
+// 清空筛选
+const handleResetFilter = () => {
+  // 清空弹窗中的临时筛选数据
+  filterForm.minAvgTime = undefined
+  filterForm.maxAvgTime = undefined
+  filterForm.minNewArrivalDay = undefined
+  filterForm.maxNewArrivalDay = undefined
+  filterForm.minEs = undefined
+  filterForm.maxEs = undefined
+  filterForm.minEsAvailableSaleDayTotal = undefined
+  filterForm.maxEsAvailableSaleDayTotal = undefined
+  filterForm.minSign = undefined
+  filterForm.maxSign = undefined
+  latestDate.value = []
+  filterForm.advStatus = undefined
+}
 // 确认筛选
 const handleConfirmFilter = async () => {
+  // 将弹窗的筛选条件应用到查询表单
   Object.assign(queryForm, filterForm)
   queryForm.startLatestDate = latestDate.value[0] || ''
   queryForm.endLatestDate = latestDate.value[1] || ''
@@ -921,15 +941,6 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-
-// 监听日期变化，确保数据及时更新
-watch(
-  () => latestDate.value,
-  () => {
-    queryData()
-  },
-  { deep: true }
-)
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()

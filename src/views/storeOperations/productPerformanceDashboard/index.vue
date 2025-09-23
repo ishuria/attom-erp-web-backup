@@ -3386,6 +3386,7 @@ const handleRouterPush = (row: any) => {
     path: '/storeOperations/productAnalysis',
     query: {
       activeName: 2,
+      site: row.site,
     },
   })
   _addData(row)

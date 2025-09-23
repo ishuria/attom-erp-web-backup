@@ -27,11 +27,7 @@
         >
           上传pdf插页
         </el-button>
-        <el-button
-          v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SPLIT] }"
-          type="primary"
-          @click="uploadSplitVisible = true"
-        >
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SPLIT] }" type="primary" @click="openUploadSplit">
           上传拆分
         </el-button>
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_SIZE_EXPORT] }" type="primary" @click="showExportSize">
@@ -65,7 +61,12 @@
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-select v-model="queryForm.site" clearable placeholder="全部发货站点" @change="queryData">
-              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                <!-- <el-icon :style="{ color: getSiteBaseColor(item.label), fontSize: '18px', marginRight: '6px' }">
+                  <location-filled />
+                </el-icon> -->
+                <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+              </el-option>
             </el-select>
             <el-input
               v-model.trim="queryForm.keyWord"
@@ -121,7 +122,11 @@
       <el-table-column label="总重量(kg)" prop="totalWeight" :width="flexColumnWidth(list, '总重量(kg)', 'totalWeight')" />
       <el-table-column label="总体积(m3)" prop="totalVolume" :width="flexColumnWidth(list, '总体积(m3)', 'totalVolume')" />
       <el-table-column label="箱规号" prop="encasementNo" :width="flexColumnWidth(list, '箱规号', 'encasementNo')" />
-      <el-table-column label="发往站点" prop="planSiteName" :width="flexColumnWidth(list, '发往站点', 'planSiteName')" />
+      <el-table-column label="发往站点" prop="planSiteName" width="150">
+        <template #default="{ row }">
+          <el-tag size="default" :style="getSiteTagStyle(row.planSiteName)">{{ row.planSiteName }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="SKU" min-width="300" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 50)">
         <template #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
@@ -151,6 +156,20 @@
       <el-table-column label="产品总数" prop="productTotalNumber" :width="flexColumnWidth(list, '产品总数', 'productTotalNumber')" />
       <el-table-column label="推荐数量" prop="recommendCount" width="100" />
       <el-table-column label="最晚补货" prop="latestRestock" width="120" />
+      <el-table-column label="总可售" prop="esAvailableSaleDayTotal" width="90">
+        <template #default="{ row }">
+          {{ row.esAvailableSaleDayTotal != null ? row.esAvailableSaleDayTotal + '天' : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="断货" prop="outOfStock" width="90">
+        <template #default="{ row }">
+          <template v-if="row.outOfStock != null">
+            <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
+            <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
+            <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
+          </template>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" min-width="100" prop="remarks">
         <template #default="{ row }">
           <el-tooltip effect="dark" placement="top">
@@ -375,9 +394,20 @@
           <el-input v-model="shipmentAmazonForm.site" disabled />
         </el-form-item>
         <el-form-item label="货代渠道" prop="channel">
-          <el-select v-model="shipmentAmazonForm.channel" clearable filterable placeholder="请选择货代渠道">
-            <el-option v-for="item in channelList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="supplier-select-container">
+            <el-select v-model="shipmentAmazonForm.channel" clearable filterable placeholder="请选择货代渠道">
+              <el-option v-for="item in channelList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="shipmentAmazonForm.channel"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getChannelName(shipmentAmazonForm.channel))"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -435,7 +465,7 @@
         <el-form-item label="拆分备注" prop="remarks">
           <el-input v-model="uploadSplitForm.remarks" resize="none" :rows="2" type="textarea" />
         </el-form-item>
-        <el-upload class="upload-demo" drag :http-request="uploadSplitFile" :show-file-list="true" width="100%">
+        <el-upload ref="uploadSplitUploadRef" class="upload-demo" drag :http-request="uploadSplitFile" :show-file-list="true" width="100%">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
             将文件拖拽到此处或
@@ -526,7 +556,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, UploadFilled } from '@element-plus/icons-vue'
+import { CopyDocument, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { printerOption, unitOption } from '../constantOption'
@@ -563,7 +593,7 @@ import {
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import EncasementPermission from '/@/permissions/encasement'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
-import handleClipboard from '/@/utils/clipboard'
+import handleClipboard, { handleClip } from '/@/utils/clipboard'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -593,6 +623,48 @@ const handleUpdateRemark = async (val: string) => {
       _row.remarks = val
     }
   } catch (error) {}
+}
+// 站点 -> 自定义颜色映射
+const getSiteBaseColor = (siteName: string) => {
+  if (!siteName) return '#909399'
+  const colorMap: Record<string, string> = {
+    亚马逊US美国: '#67C23A', // 绿色
+    亚马逊UK英国: '#409EFF', // 蓝色
+    亚马逊DE德国: '#8E44AD', // 紫色（由红色改为紫色）
+    亚马逊CA加拿大: '#2AC3A2', // 青绿
+    沃尔玛US美国: '#E6A23C', // 橙色
+    亚马逊JP日本: '#5C6BC0', // 靛蓝
+    Tiktok美国: '#34495E', // 深石板色
+    '美国-海外仓': '#909399', // 灰色
+  }
+  return colorMap[siteName] ?? '#909399'
+}
+
+// 返回协调的tag样式：浅色背景 + 同色文字
+const getSiteTagStyle = (siteName: string) => {
+  const base = getSiteBaseColor(siteName)
+  // 将16进制转换为rgba，背景使用较低透明度
+  const hexToRgba = (hex: string, alpha = 0.15) => {
+    const h = hex.replace('#', '')
+    const bigint = parseInt(h, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+  return {
+    backgroundColor: hexToRgba(base, 0.15),
+    color: base,
+    border: '1px solid ' + hexToRgba(base, 0.35),
+    fontSize: '14px',
+  }
+}
+
+// 获取供应商名称的辅助函数
+const getChannelName = (channelId: number) => {
+  if (!channelId || !channelList.value) return ''
+  const channel = channelList.value.find((item: any) => item.id === channelId)
+  return channel ? channel.label : ''
 }
 const updateErrorVisible = ref<boolean>(false)
 const showUpdateError = async () => {
@@ -698,6 +770,14 @@ const boxNumberVisible = ref<boolean>(false)
 const packingVisible = ref<boolean>(false)
 // 上传拆分可见
 const uploadSplitVisible = ref<boolean>(false)
+const uploadSplitUploadRef = ref<any>(null)
+const openUploadSplit = () => {
+  // 清空上传组件内的文件列表
+  try {
+    uploadSplitUploadRef.value?.clearFiles?.()
+  } catch {}
+  uploadSplitVisible.value = true
+}
 // 上传pdf可见
 const uploadPdfVisible = ref<boolean>(false)
 
@@ -1157,6 +1237,8 @@ const showShippingAmazon = async () => {
     $baseMessage('选中的装箱记录中包含非亚马逊站点，请仅选择发往亚马逊的记录', 'error')
     return
   }
+  // 清空上传列表
+  fileList.value = []
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
@@ -1181,6 +1263,8 @@ const showShippingWalmart = async () => {
     $baseMessage('选中的装箱记录中包含非沃尔玛站点，请仅选择发往沃尔玛的记录', 'error')
     return
   }
+  // 清空上传列表
+  fileList.value = []
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
@@ -1291,16 +1375,19 @@ const stripedRowClass = (_row: any) => {
   return [stripedClass, selectedClass].filter(Boolean).join(' ')
 }
 // 装箱合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
+  const label = column.label
   if (
-    columnIndex !== 11 &&
-    columnIndex !== 12 &&
-    columnIndex !== 13 &&
-    columnIndex !== 15 &&
-    columnIndex !== 16 &&
-    columnIndex !== 17 &&
-    columnIndex !== 18
+    label !== 'SKU' &&
+    label !== 'Description' &&
+    label !== '带磁' &&
+    label !== '数量' &&
+    label !== '产品总数' &&
+    label !== '推荐数量' &&
+    label !== '最晚补货' &&
+    label !== '总可售' &&
+    label !== '断货'
   ) {
     // 获取当前row的零件id
     const id = row.id
@@ -1418,5 +1505,17 @@ onBeforeMount(() => {
   gap: 8px;
   align-items: center;
   justify-content: center;
+}
+
+/* 供应商选择容器样式 */
+.supplier-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.copy-btn {
+  flex-shrink: 0;
 }
 </style>
