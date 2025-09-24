@@ -99,7 +99,7 @@
             class="custom-checkbox"
             :false-value="0"
             :true-value="1"
-            @change="handleCustomsChange(row)"
+            @change="handleChangeCustomsStatus(row)"
           />
         </template>
       </el-table-column>
@@ -740,7 +740,21 @@ const clickRatioCancel = async (event: any, value: any) => {
     }
   }
 }
-
+const handleChangeCustomsStatus = async (row: any) => {
+  await updateProductCustomsClearanceSuppliserInfo({
+    id: row.cId,
+    customsDeclarationStatus: row.customsDeclarationStatus,
+    placeOrigin: row.placeOrigin,
+    customsDeclarationNameZh: row.customsDeclarationNameZh,
+    count: row.count,
+    unit: row.unit,
+    type: row.type,
+    statutoryUnit: row.statutoryUnit,
+    statutoryCount: row.statutoryCount,
+    hsId: row.hsId,
+    bgWeightStatus: row.bgWeightStatus,
+  })
+}
 // 修改HS
 const handleCustomsChange = async (row: any) => {
   const { data } = await updateProductCustomsClearance({
