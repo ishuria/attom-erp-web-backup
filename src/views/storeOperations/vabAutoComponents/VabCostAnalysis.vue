@@ -426,7 +426,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
-import { getChannelList } from '/@/api/devlocal/encasement'
+import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
   addOperationAmazonCost,
@@ -1059,8 +1059,12 @@ const channelList = ref<{ id: number; label: string }[]>([])
 const siteList = ref<{ id: number; label: string }[]>([])
 // 新增的站点列表，过滤掉沃尔玛
 const siteAddList = ref<{ id: number; label: string }[]>([])
-const fetchChannelData = async () => {
-  const { data } = await getChannelList()
+// const fetchChannelData = async () => {
+//   const { data } = await getChannelList()
+//   channelList.value = data
+// }
+const fetchCostAccountingChannelData = async () => {
+  const { data } = await getCostAccountingChannelList()
   channelList.value = data
 }
 const fetchSalesSiteList = async () => {
@@ -1089,7 +1093,7 @@ const fetchPackagingInformation = async () => {
 }
 onBeforeMount(() => {
   fetchPackagingInformation()
-  fetchChannelData()
+  fetchCostAccountingChannelData()
   fetchSalesSiteList()
   percentageAgeData = data2.value.map((item) => ({
     ...item,

@@ -224,11 +224,22 @@
           <span>{{ row.brank }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="HS" min-width="160" prop="hsId">
+      <el-table-column label="HS" min-width="180" prop="hsId">
         <template #default="{ row }">
-          <el-select v-model="row.hsId" filterable placeholder="请选择HS" @change="handleCustomsChange(row)">
-            <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hs-select-container">
+            <el-select v-model="row.hsId" filterable placeholder="请选择HS" @change="handleCustomsChange(row)">
+              <el-option v-for="item in hsOption" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="row.hsId"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHsName(row.hsId))"
+            />
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="出口退税税率" min-width="90" prop="taxRate">
@@ -346,7 +357,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { CopyDocument, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -360,6 +371,7 @@ import {
   updateProductCustomsClearanceSuppliserInfo,
 } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
+import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
@@ -731,13 +743,16 @@ const clickRatioCancel = async (event: any, value: any) => {
 
 // 修改HS
 const handleCustomsChange = async (row: any) => {
-  await updateProductCustomsClearance({
+  const { data } = await updateProductCustomsClearance({
     id: row.pId,
     hsId: row.hsId,
     brank: row.brank,
     declarationElements: row.declarationElements,
     declarationElementsAbbreviation: row.declarationElementsAbbreviation,
   })
+  if (data) {
+    fetchData()
+  }
 }
 
 // col合并方法
@@ -833,6 +848,12 @@ onBeforeMount(() => {
   fetchHsSelectList()
   fetchData()
 })
+
+// 获取 HS 名称
+const getHsName = (id: number | string) => {
+  const found = hsOption.value.find((x) => Number(x.id) === Number(id))
+  return found?.label || ''
+}
 </script>
 
 <style lang="scss" scoped>
@@ -867,5 +888,15 @@ onBeforeMount(() => {
 }
 .el-table :deep(.select-row > td) {
   background-color: #7bddde !important;
+}
+
+.hs-select-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-btn {
+  margin-left: 4px;
 }
 </style>

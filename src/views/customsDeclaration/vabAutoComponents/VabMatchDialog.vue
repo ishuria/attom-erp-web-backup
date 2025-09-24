@@ -1080,6 +1080,7 @@ const showSentButNotReported = () => {
 // }
 // 关闭匹配
 const handleCloseCheck = () => {
+  displayMatch1Customs.value = true
   emit('updateMatchVisible', false)
 }
 

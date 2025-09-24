@@ -43,6 +43,11 @@
         @cell-click="changeInput"
         @selection-change="setSelectRows"
       >
+        <el-table-column label="发货日期" prop="shipmentDate" width="115">
+          <template #default="{ row }">
+            {{ row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
+          </template>
+        </el-table-column>
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(sentList, 'Shipment-ID-', 'shipmentId')" />
         <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(sentList, 'SKU', 'sku')" />
         <el-table-column label="描述" prop="desc" :width="flexColumnWidth(sentList, '描述', 'desc')" />
