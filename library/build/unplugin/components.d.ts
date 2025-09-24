@@ -312,6 +312,7 @@ declare module 'vue' {
     VabUpdate: typeof import('./../../../src/plugins/VabUpdate/index.vue')['default']
     VabUpload: typeof import('./../../../src/plugins/VabUpload/index.vue')['default']
     VabViewNewInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewNewInspectionReport.vue')['default']
+    VabViewOrderCountTable: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewOrderCountTable.vue')['default']
     VabViewPackingInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewPackingInspectionReport.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
     WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']

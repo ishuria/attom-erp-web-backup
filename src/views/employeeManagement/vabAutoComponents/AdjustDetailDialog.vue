@@ -109,8 +109,12 @@
         <el-form-item label="调整数量" prop="adjustQuantity">
           <el-input v-model.trim="addForm.adjustQuantity" placeholder="请输入调整数量" />
         </el-form-item>
-        <el-form-item label="OEM" prop="oem">
-          <el-checkbox v-model="addForm.oem" :false-value="0" :true-value="1" />
+        <el-form-item label="OEM选项" prop="oem">
+          <el-radio-group v-model="addForm.oem">
+            <el-radio :label="0">仅完成数</el-radio>
+            <el-radio :label="1">仅OEM</el-radio>
+            <el-radio :label="2">OEM和完成数</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="父体" prop="parent">
           <el-input v-model="addForm.parent" placeholder="请输入父体" />
@@ -198,12 +202,14 @@ const list = ref<IGetAdjustDetail[]>([])
 const productManagerList = ref<{ id: number; label: string }[]>([])
 
 const filterHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
-  const property = column['property']
-  return row[property] === Number(value)
+  const property = column.property as keyof IGetAdjustDetail | undefined
+  if (!property) return false
+  return Number(row[property] as unknown as number) === Number(value)
 }
 const filterDetailHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
-  const property = column['property']
-  return row[property] === Number(value)
+  const property = column.property as keyof IGetAdjustDetail | undefined
+  if (!property) return false
+  return Number(row[property] as unknown as number) === Number(value)
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '类型') {
@@ -251,7 +257,7 @@ const submitAddForm = async () => {
         month: addForm.month,
         userId: addForm.userId!,
         type: addForm.type,
-        adjustQuantity: addForm.adjustQuantity!,
+        adjustQuantity: Number(addForm.adjustQuantity)!,
         oem: addForm.oem,
         parent: addForm.parent,
         remark: addForm.remark,

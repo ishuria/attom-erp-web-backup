@@ -575,6 +575,8 @@
 
     <!-- 修改备注 -->
     <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
+    <!-- 查看订货总数 -->
+    <vab-view-order-count-table v-model="viewOrderVisible" :list="viewOrderList" :sku="_sku" />
   </div>
 </template>
 
@@ -583,8 +585,8 @@ import { CopyDocument, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { getOperationOrderTable } from '~/src/api/devlocal/productOrdering'
+import { IGetOperationOrderTable } from '~/src/type/storeOperation/productOrdering'
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
@@ -617,14 +619,18 @@ import {
   uploadGenerateTemplateFile2,
 } from '/@/api/devlocal/encasement'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import EncasementPermission from '/@/permissions/encasement'
 import type { IBoxNumberForm, IEncasementList, IGetEncasementListReq, ISiteOption, OptionType } from '/@/type/packagingShipping/shippedType'
 import handleClipboard, { handleClip } from '/@/utils/clipboard'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Packing',
 })
 
+// 订货总数查看展示
+const viewOrderVisible = ref<boolean>(false)
 const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
@@ -711,11 +717,21 @@ const handleRowClick = (row: any) => {
 let _row: any
 const remarkVisible = ref<boolean>(false)
 const remark = ref<string>('')
-const handleCellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
+const viewOrderList = ref<IGetOperationOrderTable[]>([])
+const _sku = ref<string>('')
+const handleCellClick = async (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '备注') {
     remarkVisible.value = true
     remark.value = row.remarks
     _row = row
+  } else if (column.label === '产品总数') {
+    _sku.value = row.sku
+    const { data } = await getOperationOrderTable({
+      sku: row.sku,
+      site: row.planSiteId,
+    })
+    viewOrderList.value = data
+    viewOrderVisible.value = true
   }
 }
 const handleUpdateRemark = async (val: string) => {
@@ -1452,6 +1468,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   if (label === '备注') {
     return {
       textAlign: 'left',
+      cursor: 'pointer',
+    }
+  } else if (label === '产品总数') {
+    return {
+      textAlign: 'center',
       cursor: 'pointer',
     }
   } else if (label === 'SKU' || label === 'Description') {
