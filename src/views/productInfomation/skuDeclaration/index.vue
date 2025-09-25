@@ -266,8 +266,10 @@
           <span>{{ row.usageEn }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column align="center" fixed="right" label="操作" width="230">
+      <el-table-column align="center" fixed="right" label="操作" width="330">
         <template #default="{ row }">
+          <el-link type="primary" underline="never" @click="showSkuCustomsClearance(row)">导入清关信息</el-link>
+          <span style="margin: 0 5px"></span>
           <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
           <span style="margin: 0 5px"></span>
           <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
@@ -379,18 +381,87 @@
           <el-button type="primary" @click="showBatchUpdate">批量修改</el-button>
         </vab-query-form-left-panel>
       </vab-query-form>
-      <el-table border :data="clearanceList" max-height="700" stripe @selection-change="setSelectRows">
+      <el-table
+        border
+        :data="clearanceList"
+        max-height="700"
+        stripe
+        @cell-click="changeInput"
+        @row-click="handleRowClick"
+        @selection-change="setSelectRows"
+      >
         <el-table-column align="center" type="selection" />
         <el-table-column label="国家" min-width="80" prop="countryName" />
-        <el-table-column label="制造商名称" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" prop="manufacturer" />
+
+        <el-table-column label="制造商名称" :min-width="flexColumnWidth(clearanceList, '制造商名称', 'manufacturer')" prop="manufacturer">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input
+                v-model="row.manufacturer"
+                @blur="clickCustomCleanCancel($event, row)"
+                @keypress.enter="clickCustomCleanCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.manufacturer }}</span>
+          </template>
+        </el-table-column>
+
         <el-table-column
           label="制造商地址"
           :min-width="flexColumnWidth(clearanceList, '制造商地址', 'manufacturerAddress')"
           prop="manufacturerAddress"
-        />
-        <el-table-column label="清关品名" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')" prop="clearanceName" />
-        <el-table-column label="材质比例" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')" prop="material" />
-        <el-table-column label="用途" min-width="100" prop="usage" />
+        >
+          <template #default="{ row }">
+            <div class="none">
+              <el-input
+                v-model="row.manufacturerAddress"
+                @blur="clickCustomCleanCancel($event, row)"
+                @keypress.enter="clickCustomCleanCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.manufacturerAddress }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="清关品名" :min-width="flexColumnWidth(clearanceList, '清关品名', 'clearanceName')" prop="clearanceName">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input
+                v-model="row.clearanceName"
+                @blur="clickCustomCleanCancel($event, row)"
+                @keypress.enter="clickCustomCleanCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.clearanceName }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="材质比例" :min-width="flexColumnWidth(clearanceList, '材质比例', 'material')" prop="material">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input
+                v-model="row.material"
+                @blur="clickCustomCleanCancel($event, row)"
+                @keypress.enter="clickCustomCleanCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.material }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="用途" :min-width="flexColumnWidth(clearanceList, '用途', 'usage')" prop="usage">
+          <template #default="{ row }">
+            <div class="none">
+              <el-input
+                v-model="row.usage"
+                @blur="clickCustomCleanCancel($event, row)"
+                @keypress.enter="clickCustomCleanCancel($event, row)"
+              />
+            </div>
+            <span>{{ row.usage }}</span>
+          </template>
+        </el-table-column>
+
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" />
         </template>
@@ -449,6 +520,9 @@
         <el-button type="primary" @click="confirmBatchUpdate">确定</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 导入sku清关信息 -->
+    <sku-customs-clearance-component v-model="skuCustomsClearanceVisible" :targetCustomClearnId="targetId" />
   </div>
 </template>
 
@@ -457,6 +531,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { ref } from 'vue'
 import {
   addCustomsClearanceSkuInfo,
   getCustomsClearanceCountryList,
@@ -469,6 +544,7 @@ import {
   updateCustomsClearanceSku,
   updateCustomsClearanceSkuHts,
   updateCustomsClearanceSkuInfo,
+  updateCustomsClearanceSkuInfoSign,
 } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { IGetCustomsClearanceSkuInfo } from '/@/type/productInformation/skuInformationType'
@@ -478,7 +554,6 @@ import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'SkuDeclaration',
 })
-
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
@@ -491,6 +566,7 @@ const tableRowClassName = ({ row }: { row: any }) => {
 }
 const router = useRouter()
 const route = useRoute()
+const skuCustomsClearanceVisible = ref<boolean>(false)
 const ukHtsList = ref<{ id: number; label: string }[]>([])
 const deHtsList = ref<{ id: number; label: string }[]>([])
 const caHtsList = ref<{ id: number; label: string }[]>([])
@@ -545,6 +621,14 @@ const showHts = async (row: any) => {
   id = row.id
   htsVisible.value = true
 }
+
+// 导入清关信息
+const targetId = ref<number>(0)
+const showSkuCustomsClearance = (val: any) => {
+  skuCustomsClearanceVisible.value = true
+  targetId.value = val.id
+}
+
 const closeAddClearance = () => {
   addClearanceVisible.value = false
   addClearanceForm.countryIds = []
@@ -794,6 +878,41 @@ const clickCancel = async (event: any, value: any) => {
         usageEn: value.usageEn,
         usageZh: value.usageZh,
       })
+    } catch {
+      Object.assign(value, copyRow)
+    }
+  }
+}
+
+const clickCustomCleanCancel = async (event: any, value: any) => {
+  console.log(event)
+  const rootElement = getRootElement(event.srcElement, '.cell')
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+
+  if (event.type === 'blur') {
+    try {
+      const { data } = await updateCustomsClearanceSkuInfoSign({
+        ids: value.id,
+        clearanceName: value.clearanceName,
+        manufacturer: value.manufacturer,
+        manufacturerAddress: value.manufacturerAddress,
+        material: value.material,
+        usage: value.usage,
+      })
+      if (data) {
+        $baseMessage('修改成功！', 'success')
+        const { data } = await getCustomsClearanceSkuInfo({ skuCustomId })
+        clearanceList.value = data
+      }
     } catch {
       Object.assign(value, copyRow)
     }

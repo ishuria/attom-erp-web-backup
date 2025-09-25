@@ -160,6 +160,7 @@ declare module 'vue' {
     SegmentedCustomStyle: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomStyle.vue')['default']
     SentButNotReported: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/SentButNotReported.vue')['default']
     ShipmentQuantityInspection: typeof import('./../../../src/views/storeOperations/vabAutoComponents/ShipmentQuantityInspection.vue')['default']
+    SkuCustomsClearanceComponent: typeof import('./../../../src/views/productInfomation/skuDeclaration/vabAutoComponents/SkuCustomsClearanceComponent.vue')['default']
     SkuSelectDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/SkuSelectDialog.vue')['default']
     StatisticAnalytics: typeof import('./../../../src/views/vab/statistic/vabAutoComponents/StatisticAnalytics.vue')['default']
     StatisticAnalyticsOverview: typeof import('./../../../src/views/vab/statistic/vabAutoComponents/StatisticAnalyticsOverview.vue')['default']

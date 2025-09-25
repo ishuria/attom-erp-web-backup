@@ -84,6 +84,12 @@ import type {
   IupdateProductSupplier,
 } from '/@/type/productInformation/skuInformationType'
 
+import {
+  SkuCustomsClearanceAddReq,
+  SkuCustomsClearanceQueryReq,
+  SkuCustomsClearanceQueryResp,
+} from '/@/type/productInformation/skuCustomsClearance'
+
 // SKU信息 - 获取查询列表
 export function getProductList(data: IgetProductListQuery): Promise<IgetProductListResp> {
   return request({
@@ -868,7 +874,7 @@ export function getCustomsClearanceSkuInfo(params: { skuCustomId: number }): Pro
   })
 }
 /**
- * sku清关信息修改
+ * 批量sku清关信息修改
  * @param params
  * @returns
  */
@@ -879,6 +885,20 @@ export function updateCustomsClearanceSkuInfo(data: IUpdateCustomsClearanceSkuIn
     data,
   })
 }
+
+/**
+ * 单个sku清关信息点击修改
+ * @param params
+ * @returns
+ */
+export function updateCustomsClearanceSkuInfoSign(data: IUpdateCustomsClearanceSkuInfo): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/sku/info/update/click`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * sku清关信息新增
  * @param data
@@ -1020,6 +1040,32 @@ export function updateSkuComponentInfo(data: IUpdateSkuComponent): Promise<{ dat
 export function batchAddPackingPrecautions(data: IBatchAddPackingPrecautions): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/batch/add/quality/inspection`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 获取sku信息
+ * @param data
+ * @returns
+ */
+export function otainSkuCustomCleanList(data: SkuCustomsClearanceQueryReq): Promise<{ data: SkuCustomsClearanceQueryResp }> {
+  return request({
+    url: `${BASE_API}/customs/clearance/product/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 导入sku清关信息
+ * @param data
+ * @returns
+ */
+export function addSkuCustomCleanList(data: SkuCustomsClearanceAddReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/sku/customs/clearance/import`,
     method: 'post',
     data,
   })
