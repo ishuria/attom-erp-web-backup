@@ -128,7 +128,7 @@
         <template #header>
           打包成本
           <br />
-          (近10次)
+          (近20次)
         </template>
       </el-table-column>
       <el-table-column label="" min-width="100" prop="freightFeeCost">

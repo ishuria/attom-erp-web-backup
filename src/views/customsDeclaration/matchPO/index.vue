@@ -336,6 +336,16 @@
             </el-select>
           </template>
         </el-table-column>
+        <el-table-column label="计入退税资料" min-width="100" prop="bgStatus">
+          <template #default="{ row }">
+            <el-checkbox
+              v-model="row.inTaxRefundBillStatus"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateInTaxRefundCostStatus(row)"
+            />
+          </template>
+        </el-table-column>
         <el-table-column label="实际总费用" min-width="110" prop="actualCost">
           <template #default="{ row }">
             <div class="none">
@@ -557,6 +567,7 @@ import {
   getShipmentLegCurrencyList,
   importContractNumber,
   updateBgShipmentLeg,
+  updateInTaxRefundStatusShipmentLeg,
   updateQgShipmentLeg,
   updateShipment,
   updateShipmentChannel,
@@ -1075,6 +1086,14 @@ const handleUpdateBgStatus = async (row: any) => {
   await updateBgShipmentLeg({
     id: row.id,
     status: row.bgStatus,
+  })
+}
+
+// 修改头程运费计入退税运费
+const handleUpdateInTaxRefundCostStatus = async (row: any) => {
+  await updateInTaxRefundStatusShipmentLeg({
+    id: row.id,
+    status: row.inTaxRefundBillStatus,
   })
 }
 // 修改头程运费合并清关

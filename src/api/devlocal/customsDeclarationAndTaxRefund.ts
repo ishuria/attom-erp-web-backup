@@ -498,6 +498,18 @@ export const updateBgShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBool
     params,
   })
 }
+
+/**
+ * @description 匹配PO、报关清关资料-头程运费计入退税运费修改
+ */
+export const updateInTaxRefundStatusShipmentLeg = (params: IUpdateBgShipmentLeg): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/leg/inTaxRefundStatus`,
+    method: 'post',
+    params,
+  })
+}
+
 /**
  * @description 匹配PO、报关清关资料-头程运费清关状态修改
  */

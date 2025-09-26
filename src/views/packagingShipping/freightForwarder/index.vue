@@ -207,6 +207,16 @@
             <el-checkbox v-model="row.costShowStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
           </template>
         </el-table-column>
+        <el-table-column label="计入退税资料运费" min-width="100" prop="costShowStatus">
+          <template #header>
+            计入退税
+            <br />
+            资料运费
+          </template>
+          <template #default="{ row }">
+            <el-checkbox v-model="row.inTaxRefundBillStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="80">
           <template #default="{ row, $index }">
             <el-link v-if="row.status === 1" type="danger" underline="never" @click="delFeeSetting(row, $index)">删除</el-link>
@@ -940,6 +950,7 @@ const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
       qgStatus: row.qgStatus,
       costShowStatus: row.costShowStatus,
       settlementObject: row.settlementObject,
+      inTaxRefundBillStatus: row.inTaxRefundBillStatus,
     })
   } catch (error) {
     console.error(error)
