@@ -249,6 +249,7 @@
       v-permissions="{ permission: [EncasementPermission.ENCASEMENT_LIST] }"
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
+      :page-sizes="[10, 20, 30, 40, 50, 100, 200, 300]"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
