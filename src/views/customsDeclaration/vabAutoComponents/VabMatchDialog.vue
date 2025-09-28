@@ -1208,34 +1208,32 @@ const handleCheckClear = async (row: IGetCheckMatchList) => {
 }
 // 清空
 const handleClear = async (row: IGetMatchPackageList) => {
-  $baseConfirm('确定要清空吗?', null, async () => {
-    try {
-      match2ListLoading.value = true
-      // let list: number[] = []
-      // matchList.value.forEach((item: any) => {
-      //   if (item.mId === row.mId && item.customsDeclarationStatus === 0) {
-      //     list.push(item.poComponentId)
-      //   }
-      // })
-      // if (Number(row.skuActualCount) === 0 && list.length === 0) {
+  try {
+    match2ListLoading.value = true
+    // let list: number[] = []
+    // matchList.value.forEach((item: any) => {
+    //   if (item.mId === row.mId && item.customsDeclarationStatus === 0) {
+    //     list.push(item.poComponentId)
+    //   }
+    // })
+    // if (Number(row.skuActualCount) === 0 && list.length === 0) {
 
-      //   return
-      // }
-      const { data } = await clearMatchComponent({
-        mId: row.mId,
-        id: _id.value,
-        // poComponentId: list.join(','),
-      })
-      if (data) {
-        $baseMessage('清空成功', 'success')
-        await fetchMatchData()
-        skuActualCountMap[row.mId] = 0
-      }
-      match2ListLoading.value = false
-    } catch (error) {
-      console.error(error)
+    //   return
+    // }
+    const { data } = await clearMatchComponent({
+      mId: row.mId,
+      id: _id.value,
+      // poComponentId: list.join(','),
+    })
+    if (data) {
+      $baseMessage('清空成功', 'success')
+      await fetchMatchData()
+      skuActualCountMap[row.mId] = 0
     }
-  })
+    match2ListLoading.value = false
+  } catch (error) {
+    console.error(error)
+  }
 }
 // 查看匹配的清空全部
 const handleClearCheckAll = async () => {
