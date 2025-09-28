@@ -90,7 +90,7 @@
               <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
             </template>
           </el-table-column>
-          <el-table-column label="有已发未报" prop="flag" width="110">
+          <el-table-column label="发货/报关数不平" prop="flag" width="110">
             <template #default="{ row }">
               <!-- <vab-icon v-show="row.flag === true" icon="check-line" style="color: var(--el-color-primary)" /> -->
               <el-checkbox v-model="row.flag" disabled />
@@ -480,7 +480,7 @@ const headerCellStyle = (data: { row: any; column: any; rowIndex: number; column
       fontWeight: 600,
     }
   }
-  if (['零件', '零件名', '实际数量', '退税报关数量', 'PO总数', '采购方', '不报关', '有已发未报', '有HS', '零件操作'].includes(label)) {
+  if (['零件', '零件名', '实际数量', '退税报关数量', 'PO总数', '采购方', '不报关', '发货/报关数不平', '有HS', '零件操作'].includes(label)) {
     return {
       textAlign: 'center',
       backgroundColor: 'var(--el-color-warning-light-9)',

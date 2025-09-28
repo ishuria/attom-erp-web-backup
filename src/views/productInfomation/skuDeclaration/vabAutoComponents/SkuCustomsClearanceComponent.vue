@@ -20,9 +20,9 @@
     </vab-query-form>
 
     <el-table v-loading="listLoading" border :data="skuCustomsClearanceList" max-height="1000" stripe>
-      <el-table-column align="center" label="图片" prop="skuImgUrl" width="200">
+      <el-table-column align="center" label="图片" prop="skuImgUrl" width="80">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 200px; height: 200px" />
+          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 80px; height: 80px" />
         </template>
       </el-table-column>
 
