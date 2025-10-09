@@ -775,6 +775,9 @@
                   <div>({{ row.tWksClicks }})</div>
                 </div>
               </span>
+              <span v-if="item.label === '最近入库'">
+                <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
+              </span>
             </template>
           </el-table-column>
           <template #empty>
@@ -1424,6 +1427,9 @@
                   <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
                   <div>({{ row.tWksClicks }})</div>
                 </div>
+              </span>
+              <span v-if="item.label === '最近入库'">
+                <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
               </span>
             </template>
           </el-table-column>
@@ -3139,7 +3145,7 @@ const handleWidth = (item: any) => {
         return `${Number(availableWidth) + Number(fbaWidth) + 30}px`
       }
       case '最近入库': {
-        return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
+        return 120
       }
       default: {
         return item.minWidth
@@ -3166,7 +3172,7 @@ const handleWidth = (item: any) => {
         return calculateBrColumnWidth(asinList.value, (row: any) => row._developName, 100)
       }
       case '最近入库': {
-        return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
+        return 120
       }
       case '剩余库存': {
         const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')

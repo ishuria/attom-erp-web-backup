@@ -76,7 +76,11 @@
       <el-table-column label="ASIN" prop="asin" :width="flexColumnWidth(list, 'ASIN', 'asin')" />
       <el-table-column label="站点" min-width="130" prop="siteName" />
       <el-table-column label="预计上架日期" min-width="115" prop="estimateInboundDate" />
-      <el-table-column label="最近入库" min-width="110" prop="recentlyInboundStorage" />
+      <el-table-column label="最近入库" min-width="110" prop="recentlyInboundStorage">
+        <template #default="{ row }">
+          <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="入库总数" min-width="100" prop="inboundStorageTotal" />
       <el-table-column label="头部产品#" min-width="100" prop="headerCount" />
       <el-table-column label="同赛道ASIN" min-width="200" prop="benchmarkAsin" />

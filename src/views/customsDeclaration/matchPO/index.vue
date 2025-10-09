@@ -77,7 +77,14 @@
           {{ row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber', 50)">
+        <template #default="{ row }">
+          <span class="copySku" @click="handleClipboard($event, row.contractNumber)">
+            {{ row.contractNumber }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(list, 'Shipment ID', 'shipmentId', 50)">
         <template #default="{ row }">
           <span class="copySku" @click="handleClipboard($event, row.shipmentId)">
@@ -765,6 +772,9 @@ const closeGenerate = () => {
   confirmTwiceVisible.value = false
 }
 const showModify = (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.taxRefundStatus === 1) return
   modifyVisible.value = true
   _row.value = row
@@ -777,6 +787,9 @@ const setSelectRows = (value: any) => {
 }
 // 退税归档
 const handleArchiveTaxRefund = (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.taxRefundStatus === 1) {
     $baseMessage('此记录已退税归档，请勿重复退税归档！', 'error')
     return
@@ -792,6 +805,9 @@ const handleArchiveTaxRefund = (row: any) => {
   })
 }
 const handleCancelArchiveTaxRefund = (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.taxRefundStatus === 0) {
     $baseMessage('此批次的状态不是已归档到税管理，不能进行撤销退税归档操作！', 'error')
     return
@@ -817,6 +833,9 @@ const shipId = ref<number>(0)
 
 // 撤销装箱
 const handleCancelEncasement = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   $baseConfirm('确定要撤销装箱（删除）吗', null, async () => {
     const { data } = await cancelShipmentEncasement({
       id: row.id,
@@ -999,6 +1018,9 @@ const confirmModify = async () => {
 
 // 打包归档
 const handleArchivePackage = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.packArchiveStatus === 1) {
     $baseMessage('此记录已打包归档，请勿重复打包归档！', 'error')
     return
@@ -1016,6 +1038,9 @@ const handleArchivePackage = async (row: any) => {
 
 // 撤销打包归档
 const handleCancelArchivePackage = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.packArchiveStatus === 0) {
     $baseMessage('此匹配数据状态不是已打包归档，不能进行撤销归档操作！', 'error')
     return
@@ -1032,6 +1057,9 @@ const handleCancelArchivePackage = async (row: any) => {
 }
 // 出库归档
 const handleArchiveOutbound = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.outboundStatus === 1) {
     $baseMessage('此记录已出库归档，请勿重复出库归档！', 'error')
     return
@@ -1048,6 +1076,9 @@ const handleArchiveOutbound = async (row: any) => {
 }
 // 撤销出库归档
 const handleCancelArchiveOutbound = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   if (row.outboundStatus === 0) {
     $baseMessage('该批次的出库状态不是已出库，不能进行撤销出库操作！', 'error')
     return
@@ -1159,6 +1190,8 @@ let freightName = ''
 let shipmentId = ''
 // 展示头程运费
 const showFirstLegFreight = async (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
   costList.value = []
   shipmentId = row.shipmentId
   _shipId.value = row.id
@@ -1175,6 +1208,9 @@ const showFirstLegFreight = async (row: any) => {
 
 // 合同导入
 const showContractNumberImport = (row: any) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   contractNumberForm.shipmentId = row.shipmentId
   contractNumberImportVisible.value = true
 }
@@ -1204,6 +1240,9 @@ const disabled2 = ref<boolean>(true)
 const disabled3 = ref<boolean>(false)
 // 展示匹配
 const showMatch = (row: IGetMatchPoList) => {
+  // 行高亮
+  selectedRowIndex.value = row.id!
+
   status.value = row.packArchiveStatus!
   shipId.value = row.id!
   if (row.packArchiveStatus === 1) {

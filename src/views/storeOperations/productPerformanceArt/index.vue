@@ -352,6 +352,9 @@
               <span v-if="label2.includes(item.label)">
                 {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
               </span>
+              <span v-if="item.label === '最近入库'">
+                <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
+              </span>
             </template>
           </el-table-column>
           <template #empty>

@@ -289,6 +289,9 @@
           <!-- <span v-if="item.label === 'VOC缺陷%'" >
             {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
           </span> -->
+          <span v-if="item.label === '最近入库'">
+            <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
+          </span>
         </template>
       </el-table-column>
       <template #empty>
@@ -884,7 +887,7 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '签收', 'quantityReceived', 40)
     }
     case '最近入库': {
-      return flexColumnWidth(list.value, '最近入库', 'recentlyInboundStorage')
+      return 120
     }
     case '订货#': {
       const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')

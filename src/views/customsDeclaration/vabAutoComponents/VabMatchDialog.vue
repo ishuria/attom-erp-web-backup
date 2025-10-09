@@ -177,14 +177,16 @@
               style="--el-switch-on-color: var(--el-color-success); --el-switch-off-color: var(--el-color-danger); margin-right: 10px"
               width="130"
             />
-            <el-text style="font-size: var(--el-font-size-base); font-weight: 600; margin-top: -10px">
-              SKU：
-              <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
-              品名：
-              <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
-              剩余未匹配数量：
-              <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
-            </el-text>
+            <div style="margin-top: 8px">
+              <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+                SKU：
+                <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
+                品名：
+                <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
+                剩余未匹配数量：
+                <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
+              </el-text>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline>

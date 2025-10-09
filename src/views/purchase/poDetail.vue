@@ -441,7 +441,23 @@
                 <div class="none">
                   <el-input v-model="row.orderNo" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
                 </div>
-                <span>{{ row.orderNo }}</span>
+                <div class="order-no-container">
+                  <el-tooltip content=" " effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">{{ removeHtmlTags(row.orderNo) }}</div>
+                    </template>
+                    <div class="multi-line-ellipsis">{{ removeHtmlTags(row.orderNo) }}</div>
+                  </el-tooltip>
+                  <el-button
+                    v-if="row.orderNo"
+                    circle
+                    class="copy-btn"
+                    :icon="CopyDocument"
+                    size="small"
+                    type="primary"
+                    @click.stop="handleClip(row.orderNo)"
+                  />
+                </div>
               </span>
               <span v-if="item.label === '零件采购注意事项'">
                 <el-tooltip content=" " effect="dark" placement="top">
@@ -3360,7 +3376,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     property === 'purchaseLink' ||
     property === 'purchaseMatters' ||
     property === 'contractTerms' ||
-    property === 'componentSuitDetail'
+    property === 'componentSuitDetail' ||
+    property === 'orderNo'
   ) {
     return {
       textAlign: 'left',
@@ -3593,6 +3610,36 @@ onMounted(() => {
 
   .el-select {
     flex: 1;
+  }
+
+  .copy-btn {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+
+// 订单号容器样式
+.order-no-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+
+  .el-tooltip {
+    min-width: 0; // 允许内容收缩
+    overflow: hidden;
+  }
+
+  .multi-line-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 100%;
   }
 
   .copy-btn {

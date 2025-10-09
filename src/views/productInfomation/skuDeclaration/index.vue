@@ -341,29 +341,84 @@
     <vab-dialog v-model="htsVisible" :draggable="false" title="查看和修改HTS" width="20%">
       <el-form label-width="auto" style="margin-right: 0; margin-left: 0">
         <el-form-item label="HTS美国">
-          <el-select v-model="htsForm.us" clearable filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
-            <el-option v-for="item in usaList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hts-select-container">
+            <el-select v-model="htsForm.us" clearable filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
+              <el-option v-for="item in usaList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="htsForm.us"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHtsName(htsForm.us, usaList))"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="HTS英国">
-          <el-select v-model="htsForm.uk" clearable filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
-            <el-option v-for="item in ukHtsList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hts-select-container">
+            <el-select v-model="htsForm.uk" clearable filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
+              <el-option v-for="item in ukHtsList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="htsForm.uk"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHtsName(htsForm.uk, ukHtsList))"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="HTS德国">
-          <el-select v-model="htsForm.de" clearable filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
-            <el-option v-for="item in deHtsList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hts-select-container">
+            <el-select v-model="htsForm.de" clearable filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
+              <el-option v-for="item in deHtsList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="htsForm.de"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHtsName(htsForm.de, deHtsList))"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="HTS加拿大">
-          <el-select v-model="htsForm.ca" clearable filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
-            <el-option v-for="item in caHtsList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hts-select-container">
+            <el-select v-model="htsForm.ca" clearable filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
+              <el-option v-for="item in caHtsList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="htsForm.ca"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHtsName(htsForm.ca, caHtsList))"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="HTS日本">
-          <el-select v-model="htsForm.jp" clearable filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
-            <el-option v-for="item in jpHtsList" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+          <div class="hts-select-container">
+            <el-select v-model="htsForm.jp" clearable filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
+              <el-option v-for="item in jpHtsList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-button
+              v-if="htsForm.jp"
+              circle
+              class="copy-btn"
+              :icon="CopyDocument"
+              size="small"
+              type="primary"
+              @click="handleClip(getHtsName(htsForm.jp, jpHtsList))"
+            />
+          </div>
         </el-form-item>
       </el-form>
       <!-- <template #footer>
@@ -527,11 +582,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { CopyDocument, Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
+import { handleClip } from '~/src/utils/clipboard'
 import {
   addCustomsClearanceSkuInfo,
   getCustomsClearanceCountryList,
@@ -554,6 +610,12 @@ import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'SkuDeclaration',
 })
+
+const getHtsName = (hsId: number, htsList: any[]) => {
+  if (!hsId || !htsList) return ''
+  const hts = htsList.find((item: any) => item.id === hsId)
+  return hts ? hts.label : ''
+}
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any, column: any, event: Event) => {
   selectedRowIndex.value = row.id
@@ -1012,5 +1074,15 @@ onBeforeMount(() => {
 }
 .el-table :deep(.select-row > td) {
   background-color: #7bddde !important;
+}
+/* 供应商选择容器样式 */
+.hts-select-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.copy-btn {
+  flex-shrink: 0;
 }
 </style>

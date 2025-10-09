@@ -2959,7 +2959,15 @@ const handleTabClick = (tab: TabsPaneContext) => {
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
   const label = column.label
-  if (columnIndex === 0 || label === 'PO' || label === '数据来源' || label === '发布日期' || label === '发布人' || label === '站点') {
+  if (
+    columnIndex === 0 ||
+    label === 'PO' ||
+    label === '数据来源' ||
+    label === '发布日期' ||
+    label === '发布人' ||
+    label === '站点' ||
+    label === '请购人'
+  ) {
     const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
@@ -3001,7 +3009,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 const lastTowTabSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
   const label = column.label
-  if (label === 'PO' || label === '数据来源' || label === '发布日期' || label === '发布人' || label === '站点') {
+  if (label === 'PO' || label === '数据来源' || label === '发布日期' || label === '发布人' || label === '站点' || label === '请购人') {
     const id = row.id
 
     // 遍历后面的行，检查相同的 PO ID
