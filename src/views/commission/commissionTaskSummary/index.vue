@@ -275,13 +275,28 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table border :cell-style="cellStyle" :data="developList" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          border
+          :cell-class-name="clearPadding"
+          :cell-style="cellStyle"
+          class="develop-table"
+          :data="developList"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
           <el-table-column label="采购计划发布日期" min-width="120" prop="releaseData">
             <template #default="{ row }">
               {{ row.releaseData ? formatDate(new Date(row.releaseData)) : '' }}
             </template>
           </el-table-column>
           <el-table-column label="人员" min-width="120" prop="userName" />
+          <el-table-column label="图片" width="80">
+            <template #default="{ row }">
+              <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+                <template #error><el-icon /></template>
+              </el-image>
+            </template>
+          </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(developList, 'SKU', 'sku', 50)">
             <template #default="{ row }">
               <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
@@ -601,6 +616,8 @@
       :before-price="historyPriceBeforePrice"
       :list="historyPriceList"
     />
+    <!-- 预览图片 -->
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -650,6 +667,22 @@ defineOptions({
   name: 'CommissionTaskSummary',
 })
 
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const imagePreviewShow = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
 const historyPriceVisible = ref<boolean>(false)
 
 const selectedRowIndex = ref<number>(-1)
@@ -1242,5 +1275,13 @@ onBeforeMount(() => {
       margin-right: 0;
     }
   }
+}
+.develop-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.develop-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>

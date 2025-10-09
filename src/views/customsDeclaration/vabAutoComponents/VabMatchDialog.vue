@@ -177,16 +177,6 @@
               style="--el-switch-on-color: var(--el-color-success); --el-switch-off-color: var(--el-color-danger); margin-right: 10px"
               width="130"
             />
-            <div style="margin-top: 8px">
-              <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
-                SKU：
-                <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
-                品名：
-                <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
-                剩余未匹配数量：
-                <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
-              </el-text>
-            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="6">
             <el-form inline>
@@ -204,6 +194,16 @@
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
+          <div style="margin-bottom: 20px">
+            <el-text style="font-size: var(--el-font-size-base); font-weight: 600">
+              SKU：
+              <span :style="{ color: 'var(--el-color-primary)' }">{{ _sku }}</span>
+              品名：
+              <span :style="{ color: 'var(--el-color-primary)' }">{{ _desc }}</span>
+              剩余未匹配数量：
+              <span :style="{ color: 'var(--el-color-danger)' }">{{ _encasementCount }}</span>
+            </el-text>
+          </div>
         </vab-query-form>
         <el-table
           v-loading="match2ListLoading"
@@ -627,16 +627,21 @@ let props = defineProps<{
   disabled2: boolean
   disabled3: boolean
 }>()
-watchEffect(() => {
-  dflag.value = props.matchVisible
-  disabled1.value = props.disabled1
-  disabled2.value = props.disabled2
-  disabled3.value = props.disabled3
-  if (dflag.value === true) {
-    selectedRowIndex.value = -1
-    fetchData()
+// 只监听对话框打开状态，不监听 disabled props
+watch(
+  () => props.matchVisible,
+  (newVal) => {
+    dflag.value = newVal
+    if (newVal === true) {
+      // 只在对话框打开时设置 disabled 状态
+      disabled1.value = props.disabled1
+      disabled2.value = props.disabled2
+      disabled3.value = props.disabled3
+      selectedRowIndex.value = -1
+      fetchData()
+    }
   }
-})
+)
 const emit = defineEmits<{
   updateMatchVisible: [value: boolean]
 }>()
@@ -901,6 +906,7 @@ const fetchPreviousMatchData = async () => {
   _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
   _siteName.value = item?.site!
+  displaySite.value = true // 确保站点筛选生效
   Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
   Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
   const { data } = await getMatchPackageList({
@@ -931,6 +937,7 @@ const fetchNextMatchData = async () => {
   _desc.value = item!.desc
   _originalCount.value = Number(item!.encasementCount)
   _siteName.value = item?.site!
+  displaySite.value = true // 确保站点筛选生效
   Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
   Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
   const { data } = await getMatchPackageList({
@@ -956,13 +963,20 @@ const handleShowPreviousOrNext = (id: number) => {
   const index = idList.value.indexOf(id)
   lastSku.value = length - index - 1
   // 处理上一个还是下一个显示
-  if (index === 0) {
+  if (length === 1) {
+    // 只有一个元素时，不显示上一个和下一个按钮
+    previousVisible.value = false
+    nextVisible.value = false
+  } else if (index === 0) {
+    // 第一个元素，只显示下一个
     previousVisible.value = false
     nextVisible.value = true
   } else if (index === length - 1) {
+    // 最后一个元素，只显示上一个
     previousVisible.value = true
     nextVisible.value = false
   } else {
+    // 中间元素，显示上一个和下一个
     previousVisible.value = true
     nextVisible.value = true
   }
@@ -1189,6 +1203,7 @@ const handleInsertAll = async (row: IGetMatchPackageList) => {
     }
     match2ListLoading.value = false
   } catch (error) {
+    match2ListLoading.value = false
     console.error(error)
   }
 }
@@ -1457,16 +1472,16 @@ const objectSpanMethod2 = ({ row, column, rowIndex, columnIndex }: any) => {
     // 默认不跨行
     let rowspan = 1
     // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < matchList.value.length; i++) {
+    for (let i = rowIndex + 1; i < filteredMatchList.value.length; i++) {
       // 如果零件id一样需要合并
-      if (matchList.value[i].mId === id) {
+      if (filteredMatchList.value[i].mId === id) {
         rowspan++
       } else {
         break
       }
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || matchList.value[rowIndex - 1].mId !== id) {
+    if (rowIndex === 0 || filteredMatchList.value[rowIndex - 1].mId !== id) {
       return { rowspan, colspan: 1 }
     } else {
       return { rowspan: 0, colspan: 0 }

@@ -553,6 +553,7 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
@@ -799,6 +800,7 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
@@ -1050,6 +1052,8 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
+
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
@@ -1302,6 +1306,8 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
+
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
@@ -1546,6 +1552,8 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
+
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="130" prop="siteName" />
           <el-table-column label="SKU图片" width="82">
@@ -1688,6 +1696,8 @@
               {{ row.releaseDate.split(' ')[0] }}
             </template>
           </el-table-column>
+          <el-table-column label="请购人" prop="createUserName" />
+
           <el-table-column label="发布人" prop="userName" />
           <el-table-column label="站点" min-width="135" prop="siteName" />
           <el-table-column label="SKU图片" width="82">

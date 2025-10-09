@@ -94,10 +94,14 @@
         </template>
       </el-table-column>
       <el-table-column label="PO总含税价" min-width="120" prop="taxIncludedPrice" />
-      <el-table-column label="订单号" min-width="" prop="orderNo" />
+      <el-table-column label="订单号" min-width="120" prop="orderNo" />
       <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'suppliser')" prop="suppliser" />
-      <el-table-column label="发货日期" min-width="115" prop="shipmentDate" />
-      <el-table-column label="合同编号" min-width="100" prop="contractNumber" />
+      <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
+        <template #default="{ row }">
+          {{ row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
       <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" />
       <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
       <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
@@ -174,7 +178,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['selection', 'PO', '采购日期', 'PO零件单位', '发票单位'].includes(label)) {
+  if (['selection', 'PO', '采购日期', 'PO零件单位', '发票单位', '报关单位'].includes(label)) {
     return {
       textAlign: 'center',
     }
