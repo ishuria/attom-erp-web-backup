@@ -36,6 +36,14 @@
             >
               批量删除
             </el-button>
+            <el-button
+              v-permissions="{ permission: [PlanPoPermission.NOT_BG_RELEASE] }"
+              :loading="notBgLoading"
+              type="success"
+              @click="handleNotBg"
+            >
+              不报关可发布
+            </el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <!-- 列设置面板 -->
@@ -689,6 +697,7 @@ import {
   deletePurchasePlanPo,
   getPlanPoList,
   getPoPurchaseMatters,
+  planPoNbgFlagHander,
   planPoNrMoq,
   planPorMoq,
   releaseBatchPlanPo,
@@ -1021,6 +1030,28 @@ const handleAllDelete = async () => {
     }
   })
 }
+
+// 不报关可发布标记
+const notBgLoading = ref<boolean>(false)
+const handleNotBg = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'warning', 'hey')
+    return
+  }
+  try {
+    notBgLoading.value = true
+    const ids = selectRows.value.map((item: any) => item.id).join(',')
+    const { data } = await planPoNbgFlagHander({ ids })
+    if (data === true) {
+      $baseMessage('批量不报关可发布标记更新成功！', 'success', 'hey')
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    notBgLoading.value = false
+  }
+}
+
 // 删除SKU
 const handleDelSkuPlannedPo = (row: any) => {
   try {

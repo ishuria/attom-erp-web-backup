@@ -572,6 +572,15 @@ export function planPorMoq(params?: IId) {
     params,
   })
 }
+
+// 采购计划-不报关可发布
+export function planPoNbgFlagHander(params?: IIds) {
+  return request({
+    url: `${BASE_API}/purchase/planPo/ngb/flag`,
+    method: 'post',
+    params,
+  })
+}
 /**
  * @description 采购订单-降本提成申请
  * @param params
