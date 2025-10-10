@@ -157,6 +157,11 @@ const handleData = async (response: any): Promise<any> => {
     })
     return
   }
+
+  if (code == 6000) {
+    gp.$baseAlert(errMsg, '提示')
+    return
+  }
   // 异常处理
   // 是否显示高亮错误(与errorHandler钩子触发逻辑一致)
   // gp.$baseMessage(errMsg, 'error', 'hey')
