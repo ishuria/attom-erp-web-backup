@@ -46,6 +46,7 @@ import type {
 } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type {
   ICleanTaxRefundInvoice,
+  IContractValidateTaxRefundBatch,
   IFinishTaxRefundInvoiceRes,
   IGetTaxRefundBatchDetailQuery,
   IGetTaxRefundBatchDetailRes,
@@ -628,6 +629,18 @@ export const updateTaxRefundBatchFreightFee = (params: IUpdateTaxRefundBatchFrei
     params,
   })
 }
+
+/**
+ * @description 退税批次-采购合同校验
+ */
+export const validateTaxRefundBatchContract = (data: IContractValidateTaxRefundBatch): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/batch/contract/validate`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 退税批次-明细
  */

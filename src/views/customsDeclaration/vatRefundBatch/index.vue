@@ -57,7 +57,7 @@
           <el-table-column label="未到发票" min-width="100" prop="notYetCount" />
           <el-table-column label="发票总数" min-width="100" prop="totalCount" />
           <el-table-column label="退税运费" min-width="100" prop="totalFreightFee" />
-          <el-table-column label="备注" min-width="300" prop="remark">
+          <el-table-column label="备注" min-width="250" prop="remark">
             <template #default="{ row }">
               <el-tooltip effect="dark" placement="top">
                 <template #content>
@@ -74,11 +74,13 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="380">
+          <el-table-column fixed="right" label="操作" width="480">
             <template #default="{ row }">
               <el-link type="primary" underline="never" @click="showFreightFee(row)">退税运费</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showDetail(row)">明细</el-link>
+              <span style="margin: 0 5px"></span>
+              <el-link underline="never" @click="showContractValidate(row)">采购合同校验</el-link>
               <span style="margin: 0 5px"></span>
               <el-link type="primary" underline="never" @click="showInvoiceCollection(row)">发票归集</el-link>
               <span style="margin: 0 5px"></span>
@@ -221,6 +223,19 @@
         <el-button type="primary" @click="confirmFreightFee">确认</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 采购合同校验 -->
+    <vab-dialog v-model="contractValidateVisible" title="采购合同校验" width="20%" @close="closeFreightFee">
+      <el-form ref="contractFormRef" :model="contractForm" :rules="contractFormRules" style="margin-right: 20px; margin-left: 20px">
+        <el-form-item label="采购合同路径" prop="path">
+          <el-input v-model.trim="contractForm.path" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="contractValidateVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmContractValidate">确认</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -238,6 +253,7 @@ import {
   updateTaxRefundBatchFreightFee,
   updateTaxRefundBatchRemark,
   updateTaxRefundBatchStatus,
+  validateTaxRefundBatchContract,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP } from '/@/api/devlocal/download'
 import type { IGetTaxRefundBatchList, IGetTaxRefundBatchListQuery } from '/@/type/customsDeclarationAndTaxRefund/refundTax'
@@ -375,6 +391,31 @@ const confirmFreightFee = async () => {
     $baseMessage('更新退税运费成功!', 'success')
     closeFreightFee()
     _row.totalFreightFee = freightFeeForm.freightFee
+  }
+}
+
+// 采购合同校验
+
+const contractValidateVisible = ref<boolean>(false)
+const contractForm = reactive<any>({})
+const contractFormRef = ref<FormInstance>()
+const contractFormRules = reactive<any>({
+  path: [{ required: true, message: '请输入采购合同路径', trigger: 'blur' }],
+})
+const showContractValidate = (row: IGetTaxRefundBatchList) => {
+  contractValidateVisible.value = true
+  _row = row
+}
+
+const confirmContractValidate = async () => {
+  const { data } = await validateTaxRefundBatchContract({
+    id: _row.id!,
+    path: contractForm.path,
+  })
+  if (data) {
+    $baseMessage('采购合同校验成功!', 'success')
+    closeFreightFee()
+    contractValidateVisible.value = false
   }
 }
 

@@ -409,3 +409,8 @@ export interface IGetTaxRefundProfitMarginList {
    */
   totalTaxRebate?: number
 }
+
+export interface IContractValidateTaxRefundBatch {
+  id: number
+  path: string
+}
