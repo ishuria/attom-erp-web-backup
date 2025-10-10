@@ -252,6 +252,17 @@ export function getFrontPageAdjustDetailMonth(): Promise<{ data: string[] }> {
     method: 'get',
   })
 }
+
+/**
+ * 首页-考核结账月份列表
+ * @returns
+ */
+export function getFrontPageBillingMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/front_page/billing/month`,
+    method: 'get',
+  })
+}
 /**
  * 首页-TOP30新品销售额排行
  * @returns

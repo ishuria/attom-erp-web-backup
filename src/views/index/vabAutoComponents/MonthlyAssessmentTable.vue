@@ -42,6 +42,18 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
           textAlign: 'center',
         }
       }
+    } else if (props.title === '考核数调整') {
+      if (data.row.number > 0) {
+        return {
+          color: 'var(--el-color-danger)',
+          textAlign: 'center',
+        }
+      } else {
+        return {
+          color: 'var(--el-color-success)',
+          textAlign: 'center',
+        }
+      }
     } else {
       return {
         color: 'var(--el-color-danger)',

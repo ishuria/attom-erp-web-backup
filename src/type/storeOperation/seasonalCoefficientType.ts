@@ -6,9 +6,14 @@ export interface IGetSeasonalCoefficientListReq {
 }
 export interface IGetSeasonalCoefficientListRes {
   data: {
-    list:  IGetSeasonalCoefficientList[]
+    list: IGetSeasonalCoefficientList[]
     total: number
   }
+}
+export interface IDailySeasonalCoefficient {
+  month: number
+  day: number
+  actual: number
 }
 
 export interface IGetSeasonalCoefficientList {

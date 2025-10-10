@@ -4,11 +4,12 @@ import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAddSeasonalCoefficientReq,
   IBooleanResp,
+  IDailySeasonalCoefficient,
   IGetSeasonalCoefficientListReq,
   IGetSeasonalCoefficientListRes,
   IId,
   ISite,
-  ISiteList
+  ISiteList,
 } from '/@/type/storeOperation/seasonalCoefficientType'
 
 /**
@@ -18,13 +19,25 @@ export function getSeasonalCoefficientList(params: IGetSeasonalCoefficientListRe
   return request({
     url: `${BASE_API}/seasonal/coefficient/list`,
     method: 'get',
-    params
+    params,
+  })
+}
+/**
+ * @description 季节系数每日列表
+ * @param params
+ * @returns
+ */
+export function getSeasonalCoefficientDailyList(params: { id: number; siteId: number }): Promise<{ data: IDailySeasonalCoefficient[] }> {
+  return request({
+    url: `${BASE_API}/seasonal/coefficient/daily/list`,
+    method: 'get',
+    params,
   })
 }
 /**
  * @description 季节系数的站点列表
  */
-export function getSeasonalCoefficientSiteList(): Promise<{data: ISiteList[]}> {
+export function getSeasonalCoefficientSiteList(): Promise<{ data: ISiteList[] }> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/site/list`,
     method: 'get',
@@ -37,7 +50,7 @@ export function updateSeasonalCoefficient(data: IGetSeasonalCoefficientListReq):
   return request({
     url: `${BASE_API}/seasonal/coefficient/update`,
     method: 'post',
-    data
+    data,
   })
 }
 /**
@@ -47,17 +60,17 @@ export function delSeasonalCoefficient(params: IId): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/del`,
     method: 'post',
-    params
+    params,
   })
 }
 /**
  * @description 获取季节系数的品类列表
  */
-export function getSeasonalCoefficientSite(params: ISite): Promise<{data: ISiteList[]}> {
+export function getSeasonalCoefficientSite(params: ISite): Promise<{ data: ISiteList[] }> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/site`,
     method: 'get',
-    params
+    params,
   })
 }
 /**
@@ -67,6 +80,6 @@ export function addSeasonalCoefficient(data: IAddSeasonalCoefficientReq): Promis
   return request({
     url: `${BASE_API}/seasonal/coefficient/add`,
     method: 'post',
-    data
+    data,
   })
 }
