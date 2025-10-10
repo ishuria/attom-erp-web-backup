@@ -184,7 +184,7 @@
           </template>
         </monthly-assessment-table>
       </el-col>
-      <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
           <template #select>
             <el-select v-model="selectNewProductMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
@@ -335,7 +335,7 @@ import {
   IPieItem,
   IRankItem,
 } from '/@/type/index/frontPage'
-import { getLastYearStringMonth } from '/@/utils/dateUtils'
+import { getCurrentMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
@@ -799,13 +799,17 @@ const fetchHistoryMonthList = async () => {
   selectNewProductMonth.value = newProductMonthList.value[0] || data[0]
   selectJobLevelMonth.value = newProductMonthList.value[0] || data[0]
 }
+
 const fetchAdjustDetailMonthList = async () => {
   const { data } = await getFrontPageAdjustDetailMonth()
   monthList.value = data
   if (data.length > 0) {
-    selectProfitMonth.value = data[0]
-    selectAssessmentPlusMonth.value = data[0]
-    selectAssessmentMinusMonth.value = data[0]
+    const currentMonth = getCurrentMonth()
+    // 优先选择当前月份，如果不存在则选择第一个
+    const defaultMonth = data.includes(currentMonth) ? currentMonth : data[0]
+    selectProfitMonth.value = defaultMonth
+    selectAssessmentPlusMonth.value = defaultMonth
+    selectAssessmentMinusMonth.value = defaultMonth
   }
 }
 const fetchRankOverAchieved = async () => {

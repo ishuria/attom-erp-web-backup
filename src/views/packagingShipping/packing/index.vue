@@ -155,6 +155,8 @@
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
             {{ row.sku }}
             <vab-icon icon="file-copy-2-fill" />
+            <br />
+            {{ row.description }}
           </span>
         </template>
         <template v-else-if="item.label === '带磁'" #default="{ row }">
@@ -664,7 +666,7 @@ const handleCalculateWidth = (item: any) => {
       return flexColumnWidth(list.value, '箱规号', 'encasementNo')
     }
     case 'SKU': {
-      return flexColumnWidth(list.value, 'SKU', 'sku', 50)
+      return Math.max(flexColumnWidth(list.value, 'SKU', 'sku', 50), flexColumnWidth(list.value, 'Description', 'description'))
     }
     case 'Description': {
       return flexColumnWidth(list.value, 'Description-', 'description')

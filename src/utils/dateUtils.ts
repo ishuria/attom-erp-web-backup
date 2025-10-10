@@ -130,6 +130,17 @@ export function getWeekOfYear(date: Date | string | number): string {
 }
 
 /**
+ * @description 获取当前月份
+ * @returns `${year}-${month}`
+ */
+export const getCurrentMonth = (): string => {
+  const today = new Date()
+  const year = today.getFullYear()
+  const month = String(today.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
+
+/**
  * @description 获取当前日期处理过的形式
  * @returns `${year}${month}${day}`
  */

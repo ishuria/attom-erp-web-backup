@@ -1759,7 +1759,14 @@
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadSkuComponentImage" />
     <!-- 零件报关修改 -->
     <vab-dialog v-model="modifyVisible" :title="`${route.query.tab === 'view' ? '查看' : '修改'}零件报关`" width="20%">
-      <el-form label-position="left" label-width="auto" :model="modifyForm" style="margin-left: 0; margin-right: 0">
+      <el-form
+        ref="modifyFormRef"
+        label-position="left"
+        label-width="auto"
+        :model="modifyForm"
+        :rules="modifyFormRules"
+        style="margin-left: 0; margin-right: 0"
+      >
         <el-form-item label="采购单位" prop="unit">
           <el-input v-model="modifyForm.unit" disabled />
         </el-form-item>
@@ -1767,7 +1774,14 @@
           <el-input v-model="modifyForm.billingUnit" clearable />
         </el-form-item>
         <el-form-item label="每零件单位有多少个开票单位" prop="quantity">
-          <el-input v-model="modifyForm.quantity" clearable />
+          <el-input-number
+            v-model="modifyForm.quantity"
+            align="left"
+            controls-position="right"
+            :min="0"
+            :precision="10"
+            style="width: 100%"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -1853,6 +1867,45 @@ const addSkuLoading = ref<boolean>(false)
 
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({})
+const modifyFormRef = ref()
+
+// 表单验证规则
+const modifyFormRules = {
+  billingUnit: [
+    { required: true, message: '请输入开票单位', trigger: 'blur' },
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (value === null || value === undefined || value === '') {
+          callback(new Error('请输入开票单位'))
+        } else {
+          // 检查是否为纯数字，如果是数字则提示错误
+          const numValue = parseFloat(value)
+          if (!isNaN(numValue) && value.toString().trim() === numValue.toString()) {
+            callback(new Error('开票单位不能为数字'))
+          } else {
+            callback()
+          }
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+  quantity: [
+    { required: true, message: '请输入每零件单位有多少个开票单位', trigger: 'blur' },
+    {
+      validator: (rule: any, value: any, callback: any) => {
+        if (value === null || value === undefined || value === '') {
+          callback(new Error('请输入每零件单位有多少个开票单位'))
+        } else if (value <= 0) {
+          callback(new Error('数量必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur',
+    },
+  ],
+}
 const handleShowModify = async (row: any) => {
   if (route.query.tab === 'view') {
     await fetchPurchaseComponentCustomInfo(row)
@@ -1872,13 +1925,21 @@ const showModify = (row: any) => {
 }
 const handleConfirmModify = async () => {
   try {
+    // 表单验证
+    await modifyFormRef.value.validate()
+
     const { data } = await updatePurchaseComponentCustomInfo({ ...modifyForm })
     if (data) {
       $baseMessage('修改零件报关信息成功！', 'success')
       modifyVisible.value = false
     }
-  } catch (error) {
-    $baseMessage('修改零件报关信息失败！', 'error')
+  } catch (error: any) {
+    if (error.errors) {
+      // 表单验证失败
+      $baseMessage('请检查表单输入', 'error')
+    } else {
+      $baseMessage('修改零件报关信息失败！', 'error')
+    }
   }
 }
 const createPoLoading = ref<boolean>(false)

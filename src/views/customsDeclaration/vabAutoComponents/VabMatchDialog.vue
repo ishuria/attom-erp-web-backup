@@ -573,7 +573,7 @@ const filteredMatchList = computed(() => {
   if (displaySite.value && _siteName.value) {
     list = list.filter((item: any) => item.siteName === _siteName.value)
   }
-  // 报关过滤：隐藏不报关(customsDeclarationStatus=1)
+  // 报关过滤：隐藏不报关(customsDeclarationStatus=1=不报关)
   if (displayCustoms.value) {
     // 先按 mId 分组，判断是否整组都是不报关
     const groupMap = new Map<number, any[]>()
@@ -591,7 +591,11 @@ const filteredMatchList = computed(() => {
       } else {
         // 否则，过滤掉不报关的，保留报关项
         items.forEach((x: any) => {
-          if (Number(x.customsDeclarationStatus) !== 1) result.push(x)
+          const status = x.customsDeclarationStatus
+          // customsDeclarationStatus 为 null/undefined 或不为 1 的都视为报关
+          if (status === null || status === undefined || Number(status) !== 1) {
+            result.push(x)
+          }
         })
       }
     })
