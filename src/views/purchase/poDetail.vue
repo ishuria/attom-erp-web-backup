@@ -1575,7 +1575,27 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="订单号" min-width="100" prop="orderNo" />
+          <el-table-column align="center" label="订单号" min-width="100" prop="orderNo">
+            <template #default="{ row }">
+              <div class="order-no-container">
+                <el-tooltip content=" " effect="dark" placement="top">
+                  <template #content>
+                    <div class="custom-tooltip">{{ removeHtmlTags(row.orderNo) }}</div>
+                  </template>
+                  <div class="multi-line-ellipsis">{{ removeHtmlTags(row.orderNo) }}</div>
+                </el-tooltip>
+                <el-button
+                  v-if="row.orderNo"
+                  circle
+                  class="copy-btn"
+                  :icon="CopyDocument"
+                  size="small"
+                  type="primary"
+                  @click.stop="handleClip(row.orderNo)"
+                />
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="零件采购注意事项" min-width="200" prop="purchaseMatters">
             <template #default="{ row }">
               <el-tooltip content=" " effect="dark" placement="top">

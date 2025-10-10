@@ -176,7 +176,7 @@
         </monthly-assessment-table>
       </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
-        <monthly-assessment-table :list="listAdd" title="考核数加回">
+        <monthly-assessment-table :list="listAdd" title="考核数调整">
           <template #select>
             <el-select v-model="selectAssessmentPlusMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyPlusAssessment">
               <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
@@ -188,7 +188,7 @@
         <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
           <template #select>
             <el-select v-model="selectNewProductMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
-              <el-option v-for="item in newProductMonthList" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
             </el-select>
           </template>
         </rank>
@@ -250,7 +250,7 @@
         <job-level-commission-table :list="jobLevelCommissionList">
           <template #select>
             <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
-              <el-option v-for="item in newProductMonthList" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
             </el-select>
           </template>
         </job-level-commission-table>
@@ -286,6 +286,7 @@ import { colorList } from '../storeOperations/constantOption'
 import {
   getFrontPageAdjustDetailMonth,
   getFrontPageAssessmentData,
+  getFrontPageBillingMonth,
   getFrontPageBonus,
   getFrontPageDestroyValue,
   getFrontPageDestroyValueDetail,
@@ -812,6 +813,14 @@ const fetchAdjustDetailMonthList = async () => {
     selectAssessmentMinusMonth.value = defaultMonth
   }
 }
+const fetchBillingMonthList = async () => {
+  const { data } = await getFrontPageBillingMonth()
+  historyMonthList.value = data
+  selectAchievedMonth.value = data[0]
+  selectFinishMonth.value = data[0]
+  selectNewProductMonth.value = data[0]
+  selectJobLevelMonth.value = data[0]
+}
 const fetchRankOverAchieved = async () => {
   const { data } = await getFrontPageRankOverAchieved({ month: selectAchievedMonth.value! })
   rank1List.value = data
@@ -847,7 +856,8 @@ onBeforeMount(async () => {
   }
 
   if (ableProductManagerViewCard) {
-    await fetchHistoryMonthList()
+    // await fetchHistoryMonthList()
+    await fetchBillingMonthList()
     await fetchAdjustDetailMonthList()
     fetchUserList()
     fetchRankNewProductOneYearCommission()

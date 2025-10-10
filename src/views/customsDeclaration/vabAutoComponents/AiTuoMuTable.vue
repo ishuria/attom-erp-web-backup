@@ -7,6 +7,18 @@
           <el-button type="primary" @click="$emit('import')">发票导入</el-button>
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
         </template>
+        <div class="summary-info">
+          <el-space :size="16" style="align-items: center">
+            <el-statistic class="compact-statistic" title="报关数量" :value="totalCustomsDeclarationCount" />
+            <el-divider direction="vertical" style="height: 34px" />
+            <el-statistic
+              class="compact-statistic"
+              :formatter="(val: number) => val.toFixed(2)"
+              title="总含税价"
+              :value="totalTaxIncludedPrice"
+            />
+          </el-space>
+        </div>
       </vab-query-form-left-panel>
 
       <vab-query-form-right-panel :span="4">
@@ -191,6 +203,20 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
   selectRowsData.value = value
   emit('obtain-id-list', selectRowsData.value)
 }
+const totalCustomsDeclarationCount = computed<number>(() => {
+  return selectRowsData.value.reduce((total: number, item: IAiTuoMuItem) => {
+    const count = Number(item.customsDeclarationCount) || 0
+    return total + count // 累加每个 item.customsDeclarationCount
+  }, 0) // 初始值为 0
+})
+// 总重
+const totalTaxIncludedPrice = computed<number>(() => {
+  const total = selectRowsData.value.reduce((sum: number, item: IAiTuoMuItem) => {
+    const price = Number(item.taxIncludedPrice) || 0
+    return sum + price
+  }, 0)
+  return Number(total)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -235,6 +261,22 @@ const setSelectRows = (value: IAiTuoMuItem[]) => {
           padding-left: 0;
         }
       }
+    }
+  }
+}
+/* 统计样式 */
+.summary-info {
+  margin: 0px 10px calc(var(--el-margin) / 2) 15px;
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
     }
   }
 }

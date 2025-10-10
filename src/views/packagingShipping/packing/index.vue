@@ -36,6 +36,8 @@
         <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_ERROR] }" type="primary" @click="showUpdateError">
           误差
         </el-button>
+        <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
+
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select
           v-model="printer"
@@ -583,6 +585,8 @@
     <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
     <!-- 查看订货总数 -->
     <vab-view-order-count-table v-model="viewOrderVisible" :list="viewOrderList" :sku="_sku" />
+    <!-- 发货数检查 -->
+    <vab-shipment-quantity-inspection v-model="quantityCheckVisible" />
   </div>
 </template>
 
@@ -635,6 +639,11 @@ defineOptions({
   name: 'Packing',
 })
 
+const quantityCheckVisible = ref<boolean>(false)
+// 打开发货数检查
+const showQuantityCheck = () => {
+  quantityCheckVisible.value = true
+}
 // 订货总数查看展示
 const viewOrderVisible = ref<boolean>(false)
 const columns = ref<any>([])

@@ -196,8 +196,8 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <vab-dialog v-model="viewVisible" title="查看" width="40%" @open="handleDialogOpened">
-      <div ref="chartContainer" style="width: 100%; height: 400px"></div>
+    <vab-dialog v-model="viewVisible" title="查看" width="95%" @open="handleDialogOpened">
+      <div ref="chartContainer" style="width: 100%; height: 600px"></div>
       <template #footer></template>
     </vab-dialog>
     <!-- 添加季节系数 -->
@@ -257,15 +257,20 @@ import * as echarts from 'echarts'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { months } from '../constantOption'
 import {
   addSeasonalCoefficient,
   delSeasonalCoefficient,
+  getSeasonalCoefficientDailyList,
   getSeasonalCoefficientList,
   getSeasonalCoefficientSiteList,
   updateSeasonalCoefficient,
 } from '/@/api/devlocal/seasonalCoefficient'
-import type { IGetSeasonalCoefficientList, IGetSeasonalCoefficientListReq, ISiteList } from '/@/type/storeOperation/seasonalCoefficientType'
+import type {
+  IDailySeasonalCoefficient,
+  IGetSeasonalCoefficientList,
+  IGetSeasonalCoefficientListReq,
+  ISiteList,
+} from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -291,6 +296,8 @@ const list = ref<IGetSeasonalCoefficientList[]>([])
 let copyRow: any
 let actualData: (number | undefined)[] = []
 let referenceData: (number | undefined)[] = []
+let dailyCoefficientData: (number | undefined)[] = []
+const allDailyData = ref<IDailySeasonalCoefficient[]>([])
 const addVisible = ref<boolean>(false)
 const form = reactive<any>({})
 const formRef = ref<FormInstance>()
@@ -498,80 +505,137 @@ const handleDialogOpened = () => {
         }
       })
       chartObserver.observe(chartContainer.value)
-      initChart()
       // option.value.series[0].data = actualData
       // option.value.series[1].data = referenceData
       // updateChart()
     }
   })
 }
-const viewChart = (row: IGetSeasonalCoefficientList) => {
+const viewChart = async (row: IGetSeasonalCoefficientList) => {
   viewVisible.value = true
-  actualData = [
-    row.janActual,
-    row.febActual,
-    row.marActual,
-    row.aprActual,
-    row.mayActual,
-    row.junActual,
-    row.julActual,
-    row.augActual,
-    row.sepActual,
-    row.octActual,
-    row.novActual,
-    row.decActual,
-  ]
-  referenceData = [
-    row.janReference,
-    row.febReference,
-    row.marReference,
-    row.aprReference,
-    row.mayReference,
-    row.junReference,
-    row.julReference,
-    row.augReference,
-    row.sepReference,
-    row.octReference,
-    row.novReference,
-    row.decReference,
-  ]
+
+  try {
+    // 获取每天的季节系数数据
+    const { data } = await getSeasonalCoefficientDailyList({ id: row.id, siteId: queryForm.siteId })
+
+    // 按天排序并生成图表数据
+    const sortedData = data.sort((a: any, b: any) => {
+      if (a.month !== b.month) return a.month - b.month
+      return a.day - b.day
+    })
+
+    // 保存所有数据
+    allDailyData.value = sortedData
+
+    // 保存原始行数据用于获取参考值
+    copyRow = row
+
+    // 直接显示全年数据
+    updateChartForAllData()
+  } catch (error) {
+    console.error('获取每日季节系数数据失败:', error)
+    $baseMessage('获取数据失败', 'error')
+  }
 }
-// const updateChart = () => {
-//   chartInstance?.setOption(option.value, true)
-// }
-const initChart = () => {
+
+// 更新图表配置为每日数据展示
+const updateChartForDailyData = (dayLabels: string[], title: string = '季节系数') => {
+  // 生成日期数据
+  const dateData: [number, number][] = []
+  const referenceDateData: [number, number][] = []
+  const dailyDateData: [number, number][] = []
+
+  allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
+    // 根据API返回的month和day生成正确的日期，添加小时避免重叠
+    const currentDate = new Date(2025, item.month - 1, item.day, 12, 0, 0)
+    const timestamp = currentDate.getTime()
+
+    dateData.push([timestamp, getMonthlyActual(item.month)])
+    referenceDateData.push([timestamp, getMonthlyReference(item.month)])
+    dailyDateData.push([timestamp, item.actual])
+  })
+
   option.value = {
     legend: {
-      left: '40%',
-      top: 0,
+      top: 40,
     },
     tooltip: {
       trigger: 'axis',
-      confine: true,
+      position: function (pt: any) {
+        return [pt[0], '10%']
+      },
+      textStyle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+      },
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: '#999',
+        },
+        label: {
+          formatter: function (params: any) {
+            const date = new Date(params.value)
+            const month = date.getMonth() + 1
+            const day = date.getDate()
+            return `${month}月${day}日`
+          },
+        },
+      },
+      formatter: (params: any) => {
+        if (params && params.length > 0) {
+          const date = new Date(params[0].data[0])
+          const month = date.getMonth() + 1
+          const day = date.getDate()
+
+          let result = `${month}月${day}日<br/>`
+
+          // 只显示可见的数据系列
+          params.forEach((param: any) => {
+            if (param.visible !== false) {
+              result += `${param.seriesName}: ${param.data[1]}<br/>`
+            }
+          })
+
+          return result
+        }
+        return ''
+      },
     },
+
     grid: {
-      top: 50,
-      bottom: 30,
-      left: 50,
-      right: 50,
+      top: 90,
+      bottom: 80,
+      left: 60,
+      right: 60,
       containLabel: true,
     },
     xAxis: {
-      type: 'category',
-      data: months.map((item) => item.label),
-      axisTick: {
-        alignWithLabel: true,
-      },
+      type: 'time',
+      boundaryGap: false,
       axisLine: {
         lineStyle: {
           color: '#999',
         },
       },
+      axisLabel: {
+        formatter: function (value: any) {
+          const date = new Date(value)
+          const month = date.getMonth() + 1
+          const day = date.getDate()
+          if (day === 1) {
+            return `${month}月${day}日`
+          }
+          return ''
+        },
+        interval: 0, // 强制显示所有标签
+        showMaxLabel: true, // 显示最大值标签
+        showMinLabel: true, // 显示最小值标签
+      },
     },
     yAxis: {
       name: '系数',
       type: 'value',
-      // min: 'dataMin', // 自动以数据中的最小值为起点
       boundaryGap: [0, 0.1],
       axisLine: {
         show: true,
@@ -580,30 +644,140 @@ const initChart = () => {
         },
       },
     },
+    // 数据缩放配置
+    dataZoom: [
+      // 内部缩放：鼠标滚轮缩放，拖拽平移
+      {
+        type: 'inside', // 内部缩放类型
+        start: 0, // 初始显示范围开始位置（0%）
+        end: 100, // 初始显示范围结束位置（100%）
+      },
+      // 滑块缩放：底部滑块控制显示范围
+      {
+        type: 'slider', // 滑块类型
+        start: 0, // 滑块开始位置（0%）
+        end: 100, // 滑块结束位置（100%）
+        height: 40, // 滑块高度
+        bottom: 10, // 距离底部距离
+        // 滑块标签格式化：显示为"几月几日"
+        labelFormatter: function (value: any) {
+          const date = new Date(value)
+          const month = date.getMonth() + 1
+          const day = date.getDate()
+          return `${month}月${day}日`
+        },
+      },
+    ],
     series: [
       {
         name: '实际值',
         type: 'line',
-        data: actualData,
+        data: dateData,
         itemStyle: {
-          color: '#52bfff',
+          color: '#1890ff',
         },
         smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 2,
+        },
       },
       {
         name: '参考值',
         type: 'line',
-        data: referenceData,
+        data: referenceDateData,
         itemStyle: {
-          color: '#ff8fa5',
+          color: '#f5222d',
         },
         smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 2,
+        },
+      },
+      {
+        name: '每日系数',
+        type: 'line',
+        data: dailyDateData,
+        itemStyle: {
+          color: '#52c41a',
+        },
+        smooth: true,
+        symbol: 'none',
+        lineStyle: {
+          width: 2,
+        },
       },
     ],
   }
 
-  chartInstance?.setOption(option.value)
+  chartInstance?.setOption(option.value, true)
 }
+
+// 更新图表显示全年数据
+const updateChartForAllData = () => {
+  const dayLabels: string[] = []
+  actualData = []
+  referenceData = []
+  dailyCoefficientData = []
+
+  allDailyData.value.forEach((item: IDailySeasonalCoefficient, index: number) => {
+    dayLabels.push((index + 1).toString())
+    // 获取该月对应的实际值
+    actualData.push(getMonthlyActual(item.month))
+    // 获取该月对应的参考值
+    referenceData.push(getMonthlyReference(item.month))
+    // 添加每天的季节系数
+    dailyCoefficientData.push(item.actual)
+  })
+
+  updateChartForDailyData(dayLabels, '全年数据')
+}
+
+// 获取指定月份的参考值
+const getMonthlyReference = (month: number): number => {
+  if (!copyRow) return 0
+
+  const referenceMap: Record<number, number> = {
+    1: copyRow.janReference || 0,
+    2: copyRow.febReference || 0,
+    3: copyRow.marReference || 0,
+    4: copyRow.aprReference || 0,
+    5: copyRow.mayReference || 0,
+    6: copyRow.junReference || 0,
+    7: copyRow.julReference || 0,
+    8: copyRow.augReference || 0,
+    9: copyRow.sepReference || 0,
+    10: copyRow.octReference || 0,
+    11: copyRow.novReference || 0,
+    12: copyRow.decReference || 0,
+  }
+
+  return referenceMap[month] || 0
+}
+const getMonthlyActual = (month: number): number => {
+  if (!copyRow) return 0
+
+  const actualMap: Record<number, number> = {
+    1: copyRow.janActual || 0,
+    2: copyRow.febActual || 0,
+    3: copyRow.marActual || 0,
+    4: copyRow.aprActual || 0,
+    5: copyRow.mayActual || 0,
+    6: copyRow.junActual || 0,
+    7: copyRow.julActual || 0,
+    8: copyRow.augActual || 0,
+    9: copyRow.sepActual || 0,
+    10: copyRow.octActual || 0,
+    11: copyRow.novActual || 0,
+    12: copyRow.decActual || 0,
+  }
+
+  return actualMap[month] || 0
+}
+// const updateChart = () => {
+//   chartInstance?.setOption(option.value, true)
+// }
 const handleDel = async (row: IGetSeasonalCoefficientList) => {
   $baseConfirm('确定要删除季节系数吗？', null, async () => {
     const { data } = await delSeasonalCoefficient({
