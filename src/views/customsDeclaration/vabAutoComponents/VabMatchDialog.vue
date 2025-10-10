@@ -314,11 +314,13 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="230">
+          <el-table-column fixed="right" label="操作" width="330">
             <template #default="{ row }">
               <el-space alignment="center" :size="10">
+                <!-- <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link> -->
+                <el-link underline="never" @click="handleInsertAllBg(row)">填入(报关)</el-link>
+                <el-link type="warning" underline="never" @click="handleInsertAllNotBg(row)">填入(不报关)</el-link>
                 <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
-                <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link>
                 <el-link type="danger" underline="never" @click="handleClear(row)">清空</el-link>
               </el-space>
             </template>
@@ -1183,8 +1185,8 @@ const handleUpdateComponentCustomCount = async (row: IGetMatchPackageList) => {
     }
   }
 }
-// 填入全部
-const handleInsertAll = async (row: IGetMatchPackageList) => {
+// 填入(报关)
+const handleInsertAllBg = async (row: IGetMatchPackageList) => {
   // if (row.goodCount !== null && row.goodCount > _encasementCount.value) {
   //   $baseMessage("打包完成数(好)的数量不能大于剩余未匹配数量，无法填入全部！", 'error')
   //   return
@@ -1196,9 +1198,10 @@ const handleInsertAll = async (row: IGetMatchPackageList) => {
       poId: row.poId,
       sku: row.sku,
       mId: row.mId,
+      type: 0,
     })
     if (data) {
-      $baseMessage('填入全部成功', 'success')
+      $baseMessage('填入(报关)成功', 'success')
       await fetchMatchData()
     }
     match2ListLoading.value = false
@@ -1207,6 +1210,29 @@ const handleInsertAll = async (row: IGetMatchPackageList) => {
     console.error(error)
   }
 }
+
+// 填入(不报关)
+const handleInsertAllNotBg = async (row: IGetMatchPackageList) => {
+  try {
+    match2ListLoading.value = true
+    const { data } = await insertAllMatchComponent({
+      id: _id.value,
+      poId: row.poId,
+      sku: row.sku,
+      mId: row.mId,
+      type: 1,
+    })
+    if (data) {
+      $baseMessage('填入(不报关)成功', 'success')
+      await fetchMatchData()
+    }
+    match2ListLoading.value = false
+  } catch (error) {
+    match2ListLoading.value = false
+    console.error(error)
+  }
+}
+
 // 查看匹配的清空
 const handleCheckClear = async (row: IGetCheckMatchList) => {
   $baseConfirm('确定要清空吗?', null, async () => {
