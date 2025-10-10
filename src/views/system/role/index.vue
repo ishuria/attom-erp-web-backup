@@ -41,7 +41,16 @@
           <el-tag v-if="row.status == 1" type="warning">禁用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="激励政策" prop="incentivePolicy" show-overflow-tooltip />
+      <el-table-column label="激励政策" prop="incentivePolicy">
+        <template #default="{ row }">
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ removeHtmlTags(row.incentivePolicy) }}</div>
+            </template>
+            <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.incentivePolicy) }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column v-permissions="RolePermission.operationColPermission()" label="操作" width="200">
         <template #default="{ row }">
           <el-button v-permissions="{ permission: [RolePermission.EDIT] }" text type="primary" @click="handleEdit(row)">编辑</el-button>
@@ -61,11 +70,14 @@
     />
     <role-edit ref="editRef" @fetch-data="fetchData" />
     <!-- 激励政策弹窗 -->
-    <vab-remark-dialog
-      v-model="incentivePolicyVisible"
-      :remark="incentivePolicy"
-      title="修改激励政策"
-      @update:remark="handleUpdateIncentivePolicy"
+    <wang-editor
+      :classify="classify"
+      :content="editorContent"
+      :progress-id="detailId"
+      :title="wangEditorTitle"
+      :wang-editor-visible="wangEditorVisible"
+      @click-boolean="clickEditorCancel"
+      @click-child="clickEditorConfirm"
     />
   </div>
 </template>
@@ -74,17 +86,39 @@
 import { Delete, Plus, Refresh, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { CSSProperties } from 'vue'
+import { removeHtmlTags } from '~/src/utils/tableColum'
 import { doDelete, doDeleteList, getAllList, updateIncentivePolicy } from '/@/api/devlocal/role'
 import RolePermission from '/@/permissions/role'
-import type { IRole, IRoleQuery } from '/@/type/role/roleType'
+import type { IRoleQuery, IRoleRes } from '/@/type/role/roleType'
+import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
   name: 'Role',
 })
 
+// 弹出框的标题
+const wangEditorTitle = ref<string>('')
+const detailId = ref<number>(-1)
+// 分类
+const classify = ref<string>('')
+const wangEditorVisible = ref<boolean>(false)
+const editorContent = ref<string>('')
+
+const clickEditorConfirm = async (val: string) => {
+  // 调用原来的更新方法
+  await handleUpdateIncentivePolicy(val)
+  wangEditorVisible.value = false
+}
+/**
+ * 当点击取消，确认时，子组件传递给父组件 false
+ */
+const clickEditorCancel = (val: any) => {
+  wangEditorVisible.value = val
+}
+
 const tableRef = ref<TableInstance>()
 const editRef = ref<any>(null)
-const list = ref<IRole[]>([])
+const list = ref<IRoleRes[]>([])
 const listLoading = ref<boolean>(true)
 const incentivePolicyVisible = ref<boolean>(false)
 const incentivePolicy = ref<string>('')
@@ -98,7 +132,11 @@ const queryForm = reactive<IRoleQuery>({
 const _row = ref<any>(null)
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
   if (column.label === '激励政策') {
-    incentivePolicyVisible.value = true
+    wangEditorVisible.value = true
+    wangEditorTitle.value = '修改激励政策'
+    classify.value = '激励政策'
+    editorContent.value = row.incentivePolicy
+    detailId.value = row.roleId
     incentivePolicy.value = row.incentivePolicy
     _row.value = row
     return
@@ -162,7 +200,6 @@ const handleCurrentChange = (value: number) => {
 const handleUpdateIncentivePolicy = async (val: string) => {
   const { data } = await updateIncentivePolicy({ id: Number(_row.value.roleId), incentivePolicy: val })
   if (data) {
-    $baseMessage('修改激励政策成功！', 'success')
     _row.value.incentivePolicy = val
     incentivePolicyVisible.value = false
   } else {

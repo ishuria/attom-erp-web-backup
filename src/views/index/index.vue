@@ -255,6 +255,10 @@
           </template>
         </job-level-commission-table>
       </el-col>
+      <!-- 激励政策 -->
+      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+        <incentive-policy-card />
+      </el-col>
     </el-row>
 
     <history-assessment-records

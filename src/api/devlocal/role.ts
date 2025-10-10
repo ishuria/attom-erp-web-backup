@@ -2,13 +2,20 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import type { IRoleAddOrUpdateReq, IRoleDeleteReq, IRoleMenuReq, IRoleQuery, IRoleUpdateIncentivePolicyReq } from '/@/type/role/roleType'
+import type {
+  IRoleAddOrUpdateReq,
+  IRoleDeleteReq,
+  IRoleMenuReq,
+  IRoleQuery,
+  IRoleRes,
+  IRoleUpdateIncentivePolicyReq,
+} from '/@/type/role/roleType'
 
 /**
  * 角色列表
  * @returns
  */
-export function getAllList(params: IRoleQuery) {
+export function getAllList(params: IRoleQuery): Promise<{ data: { list: IRoleRes[]; total: number } }> {
   return request({
     url: `${BASE_API}/role/getAllList`,
     method: 'get',

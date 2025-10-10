@@ -216,7 +216,7 @@
           <el-checkbox v-model="row.coveredWeightStatus" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleWeightStatusChange(row)"/>
         </template>
       </el-table-column> -->
-      <el-table-column label="品牌" min-width="100" prop="brank">
+      <el-table-column label="品牌" prop="brank" :width="flexColumnWidth(list, '品牌', 'brank', 30)">
         <template #default="{ row }">
           <div class="none">
             <el-input v-model="row.brank" @blur="clickCancel($event, row)" @keypress.enter="clickCancel($event, row)" />

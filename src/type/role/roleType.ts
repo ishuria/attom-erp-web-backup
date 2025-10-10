@@ -49,6 +49,16 @@ export interface IRoleAddOrUpdateReq {
   status: string
 }
 
+export interface IRoleRes {
+  createTime: string
+  roleId: number
+  roleCode: string
+  roleName: string
+  roleNameEn: string
+  status: string
+  incentivePolicy: string
+}
+
 export interface IRoleMenuReq {
   // 角色code
   roleCode: string

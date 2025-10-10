@@ -126,6 +126,7 @@ declare module 'vue' {
     ImageBasicUsage: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageBasicUsage.vue')['default']
     ImageLoadFailed: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImageLoadFailed.vue')['default']
     ImagePlaceholder: typeof import('./../../../src/views/vab/image/vabAutoComponents/ImagePlaceholder.vue')['default']
+    IncentivePolicyCard: typeof import('./../../../src/views/index/vabAutoComponents/IncentivePolicyCard.vue')['default']
     InProgressProjectsBar: typeof import('./../../../src/views/index/vabAutoComponents/InProgressProjectsBar.vue')['default']
     InventoryProductsTotalValue: typeof import('./../../../src/views/index/vabAutoComponents/InventoryProductsTotalValue.vue')['default']
     JobLevelCommissionTable: typeof import('./../../../src/views/index/vabAutoComponents/JobLevelCommissionTable.vue')['default']
@@ -316,6 +317,7 @@ declare module 'vue' {
     VabViewOrderCountTable: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewOrderCountTable.vue')['default']
     VabViewPackingInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewPackingInspectionReport.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
+    WangEditorViewer: typeof import('./../../../src/views/index/vabAutoComponents/WangEditorViewer.vue')['default']
     WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']
     WorkbenchNotice: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchNotice.vue')['default']
   }

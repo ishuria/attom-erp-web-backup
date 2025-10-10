@@ -190,6 +190,9 @@
         <template v-else-if="item.label === '箱数展示'" #default="{ row }">
           {{ row.numberOfBoxes }}
         </template>
+        <template v-else-if="item.label === '产品总数'" #default="{ row }">
+          <el-link type="primary" underline="always">{{ row.productTotalNumber }}</el-link>
+        </template>
       </el-table-column>
       <el-table-column
         v-permissions="{
