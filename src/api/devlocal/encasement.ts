@@ -13,6 +13,7 @@ import type {
   IEncasementIds,
   IFilterShipmentFbaList,
   IFinishWalmartShipmentReq,
+  IGenerateAmazonTestTemplateFileReq,
   IGenerateTemplateFile1Req,
   IGetChannelListRes,
   IGetChannelSiteList,
@@ -242,6 +243,18 @@ export const uploadGenerateTemplateFile2 = (data: FormData): Promise<IStringRes>
     data,
   })
 }
+
+/**
+ * @description 发货亚马逊生成测试模板文件
+ */
+export const generateAmazonSendShipmentFile = (data: IGenerateAmazonTestTemplateFileReq): Promise<IStringRes> => {
+  return request({
+    url: `${BASE_API}/encasement/generate/amazon/file`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 发货生成装箱表格文件
  */

@@ -326,6 +326,13 @@ export interface IGenerateTemplateFile1Req {
 }
 
 /**
+ * @description 发货亚马逊生成测试模板文件
+ */
+export interface IGenerateAmazonTestTemplateFileReq {
+  site: number
+}
+
+/**
  * @description 发货完成提交
  */
 export interface IConfirmEncasementShipmentsReq {

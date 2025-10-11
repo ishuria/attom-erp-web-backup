@@ -37,6 +37,7 @@
           误差
         </el-button>
         <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
+        <el-button type="primary" @click="sendShipmentCheckVisible = true">生成发货测试文件1</el-button>
 
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select
@@ -610,6 +611,30 @@
     <vab-view-order-count-table v-model="viewOrderVisible" :list="viewOrderList" :sku="_sku" />
     <!-- 发货数检查 -->
     <vab-shipment-quantity-inspection v-model="quantityCheckVisible" />
+
+    <!-- 发货亚马逊测试文件生成-->
+    <vab-dialog
+      v-model="sendShipmentCheckVisible"
+      class="dialog"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :draggable="false"
+      title="发货（亚马逊）文件生成"
+      width="15%"
+    >
+      <el-form ref="shipmentAmazonFormRef" label-position="left" :model="sendShipmentAmazonForm">
+        <el-form-item label="发往站点" prop="site">
+          <el-select v-model="sendShipmentAmazonForm.site" clearable placeholder="请选择站点">
+            <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div style="text-align: right">
+          <el-button :loading="sendShipmentLoading" type="primary" @click="generateTestSendShipmentFile">确定</el-button>
+        </div>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -628,6 +653,7 @@ import {
   delEncasement,
   doLockEncasement,
   finishWalmartShipment,
+  generateAmazonSendShipmentFile,
   generateTemplateFile1,
   generateTemplateFile3,
   generateWalmartShipment,
@@ -673,6 +699,29 @@ const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((item: any) => item.checked)
 })
+
+const sendShipmentCheckVisible = ref<boolean>(false)
+const sendShipmentLoading = ref<boolean>(false)
+const sendShipmentAmazonForm = ref<any>({})
+const generateTestSendShipmentFile = async () => {
+  sendShipmentLoading.value = true
+  const { data } = await generateAmazonSendShipmentFile({
+    site: sendShipmentAmazonForm.value.site,
+  })
+  if (data) {
+    await downloadFile('/encasement/download', {
+      fileName: data,
+    })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+  sendShipmentCheckVisible.value = false
+  sendShipmentLoading.value = false
+}
 // 计算某些列的自适应宽度
 const handleCalculateWidth = (item: any) => {
   switch (item.label) {
