@@ -124,7 +124,17 @@
             <template #default="{ row }">{{ row.remainingDays }} / {{ row.commissionDay }}</template>
           </el-table-column>
           <el-table-column label="销售额/差额" min-width="110" prop="salesDifference">
-            <template #default="{ row }">{{ row.currencySymbol }}{{ row.salesDifference }}</template>
+            <template #default="scope">
+              <el-popover v-if="scope.row.mold === '老品优化'" effect="dark" placement="top" trigger="hover" width="auto">
+                <template #default>
+                  <div>
+                    {{ scope.row.currencySymbol }}{{ scope.row.salesDifference }} - {{ scope.row.currencySymbol
+                    }}{{ scope.row.salesDiffPrice }}
+                  </div>
+                </template>
+                <template #reference>{{ scope.row.currencySymbol }}{{ scope.row.salesDifference }}</template>
+              </el-popover>
+            </template>
           </el-table-column>
           <el-table-column label="汇率" min-width="100" prop="avgRate" />
           <el-table-column label="提成比例" min-width="120" prop="cooperationProportion">
