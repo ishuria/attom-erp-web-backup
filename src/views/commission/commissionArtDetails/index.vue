@@ -123,7 +123,7 @@
           <el-table-column label="剩余提成天数" min-width="130">
             <template #default="{ row }">{{ row.remainingDays }} / {{ row.commissionDay }}</template>
           </el-table-column>
-          <el-table-column label="销售额/差额" min-width="110" prop="salesDifference">
+          <el-table-column label="销售额/差额" min-width="110">
             <template #default="scope">
               <el-popover v-if="scope.row.mold === '老品优化'" effect="dark" placement="top" trigger="hover" width="auto">
                 <template #default>
@@ -132,8 +132,9 @@
                     }}{{ scope.row.salesDiffPrice }}
                   </div>
                 </template>
-                <template #reference>{{ scope.row.currencySymbol }}{{ scope.row.salesDifference }}</template>
+                <template #reference>{{ scope.row.currencySymbol }}{{ scope.row.salePrice }}</template>
               </el-popover>
+              <div v-else>{{ scope.row.currencySymbol }}{{ scope.row.salesDifference }}</div>
             </template>
           </el-table-column>
           <el-table-column label="汇率" min-width="100" prop="avgRate" />
