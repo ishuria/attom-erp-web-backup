@@ -13,13 +13,13 @@
         </el-button>
         <!-- <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button> -->
         <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
-        <el-button
+        <!-- <el-button
           v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE_PLAN] }"
           type="primary"
           @click="showModifyShippingPlan"
         >
           修改发货计划
-        </el-button>
+        </el-button> -->
         <el-button
           v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPLOAD_PDF] }"
           type="primary"
@@ -49,6 +49,21 @@
         >
           <el-option v-for="item in printerOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
+
+        <!-- 发货计划日期区域 -->
+        <div v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE_PLAN] }" class="shipping-plan-section">
+          <span class="shipping-plan-label">发货计划日期：</span>
+          <el-date-picker
+            v-model="shippingPlanForm.date"
+            class="shipping-plan-date-picker"
+            clearable
+            placeholder="请选择日期"
+            type="date"
+            value-format="YYYY-MM-DD"
+          />
+          <el-button class="shipping-plan-button" type="success" @click="confirmShippingPlan">修改</el-button>
+        </div>
+
         <div class="summary-info">
           <el-space :size="16" style="align-items: center">
             <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxNumber" />
@@ -144,9 +159,17 @@
         :prop="item.prop"
         :sortable="item.sortable ? 'custom' : false"
       >
+        <template v-if="item.label === '多选'" #header>
+          <el-checkbox :indeterminate="isIndeterminate" :model-value="isAllSelected" @change="handleSelectAll" />
+        </template>
+
         <template v-if="item.label === '发货计划'" #default="{ row }">
           {{ row.shipmentPlanDate ? row.shipmentPlanDate.split(' ')[0] : '' }}
         </template>
+        <template v-else-if="item.label === '多选'" #default="{ row }">
+          <el-checkbox :model-value="isRowSelected(row)" @change="handleBackendCheckboxChange(row, $event)" />
+        </template>
+
         <template v-else-if="item.label === '装箱日期'" #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
         </template>
@@ -471,7 +494,7 @@
       </template>
     </vab-dialog>
     <!-- 修改发货计划 -->
-    <vab-dialog v-model="modifyPlanVisible" title="修改发货计划" width="20%" @close="closeShippingPlan">
+    <!-- <vab-dialog v-model="modifyPlanVisible" title="修改发货计划" width="20%" @close="closeShippingPlan">
       <el-form
         ref="shippingPlanFormRef"
         :model="shippingPlanForm"
@@ -486,7 +509,7 @@
         <el-button @click="closeShippingPlan">取消</el-button>
         <el-button type="primary" @click="confirmShippingPlan">确认</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
     <!-- 上传拆分 -->
     <vab-dialog v-model="uploadSplitVisible" title="上传拆分" top="10vh" width="25%" @close="closeUploadSplit">
       <el-form ref="uploadSplitFormRef" label-position="top" :model="uploadSplitForm" style="margin-right: 10px; margin-left: 10px">
@@ -1264,6 +1287,10 @@ const closeShippingPlan = () => {
 }
 // 确认修改发货计划
 const confirmShippingPlan = async () => {
+  if (selectRows.value.length === 0) {
+    $baseMessage('您未选中任何行', 'error')
+    return
+  }
   const encasementIds = selectRows.value.map((item: IEncasementList) => item.id).join(',')
   const { data } = await updateEncasementShipmentDate({
     encasementIds,
@@ -1357,6 +1384,56 @@ const setSelectRows = (value: IEncasementList[]) => {
 
   // 更新 selectRows 为去重后的数组
   selectRows.value = uniqueRows
+}
+
+// 检查行是否被选中（用于多选列的显示状态）
+const isRowSelected = (row: IEncasementList) => {
+  return selectRows.value.some((item: IEncasementList) => item.id === row.id)
+}
+
+// 处理多选列复选框变化
+const handleBackendCheckboxChange = (row: IEncasementList, checked: boolean | string | number) => {
+  const isChecked = Boolean(checked)
+  if (isChecked) {
+    // 如果选中，添加到selectRows中（如果不存在）
+    if (!isRowSelected(row)) {
+      selectRows.value.push(row)
+    }
+  } else {
+    // 如果取消选中，从selectRows中移除
+    selectRows.value = selectRows.value.filter((item: IEncasementList) => item.id !== row.id)
+  }
+}
+
+// 全选状态计算属性
+const isAllSelected = computed(() => {
+  if (list.value.length === 0) return false
+
+  // 获取去重后的list长度
+  const uniqueListLength = new Set(list.value.map((item) => item.id)).size
+  return selectRows.value.length === uniqueListLength
+})
+
+// 半选状态计算属性
+const isIndeterminate = computed(() => {
+  if (list.value.length === 0) return false
+
+  // 获取去重后的list长度
+  const uniqueListLength = new Set(list.value.map((item) => item.id)).size
+  return selectRows.value.length > 0 && selectRows.value.length < uniqueListLength
+})
+
+// 处理全选/全不选
+const handleSelectAll = (checked: boolean | string | number) => {
+  const isChecked = Boolean(checked)
+  if (isChecked) {
+    // 全选：将去重后的所有行添加到selectRows中
+    const uniqueList = Array.from(new Map(list.value.map((item) => [item.id, item])).values())
+    selectRows.value = uniqueList
+  } else {
+    // 全不选：清空selectRows
+    selectRows.value = []
+  }
 }
 // 货代渠道列表
 const channelList = ref<OptionType[]>([])
@@ -1630,6 +1707,52 @@ onBeforeMount(() => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+
+/* 发货计划区域样式 */
+.shipping-plan-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  margin: 0 10px calc(var(--el-margin) / 2) 0;
+  padding: 5px 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  height: 40px; /* 增加高度以容纳padding */
+
+  &:hover {
+    background: #f1f3f4;
+    border-color: #d0d7de;
+  }
+}
+
+.shipping-plan-label {
+  font-size: var(--el-font-size-base);
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+  padding: 0 8px 0 0px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid #e9ecef;
+}
+
+.shipping-plan-button {
+  margin-left: 0;
+  padding: 6px 12px;
+  height: 32px;
+  border-radius: 0 4px 4px 0;
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #67c23a;
+    transform: none;
+    box-shadow: none;
   }
 }
 

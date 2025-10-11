@@ -458,6 +458,9 @@
                   <el-dropdown-item @click="handleAddOtherSku(row)">
                     <el-link type="primary" underline="never">添加到其他SKU</el-link>
                   </el-dropdown-item>
+                  <el-dropdown-item @click="showPrices(row)">
+                    <el-link type="primary" underline="never">历史价格</el-link>
+                  </el-dropdown-item>
                   <el-dropdown-item @click="handleUpdateComponentName(row)">
                     <el-link type="primary" underline="never">修改零件名</el-link>
                   </el-dropdown-item>
@@ -706,6 +709,8 @@
         <el-button type="primary" @click="handleConfirmModify">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 历史价格 -->
+    <history-price-table v-model="historyPriceVisible" :list="historyPriceList" />
   </div>
 </template>
 
@@ -715,16 +720,7 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
-import {
-  ROLE_BOSS_CODE,
-  ROLE_INDUSTRIAL_DESIGN_CODE,
-  ROLE_LOGISTISCSPECIALIST_CODE,
-  ROLE_PRODUCTMANAGER_CODE,
-  ROLE_PRODUCTMANNAGERLEAD_CODE,
-  ROLE_PURCHASER_CODE,
-  ROLE_PURCHASINGASSISTANT_CODE,
-} from '~/src/const/role'
+import { getProductSkuDetailHistoryPriceList } from '~/src/api/devlocal/commission'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
   addProductComponentOtherSku,
@@ -757,9 +753,20 @@ import {
   uploadComponentImage,
   uploadSkuImage,
 } from '/@/api/devlocal/productInformation'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
+import {
+  ROLE_BOSS_CODE,
+  ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_LOGISTISCSPECIALIST_CODE,
+  ROLE_PRODUCTMANAGER_CODE,
+  ROLE_PRODUCTMANNAGERLEAD_CODE,
+  ROLE_PURCHASER_CODE,
+  ROLE_PURCHASINGASSISTANT_CODE,
+} from '/@/const/role'
 import SkuPermission from '/@/permissions/sku'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { IGetCostReductionHistoryPriceList } from '/@/type/commission/commissionType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -770,6 +777,16 @@ defineOptions({
   name: 'SkuDetailView',
 })
 
+const historyPriceVisible = ref<boolean>(false)
+const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
+const showPrices = async (row: any) => {
+  historyPriceVisible.value = true
+
+  const { data } = await getProductSkuDetailHistoryPriceList({ componentId: row.componentId, supplierId: row.defaultSuppliserId })
+  if (data) {
+    historyPriceList.value = data
+  }
+}
 // 获取供应商名称的辅助函数
 const getSupplierName = (row: any) => {
   if (!row.defaultSuppliserId || !row.suppliserList) return ''

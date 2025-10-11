@@ -155,8 +155,13 @@
           <!-- 空白占位，让销毁货值卡片独占一行 -->
         </el-col>
       </template>
-
-      <!-- 第二层 -->
+    </el-row>
+    <!-- 第二层 -->
+    <el-row v-if="ableProductManagerViewCard || true" class="row-spacing" :gutter="20">
+      <!-- 激励政策 - 放在第二行开头 -->
+      <el-col :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <incentive-policy-card />
+      </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="7" :md="24" :sm="24" :xl="7" :xs="24">
         <monthly-product-profit-table :list="profitList">
           <template #select>
@@ -184,30 +189,13 @@
           </template>
         </monthly-assessment-table>
       </el-col>
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
-          <template #select>
-            <el-select v-model="selectNewProductMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </rank>
-      </el-col>
-      <!-- 第三层 -->
+    </el-row>
+
+    <!-- 第三层
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <!-- <recommendation2 /> -->
-      </el-col>
-      <!-- 第四层 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-        <performance-history :list="historyList">
-          <template #select>
-            <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
-              <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-date-picker v-model="selectDate" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
-          </template>
-        </performance-history>
-      </el-col>
+      </el-col> -->
+    <!-- 第四层 -->
+    <el-row v-if="ableProductManagerViewCard || ableProductManagerLeadViewCard" class="row-spacing" :gutter="20">
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank1List" :my-name="myName" name="超额完成数" :show-medal="true" title="超额完成排行">
           <template #select>
@@ -232,7 +220,40 @@
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
       </el-col>
-      <!-- 第五层 -->
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+        <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
+          <template #select>
+            <el-select v-model="selectNewProductMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankNewProductCommission">
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </rank>
+      </el-col>
+      <!-- 职级提成 -->
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <job-level-commission-table :list="jobLevelCommissionList">
+          <template #select>
+            <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </job-level-commission-table>
+      </el-col>
+    </el-row>
+    <!-- 第五层 -->
+    <el-row v-if="ableProductManagerViewCard || ableViewTop30ProductSaleCard" class="row-spacing" :gutter="20">
+      <!-- 产品经理绩效历史 -->
+      <el-col v-if="ableProductManagerViewCard" :lg="10" :md="12" :sm="24" :xl="10" :xs="24">
+        <performance-history :list="historyList">
+          <template #select>
+            <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
+              <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+            <el-date-picker v-model="selectDate" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
+          </template>
+        </performance-history>
+      </el-col>
+      <!-- top30新品销售额 -->
       <el-col v-if="ableViewTop30ProductSaleCard" :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList">
           <!-- <template #select>
@@ -242,24 +263,14 @@
           </template> -->
         </top30-product-sale-table>
       </el-col>
-      <el-col v-if="ableBossViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+    </el-row>
+    <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
+      <el-col :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
       </el-col>
-      <!-- 第六层 -->
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
-        <job-level-commission-table :list="jobLevelCommissionList">
-          <template #select>
-            <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </job-level-commission-table>
-      </el-col>
-      <!-- 激励政策 -->
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <incentive-policy-card />
-      </el-col>
     </el-row>
+
+    <!-- 第六层 -->
 
     <history-assessment-records
       v-model="historyVisible"
@@ -927,6 +938,11 @@ onBeforeMount(async () => {
       }
     }
     margin-bottom: 20px;
+  }
+
+  // 行间距样式
+  .row-spacing {
+    margin-top: 20px;
   }
 }
 </style>

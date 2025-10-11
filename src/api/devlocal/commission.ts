@@ -392,3 +392,18 @@ export function getCostReductionHistoryPriceList(params: { id: number }): Promis
     params,
   })
 }
+/**
+ * 获取产品SKU详情-历史价格列表
+ * @param params
+ * @returns
+ */
+export function getProductSkuDetailHistoryPriceList(params: {
+  componentId: number
+  supplierId: number
+}): Promise<{ data: IGetCostReductionHistoryPriceList[] }> {
+  return request({
+    url: `${BASE_API}/sku/detail/history/price`,
+    method: 'get',
+    params,
+  })
+}

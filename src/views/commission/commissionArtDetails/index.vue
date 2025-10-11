@@ -105,7 +105,7 @@
           <el-table-column label="类型" min-width="110" prop="type" />
           <el-table-column label="奖金￥" min-width="100" prop="bonus">
             <template #default="{ row }">
-              {{ row.bonus ? '￥' + row.bonus : '' }}
+              {{ row.bonus !== null ? '￥' + row.bonus : '' }}
             </template>
           </el-table-column>
           <el-table-column label="站点分布" min-width="100" prop="">
@@ -274,12 +274,12 @@
           </el-table-column>
           <el-table-column label="奖金￥" min-width="100" prop="bonus">
             <template #default="{ row }">
-              {{ row.bonus ? '￥' + row.bonus : '' }}
+              {{ row.bonus !== null ? '￥' + row.bonus : '' }}
             </template>
           </el-table-column>
           <el-table-column label="SKU累计奖金￥" min-width="100" prop="accumulateBonus">
             <template #default="{ row }">
-              {{ row.accumulateBonus ? '￥' + row.accumulateBonus : '' }}
+              {{ row.accumulateBonus !== null ? '￥' + row.accumulateBonus : '' }}
             </template>
           </el-table-column>
           <el-table-column label="站点分布" min-width="100" prop="">

@@ -1,7 +1,7 @@
 <template>
   <div>
     <vab-dialog v-model="visible" title="历史价格" width="800px">
-      <div class="price-summary">
+      <div v-if="beforePrice || afterPrice" class="price-summary">
         <!-- 展示降本申请优化前和优化后价格 -->
         <div class="price-cards">
           <div class="price-card before-price">
@@ -56,8 +56,8 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
   list: IGetCostReductionHistoryPriceList[]
-  beforePrice: number
-  afterPrice: number
+  beforePrice?: number
+  afterPrice?: number
 }>()
 const visible = computed({
   get() {
