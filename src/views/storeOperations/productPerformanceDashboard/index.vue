@@ -409,7 +409,11 @@
                     <el-icon><question-filled /></el-icon>
                   </div>
                   <template #content>
-                    <div class="custom-tooltip">过去30天的FBA仓储费</div>
+                    <div class="custom-tooltip-new">
+                      过去30天的FBA仓储费
+                      <br />
+                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
+                    </div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1215,7 +1219,11 @@
                     <el-icon><question-filled /></el-icon>
                   </div>
                   <template #content>
-                    <div class="custom-tooltip">过去30天的FBA仓储费</div>
+                    <div class="custom-tooltip-new">
+                      过去30天的FBA仓储费
+                      <br />
+                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
+                    </div>
                   </template>
                 </el-tooltip>
               </span>
@@ -1837,7 +1845,11 @@
                     <el-icon><question-filled /></el-icon>
                   </div>
                   <template #content>
-                    <div class="custom-tooltip">过去30天的FBA仓储费</div>
+                    <div class="custom-tooltip-new">
+                      过去30天的FBA仓储费
+                      <br />
+                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
+                    </div>
                   </template>
                 </el-tooltip>
               </span>
@@ -4344,5 +4356,8 @@ onBeforeMount(() => {
   :deep(.flag) {
     border: 1px solid #ddd;
   }
+}
+.custom-tooltip-new {
+  font-size: 16px;
 }
 </style>

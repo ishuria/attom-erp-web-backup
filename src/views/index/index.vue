@@ -212,7 +212,7 @@
         <rank :list="rank1List" :my-name="myName" name="超额完成数" :show-medal="true" title="超额完成排行">
           <template #select>
             <el-select v-model="selectAchievedMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankOverAchieved">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in historyBossMonthList" :key="item" :label="item" :value="item" />
             </el-select>
           </template>
         </rank>
@@ -221,7 +221,7 @@
         <rank :list="rank4List" :my-name="myName" name="考核完成数" title="考核数完成排行">
           <template #select>
             <el-select v-model="selectFinishMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankAssessmentFinish">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+              <el-option v-for="item in historyBossMonthList" :key="item" :label="item" :value="item" />
             </el-select>
           </template>
         </rank>
@@ -769,6 +769,7 @@ const fetchMonthlyMinusAssessment = async () => {
   }
 }
 const historyMonthList = ref<string[]>([])
+const historyBossMonthList = ref<string[]>([])
 const newProductMonthList = ref<string[]>([])
 const selectAchievedMonth = ref<string>()
 const selectFinishMonth = ref<string>()
@@ -816,8 +817,15 @@ const fetchAdjustDetailMonthList = async () => {
 const fetchBillingMonthList = async () => {
   const { data } = await getFrontPageBillingMonth()
   historyMonthList.value = data
-  selectAchievedMonth.value = data[0]
-  selectFinishMonth.value = data[0]
+  // 对于Boss角色
+  if (useAclStore().getRole.includes(ROLE_BOSS_CODE)) {
+    historyBossMonthList.value = data
+  } else {
+    // 对于其他角色,去掉当月的
+    historyBossMonthList.value = data.filter((item) => item !== getCurrentMonth())
+  }
+  selectAchievedMonth.value = historyBossMonthList.value[0]
+  selectFinishMonth.value = historyBossMonthList.value[0]
   selectNewProductMonth.value = data[0]
   selectJobLevelMonth.value = data[0]
 }

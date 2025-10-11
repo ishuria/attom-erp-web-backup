@@ -154,6 +154,17 @@
               </template>
             </el-tooltip>
           </span>
+          <span v-if="item.label === '月净利率'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">
+                月净利
+                <el-icon><question-filled /></el-icon>
+              </div>
+              <template #content>
+                <div class="custom-tooltip">过去30天的结算净利润率</div>
+              </template>
+            </el-tooltip>
+          </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
@@ -980,6 +991,27 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     return {
       textAlign: 'right',
       cursor: 'pointer',
+    }
+  } else if (label === '月净利率') {
+    const monthNetProfitMargin = data.row.monthNetProfitMargin * 100
+    if (monthNetProfitMargin >= 20) {
+      return {
+        textAlign: 'center',
+
+        color: 'var(--el-color-success)',
+      }
+    } else if (monthNetProfitMargin < 20 && monthNetProfitMargin > 0) {
+      return {
+        textAlign: 'center',
+
+        color: 'var(--el-color-warning)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+
+        color: 'var(--el-color-danger)',
+      }
     }
   } else {
     return {
