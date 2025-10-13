@@ -7,7 +7,9 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item label="审批状态">
                 <el-select v-model="queryForm.status" @change="queryData">
-                  <el-option v-for="item in reviewStatusOption" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option v-for="item in reviewStatusOption" :key="item.value" :label="item.label" :value="item.value">
+                    <el-text :style="{ color: getStatusBaseColor(item.value), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -134,12 +136,7 @@
           </el-table-column>
           <el-table-column label="审批状态" min-width="130" prop="reviewStatus">
             <template #default="{ row }">
-              <span
-                :class="generateStatus(row.reviewStatus).color"
-                :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }"
-              >
-                {{ generateStatus(row.reviewStatus).text }}
-              </span>
+              <el-tag :style="getSiteTagStyle(row.reviewStatus)">{{ generateStatus(row.reviewStatus) }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
@@ -325,12 +322,7 @@
           </el-table-column>
           <el-table-column label="审批状态" min-width="130" prop="reviewStatus">
             <template #default="{ row }">
-              <span
-                :class="generateStatus(row.reviewStatus).color"
-                :style="{ display: 'inline-block', 'min-width': columnWidths.reviewStatus + 'px', 'text-align': 'left' }"
-              >
-                {{ generateStatus(row.reviewStatus).text }}
-              </span>
+              <el-tag type="success">{{ generateStatus(row.reviewStatus) }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="审批人" min-width="100" prop="reviewPersonName">
@@ -706,31 +698,64 @@ const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
 }
 
 // 审批状态对应的文本和颜色
+// 审批状态 -> 自定义颜色映射
+const getStatusBaseColor = (status: number) => {
+  const colorMap: Record<number, string> = {
+    0: '#E6A23C', // 编辑中 - 橙色
+    1: '#409EFF', // 待审核 - 蓝色
+    2: '#F56C6C', // 主管审批未通过 - 红色
+    3: '#67C23A', // SKU创建 - 绿色
+    4: '#8E44AD', // 运营分货 - 紫色
+    5: '#2AC3A2', // 待发布PO - 青绿
+  }
+  return colorMap[status] ?? '#909399'
+}
+
+// 返回协调的tag样式：浅色背景 + 同色文字
+const getSiteTagStyle = (status: number) => {
+  const base = getStatusBaseColor(status)
+  // 将16进制转换为rgba，背景使用较低透明度
+  const hexToRgba = (hex: string, alpha = 0.15) => {
+    const h = hex.replace('#', '')
+    const bigint = parseInt(h, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+  return {
+    backgroundColor: hexToRgba(base, 0.15),
+    color: base,
+    border: '1px solid ' + hexToRgba(base, 0.35),
+    fontSize: '14px',
+  }
+}
+
 const generateStatus = (value: number) => {
   switch (value) {
     case 0: {
-      return { text: '编辑中', color: 'status-editing' }
+      return '编辑中'
     }
     case 1: {
-      return { text: '待审核', color: 'status-editing' }
+      return '待审核'
     }
     case 2: {
-      return { text: '主管审批未通过', color: 'status-failed' }
+      return '主管审批未通过'
     }
     case 3: {
-      return { text: 'SKU创建', color: 'status-editing' }
+      return 'SKU创建'
     }
     case 4: {
-      return { text: '运营分货', color: 'status-editing' }
+      return '运营分货'
     }
     case 5: {
-      return { text: '待发布PO', color: 'status-editing' }
+      return '待发布PO'
     }
     case 6: {
-      return { text: '已完成', color: 'status-finished' }
+      return '已完成'
     }
     default: {
-      return { text: '未知', color: 'status-editing' }
+      return '未知'
     }
   }
 }

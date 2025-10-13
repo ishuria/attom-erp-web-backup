@@ -46,6 +46,7 @@
           <el-form-item>
             <el-input
               v-model.trim="queryForm.keyWord"
+              class="search-input"
               clearable
               placeholder="请输入搜索关键词"
               @input="queryData"
@@ -1594,6 +1595,11 @@ onActivated(() => {
 </script>
 
 <style lang="scss" scoped>
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
+}
+
 .el-checkbox {
   transform: scale(1.3);
   transform-origin: center;

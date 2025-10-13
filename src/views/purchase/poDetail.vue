@@ -2845,6 +2845,10 @@ const handleDefaultPurchase = async (row: any) => {
   if (item!.label === '埃托姆') {
     //选择了埃托姆
     row.customsDeclarationStatus = 0
+    // 如果开票是无法开票 则切换成普票
+    if (row.invoicing === 2) {
+      row.invoicing = 1
+    }
   } else if (item!.label === 'Attom') {
     //选择了attom，开票变成无法开票
     row.invoicing = 2
@@ -2885,6 +2889,10 @@ const handleCreateDefaultPurchase = (row: any) => {
   if (item!.label === '埃托姆') {
     //选择了埃托姆
     row.customsDeclarationStatus = 0
+    // 如果开票是无法开票 则切换成普票
+    if (row.invoicing === 2) {
+      row.invoicing = 1
+    }
   } else if (item!.label === 'Attom') {
     //选择了attom，开票变成无法开票
     row.invoicing = 2

@@ -131,8 +131,15 @@
           </el-table-column>
           <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
+              <!-- <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
+              {{ '' }} -->
+              <vab-icon
+                v-if="row.sellingPointStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
               {{ '' }}
+              <!-- <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-danger); font-size: 23px" /> -->
             </template>
           </el-table-column>
           <template v-for="col in columnConfigs" :key="col.prop">
@@ -158,14 +165,20 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck"
+                v-if="ableCheck && row.operation === userName"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
                 @change="handleUpdateProofreadingStatus(row)"
               />
-              <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
-              <span v-else>{{ '' }}</span>
+              <!-- <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" /> -->
+              <vab-icon
+                v-else-if="row.proofreadingStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
+              <!-- <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-danger); font-size: 23px" /> -->
+              {{ '' }}
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -359,7 +372,11 @@
           </el-table-column>
           <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
+              <vab-icon
+                v-if="row.sellingPointStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
               {{ '' }}
             </template>
           </el-table-column>
@@ -386,14 +403,18 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck"
+                v-if="ableCheck && row.operation === userName"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
                 @change="handleUpdateProofreadingStatus(row)"
               />
-              <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
-              <span v-else>{{ '' }}</span>
+              <vab-icon
+                v-else-if="row.proofreadingStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
+              {{ '' }}
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -586,7 +607,11 @@
           </el-table-column>
           <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
+              <vab-icon
+                v-if="row.sellingPointStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
               {{ '' }}
             </template>
           </el-table-column>
@@ -613,14 +638,18 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck"
+                v-if="ableCheck && row.operation === userName"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
                 @change="handleUpdateProofreadingStatus(row)"
               />
-              <vab-icon v-else-if="!ableCheck && row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
-              <span v-else>{{ '' }}</span>
+              <vab-icon
+                v-else-if="row.proofreadingStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
+              {{ '' }}
             </template>
           </el-table-column>
           <el-table-column label="备注" min-width="130" prop="remark">
@@ -786,7 +815,11 @@
           <el-table-column label="需求文件地址" min-width="160" prop="requiredAddress" />
           <el-table-column label="卖点完成" min-width="100" prop="sellingPointStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.sellingPointStatus === 1" class="custom-check" icon="check-fill" />
+              <vab-icon
+                v-if="row.sellingPointStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
               {{ '' }}
             </template>
           </el-table-column>
@@ -812,7 +845,11 @@
           </template>
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
-              <vab-icon v-if="row.proofreadingStatus === 1" class="custom-check" icon="check-fill" />
+              <vab-icon
+                v-if="row.proofreadingStatus === 1"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
               {{ '' }}
             </template>
           </el-table-column>
@@ -1160,7 +1197,7 @@ import {
 import { getProductPositionList } from '/@/api/devlocal/orderProcess'
 import { getPoSkuList } from '/@/api/devlocal/purchasePo'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { ROLE_BOSS_CODE, ROLE_PARTNER_CODE } from '/@/const/role'
+import { ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import ListingPermission from '/@/permissions/listing'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
@@ -1182,7 +1219,7 @@ defineOptions({
 })
 const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
-const ableCheck = currentRoleCode === ROLE_BOSS_CODE || ROLE_PARTNER_CODE
+const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
 
 const getTaskTypeColor = (taskType: string) => {
   switch (taskType) {
