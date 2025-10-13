@@ -152,6 +152,15 @@
               @change="handleUpdateGraphicDesign(row, prop)"
             />
           </template>
+          <template v-if="row['column0'] === 'magnetic'">
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateMagnetic(row, prop)"
+            />
+          </template>
         </template>
       </el-table-column>
       <template #empty>
@@ -227,7 +236,7 @@ const remotePeopleMethod = async (query: string) => {
   }
 }
 const handleUpdateOEM = async (row: any, prop: string) => {
-  if (exchangeList.value[3][prop] === 1 && row[prop] === 1) {
+  if (exchangeList.value[FIELD_INDEX_MAP.GRAPHIC_DESIGN][prop] === 1 && row[prop] === 1) {
     // o 1 g 1
     row[prop] = 0
     $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
@@ -236,12 +245,15 @@ const handleUpdateOEM = async (row: any, prop: string) => {
   handlePackingUpdate(row, prop)
 }
 const handleUpdateGraphicDesign = async (row: any, prop: string) => {
-  if (exchangeList.value[2][prop] === 1 && row[prop] === 1) {
+  if (exchangeList.value[FIELD_INDEX_MAP.OEM][prop] === 1 && row[prop] === 1) {
     // o 1 g 1
     row[prop] = 0
     $baseMessage('每个变体只能选择OEM或平面设计其中一个，要选择另外一个请取消当前选择', 'error', 'hey')
     return
   }
+  handlePackingUpdate(row, prop)
+}
+const handleUpdateMagnetic = async (row: any, prop: string) => {
   handlePackingUpdate(row, prop)
 }
 const handleInsertSku = async (row: any, prop: string) => {
@@ -250,22 +262,25 @@ const handleInsertSku = async (row: any, prop: string) => {
     // console.log(row)
     // console.log(prop)
     // console.log(index)
-    const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[17][prop] })
+    const { data } = await reviewInsertSkuInfo({ sku: exchangeList.value[FIELD_INDEX_MAP.SKU_MERGE][prop] })
     if (data) {
-      exchangeList.value[4][prop] = data.productLength
-      exchangeList.value[5][prop] = data.productWidth
-      exchangeList.value[6][prop] = data.productHeight
-      exchangeList.value[7][prop] = data.material
-      exchangeList.value[8][prop] = data.battery
-      exchangeList.value[9][prop] = data.benchmarkAsin
+      exchangeList.value[FIELD_INDEX_MAP.PRODUCT_LENGTH][prop] = data.productLength
+      exchangeList.value[FIELD_INDEX_MAP.PRODUCT_WIDTH][prop] = data.productWidth
+      exchangeList.value[FIELD_INDEX_MAP.PRODUCT_HEIGHT][prop] = data.productHeight
+      exchangeList.value[FIELD_INDEX_MAP.MATERIAL][prop] = data.material
+      exchangeList.value[FIELD_INDEX_MAP.BATTERY][prop] = data.battery
+      exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop] = data.magnetic || 0
+      exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop] = data.benchmarkAsin
+
       await reviewStepNo5SkuInfoPerfect({
-        productLength: exchangeList.value[4][prop],
-        productWidth: exchangeList.value[5][prop],
-        productHeight: exchangeList.value[6][prop],
-        material: exchangeList.value[7][prop],
-        battery: exchangeList.value[8][prop],
-        benchmarkAsin: exchangeList.value[9][prop],
-        orderEntryId: exchangeList.value[19][prop],
+        productLength: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_LENGTH][prop],
+        productWidth: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_WIDTH][prop],
+        productHeight: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_HEIGHT][prop],
+        material: exchangeList.value[FIELD_INDEX_MAP.MATERIAL][prop],
+        battery: exchangeList.value[FIELD_INDEX_MAP.BATTERY][prop],
+        magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop],
+        benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop],
+        orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][prop],
       })
       $baseMessage('导入该SKU数据成功', 'success', 'hey')
     }
@@ -296,7 +311,7 @@ async function uploadImage(file: File) {
   try {
     let imageForm = new FormData()
     imageForm.append('file', file)
-    imageForm.append('orderEntryId', exchangeList.value[19][_prop])
+    imageForm.append('orderEntryId', exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][_prop])
 
     // 上传图片
     const { data } = await reviewStepNo5VariantImgUpload(imageForm)
@@ -319,16 +334,48 @@ async function uploadImage(file: File) {
 const handleRemove = async (prop: any) => {
   try {
     $baseConfirm('确定要删除这张图片吗', '系统提示', async () => {
-      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[19][prop] })
+      const { data } = await reviewStepNo5VariantImgDel({ orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][prop] })
       if (data === true) {
         $baseMessage('此产品图片信息删除成功!', 'success', 'hey')
-        exchangeList.value[0][prop] = ''
+        exchangeList.value[FIELD_INDEX_MAP.PRODUCT_IMG_URL][prop] = ''
       }
     })
   } catch (error) {
     console.error(error)
   }
 }
+
+// 字段索引映射 - 固定下标，便于维护
+// 添加新列时，只需要：
+// 1. 在这里添加新的常量（使用下一个可用数字）
+// 2. 在labelMap中添加对应的标签
+// 3. 在数据转换中添加字段
+// 4. 在buildParams中使用常量而不是硬编码下标
+const FIELD_INDEX_MAP = {
+  PRODUCT_IMG_URL: 0,
+  PRODUCT_POSITION: 1,
+  OEM: 2,
+  GRAPHIC_DESIGN: 3,
+  PRODUCT_LENGTH: 4,
+  PRODUCT_WIDTH: 5,
+  PRODUCT_HEIGHT: 6,
+  MATERIAL: 7,
+  BATTERY: 8,
+  MAGNETIC: 9,
+  BENCHMARK_ASIN: 10,
+  PATENT: 11,
+  PRODUCT_MANAGER: 12,
+  PRODUCT_DESIGN: 13,
+  SAMPLE_RETENTION: 14,
+  PACKING_GROUP: 15,
+  MANUFACTURER_EN_NAME: 16,
+  CERTIFICATE_UPLOAD: 17,
+  SKU_MERGE: 18,
+  OPERATE: 19,
+  ORDER_ENTRY_ID: 20,
+  PRODUCT_MANAGER_ID: 21,
+  PRODUCT_DESIGN_ID: 22,
+} as const
 
 const labelMap: Record<string, string> = {
   column0: '',
@@ -341,6 +388,7 @@ const labelMap: Record<string, string> = {
   productHeight: '产品高(cm)',
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
+  magnetic: '带磁',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
@@ -369,22 +417,23 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 }
 const buildParams = (key: string) => {
   const params = {
-    productPosition: exchangeList.value[1][key],
-    oem: exchangeList.value[2][key],
-    graphicDesign: exchangeList.value[3][key],
-    productLength: exchangeList.value[4][key],
-    productWidth: exchangeList.value[5][key],
-    productHeight: exchangeList.value[6][key],
-    material: exchangeList.value[7][key],
-    battery: exchangeList.value[8][key],
-    benchmarkAsin: exchangeList.value[9][key],
-    patent: exchangeList.value[10][key],
-    productManagerId: exchangeList.value[20][key],
-    productDesignId: exchangeList.value[21][key],
-    sampleRetention: exchangeList.value[13][key].join(','),
-    checkStatus: exchangeList.value[14][key],
-    manufacturerEnName: exchangeList.value[15][key],
-    orderEntryId: exchangeList.value[19][key],
+    productPosition: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_POSITION][key],
+    oem: exchangeList.value[FIELD_INDEX_MAP.OEM][key],
+    graphicDesign: exchangeList.value[FIELD_INDEX_MAP.GRAPHIC_DESIGN][key],
+    productLength: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_LENGTH][key],
+    productWidth: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_WIDTH][key],
+    productHeight: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_HEIGHT][key],
+    material: exchangeList.value[FIELD_INDEX_MAP.MATERIAL][key],
+    battery: exchangeList.value[FIELD_INDEX_MAP.BATTERY][key],
+    magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][key],
+    benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][key],
+    patent: exchangeList.value[FIELD_INDEX_MAP.PATENT][key],
+    productManagerId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key],
+    productDesignId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key],
+    sampleRetention: exchangeList.value[FIELD_INDEX_MAP.SAMPLE_RETENTION][key].join(','),
+    checkStatus: exchangeList.value[FIELD_INDEX_MAP.PACKING_GROUP][key],
+    manufacturerEnName: exchangeList.value[FIELD_INDEX_MAP.MANUFACTURER_EN_NAME][key],
+    orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][key],
   }
   return params
 }
@@ -533,22 +582,22 @@ const handleChangeProductManager = async (row: any, prop: any) => {
         row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
         // 点击了修改,manager对应的就是id,让managerId就等于id
-        exchangeList.value[20][key] = exchangeList.value[11][key]
-        if (exchangeList.value[20][key] === exchangeList.value[21][key]) {
+        exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key] = exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER][key]
+        if (exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key] === exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key]) {
           $baseMessage('产品经理和产品设计不能相同！', 'error')
           row[key] = ''
           row[prop] = ''
-          exchangeList.value[20][key] = null
+          exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key] = null
         }
         update(key)
       }
     })
   } else {
-    exchangeList.value[20][prop] = exchangeList.value[11][prop]
-    if (exchangeList.value[20][prop] === exchangeList.value[21][prop]) {
+    exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][prop] = exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER][prop]
+    if (exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][prop] === exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][prop]) {
       $baseMessage('产品经理和产品设计不能相同！', 'error')
       row[prop] = ''
-      exchangeList.value[20][prop] = null
+      exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][prop] = null
     }
     update(prop)
   }
@@ -564,22 +613,22 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
         row[key] = newValue // 将其他单元格的值更新为当前输入框的值
 
         // 点击了修改,design对应的就是id,让designId就等于id
-        exchangeList.value[21][key] = exchangeList.value[12][key]
-        if (exchangeList.value[20][key] === exchangeList.value[21][key]) {
+        exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key] = exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN][key]
+        if (exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key] === exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key]) {
           $baseMessage('产品经理和产品设计不能相同！', 'error')
           row[key] = ''
           row[prop] = ''
-          exchangeList.value[21][key] = null
+          exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key] = null
         }
         update(key)
       }
     })
   } else {
-    exchangeList.value[21][prop] = exchangeList.value[12][prop]
-    if (exchangeList.value[20][prop] === exchangeList.value[21][prop]) {
+    exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][prop] = exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN][prop]
+    if (exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][prop] === exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][prop]) {
       $baseMessage('产品经理和产品设计不能相同！', 'error')
       row[prop] = ''
-      exchangeList.value[21][prop] = null
+      exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][prop] = null
     }
     update(prop)
   }
@@ -815,6 +864,7 @@ const fetchVariantList = async () => {
           productHeight: item.productHeight,
           material: item.material,
           battery: item.battery,
+          magnetic: item.magnetic || 0,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
           productManager: item.productManager,

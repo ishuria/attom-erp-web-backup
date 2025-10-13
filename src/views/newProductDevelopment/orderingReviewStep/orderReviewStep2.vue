@@ -72,6 +72,9 @@
             <template v-if="row['column0'] === 'purchaseTotalPrice'">
               {{ row[prop] !== null ? '￥' + Number(row[prop]).toFixed(2) : '' }}
             </template>
+            <template v-if="row['column0'] === 'magnetic'">
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" :disabled="editDisabled" :false-value="0" :true-value="1" />
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -80,7 +83,8 @@
                 row['column0'] !== 'sampleRetention' &&
                 row['column0'] !== 'purchaseTotalPrice' &&
                 row['column0'] !== 'productPosition' &&
-                row['column0'] !== 'graphicDesign'
+                row['column0'] !== 'graphicDesign' &&
+                row['column0'] !== 'magnetic'
               "
             >
               {{ row[prop] }}
@@ -193,6 +197,7 @@ const labelMap: Record<string, string> = {
   productSize: '产品尺寸(in)',
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
+  magnetic: '带磁',
   variantSku: '合并变体的SKU',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
@@ -251,6 +256,7 @@ const buildParams = (): IReviewStep2Req => {
       productPosition: item.productPosition,
       graphicDesign: item.graphicDesign,
       oem: item.oem,
+      magnetic: item.magnetic,
     }
 
     paramVArr.push(v)
@@ -327,6 +333,7 @@ const fetchData = async () => {
       productSize: item.productSize,
       material: item.material,
       battery: item.battery,
+      magnetic: item.magnetic || 0,
       variantSku: item.variantSku,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,

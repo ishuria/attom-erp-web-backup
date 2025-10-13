@@ -53,6 +53,9 @@
           <template v-if="row['column0'] === 'graphicDesign'">
             <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
           </template>
+          <template v-if="row['column0'] === 'magnetic'">
+            <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+          </template>
           <template
             v-if="
               row['column0'] !== 'productImgUrl' &&
@@ -60,7 +63,8 @@
               row['column0'] !== 'packingGroup' &&
               row['column0'] !== 'oem' &&
               row['column0'] !== 'productPosition' &&
-              row['column0'] !== 'graphicDesign'
+              row['column0'] !== 'graphicDesign' &&
+              row['column0'] !== 'magnetic'
             "
           >
             {{ row[prop] }}
@@ -117,6 +121,7 @@ const labelMap: Record<string, string> = {
   productHeight: '产品高(cm)',
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
+  magnetic: '带磁',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
@@ -235,6 +240,7 @@ const fetchVariantList = async () => {
       productHeight: item.productHeight,
       material: item.material,
       battery: item.battery,
+      magnetic: item.magnetic || 0,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
       productManager: item.productManager === '' ? productManager : item.productManager,

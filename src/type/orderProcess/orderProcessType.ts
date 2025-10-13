@@ -563,6 +563,10 @@ export interface IreviewStepNo5SkuInfoPerfect {
    */
   productWidth?: number
   /**
+   * 是否带磁 0 不带磁 1带磁
+   */
+  magnetic?: number
+  /**
    * 拍照留样状态
    */
   sampleRetentionStatus?: number
@@ -629,6 +633,7 @@ export interface IreviewInsertSkuInfo {
   material?: string
   battery?: string
   benchmarkAsin?: string
+  magnetic?: number
 }
 
 export interface ISubmitReviewComponentQuery {

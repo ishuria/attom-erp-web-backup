@@ -374,6 +374,7 @@ export interface IReviewStepNo1Variant {
    * OEM 0不选中 1选中
    */
   oem?: number
+  magnetic?: number
 }
 
 export interface IReviewStepResp {
