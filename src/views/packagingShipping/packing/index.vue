@@ -112,6 +112,18 @@
         </div>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
+            <!-- 
+              筛选条件说明：
+              - boxCount5Plus: 筛选箱数大于等于5的记录
+              - dimensionsComplete: 筛选毛重、长、宽、高都已录入的记录
+            -->
+            <div class="filter-group">
+              <el-checkbox-group v-model="queryForm.filters" @change="queryData">
+                <el-checkbox value="boxCount5Plus">箱数5+</el-checkbox>
+                <el-checkbox value="dimensionsComplete">尺寸已录</el-checkbox>
+              </el-checkbox-group>
+            </div>
+
             <el-select v-model="queryForm.site" clearable placeholder="全部发货站点" @change="queryData">
               <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
                 <!-- <el-icon :style="{ color: getSiteBaseColor(item.label), fontSize: '18px', marginRight: '6px' }">
@@ -902,6 +914,7 @@ const queryForm = reactive<IGetEncasementListReq>({
   pageNo: 1,
   pageSize: 20,
   site: undefined,
+  filters: [], // 筛选条件数组
 })
 const exportSizeVisible = ref<boolean>(false)
 const exportSizeLoading = ref<boolean>(false)
@@ -1739,6 +1752,28 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+// 筛选条件组样式
+.filter-group {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  padding: 1px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f1f3f4;
+  }
+
+  :deep(.el-checkbox) {
+    margin-right: 12px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 .noneHoveTable :deep(.el-checkbox) {
   transform: scale(1.2);
   transform-origin: center;

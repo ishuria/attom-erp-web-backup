@@ -27,6 +27,7 @@ export interface IGetEncasementListReq {
   grossWeightSort?: number //毛重排序 0升序 1降序
   createTimeSort?: number
   site?: number
+  filters?: string[] // 筛选条件数组
 }
 export interface IEncasementList {
   /**
