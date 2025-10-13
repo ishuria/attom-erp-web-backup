@@ -1,57 +1,67 @@
 <template>
-  <vab-dialog v-model="skuCustomsClearanceVisible" :draggable="false" title="Sku信息" width="50%">
-    <vab-query-form>
-      <vab-query-form-left-panel>
-        <el-form inline :model="queryForm" @submit.prevent>
-          <el-form-item>
-            <el-input
-              v-model.trim="queryForm.keyWord"
-              clearable
-              placeholder="请输入搜索关键词"
-              @input="querySkuData"
-              @keyup.enter="querySkuData"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button :icon="Search" native-type="submit" type="primary" @click="querySkuData" />
-          </el-form-item>
-        </el-form>
-      </vab-query-form-left-panel>
-    </vab-query-form>
+  <div>
+    <vab-dialog v-model="skuCustomsClearanceVisible" :draggable="false" title="SKU信息" top="10vh" width="50%">
+      <vab-query-form>
+        <vab-query-form-right-panel :span="24">
+          <el-form inline :model="queryForm" @submit.prevent>
+            <el-form-item>
+              <el-input
+                v-model.trim="queryForm.keyWord"
+                clearable
+                placeholder="请输入搜索关键词"
+                @input="querySkuData"
+                @keyup.enter="querySkuData"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button :icon="Search" native-type="submit" type="primary" @click="querySkuData" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-right-panel>
+      </vab-query-form>
 
-    <el-table v-loading="listLoading" border :data="skuCustomsClearanceList" max-height="1000" stripe>
-      <el-table-column align="center" label="图片" prop="skuImgUrl" width="80">
-        <template #default="{ row }">
-          <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 80px; height: 80px" />
+      <el-table
+        v-loading="listLoading"
+        border
+        :cell-class-name="clearPadding"
+        class="custom-table"
+        :data="skuCustomsClearanceList"
+        max-height="65vh"
+        stripe
+      >
+        <el-table-column align="center" label="图片" prop="skuImgUrl" width="80">
+          <template #default="{ row }">
+            <el-image fit="fill" :src="row.skuImgUrl" style="display: block; width: 80px; height: 80px" />
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="sku" prop="sku" />
+
+        <el-table-column align="center" label="品名" prop="productName" />
+
+        <el-table-column align="center" fixed="right" label="操作" width="250">
+          <template #default="{ row }">
+            <el-link v-loading="importLoading" type="primary" underline="never" @click="importSkuCustomClearnce(row)">
+              导入此sku清关信息
+            </el-link>
+          </template>
+        </el-table-column>
+
+        <template #empty>
+          <el-empty description="暂无数据" />
         </template>
-      </el-table-column>
+      </el-table>
+      <template #footer></template>
 
-      <el-table-column align="center" label="sku" prop="sku" />
-
-      <el-table-column align="center" label="品名" prop="productName" />
-
-      <el-table-column align="center" fixed="right" label="操作" width="200">
-        <template #default="{ row }">
-          <el-link v-loading="importLoading" type="primary" underline="never" @click="importSkuCustomClearnce(row)">
-            导入此sku清关信息
-          </el-link>
-        </template>
-      </el-table-column>
-
-      <template #empty>
-        <el-empty description="暂无数据" />
-      </template>
-    </el-table>
-    <template #footer></template>
-
-    <vab-pagination
-      :current-page="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :total="total"
-      @current-change="skuCustomClearnceHandleCurrentChange"
-      @size-change="skuCustomClearnceHandleSizeChange"
-    />
-  </vab-dialog>
+      <vab-pagination
+        :current-page="queryForm.pageNo"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="skuCustomClearnceHandleCurrentChange"
+        @size-change="skuCustomClearnceHandleSizeChange"
+      />
+    </vab-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -145,4 +155,22 @@ watch(skuCustomsClearanceVisible, (newVal) => {
     })
   }
 })
+
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
 </script>
+
+<style lang="scss" scoped>
+.custom-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.custom-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>

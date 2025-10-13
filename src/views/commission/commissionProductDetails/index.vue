@@ -1,7 +1,7 @@
 <template>
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
-      <vab-query-form-left-panel>
+      <vab-query-form-left-panel :span="18">
         <el-form inline>
           <template v-if="currentRoleCode === ROLE_BOSS_CODE">
             <!-- 角色（如需） -->
@@ -36,6 +36,11 @@
               <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
             </el-select>
           </el-form-item>
+          <el-form-item label="上线">
+            <el-select v-model="developQueryForm.online" placeholder="请选择上线" @change="developQueryData">
+              <el-option v-for="item in onlineOption" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-text style="margin-left: 10px">提成总金额：</el-text>
             <el-text type="success">{{ bonus }}元</el-text>
@@ -45,7 +50,7 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-right-panel :span="6">
         <el-form inline :model="developQueryForm" @submit.prevent>
           <el-form-item>
             <el-input
@@ -191,12 +196,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import {
-  getCommissionDetailDevelopList,
-  getCommissionTypeMonth,
-  getDevelopDesignDetailPersonList,
-  getDevelopDesignDetailRoleList,
-} from '/@/api/devlocal/commission'
+import { getCommissionDetailDevelopList, getCommissionTypeMonth, getDevelopDesignDetailPersonList } from '/@/api/devlocal/commission'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
 import { ROLE_BOSS_CODE } from '/@/const/role.ts'
@@ -239,6 +239,7 @@ const developQueryForm = reactive<IGetCommissionDetailDevelopListReq>({
   pageSize: 20,
   orderByField: 'currentMonthBonus',
   orderDirection: 'desc',
+  online: -1,
 })
 
 const listLoading = ref<boolean>(false)
@@ -492,12 +493,12 @@ const convertToTreeData = (data: any[]) => {
   return treeData
 }
 
-const fetchDevelopRoleList = async () => {
-  const { data } = await getDevelopDesignDetailRoleList()
-  roleList.value = data
-  roleList.value.unshift({ id: -1, label: '全部' })
-  developQueryForm.roleId = roleList.value.find((item) => item.label === '产品经理')?.id || -1
-}
+// const fetchDevelopRoleList = async () => {
+//   const { data } = await getDevelopDesignDetailRoleList()
+//   roleList.value = data
+//   roleList.value.unshift({ id: -1, label: '全部' })
+//   developQueryForm.roleId = roleList.value.find((item) => item.label === '产品经理')?.id || -1
+// }
 const bonus = ref<number>(0)
 
 const fetchDevelopData = async () => {
@@ -548,6 +549,20 @@ const fetchUpdateDate = async () => {
   updateDate.value = data
 }
 const monthOption = ref<{ id: number; label: string }[]>([])
+const onlineOption = ref<{ id: number; label: string }[]>([
+  {
+    id: -1,
+    label: '全部',
+  },
+  {
+    id: 1,
+    label: '已上线',
+  },
+  {
+    id: 0,
+    label: '未上线',
+  },
+])
 const fetchCommissionTypeMonth = async () => {
   const { data } = await getCommissionTypeMonth({ type: 2 })
   monthOption.value = data

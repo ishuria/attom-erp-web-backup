@@ -589,6 +589,7 @@ export interface IGetCommissionDetailDevelopListReq {
   pageSize: number
   orderByField: string
   orderDirection: string
+  online: number
 }
 export interface IGetCommissionDetailDevelopListRes {
   data?: {
