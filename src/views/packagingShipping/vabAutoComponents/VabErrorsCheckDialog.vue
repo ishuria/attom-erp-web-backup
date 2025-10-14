@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="visible" title="查错" width="40%">
+  <vab-dialog v-model="visible" title="查错" top="10vh" width="40%">
     <vab-query-form>
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
@@ -19,12 +19,12 @@
       </vab-query-form-right-panel>
     </vab-query-form>
     <el-table v-loading="loading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="60vh" stripe>
-      <el-table-column align="center" label="开始时间" min-width="160" prop="startTime">
+      <el-table-column align="center" label="开始时间" prop="startTime" :width="160">
         <template #default="{ row }">
           {{ formatTime(row.startTime) }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="结束时间" min-width="160" prop="endTime">
+      <el-table-column align="center" label="结束时间" prop="endTime" :width="160">
         <template #default="{ row }">
           {{ formatTime(row.endTime) }}
         </template>
@@ -37,12 +37,21 @@
       />
       <el-table-column
         align="center"
-        label="工作时长(分钟)"
+        label="工时(分钟)"
         prop="workingHours"
-        :width="flexColumnWidth(list, '工作时长(分钟)', 'workingHours')"
+        :width="flexColumnWidth(list, '工时(分钟)-', 'workingHours')"
       />
-      <el-table-column align="center" label="PO" min-width="100" prop="po" />
-      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
+      <el-table-column align="center" label="PO" prop="po" :width="100">
+        <template #default="{ row }">
+          <div class="multi-line-text">{{ row.po.replaceAll(',', '\n') }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="SKU" min-width="160" prop="sku">
+        <template #default="{ row }">
+          <div class="multi-line-text">{{ row.sku.replaceAll(',', '\n') }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="错误类型" prop="errorType" :width="100" />
     </el-table>
     <vab-pagination
       :current-page="queryForm.pageNo"
@@ -57,14 +66,14 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { checkingPackagingTimeError } from '/@/api/devlocal/packagingShipping'
-import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '/@/type/packagingShipping/packagingType'
+import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorForm } from '/@/type/packagingShipping/packagingType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 interface Props {
   modelValue: boolean
   startTime: string
   endTime: string
-  userId: number
+  userId: number | string | null
 }
 
 interface Emits {
@@ -79,11 +88,13 @@ const visible = computed({
   set: (value) => emit('update:modelValue', value),
 })
 
-const list = ref<ICheckingPackagingTimeError[]>([])
+const allData = ref<ICheckingPackagingTimeError[]>([]) // 所有原始数据
+const filteredData = ref<ICheckingPackagingTimeError[]>([]) // 过滤后的数据
+const list = ref<ICheckingPackagingTimeError[]>([]) // 当前页数据
 const total = ref<number>(0)
 const loading = ref<boolean>(false)
 
-const queryForm = reactive<ICheckingPackagingTimeErrorReq>({
+const queryForm = reactive<ICheckingPackagingTimeErrorForm>({
   startTime: '',
   endTime: '',
   keyWord: '',
@@ -108,22 +119,31 @@ const formatTime = (time: string) => {
   return `${year}-${month}-${day} ${hours}:${minutes}`
 }
 
-// 获取数据
-const fetchData = async () => {
+// 获取所有数据
+const fetchAllData = async () => {
   loading.value = true
   try {
-    queryForm.startTime = props.startTime
-    queryForm.endTime = props.endTime
-    queryForm.userId = props.userId
+    const requestData = {
+      startTime: props.startTime,
+      endTime: props.endTime,
+      keyWord: queryForm.keyWord,
+      userId: props.userId ? Number(props.userId) : -1,
+    }
 
-    const { data } = await checkingPackagingTimeError(queryForm)
-    total.value = data.total
-    list.value = data.list
-    list.value.forEach((item: any) => {
+    const { data } = await checkingPackagingTimeError(requestData)
+    allData.value = data.list || []
+    allData.value.forEach((item: any) => {
       if (item.workingHours) {
         item.workingHours = item.workingHours.toFixed(2)
       }
     })
+
+    // 初始化过滤数据
+    filteredData.value = [...allData.value]
+    total.value = filteredData.value.length
+
+    // 执行前端分页
+    updatePagedData()
   } catch (error) {
     console.error('获取查错数据失败:', error)
   } finally {
@@ -131,29 +151,62 @@ const fetchData = async () => {
   }
 }
 
+// 前端分页处理
+const updatePagedData = () => {
+  const start = (queryForm.pageNo - 1) * queryForm.pageSize
+  const end = start + queryForm.pageSize
+  list.value = filteredData.value.slice(start, end)
+}
+
+// 搜索过滤
+const filterData = () => {
+  if (!queryForm.keyWord.trim()) {
+    filteredData.value = [...allData.value]
+  } else {
+    const keyword = queryForm.keyWord.toLowerCase()
+    filteredData.value = allData.value.filter(
+      (item: any) =>
+        item.po?.toLowerCase().includes(keyword) ||
+        item.sku?.toLowerCase().includes(keyword) ||
+        item.packPersonName?.toLowerCase().includes(keyword) ||
+        item.errorType?.toLowerCase().includes(keyword)
+    )
+  }
+
+  total.value = filteredData.value.length
+  queryForm.pageNo = 1 // 重置到第一页
+  updatePagedData()
+}
+
 // 查询
 const handleQuery = () => {
-  queryForm.pageNo = 1
-  fetchData()
+  filterData()
 }
 
 // 页码变化
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  fetchData()
+  updatePagedData()
 }
 
 // 页大小变化
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  fetchData()
+  updatePagedData()
 }
 
 // 监听弹窗打开
 watch(visible, (newVal) => {
   if (newVal) {
-    fetchData()
+    fetchAllData()
   }
 })
 </script>
+
+<style scoped>
+.multi-line-text {
+  white-space: pre-line;
+  word-break: break-all;
+}
+</style>

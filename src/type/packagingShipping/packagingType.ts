@@ -847,13 +847,19 @@ export interface IGeneratePackageBarcodeReq {
 /**
  * 打包工时-工时查错
  */
-export interface ICheckingPackagingTimeErrorReq {
+export interface ICheckingPackagingTimeErrorForm {
   startTime: string
   endTime: string
   keyWord: string
   pageNo: number
   pageSize: number
-  userId: number
+  userId: number | string | null
+}
+export interface ICheckingPackagingTimeErrorReq {
+  startTime: string
+  endTime: string
+  keyWord: string
+  userId: number | string | null
 }
 export interface ICheckingPackagingTimeErrorRes {
   data: {
