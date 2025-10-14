@@ -399,7 +399,7 @@
       </template>
     </vab-dialog>
     <!-- 发货数检查 -->
-    <vab-shipment-quantity-inspection v-model="quantityCheckVisible" />
+    <vab-shipment-quantity-inspection v-model="quantityCheckVisible" @confirm="fetchData" />
     <!-- 春节备货 -->
     <vab-dialog v-model="stockUpVisible" title="春节备货" width="20%">
       <el-form class="noneHoverTable" style="margin: auto 0">

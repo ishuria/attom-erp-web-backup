@@ -245,6 +245,7 @@ declare module 'vue' {
     VabEchartsChartPie: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabEchartsChartPie.vue')['default']
     VabErrorLog: typeof import('./../../components/VabErrorLog/index.vue')['default']
     VabErrorLogContent: typeof import('./../../components/VabErrorLog/components/VabErrorLogContent.vue')['default']
+    VabErrorsCheckDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabErrorsCheckDialog.vue')['default']
     VabEstimatedCostAccounting: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEstimatedCostAccounting.vue')['default']
     VabFallBar: typeof import('./../../components/VabFallBar/index.vue')['default']
     VabFilterDialog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabFilterDialog.vue')['default']

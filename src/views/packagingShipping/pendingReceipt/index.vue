@@ -53,6 +53,9 @@
             </el-popover>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <el-select v-model="queryForm.filterProblemComponent" placeholder="筛选问题零件" @change="queryData">
+                  <el-option v-for="item in problemComponentOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -196,6 +199,11 @@
                   <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
                 </el-tooltip>
               </div>
+              <div v-if="item.label === '问题原因'">
+                <el-select v-model="row.reason" placeholder="请选择问题原因" @change="changeProblemReason(row)">
+                  <el-option v-for="item in problemReasonOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+              </div>
             </template>
           </el-table-column>
 
@@ -280,6 +288,9 @@
             </el-popover>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <el-select v-model="queryForm.filterProblemComponent" placeholder="筛选问题零件" @change="queryData">
+                  <el-option v-for="item in problemComponentOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   clearable
@@ -422,6 +433,9 @@
                   </template>
                   <div class="multi-line-ellipsis-1">{{ removeHtmlTags(row.log) }}</div>
                 </el-tooltip>
+              </div>
+              <div v-if="item.label === '问题原因'">
+                {{ problemReasonOption.find((item) => item.value === row.problemReason)?.label }}
               </div>
             </template>
           </el-table-column>
@@ -607,6 +621,7 @@ import {
   signBatch,
   signComponent,
   signMoreRecord,
+  updateProblemReason,
   updateProductDate,
   updateRecordOrder,
   updateSignLog,
@@ -624,6 +639,17 @@ defineOptions({
   name: 'PendingReceipt',
 })
 
+const problemReasonOption = [
+  { label: '供应商不配合', value: 0 },
+  { label: '交期问题', value: 1 },
+  { label: '开票问题', value: 2 },
+  { label: '其他', value: 3 },
+]
+const problemComponentOption = [
+  { label: '全部零件', value: -1 },
+  { label: '有问题零件', value: 1 },
+  { label: '没问题零件', value: 0 },
+]
 const columns = ref<any>([])
 const checkList = computed(() => {
   return columns.value.filter((_: any) => _.checked)
@@ -995,6 +1021,7 @@ const queryForm = reactive<any>({
   signDate: '',
   orderByField: 'payDate',
   orderDirection: 'desc',
+  filterProblemComponent: -1,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -1036,6 +1063,12 @@ const changeProductDate = async (row: any) => {
     date: row.produceCompletionDate,
   })
   // console.log(row.produceCompletionDate);
+}
+const changeProblemReason = async (row: any) => {
+  await updateProblemReason({
+    signId: row.signId,
+    reason: row.reason,
+  })
 }
 
 // 弹出框的标题

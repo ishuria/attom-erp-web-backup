@@ -87,6 +87,18 @@ export function updateProductDate(params: IUpdateProductDate): Promise<IBooleanR
     params,
   })
 }
+/**
+ * 修改问题原因
+ * @param params
+ * @returns
+ */
+export function updateProblemReason(params: { signId: number; reason: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sign/update/problem/reason`,
+    method: 'post',
+    params,
+  })
+}
 
 // 查询签收零件跟踪日志
 export function getSignLog(params: ISignId): Promise<IStringResp> {

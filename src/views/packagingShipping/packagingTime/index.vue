@@ -206,59 +206,7 @@
       </template>
     </vab-dialog>
     <!-- 查错 -->
-    <vab-dialog v-model="errorsVisible" title="查错" width="40%">
-      <vab-query-form>
-        <vab-query-form-right-panel :span="24">
-          <el-form inline :model="errorsQueryForm" @submit.prevent>
-            <el-form-item>
-              <el-input
-                v-model.trim="errorsQueryForm.keyWord"
-                clearable
-                placeholder="请输入搜索关键词"
-                @input="queryErrorsData"
-                @keyup.enter="queryErrorsData"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryErrorsData" />
-            </el-form-item>
-          </el-form>
-        </vab-query-form-right-panel>
-      </vab-query-form>
-      <el-table border :data="errorList" :header-cell-style="{ textAlign: 'center' }" stripe>
-        <el-table-column align="center" label="开始时间" min-width="160" prop="startTime">
-          <template #default="{ row }">
-            {{ formatTime(row.startTime) }}
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="结束时间" min-width="160" prop="endTime">
-          <template #default="{ row }">
-            {{ formatTime(row.endTime) }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          label="打包人姓名"
-          prop="packPersonName"
-          :width="flexColumnWidth(errorList, '打包人姓名', 'packPersonName')"
-        />
-        <el-table-column
-          align="center"
-          label="工作时长(分钟)"
-          prop="workingHours"
-          :width="flexColumnWidth(errorList, '工作时长(分钟)', 'workingHours')"
-        />
-        <el-table-column align="center" label="PO" min-width="100" prop="po" />
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(errorList, 'SKU', 'sku')" />
-      </el-table>
-      <vab-pagination
-        :current-page="errorsQueryForm.pageNo"
-        :page-size="errorsQueryForm.pageSize"
-        :total="errorsTotal"
-        @current-change="handleErrorsCurrentChange"
-        @size-change="handleErrorsSizeChange"
-      />
-    </vab-dialog>
+    <vab-errors-check-dialog v-model="errorsVisible" :end-time="date[1]" :start-time="date[0]" :user-id="queryRightForm.userId" />
   </div>
 </template>
 
@@ -267,7 +215,6 @@ import { ArrowDown, Check, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import type { FormInstance } from 'element-plus'
 import {
-  checkingPackagingTimeError,
   getMorkPackageList,
   getPackageTimeDay,
   getPackageTimeList,
@@ -275,21 +222,9 @@ import {
   updatePackageTime,
   updatePackagingCost,
 } from '/@/api/devlocal/packagingShipping'
-import type { ICheckingPackagingTimeError, ICheckingPackagingTimeErrorReq } from '/@/type/packagingShipping/packagingType'
-import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackagingTime',
-})
-const errorList = ref<ICheckingPackagingTimeError[]>([])
-const errorsTotal = ref<number>(0)
-const errorsQueryForm = reactive<ICheckingPackagingTimeErrorReq>({
-  startTime: '',
-  endTime: '',
-  keyWord: '',
-  pageNo: 1,
-  pageSize: 20,
-  userId: -1,
 })
 const errorsVisible = ref<boolean>(false)
 const costVisible = ref<boolean>(false)
@@ -329,36 +264,8 @@ const modifyForm = reactive<any>({
 const modifyFormRef = ref<FormInstance>()
 const copyRow = ref<any>()
 
-const fetchErrorsData = async () => {
-  errorsQueryForm.startTime = date.value[0]
-  errorsQueryForm.endTime = date.value[1]
-  errorsQueryForm.userId = queryRightForm.userId
-  const { data } = await checkingPackagingTimeError(errorsQueryForm)
-  errorsTotal.value = data.total
-  errorList.value = data.list
-  errorList.value.forEach((item: any) => {
-    if (item.workingHours) {
-      item.workingHours = item.workingHours.toFixed(2)
-    }
-  })
-}
-const queryErrorsData = () => {
-  errorsQueryForm.pageNo = 1
-  fetchErrorsData()
-}
-const handleErrorsCurrentChange = (value: number) => {
-  errorsQueryForm.pageNo = value
-  fetchErrorsData()
-}
-const handleErrorsSizeChange = (value: number) => {
-  errorsQueryForm.pageNo = 1
-  errorsQueryForm.pageSize = value
-  fetchErrorsData()
-}
 const showErrors = async () => {
   errorsVisible.value = true
-  // console.log(date.value);
-  fetchErrorsData()
 }
 const confirmCost = async () => {
   costFormRef.value?.validate(async (valid: any) => {

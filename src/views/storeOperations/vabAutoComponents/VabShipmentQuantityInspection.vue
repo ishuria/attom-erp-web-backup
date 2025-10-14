@@ -35,7 +35,7 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
 }>()
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'confirm'])
 const visible = computed({
   get() {
     return props.modelValue
@@ -69,6 +69,7 @@ const handleConfirm = async () => {
   if (data) {
     $baseMessage('更新发货数成功！', 'success')
     visible.value = false
+    emit('confirm')
   } else {
     $baseMessage('更新发货数失败！', 'error')
   }
