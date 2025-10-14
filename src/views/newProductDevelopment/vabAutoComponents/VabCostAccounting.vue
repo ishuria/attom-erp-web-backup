@@ -122,6 +122,8 @@
             >
               {{ row.length != null ? row.length : '' }}
             </span>
+            <br />
+            <span v-if="row.length1">{{ row.length1 != null ? row.length1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -139,6 +141,8 @@
             >
               {{ row.width != null ? row.width : '' }}
             </span>
+            <br />
+            <span v-if="row.width1">{{ row.width1 != null ? row.width1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -156,6 +160,8 @@
             >
               {{ row.height != null ? row.height : '' }}
             </span>
+            <br />
+            <span v-if="row.height1">{{ row.height1 != null ? row.height1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -173,6 +179,8 @@
             >
               {{ row.weight != null ? row.weight : '' }}
             </span>
+            <br />
+            <span v-if="row.weight1">{{ row.weight1 != null ? row.weight1 : '' }}</span>
           </template>
         </el-table-column>
 
