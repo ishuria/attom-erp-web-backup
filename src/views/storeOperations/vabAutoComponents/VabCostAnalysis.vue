@@ -206,16 +206,33 @@
       </vab-query-form-left-panel>
     </vab-query-form>
     <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" @cell-click="cellClick">
-      <el-table-column label="日期" min-width="115" prop="createTime" />
-      <el-table-column label="站点" min-width="175" prop="site">
+      <el-table-column fixed="left" label="日期" min-width="115" prop="createTime" />
+      <el-table-column fixed="left" label="站点" min-width="175" prop="site">
         <template #default="{ row }">
           <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%" @change="handleUpdateList(row)">
             <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="外汇币种" min-width="100" prop="currencyType" />
-      <el-table-column label="汇率" min-width="90" prop="foreignExchange" />
+      <el-table-column fixed="left" label="售价" min-width="100" prop="sellingPrice">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="left" label="毛利率" min-width="100" prop="grossMarginRate">
+        <template #default="{ row }">
+          <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+          <el-text v-if="row.grossMarginRate < 20" type="danger">
+            {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
+          </el-text>
+        </template>
+      </el-table-column>
+
       <el-table-column label="产品价格¥" min-width="110" prop="price">
         <template #default="{ row }">
           <div class="none">
@@ -224,12 +241,30 @@
           <span>{{ row.price != null ? '￥' + row.price : '' }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="关税%" min-width="100" prop="tariff">
+        <template #default="{ row }">
+          <div class="none">
+            <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
+          </div>
+          <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="关税" min-width="100" prop="tariffPrice">
+        <template #default="{ row }">
+          <span>{{ row.tariffPrice != null ? '￥' + row.tariffPrice : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="长(cm)" min-width="90" prop="length">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
+          <span>
+            {{ row.length != null ? row.length + 'cm' : '' }}
+            <br />
+            <!-- 显示下一档位的长 -->
+            {{ '' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="宽(cm)" min-width="90" prop="width">
@@ -237,7 +272,12 @@
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
+          <span>
+            {{ row.width != null ? row.width + 'cm' : '' }}
+            <br />
+            <!-- 显示下一档位的宽 -->
+            {{ '' }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="高(cm)" min-width="90" prop="height">
@@ -245,22 +285,32 @@
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
+          <span>
+            {{ row.height != null ? row.height + 'cm' : '' }}
+            <br />
+            <!-- 显示下一档位的高 -->
+            {{ '' }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" min-width="100" prop="weight">
+      <el-table-column label="重量(g)" min-width="110" prop="weight">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+          <span>
+            {{ row.weight != null ? row.weight + 'g' : '' }}
+            <br />
+            <!-- 显示下一档位的重量 -->
+            {{ '' }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="下一档位" min-width="200" prop="nextGear">
+      <!-- <el-table-column label="下一档位" min-width="200" prop="nextGear">
         <template #default="{ row }">
           <span v-html="row.nextGear"></span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="尺寸/尾程来源" min-width="150" prop="sizeSource">
         <template #default="{ row }">
           <el-select v-model="row.sizeSource" style="min-width: 100%" @change="handleUpdateList(row)">
@@ -296,24 +346,7 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="售价" min-width="100" prop="sellingPrice">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="毛利率" min-width="100" prop="grossMarginRate">
-        <template #default="{ row }">
-          <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
-          <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
-          <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
-          <el-text v-if="row.grossMarginRate < 20" type="danger">
-            {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
-          </el-text>
-        </template>
-      </el-table-column>
+
       <el-table-column label="ROI" min-width="90" prop="roi">
         <template #default="{ row }">
           {{ row.roi != null ? row.roi + '%' : '' }}
@@ -335,19 +368,7 @@
           <span>{{ row.volumeCoefficient }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关税%" min-width="100" prop="tariff">
-        <template #default="{ row }">
-          <div class="none">
-            <el-input v-model="row.tariff" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
-          </div>
-          <span>{{ row.tariff != null ? row.tariff + '%' : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="关税" min-width="100" prop="tariffPrice">
-        <template #default="{ row }">
-          <span>{{ row.tariffPrice != null ? '￥' + row.tariffPrice : '' }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column label="VAT" min-width="100" prop="vat">
         <template #default="{ row }">
           <span>{{ row.vat != null ? row.vat + '%' : '' }}</span>
@@ -369,6 +390,8 @@
           <span>{{ row.storageFee != null ? row.symbol + Number(row.storageFee).toFixed(2) : '' }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="外汇币种" min-width="100" prop="currencyType" />
+      <el-table-column label="汇率" min-width="90" prop="foreignExchange" />
       <el-table-column fixed="right" label="操作" width="110">
         <template #default="{ row, $index }">
           <el-dropdown>
@@ -1010,24 +1033,16 @@ const setImageHeight = () => {
   }
   // console.log('imageHeight', imageHeight.value);
 }
+
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const columnIndex = data.columnIndex
-  if (
-    columnIndex === 0 ||
-    columnIndex === 2 ||
-    columnIndex === 3 ||
-    columnIndex === 9 ||
-    columnIndex === 13 ||
-    columnIndex === 16 ||
-    columnIndex === 17
-  ) {
+  const label = data.column.label
+  if (['日期', '外汇币种', '汇率', '下一档位', '头程¥', '毛利率', 'ROI'].includes(label)) {
     return {
       fontWeight: 600,
       textAlign: 'center',
       cursor: 'not-allowed',
     }
   }
-  const label = data.column.label
   if (
     data.row.sizeSource === 1 &&
     (label === '长(cm)' || label === '宽(cm)' || label === '高(cm)' || label === '重量(g)' || label === '尾程')
