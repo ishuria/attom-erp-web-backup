@@ -487,7 +487,6 @@
       width="90%"
       @opened="onDialogOpened"
     >
-      <el-divider style="margin-top: 0; margin-bottom: 20px" />
       <div id="table-height-container">
         <el-table
           ref="evaluationTableRef"
@@ -566,8 +565,8 @@
     <!-- 关键词趋势图表 -->
     <vab-trend
       :key-word="inputKeyWord"
-      :trend-data="trendEcahts"
-      :trend-echarts-visible="keyWordTrendEchatsVisible"
+      :trend-data="trendEcharts"
+      :trend-echarts-visible="keyWordTrendEchartsVisible"
       @update:clear-input-key-word="cleanKeyWordTrendData"
       @update:trend-echarts-list="updateTrendEchatsData"
       @update:visible-value="updateTrendVisibleValue"
@@ -620,6 +619,7 @@ import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
 import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
 import { updateProgressLog } from '~/src/api/devlocal/progressSample'
 import { indexColumns } from './indexColumns'
@@ -838,14 +838,14 @@ const moldProgressDialog = ref<boolean>(false)
 const newEvaluationVisible = ref<boolean>(false)
 // 根据评估id找到的新款评估信息
 const newEvaluationData = ref<IGetByIdQueryEvaluation[]>([])
-const keyWordTrendEchatsVisible = ref<boolean>(false)
+const keyWordTrendEchartsVisible = ref<boolean>(false)
 // 图表
-const trendEcahts = ref<IKeyWordTrend>({
+const trendEcharts = ref<IKeyWordTrend>({
   xAxis: [],
   yAxis: [],
 })
 // 输入的关键词
-const inputKeyWord = ref<string>('')
+const inputKeyWord = ref<string>('0')
 // 控制参与人员筛选
 const shareSelectVisible = ref<boolean>(false)
 // 控制已归档参与人员筛选
@@ -1495,23 +1495,26 @@ const onDialogOpened = () => {
 const keyWordTrendCellClick = async (row: any, column: any) => {
   if (column.label === '关键词趋势') {
     inputKeyWord.value = row.amazonFrontendKeywords
-    trendEcahts.value.xAxis = row.trendList.xAxis
-    trendEcahts.value.yAxis = row.trendList.yAxis
-    keyWordTrendEchatsVisible.value = true
+    const { data } = await getEvaluationTrendList({ keyWord: inputKeyWord.value, type: 0 })
+    if (data && data.xAxis && data.yAxis) {
+      trendEcharts.value.xAxis = data.xAxis
+      trendEcharts.value.yAxis = data.yAxis
+    }
+    keyWordTrendEchartsVisible.value = true
   }
 }
 const updateTrendVisibleValue = (newValue: boolean) => {
-  keyWordTrendEchatsVisible.value = newValue
+  keyWordTrendEchartsVisible.value = newValue
 }
 // 清除关键词趋势相关数据
 const cleanKeyWordTrendData = (newValue: string) => {
   inputKeyWord.value = newValue
-  trendEcahts.value.xAxis = []
-  trendEcahts.value.yAxis = []
-  keyWordTrendEchatsVisible.value = false
+  trendEcharts.value.xAxis = []
+  trendEcharts.value.yAxis = []
+  keyWordTrendEchartsVisible.value = false
 }
 const updateTrendEchatsData = (newValue: IKeyWordTrend) => {
-  trendEcahts.value = newValue
+  trendEcharts.value = newValue
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label

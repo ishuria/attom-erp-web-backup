@@ -87,7 +87,7 @@ export const indexColumns: ColumnConfig[] = [
   {
     label: '来源',
     prop: 'productSource',
-    minWidth: 100
+    minWidth: 100,
   },
 ]
 
@@ -186,4 +186,3 @@ export const estimatedCostAccountingColumns = [
     prop: 'storageFee',
   },
 ]
-

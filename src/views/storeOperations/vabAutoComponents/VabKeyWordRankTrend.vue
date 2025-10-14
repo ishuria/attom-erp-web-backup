@@ -1,11 +1,6 @@
 <template>
-  <vab-dialog
-    v-model="dflag"
-    title="关键词排名趋势"
-    width="20%"
-    @close="handleClose"
-  >
-    <el-form label-position="top" >
+  <vab-dialog v-model="dflag" title="关键词排名趋势" width="20%" @close="handleClose">
+    <el-form label-position="top">
       <el-form-item label="关键词">
         <el-input v-model="inputKeyWord" clearable />
       </el-form-item>
@@ -28,7 +23,7 @@
 <script lang="ts" setup>
 import { getEvaluationTrendList } from '/@/api/devlocal/evaluation'
 defineOptions({
-  name: 'VabKeyWordRankTrend'
+  name: 'VabKeyWordRankTrend',
 })
 const dflag = ref<boolean>(false)
 const props = defineProps<{
@@ -42,7 +37,7 @@ const emit = defineEmits(['updateVisible'])
 const keywordTrendChartVisible = ref<boolean>(false)
 let trendData = {
   xAxis: [],
-  yAxis: []
+  yAxis: [],
 }
 const queryLoading = ref<boolean>(false)
 const queryKeyWordTrend = () => {
@@ -68,7 +63,7 @@ const cleanKeyWordTrendData = (newValue: string) => {
   keywordTrendChartVisible.value = false
   dflag.value = false
 }
-const updateTrendEchartsData = (newValue: IKeyWordTrend) => {
+const updateTrendEchartsData = (newValue: any) => {
   trendData = newValue
 }
 
@@ -76,4 +71,3 @@ const updateTrendVisibleValue = (newValue: boolean) => {
   keywordTrendChartVisible.value = newValue
 }
 </script>
-
