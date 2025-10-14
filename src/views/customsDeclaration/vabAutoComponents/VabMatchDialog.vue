@@ -335,9 +335,15 @@
       </div>
       <template #footer>
         <div style="text-align: center">
-          <el-button v-if="previousVisible" type="warning" @click="fetchPreviousMatchData">上一个</el-button>
+          <el-button v-if="previousVisible" type="warning" @click="fetchPreviousMatchData">
+            上一个
+            <el-text style="font-size: 12px" type="info">(←)</el-text>
+          </el-button>
           <el-button type="success" @click="handleCloseMatch2">关闭</el-button>
-          <el-button v-if="nextVisible" type="warning" @click="fetchNextMatchData">下一个</el-button>
+          <el-button v-if="nextVisible" type="warning" @click="fetchNextMatchData">
+            下一个
+            <el-text style="font-size: 12px" type="info">(→)</el-text>
+          </el-button>
         </div>
       </template>
     </vab-dialog>
@@ -443,7 +449,6 @@
 import { CirclePlus, QuestionFilled, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { getHsSelectList } from '~/src/api/devlocal/productInformation'
 import {
   clearAllMatchComponent,
   clearAllMatchShipment,
@@ -463,6 +468,7 @@ import {
   updatePurchaseComponentHs,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { getQualityCheck } from '/@/api/devlocal/packagingShipping'
+import { getHsSelectList } from '/@/api/devlocal/productInformation'
 import type { IGetCheckMatchList, IGetMatchPackageList } from '/@/type/customsDeclarationAndTaxRefund/matchPo'
 import type { IGetQualityCheck } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
@@ -876,23 +882,30 @@ const keyWord = ref('')
 // 获取第二个匹配的数据
 const fetchMatchData = async () => {
   match2ListLoading.value = true
-  const { data } = await getMatchPackageList({
-    sku: _sku.value,
-    status: props.status,
-    matchId: _id.value,
-    keyWord: keyWord.value,
-  })
-  matchList.value = data
-  matchList.value.forEach((item: any) => {
-    if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
-      skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
-    }
-    if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
-      customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
-    }
-  })
-  // 默认只展示匹配站点，需要对 matchList 做处理 筛选出和_siteName一样的数据
-  match2ListLoading.value = false
+  try {
+    const { data } = await getMatchPackageList({
+      sku: _sku.value,
+      status: props.status,
+      matchId: _id.value,
+      keyWord: keyWord.value,
+    })
+    matchList.value = data
+    matchList.value.forEach((item: any) => {
+      if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
+        skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
+      }
+      if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
+        customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
+      }
+    })
+    // 默认只展示匹配站点，需要对 matchList 做处理 筛选出和_siteName一样的数据
+    match2ListLoading.value = false
+  } catch (error) {
+    console.error(error)
+    match2ListLoading.value = false
+  } finally {
+    match2ListLoading.value = false
+  }
 }
 // 上一个显示
 const previousVisible = ref<boolean>(false)
@@ -905,64 +918,74 @@ const lastSku = ref<number>(0)
 // 点击上一个
 const fetchPreviousMatchData = async () => {
   match2ListLoading.value = true
-  const index = idList.value.indexOf(_id.value)
-  _id.value = idList.value[index - 1]
-  const item = list.value.find((item: any) => item.id === _id.value)
-  _sku.value = item!.sku
-  _desc.value = item!.desc
-  _originalCount.value = Number(item!.encasementCount)
-  _siteName.value = item?.site!
-  displaySite.value = true // 确保站点筛选生效
-  Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
-  Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
-  const { data } = await getMatchPackageList({
-    sku: _sku.value,
-    status: props.status,
-    matchId: _id.value,
-    keyWord: keyWord.value,
-  })
-  matchList.value = data
-  matchList.value.forEach((item: any) => {
-    if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
-      skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
-    }
-    if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
-      customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
-    }
-  })
-  handleShowPreviousOrNext(_id.value)
-  match2ListLoading.value = false
+  try {
+    const index = idList.value.indexOf(_id.value)
+    _id.value = idList.value[index - 1]
+    const item = list.value.find((item: any) => item.id === _id.value)
+    _sku.value = item!.sku
+    _desc.value = item!.desc
+    _originalCount.value = Number(item!.encasementCount)
+    _siteName.value = item?.site!
+    displaySite.value = true // 确保站点筛选生效
+    Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
+    Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
+    const { data } = await getMatchPackageList({
+      sku: _sku.value,
+      status: props.status,
+      matchId: _id.value,
+      keyWord: keyWord.value,
+    })
+    matchList.value = data
+    matchList.value.forEach((item: any) => {
+      if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
+        skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
+      }
+      if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
+        customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
+      }
+    })
+    handleShowPreviousOrNext(_id.value)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    match2ListLoading.value = false
+  }
 }
 // 点击下一个
 const fetchNextMatchData = async () => {
   match2ListLoading.value = true
-  const index = idList.value.indexOf(_id.value)
-  _id.value = idList.value[index + 1]
-  const item = list.value.find((item: any) => item.id === _id.value)
-  _sku.value = item!.sku
-  _desc.value = item!.desc
-  _originalCount.value = Number(item!.encasementCount)
-  _siteName.value = item?.site!
-  displaySite.value = true // 确保站点筛选生效
-  Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
-  Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
-  const { data } = await getMatchPackageList({
-    sku: _sku.value,
-    status: props.status,
-    matchId: _id.value,
-    keyWord: keyWord.value,
-  })
-  matchList.value = data
-  matchList.value.forEach((item: any) => {
-    if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
-      skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
-    }
-    if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
-      customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
-    }
-  })
-  handleShowPreviousOrNext(_id.value)
-  match2ListLoading.value = false
+  try {
+    const index = idList.value.indexOf(_id.value)
+    _id.value = idList.value[index + 1]
+    const item = list.value.find((item: any) => item.id === _id.value)
+    _sku.value = item!.sku
+    _desc.value = item!.desc
+    _originalCount.value = Number(item!.encasementCount)
+    _siteName.value = item?.site!
+    displaySite.value = true // 确保站点筛选生效
+    Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
+    Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
+    const { data } = await getMatchPackageList({
+      sku: _sku.value,
+      status: props.status,
+      matchId: _id.value,
+      keyWord: keyWord.value,
+    })
+    matchList.value = data
+    matchList.value.forEach((item: any) => {
+      if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
+        skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
+      }
+      if (item.customsDeclarationCount !== '0' && item.customsDeclarationCount != null && item.customsDeclarationCount != undefined) {
+        customsDeclarationCountMap[item.poComponentId] = Number(item.customsDeclarationCount) || 0
+      }
+    })
+    handleShowPreviousOrNext(_id.value)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    match2ListLoading.value = false
+  }
 }
 const handleShowPreviousOrNext = (id: number) => {
   const length = idList.value.length
@@ -1279,6 +1302,7 @@ const handleClear = async (row: IGetMatchPackageList) => {
     }
     match2ListLoading.value = false
   } catch (error) {
+    match2ListLoading.value = false
     console.error(error)
   }
 }
@@ -1656,6 +1680,44 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   }
   return ''
 }
+
+// 键盘事件处理
+const handleKeydown = (event: KeyboardEvent) => {
+  // 只在匹配对话框打开时响应键盘事件
+  if (!match2Visible.value) return
+
+  // 防止在输入框中触发
+  const target = event.target as HTMLElement
+  if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.contentEditable === 'true') {
+    return
+  }
+
+  switch (event.key) {
+    case 'ArrowLeft':
+      // 左方向键 - 上一个
+      if (previousVisible.value) {
+        event.preventDefault()
+        fetchPreviousMatchData()
+      }
+      break
+    case 'ArrowRight':
+      // 右方向键 - 下一个
+      if (nextVisible.value) {
+        event.preventDefault()
+        fetchNextMatchData()
+      }
+      break
+  }
+}
+
+// 生命周期钩子
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <style lang="scss" scoped>
