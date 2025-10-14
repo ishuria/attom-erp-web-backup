@@ -241,6 +241,7 @@
           <span>{{ row.price != null ? '￥' + row.price : '' }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="关税%" min-width="100" prop="tariff">
         <template #default="{ row }">
           <div class="none">
@@ -254,30 +255,25 @@
           <span>{{ row.tariffPrice != null ? '￥' + row.tariffPrice : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="长(cm)" min-width="90" prop="length">
+
+      <el-table-column label="长(cm)" min-width="120" prop="length">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>
-            {{ row.length != null ? row.length + 'cm' : '' }}
-            <br />
-            <!-- 显示下一档位的长 -->
-            {{ '' }}
-          </span>
+          <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
+          <br />
+          <span v-if="row.length1">({{ row.length1 != null ? row.length1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="宽(cm)" min-width="90" prop="width">
+      <el-table-column label="宽(cm)" min-width="120" prop="width">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>
-            {{ row.width != null ? row.width + 'cm' : '' }}
-            <br />
-            <!-- 显示下一档位的宽 -->
-            {{ '' }}
-          </span>
+          <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
+          <br />
+          <span v-if="row.width1">({{ row.width1 != null ? row.width1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
       <el-table-column label="高(cm)" min-width="90" prop="height">
@@ -285,25 +281,19 @@
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>
-            {{ row.height != null ? row.height + 'cm' : '' }}
-            <br />
-            <!-- 显示下一档位的高 -->
-            {{ '' }}
-          </span>
+          <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
+          <br />
+          <span v-if="row.height1">({{ row.height1 != null ? row.height1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" min-width="110" prop="weight">
+      <el-table-column label="重量(g)" min-width="120" prop="weight">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
-          <span>
-            {{ row.weight != null ? row.weight + 'g' : '' }}
-            <br />
-            <!-- 显示下一档位的重量 -->
-            {{ '' }}
-          </span>
+          <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
+          <br />
+          <span v-if="row.weight1">({{ row.weight1 != null ? row.weight1 + 'g' : '' }})</span>
         </template>
       </el-table-column>
       <!-- <el-table-column label="下一档位" min-width="200" prop="nextGear">
