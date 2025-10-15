@@ -33,11 +33,12 @@
       :cell-style="cellStyle"
       class="noneHoveTable custom-table-hover"
       :data="list"
-      :header-cell-style="{ 'text-align': 'center' }"
+      :header-cell-style="{ textAlign: 'center' }"
       :row-class-name="tableRowClassName"
       stripe
       @row-click="handleRowClick"
       @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange"
     >
       <el-table-column fixed="left" type="selection" width="53" />
       <el-table-column class="image-wall" label="图片" width="75">
@@ -110,28 +111,28 @@
           <el-checkbox v-model="row.magnetic" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
         </template>
       </el-table-column>
-      <el-table-column label="总实际成本" min-width="90" prop="procurementCost">
+      <el-table-column label="总实际成本" min-width="100" prop="procurementCost" sortable="custom">
         <template #header>
           总实际
           <br />
           成本
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="dilapidationCost">
+      <el-table-column label="" min-width="110" prop="dilapidationCost" sortable="custom">
         <template #header>
           损耗成本
           <br />
           (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="packingCost">
+      <el-table-column label="" min-width="110" prop="packingCost" sortable="custom">
         <template #header>
           打包成本
           <br />
           (近20次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="freightFeeCost">
+      <el-table-column label="" min-width="110" prop="freightFeeCost" sortable="custom">
         <template #header>
           运费
           <br />
@@ -139,14 +140,14 @@
         </template>
       </el-table-column>
       <el-table-column label="货币" prop="currency" width="110px" />
-      <el-table-column label="" min-width="100" prop="avgTime">
+      <el-table-column label="" min-width="110" prop="avgTime" sortable="custom">
         <template #header>
           平均交期
           <br />
           (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="100" prop="avgFluctuation">
+      <el-table-column label="" min-width="110" prop="avgFluctuation" sortable="custom">
         <template #header>
           交期平均
           <br />
@@ -156,23 +157,13 @@
       <el-table-column label="长(cm)" min-width="90" prop="length" />
       <el-table-column label="宽(cm)" min-width="90" prop="width" />
       <el-table-column label="高(cm)" min-width="90" prop="height" />
-      <el-table-column label="重量(g)" prop="weight" />
-      <el-table-column
-        label="重量系数"
-        min-width="100"
-        prop="weightCoefficient"
-        :width="flexColumnWidth(list, '重量系数', 'weightCoefficient')"
-      >
+      <el-table-column label="重量(g)" min-width="90" prop="weight" />
+      <el-table-column label="重量系数" min-width="110" prop="weightCoefficient" sortable="custom">
         <template #default="{ row }">
           {{ row.weightCoefficient != null ? row.weightCoefficient.toFixed(4) : '' }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="体积系数"
-        min-width="100"
-        prop="volumeCoefficient"
-        :width="flexColumnWidth(list, '体积系数', 'volumeCoefficient')"
-      >
+      <el-table-column label="体积系数" min-width="110" prop="volumeCoefficient" sortable="custom">
         <template #default="{ row }">
           {{ row.volumeCoefficient != null ? row.volumeCoefficient.toFixed(4) : '' }}
         </template>
@@ -248,11 +239,50 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import handleClipboard from '/@/utils/clipboard'
 import { handleMatched, handleTabs } from '/@/utils/routes'
-import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'SkuInfomation',
 })
+
+const tableRef = ref()
+
+const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  const prop = data.column.prop
+  if (
+    [
+      'procurementCost',
+      'dilapidationCost',
+      'packingCost',
+      'freightFeeCost',
+      'avgTime',
+      'avgFluctuation',
+      'weightCoefficient',
+      'volumeCoefficient',
+    ].includes(prop)
+  ) {
+    return 'header-cell'
+  }
+  return ''
+}
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  // console.log(prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryData()
+}
 
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
@@ -370,6 +400,8 @@ const queryForm = reactive<any>({
   haltStatus: 1, // 0展示停产 1隐藏停产
   pageNo: 1,
   pageSize: 20,
+  orderByField: '',
+  orderDirection: '',
 })
 const total = ref<number>(0)
 const handleSizeChange = (value: number) => {
@@ -481,12 +513,47 @@ onBeforeMount(() => {
   padding-right: 0;
   padding-left: 0;
 }
-
+// .noneHoveTable :deep(.header-cell .cell) {
+//   display: flex; /* 应用 Flexbox 布局 */
+//   align-items: center; /* 垂直居中 */
+//   justify-content: center;
+// }
 .overflow-text {
   display: block;
   max-height: 81.2px; /* 设置文本的最大高度 */
   overflow-y: auto; /* 溢出时显示垂直滚动条 */
 }
+
+/* 修复排序图标位置和样式 */
+:deep(.el-table__header-wrapper .el-table__header th) {
+  position: relative;
+}
+
+/* 确保表头文字不会与排序图标重叠 */
+:deep(.el-table__header-wrapper .el-table__header th .cell) {
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// /* 将排序图标定位到表头右侧 */
+// :deep(.el-table__header-wrapper .el-table__header th .el-table__column-sort) {
+//   position: absolute;
+//   right: 8px;
+//   top: 50%;
+//   transform: translateY(-50%);
+//   z-index: 1;
+// }
+
+// /* 确保排序图标在表头右侧显示 */
+// :deep(.el-table__header-wrapper .el-table__header th .el-table__column-sort .el-icon) {
+//   position: absolute;
+//   right: 0;
+//   top: 50%;
+//   transform: translateY(-50%);
+// }
 .copySku {
   cursor: pointer;
   -webkit-user-select: text;

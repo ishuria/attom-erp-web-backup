@@ -24,7 +24,14 @@
       </vab-query-form>
       <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="800" stripe>
         <el-table-column label="月份" prop="month" width="100" />
-        <el-table-column label="被调整人" prop="userName" width="100" />
+        <el-table-column
+          column-key="userName"
+          :filter-method="filterNameHandler"
+          :filters="filterProductManagerList"
+          label="被调整人"
+          prop="userName"
+          width="100"
+        />
         <el-table-column
           column-key="type"
           :filter-method="filterHandler"
@@ -66,7 +73,14 @@
         </el-table-column>
         <el-table-column label="父体" prop="parent" width="130" />
         <el-table-column label="备注" prop="remark" />
-        <el-table-column label="来源" prop="source" width="135" />
+        <el-table-column
+          column-key="source"
+          :filter-method="filterSourceHandler"
+          :filters="filterAdjustDetailSourceList"
+          label="来源"
+          prop="source"
+          width="135"
+        />
         <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column v-if="!editDisabled" label="操作" width="100">
           <template #default="{ row }">
@@ -134,7 +148,13 @@
 import { Search } from '@element-plus/icons-vue'
 import { FormInstance, TableColumnCtx } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { addAdjustDetail, deleteAdjustDetail, getAdjustDetail, getProductManager } from '/@/api/devlocal/performanceStatistics'
+import {
+  addAdjustDetail,
+  deleteAdjustDetail,
+  getAdjustDetail,
+  getAdjustDetailSource,
+  getProductManager,
+} from '/@/api/devlocal/performanceStatistics'
 import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
 
 defineOptions({
@@ -158,6 +178,8 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) {
+      fetchAdjustDetailSourceList()
+      fetchProductManagerList()
       fetchData()
     }
   },
@@ -196,20 +218,33 @@ const queryForm = reactive<IGetAdjustDetailReq>({
   pageNo: 1,
   pageSize: 20,
 })
+
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const list = ref<IGetAdjustDetail[]>([])
 const productManagerList = ref<{ id: number; label: string }[]>([])
-
+const filterProductManagerList = ref<{ text: string; value: string }[]>([])
 const filterHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
   const property = column.property as keyof IGetAdjustDetail | undefined
   if (!property) return false
   return Number(row[property] as unknown as number) === Number(value)
 }
+
+const filterNameHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
+  const property = column.property as keyof IGetAdjustDetail | undefined
+  if (!property) return false
+  return row[property] === value
+}
 const filterDetailHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
   const property = column.property as keyof IGetAdjustDetail | undefined
   if (!property) return false
   return Number(row[property] as unknown as number) === Number(value)
+}
+
+const filterSourceHandler = (value: string, row: IGetAdjustDetail, column: TableColumnCtx<IGetAdjustDetail>) => {
+  const property = column.property as keyof IGetAdjustDetail | undefined
+  if (!property) return false
+  return row[property] === value
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '类型') {
@@ -221,6 +256,15 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   return {
     textAlign: 'center',
   }
+}
+const fetchProductManagerList = async () => {
+  const { data } = await getProductManager()
+  filterProductManagerList.value = data.map((item) => ({ text: item.label, value: item.label }))
+}
+const filterAdjustDetailSourceList = ref<{ text: string; value: string }[]>([])
+const fetchAdjustDetailSourceList = async () => {
+  const { data } = await getAdjustDetailSource()
+  filterAdjustDetailSourceList.value = data.map((item) => ({ text: item, value: item }))
 }
 const showAdd = async () => {
   addVisible.value = true
@@ -235,17 +279,14 @@ const fetchData = async () => {
   listLoading.value = false
 }
 const queryData = async () => {
-  console.log('查询数据')
   queryForm.pageNo = 1
   fetchData()
 }
 const handleCurrentChange = (val: number) => {
-  console.log('页码变化:', val)
   queryForm.pageNo = val
   fetchData()
 }
 const handleSizeChange = (val: number) => {
-  console.log('每页条数变化:', val)
   queryForm.pageNo = 1
   queryForm.pageSize = val
   fetchData()

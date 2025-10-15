@@ -102,6 +102,18 @@ export function getAdjustDetail(data: IGetAdjustDetailReq): Promise<IGetAdjustDe
     data,
   })
 }
+
+/**
+ * 调整明细-来源列表
+ * @param data
+ * @returns
+ */
+export function getAdjustDetailSource(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/performance/adjust/detail/source/list`,
+    method: 'get',
+  })
+}
 /**
  * 查询当月 人员 对应调整明细
  * @param params

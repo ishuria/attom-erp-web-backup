@@ -590,6 +590,16 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     return {
       textAlign: 'left',
     }
+  } else if (label === '平均转化率') {
+    if (data.row.avgConversionRate < data.row.lowRate) {
+      return {
+        color: 'var(--el-color-danger)',
+        textAlign: 'center',
+      }
+    }
+    return {
+      textAlign: 'center',
+    }
   }
   return {
     textAlign: 'center',
