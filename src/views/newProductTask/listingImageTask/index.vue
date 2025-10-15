@@ -165,7 +165,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation === userName"
+                v-if="ableCheck && row.operation.includes(userName)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
@@ -403,7 +403,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation === userName"
+                v-if="ableCheck && row.operation.includes(userName)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
@@ -638,7 +638,7 @@
           <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
             <template #default="{ row }">
               <el-checkbox
-                v-if="ableCheck && row.operation === userName"
+                v-if="ableCheck && row.operation.includes(userName)"
                 v-model="row.proofreadingStatus"
                 :false-value="0"
                 :true-value="1"
