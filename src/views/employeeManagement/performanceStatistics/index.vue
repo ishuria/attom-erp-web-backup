@@ -51,11 +51,18 @@
                 (小时)
               </template>
             </el-table-column>
+            <el-table-column min-width="100" prop="absenceDuration">
+              <template #header>
+                缺勤时长
+                <br />
+                (小时)
+              </template>
+            </el-table-column>
             <el-table-column min-width="90" prop="annualLeave">
               <template #header>
-                年假
+                短时请假
                 <br />
-                (天)
+                (小时)
               </template>
             </el-table-column>
             <el-table-column min-width="90" prop="sickLeave">
@@ -86,13 +93,6 @@
                 旷工
                 <br />
                 (天)
-              </template>
-            </el-table-column>
-            <el-table-column min-width="100" prop="absenceDuration">
-              <template #header>
-                缺勤时长
-                <br />
-                (小时)
               </template>
             </el-table-column>
             <el-table-column min-width="90" prop="leaveEarlyCount">
