@@ -58,7 +58,7 @@
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="annualLeave">
+            <el-table-column min-width="90" prop="shortLeave">
               <template #header>
                 短时请假
                 <br />
