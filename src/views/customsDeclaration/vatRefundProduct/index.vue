@@ -1033,6 +1033,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     return {
       textAlign: 'center',
     }
+  } else if (label === '利润率') {
+    if (data.row.profitMargin < 0) {
+      return {
+        color: 'var(--el-color-danger)',
+      }
+    }
   }
   // else if (label !== '报关数量' && label !== '报关单位') {
   //   return {
