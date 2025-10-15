@@ -51,7 +51,7 @@
             </div>
             <span>{{ row.length != null ? row.length : '' }}</span>
             <br />
-            <span>{{ row.length1 != null ? row.length1 : '' }}</span>
+            <span v-if="row.length1" style="color: var(--el-color-danger)">{{ row.length1 != null ? row.length1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -62,7 +62,7 @@
             </div>
             <span>{{ row.width != null ? row.width : '' }}</span>
             <br />
-            <span>{{ row.width1 != null ? row.width1 : '' }}</span>
+            <span v-if="row.width1" style="color: var(--el-color-danger)">{{ row.width1 != null ? row.width1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -73,13 +73,13 @@
             </div>
             <span>{{ row.height != null ? row.height : '' }}</span>
             <br />
-            <span>{{ row.height1 != null ? row.height1 : '' }}</span>
+            <span v-if="row.height1" style="color: var(--el-color-danger)">{{ row.height1 != null ? row.height1 : '' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="实际总成本￥" prop="price" width="185">
           <template #default="{ row }">
-            {{ row.price != null ? '￥' + row.price : '' }}
+            {{ row.price != null && row.price != '' ? '￥' + row.price : '' }}
           </template>
         </el-table-column>
 
@@ -90,7 +90,7 @@
             </div>
             <span>{{ row.weight != null ? row.weight : '' }}</span>
             <br />
-            <span>{{ row.weight1 != null ? row.weight1 : '' }}</span>
+            <span v-if="row.weight1" style="color: var(--el-color-danger)">{{ row.weight1 != null ? row.weight1 : '' }}</span>
           </template>
         </el-table-column>
 
@@ -99,13 +99,13 @@
             <div class="none">
               <el-input v-model="row.lastMile" @blur="clickSaleCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.lastMile != null ? row.symbol + row.lastMile : '' }}</span>
+            <span>{{ row.lastMile != null && row.lastMile != '' ? row.symbol + row.lastMile : '' }}</span>
           </template>
         </el-table-column>
 
         <el-table-column label="头程￥" prop="firstMile" width="80">
           <template #default="{ row }">
-            {{ row.firstMile != null ? '￥' + row.firstMile : '' }}
+            {{ row.firstMile != null && row.firstMile != '' ? '￥' + row.firstMile : '' }}
           </template>
         </el-table-column>
 
@@ -114,7 +114,7 @@
             <div class="none">
               <el-input v-model="row.packaging" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-            <span>{{ row.packaging != null ? '￥' + row.packaging : '' }}</span>
+            <span>{{ row.packaging != null && row.packaging != '' ? '￥' + row.packaging : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="头程渠道" prop="firstMileChannel" width="160">
@@ -139,7 +139,7 @@
                 @keydown.enter="effectiveCountInputHandle($event)"
               />
             </div>
-            <span>{{ row.sellingPrice != null ? row.symbol + row.sellingPrice : '' }}</span>
+            <span>{{ row.sellingPrice != null && row.sellingPrice != '' ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
         </el-table-column>
 
@@ -149,14 +149,14 @@
             <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
             <el-text v-if="row.grossMarginRate < 20" type="danger">
-              {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
+              {{ row.grossMarginRate != null && row.grossMarginRate != '' ? row.grossMarginRate + '%' : '' }}
             </el-text>
           </template>
         </el-table-column>
 
         <el-table-column label="ROI" prop="roi" width="80">
           <template #default="{ row }">
-            {{ row.roi != null ? row.roi + '%' : '' }}
+            {{ row.roi != null && row.roi != '' ? row.roi + '%' : '' }}
           </template>
         </el-table-column>
 
@@ -169,7 +169,7 @@
                 @keydown.enter="effectiveCountInputHandle($event)"
               />
             </div>
-            <span>{{ row.weightCoefficient }}</span>
+            <span>{{ row.weightCoefficient != null && row.weightCoefficient != '' ? row.weightCoefficient : '' }}</span>
           </template>
         </el-table-column>
 
@@ -203,13 +203,13 @@
 
         <el-table-column label="平台佣金" prop="platformCommission" width="100">
           <template #default="{ row }">
-            {{ row.platformCommission != null ? row.symbol + row.platformCommission.toFixed(2) : '' }}
+            {{ row.platformCommission != null && row.platformCommission != '' ? row.symbol + row.platformCommission.toFixed(2) : '' }}
           </template>
         </el-table-column>
 
         <el-table-column label="仓储费2个月" min-width="140" prop="storageFee">
           <template #default="{ row }">
-            {{ row.storageFee != null ? row.symbol + row.storageFee.toFixed(2) : '' }}
+            {{ row.storageFee != null && row.storageFee != '' ? row.symbol + row.storageFee.toFixed(2) : '' }}
           </template>
         </el-table-column>
 
@@ -536,6 +536,7 @@ const fetchData = async () => {
   sampleList.value = []
 
   let first: IProgressSample = {
+    firstColumn: '', // 添加第一列数据
     site: '0',
     currencyType: '0',
     foreignExchange: '',
@@ -574,6 +575,7 @@ const fetchData = async () => {
       first.id = convertString(id)
     }
     sampleList.value.push(first)
+    // console.log(sampleList.value)
   }
 }
 defineExpose({

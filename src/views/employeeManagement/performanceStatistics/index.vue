@@ -48,7 +48,7 @@
               <template #header>
                 事假
                 <br />
-                (天)
+                (小时)
               </template>
             </el-table-column>
             <el-table-column min-width="90" prop="annualLeave">

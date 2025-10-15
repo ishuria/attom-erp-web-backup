@@ -57,6 +57,8 @@ export interface IProgressSample {
   id?: string | null
   // 进度id
   progressId?: number | null
+  // 第一列标识
+  firstColumn?: string
   // 站点
   site?: string
   // 外币币种
