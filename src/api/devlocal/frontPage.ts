@@ -146,10 +146,11 @@ export function getFrontPageRankOverAchieved(params: { month: string }): Promise
  * 首页-排行新品提成
  * @returns
  */
-export function getFrontPageRankNewProductOneYearCommission(): Promise<{ data: IRankItem[] }> {
+export function getFrontPageRankNewProductOneYearCommission(params: { month: string }): Promise<{ data: IRankItem[] }> {
   return request({
     url: `${BASE_API}/front_page/rank/new_product_one_year_commission`,
     method: 'get',
+    params,
   })
 }
 /**

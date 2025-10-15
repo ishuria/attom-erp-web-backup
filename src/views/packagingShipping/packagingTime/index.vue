@@ -3,12 +3,30 @@
     <el-row :gutter="30" style="height: calc(100% - 52px)">
       <el-col :span="17" style="height: 100%">
         <vab-query-form>
-          <vab-query-form-left-panel>
+          <vab-query-form-left-panel :span="6">
             <el-button type="primary" @click="showCost">打包成本设定</el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
+          <vab-query-form-right-panel :span="18">
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
+                <el-date-picker
+                  v-model="leftStartDate"
+                  :disabled-date="disabledDate"
+                  :editable="false"
+                  placeholder="开始日期"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  @change="queryData"
+                />
+                <span style="margin: 0 8px">至</span>
+                <el-date-picker
+                  v-model="leftEndDate"
+                  :editable="false"
+                  placeholder="结束日期"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+                  @change="queryData"
+                />
                 <el-select
                   v-model.trim="queryForm.userId"
                   clearable
@@ -236,6 +254,8 @@ const costRules = reactive<any>({
   cost: [{ required: true, message: '请输入每个工时成本', trigger: 'blur' }],
 })
 // 日期初始化
+const leftStartDate = ref<string>('')
+const leftEndDate = ref<string>('')
 const date = ref<string[]>(getDefaultStringTime()) // 初始化为两个空字符串
 const datePickerKey = ref<number>(0) // 用于强制重新渲染日期选择器
 const disabledDate = (time: Date) => {
@@ -246,15 +266,6 @@ const disabledDate = (time: Date) => {
   return date.isBefore(lastMonth, 'day') || date.isAfter(now, 'day')
 }
 
-function getDefaultStringTime(): [string, string] {
-  const now = dayjs()
-  // 获取当月1号
-  const monthStart = now.startOf('month').format('YYYY-MM-DD')
-  // 获取今天
-  const today = now.format('YYYY-MM-DD')
-
-  return [monthStart, today]
-}
 // 修改可见
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({
@@ -303,6 +314,16 @@ const closeModify = () => {
 //   startTime: [{ required: true, message: '请选择开始时间', trigger: 'blur' }],
 //   endTime: [{ required: true, message: '请选择结束时间', trigger: 'blur' }]
 // })
+function getDefaultStringTime(): [string, string] {
+  const now = dayjs()
+  // 获取当月1号
+  const monthStart = now.startOf('month').format('YYYY-MM-DD')
+  // 获取今天
+  const today = now.format('YYYY-MM-DD')
+
+  return [monthStart, today]
+}
+
 const confirmModify = async () => {
   modifyFormRef.value?.validate(async (valid: any) => {
     if (valid) {
@@ -321,6 +342,8 @@ const confirmModify = async () => {
 }
 const queryForm = reactive<any>({
   userId: '',
+  startTime: leftStartDate.value,
+  endTime: leftEndDate.value,
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
@@ -402,6 +425,9 @@ const handleRightCurrentChange = (value: number) => {
 }
 const queryData = () => {
   queryForm.pageNo = 1
+  // 处理只有开始日期没有结束日期的情况
+  queryForm.startTime = leftStartDate.value || ''
+  queryForm.endTime = leftEndDate.value || ''
   fetchData()
 }
 const queryRightData = () => {

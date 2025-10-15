@@ -218,7 +218,18 @@
         <rank title="上月提成排行" :list="rank2List" name="提成" :my-name="myName" />
       </el-col> -->
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
-        <rank :list="rank3List" :my-name="myName" name="新品提成" title="上月新品提成排行(上线1年以内)" />
+        <rank :list="rank3List" :my-name="myName" name="新品提成" title="新品提成排行(上线1年以内)">
+          <template #select>
+            <el-select
+              v-model="selectNewProductOneYearMonth"
+              placeholder="月份"
+              style="max-width: 5em"
+              @change="fetchRankNewProductOneYearCommission"
+            >
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </rank>
       </el-col>
       <el-col v-if="ableProductManagerLeadViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank5List" :my-name="myName" name="新品月均提成(前6个月)" title="前6月平均新品提成排行">
@@ -749,7 +760,7 @@ const rank4List = ref<IRankItem[]>([])
 const rank5List = ref<IRankItem[]>([])
 
 const fetchRankNewProductOneYearCommission = async () => {
-  const { data } = await getFrontPageRankNewProductOneYearCommission()
+  const { data } = await getFrontPageRankNewProductOneYearCommission({ month: selectNewProductOneYearMonth.value! })
   rank3List.value = data
 }
 const fetchRankNewProductCommission = async () => {
@@ -785,6 +796,7 @@ const newProductMonthList = ref<string[]>([])
 const selectAchievedMonth = ref<string>()
 const selectFinishMonth = ref<string>()
 const selectNewProductMonth = ref<string>()
+const selectNewProductOneYearMonth = ref<string>()
 const monthList = ref<string[]>([])
 const selectProfitMonth = ref<string>()
 const selectAssessmentPlusMonth = ref<string>()
@@ -838,6 +850,7 @@ const fetchBillingMonthList = async () => {
   selectAchievedMonth.value = historyBossMonthList.value[0]
   selectFinishMonth.value = historyBossMonthList.value[0]
   selectNewProductMonth.value = data[0]
+  selectNewProductOneYearMonth.value = data[0]
   selectJobLevelMonth.value = data[0]
 }
 const fetchRankOverAchieved = async () => {

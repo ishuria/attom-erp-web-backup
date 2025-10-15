@@ -132,11 +132,11 @@ const fetchAllData = async () => {
 
     const { data } = await checkingPackagingTimeError(requestData)
     allData.value = data.list || []
-    allData.value.forEach((item: any) => {
-      if (item.workingHours) {
-        item.workingHours = item.workingHours.toFixed(2)
-      }
-    })
+    // allData.value.forEach((item: any) => {
+    //   if (item.workingHours) {
+    //     item.workingHours = item.workingHours.toFixed(2)
+    //   }
+    // })
 
     // 初始化过滤数据
     filteredData.value = [...allData.value]
