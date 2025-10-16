@@ -26,7 +26,7 @@
       <el-table-column type="selection" width="38" />
       <el-table-column align="center" label="用户id" min-width="120" prop="userId" show-overflow-tooltip />
       <el-table-column align="center" label="用户名" min-width="120" prop="userName" />
-      
+
       <el-table-column align="center" label="今年病假" min-width="120" prop="currentYearSickLeave" />
       <el-table-column align="center" label="明年病假" min-width="120" prop="nextYearSickLeave" />
       <el-table-column align="center" label="今年年假" min-width="120" prop="currentYearAnnualLeave" />
@@ -51,6 +51,7 @@
           <el-tag v-if="row.status == 2" type="danger">离职</el-tag>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="直属上级提成比例" min-width="160" prop="proportion" show-overflow-tooltip />
       <el-table-column align="center" label="创建时间" min-width="160" prop="createTime" show-overflow-tooltip />
       <el-table-column v-permissions="UserPermission.userOperationColPermission()" align="center" label="操作" width="250">
         <template #default="{ row }">
