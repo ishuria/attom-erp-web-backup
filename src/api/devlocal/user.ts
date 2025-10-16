@@ -61,13 +61,21 @@ export function getAllName(params: IGetAllNameReq) {
   return request({
     url: `${BASE_API}/user/getAllName`,
     method: 'get',
-    params
+    params,
+  })
+}
+
+export function getUserProcurementName(params: IGetAllNameReq) {
+  return request({
+    url: `${BASE_API}/user/procurement`,
+    method: 'get',
+    params,
   })
 }
 
 /**
  * 获取主管列表
- * @returns 
+ * @returns
  */
 export function getSupervisorList() {
   return request({

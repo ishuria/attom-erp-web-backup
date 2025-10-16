@@ -28,7 +28,7 @@
           </template>
           <template v-if="row['column0'] === 'sampleRetention'">
             <!-- <el-select v-model="row[prop]" disabled placeholder="请选择拍照留样情况">
-              <el-option 
+              <el-option
                 v-for="item in photoSampleOptions"
                 :key="item.value"
                 :label="item.label"
@@ -126,6 +126,7 @@ const labelMap: Record<string, string> = {
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
+  procurementManager: '采购负责人',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   manufacturerEnName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
@@ -245,6 +246,7 @@ const fetchVariantList = async () => {
       patent: item.patent,
       productManager: item.productManager === '' ? productManager : item.productManager,
       productDesign: item.productDesign,
+      procurementManager: item.procurementManager,
       sampleRetention: item.sampleRetention.split(',').map(Number),
       packingGroup: item.checkStatus,
       manufacturerEnName: item.manufacturerEnName,

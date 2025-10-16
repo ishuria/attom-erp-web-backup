@@ -109,6 +109,7 @@ export interface IupdateProductSku {
   productDesign?: string
   // 产品经理
   productManager?: string
+  procurementManager?: string
   /**
    * 产品名
    */

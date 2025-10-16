@@ -89,7 +89,7 @@
                     default-first-option
                     filterable
                     :loading="peopleLoading"
-                    placeholder="点击输入和搜索"
+                    placeholder="点击输入和搜索产品经理"
                     remote
                     :remote-method="remotePeopleMethod"
                     @change="handleUpdateSku"
@@ -106,7 +106,7 @@
                     default-first-option
                     filterable
                     :loading="peopleLoading"
-                    placeholder="点击输入和搜索"
+                    placeholder="点击输入和搜索产品设计"
                     remote
                     :remote-method="remotePeopleMethod"
                     @change="handleUpdateSku"
@@ -133,7 +133,24 @@
                   <el-input v-model="sku.numCartons" type="number" @blur="handleUpdateSku" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="5">
+                <el-form-item label="采购负责人">
+                  <el-select
+                    v-model="sku.procurementManager"
+                    clearable
+                    default-first-option
+                    filterable
+                    :loading="peopleLoading"
+                    placeholder="点击输入和搜索采购"
+                    remote
+                    :remote-method="queryRemoteprocurementManager"
+                    @change="handleUpdateSku"
+                  >
+                    <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
                 <el-form-item label="近10次打包装箱数">
                   <el-input disabled />
                 </el-form-item>
@@ -754,6 +771,7 @@ import {
   uploadSkuImage,
 } from '/@/api/devlocal/productInformation'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
+import { getUserProcurementName } from '/@/api/devlocal/user'
 import {
   ROLE_BOSS_CODE,
   ROLE_INDUSTRIAL_DESIGN_CODE,
@@ -1052,6 +1070,28 @@ const remotePeopleMethod = async (query: string) => {
     peopleOptions.value = []
   }
 }
+
+/** 获取采购负责人 */
+const queryRemoteprocurementManager = async (query: string) => {
+  if (query) {
+    const { data } = await getUserProcurementName({
+      name: query,
+    })
+    peopleList.value = data.map((item: any) => {
+      return { value: `${item.userName}`, label: `${item.userName}` }
+    })
+    peopleLoading.value = true
+    setTimeout(() => {
+      peopleLoading.value = false
+      peopleOptions.value = peopleList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    peopleOptions.value = []
+  }
+}
+
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
 const supplierList = ref<any[]>([]) //供应商搜索列表
@@ -1286,6 +1326,7 @@ const handleUpdateSku = async () => {
     numCartons: sku.value.numCartons,
     productManager: sku.value.productManager,
     productDesign: sku.value.productDesign,
+    procurementManager: sku.value.procurementManager,
   })
 }
 const handleRemarksChange = async () => {

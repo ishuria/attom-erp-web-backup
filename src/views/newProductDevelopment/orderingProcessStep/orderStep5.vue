@@ -161,8 +161,26 @@
               @change="handleUpdateMagnetic(row, prop)"
             />
           </template>
+
+          <template v-if="row['column0'] === 'procurementManager'">
+            <el-select
+              v-model="row[prop]"
+              class="center-input"
+              clearable
+              default-first-option
+              filterable
+              :loading="peopleLoading"
+              placeholder="点击输入和搜索"
+              remote
+              :remote-method="remoteProcurementManagerMethod"
+              @change="handleChangeProcurementManager(row, prop)"
+            >
+              <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </template>
         </template>
       </el-table-column>
+
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
       </template>
@@ -193,7 +211,7 @@ import {
   reviewStepNo5VariantImgDel,
   reviewStepNo5VariantImgUpload,
 } from '/@/api/devlocal/orderProcess'
-import { getAllName } from '/@/api/devlocal/user'
+import { getAllName, getUserProcurementName } from '/@/api/devlocal/user'
 import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
@@ -235,6 +253,29 @@ const remotePeopleMethod = async (query: string) => {
     peopleOptions.value = []
   }
 }
+
+// 采购负责人列表
+const remoteProcurementManagerMethod = async (query: string) => {
+  if (query) {
+    const { data } = await getUserProcurementName({
+      name: query,
+    })
+
+    peopleList.value = data.map((item: any) => {
+      return { value: item.userId, label: item.userName }
+    })
+    peopleLoading.value = true
+    setTimeout(() => {
+      peopleLoading.value = false
+      peopleOptions.value = peopleList.value.filter((item) => {
+        return item.label.toLowerCase().includes(query.toLowerCase())
+      })
+    }, 200)
+  } else {
+    peopleOptions.value = []
+  }
+}
+
 const handleUpdateOEM = async (row: any, prop: string) => {
   if (exchangeList.value[FIELD_INDEX_MAP.GRAPHIC_DESIGN][prop] === 1 && row[prop] === 1) {
     // o 1 g 1
@@ -366,15 +407,17 @@ const FIELD_INDEX_MAP = {
   PATENT: 11,
   PRODUCT_MANAGER: 12,
   PRODUCT_DESIGN: 13,
-  SAMPLE_RETENTION: 14,
-  PACKING_GROUP: 15,
-  MANUFACTURER_EN_NAME: 16,
-  CERTIFICATE_UPLOAD: 17,
-  SKU_MERGE: 18,
-  OPERATE: 19,
-  ORDER_ENTRY_ID: 20,
-  PRODUCT_MANAGER_ID: 21,
-  PRODUCT_DESIGN_ID: 22,
+  PROCUREMENT_MANAGER: 14,
+  SAMPLE_RETENTION: 15,
+  PACKING_GROUP: 16,
+  MANUFACTURER_EN_NAME: 17,
+  CERTIFICATE_UPLOAD: 18,
+  SKU_MERGE: 19,
+  OPERATE: 20,
+  ORDER_ENTRY_ID: 21,
+  PRODUCT_MANAGER_ID: 22,
+  PRODUCT_DESIGN_ID: 23,
+  PROCUREMENT_MANAGER_ID: 24,
 } as const
 
 const labelMap: Record<string, string> = {
@@ -393,6 +436,7 @@ const labelMap: Record<string, string> = {
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
   productDesign: '产品设计',
+  procurementManager: '采购负责人',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   packingGroup: '打包小组每次打包都要<br>拍照发微信群给产品经理检查',
   manufacturerEnName: '制造商英文名称<br>需认证产品必填(CPC/FCC/UL等)',
@@ -430,6 +474,7 @@ const buildParams = (key: string) => {
     patent: exchangeList.value[FIELD_INDEX_MAP.PATENT][key],
     productManagerId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key],
     productDesignId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_DESIGN_ID][key],
+    procurementManagerId: exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER_ID][key],
     sampleRetention: exchangeList.value[FIELD_INDEX_MAP.SAMPLE_RETENTION][key].join(','),
     checkStatus: exchangeList.value[FIELD_INDEX_MAP.PACKING_GROUP][key],
     manufacturerEnName: exchangeList.value[FIELD_INDEX_MAP.MANUFACTURER_EN_NAME][key],
@@ -633,6 +678,26 @@ const handleChangeProductDesign = async (row: any, prop: any) => {
     update(prop)
   }
 }
+
+// 修改采购负责人
+const handleChangeProcurementManager = async (row: any, prop: any) => {
+  if (row.variantsSame) {
+    // 获取当前输入框的值
+    const newValue = row[prop]
+
+    Object.keys(row).forEach(async (key) => {
+      if (key !== 'column0' && key !== 'variantsSame') {
+        row[key] = newValue
+        exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER_ID][key] = exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER][key]
+        update(key)
+      }
+    })
+  } else {
+    exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER_ID][prop] = exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER][prop]
+    update(prop)
+  }
+}
+
 // 修改产品定位
 const handleChangeProductPosition = async (row: any, prop: any) => {
   if (row.variantsSame) {
@@ -721,6 +786,7 @@ const handleSaveAndContinue = async () => {
         'battery',
         'benchmarkAsin',
         'productManager',
+        'procurementManager',
         'manufacturerEnName',
       ].includes(column0)
     ) {
@@ -869,6 +935,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
+          procurementManager: item.procurementManager,
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
           manufacturerEnName: item.manufacturerEnName,
@@ -878,6 +945,7 @@ const fetchVariantList = async () => {
           orderEntryId: undefined,
           productManagerId: item.productManagerId,
           productDesignId: item.productDesignId,
+          procurementManagerId: item.procurementManagerId,
         }
       }
     })

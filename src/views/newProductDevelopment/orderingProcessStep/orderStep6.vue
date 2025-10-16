@@ -205,6 +205,7 @@ const labelMap: Record<string, string> = {
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
   productManager: '产品经理',
   productDesign: '产品设计',
+  procurementManager: '采购负责人',
   certification: '证书',
   variantSku: '合并变体的SKU',
 }
@@ -316,6 +317,7 @@ const fetchData = async () => {
       sampleRetention: item.sampleRetention,
       productManager: item.productManager,
       productDesign: item.productDesign,
+      procurementManager: item.procurementManager,
       certification: '',
       variantSku: item.variantSku,
       orderEntryId: item.orderEntryId,
