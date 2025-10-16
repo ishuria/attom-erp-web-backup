@@ -44,6 +44,11 @@
             </el-tooltip>
           </template>
         </el-table-column>
+        <!-- <el-table-column align="center" label="耗材" prop="consumable" width="70">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.consumableCheck" disabled :false-value="0" :true-value="1" />
+          </template>
+        </el-table-column> -->
         <el-table-column align="center" label="每个SKU需要数量" prop="quantity" width="100">
           <template #header>
             每个SKU

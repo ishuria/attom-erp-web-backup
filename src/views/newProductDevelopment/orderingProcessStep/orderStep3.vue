@@ -71,11 +71,11 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="耗材" prop="consumable" width="70">
+        <!-- <el-table-column align="center" label="耗材" prop="consumable" width="70">
           <template #default="{ row }">
-            <el-checkbox v-model="row.consumable" :false-value="0" :true-value="1" />
+            <el-checkbox v-model="row.consumableCheck" :false-value="0" :true-value="1" @change="handleConsumableChange(row)" />
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column align="center" label="每个SKU需要数量" prop="quantity" width="100">
           <template #header>
             每个SKU
@@ -611,6 +611,7 @@ import {
   reviewStepNo3GetSelectVariantList,
   reviewStepNo3PurchaseMatters,
   reviewStepNo3SaveTh,
+  reviewStepNo3UpdateConsumableCheck,
   reviewStepNo3UpdateContractTerms,
   reviewStepNo3UpdatePurchaseMatters,
   reviewStepNo3VariantList,
@@ -978,6 +979,12 @@ const handleVariantChange = async (row: any) => {
 
   await fetchDataComponent()
   await fetchVariantsData()
+}
+const handleConsumableChange = async (row: any) => {
+  await reviewStepNo3UpdateConsumableCheck({
+    reviewComponentId: row.reviewComponentId,
+    consumableCheck: row.consumableCheck,
+  })
 }
 const handleCurrencyChange = async (row: any) => {
   const actualTaxRate = (row.actualTaxRate ?? 0) / 100

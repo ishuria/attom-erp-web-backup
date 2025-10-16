@@ -291,6 +291,16 @@ export function reviewStepNo3ComponentUpdate(data?: IreviewStepNo3ComponentUpdat
   })
 }
 /**
+ * 新品订货流程-零件信息完善与售价核对-修改耗材
+ */
+export function reviewStepNo3UpdateConsumableCheck(params: { reviewComponentId: number; consumableCheck: number }) {
+  return request({
+    url: `${BASE_API}/review/stepsNo3/update/consumableCheck`,
+    method: 'post',
+    params,
+  })
+}
+/**
  * 新品订货流程-零件信息完善与售价核对-修改零件采购注意事项
  */
 export function reviewStepNo3UpdatePurchaseMatters(params?: IreviewStepNo3UpdatePurchaseMatters) {

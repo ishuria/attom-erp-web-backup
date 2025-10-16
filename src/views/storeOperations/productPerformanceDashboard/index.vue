@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="SKU" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="20">
+          <vab-query-form-left-panel>
             <el-form inline :model="queryForm">
               <el-form-item label="站点">
                 <el-select
@@ -61,7 +61,7 @@
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="4">
+          <vab-query-form-right-panel>
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -98,6 +98,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -798,7 +799,7 @@
       </el-tab-pane>
       <el-tab-pane label="ASIN" :name="1">
         <vab-query-form>
-          <vab-query-form-left-panel :span="20">
+          <vab-query-form-left-panel>
             <el-form inline :model="queryForm">
               <el-form-item label="站点">
                 <el-select
@@ -855,7 +856,7 @@
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="4">
+          <vab-query-form-right-panel>
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -892,6 +893,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="asinQueryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryAsinData"
@@ -1455,7 +1457,7 @@
       </el-tab-pane>
       <el-tab-pane label="父体ASIN" :name="2">
         <vab-query-form>
-          <vab-query-form-left-panel :span="20">
+          <vab-query-form-left-panel>
             <el-form inline :model="pAsinQueryForm">
               <el-form-item label="站点">
                 <el-select
@@ -1514,7 +1516,7 @@
               </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="4">
+          <vab-query-form-right-panel>
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
               <template #reference>
                 <el-button>
@@ -1551,6 +1553,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="pAsinQueryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryPAsinData"
@@ -4359,5 +4362,9 @@ onBeforeMount(() => {
 }
 .custom-tooltip-new {
   font-size: 16px;
+}
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
 }
 </style>
