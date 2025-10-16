@@ -576,8 +576,11 @@ const displayMatch1Customs = ref<boolean>(true)
 const filteredMatchList = computed(() => {
   let list = matchList.value
   // 站点过滤：只展示匹配站点
-  if (displaySite.value && _siteName.value) {
-    list = list.filter((item: any) => item.siteName === _siteName.value)
+  if (displaySite.value && _siteName.value.length > 0) {
+    // console.log('站点过滤 - displaySite:', displaySite.value, '_siteName:', _siteName.value)
+    // console.log('过滤前数据量:', list.length)
+    list = list.filter((item: any) => _siteName.value.includes(item.siteName))
+    // console.log('过滤后数据量:', list.length)
   }
   // 报关过滤：隐藏不报关(customsDeclarationStatus=1=不报关)
   if (displayCustoms.value) {
@@ -925,7 +928,11 @@ const fetchPreviousMatchData = async () => {
     _sku.value = item!.sku
     _desc.value = item!.desc
     _originalCount.value = Number(item!.encasementCount)
-    _siteName.value = item?.site!
+    const siteNames = list.value
+      .filter((item: any) => item.id === _id.value)
+      .map((item: any) => item.site)
+      .filter(Boolean)
+    _siteName.value = [...new Set(siteNames)]
     displaySite.value = true // 确保站点筛选生效
     Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
     Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
@@ -961,7 +968,13 @@ const fetchNextMatchData = async () => {
     _sku.value = item!.sku
     _desc.value = item!.desc
     _originalCount.value = Number(item!.encasementCount)
-    _siteName.value = item?.site!
+    // console.log(list.value)
+    const siteNames = list.value
+      .filter((item: any) => item.id === _id.value)
+      .map((item: any) => item.site)
+      .filter(Boolean)
+    _siteName.value = [...new Set(siteNames)]
+
     displaySite.value = true // 确保站点筛选生效
     Object.keys(skuActualCountMap).forEach((key) => delete skuActualCountMap[key])
     Object.keys(customsDeclarationCountMap).forEach((key) => delete customsDeclarationCountMap[key])
@@ -972,6 +985,7 @@ const fetchNextMatchData = async () => {
       keyWord: keyWord.value,
     })
     matchList.value = data
+
     matchList.value.forEach((item: any) => {
       if (item.skuActualCount !== 0 && item.skuActualCount != null && item.skuActualCount != undefined) {
         skuActualCountMap[item.mId] = Number(item.skuActualCount) || 0
@@ -1010,16 +1024,23 @@ const handleShowPreviousOrNext = (id: number) => {
     nextVisible.value = true
   }
 }
-const _siteName = ref<string>('')
+const _siteName = ref<string[]>([])
 const handleShowMatch2 = (row: any) => {
   match2Visible.value = true
   _sku.value = row.sku
   _desc.value = row.desc
   _id.value = row.id
   _originalCount.value = Number(row.encasementCount)
-  _siteName.value = row.site
+  // 匹配操作列是合并的 应该找到这个匹配对应数据的站点然后去重
+  // 找到这个row的pid 和 id
+  const siteNames = list.value
+    .filter((item: any) => item.id === row.id)
+    .map((item: any) => item.site)
+    .filter(Boolean)
+  _siteName.value = [...new Set(siteNames)]
   displaySite.value = true
-
+  // console.log(row)
+  // console.log(_siteName.value)
   handleShowPreviousOrNext(row.id)
   fetchMatchData()
 }
