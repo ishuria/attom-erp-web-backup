@@ -220,6 +220,19 @@ const option = reactive<any>({
       symbolSize: 7,
     },
     {
+      name: '新品平均利润',
+      type: 'line',
+      yAxisIndex: 1,
+      data: [],
+      itemStyle: { color: '#FF6B9D' }, // 粉红色
+      lineStyle: {
+        width: 2,
+      },
+      smooth: true,
+      symbol: 'none',
+      symbolSize: 7,
+    },
+    {
       name: '新款采购额',
       type: 'line',
       yAxisIndex: 1,
@@ -245,7 +258,8 @@ watch(
     option.series[3].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.puHuoCount)
     option.series[4].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.developmentDesign)
     option.series[5].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.newProductOneYearCommission)
-    option.series[6].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.purchaseAmount)
+    option.series[6].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.newProductsAverageProfit)
+    option.series[7].data = newVal.map((item: IGetFrontPagePerformanceHistory) => item.purchaseAmount)
   }
 )
 </script>

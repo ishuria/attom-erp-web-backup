@@ -168,6 +168,7 @@ export interface IGetFrontPagePerformanceHistory {
   developmentDesign: number
   purchaseAmount: number
   newProductOneYearCommission: number
+  newProductsAverageProfit: number
 }
 export interface IRankItem {
   name: string

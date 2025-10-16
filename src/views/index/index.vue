@@ -260,7 +260,7 @@
             <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
               <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
-            <el-date-picker v-model="selectDate" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
+            <el-date-picker v-model="selectDate" :clearable="false" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
           </template>
         </performance-history>
       </el-col>
