@@ -577,10 +577,7 @@ const filteredMatchList = computed(() => {
   let list = [...matchList.value] // 创建副本，保持原始顺序
   // 站点过滤：只展示匹配站点
   if (displaySite.value && _siteName.value.length > 0) {
-    // console.log('站点过滤 - displaySite:', displaySite.value, '_siteName:', _siteName.value)
-    // console.log('过滤前数据量:', list.length)
     list = list.filter((item: any) => _siteName.value.includes(item.siteName))
-    // console.log('过滤后数据量:', list.length)
   }
   // 报关过滤：隐藏不报关(customsDeclarationStatus=1=不报关)
   if (displayCustoms.value) {
@@ -975,7 +972,6 @@ const fetchNextMatchData = async () => {
     _sku.value = item!.sku
     _desc.value = item!.desc
     _originalCount.value = Number(item!.encasementCount)
-    // console.log(list.value)
     const siteNames = list.value
       .filter((item: any) => item.id === _id.value)
       .map((item: any) => item.site)
@@ -1046,12 +1042,8 @@ const handleShowMatch2 = (row: any) => {
     .filter(Boolean)
   _siteName.value = [...new Set(siteNames)]
   displaySite.value = true
-  // console.log(row)
-  // console.log(_siteName.value)
   handleShowPreviousOrNext(row.id)
   fetchMatchData()
-  console.log(idList.value)
-  console.log(row.id)
 }
 // 已发未报的展示
 const sentButNotReportedVisible = ref<boolean>(false)
@@ -1164,7 +1156,6 @@ const skuActualCountMap = reactive<Record<string, number>>({})
 const customsDeclarationCountMap = reactive<Record<string, number>>({})
 let originalSkuActualCount = 0
 const handleFocus = (row: IGetMatchPackageList) => {
-  // console.log('原来', row.skuActualCount)
   originalSkuActualCount = Number(row.skuActualCount)
   // 如果该 mId 不存在于 changedItems 中，初始化记录
   if (!(row.mId in skuActualCountMap)) {
@@ -1175,8 +1166,6 @@ const handleFocus = (row: IGetMatchPackageList) => {
   }
 }
 const handleUpdateSkuCount = async (row: IGetMatchPackageList) => {
-  // console.log('改变后', row.skuActualCount)
-  // console.log(originalSkuActualCount)
   if (originalSkuActualCount !== 0 && Number(row.skuActualCount) === 0) {
     $baseMessage('已填入的sku数量如果要设置为0，请使用清空按钮，而不是直接填0！', 'error')
     row.skuActualCount = originalSkuActualCount
@@ -1484,7 +1473,7 @@ const fetchData = async () => {
       })
     }
   })
-  // console.log(idMap)
+
   idList.value = Array.from(idSet).sort((a: any, b: any) => a - b)
   list.value.sort((a, b) => {
     return a.id - b.id
@@ -1613,7 +1602,6 @@ const match1Style = (data: { row: any; column: any; rowIndex: number; columnInde
         const info = idMap.value.get(data.row.id)
         if (info) {
           const totalSkuActualCount = info.skuActualCount.reduce((sum: number, count: number) => sum + (Number(count) || 0), 0)
-          // console.log(totalSkuActualCount)
           if (totalSkuActualCount === info.encasementCount) {
             return {
               color: '',
