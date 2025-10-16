@@ -7,6 +7,8 @@ class PerformanceStatisticsPermission {
   static readonly ADJUST_DETAIL = 'performanceStatistics:adjust:detail'
   /** 考核数结账权限 */
   static readonly ASSESSMENT_CHECKOUT = 'performanceStatistics:assessment:checkout'
+  /** 考核数导出 */
+  static readonly ASSESSMENT_EXPORT = 'performanceStatistics:assessment:export'
 }
 
 export default PerformanceStatisticsPermission

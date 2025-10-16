@@ -4,7 +4,21 @@
       <el-tab-pane label="全员明细" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+            <el-form inline @submit.prevent>
+              <el-form-item>
+                <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  v-permissions="{ permission: [PerformanceStatisticsPermission.ASSESSMENT_EXPORT] }"
+                  :loading="generateLoading"
+                  type="primary"
+                  @click="userAttendanceExport"
+                >
+                  导出
+                </el-button>
+              </el-form-item>
+            </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -43,6 +57,9 @@
                 <br />
                 (小时)
               </template>
+            </el-table-column>
+            <el-table-column min-width="100" prop="count">
+              <template #header>餐补次数</template>
             </el-table-column>
             <el-table-column min-width="90" prop="personalLeave">
               <template #header>
@@ -629,6 +646,7 @@ import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import PerformanceStatisticsPermission from '~/src/permissions/performanceStatistics'
+import { downloadFilePD } from '/@/api/devlocal/download'
 import {
   checkoutAssessmentNumber,
   getAdjustDetailByUser,
@@ -800,6 +818,36 @@ const handleSettingSizeChange = (value: number) => {
   settingQueryForm.pageSize = value
   fetchSettingData()
 }
+
+const generateLoading = ref<boolean>(false)
+
+const userAttendanceExport = async () => {
+  try {
+    generateLoading.value = true
+    const response = await downloadFilePD('/user/attendance/export', {
+      startDate: date.value[0],
+      endDate: date.value[1],
+    })
+
+    // 如果返回的是 JSON 类型，说明可能是错误信息
+    if (response.type === 'application/json') {
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        const result = JSON.parse(reader.result as string)
+        if (result.code === 5000) {
+          $baseMessage(result.msg, 'error')
+        }
+      })
+      reader.readAsText(response)
+    }
+    generateLoading.value = false
+  } catch (error) {
+    console.error(error)
+    $baseMessage('下载失败，请稍后重试', 'error')
+    generateLoading.value = false
+  }
+}
+
 const changeInput = async (row: IGetProductManagerAssessmentList, column: any, cell: HTMLTableCellElement) => {
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
