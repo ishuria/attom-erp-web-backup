@@ -11,20 +11,18 @@ export const getLocalStorage = (key: string) => {
 
 export const setLocalStorage = (key: string, value: any) => {
   try {
-      const jsonValue = JSON.stringify(value);
-      localStorage.setItem(key, jsonValue);
+    const jsonValue = JSON.stringify(value)
+    localStorage.setItem(key, jsonValue)
   } catch (error) {
-      console.error("Failed to store item in localStorage:", error);
+    console.error('Failed to store item in localStorage:', error)
   }
 }
 
-
-export const removeLocalStorage = (key:string) => {
+export const removeLocalStorage = (key: string) => {
   try {
-      localStorage.removeItem(key);
-      console.log(`Item with key '${key}' has been removed from localStorage.`);
+    localStorage.removeItem(key)
+    console.log(`Item with key '${key}' has been removed from localStorage.`)
   } catch (error) {
-      console.error("Failed to remove item from localStorage:", error);
+    console.error('Failed to remove item from localStorage:', error)
   }
 }
-

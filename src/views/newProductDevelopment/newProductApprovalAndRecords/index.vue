@@ -146,6 +146,13 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="新款评估编号" min-width="100" prop="evaluationId">
+            <template #header>
+              新款评估
+              <br />
+              编号
+            </template>
+          </el-table-column>
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
@@ -332,6 +339,13 @@
               </span>
             </template>
           </el-table-column>
+          <el-table-column label="新款评估编号" min-width="100" prop="evaluationId">
+            <template #header>
+              新款评估
+              <br />
+              编号
+            </template>
+          </el-table-column>
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
@@ -513,6 +527,13 @@
               <span :style="{ display: 'inline-block', 'min-width': columnWidths.reviewPersonName + 'px', 'text-align': 'left' }">
                 {{ row.reviewPersonName }}
               </span>
+            </template>
+          </el-table-column>
+          <el-table-column label="新款评估编号" min-width="100" prop="evaluationId">
+            <template #header>
+              新款评估
+              <br />
+              编号
             </template>
           </el-table-column>
 
@@ -862,7 +883,7 @@ const setPreviewList = (url: string) => {
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProps) => {
   const label = column.label
   // 设置需要合并的列
-  if (['提交日期', '图片', '立项日期', '审批日期', '耗时', '审批状态', '审批人', '操作'].includes(label)) {
+  if (['提交日期', '图片', '立项日期', '审批日期', '耗时', '审批状态', '审批人', '操作', '新款评估编号'].includes(label)) {
     // 获取当前row的id
     const reviewMainId = row.reviewMainId
     // 默认不跨行

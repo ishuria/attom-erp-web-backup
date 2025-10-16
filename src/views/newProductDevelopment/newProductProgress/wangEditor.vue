@@ -13,6 +13,7 @@
     </div>
     <template #footer>
       <span>
+        <el-button type="primary" @click="handleSave">保存</el-button>
         <el-button @click="insertDate">插入日期</el-button>
         <el-button @click="handleCloseDialog">取消</el-button>
         <el-button type="primary" @click="handleConfirmDialog">确认</el-button>
@@ -25,7 +26,6 @@
 import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
-import { removeLocalStorage } from '/@/utils/localStorage'
 
 defineOptions({
   name: 'WangEditor',
@@ -54,24 +54,38 @@ watch(
   (newValue) => {
     dflag.value = newValue
 
-    // 当对话框打开时，检查缓存内容
+    // 当对话框打开时，智能选择内容来源
     if (newValue) {
       const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
       const tempContent = localStorage.getItem(key)
 
-      // console.log('tempContent', tempContent)
-      // console.log('content', content.value)
+      // 智能选择逻辑：
+      // 1. 如果后端有内容且缓存也有内容，比较时间戳决定使用哪个
+      // 2. 如果只有后端有内容，使用后端内容
+      // 3. 如果只有缓存有内容，使用缓存内容
+      // 4. 都没有则使用空内容
 
-      // 判断逻辑：
-      // 1. 有缓存内容
-      // 2. 缓存内容不是空的HTML标签（如 <p><br></p>、<p></p> 等）
-      // 满足以上条件则使用缓存，否则使用后端返回的内容
-      if (tempContent && !isEmptyHtml(tempContent)) {
-        // 使用缓存内容
+      if (content.value && !isEmptyHtml(content.value) && tempContent && !isEmptyHtml(tempContent)) {
+        // 两者都有内容，比较时间戳
+        const cacheTimestamp = localStorage.getItem(`${key}_timestamp`)
+        const currentTime = Date.now()
+
+        if (cacheTimestamp && currentTime - parseInt(cacheTimestamp) < 5 * 60 * 1000) {
+          // 缓存是5分钟内的，使用缓存（用户可能正在编辑）
+          html.value = tempContent
+        } else {
+          // 缓存过期或没有时间戳，使用后端内容
+          html.value = content.value
+        }
+      } else if (content.value && !isEmptyHtml(content.value)) {
+        // 只有后端有内容
+        html.value = content.value
+      } else if (tempContent && !isEmptyHtml(tempContent)) {
+        // 只有缓存有内容
         html.value = tempContent
       } else {
-        // 使用后端内容
-        html.value = content.value || ''
+        // 都没有
+        html.value = ''
       }
 
       // 确保编辑器内容同步
@@ -162,6 +176,8 @@ const handleClick = () => {
     const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
     // 直接使用 localStorage.setItem 保存 HTML 内容，避免 JSON.stringify 添加引号
     localStorage.setItem(key, html.value)
+    // 同时保存时间戳，用于判断缓存是否过期
+    localStorage.setItem(`${key}_timestamp`, Date.now().toString())
     // console.log(key, html.value);
   }, 1000)
 }
@@ -181,6 +197,15 @@ const handleCloseDialog = () => {
   emit('clickBoolean', false)
   dflag.value = false
 }
+// 点击保存
+const handleSave = () => {
+  if (!editorRef.value) return
+  emit('clickChild', editorRef.value.getHtml())
+  $baseMessage(`${props.title}保存成功`, 'success', 'hey')
+  clearTimer()
+  const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
+  localStorage.removeItem(`${key}_timestamp`)
+}
 /**
  * 当确认对话框的时候
  */
@@ -192,7 +217,7 @@ const handleConfirmDialog = () => {
   dflag.value = false
   clearTimer()
   const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-  removeLocalStorage(key)
+  localStorage.removeItem(`${key}_timestamp`)
 }
 
 const handleCreated = (editor: IDomEditor) => {
@@ -206,7 +231,7 @@ onBeforeUnmount(() => {
   // 这样可以避免路由切换时误清理缓存
   if (dflag.value) {
     const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
-    removeLocalStorage(key)
+    localStorage.removeItem(`${key}_timestamp`)
   }
 })
 onUnmounted(() => {
