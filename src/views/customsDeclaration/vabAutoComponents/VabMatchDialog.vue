@@ -574,7 +574,7 @@ const displayCustoms = ref<boolean>(true)
 const displayMatch1Customs = ref<boolean>(true)
 // 根据开关对 matchList 进行过滤（站点 + 报关）
 const filteredMatchList = computed(() => {
-  let list = matchList.value
+  let list = [...matchList.value] // 创建副本，保持原始顺序
   // 站点过滤：只展示匹配站点
   if (displaySite.value && _siteName.value.length > 0) {
     // console.log('站点过滤 - displaySite:', displaySite.value, '_siteName:', _siteName.value)
@@ -592,22 +592,29 @@ const filteredMatchList = computed(() => {
       groupMap.get(key)!.push(it)
     }
     const result: any[] = []
-    groupMap.forEach((items, mId) => {
-      const allNoCustoms = items.every((x: any) => Number(x.customsDeclarationStatus) === 1)
-      if (allNoCustoms) {
-        // 整组全部不报关：只保留一个（保留第一个）
-        result.push(items[0])
-      } else {
-        // 否则，过滤掉不报关的，保留报关项
-        items.forEach((x: any) => {
-          const status = x.customsDeclarationStatus
-          // customsDeclarationStatus 为 null/undefined 或不为 1 的都视为报关
-          if (status === null || status === undefined || Number(status) !== 1) {
-            result.push(x)
-          }
-        })
+    // 保持原始顺序，按 mId 在原始列表中的顺序处理
+    const processedMIds = new Set<number>()
+    for (const it of list) {
+      const mId = it.mId as number
+      if (!processedMIds.has(mId)) {
+        processedMIds.add(mId)
+        const items = groupMap.get(mId) || []
+        const allNoCustoms = items.every((x: any) => Number(x.customsDeclarationStatus) === 1)
+        if (allNoCustoms) {
+          // 整组全部不报关：只保留一个（保留第一个）
+          result.push(items[0])
+        } else {
+          // 否则，过滤掉不报关的，保留报关项
+          items.forEach((x: any) => {
+            const status = x.customsDeclarationStatus
+            // customsDeclarationStatus 为 null/undefined 或不为 1 的都视为报关
+            if (status === null || status === undefined || Number(status) !== 1) {
+              result.push(x)
+            }
+          })
+        }
       }
-    })
+    }
     list = result
   }
   return list
@@ -1043,6 +1050,8 @@ const handleShowMatch2 = (row: any) => {
   // console.log(_siteName.value)
   handleShowPreviousOrNext(row.id)
   fetchMatchData()
+  console.log(idList.value)
+  console.log(row.id)
 }
 // 已发未报的展示
 const sentButNotReportedVisible = ref<boolean>(false)
