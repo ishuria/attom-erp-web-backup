@@ -1476,7 +1476,7 @@ const fetchData = async () => {
     }
   })
   // console.log(idMap)
-  idList.value = Array.from(idSet)
+  idList.value = Array.from(idSet).sort((a: any, b: any) => a - b)
   list.value.sort((a, b) => {
     return a.id - b.id
   })
