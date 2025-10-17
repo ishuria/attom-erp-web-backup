@@ -254,6 +254,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -500,6 +501,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -747,6 +749,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -999,6 +1002,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -1253,6 +1257,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -1507,6 +1512,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -1651,6 +1657,7 @@
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -3465,23 +3472,26 @@ onUnmounted(() => {
           .left-panel {
             margin-bottom: 5px !important;
           }
-          .el-form {
-            .el-form-item:first-child {
-              margin-bottom: 5px !important;
-
-              .el-check-tag,
-              .el-form-item__label {
-                margin: 0 10px 5px 0;
-                border-radius: 99px;
-              }
-            }
-            .el-form-item:nth-child(2) {
-              margin-bottom: 5px !important;
-            }
-            .el-form-item:last-child {
-              margin-bottom: 5px !important;
-            }
+          .right-panel {
+            margin-bottom: 5px !important;
           }
+          // .el-form {
+          //   .el-form-item:first-child {
+          //     margin-bottom: 5px !important;
+
+          //     .el-check-tag,
+          //     .el-form-item__label {
+          //       margin: 0 10px 5px 0;
+          //       border-radius: 99px;
+          //     }
+          //   }
+          //   .el-form-item:nth-child(2) {
+          //     margin-bottom: 5px !important;
+          //   }
+          //   .el-form-item:last-child {
+          //     margin-bottom: 5px !important;
+          //   }
+          // }
         }
 
         .el-table {
@@ -3684,6 +3694,7 @@ onUnmounted(() => {
 // 列设置面板样式
 .column-settings {
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .drag-group {
@@ -3741,5 +3752,9 @@ onUnmounted(() => {
     //   font-size: 18px;
     // }
   }
+}
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
 }
 </style>

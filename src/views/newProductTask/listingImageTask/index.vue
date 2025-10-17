@@ -35,6 +35,7 @@
               <el-form-item>
                 <el-input
                   v-model="queryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -276,6 +277,7 @@
               <el-form-item>
                 <el-input
                   v-model="queryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -512,6 +514,7 @@
               <el-form-item>
                 <el-input
                   v-model="queryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -733,6 +736,7 @@
               <el-form-item>
                 <el-input
                   v-model="queryForm.keyword"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="queryData"
@@ -1250,7 +1254,11 @@ const canFinishTask = (row: any) => {
   const supervisors = row.supervisorNames?.split(',').map((name: string) => name.trim()) || []
   const isSupervisor = supervisors.includes(userName)
 
-  return isProductManager || isProductDesign || isSupervisor
+  // 检查是否是发布人
+  const publishers = row.publisherPersonName?.split(',').map((name: string) => name.trim()) || []
+  const isPublisher = publishers.includes(userName)
+
+  return isProductManager || isProductDesign || isSupervisor || isPublisher
 }
 
 // // 检查用户是否有权限完成该任务
@@ -2033,4 +2041,8 @@ onBeforeMount(() => {
 // :deep(.noneHoveTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
 //   background-color: #fafafa !important;
 // }
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
+}
 </style>

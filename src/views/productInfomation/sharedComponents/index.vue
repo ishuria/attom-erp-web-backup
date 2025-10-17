@@ -4,40 +4,48 @@
       <vab-query-form-right-panel :span="24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              class="search-input"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData"/>
+            <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table 
+    <el-table
+      ref="tableRef"
       v-loading="listLoading"
-      ref="tableRef" 
-      border class="noneHoveTable" 
-      :data="list" 
+      border
+      class="noneHoveTable"
+      :data="list"
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
       @cell-click="cellClick"
     >
       <el-table-column label="图片" width="94">
         <template #default="{ row }">
-          <el-image fit="fill" :src="row.imageUrl" style="width: 100%; height: 100%" @click="handleImagePreview(row.imageUrl)" >
+          <el-image fit="fill" :src="row.imageUrl" style="width: 100%; height: 100%" @click="handleImagePreview(row.imageUrl)">
             <template #error>
-              <el-icon/>
+              <el-icon />
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column class="component-center" label="零件ID" min-width="70" prop="id" width="100"/>   
-      <el-table-column label="零件名" min-width="200" prop="componentName"/>
+      <el-table-column class="component-center" label="零件ID" min-width="70" prop="id" width="100" />
+      <el-table-column label="零件名" min-width="200" prop="componentName" />
       <el-table-column label="使用的SKU" min-width="200" prop="sku">
         <template #default="{ row }">
           <span v-html="row.sku"></span>
         </template>
       </el-table-column>
-      <el-table-column label="默认供应商" min-width="200" prop="suppliser"/>
+      <el-table-column label="默认供应商" min-width="200" prop="suppliser" />
       <!-- <el-table-column label="云舟采购价格系数" min-width="80" prop="ratio">
         <template #default="{ row }">
           <div class="none">
@@ -49,13 +57,13 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
-            <el-link type="primary" underline='never' @click="handleSupplier(row)">供应商</el-link>
-            <el-link type="primary" underline='never' @click="handleAddOtherSku(row)">添加到SKU</el-link>
+            <el-link type="primary" underline="never" @click="handleSupplier(row)">供应商</el-link>
+            <el-link type="primary" underline="never" @click="handleAddOtherSku(row)">添加到SKU</el-link>
           </el-space>
         </template>
       </el-table-column>
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px;"/>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
     </el-table>
     <vab-pagination
@@ -67,21 +75,16 @@
     />
 
     <!-- 添加到其它SKU -->
-    <vab-dialog 
-      v-model="addOtherSkuVisible" 
-      :before-close="handlerOtherSkuCloseDialog" 
+    <vab-dialog
+      v-model="addOtherSkuVisible"
+      :before-close="handlerOtherSkuCloseDialog"
       class="moldDialog"
       title="零件复制到其他SKU"
       width="1525"
     >
-      <el-divider style="margin-top: 0;"/>
+      <el-divider style="margin-top: 0" />
       <div class="transfer-container">
-        <el-transfer 
-          v-model="transferValue" 
-          :data="transferData" 
-          filterable 
-          :titles="['源列', '目的列']"
-        />
+        <el-transfer v-model="transferValue" :data="transferData" filterable :titles="['源列', '目的列']" />
       </div>
       <template #footer>
         <span>
@@ -90,7 +93,7 @@
         </span>
       </template>
     </vab-dialog>
-    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose"/>
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
@@ -104,25 +107,25 @@ defineOptions({
 
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
-    addOtherSkuVisible.value = false
+  addOtherSkuVisible.value = false
 }
 
 let copyRow: any
-const cellClick = async (row: any, column: any, cell: HTMLTableCellElement) => { 
-  const firstChild = cell?.children[0]?.children[0];
-  const secondChild = cell?.children[0]?.children[1];
+const cellClick = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
 
   if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
-    return;
+    return
   }
 
-  copyRow = JSON.parse(JSON.stringify(row));
+  copyRow = JSON.parse(JSON.stringify(row))
 
   if (firstChild.classList.contains('none')) {
-    firstChild.classList.remove('none');
-    secondChild.classList.add('none');
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
 
-    focusAndSelectInput(cell);
+    focusAndSelectInput(cell)
   }
 }
 
@@ -151,19 +154,19 @@ let _componentId = ref<number>()
 // 添加其他 SKU 的逻辑
 const handleAddOtherSku = async (row: any) => {
   // console.log(row);
-  
+
   states.value = []
   initials.value = []
   transferData.value = []
   transferValue.value = []
-  const { data } = await getProductSkuList({existingPartsListId: row.id})
+  const { data } = await getProductSkuList({ existingPartsListId: row.id })
   data.forEach((item: any) => {
     states.value.push(item.sku)
     initials.value.push(item.skuId)
   })
   transferData.value = generateData2()
   _componentId.value = row.id
-  
+
   addOtherSkuVisible.value = true
 }
 const handleSubmitOtherSku = async () => {
@@ -172,12 +175,12 @@ const handleSubmitOtherSku = async () => {
     const { data } = await addConsumablesOtherSku({
       skuIds: `${transferValue.value}`,
       componentId: _componentId.value!,
-      type: 0
+      type: 0,
     })
-    if(data === true) {
+    if (data === true) {
       $baseMessage('添加到其他SKU成功', 'success', 'hey')
     }
-  });
+  })
 }
 
 const router = useRouter()
@@ -217,22 +220,21 @@ const handleSupplier = (row: any) => {
   router.push({
     path: '/productInfomation/skuSupplier',
     query: {
-      title: "SKU供应商",
+      title: 'SKU供应商',
       componentId: row.id,
       componentName: row.componentName,
-      from: "allReadyComponents",
+      from: 'allReadyComponents',
     },
   })
 }
-
 
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 图片预览关闭事件
-const imagePreviewClose = () =>{
-  imagePreviewVisible.value = false;
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
 }
 const handleImagePreview = (url: string) => {
   imagePreviewVisible.value = true
@@ -247,7 +249,7 @@ const queryData = () => {
       ...route.query,
       pageNo: '1',
       pageSize: queryForm.pageSize,
-    }
+    },
   })
   fetchData()
 }
@@ -259,7 +261,7 @@ const fetchData = async () => {
   list.value = data.list
   total.value = data.total
   list.value.forEach((item: any) => {
-    item.sku = item.sku.replaceAll(',', '<br>');
+    item.sku = item.sku.replaceAll(',', '<br>')
   })
   listLoading.value = false
 }
@@ -277,7 +279,6 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   display: flex;
@@ -290,7 +291,7 @@ onBeforeMount(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.moldDialog .el-dialog__body) { 
+:deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
 }
 .transfer-container {
@@ -317,5 +318,8 @@ onBeforeMount(() => {
 .none {
   display: none;
 }
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
+}
 </style>
-

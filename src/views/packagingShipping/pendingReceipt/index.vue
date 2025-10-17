@@ -58,6 +58,7 @@
                 </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -293,6 +294,7 @@
                 </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
+                  class="search-input"
                   clearable
                   placeholder="请输入搜索关键词"
                   @input="debouncedQueryData"
@@ -1447,5 +1449,9 @@ onBeforeMount(async () => {
 .icon-hover:hover {
   color: var(--el-color-primary);
   background-color: #f2f2f2; /* 浅灰色背景 */
+}
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
 }
 </style>

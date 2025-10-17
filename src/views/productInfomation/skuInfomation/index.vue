@@ -12,6 +12,7 @@
           <el-form-item>
             <el-input
               v-model.trim="queryForm.keyWord"
+              class="search-input"
               clearable
               placeholder="请输入搜索关键词"
               @input="queryData"
@@ -562,5 +563,9 @@ onBeforeMount(() => {
   &:hover {
     color: #000;
   }
+}
+// 搜索框宽度设置
+.search-input {
+  width: 300px !important;
 }
 </style>
