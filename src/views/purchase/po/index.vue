@@ -5,6 +5,14 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="18">
             <el-button
+              v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"
+              :loading="priceSharingLoading"
+              type="primary"
+              @click="handlePackageTaskRelease"
+            >
+              发布打包任务
+            </el-button>
+            <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
               type="primary"
@@ -2026,6 +2034,26 @@
         <el-button :loading="reduceCostLoading" type="primary" @click="confirmReductionCost">确定</el-button>
       </template>
     </vab-dialog>
+
+    <!-- 发布打包任务 -->
+    <vab-dialog
+      v-model="releaseNewPackageTaskVisible"
+      class="moldDialog"
+      title="发布打包任务"
+      width="20%"
+      @close="handleClosePackageTaskReleaseDialog"
+    >
+      <el-divider class="divider-margin" />
+      <el-form class="form-center" label-position="top" label-width="auto" :model="releaseNewPackageTaskForm">
+        <el-form-item label="打包任务数量" prop="tax">
+          <el-input v-model="releaseNewPackageTaskForm.count" clearable />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button :loading="releasePackageTaskLoading" type="primary" @click="handleConfirmReleaseNewPackageTask">确认</el-button>
+      </template>
+    </vab-dialog>
+
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
@@ -2051,6 +2079,7 @@ import {
   getPurchaseBonus,
   getPurchaseCostReduction,
   purchaseTotalAp,
+  releasePackageTask,
   updateComponentAllPay,
   updateComponentPayPart,
   updateComponentRefund,
@@ -2083,11 +2112,36 @@ const procurementBonus = ref<number>(0)
 const procurementBonusCrossMonth = ref<number>(0)
 const _poComponentId = ref<number>(0)
 const reductionCostVisible = ref<boolean>(false)
+
+const releaseNewPackageTaskVisible = ref<boolean>(false)
+const releasePackageTaskLoading = ref<boolean>(false)
+const releaseNewPackageTaskForm = reactive<any>({})
+
+const handleConfirmReleaseNewPackageTask = async () => {
+  try {
+    releasePackageTaskLoading.value = true
+    const poArr = [...selectedPORow.value]
+    const { data } = await releasePackageTask({
+      poId: poArr[0],
+      count: releaseNewPackageTaskForm.count,
+    })
+    if (data) {
+      $baseMessage('Po打包任务发布成功！', 'success')
+      handleClosePackageTaskReleaseDialog()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    releaseNewPackageTaskForm.count = null
+    releasePackageTaskLoading.value = false
+  }
+}
+
 const reductionCostForm = reactive<any>({})
 const reductionCostFormRef = ref<FormInstance>()
 const reductionCostFormRules = reactive<FormRules>({
-  beforePrice: [{ required: true, message: '请输入优化前价格', trigger: 'blur' }],
-  afterPrice: [{ required: true, message: '请输入优化后价格', trigger: 'blur' }],
+  beforePrice: [{ required: true, message: '请输入优化前价格！', trigger: 'blur' }],
+  afterPrice: [{ required: true, message: '请输入优化后价格！', trigger: 'blur' }],
 })
 const closeReductionCost = () => {
   reductionCostFormRef.value?.resetFields()
@@ -2568,6 +2622,27 @@ const handleConfirmRefund = async () => {
     }
   })
 }
+
+// 发布打包任务按钮
+const handlePackageTaskRelease = () => {
+  if (selectedPORow.value.size === 0) {
+    $baseMessage('您未选中Po任何行！', 'warning')
+    return
+  }
+
+  if (selectedPORow.value.size > 1) {
+    $baseMessage('不能一次性发布多个打包任务！', 'warning')
+    return
+  }
+
+  releaseNewPackageTaskVisible.value = true
+}
+
+// 关闭发布打包任务弹窗
+const handleClosePackageTaskReleaseDialog = () => {
+  releaseNewPackageTaskVisible.value = false
+}
+
 // 展示总价分摊弹窗
 const handleShowTotalPriceSharing = () => {
   // 判断是否选中零件操作

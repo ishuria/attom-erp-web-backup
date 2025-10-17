@@ -31,6 +31,7 @@ import type {
   IId,
   IIds,
   INumberResp,
+  IPacakgeTaskReq,
   IPoId,
   IPoIds,
   IPoSkuComponentId,
@@ -589,6 +590,19 @@ export function planPoNbgFlagHander(params?: IIds) {
 export function applyPurchaseReductionCost(data?: IApplyPurchaseReductionCostReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/purchase/cost/reduction/apply`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 采购订单-发布打包任务
+ * @param params
+ * @returns
+ */
+export function releasePackageTask(data?: IPacakgeTaskReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/purchase/packageTask/release`,
     method: 'post',
     data,
   })

@@ -23,6 +23,8 @@ class PoPermission {
   static readonly QUERY = 'purchase:po:query'
   /** 付款记录权限 */
   static readonly PAY_RECORD = 'purchase:pay:record'
+  /** 发布打包任务按钮权限 */
+  static readonly PACKAGE_TASK_REPLEASE = 'purchase:packageTask:release'
 }
 
 export default PoPermission

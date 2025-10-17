@@ -950,3 +950,11 @@ export interface IGetPurchaseComponentCustomInfo {
   quantity?: string
   billingUnit?: string
 }
+
+/**
+ * 采购订单-发布打包任务
+ */
+export interface IPacakgeTaskReq {
+  poId: number
+  count: number
+}
