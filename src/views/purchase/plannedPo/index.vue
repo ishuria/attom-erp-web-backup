@@ -191,6 +191,18 @@
                   <el-option label="不报关" :value="1" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -707,6 +719,7 @@ import {
   updatePlanPoStatus,
   updatePoPurchaseMatters,
 } from '/@/api/devlocal/purchasePo'
+import { getUserProcurementName } from '/@/api/devlocal/user'
 import PlanPoPermission from '/@/permissions/planPo'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -730,6 +743,7 @@ const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta } = tabsStore
 const selectRows = ref<any>([])
+const procurementManagerOptions = ref<any>([])
 const setSelectRows = (value: string) => {
   selectRows.value = value
 }
@@ -744,6 +758,7 @@ const skuColumns = ref<any>([])
 // 第三组：零件和其他信息 (不支持合并单元格)
 const componentColumns = ref<any>([])
 
+const deraltProcurementManager = { userId: -1, userName: '全部采购负责人' }
 const fetchColumn = async () => {
   const { data } = await getOperationColumnList({ type: 9 })
   poOperationColumns.value = data
@@ -850,6 +865,7 @@ const queryForm = reactive<IGetPlanPoListQuery>({
   keyWord: '',
   status: 0, //po状态 0待发布 1未达起订量
   customsStatus: -1, //报关状态 -1全部 0报关 1不报关
+  procurementManager: deraltProcurementManager,
 })
 const route = useRoute()
 const handleSizeChange = (value: number) => {
@@ -1295,6 +1311,16 @@ const clickLog = async (val: any) => {
     clickRow.value.purchaseMatters = val
   }
 }
+
+// 获取采购负责人列表
+const queryProcurementManagerData = async () => {
+  procurementManagerOptions.value = []
+  const { data } = await getUserProcurementName({
+    name: '',
+  })
+  data.unshift(deraltProcurementManager)
+  procurementManagerOptions.value = data
+}
 /**
  * 当点击取消，确认时，子组件传递给父组件 false
  */
@@ -1305,7 +1331,14 @@ const clickLogBool = (val: any) => {
 const fetchData = async () => {
   try {
     listLoading.value = true
-    const { data } = await getPlanPoList(queryForm)
+    const { data } = await getPlanPoList({
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+      keyWord: queryForm.keyWord,
+      status: queryForm.status,
+      customsStatus: queryForm.customsStatus,
+      procurementManagerId: queryForm.procurementManager.userId,
+    })
     if (data) {
       listLoading.value = false
       total.value = data.total
@@ -1320,6 +1353,7 @@ onActivated(() => {
 })
 onBeforeMount(() => {
   fetchColumn()
+  queryProcurementManagerData()
   const { pageNo, pageSize, tab } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)

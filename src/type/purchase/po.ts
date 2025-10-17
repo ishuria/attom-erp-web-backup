@@ -5,6 +5,8 @@ export interface IGetPlanPoListQuery {
   pageNo: number
   pageSize: number
   customsStatus: number //报关状态 -1全部 0报关 1不报关
+  procurementManager?: any
+  procurementManagerId?: number
 }
 // 采购计划-获取采购计划PlanPo返回值
 export interface IGetPlanPoListResp {
