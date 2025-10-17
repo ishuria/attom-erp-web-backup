@@ -37,6 +37,8 @@ export interface IGetAssessmentListReq {
   pageNo: number
   pageSize: number
   status?: number
+  orderByField?: string
+  orderDirection?: string
 }
 
 export interface IGetAssessmentListRes {

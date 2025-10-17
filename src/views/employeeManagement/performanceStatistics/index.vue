@@ -41,48 +41,51 @@
           v-loading="listLoading"
           border
           :cell-style="{ textAlign: 'center' }"
+          class="all-table"
           :data="list"
+          :default-sort="{ prop: 'totalBonus', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleSortChange"
         >
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
-            <el-table-column label="姓名" min-width="100" prop="userName" />
-            <el-table-column label="角色" min-width="130" prop="roleName" />
+            <el-table-column label="姓名" min-width="90" prop="userName" />
+            <el-table-column label="角色" min-width="120" prop="roleName" />
           </el-table-column>
           <el-table-column label="加班和请假">
-            <el-table-column min-width="100" prop="overtimeHours">
+            <el-table-column min-width="100" prop="overtimeHours" sortable="custom">
               <template #header>
                 加班时长
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="count">
+            <el-table-column min-width="100" prop="count" sortable="custom">
               <template #header>餐补次数</template>
             </el-table-column>
-            <el-table-column min-width="90" prop="personalLeave">
+            <el-table-column min-width="90" prop="personalLeave" sortable="custom">
               <template #header>
                 事假
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="absenceDuration">
+            <el-table-column min-width="100" prop="absenceDuration" sortable="custom">
               <template #header>
                 缺勤时长
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="shortLeave">
+            <el-table-column min-width="90" prop="shortLeave" sortable="custom">
               <template #header>
                 短时请假
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="sickLeave">
+            <el-table-column min-width="90" prop="sickLeave" sortable="custom">
               <template #header>
                 病假
                 <br />
@@ -91,63 +94,63 @@
             </el-table-column>
           </el-table-column>
           <el-table-column label="考勤异常">
-            <el-table-column min-width="100" prop="sWorkCount">
+            <el-table-column min-width="100" prop="sWorkCount" sortable="custom">
               <template #header>
                 上班缺卡
                 <br />
                 (次)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="xWorkCount">
+            <el-table-column min-width="100" prop="xWorkCount" sortable="custom">
               <template #header>
                 下班缺卡
                 <br />
                 (次)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="absenteeismCount">
+            <el-table-column min-width="90" prop="absenteeismCount" sortable="custom">
               <template #header>
                 旷工
                 <br />
                 (天)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="leaveEarlyCount">
+            <el-table-column min-width="90" prop="leaveEarlyCount" sortable="custom">
               <template #header>
                 早退
                 <br />
                 (次)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="leaveEarlyDuration">
+            <el-table-column min-width="100" prop="leaveEarlyDuration" sortable="custom">
               <template #header>
                 早退时长
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="90" prop="lateCount">
+            <el-table-column min-width="90" prop="lateCount" sortable="custom">
               <template #header>
                 迟到
                 <br />
                 (次数)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="seriousLateCount">
+            <el-table-column min-width="100" prop="seriousLateCount" sortable="custom">
               <template #header>
                 严重迟到
                 <br />
                 (次数)
               </template>
             </el-table-column>
-            <el-table-column min-width="100" prop="lateDuration">
+            <el-table-column min-width="100" prop="lateDuration" sortable="custom">
               <template #header>
                 迟到时长
                 <br />
                 (小时)
               </template>
             </el-table-column>
-            <el-table-column min-width="130" prop="seriousLateDuration">
+            <el-table-column min-width="130" prop="seriousLateDuration" sortable="custom">
               <template #header>
                 严重迟到时长
                 <br />
@@ -155,7 +158,7 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="总奖金" min-width="110" prop="">
+          <el-table-column label="总奖金" min-width="110" prop="totalBonus" sortable="custom">
             <template #default="{ row }">
               {{ handleCalculateTotalBonus(row) }}
             </template>
@@ -741,6 +744,8 @@ const queryForm = reactive<IGetAssessmentListReq>({
   startDate: '',
   endDate: '',
   status: 0,
+  orderByField: 'totalBonus',
+  orderDirection: 'desc',
 })
 const list = ref<IGetUserAttendanceList[]>([])
 /* ============================== 考核数设定变量 ============================== */
@@ -998,6 +1003,24 @@ const cell3Style = (data: { row: any; column: any; rowIndex: number; columnIndex
     textAlign: 'center',
   }
 }
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  // console.log(prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryData()
+}
 // tab切换
 const handleTabChange = () => {
   if (activeName.value === 2) {
@@ -1102,5 +1125,18 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+/* 修复排序图标位置和样式 */
+:deep(.all-table .el-table__header-wrapper .el-table__header th) {
+  position: relative;
+}
+
+/* 确保表头文字不会与排序图标重叠 */
+:deep(.all-table .el-table__header-wrapper .el-table__header th .cell) {
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
