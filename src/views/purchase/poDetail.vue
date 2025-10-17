@@ -121,7 +121,12 @@
                     <el-input v-model="poDetailData.numCartons" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="5">
+                  <el-form-item label="采购负责人">
+                    <el-input v-model="poDetailData.procurementManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
                   <el-form-item label="我方打包整箱数(近10次)">
                     <el-input v-model="poDetailData.packedTenRecord" disabled />
                   </el-form-item>
@@ -768,7 +773,12 @@
                     <el-input v-model="poDetailData.numCartons" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="5">
+                  <el-form-item label="采购负责人">
+                    <el-input v-model="poDetailData.procurementManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
                   <el-form-item label="我方打包整箱数(近10次)">
                     <el-input v-model="poDetailData.packedTenRecord" disabled />
                   </el-form-item>
@@ -1377,7 +1387,12 @@
                     <el-input v-model="poDetailData.numCartons" disabled />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="5">
+                  <el-form-item label="采购负责人">
+                    <el-input v-model="poDetailData.procurementManager" disabled />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
                   <el-form-item label="我方打包整箱数(近10次)">
                     <el-input v-model="poDetailData.packedTenRecord" disabled />
                   </el-form-item>

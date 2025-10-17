@@ -2994,7 +2994,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   }
 
   // 合并 SKU 行
-  if (label === 'SKU图片' || label === 'SKU' || label === '数量') {
+  if (label === '采购负责人' || label === 'SKU图片' || label === 'SKU' || label === '数量') {
     const poSkuId = row.poSkuId
 
     // 遍历后面的行，检查相同的 SKU ID
