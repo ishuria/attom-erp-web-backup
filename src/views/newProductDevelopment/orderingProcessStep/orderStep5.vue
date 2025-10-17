@@ -966,7 +966,6 @@ const fetchVariantList = async () => {
         syncVariantValues(item)
       }
     })
-    // console.log(exchangeList.value);
   } catch (error) {
     console.error('Error fetching variant list:', error)
   }
@@ -1002,7 +1001,7 @@ onMounted(() => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.el-table__body-wrapper tr:nth-last-child(-n + 3)) {
+:deep(.el-table__body-wrapper tr:nth-last-child(-n + 4)) {
   display: none;
 }
 :deep(.center-select) {
