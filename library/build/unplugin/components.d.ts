@@ -187,6 +187,7 @@ declare module 'vue' {
     TariffBillUpload: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/TariffBillUpload.vue')['default']
     TodoList: typeof import('./../../../src/views/index/vabAutoComponents/TodoList.vue')['default']
     Top30ProductSaleTable: typeof import('./../../../src/views/index/vabAutoComponents/Top30ProductSaleTable.vue')['default']
+    Top50ProductLossTable: typeof import('./../../../src/views/index/vabAutoComponents/Top50ProductLossTable.vue')['default']
     TopBarCard: typeof import('./../../../src/views/index/vabAutoComponents/TopBarCard.vue')['default']
     TopCard: typeof import('./../../../src/views/index/vabAutoComponents/TopCard.vue')['default']
     Transactions: typeof import('./../../../src/views/goods/vabAutoComponents/Transactions.vue')['default']

@@ -26,10 +26,10 @@ export function getAmazonStars(score: number, commentNumbers: number): number {
 
 /**
  * @description 处理亚马逊图片变清晰
- * @param url 
+ * @param url
  */
 export const handleImgUrl = (url: string): string => {
-  if (url.startsWith("https")) {
+  if (url.startsWith('https')) {
     //去掉第一个_后面的到最后一个.前面的
     const start = url.indexOf('_')
     const end = url.lastIndexOf('.')
@@ -43,11 +43,11 @@ export const handleImgUrl = (url: string): string => {
 }
 /**
  * @description 将小数转化为百分比，保留对应的位数
- * @param value 
- * @param num 
- * @returns 
+ * @param value
+ * @param num
+ * @returns
  */
- export function formatPercentage(value: number | null, num: number): string | null {
+export function formatPercentage(value: number | null, num: number): string | null {
   if (value == null) return value
   const percentage = (value * 100).toFixed(num) // 将小数转换为百分比，并保留两位小数
   return `${percentage}%`

@@ -275,6 +275,16 @@ export function getFrontPageTop30ProductSale(): Promise<{ data: IGetOperationAma
   })
 }
 /**
+ * 首页-TOP50亏损产品排行
+ * @returns
+ */
+export function getFrontPageTop50ProductLoss(): Promise<{ data: IGetOperationAmazonSKUList[] }> {
+  return request({
+    url: `${BASE_API}/operation/amazon/sku/top50/loss/list`,
+    method: 'get',
+  })
+}
+/**
  * 首页-库存货值统计
  * @returns
  */

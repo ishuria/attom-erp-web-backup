@@ -2,7 +2,7 @@
   <vab-card class="top30ProductSaleTable">
     <template #header>
       <vab-icon icon="information-line" />
-      TOP30新品销售额排行
+      TOP50亏损产品排行
       <div class="right-select">
         <slot name="select"></slot>
       </div>
@@ -40,12 +40,15 @@
       <el-table-column label="30天销售额" min-width="110" prop="monthOrderSales">
         <template #default="{ row }">${{ row.monthOrderSales }}</template>
       </el-table-column>
-      <el-table-column label="30天销量" min-width="100" prop="monthOrderVolume" />
-      <el-table-column label="上新天数" min-width="95" prop="newArrivalDay">
-        <template #default="{ row }">{{ row.newArrivalDay }}天</template>
+      <el-table-column label="30天销量" min-width="90" prop="monthOrderVolume" />
+      <el-table-column label="30天净利润" min-width="100" prop="monthNetProfit">
+        <template #default="{ row }">${{ row.monthNetProfit }}</template>
+      </el-table-column>
+      <el-table-column label="30天净利润率" min-width="110" prop="monthNetProfitMargin">
+        <template #default="{ row }">{{ formatPercentage(row.monthNetProfitMargin, 2) }}</template>
       </el-table-column>
       <el-table-column label="产品经理" min-width="95" prop="productManager" />
-      <el-table-column label="产品设计" min-width="95" prop="productDesign" />
+      <el-table-column label="运营" min-width="95" prop="operationUserName" />
     </el-table>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
   </vab-card>
@@ -54,11 +57,12 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
+import { formatPercentage } from '~/src/utils/rate'
 import { IGetOperationAmazonSKUList } from '/@/type/storeOperation/productPerformanceType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'Top30ProductSaleTable',
+  name: 'Top50ProductLossTable',
 })
 
 const props = defineProps<{

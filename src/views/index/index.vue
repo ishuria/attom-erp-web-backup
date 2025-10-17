@@ -264,16 +264,6 @@
           </template>
         </performance-history>
       </el-col>
-      <!-- top30新品销售额 -->
-      <el-col v-if="ableViewTop30ProductSaleCard" :lg="14" :md="24" :sm="24" :xl="14" :xs="24">
-        <top30-product-sale-table :list="top30ProductSaleList">
-          <!-- <template #select>
-            <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
-              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template> -->
-        </top30-product-sale-table>
-      </el-col>
     </el-row>
     <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
       <el-col :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
@@ -282,6 +272,28 @@
     </el-row>
 
     <!-- 第六层 -->
+    <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
+      <!-- top30新品销售额 -->
+      <el-col v-if="ableViewTop30ProductSaleCard" :lg="11" :md="24" :sm="24" :xl="11" :xs="24">
+        <top30-product-sale-table :list="top30ProductSaleList">
+          <!-- <template #select>
+            <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
+              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template> -->
+        </top30-product-sale-table>
+      </el-col>
+      <!-- top50 亏损产品 -->
+      <el-col v-if="ableViewTop50ProductLossCard" :lg="13" :md="24" :sm="24" :xl="13" :xs="24">
+        <top50-product-loss-table :list="top50ProductLossList">
+          <!-- <template #select>
+            <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
+              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template> -->
+        </top50-product-loss-table>
+      </el-col>
+    </el-row>
 
     <history-assessment-records
       v-model="historyVisible"
@@ -326,6 +338,7 @@ import {
   getFrontPageRankNewProductOneYearCommission,
   getFrontPageRankOverAchieved,
   getFrontPageTop30ProductSale,
+  getFrontPageTop50ProductLoss,
   getMonthlyAssessmentMinus,
   getMonthlyAssessmentPlus,
   getMonthlyProductProfit,
@@ -334,6 +347,8 @@ import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import {
   ROLE_ADMINBUYERLEAD_CODE,
   ROLE_BOSS_CODE,
+  ROLE_ECOMMERCEOPERATIONLEAD_CODE,
+  ROLE_ECOMMERCEOPERATOR_CODE,
   ROLE_GRAPHICDESIGNER_CODE,
   ROLE_GRAPHICDESIGNLEAD_CODE,
   ROLE_INDUSTRIAL_DESIGN_CODE,
@@ -395,6 +410,12 @@ const ableViewDestroyValueCard =
   currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 const ableViewCommissionCard = commissionRole.includes(currentRoleCode)
 const ableBossViewCard = currentRoleCode === ROLE_BOSS_CODE
+const ableViewTop50ProductLossCard =
+  currentRoleCode === ROLE_BOSS_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -862,9 +883,14 @@ const fetchRankAssessmentFinish = async () => {
   rank4List.value = data
 }
 const top30ProductSaleList = ref<IGetOperationAmazonSKUList[]>([])
+const top50ProductLossList = ref<IGetOperationAmazonSKUList[]>([])
 const fetchTop30ProductSale = async () => {
   const { data } = await getFrontPageTop30ProductSale()
   top30ProductSaleList.value = data
+}
+const fetchTop50ProductLoss = async () => {
+  const { data } = await getFrontPageTop50ProductLoss()
+  top50ProductLossList.value = data
 }
 const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalValue[]>([])
 const fetchInventoryProductsTotalValue = async () => {
@@ -902,6 +928,9 @@ onBeforeMount(async () => {
   }
   if (ableViewTop30ProductSaleCard) {
     fetchTop30ProductSale()
+  }
+  if (ableViewTop50ProductLossCard) {
+    fetchTop50ProductLoss()
   }
   if (ableBossViewCard) {
     fetchInventoryProductsTotalValue()
