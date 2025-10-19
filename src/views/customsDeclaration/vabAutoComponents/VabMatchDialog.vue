@@ -318,7 +318,7 @@
             <template #default="{ row }">
               <el-space alignment="center" :size="10">
                 <!-- <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link> -->
-                <el-link underline="never" @click="handleInsertAllBg(row)">填入(报关)</el-link>
+                <el-link :loading="row.loadingEdit" underline="never" @click="handleInsertAllBg(row)">填入(报关)</el-link>
                 <el-link type="warning" underline="never" @click="handleInsertAllNotBg(row)">填入(不报关)</el-link>
                 <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
                 <el-link type="danger" underline="never" @click="handleClear(row)">清空</el-link>
@@ -1238,6 +1238,15 @@ const handleInsertAllBg = async (row: IGetMatchPackageList) => {
   //   return
   // }
   try {
+    if (!row.goodCount) {
+      $baseMessage('打包任务数没有好的数量，不能进行匹配！', 'error')
+      return
+    }
+    // sku的实际发货数量大于打包任务好的数量
+    if (row.skuActualCount >= row.goodCount!) {
+      $baseMessage('此条任务填入（报关）已完成，无法填入在此点击填入（报关）！', 'error')
+      return
+    }
     match2ListLoading.value = true
     const { data } = await insertAllMatchComponent({
       id: _id.value,
