@@ -103,7 +103,13 @@
     <vab-dialog v-model="addVisible" title="新增" width="20%" @close="closeAdd">
       <el-form ref="addFormRef" label-width="auto" :model="addForm" :rules="addRules" style="margin-left: 0; margin-right: 0">
         <el-form-item label="月份" prop="month">
-          <el-date-picker v-model="addForm.month" placeholder="请选择月份" type="month" value-format="YYYY-MM" />
+          <el-date-picker
+            v-model="addForm.month"
+            :disabled-date="disabledDate"
+            placeholder="请选择月份"
+            type="month"
+            value-format="YYYY-MM"
+          />
         </el-form-item>
         <el-form-item label="被调整人" prop="userId">
           <el-select v-model="addForm.userId" filterable placeholder="请选择被调整人">
@@ -155,6 +161,8 @@ import {
   getAdjustDetailSource,
   getProductManager,
 } from '/@/api/devlocal/performanceStatistics'
+import { ROLE_BOSS_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
 import { IGetAdjustDetail, IGetAdjustDetailReq } from '/@/type/employeeManagement/performanceStatistics'
 
 defineOptions({
@@ -166,6 +174,8 @@ const props = defineProps<{
   editDisabled: boolean
 }>()
 const emit = defineEmits(['update:modelValue', 'query-data'])
+const aclStore = useAclStore()
+
 const visible = computed({
   get() {
     return props.modelValue
@@ -174,6 +184,26 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
+
+// 判断当前用户是否为BOSS
+const isBoss = computed(() => aclStore.getRole.includes(ROLE_BOSS_CODE))
+
+// 日期选择器禁用日期的函数
+const disabledDate = (date: Date) => {
+  if (isBoss.value) {
+    // BOSS无限制
+    return false
+  }
+
+  // 其他用户只能选择上个月（含）之后的月份
+  const today = new Date()
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+
+  // 将日期设置为该月的第一天进行比较
+  const compareDate = new Date(date.getFullYear(), date.getMonth(), 1)
+
+  return compareDate < lastMonth
+}
 watch(
   () => props.modelValue,
   (val) => {
