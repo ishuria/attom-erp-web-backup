@@ -177,6 +177,13 @@
             <span>{{ row.billCostName }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="币种" min-width="180" prop="crurency">
+          <template #default="{ row }">
+            <el-select v-model="row.currency" @change="modifyFeeNameSetting(row)">
+              <el-option v-for="item in currencyList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </template>
+        </el-table-column>
         <el-table-column label="合并报关后可合并" min-width="100" prop="bgStatus">
           <template #header>
             合并报关
@@ -537,6 +544,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { includeTariffOption } from '../../packagingShipping/constantOption'
+import { getShipmentLegCurrencyList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import {
   addChannelFreightForwarder,
   addCostFreightForwarder,
@@ -585,6 +593,7 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   }
   return ''
 }
+const currencyList = ref<any>()
 const router = useRouter()
 const route = useRoute()
 const currencyNumList = [
@@ -951,6 +960,7 @@ const modifyFeeNameSetting = async (row: IGetForwarderCostList) => {
       costShowStatus: row.costShowStatus,
       settlementObject: row.settlementObject,
       inTaxRefundBillStatus: row.inTaxRefundBillStatus,
+      currency: row.currency,
     })
   } catch (error) {
     console.error(error)
@@ -1033,6 +1043,12 @@ const fetchData = async () => {
   })
   listLoading.value = false
 }
+
+const fetchCurrencyList = async () => {
+  const { data } = await getShipmentLegCurrencyList()
+  currencyList.value = data
+}
+
 onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
   if (pageNo) {
@@ -1043,6 +1059,7 @@ onBeforeMount(() => {
   }
   fetchData()
   fetchSelectList()
+  fetchCurrencyList()
 })
 </script>
 

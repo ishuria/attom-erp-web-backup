@@ -530,6 +530,8 @@ export interface IUpdateCostFreightForwarderReq {
   error?: number
   /** 计入退税资料运费 0不计入 1计入 */
   inTaxRefundBillStatus?: number
+  /** 币种 */
+  currency?: number
 }
 
 export interface IAddChannelFreightForwarderReq {
@@ -720,6 +722,8 @@ export interface IGetForwarderCostList {
   settlementObject: number
   /** 计入退税资料运费 0不计入 1计入 */
   inTaxRefundBillStatus: number
+  /** 币种 */
+  currency?: number
 }
 
 export interface IGetForwarderListReq {
