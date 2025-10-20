@@ -13,9 +13,9 @@
     </div>
     <template #footer>
       <span>
-        <el-button type="primary" @click="handleSave">保存</el-button>
         <el-button @click="insertDate">插入日期</el-button>
         <el-button @click="handleCloseDialog">取消</el-button>
+        <el-button type="success" @click="handleSave">保存</el-button>
         <el-button type="primary" @click="handleConfirmDialog">确认</el-button>
       </span>
     </template>

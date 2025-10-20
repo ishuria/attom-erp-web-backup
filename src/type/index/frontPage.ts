@@ -206,6 +206,16 @@ export interface IGetFrontPageInventoryProductsTotalValue {
   date: string
   totalValue: number
   unpaidGoods: number
+  // FBA已到库存
+  fbaArrivedInventory?: Array<{
+    siteName: string
+    value: number
+  }>
+  // FBA在途库存
+  fbaInTransitInventory?: Array<{
+    siteName: string
+    value: number
+  }>
 }
 
 export interface IGetFrontPageJobLevelCommission {
@@ -213,4 +223,27 @@ export interface IGetFrontPageJobLevelCommission {
   monthlyLevel: string
   newProductCommission: number
   commissionRatio: number
+}
+
+export interface ILowVolumeProductStorageFee {
+  sku: string
+  skuImgUrl: string
+  flag: string
+  productDesc: string
+  operationUserName: string
+
+  /** 预计下月仓储费 */
+  estimateNextMonthStorageFee: number
+
+  /** 预计剩余库存仓储天数 */
+  remainingStorageDays: number
+
+  /** 预计总仓储费 */
+  totalStorageFee: number
+
+  /** 预计库存售完利润 */
+  expectedProfit: number
+
+  /** 建议清算 */
+  recommendClearing: number
 }

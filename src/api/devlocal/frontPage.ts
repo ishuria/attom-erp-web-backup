@@ -18,6 +18,7 @@ import {
   IGetFrontPagePerformanceHistoryReq,
   IGetFrontPageProductProfitRes,
   IGetFrontPageProgressProjectsRes,
+  ILowVolumeProductStorageFee,
   IRankItem,
 } from '/@/type/index/frontPage'
 
@@ -315,5 +316,23 @@ export function getFrontPageJobLevelCommission(params: { month: string }): Promi
     url: `${BASE_API}/front_page/job_level/commission`,
     method: 'get',
     params,
+  })
+}
+/**
+ * 首页-低动销产品仓储费
+ * @param params
+ * @returns
+ */
+export function getLowVolumeProductStorageFee(data: {
+  id: number
+  pageNo: number
+  pageSize: number
+  orderByField: string
+  orderDirection: string
+}): Promise<{ data: { list: ILowVolumeProductStorageFee[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/low/volume/product/storageFees`,
+    method: 'post',
+    data,
   })
 }

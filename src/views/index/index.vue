@@ -266,7 +266,8 @@
       </el-col>
     </el-row>
     <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
-      <el-col :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+      <!-- 库存货值统计 -->
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
       </el-col>
     </el-row>
@@ -294,6 +295,43 @@
         </top50-product-loss-table>
       </el-col>
     </el-row>
+    <!-- 低动销仓储费 -->
+    <el-row class="row-spacing" :gutter="20">
+      <el-col :lg="15" :md="24" :sm="24" :xl="15" :xs="24">
+        <low-volume-product-storage-fees
+          :current-page="lowStorageFeeQueryForm.pageNo"
+          :list="lowVolumeProductStorageFeeList"
+          :loading="lowStorageFeeLoading"
+          :page-size="lowStorageFeeQueryForm.pageSize"
+          :total="lowStorageFeeTotal"
+          @current-change="
+            (p) => {
+              lowStorageFeeQueryForm.pageNo = p
+              fetchLowVolumeProductStorageFee()
+            }
+          "
+          @size-change="
+            (s) => {
+              lowStorageFeeQueryForm.pageNo = 1
+              lowStorageFeeQueryForm.pageSize = s
+              fetchLowVolumeProductStorageFee()
+            }
+          "
+          @sort-change="handleSortChange"
+        >
+          <template #select>
+            <el-select
+              v-model="selectOperationUserId"
+              placeholder="请选择运营人员"
+              style="width: 5em"
+              @change="fetchLowVolumeProductStorageFee"
+            >
+              <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </template>
+        </low-volume-product-storage-fees>
+      </el-col>
+    </el-row>
 
     <history-assessment-records
       v-model="historyVisible"
@@ -314,6 +352,7 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
+import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
@@ -339,6 +378,7 @@ import {
   getFrontPageRankOverAchieved,
   getFrontPageTop30ProductSale,
   getFrontPageTop50ProductLoss,
+  getLowVolumeProductStorageFee,
   getMonthlyAssessmentMinus,
   getMonthlyAssessmentPlus,
   getMonthlyProductProfit,
@@ -370,6 +410,7 @@ import {
   IGetFrontPagePerformanceHistory,
   IGetFrontPageProductProfitRes,
   IGetFrontPageProgressProjectsItem,
+  ILowVolumeProductStorageFee,
   IPieItem,
   IRankItem,
 } from '/@/type/index/frontPage'
@@ -414,6 +455,10 @@ const ableViewTop50ProductLossCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
   currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
+const ableViewLowVolumeProductStorageFeeCard =
+  currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const type = ref<number>(0)
@@ -903,6 +948,48 @@ const fetchJobLevelCommission = async () => {
   const { data } = await getFrontPageJobLevelCommission({ month: selectJobLevelMonth.value! })
   jobLevelCommissionList.value = data
 }
+const lowVolumeProductStorageFeeList = ref<ILowVolumeProductStorageFee[]>([])
+const selectOperationUserId = ref<number>(-1)
+const operateUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperateUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operateUserList.value = data
+  operateUserList.value.unshift({ id: -1, label: '全部' })
+}
+const lowStorageFeeQueryForm = reactive<any>({
+  pageNo: 1,
+  pageSize: 50,
+  id: -1,
+  orderByField: 'estimateNextMonthStorageFee',
+  orderDirection: 'descending',
+})
+const lowStorageFeeTotal = ref<number>(0)
+const lowStorageFeeLoading = ref<boolean>(false)
+const fetchLowVolumeProductStorageFee = async () => {
+  lowStorageFeeLoading.value = true
+  lowStorageFeeQueryForm.id = selectOperationUserId.value
+  const { data } = await getLowVolumeProductStorageFee(lowStorageFeeQueryForm)
+  lowVolumeProductStorageFeeList.value = data.list
+  lowStorageFeeTotal.value = data.total
+  lowStorageFeeLoading.value = false
+}
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (lowStorageFeeQueryForm.orderByField === prop) {
+    if (!order) {
+      if (lowStorageFeeQueryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (lowStorageFeeQueryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  lowStorageFeeQueryForm.orderByField = prop
+  lowStorageFeeQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchLowVolumeProductStorageFee()
+}
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -933,6 +1020,7 @@ onBeforeMount(async () => {
     fetchTop50ProductLoss()
   }
   if (ableBossViewCard) {
+    fetchOperateUserList()
     fetchInventoryProductsTotalValue()
   }
   if (ableViewDestroyValueCard) {
@@ -941,6 +1029,10 @@ onBeforeMount(async () => {
   if (ableProductManagerLeadViewCard) {
     fetchLeadDestroyValue()
     fetchJobLevelCommission()
+  }
+  if (ableViewLowVolumeProductStorageFeeCard) {
+    fetchOperateUserList()
+    fetchLowVolumeProductStorageFee()
   }
 })
 </script>
