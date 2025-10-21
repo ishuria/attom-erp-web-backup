@@ -40,7 +40,7 @@
       <el-table-column label="30天销售额" min-width="110" prop="monthOrderSales">
         <template #default="{ row }">${{ row.monthOrderSales }}</template>
       </el-table-column>
-      <el-table-column label="30天销量" min-width="90" prop="monthOrderVolume" />
+      <el-table-column label="30天销量" min-width="90" prop="monthSalesVolume" />
       <el-table-column label="30天净利润" min-width="100" prop="monthNetProfit">
         <template #default="{ row }">${{ row.monthNetProfit }}</template>
       </el-table-column>

@@ -23,6 +23,19 @@
 
       <vab-query-form-right-panel :span="4">
         <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item label="">
+            <el-select
+              v-model="queryForm.customsDeclarationStatus"
+              clearable
+              placeholder="匹配状态筛选"
+              style="width: 150px"
+              @change="$emit('query')"
+            >
+              <el-option label="全部" :value="-1" />
+              <el-option label="已匹配" :value="1" />
+              <el-option label="未匹配" :value="0" />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-input
               v-model.trim="queryForm.keyWord"
@@ -230,7 +243,6 @@ const totalTaxIncludedPrice = computed<number>(() => {
       .left-panel {
         margin-bottom: 5px;
       }
-
       .el-form {
         .el-form-item:first-child {
           margin-bottom: 5px !important;

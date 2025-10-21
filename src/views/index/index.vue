@@ -287,11 +287,11 @@
       <!-- top50 亏损产品 -->
       <el-col v-if="ableViewTop50ProductLossCard" :lg="13" :md="24" :sm="24" :xl="13" :xs="24">
         <top50-product-loss-table :list="top50ProductLossList">
-          <!-- <template #select>
-            <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
-              <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
+          <template #select>
+            <el-select v-model="selectLossUserId" placeholder="人员" style="max-width: 5em" @change="fetchTop50ProductLoss">
+              <el-option v-for="item in lossUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
-          </template> -->
+          </template>
         </top50-product-loss-table>
       </el-col>
     </el-row>
@@ -800,7 +800,7 @@ const selectDate = ref<[string, string]>(getLastYearStringMonth())
 const userList = ref<{ id: number; label: string }[]>([])
 const userId = ref<number>()
 const fetchUserList = async () => {
-  const { data } = await getFrontPageProductManagerSelectOption()
+  const { data } = await getFrontPageProductManagerSelectOption({ type: 0 })
   userList.value = data
   if (userList.value.length > 0) {
     userId.value = userList.value.find((item) => item.label === myName)?.id
@@ -809,6 +809,19 @@ const fetchUserList = async () => {
     userId.value = userList.value[0].id
   }
   fetchData()
+}
+const lossUserList = ref<{ id: number; label: string }[]>([])
+const selectLossUserId = ref<number>()
+const fetchLossUserList = async () => {
+  const { data } = await getFrontPageProductManagerSelectOption({ type: 1 })
+  lossUserList.value = data
+  if (lossUserList.value.length > 0) {
+    selectLossUserId.value = lossUserList.value.find((item) => item.label === myName)?.id
+  }
+  if (!selectLossUserId.value) {
+    selectLossUserId.value = lossUserList.value[0].id
+  }
+  fetchTop50ProductLoss()
 }
 const fetchData = async () => {
   const { data } = await getFrontPagePerformanceHistory({
@@ -934,7 +947,7 @@ const fetchTop30ProductSale = async () => {
   top30ProductSaleList.value = data
 }
 const fetchTop50ProductLoss = async () => {
-  const { data } = await getFrontPageTop50ProductLoss()
+  const { data } = await getFrontPageTop50ProductLoss({ userId: selectLossUserId.value! })
   top50ProductLossList.value = data
 }
 const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalValue[]>([])
@@ -1017,7 +1030,8 @@ onBeforeMount(async () => {
     fetchTop30ProductSale()
   }
   if (ableViewTop50ProductLossCard) {
-    fetchTop50ProductLoss()
+    await fetchLossUserList()
+    await fetchTop50ProductLoss()
   }
   if (ableBossViewCard) {
     fetchOperateUserList()

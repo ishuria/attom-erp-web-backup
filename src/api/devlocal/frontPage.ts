@@ -126,10 +126,11 @@ export function getFrontPagePerformanceHistory(
  * 首页-绩效历史-人员列表
  * @returns
  */
-export function getFrontPageProductManagerSelectOption(): Promise<{ data: { id: number; label: string }[] }> {
+export function getFrontPageProductManagerSelectOption(params: { type: number }): Promise<{ data: { id: number; label: string }[] }> {
   return request({
     url: `${BASE_API}/front_page/product_manager/select_option`,
     method: 'get',
+    params,
   })
 }
 /**
@@ -279,10 +280,11 @@ export function getFrontPageTop30ProductSale(): Promise<{ data: IGetOperationAma
  * 首页-TOP50亏损产品排行
  * @returns
  */
-export function getFrontPageTop50ProductLoss(): Promise<{ data: IGetOperationAmazonSKUList[] }> {
+export function getFrontPageTop50ProductLoss(params: { userId: number }): Promise<{ data: IGetOperationAmazonSKUList[] }> {
   return request({
     url: `${BASE_API}/operation/amazon/sku/top50/loss/list`,
     method: 'get',
+    params,
   })
 }
 /**
