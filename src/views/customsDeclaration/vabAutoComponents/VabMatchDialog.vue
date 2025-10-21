@@ -59,6 +59,24 @@
         @row-click="handleRowClick"
       >
         <el-table-column label="SKU">
+          <el-table-column label="带磁" prop="magnetic" width="70">
+            <template #default="{ row }">
+              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="木制品" prop="woodenProduct" width="80">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" prop="toy" width="70">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku', 45)">
             <template #default="{ row }">
               <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
@@ -482,7 +500,7 @@ const handleRowClick = (row: any, column: any, event: Event) => {
 const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column?.label
   // 顶层分组列“SKU/零件”的背景色
-  if (['SKU', '装箱总数', '站点', '匹配的PO', 'SKU实际数量'].includes(label)) {
+  if (['SKU', '装箱总数', '站点', '匹配的PO', 'SKU实际数量', '带磁', '木制品', '玩具'].includes(label)) {
     return {
       textAlign: 'center',
       backgroundColor: 'var(--el-color-primary-light-9)',
@@ -1506,7 +1524,7 @@ const queryData = () => {
 const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
   const label = column.label
-  if (label === 'SKU' || label === '装箱总数' || label === '操作') {
+  if (label === 'SKU' || label === '装箱总数' || label === '操作' || label === '带磁' || label === '木制品' || label === '玩具') {
     const id = row.id
 
     for (let i = rowIndex + 1; i < list.value.length; i++) {

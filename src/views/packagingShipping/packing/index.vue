@@ -201,6 +201,14 @@
           <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
           <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
         </template>
+        <template v-else-if="item.label === '木制品'" #default="{ row }">
+          <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+          <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+        </template>
+        <template v-else-if="item.label === '玩具'" #default="{ row }">
+          <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+          <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+        </template>
         <template v-else-if="item.label === '箱数'" #default="{ row }">
           <el-input-number
             v-model="row.numberOfBoxes"
@@ -1666,7 +1674,9 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     label !== '推荐数量' &&
     label !== '最晚补货' &&
     label !== '总可售' &&
-    label !== '断货'
+    label !== '断货' &&
+    label !== '木制品' &&
+    label !== '玩具'
   ) {
     // 获取当前row的零件id
     const id = row.id

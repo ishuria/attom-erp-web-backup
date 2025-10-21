@@ -112,6 +112,22 @@
           <el-checkbox v-model="row.magnetic" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
         </template>
       </el-table-column>
+      <el-table-column label="木制品" min-width="80" prop="woodenProduct">
+        <template #default="{ row }">
+          <el-checkbox
+            v-model="row.woodenProduct"
+            class="custom-checkbox"
+            :false-value="0"
+            :true-value="1"
+            @change="handleUpdateStatus(row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="玩具" min-width="70" prop="toy">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.toy" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
+        </template>
+      </el-table-column>
       <el-table-column label="总实际成本" min-width="100" prop="procurementCost" sortable="custom">
         <template #header>
           总实际
@@ -126,7 +142,7 @@
           (近10次)
         </template>
       </el-table-column>
-      <el-table-column label="" min-width="110" prop="packingCost" sortable="custom">
+      <el-table-column label="" min-width="115" prop="packingCost" sortable="custom">
         <template #header>
           打包成本
           <br />
@@ -394,6 +410,8 @@ const handleUpdateStatus = async (row: IgetProductList) => {
     photographStatus: row.packagePhotograph,
     priorityStatus: row.priorityPacking,
     magnetic: row.magnetic,
+    woodenProduct: row.woodenProduct,
+    toy: row.toy,
   })
 }
 const queryForm = reactive<any>({
@@ -481,6 +499,8 @@ const fetchData = async () => {
     item.fnSkuUpc = item.fnSkuUpc.replaceAll(',', '<br>')
     item._sku = item.sku.split('<br/>')
     item.magnetic = item.magnetic === null ? 0 : item.magnetic
+    item.woodenProduct = item.woodenProduct === null ? 0 : item.woodenProduct
+    item.toy = item.toy === null ? 0 : item.toy
   })
   listLoading.value = false
 }

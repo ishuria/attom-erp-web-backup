@@ -31,6 +31,8 @@ export interface IgetProductList {
   invoiceIssuType: string
   productManager: string
   magnetic: number
+  woodenProduct: number
+  toy: number
 }
 export interface IgetProductListResp {
   code: number
@@ -48,6 +50,8 @@ export interface IupdateProductStatus {
   photographStatus: number
   priorityStatus: number
   magnetic: number
+  woodenProduct: number
+  toy: number
 }
 export interface ISkuId {
   skuId: number

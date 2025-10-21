@@ -161,6 +161,24 @@
               @change="handleUpdateMagnetic(row, prop)"
             />
           </template>
+          <template v-if="row['column0'] === 'woodenProduct'">
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateMagnetic(row, prop)"
+            />
+          </template>
+          <template v-if="row['column0'] === 'toy'">
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateMagnetic(row, prop)"
+            />
+          </template>
 
           <template v-if="row['column0'] === 'procurementManager'">
             <el-select
@@ -311,6 +329,8 @@ const handleInsertSku = async (row: any, prop: string) => {
       exchangeList.value[FIELD_INDEX_MAP.MATERIAL][prop] = data.material
       exchangeList.value[FIELD_INDEX_MAP.BATTERY][prop] = data.battery
       exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop] = data.magnetic || 0
+      exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop] = data.woodenProduct || 0
+      exchangeList.value[FIELD_INDEX_MAP.TOY][prop] = data.toy || 0
       exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop] = data.benchmarkAsin
 
       await reviewStepNo5SkuInfoPerfect({
@@ -320,6 +340,8 @@ const handleInsertSku = async (row: any, prop: string) => {
         material: exchangeList.value[FIELD_INDEX_MAP.MATERIAL][prop],
         battery: exchangeList.value[FIELD_INDEX_MAP.BATTERY][prop],
         magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop],
+        woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop],
+        toy: exchangeList.value[FIELD_INDEX_MAP.TOY][prop],
         benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop],
         orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][prop],
       })
@@ -403,21 +425,23 @@ const FIELD_INDEX_MAP = {
   MATERIAL: 7,
   BATTERY: 8,
   MAGNETIC: 9,
-  BENCHMARK_ASIN: 10,
-  PATENT: 11,
-  PRODUCT_MANAGER: 12,
-  PRODUCT_DESIGN: 13,
-  PROCUREMENT_MANAGER: 14,
-  SAMPLE_RETENTION: 15,
-  PACKING_GROUP: 16,
-  MANUFACTURER_EN_NAME: 17,
-  CERTIFICATE_UPLOAD: 18,
-  SKU_MERGE: 19,
-  OPERATE: 20,
-  ORDER_ENTRY_ID: 21,
-  PRODUCT_MANAGER_ID: 22,
-  PRODUCT_DESIGN_ID: 23,
-  PROCUREMENT_MANAGER_ID: 24,
+  WOODEN_PRODUCT: 10,
+  TOY: 11,
+  BENCHMARK_ASIN: 12,
+  PATENT: 13,
+  PRODUCT_MANAGER: 14,
+  PRODUCT_DESIGN: 15,
+  PROCUREMENT_MANAGER: 16,
+  SAMPLE_RETENTION: 17,
+  PACKING_GROUP: 18,
+  MANUFACTURER_EN_NAME: 19,
+  CERTIFICATE_UPLOAD: 20,
+  SKU_MERGE: 21,
+  OPERATE: 22,
+  ORDER_ENTRY_ID: 23,
+  PRODUCT_MANAGER_ID: 24,
+  PRODUCT_DESIGN_ID: 25,
+  PROCUREMENT_MANAGER_ID: 26,
 } as const
 
 const labelMap: Record<string, string> = {
@@ -432,6 +456,8 @@ const labelMap: Record<string, string> = {
   material: '产品材质',
   battery: '是否含电池<br>(若有则填入电池类型)',
   magnetic: '带磁',
+  woodenProduct: '木制品',
+  toy: '玩具',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
@@ -470,6 +496,8 @@ const buildParams = (key: string) => {
     material: exchangeList.value[FIELD_INDEX_MAP.MATERIAL][key],
     battery: exchangeList.value[FIELD_INDEX_MAP.BATTERY][key],
     magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][key],
+    woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][key],
+    toy: exchangeList.value[FIELD_INDEX_MAP.TOY][key],
     benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][key],
     patent: exchangeList.value[FIELD_INDEX_MAP.PATENT][key],
     productManagerId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key],
@@ -931,6 +959,8 @@ const fetchVariantList = async () => {
           material: item.material,
           battery: item.battery,
           magnetic: item.magnetic || 0,
+          woodenProduct: item.woodenProduct || 0,
+          toy: item.toy || 0,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
           productManager: item.productManager,

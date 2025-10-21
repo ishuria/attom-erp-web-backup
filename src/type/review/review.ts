@@ -375,6 +375,8 @@ export interface IReviewStepNo1Variant {
    */
   oem?: number
   magnetic?: number
+  woodenProduct?: number
+  toy?: number
 }
 
 export interface IReviewStepResp {

@@ -571,6 +571,14 @@ export interface IreviewStepNo5SkuInfoPerfect {
    */
   sampleRetentionStatus?: number
   checkStatus?: number
+  /**
+   * 是否木制品 0 不是 1是
+   */
+  woodenProduct?: number
+  /**
+   * 是否玩具 0 不是 1是
+   */
+  toy?: number
 }
 // 新品订货流程- 检查提交审核信息 - 保存
 export interface IreviewStepNo6SaveSix {
@@ -634,6 +642,8 @@ export interface IreviewInsertSkuInfo {
   battery?: string
   benchmarkAsin?: string
   magnetic?: number
+  woodenProduct?: number
+  toy?: number
 }
 
 export interface ISubmitReviewComponentQuery {
