@@ -176,6 +176,8 @@
                 <span class="copySku" @click="handleClipboard($event, row.sku)">
                   {{ row.sku }}
                   <vab-icon icon="file-copy-2-fill" />
+                  <br />
+                  {{ row.componentName }}
                 </span>
               </div>
               <div v-if="item.label === '站点'">
@@ -412,6 +414,8 @@
                 <span class="copySku" @click="handleClipboard($event, row.sku)">
                   {{ row.sku }}
                   <vab-icon icon="file-copy-2-fill" />
+                  <br />
+                  {{ row.componentName }}
                 </span>
               </div>
               <div v-if="item.label === '站点'">
@@ -634,7 +638,7 @@ import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import wangEditor from '/@/views/newProductDevelopment/newProductProgress/wangEditor.vue'
 
 defineOptions({
@@ -698,7 +702,7 @@ const handleWidth = (item: any) => {
       return flexColumnWidth(list.value, '零件名', 'componentName')
     }
     case '签收物流单号': {
-      return flexColumnWidth(list.value, '签收物流单号', 'signOrder')
+      return calculateBrColumnWidth(list.value, (row: any) => row.signOrder, 100)
     }
     default: {
       return item.minWidth

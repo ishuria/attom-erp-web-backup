@@ -1731,18 +1731,14 @@ const handleDefaultPurchase = async (row: any) => {
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  if (item.type === 0) {
+  if (item.type === 0 && row.declareCustomsStatus === 0) {
     //如果选择了为买单的采购方
-    if (row.declareCustomsStatus === 0) {
-      row.declareCustomsStatus = 1
-      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
-    }
-  } else if (row.purchaseId === 2) {
+    row.declareCustomsStatus = 1
+    $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+  } else if (row.purchaseId === 2 && row.declareCustomsStatus === 1) {
     //选择了埃托姆
-    if (row.declareCustomsStatus === 1) {
-      row.declareCustomsStatus = 0
-      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-    }
+    row.declareCustomsStatus = 0
+    $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
   } else if (item.label === '云舟' && row.invoicing === 1 && row.declareCustomsStatus === 0) {
     row.declareCustomsStatus = 1
     $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
