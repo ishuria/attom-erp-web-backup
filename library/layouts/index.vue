@@ -64,9 +64,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeBody)
 })
 
-watch(visibility, (current, previous) => {
-  if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
-})
+// watch(visibility, (current, previous) => {
+//   if (current === 'visible' && previous === 'hidden') $baseNotify(`尊敬的${username.value}，欢迎回来`, '', 'success', 'bottom-right')
+// })
 
 watch(mobile, (value) => {
   if (value) {

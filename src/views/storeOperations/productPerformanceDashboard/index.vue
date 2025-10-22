@@ -620,7 +620,23 @@
                 </el-select>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateSKUStopStatus(row)" />
+                <el-checkbox
+                  v-if="row.operationUserName === userName || row.developName.includes(userName) || isBoss"
+                  v-model="row.stopProductStatus"
+                  :false-value="0"
+                  :true-value="1"
+                  @change="handleUpdateSKUStopStatus(row)"
+                />
+                <vab-icon
+                  v-else-if="row.stopProductStatus === 1"
+                  icon="checkbox-circle-fill"
+                  style="color: var(--el-color-danger); font-size: 23px"
+                />
+                <vab-icon
+                  v-else-if="row.stopProductStatus === 0 || row.stopProductStatus === null"
+                  icon="close-circle-fill"
+                  style="color: var(--el-color-success); font-size: 23px"
+                />
               </span>
               <span v-if="item.label === '自量FBA'">
                 {{ row.currencyIcon + (row.selfAssessmentFba ?? '') }}
@@ -1292,7 +1308,23 @@
                 <el-link type="primary">{{ row.parentAsin }}</el-link>
               </span>
               <span v-if="item.label === '停产'">
-                <el-checkbox v-model="row.stopProductStatus" :false-value="0" :true-value="1" @change="handleUpdateASINStopStatus(row)" />
+                <el-checkbox
+                  v-if="row.operationUserName === userName || row.developName.includes(userName) || isBoss"
+                  v-model="row.stopProductStatus"
+                  :false-value="0"
+                  :true-value="1"
+                  @change="handleUpdateASINStopStatus(row)"
+                />
+                <vab-icon
+                  v-else-if="row.stopProductStatus === 1"
+                  icon="checkbox-circle-fill"
+                  style="color: var(--el-color-danger); font-size: 23px"
+                />
+                <vab-icon
+                  v-else-if="row.stopProductStatus === 0 || row.stopProductStatus === null"
+                  icon="close-circle-fill"
+                  style="color: var(--el-color-success); font-size: 23px"
+                />
               </span>
               <span v-if="item.label === '销量趋势(点击看明细)'">
                 <div class="custom-bar">
@@ -2093,6 +2125,8 @@ import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
+import { ROLE_BOSS_CODE } from '~/src/const/role'
+import { useUserStore } from '~/src/store/modules/user'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -2143,6 +2177,9 @@ defineOptions({
   name: 'ProductPerformanceDashboard',
 })
 
+const userName = useUserStore().getUsername
+const currentRole = useAclStore().getRole
+const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE))
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
 const releaseOrderVisible = ref<boolean>(false)

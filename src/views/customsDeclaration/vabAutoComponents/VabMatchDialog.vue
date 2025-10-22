@@ -584,15 +584,21 @@ const fetchHsSelectList = async () => {
   hsOption.value = data
 }
 const match2ListLoading = ref<boolean>(false)
-// 切换：展示匹配站点/全部站点
-const displaySite = ref<boolean>(true)
+// 切换：展示匹配站点/全部站点 - 初始化为false，等数据加载完成后再设置为true
+const displaySite = ref<boolean>(false)
 // 切换：展示不报关/隐藏不报关
 const displayCustoms = ref<boolean>(true)
 // 匹配1 的 展示不报关/隐藏不报关
 const displayMatch1Customs = ref<boolean>(true)
 // 根据开关对 matchList 进行过滤（站点 + 报关）
 const filteredMatchList = computed(() => {
+  // 确保数据已加载
+  if (!matchList.value || matchList.value.length === 0) {
+    return []
+  }
+
   let list = [...matchList.value] // 创建副本，保持原始顺序
+
   // 站点过滤：只展示匹配站点
   if (displaySite.value && _siteName.value.length > 0) {
     list = list.filter((item: any) => _siteName.value.includes(item.siteName))
@@ -924,10 +930,10 @@ const fetchMatchData = async () => {
       }
     })
     // 默认只展示匹配站点，需要对 matchList 做处理 筛选出和_siteName一样的数据
-    match2ListLoading.value = false
+    return data // 返回数据，确保 Promise 正确解析
   } catch (error) {
     console.error(error)
-    match2ListLoading.value = false
+    throw error // 重新抛出错误，让调用者可以处理
   } finally {
     match2ListLoading.value = false
   }
@@ -1059,9 +1065,13 @@ const handleShowMatch2 = (row: any) => {
     .map((item: any) => item.site)
     .filter(Boolean)
   _siteName.value = [...new Set(siteNames)]
-  displaySite.value = true
+
+  // 先获取数据，再设置显示模式
   handleShowPreviousOrNext(row.id)
-  fetchMatchData()
+  fetchMatchData().then(() => {
+    // 数据加载完成后再设置显示模式，确保过滤生效
+    displaySite.value = true
+  })
 }
 // 已发未报的展示
 const sentButNotReportedVisible = ref<boolean>(false)
