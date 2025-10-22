@@ -54,6 +54,11 @@
           <span>{{ row.ratio }}</span>
         </template>
       </el-table-column> -->
+      <el-table-column label="耗材" min-width="80" prop="type">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.type" :false-value="0" :true-value="1" @change="handleUpdateComponentType(row)" />
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
@@ -99,7 +104,12 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
-import { addConsumablesOtherSku, getProductAllReadyCOmponentList, getProductSkuList } from '/@/api/devlocal/productInformation'
+import {
+  addConsumablesOtherSku,
+  getProductAllReadyCOmponentList,
+  getProductSkuList,
+  updateProductAlreadyComponentType,
+} from '/@/api/devlocal/productInformation'
 import { focusAndSelectInput } from '/@/utils/nodeUtils'
 defineOptions({
   name: 'SharedComponents',
@@ -108,6 +118,12 @@ defineOptions({
 const addOtherSkuVisible = ref<boolean>(false)
 const handlerOtherSkuCloseDialog = () => {
   addOtherSkuVisible.value = false
+}
+const handleUpdateComponentType = async (row: any) => {
+  await updateProductAlreadyComponentType({
+    id: row.id,
+    type: row.type,
+  })
 }
 
 let copyRow: any
@@ -321,5 +337,8 @@ onBeforeMount(() => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+.el-checkbox {
+  transform: scale(1.3);
 }
 </style>

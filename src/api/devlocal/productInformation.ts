@@ -615,7 +615,18 @@ export function updateProductAlreadyComponent(params: IUpdateProductAlreadyCompo
     params,
   })
 }
-
+/**
+ * @description 已有零件库-更新耗材类型
+ * @param params
+ * @returns
+ */
+export function updateProductAlreadyComponentType(params: { id: number; type: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/already/component/update/type`,
+    method: 'post',
+    params,
+  })
+}
 /**
  * @description SKU报关属性-获取SKU报关属性列表
  * @param params
