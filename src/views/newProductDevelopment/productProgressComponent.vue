@@ -14,6 +14,7 @@
     <el-divider style="margin: 10px 0" />
     <div class="container">
       <vab-component-list
+        v-model:table1Loading="table1Loading"
         :progress-id="route.query.progressId"
         :trial-calculation-data="trialCalculationRef?.fetchData"
         @update:image-preview-visible="updateUploadPreviewVisible"
@@ -22,6 +23,7 @@
 
       <vab-trial-calculation
         ref="trialCalculationRef"
+        v-model:table2Loading="table2Loading"
         :channel-list="costAccountingList"
         :cost-accounting-data="costAccountingRef?.estimatedCostList"
         :cost-accounting-fetch="costAccountingRef?.fetchDataCostAccounting"
@@ -32,6 +34,7 @@
 
       <vab-cost-accounting
         ref="costAccountingRef"
+        v-model:table3Loading="table3Loading"
         :channel-list="channelList"
         :progress-id="route.query.progressId"
         :site-list="siteList"
@@ -67,6 +70,10 @@ const imagePreviewList = ref<string[]>([])
 const channelList = ref<{ id: number; label: string }[]>([])
 const costAccountingList = ref<{ id: number; label: string }[]>([])
 const siteList = ref<{ id: number; label: string }[]>([])
+
+const table1Loading = ref<boolean>(false)
+const table2Loading = ref<boolean>(false)
+const table3Loading = ref<boolean>(false)
 
 // back
 const goBack = async () => {

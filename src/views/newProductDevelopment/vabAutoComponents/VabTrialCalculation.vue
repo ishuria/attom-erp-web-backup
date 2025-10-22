@@ -7,6 +7,7 @@
     <el-col :span="24">
       <el-table
         ref="trialTableRef"
+        v-loading="table2Loading"
         border
         :cell-style="cellStyle"
         :data="sampleList"
@@ -257,6 +258,7 @@ import { convertString } from '/@/utils/stringUtils'
 import { removeHtmlTags } from '/@/utils/tableColum'
 
 const trialTableRef = ref<TableInstance>()
+const table2Loading = defineModel('table2Loading', { type: Boolean, default: false })
 
 const props = defineProps<{
   progressId: string
@@ -312,6 +314,7 @@ const isValueAllInput = (row: IProgressSample) => {
   return true
 }
 const handleCalculate = async (row: IProgressSample) => {
+  table2Loading.value = true
   const isInputAll = isValueAllInput(row)
   if (isInputAll) {
     const { data } = await reverseCalculateProgressSample({ id: Number(row.id) })
@@ -320,6 +323,7 @@ const handleCalculate = async (row: IProgressSample) => {
       fetchData()
     }
   }
+  table2Loading.value = false
 }
 const handleDescClick = (index: number) => {
   _index.value = index
@@ -365,6 +369,7 @@ const sampleList = ref<IProgressSample[]>([])
 
 // 修改站点和渠道
 const handleUpdateChannel = async (row: any) => {
+  table2Loading.value = true
   await updateTrialCalculation({
     ...row,
     tariff: `${Number(row.tariff!) / 100}`,
@@ -402,6 +407,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 
 // 保存拿样清单成本试算
 const saveTrialCalculationHandler = async (row: IProgressSample) => {
+  table2Loading.value = true
   const { data } = await saveTrialCalculation({ progressId: Number(props.progressId), id: row.id! })
   if (data === true) {
     $baseMessage('拿样清单成本试算添加到成本核算成功！', 'success', 'hey')
@@ -442,6 +448,7 @@ const saveTrialCalculationHandler = async (row: IProgressSample) => {
     props.costAccountingFetch?.()
     // 自动滚动到新增加行位置
     props.costScroll?.()
+    table2Loading.value = false
   }
 }
 
@@ -501,6 +508,7 @@ const clickCancel = async (event: any, value: IProgressSample) => {
   if (isEqual(copyRow, value)) {
     return
   }
+  table2Loading.value = true
   await updateTrialCalculation({
     ...value,
     tariff: `${Number(value.tariff) / 100}`,
@@ -562,7 +570,7 @@ const fetchData = async () => {
   // const currencyType = siteReflectCurrencyAndExchangeRate.get(first.site!)
   // const {data} = await getExchangeRate({currency:currencyType})
   // first.foreignExchange = data
-
+  table2Loading.value = true
   const dbInfo: IProgressSample = await getTrialCalculationHandler()
   if (dbInfo) {
     first.id = dbInfo.id!
@@ -577,6 +585,7 @@ const fetchData = async () => {
     sampleList.value.push(first)
     // console.log(sampleList.value)
   }
+  table2Loading.value = false
 }
 defineExpose({
   fetchData,

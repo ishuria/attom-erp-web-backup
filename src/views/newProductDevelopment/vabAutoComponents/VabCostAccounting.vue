@@ -20,6 +20,7 @@
     >
       <el-table
         ref="costAccountingTable"
+        v-loading="table3Loading"
         border
         :cell-class-name="clearPadding"
         :cell-style="cellStyle"
@@ -471,6 +472,7 @@ import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 const isDraggingDisabled = ref<boolean>(false)
 
+const table3Loading = defineModel('table3Loading', { type: Boolean, default: false })
 const props = defineProps<{
   progressId: string
   siteList: { id: number; label: string }[]
@@ -577,6 +579,7 @@ const isValueAllInput = (row: IProgressEstimatedCostAccounting) => {
   return true
 }
 const handleReverseCalculate = async (row: IProgressEstimatedCostAccounting) => {
+  table3Loading.value = true
   const isInputAll = isValueAllInput(row)
   if (isInputAll) {
     const { data } = await reverseCalculateProgress({ id: Number(row.id) })
@@ -585,6 +588,7 @@ const handleReverseCalculate = async (row: IProgressEstimatedCostAccounting) => 
       fetchDataCostAccounting()
     }
   }
+  table3Loading.value = false
 }
 // 输入input blur事件
 const clickCancel = async (event: any, value: IProgressEstimatedCostAccounting) => {
@@ -600,6 +604,7 @@ const clickCancel = async (event: any, value: IProgressEstimatedCostAccounting) 
   if (isEqual(copyRow, value)) {
     return
   }
+  table3Loading.value = true
   isDraggingDisabled.value = false
   await costAccountingUpdate({
     ...value,
@@ -691,6 +696,7 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
 // 进度成本核算修改站点
 const handlerSiteChange = async (row: IProgressEstimatedCostAccounting) => {
   try {
+    table3Loading.value = true
     await costAccountingUpdate({
       ...row,
       tariff: `${parseFloat(row.tariff!) / 100}`,
@@ -718,11 +724,14 @@ const onEnd = debounce(async () => {
 // 获取成本核算数据列表
 const fetchDataCostAccounting = async () => {
   try {
+    table3Loading.value = true
     // 成本核算列表
     const { data } = await getCostAccountingList({ progressId: props.progressId })
     estimatedCostList.value = data
+    table3Loading.value = false
   } catch (error) {
     console.error(error)
+    table3Loading.value = false
   }
 }
 const uploadImage = async (file: File) => {
@@ -761,6 +770,7 @@ const removeImage = (row: any) => {
 
 // 头程渠道修改
 const handlerEstimatendChange = async (row: IProgressEstimatedCostAccounting) => {
+  table3Loading.value = true
   await costAccountingUpdate({
     ...row,
     tariff: `${parseFloat(row.tariff!) / 100}`,
@@ -772,6 +782,7 @@ const handlerEstimatendChange = async (row: IProgressEstimatedCostAccounting) =>
 
 // 新增
 const addRowCostAccounting = async () => {
+  table3Loading.value = true
   let newData: IProgressEstimatedCostAccounting = {
     id: '',
     evaluationId: '',
@@ -823,16 +834,19 @@ const addRowCostAccounting = async () => {
       autoScrollButtom()
     })
   }
+  table3Loading.value = false
 }
 
 // 复制
 const costAccountCopy = async (row: IProgressEstimatedCostAccounting) => {
+  table3Loading.value = true
   const { data } = await costAccountingCopy({ accountingId: `${row.id}`, progressId: props.progressId })
   if (data == true) {
     $baseMessage('此条产品成本核算信息复制成功!', 'success', 'hey')
     fetchDataCostAccounting()
     autoScrollButtom()
   }
+  table3Loading.value = false
 }
 
 // 自动滚动
@@ -850,6 +864,7 @@ const autoScrollButtom = () => {
 // 删除
 const costAccountDelete = async (row: IProgressEstimatedCostAccounting) => {
   $baseConfirm('您确定要删除产品成本信息吗', null, async () => {
+    table3Loading.value = true
     const { data } = await costAccountingDelete({ accountingId: row.id! })
     if (data == true) {
       const index = estimatedCostList.value.findIndex((item: IProgressEstimatedCostAccounting) => item.id === row.id)
@@ -857,6 +872,7 @@ const costAccountDelete = async (row: IProgressEstimatedCostAccounting) => {
         estimatedCostList.value.splice(index, 1)
       }
       $baseMessage('此条产品成本信息删除成功!', 'success', 'hey')
+      table3Loading.value = false
     }
   })
 }

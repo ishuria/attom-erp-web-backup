@@ -14,6 +14,7 @@
 
     <el-table
       ref="progressComponentTable"
+      v-loading="table1Loading"
       border
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
@@ -492,6 +493,8 @@ defineComponent({
   name: 'VabComponentList',
 })
 
+const table1Loading = defineModel('table1Loading', { type: Boolean, default: false })
+
 const props = defineProps<{
   progressId: string
   trialCalculationData: (() => Promise<void>) | undefined
@@ -719,6 +722,7 @@ const stripedRowClass = (_row: any) => {
 
 // 零件清单修改开票
 const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
+  table1Loading.value = true
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (row.actualTaxRate !== null && row.actualTaxRate !== undefined) {
@@ -734,6 +738,7 @@ const handlerInvoicingChange = async (row: IProgressProdcutComponent) => {
 
 // 零件清单修改货币
 const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
+  table1Loading.value = true
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (row.actualTaxRate !== null && row.actualTaxRate !== undefined) {
@@ -743,6 +748,7 @@ const handlerCurrencyChange = async (row: IProgressProdcutComponent) => {
     invoicingTaxRate = toDecimal(row.invoicingTaxRate)
   }
   await updateComponenet({ ...row, invoicingTaxRate, actualTaxRate })
+  table1Loading.value = false
   props.trialCalculationData?.()
 }
 
@@ -882,6 +888,8 @@ const addSuppliserInfo = async (row: IProgressProdcutComponent) => {
     componentId: convertString(row.componentId!),
   }
 
+  table1Loading.value = true
+
   const { data } = await addSuppliers(params)
   newComponentAndSuppliserInfo.supplierId = data
 
@@ -909,6 +917,7 @@ const deleteSupplserOrComponent = async (row: IProgressProdcutComponent) => {
       ),
     ])
     $baseConfirm(deleteVNode, '系统提示', async () => {
+      table1Loading.value = true
       const { data } = await deleteSuppliers({ suppliserId: row.supplierId! })
       if (data === true) {
         const index = progressProductList.value.findIndex((item: IProgressProdcutComponent) => item.supplierId === row.supplierId)
@@ -917,10 +926,12 @@ const deleteSupplserOrComponent = async (row: IProgressProdcutComponent) => {
           props.trialCalculationData?.()
         }
         $baseMessage('供应商删除成功！', 'success', 'hey')
+        table1Loading.value = false
       }
     })
   } catch (error) {
     console.log(error as Error)
+    table1Loading.value = false
   }
 }
 
@@ -986,6 +997,7 @@ const componentClickCancel = async (event: any, value: IProgressProdcutComponent
   if (isEqual(rowCopy, value)) {
     return
   }
+  table1Loading.value = true
   let invoicingTaxRate = 0
   let actualTaxRate = 0
   if (value.actualTaxRate !== null && value.actualTaxRate !== undefined) {
@@ -1039,6 +1051,7 @@ const settingPreviewList = (imageUr: string) => {
 const fetchDataComponent = async () => {
   try {
     // 零件列表
+    table1Loading.value = true
     const { data } = await getComponentList({ progressId: progressId.value! })
     progressProductList.value = data
 
@@ -1051,8 +1064,10 @@ const fetchDataComponent = async () => {
     progressProductList.value.sort((a: IProgressProdcutComponent, b: IProgressProdcutComponent) => a.componentId! - b.componentId!)
     previous = null
     currentGroupIndex = 0
+    table1Loading.value = false
   } catch (error) {
     console.error(error as Error)
+    table1Loading.value = false
   }
 }
 

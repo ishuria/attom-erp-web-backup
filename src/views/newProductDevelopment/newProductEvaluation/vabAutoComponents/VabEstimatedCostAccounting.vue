@@ -8,6 +8,7 @@
     </vab-query-form>
     <vue-draggable v-model="dList" :animation="150" ghost-class="ghost" target="tbody" @end="onEnd">
       <el-table
+        v-loading="listLoading"
         border
         :cell-class-name="getCellStyle"
         :cell-style="cellStyle"
@@ -139,7 +140,7 @@
             <div class="none">
               <el-input v-model="row.lastMile" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
-           
+
             <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(dList, '尾程', 'lastMile', 0), 'text-align': 'right' }">
               {{ row.lastMile ? row.symbol + row.lastMile : '' }}
             </span>
@@ -147,8 +148,9 @@
         </el-table-column>
         <el-table-column label="头程￥" prop="firstMile" width="85">
           <template #default="{ row }">
-            
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(dList, '头程￥', 'firstMile', 0), 'text-align': 'right' }">
+            <span
+              :style="{ display: 'inline-block', 'min-width': flexColumnWidth(dList, '头程￥', 'firstMile', 0), 'text-align': 'right' }"
+            >
               {{ row.firstMile ? '￥' + row.firstMile : '' }}
             </span>
           </template>
@@ -172,25 +174,26 @@
         <el-table-column label="售价" prop="sellingPrice" width="85">
           <template #default="{ row }">
             <div class="none">
-              <el-input
-                v-model="row.sellingPrice"
-                @blur="clickCancel($event, row)"
-                @keydown.enter="effectiveCountInputHandle($event)"
-              />
+              <el-input v-model="row.sellingPrice" @blur="clickCancel($event, row)" @keydown.enter="effectiveCountInputHandle($event)" />
             </div>
             <span>{{ row.sellingPrice ? row.symbol + row.sellingPrice : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="毛利率" prop="grossMarginRate" width="85">
           <template #default="{ row }">
-            
-            <span :style="{ display: 'inline-block', 'min-width': flexColumnWidth(dList, '毛利率', 'grossMarginRate', 0), 'text-align': 'right' }">
+            <span
+              :style="{
+                display: 'inline-block',
+                'min-width': flexColumnWidth(dList, '毛利率', 'grossMarginRate', 0),
+                'text-align': 'right',
+              }"
+            >
               <el-text v-if="row.grossMarginRate >= 30" type="success">{{ row.grossMarginRate + '%' }}</el-text>
-            <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
-            <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
-            <el-text v-if="row.grossMarginRate < 20" type="danger">
-              {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
-            </el-text>
+              <el-text v-if="row.grossMarginRate >= 25 && row.grossMarginRate < 30" type="primary">{{ row.grossMarginRate + '%' }}</el-text>
+              <el-text v-if="row.grossMarginRate >= 20 && row.grossMarginRate < 25" type="warning">{{ row.grossMarginRate + '%' }}</el-text>
+              <el-text v-if="row.grossMarginRate < 20" type="danger">
+                {{ row.grossMarginRate != null ? row.grossMarginRate + '%' : '' }}
+              </el-text>
             </span>
           </template>
         </el-table-column>
@@ -201,7 +204,6 @@
         </el-table-column>
 
         <el-table-column label="重量系数" prop="weightCoefficient" width="100">
-     
           <template #default="{ row }">
             <div class="none">
               <el-input
@@ -215,7 +217,6 @@
         </el-table-column>
 
         <el-table-column label="体积系数" prop="volumeCoefficient" width="100">
-     
           <template #default="{ row }">
             <div class="none">
               <el-input
@@ -238,7 +239,7 @@
         </el-table-column>
         <el-table-column label="关税" prop="tariffPrice" width="85">
           <template #default="{ row }">
-            <span>{{ row.tariffPrice != null && row.tariffPrice !== '' ? '￥'+ row.tariffPrice : '' }}</span>
+            <span>{{ row.tariffPrice != null && row.tariffPrice !== '' ? '￥' + row.tariffPrice : '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="平台佣金" prop="platformCommission" width="90">
@@ -269,13 +270,13 @@
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="handleCalculate(row)">
-                    <el-link type="primary" underline='never'>逆算</el-link>
+                    <el-link type="primary" underline="never">逆算</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handlerCopyData(row)">
-                    <el-link type="primary" underline='never'>复制</el-link>
+                    <el-link type="primary" underline="never">复制</el-link>
                   </el-dropdown-item>
                   <el-dropdown-item @click="handlerDelete(row)">
-                    <el-link type="danger" underline='never'>删除</el-link>
+                    <el-link type="danger" underline="never">删除</el-link>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -344,9 +345,11 @@ import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
-  name: 'VabEstimatedCostAccounting'
+  name: 'VabEstimatedCostAccounting',
 })
 
+// 表格加载loading状态
+const listLoading = ref<boolean>(true)
 const imageUploadVisible = ref<boolean>(false)
 let props = defineProps<{
   flag: boolean
@@ -372,6 +375,9 @@ const dflag = ref<boolean>(false)
 watchEffect(() => {
   dList.value = props.list
   dflag.value = props.flag
+  if (dList.value.length >= 0) {
+    listLoading.value = false
+  }
 })
 
 const imagePreviewVisible = ref<boolean>(false)
@@ -392,8 +398,8 @@ const showUploadDialog = (row: any) => {
 const uploadImage = async (file: File) => {
   try {
     let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file);
-    uploadImgForm.append('id', `${copyRow.id}`);
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('id', `${copyRow.id}`)
 
     const { data } = await uploadFileBoBakend(uploadImgForm)
     if (data) {
@@ -410,13 +416,13 @@ const uploadImage = async (file: File) => {
 // 删除图片
 const removeImage = (row: any) => {
   try {
-    $baseConfirm('确定要删除这张图片吗',"系统提示", async ()=>{
+    $baseConfirm('确定要删除这张图片吗', '系统提示', async () => {
       const { data } = await evaluationCostDeleteImg({
-        id: row.id
+        id: row.id,
       })
       if (data) {
         row.imgUrl = ''
-        $baseMessage("图片删除成功!","success","hey")
+        $baseMessage('图片删除成功!', 'success', 'hey')
       }
     })
   } catch (error) {
@@ -469,6 +475,7 @@ const isValueAllInput = (row: IEstimatedCostAccounting) => {
 
 // 逆算
 const handleCalculate = async (row: IEstimatedCostAccounting) => {
+  listLoading.value = true
   // 判断可以编辑的值是否都已填
   const isInputAll = isValueAllInput(row)
   if (isInputAll) {
@@ -487,6 +494,7 @@ const effectiveCountInputHandle = (event: Event) => {
 
 // 新增行
 const handlerAddRowCost = async () => {
+  listLoading.value = true
   let newData: IEstimatedCostAccounting = {
     id: '',
     evaluationId: '',
@@ -624,6 +632,7 @@ const clickCancel = async (event: any, value: any) => {
     return
   }
 
+  listLoading.value = true
   const { firstMileChannel, ...filterValue } = value
   await updateEstimatedCostAccounting({
     ...filterValue,
@@ -653,6 +662,7 @@ const handlerCloseDialog = () => {
 
 // 复制
 const handlerCopyData = async (row: any) => {
+  listLoading.value = true
   const { data } = await copyEstimatedCostAccounting({ id: `${row.id}` })
   if (data == true) {
     $baseMessage('此条产品成本核算信息复制成功!', 'success', 'hey')
@@ -663,6 +673,7 @@ const handlerCopyData = async (row: any) => {
 // 删除
 const handlerDelete = async (row: any) => {
   $baseConfirm('您确定要删除产品成本信息吗', null, async () => {
+    listLoading.value = true
     const { data } = await deleteEstimatedCostAccounting({ id: row.id })
     if (data == true) {
       $baseMessage('此条产品成本信息删除成功!', 'success', 'hey')
@@ -673,6 +684,7 @@ const handlerDelete = async (row: any) => {
 
 // 头程渠道修改
 const handlerEstimatedChange = async (row: IEstimatedCostAccounting) => {
+  listLoading.value = true
   await updateEstimatedCostAccountingFirstMileChannel({
     id: Number(row.id),
     channelId: row.firstMileChannel,
@@ -682,6 +694,7 @@ const handlerEstimatedChange = async (row: IEstimatedCostAccounting) => {
 
 // 修改站点
 const handlerSiteChange = async (row: IEstimatedCostAccounting) => {
+  listLoading.value = true
   await updateEstimatedCostAccounting({
     ...row,
     tariff: Number(row.tariff) / 100,
@@ -743,11 +756,10 @@ const handleSelectionChange = (val: IEstimatedCostAccounting[]) => {
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  
   const label = data.column.label
   switch (label) {
-    case '产品描述': 
-    case '价格信息': 
+    case '产品描述':
+    case '价格信息':
     case '1688链接':
     case '站点': {
       return {
@@ -755,35 +767,35 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
         cursor: 'pointer',
       }
     }
-    case '日期': 
+    case '日期':
     case '币种': {
       return {
         textAlign: 'center',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
       }
     }
-    case '汇率': 
-    case 'ROI': 
-    case '平台佣金': 
+    case '汇率':
+    case 'ROI':
+    case '平台佣金':
     case '仓储费2个月': {
       return {
         textAlign: 'right',
-        cursor: 'not-allowed'
+        cursor: 'not-allowed',
       }
     }
-  // No default
+    // No default
   }
   return {
     textAlign: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }
 }
 // const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  
+
 //   const label = data.column.label
 //   switch (label) {
-//     case '产品描述': 
-//     case '价格信息': 
+//     case '产品描述':
+//     case '价格信息':
 //     case '1688链接':
 //     case '日期':
 //     case '外汇币种':
@@ -845,20 +857,20 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 .image-cell {
   width: 100%;
   height: 75px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -872,21 +884,21 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
@@ -898,14 +910,14 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
