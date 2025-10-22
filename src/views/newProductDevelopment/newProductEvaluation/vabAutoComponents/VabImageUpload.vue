@@ -1,24 +1,14 @@
 <template>
-  <vab-dialog
-    v-model="visible"
-    title="上传图片"
-    width="20%"
-    @close="closeImageUploadDialog"
-  >
+  <vab-dialog v-model="visible" title="上传图片" width="20%" @close="closeImageUploadDialog">
     <div class="upload-dialog-content" @paste="handlePaste">
       <!-- 上传区域 -->
       <div class="upload-area">
         <!-- 上半部分上传 -->
-        <el-upload
-          :auto-upload="false"
-          class="upload-zone"
-          drag
-          :on-change="handleImageBeforeUpload"
-          :show-file-list="false"
-        >
+        <el-upload :auto-upload="false" class="upload-zone" drag :on-change="handleImageBeforeUpload" :show-file-list="false">
           <vab-icon class="image-icon" icon="image-add-fill" />
           <div class="el-upload__text">
-            拖拽图片到此处，或 <em>点击上传</em>
+            拖拽图片到此处，或
+            <em>点击上传</em>
           </div>
         </el-upload>
 
@@ -35,10 +25,10 @@
           @clear="handleClearImageUrl"
         />
       </div>
-      
+
       <!-- 图片预览区域 -->
       <div v-if="previewUrl" class="preview-area" @click="imagePreviewOpen(previewUrl)">
-        <img alt="预览图" :src="previewUrl">
+        <img alt="预览图" :src="previewUrl" />
       </div>
     </div>
     <template #footer>
@@ -69,7 +59,7 @@ const visible = computed({
   },
 })
 
-watch((visible), (val) => {
+watch(visible, (val) => {
   if (val) {
     imageUrl.value = ''
     previewUrl.value = ''
@@ -126,7 +116,7 @@ const confirmUpload = () => {
 const handlePaste = (event: ClipboardEvent) => {
   const items = event.clipboardData?.items
   if (!items) return
-  const imageItem = Array.from(items).find(item => item.type.includes('image'))
+  const imageItem = Array.from(items).find((item) => item.type.includes('image'))
   if (imageItem) {
     const file = imageItem.getAsFile()
     if (file) {
@@ -150,7 +140,7 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    
+
     .upload-zone {
       width: 100%;
 
@@ -160,7 +150,7 @@ onBeforeUnmount(() => {
         color: #999;
       }
     }
-    
+
     .divider {
       width: 60%;
       margin: 20px 0;
@@ -171,21 +161,21 @@ onBeforeUnmount(() => {
         color: #999;
       }
     }
-    
+
     .url-input {
       width: 100%;
-      
+
       :deep(.el-input__inner) {
         text-align: center;
       }
     }
   }
-  
+
   // 图片预览区域
   .preview-area {
     margin-top: 15px;
     text-align: center;
-    
+
     img {
       max-width: 100%;
       max-height: 200px;
