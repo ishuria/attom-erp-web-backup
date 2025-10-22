@@ -355,6 +355,7 @@
     <div class="table-container">
       <el-table
         ref="tableRef"
+        v-loading="variantLoading"
         border
         :cell-style="cellStyle"
         :data="variantsList"
@@ -633,6 +634,7 @@ defineOptions({
   name: 'OrderStep3',
 })
 
+const variantLoading = ref<boolean>(false)
 // 获取HTS名称的辅助函数
 const getHtsName = (row: any) => {
   if (!row.hts) return ''
@@ -888,6 +890,8 @@ const clickEditorCancel = (val: any) => {
 }
 const handleUpdateHts = async (row: IreviewStepNo3VariantList) => {
   // console.log(row)
+
+  variantLoading.value = true
   let htsId = null
   if (row.hts.value) htsId = row.hts.value
   if (row.hts.id) htsId = row.hts.id
@@ -910,6 +914,7 @@ const handleUpdateHts = async (row: IreviewStepNo3VariantList) => {
     htsId,
   })
   fetchVariantsData()
+  variantLoading.value = false
 }
 const handleClearHts = async (row: IreviewStepNo3VariantList) => {
   // console.log(row)
@@ -936,6 +941,7 @@ const handleClearHts = async (row: IreviewStepNo3VariantList) => {
 }
 // 零件信息完善与售价核对修改站点
 const handlerSiteChange = async (row: IreviewStepNo3VariantList) => {
+  variantLoading.value = true
   // 外币币种
   let htsId = null
   if (row.hts.value) htsId = row.hts.value
@@ -959,6 +965,7 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) => {
     htsId,
   })
   await fetchVariantsData()
+  variantLoading.value = false
 }
 const handleVariantChange = async (row: any) => {
   let _variant: any = {}
@@ -1012,6 +1019,7 @@ const handleInvoicingChange = async (row: any) => {
 }
 // 头程渠道修改
 const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) => {
+  variantLoading.value = true
   let htsId = null
   if (row.hts.value) htsId = row.hts.value
   if (row.hts.id) htsId = row.hts.id
@@ -1034,6 +1042,8 @@ const handlerEstimatendChange = async (row: IreviewStepNo3VariantList) => {
     htsId,
   })
   await fetchVariantsData()
+
+  variantLoading.value = false
 }
 
 /**
@@ -1328,6 +1338,7 @@ const clickVariantsCancel = async (event: any, value: any) => {
     return
   }
 
+  variantLoading.value = true
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
@@ -1342,8 +1353,10 @@ const clickVariantsCancel = async (event: any, value: any) => {
         htsId,
       })
       await fetchVariantsData()
+      variantLoading.value = false
     } catch {
       Object.assign(value, _row)
+      variantLoading.value = false
     }
   }
 }
@@ -1527,6 +1540,7 @@ const fetchDataComponent = async () => {
 }
 // 获取变体列表
 const fetchVariantsData = async () => {
+  variantLoading.value = true
   let classReviewId: number | undefined
   if (route.query.progressId) {
     //说明是订大货进去的,接受上一步传来的reviewId
@@ -1538,9 +1552,11 @@ const fetchVariantsData = async () => {
     if (route.query.progressId || route.query.reviewStatus === '0' || route.query.reviewStatus === '2') {
       const { data } = await reviewStepNo3VariantList({ reviewId: classReviewId! })
       variantsList.value = data
+      variantLoading.value = false
     }
   } catch (error) {
     console.error(error)
+    variantLoading.value = false
   }
 }
 const repositoryOption = ref<any>()
