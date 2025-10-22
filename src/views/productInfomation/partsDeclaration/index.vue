@@ -116,7 +116,7 @@
         <template #default="{ row }">
           <div class="none">
             <el-input
-              v-model="row.customsDeclarationNameZh"
+              v-model.trim="row.customsDeclarationNameZh"
               @blur="clickCancel2($event, row)"
               @keypress.enter="clickCancel2($event, row)"
             />

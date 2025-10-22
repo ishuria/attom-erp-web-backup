@@ -1,22 +1,28 @@
 <template>
-  <vab-card :body-style="{ height: '470px' }" skeleton>
+  <vab-card :body-style="{ height: '470px' }" class="inventory-products-total-value-card" skeleton>
     <template #header>
       <vab-icon icon="bar-chart-2-line" />
-      库存货值统计
-      <el-button class="card-header-tag" type="primary" @click="updateInventoryProductsTotalValue">更新</el-button>
+      库存货值
+      <div class="right-select">
+        <slot name="select"></slot>
+      </div>
     </template>
     <vab-chart :option="option" />
   </vab-card>
 </template>
 
 <script lang="ts" setup>
-import { updateFrontPageInventoryProductsTotalValue } from '~/src/api/devlocal/frontPage'
 import { useSettingsStore } from '/@/store/modules/settings'
 import { IGetFrontPageInventoryProductsTotalValue } from '/@/type/index/frontPage'
 
-const props = defineProps<{
-  data: IGetFrontPageInventoryProductsTotalValue[]
-}>()
+const props = withDefaults(
+  defineProps<{
+    data: IGetFrontPageInventoryProductsTotalValue[]
+  }>(),
+  {
+    data: () => [],
+  }
+)
 const emit = defineEmits(['update'])
 
 defineOptions({
@@ -274,6 +280,8 @@ const option = reactive<any>({
 watch(
   () => props.data,
   () => {
+    if (!props.data || !Array.isArray(props.data) || props.data.length === 0) return
+
     option.xAxis.data = props.data.map((item) => item.date)
     option.series[0].data = props.data.map((item) => item.totalValue)
     option.series[1].data = props.data.map((item) => item.unpaidGoods)
@@ -301,22 +309,34 @@ watch(
   },
   { immediate: true }
 )
-const updateInventoryProductsTotalValue = async () => {
-  const { data } = await updateFrontPageInventoryProductsTotalValue()
-  if (data) {
-    $baseMessage('更新成功', 'success', 'hey')
-    emit('update')
-  }
-}
 </script>
 
 <style lang="scss" scoped>
-:deep() {
-  .echarts {
-    height: 430px !important;
+.card-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inventory-products-total-value-card {
+  :deep() {
+    .echarts {
+      height: 430px !important;
+    }
   }
-  .card-header-tag {
-    cursor: pointer;
+  .right-select {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    width: 330px;
+    height: 60px;
+    line-height: 60px;
+    text-align: right;
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 }
 </style>

@@ -268,7 +268,35 @@
     <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
       <!-- 库存货值统计 -->
       <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
-        <inventory-products-total-value :data="inventoryProductsTotalValueList" @update="fetchInventoryProductsTotalValue" />
+        <inventory-products-total-value :data="inventoryProductsTotalValueList">
+          <template #select>
+            <el-date-picker
+              :key="inventoryProductsTotalValueDateRangeKey"
+              v-model="inventoryProductsTotalValueDateRange"
+              :clearable="false"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              @change="handleInventoryProductsTotalValueDateRangeChange"
+            />
+            <el-button type="primary" @click="updateInventoryProductsTotalValue">更新</el-button>
+          </template>
+        </inventory-products-total-value>
+      </el-col>
+      <!-- 仓库容量 -->
+      <el-col :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <warehouse-capacity :data="warehouseCapacityList">
+          <template #select>
+            <el-date-picker
+              :key="warehouseCapacityDateRangeKey"
+              v-model="warehouseCapacityDateRange"
+              :clearable="false"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              @change="handleWarehouseCapacityDateRangeChange"
+            />
+            <el-button type="primary" @click="updateWarehouseCapacity">更新</el-button>
+          </template>
+        </warehouse-capacity>
       </el-col>
     </el-row>
 
@@ -378,10 +406,13 @@ import {
   getFrontPageRankOverAchieved,
   getFrontPageTop30ProductSale,
   getFrontPageTop50ProductLoss,
+  getFrontPageWarehouseCapacity,
   getLowVolumeProductStorageFee,
   getMonthlyAssessmentMinus,
   getMonthlyAssessmentPlus,
   getMonthlyProductProfit,
+  updateFrontPageInventoryProductsTotalValue,
+  updateFrontPageWarehouseCapacity,
 } from '/@/api/devlocal/frontPage'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import {
@@ -413,8 +444,9 @@ import {
   ILowVolumeProductStorageFee,
   IPieItem,
   IRankItem,
+  IWarehouseCapacityItem,
 } from '/@/type/index/frontPage'
-import { getCurrentMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
+import { getCurrentMonth, getLast30DaysStringTime, getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
@@ -797,6 +829,7 @@ const fetchUpdateDate = async () => {
 }
 const historyList = ref<IGetFrontPagePerformanceHistory[]>([])
 const selectDate = ref<[string, string]>(getLastYearStringMonth())
+const dateRange = ref<[string, string] | null>(null)
 const userList = ref<{ id: number; label: string }[]>([])
 const userId = ref<number>()
 const fetchUserList = async () => {
@@ -951,10 +984,79 @@ const fetchTop50ProductLoss = async () => {
   top50ProductLossList.value = data
 }
 const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalValue[]>([])
+const inventoryProductsTotalValueDateRange = ref<[string, string]>(getLast30DaysStringTime())
+const inventoryProductsTotalValueQueryForm = reactive({
+  startDate: inventoryProductsTotalValueDateRange.value[0],
+  endDate: inventoryProductsTotalValueDateRange.value[1],
+})
+
+// 仓库容量相关
+const warehouseCapacityList = ref<IWarehouseCapacityItem[]>([])
+const warehouseCapacityDateRange = ref<[string, string]>(getLast30DaysStringTime())
+const warehouseCapacityQueryForm = reactive({
+  startDate: warehouseCapacityDateRange.value[0],
+  endDate: warehouseCapacityDateRange.value[1],
+})
 const fetchInventoryProductsTotalValue = async () => {
-  const { data } = await getFrontPageInventoryProductsTotalValue()
+  const { data } = await getFrontPageInventoryProductsTotalValue({
+    startDate: inventoryProductsTotalValueQueryForm.startDate,
+    endDate: inventoryProductsTotalValueQueryForm.endDate,
+  })
   inventoryProductsTotalValueList.value = data
 }
+
+const fetchWarehouseCapacity = async () => {
+  const { data } = await getFrontPageWarehouseCapacity({
+    startDate: warehouseCapacityQueryForm.startDate,
+    endDate: warehouseCapacityQueryForm.endDate,
+  })
+  warehouseCapacityList.value = data
+}
+const updateInventoryProductsTotalValue = async () => {
+  const { data } = await updateFrontPageInventoryProductsTotalValue()
+  if (data) {
+    $baseMessage('更新成功', 'success', 'hey')
+    fetchInventoryProductsTotalValue()
+  }
+}
+
+const updateWarehouseCapacity = async () => {
+  const { data } = await updateFrontPageWarehouseCapacity()
+  if (data) {
+    $baseMessage('更新成功', 'success', 'hey')
+    fetchWarehouseCapacity()
+  }
+}
+const inventoryProductsTotalValueDateRangeKey = ref<number>(0)
+const warehouseCapacityDateRangeKey = ref<number>(0)
+const handleInventoryProductsTotalValueDateRangeChange = (dateRange: [string, string] | null) => {
+  inventoryProductsTotalValueDateRangeKey.value++
+  if (dateRange && dateRange.length === 2) {
+    inventoryProductsTotalValueQueryForm.startDate = dateRange[0]
+    inventoryProductsTotalValueQueryForm.endDate = dateRange[1]
+    fetchInventoryProductsTotalValue()
+  } else {
+    inventoryProductsTotalValueDateRange.value = getLast30DaysStringTime()
+    inventoryProductsTotalValueQueryForm.startDate = inventoryProductsTotalValueDateRange.value[0]
+    inventoryProductsTotalValueQueryForm.endDate = inventoryProductsTotalValueDateRange.value[1]
+    fetchInventoryProductsTotalValue()
+  }
+}
+
+const handleWarehouseCapacityDateRangeChange = (dateRange: [string, string] | null) => {
+  warehouseCapacityDateRangeKey.value++
+  if (dateRange && dateRange.length === 2) {
+    warehouseCapacityQueryForm.startDate = dateRange[0]
+    warehouseCapacityQueryForm.endDate = dateRange[1]
+    fetchWarehouseCapacity()
+  } else {
+    warehouseCapacityDateRange.value = getLast30DaysStringTime()
+    warehouseCapacityQueryForm.startDate = warehouseCapacityDateRange.value[0]
+    warehouseCapacityQueryForm.endDate = warehouseCapacityDateRange.value[1]
+    fetchWarehouseCapacity()
+  }
+}
+
 const jobLevelCommissionList = ref<IGetFrontPageJobLevelCommission[]>([])
 const selectJobLevelMonth = ref<string>()
 const fetchJobLevelCommission = async () => {
@@ -1036,6 +1138,7 @@ onBeforeMount(async () => {
   if (ableBossViewCard) {
     fetchOperateUserList()
     fetchInventoryProductsTotalValue()
+    fetchWarehouseCapacity()
   }
   if (ableViewDestroyValueCard) {
     fetchDestroyValue()

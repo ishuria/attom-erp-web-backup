@@ -20,6 +20,7 @@ import {
   IGetFrontPageProgressProjectsRes,
   ILowVolumeProductStorageFee,
   IRankItem,
+  IWarehouseCapacityItem,
 } from '/@/type/index/frontPage'
 
 /**
@@ -291,10 +292,14 @@ export function getFrontPageTop50ProductLoss(params: { userId: number }): Promis
  * 首页-库存货值统计
  * @returns
  */
-export function getFrontPageInventoryProductsTotalValue(): Promise<{ data: IGetFrontPageInventoryProductsTotalValue[] }> {
+export function getFrontPageInventoryProductsTotalValue(params: {
+  startDate: string
+  endDate: string
+}): Promise<{ data: IGetFrontPageInventoryProductsTotalValue[] }> {
   return request({
     url: `${BASE_API}/front_page/inventory_value/get`,
     method: 'get',
+    params,
   })
 }
 /**
@@ -304,6 +309,27 @@ export function getFrontPageInventoryProductsTotalValue(): Promise<{ data: IGetF
 export function updateFrontPageInventoryProductsTotalValue(): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/front_page/inventory_value/update`,
+    method: 'post',
+  })
+}
+/**
+ * 首页-仓库容量
+ * @returns
+ */
+export function getFrontPageWarehouseCapacity(params: { startDate: string; endDate: string }): Promise<{ data: IWarehouseCapacityItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/warehouse_capacity/get`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 首页-仓库容量-更新
+ * @returns
+ */
+export function updateFrontPageWarehouseCapacity(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/front_page/warehouse_capacity/update`,
     method: 'post',
   })
 }

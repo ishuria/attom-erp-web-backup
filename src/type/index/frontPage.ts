@@ -218,6 +218,39 @@ export interface IGetFrontPageInventoryProductsTotalValue {
   }>
 }
 
+export interface IWarehouseCapacityItem {
+  date: string
+  // 数量字段
+  notArrivedQuantity: number // 未到国内仓数量
+  pendingPackQuantity: number // 待打包数量
+  packedQuantity: number // 已打包完成数量
+  // FBA在途数量
+  fbaInTransitQuantity?: Array<{
+    siteName: string
+    value: number
+  }>
+  // FBA可售数量
+  fbaAvailableQuantity?: Array<{
+    siteName: string
+    value: number
+  }>
+
+  // 体积字段
+  notArrivedVolume: number // 未到国内仓体积(m³)
+  pendingPackVolume: number // 待打包体积(m³)
+  packedVolume: number // 已打包完成体积(m³)
+  // FBA在途体积
+  fbaInTransitVolume?: Array<{
+    siteName: string
+    value: number
+  }>
+  // FBA可售体积
+  fbaAvailableVolume?: Array<{
+    siteName: string
+    value: number
+  }>
+}
+
 export interface IGetFrontPageJobLevelCommission {
   userName: string
   monthlyLevel: string
