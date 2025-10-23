@@ -1450,7 +1450,7 @@ const validateVariants = (item: any) => {
   } else if (!item.volumeCoefficient) {
     $baseMessage('请先填写体积系数', 'warning', 'hey')
     return false
-  } else if (!item.tariff) {
+  } else if (item.tariff === null || item.tariff === undefined || item.tariff === '') {
     $baseMessage('请先填写关税', 'warning', 'hey')
     return false
   } else if (!item.hts.label) {

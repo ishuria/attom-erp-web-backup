@@ -650,6 +650,7 @@ const problemReasonOption = [
   { label: '交期问题', value: 1 },
   { label: '开票问题', value: 2 },
   { label: '其他', value: 3 },
+  { label: '交期延误-自动', value: 4 },
 ]
 const problemComponentOption = [
   { label: '全部零件', value: -1 },
