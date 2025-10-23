@@ -829,7 +829,6 @@ const fetchUpdateDate = async () => {
 }
 const historyList = ref<IGetFrontPagePerformanceHistory[]>([])
 const selectDate = ref<[string, string]>(getLastYearStringMonth())
-const dateRange = ref<[string, string] | null>(null)
 const userList = ref<{ id: number; label: string }[]>([])
 const userId = ref<number>()
 const fetchUserList = async () => {
