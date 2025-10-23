@@ -92,3 +92,8 @@ export interface IAddParams {
 export interface IGetAllNameReq {
   name: string
 }
+
+export interface IGetAddUserListResp {
+  userId: number
+  userName: string
+}

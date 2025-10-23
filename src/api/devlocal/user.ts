@@ -2,7 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
-import type { IAddParams, IEditParams, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
+import type { IAddParams, IEditParams, IGetAddUserListResp, IGetAllNameReq, IUserDeleteReq, IUserQueryReq } from '/@/type/user/userType'
 
 export function getList(data?: IUserQueryReq) {
   return request({
@@ -81,5 +81,27 @@ export function getSupervisorList() {
   return request({
     url: `${BASE_API}/supervisor/list`,
     method: 'get',
+  })
+}
+/**
+ * 部门管理-添加人员列表
+ * @returns
+ */
+export function getAddUserList(): Promise<{ data: IGetAddUserListResp[] }> {
+  return request({
+    url: `${BASE_API}/person_level/add/user/list`,
+    method: 'get',
+  })
+}
+/**
+ * 部门管理-添加人员
+ * @param params {userId: number}
+ * @returns { data: boolean }
+ */
+export function addPersonLevelUser(params: { userId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/person_level/user/add`,
+    method: 'post',
+    params,
   })
 }
