@@ -2267,7 +2267,7 @@ const automaticSignatureVisible = ref<boolean>(false)
 const payHistoryRow = ref<any>()
 const tableColumnWidth = ref<number>(90)
 // 含税价格合计
-const taxIncludedTotalPrice = ref<number>(0)
+// const taxIncludedTotalPrice = ref<number>(0)
 // 防抖处理
 const debouncedQueryData = debounce(() => {
   queryData()
@@ -2326,18 +2326,37 @@ const handleSelectAllPoRow = (event: any) => {
   }
   selectedPOArray.value = Array.from(selectedPORow.value)
 }
-// 将选择的component行加入到component数组里
+// // 将选择的component行加入到component数组里
+// const handleSelectedCompRow = (event: any, row: any) => {
+//   if (event) {
+//     selectedCompArray.value.push(row)
+//     // 累加含税总价
+//     taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + Number(row.taxIncludedPrice)).toFixed(2))
+//   } else {
+//     const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
+//     selectedCompArray.value.splice(index, 1)
+//     // 累减含税总价
+//     taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - Number(row.taxIncludedPrice)).toFixed(2))
+//   }
+// }
+// 使用 computed 自动计算总价，避免手动累加
+const taxIncludedTotalPrice = computed(() => {
+  return selectedCompArray.value.reduce((total: number, item: any) => {
+    return total + Number(item.taxIncludedPrice || 0)
+  }, 0)
+})
+
+// 简化的勾选处理
 const handleSelectedCompRow = (event: any, row: any) => {
   if (event) {
     selectedCompArray.value.push(row)
-    // 累加含税总价
-    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + Number(row.taxIncludedPrice)).toFixed(2))
   } else {
     const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
-    selectedCompArray.value.splice(index, 1)
-    // 累减含税总价
-    taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - Number(row.taxIncludedPrice)).toFixed(2))
+    if (index > -1) {
+      selectedCompArray.value.splice(index, 1)
+    }
   }
+  // 不需要手动计算，computed 会自动更新
 }
 // 全选零件操作列
 const handleSelectAllCompRow = (event: any) => {
@@ -2345,16 +2364,16 @@ const handleSelectAllCompRow = (event: any) => {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = true
       selectedCompArray.value.push(item)
-      taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
+      // taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
     })
-    taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
+    // taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
     // console.log(selectedCompRow.value);
   } else {
     poList.value.forEach((item: any) => {
       item.selectedCompRow = false
     })
     selectedCompArray.value = []
-    taxIncludedTotalPrice.value = 0
+    // taxIncludedTotalPrice.value = 0
     // console.log(selectedCompRow.value);
   }
 }
@@ -2500,8 +2519,8 @@ const clearTableSelect = () => {
   })
   selectedCompArray.value = []
 
-  // 重置含税价格合计
-  taxIncludedTotalPrice.value = 0
+  // // 重置含税价格合计
+  // taxIncludedTotalPrice.value = 0
 }
 const installmentLoading = ref<boolean>(false)
 // 确认分批付款
@@ -3045,7 +3064,7 @@ const handleTabClick = (tab: TabsPaneContext) => {
       pageSize: queryForm.pageSize,
     },
   })
-  taxIncludedTotalPrice.value = 0
+  // taxIncludedTotalPrice.value = 0
 }
 //采购订单col合并方法
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -3319,7 +3338,7 @@ const fetchData = async () => {
       poList.value = data.list
       selectedPORow.value.clear()
       selectedCompArray.value = []
-      taxIncludedTotalPrice.value = 0
+      // taxIncludedTotalPrice.value = 0
       // 每个零件的付款进度进行处理
       poList.value.forEach((item: any) => {
         item.selectedCompRow = false

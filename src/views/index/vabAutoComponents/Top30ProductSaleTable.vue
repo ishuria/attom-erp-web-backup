@@ -8,7 +8,14 @@
       </div>
     </template>
 
-    <el-table border :cell-class-name="clearPadding" :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }">
+    <el-table
+      v-loading="loading"
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+    >
       <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
           <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
@@ -26,26 +33,26 @@
           <br />
           <div class="product-desc-container">
             <span class="product-desc">{{ row.productDesc }}</span>
-            <span class="flag-container" :class="{ 'japan-flag': row.flag === 'JP' }">
-              <country-flag :country="row.flag" />
-            </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="ASIN" min-width="110" prop="asin">
+      <el-table-column label="ASIN" min-width="120" prop="asin">
         <template #default="{ row }">
-          <el-link class="always-underline" :href="row.amazonUrl" target="_blank" type="primary" :underline="false">{{ row.asin }}</el-link>
+          <el-link :href="row.amazonUrl" target="_blank" type="primary" underline="always">{{ row.asin }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="30天销售额" min-width="110" prop="monthOrderSales">
         <template #default="{ row }">${{ row.monthOrderSales }}</template>
       </el-table-column>
-      <el-table-column label="30天销量" min-width="100" prop="monthOrderVolume" />
+      <el-table-column label="30天销量" min-width="100" prop="monthSalesVolume" />
       <el-table-column label="上新天数" min-width="95" prop="newArrivalDay">
         <template #default="{ row }">{{ row.newArrivalDay }}天</template>
       </el-table-column>
       <el-table-column label="产品经理" min-width="95" prop="productManager" />
       <el-table-column label="产品设计" min-width="95" prop="productDesign" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
   </vab-card>
@@ -53,7 +60,6 @@
 
 <script lang="ts" setup>
 import { CSSProperties } from 'vue'
-import CountryFlag from 'vue-country-flag-next'
 import { IGetOperationAmazonSKUList } from '/@/type/storeOperation/productPerformanceType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -63,6 +69,7 @@ defineOptions({
 
 const props = defineProps<{
   list: IGetOperationAmazonSKUList[]
+  loading: boolean
 }>()
 
 const imagePreviewVisible = ref(false)
@@ -136,15 +143,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 .top30ProductSaleTable :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
-}
-
-/* 确保链接下划线一直显示 */
-.always-underline {
-  text-decoration: underline !important;
-}
-
-.always-underline:hover {
-  text-decoration: underline !important;
 }
 // 产品描述和国旗容器样式
 .product-desc-container {

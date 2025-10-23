@@ -304,7 +304,7 @@
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
       <!-- top30新品销售额 -->
       <el-col v-if="ableViewTop30ProductSaleCard" :lg="11" :md="24" :sm="24" :xl="11" :xs="24">
-        <top30-product-sale-table :list="top30ProductSaleList">
+        <top30-product-sale-table :list="top30ProductSaleList" :loading="top30ProductSaleLoading">
           <!-- <template #select>
             <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
               <el-option v-for="item in monthList" :key="item" :label="item" :value="item" />
@@ -974,9 +974,12 @@ const fetchRankAssessmentFinish = async () => {
 }
 const top30ProductSaleList = ref<IGetOperationAmazonSKUList[]>([])
 const top50ProductLossList = ref<IGetOperationAmazonSKUList[]>([])
+const top30ProductSaleLoading = ref<boolean>(false)
 const fetchTop30ProductSale = async () => {
+  top30ProductSaleLoading.value = true
   const { data } = await getFrontPageTop30ProductSale()
   top30ProductSaleList.value = data
+  top30ProductSaleLoading.value = false
 }
 const fetchTop50ProductLoss = async () => {
   const { data } = await getFrontPageTop50ProductLoss({ userId: selectLossUserId.value! })
