@@ -41,12 +41,18 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="运营" prop="operationUserName" width="95" />
-      <el-table-column align="center" label="预计下月仓储费" prop="estimateNextMonthStorageFee" sortable="custom" />
+      <el-table-column align="center" label="预计下月仓储费" prop="estimateNextMonthStorageFee" sortable="custom">
+        <template #default="{ row }">¥{{ row.estimateNextMonthStorageFee }}</template>
+      </el-table-column>
       <el-table-column align="center" label="预计剩余库存仓储天数" prop="remainingStorageDays">
         <template #default="{ row }">{{ row.remainingStorageDays }}天</template>
       </el-table-column>
-      <el-table-column align="center" label="预计总仓储费" prop="totalStorageFee" sortable="custom" />
-      <el-table-column align="center" label="预计库存售完利润" prop="expectedProfit" />
+      <el-table-column align="center" label="预计总仓储费" prop="totalStorageFee" sortable="custom">
+        <template #default="{ row }">¥{{ row.totalStorageFee }}</template>
+      </el-table-column>
+      <el-table-column align="center" label="预计库存售完利润" prop="expectedProfit">
+        <template #default="{ row }">¥{{ row.expectedProfit }}</template>
+      </el-table-column>
       <el-table-column align="center" label="建议清算" prop="recommendClearing" width="95">
         <template #default="{ row }">
           <vab-icon v-if="row.recommendClearing === 1" icon="check-fill" style="color: var(--el-color-success); font-size: 16px" />

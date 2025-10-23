@@ -27,13 +27,13 @@
             <el-select
               v-model="queryForm.customsDeclarationStatus"
               clearable
-              placeholder="匹配状态筛选"
+              placeholder="出货状态筛选"
               style="width: 150px"
               @change="$emit('query')"
             >
               <el-option label="全部" :value="-1" />
-              <el-option label="已匹配" :value="1" />
-              <el-option label="未匹配" :value="0" />
+              <el-option label="已出货" :value="1" />
+              <el-option label="未出货" :value="0" />
             </el-select>
           </el-form-item>
           <el-form-item>

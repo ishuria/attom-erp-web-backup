@@ -80,6 +80,7 @@ const queryForm = reactive<IAiTuoMuListReq>({
   status: activeName.value,
   pageNo: 1,
   pageSize: 20,
+  customsDeclarationStatus: -1,
 })
 const list = ref<IAiTuoMuItem[]>([])
 const listLoading = ref<boolean>(false)

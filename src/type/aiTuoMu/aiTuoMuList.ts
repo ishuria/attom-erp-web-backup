@@ -81,4 +81,8 @@ export interface IAiTuoMuListReq {
    * 状态 0未匹配 1已匹配
    */
   status?: number
+  /*
+   * 出货状态 0未出货 1已出货
+   */
+  customsDeclarationStatus?: number
 }
