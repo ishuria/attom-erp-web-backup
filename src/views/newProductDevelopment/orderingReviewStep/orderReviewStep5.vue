@@ -3,13 +3,13 @@
     <div class="comprehensive-table-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center">
       <el-table
         ref="tableRef"
+        v-loading="tableLoading"
         border
         :cell-class-name="clearPadding"
         class="noneHoverTable"
         :data="componentList"
         :header-cell-style="{ 'text-align': 'center' }"
         stripe
-        @cell-click="changeInput"
       >
         <el-table-column align="center" fixed="left" label="属于变体" min-width="140" prop="variant">
           <template #default="{ row }">
@@ -57,7 +57,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="单位" min-width="70" prop="componentUnit" />
-        <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂', 'unitPrice')">
+        <el-table-column align="center" label="出厂单价" prop="unitPrice" :width="flexColumnWidth(componentList, '出厂单', 'unitPrice')">
           <template #header>
             出厂
             <br />
@@ -65,7 +65,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂', 'totalPrice')">
+        <el-table-column align="center" label="出厂总价" prop="totalPrice" :width="flexColumnWidth(componentList, '出厂总', 'totalPrice')">
           <template #header>
             出厂
             <br />
@@ -79,7 +79,12 @@
             运费(含税)
           </template>
         </el-table-column>
-        <el-table-column align="center" label="总未税价" prop="preTaxPrice" :width="flexColumnWidth(componentList, '总未', 'preTaxPrice')">
+        <el-table-column
+          align="center"
+          label="总未税价"
+          prop="preTaxPrice"
+          :width="flexColumnWidth(componentList, '总未税', 'preTaxPrice')"
+        >
           <template #header>
             总未
             <br />
@@ -90,7 +95,7 @@
           align="center"
           label="总含税价"
           prop="taxIncludedPrice"
-          :width="flexColumnWidth(componentList, '总含', 'taxIncludedPrice')"
+          :width="flexColumnWidth(componentList, '总含税', 'taxIncludedPrice')"
         >
           <template #header>
             总含
@@ -119,6 +124,9 @@
             <br />
             税点
           </template>
+          <template #default="{ row }">
+            <span>{{ row.actualTaxRate != null ? row.actualTaxRate + '%' : '' }}</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" label="开票税点" min-width="60" prop="invoicingTaxRate">
           <template #header>
@@ -126,9 +134,12 @@
             <br />
             税点
           </template>
+          <template #default="{ row }">
+            <span>{{ row.invoicingTaxRate != null ? row.invoicingTaxRate + '%' : '' }}</span>
+          </template>
         </el-table-column>
 
-        <el-table-column label="采购方" prop="purchase">
+        <el-table-column label="采购方" prop="purchase" width="120">
           <template #default="{ row }">
             <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="updateReviewComponent(row)">
               <el-option v-for="b in purchaseOption" :key="b.id" :label="b.label" :value="b.id" />
@@ -198,7 +209,7 @@ import {
   reviewStepNo3GetSelectVariantList,
   reviewStepNo3UpdateConsumableCheck,
   updateReviewComponentPurchaseIdAndInvoiceCustomstatus,
-} from '~/src/api/devlocal/orderProcess'
+} from '/@/api/devlocal/orderProcess'
 import { currencyList, invoicingList } from '../indexCommon'
 import { releasePo } from '/@/api/devlocal/orderingReview'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
@@ -206,7 +217,7 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
-import { convertString } from '~/src/utils/stringUtils'
+import { convertString } from '/@/utils/stringUtils'
 
 defineOptions({
   name: 'OrderReviewStep5',
@@ -217,6 +228,7 @@ const props = defineProps<{
   reviewStepNo: string
   reviewId: string
 }>()
+const tableLoading = ref<boolean>(false)
 // 零件列表
 const componentList = ref<IreviewStepNo3ComponentList[]>([])
 
@@ -240,9 +252,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   }
   return ''
 }
-const changeInput = async (row: any, column: any) => {
-  //
-}
+
 const editDisabled = ref<boolean>(false)
 // 发布Po的loading
 const releasePoLoading = ref<boolean>(false)
@@ -314,14 +324,70 @@ const fetchDataComponent = async () => {
 }
 
 const handleConsumableChange = async (row: any) => {
-  debugger
-  await reviewStepNo3UpdateConsumableCheck({
-    reviewComponentId: row.reviewComponentId,
-    consumableCheck: row.consumableCheck,
-  })
+  tableLoading.value = true
+  try {
+    await reviewStepNo3UpdateConsumableCheck({
+      reviewComponentId: row.reviewComponentId,
+      consumableCheck: row.consumableCheck,
+    })
+    await fetchDataComponent()
+  } catch (error) {
+    console.error(error as Error)
+  } finally {
+    tableLoading.value = false
+  }
 }
 
 const updateReviewComponent = async (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+
+  // 买单采购方：强制不报关
+  if (item.type === 0) {
+    row.customsDeclarationStatus = 1
+    if (row.customsDeclarationStatus === 0) {
+      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+    }
+  }
+
+  // 埃托姆采购方：必须报关，不能无法开票
+  if (item.label === '埃托姆') {
+    row.customsDeclarationStatus = 0
+    if (row.invoicing === 2) {
+      row.invoicing = 1
+    }
+    if (row.customsDeclarationStatus === 1) {
+      row.customsDeclarationStatus = 0
+      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+    }
+  }
+
+  // Attom采购方：强制无法开票
+  if (item.label === 'Attom') {
+    row.invoicing = 2
+    if (row.invoicing !== 2) {
+      $baseMessage('采购方为attom，无法开票', 'error')
+    }
+  }
+
+  // 云舟采购方：普票+不报关组合
+  if (item.label === '云舟') {
+    if (row.invoicing === 2) {
+      row.invoicing = 1
+      $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
+    }
+    if (row.invoicing === 1) {
+      row.customsDeclarationStatus = 1
+      if (row.customsDeclarationStatus === 0) {
+        $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
+      }
+    }
+  }
+
+  // 通用规则：云舟和埃托姆不能选择无法开票
+  if (row.invoicing === 2 && (item.label === '云舟' || item.label === '埃托姆')) {
+    $baseMessage('采购方为云舟或埃托姆，不能选择无法开票', 'error', 'hey')
+    row.invoicing = 1
+  }
   const { data } = await updateReviewComponentPurchaseIdAndInvoiceCustomstatus({
     reviewComponentId: row.reviewComponentId,
     purchaseId: row.purchaseId,
@@ -345,5 +411,16 @@ onBeforeMount(() => {
   display: block;
   margin: 20px auto;
   text-align: center;
+}
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+.el-checkbox {
+  transform: scale(1.2);
 }
 </style>

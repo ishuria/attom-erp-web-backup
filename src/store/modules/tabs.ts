@@ -86,6 +86,8 @@ export const useTabsStore = defineStore('tabs', {
         })
       }
       this.visitedRoutes = handleVisitedRoutes(this.visitedRoutes)
+      // 立即保存到缓存，确保数据安全
+      this.handleCaughtRoutes()
     },
     /**
      * @description 缓存tab页

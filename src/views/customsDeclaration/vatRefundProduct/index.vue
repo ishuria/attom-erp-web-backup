@@ -75,7 +75,9 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
-                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <span :style="{ fontWeight: item.value === 'all' ? 'bold' : 'normal' }">{{ item.label }}</span>
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -284,7 +286,9 @@
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-select v-model="queryForm.searchFields" placeholder="请选择搜索字段">
-                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option v-for="item in searchOptions" :key="item.value" :label="item.label" :value="item.value">
+                    <span :style="{ fontWeight: item.value === 'all' ? 'bold' : 'normal' }">{{ item.label }}</span>
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -614,6 +618,7 @@ const handleCalculateWidth = (item: any) => {
   }
 }
 const searchOptions = [
+  { label: '全部', value: 'all' },
   { label: 'ShipmentId', value: 'shipmentId' },
   { label: 'PO', value: 'po' },
   { label: 'SKU', value: 'sku' },
@@ -772,7 +777,7 @@ const queryForm = reactive<IGetTaxRefundListQuery>({
   toDate: date.value[1],
   orderByField: 'shipmentDate',
   orderDirection: 'desc',
-  searchFields: 'shipmentId',
+  searchFields: 'all',
 })
 const queryDateData = () => {
   queryForm.fromDate = date.value[0]

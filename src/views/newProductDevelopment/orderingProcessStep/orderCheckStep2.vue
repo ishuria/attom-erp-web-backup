@@ -44,11 +44,11 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="耗材" prop="consumable" width="70">
+        <el-table-column align="center" label="耗材" prop="consumable" width="70">
           <template #default="{ row }">
             <el-checkbox v-model="row.consumableCheck" disabled :false-value="0" :true-value="1" />
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <el-table-column align="center" label="每个SKU需要数量" prop="quantity" width="100">
           <template #header>
             每个SKU
@@ -117,12 +117,18 @@
             <br />
             税点
           </template>
+          <template #default="{ row }">
+            <span>{{ row.actualTaxRate != null ? row.actualTaxRate + '%' : '' }}</span>
+          </template>
         </el-table-column>
         <el-table-column align="center" label="开票税点" min-width="60" prop="invoicingTaxRate">
           <template #header>
             开票
             <br />
             税点
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.invoicingTaxRate != null ? row.invoicingTaxRate + '%' : '' }}</span>
           </template>
         </el-table-column>
 
@@ -380,6 +386,8 @@ const fetchDataComponent = async () => {
     componentList.value.forEach((item: any) => {
       item.currency = convertString(item.currency)
       item.invoicing = convertString(item.invoicing)
+      item.actualTaxRate = item.actualTaxRate * 100
+      item.invoicingTaxRate = item.invoicingTaxRate * 100
     })
     // console.log(componentList.value);
   } catch (error) {

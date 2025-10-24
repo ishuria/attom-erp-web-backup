@@ -194,7 +194,7 @@ onMounted(() => {
     }
   }
 })
-onUnmounted(() => console.log('父组件 unmounted'))
+// onUnmounted(() => console.log('父组件 unmounted'))
 </script>
 
 <style lang="scss" scoped>

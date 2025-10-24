@@ -105,3 +105,15 @@ export function addPersonLevelUser(params: { userId: number }): Promise<{ data: 
     params,
   })
 }
+/**
+ * 部门管理-更新人员层级
+ * @param params { userId: number; newRootId: number }
+ * @returns { data: boolean }
+ */
+export function updatePersonLevel(params: { userId: number; targetUserId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/person/updateLevel`,
+    method: 'post',
+    params,
+  })
+}

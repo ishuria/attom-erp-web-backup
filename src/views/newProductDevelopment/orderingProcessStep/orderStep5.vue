@@ -793,7 +793,6 @@ const handleSaveAndContinue = async () => {
   } else {
     classReviewId = route.query.reviewId
   }
-
   // 校验是否为空
   for (const item of exchangeList.value) {
     const column0 = item.column0
@@ -827,6 +826,14 @@ const handleSaveAndContinue = async () => {
     }
   }
 
+  // 获取采购负责人字段的所有变体值
+  const procurementManagerField = exchangeList.value[FIELD_INDEX_MAP.PROCUREMENT_MANAGER]
+  const variantNames = Object.keys(procurementManagerField).filter((key) => key !== 'column0' && key !== 'variantsSame')
+  const allManagers = variantNames.map((variantName) => procurementManagerField[variantName]).filter(Boolean) // 过滤掉 undefined/null
+  if (new Set(allManagers).size !== 1) {
+    $baseMessage('采购负责人必须都一样!', 'warning')
+    return
+  }
   try {
     const { data } = await reviewStepNo5SaveFv({ reviewId: classReviewId! })
     if (data === true) {
