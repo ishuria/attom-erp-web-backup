@@ -99,11 +99,13 @@ export const useTabsStore = defineStore('tabs', {
       }
     },
     async updateVisitedRoutes(visitedRoutes: any) {
-      this.visitedRoutes = []
-      await this.handleCaughtRoutes()
-      setTimeout(() => {
-        this.visitedRoutes = [...visitedRoutes]
-      }, 0)
+      // this.visitedRoutes = []
+      // await this.handleCaughtRoutes()
+      // setTimeout(() => {
+      //   this.visitedRoutes = [...visitedRoutes]
+      // }, 0)
+      // 直接更新路由数组，避免清空导致组件刷新
+      this.visitedRoutes = [...visitedRoutes]
     },
   },
 })

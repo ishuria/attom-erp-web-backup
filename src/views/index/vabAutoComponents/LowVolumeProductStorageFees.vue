@@ -47,7 +47,7 @@
       <el-table-column align="center" label="预计剩余库存仓储天数" prop="remainingStorageDays">
         <template #default="{ row }">{{ row.remainingStorageDays }}天</template>
       </el-table-column>
-      <el-table-column align="center" label="预计总仓储费" prop="totalStorageFee" sortable="custom">
+      <el-table-column align="center" label="预计剩余总仓储费" prop="totalStorageFee" sortable="custom">
         <template #default="{ row }">¥{{ row.totalStorageFee }}</template>
       </el-table-column>
       <el-table-column align="center" label="预计库存售完利润" prop="expectedProfit">
