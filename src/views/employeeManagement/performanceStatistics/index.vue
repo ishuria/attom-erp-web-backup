@@ -501,6 +501,8 @@
             </template>
           </el-table-column>
           <el-table-column label="采购降本" min-width="100" prop="procurementCostReduction" />
+          <el-table-column label="退税奖金" min-width="100" prop="taxRefundPrice" />
+          <el-table-column label="退税跨月调整" min-width="100" prop="taxRefundPriceCrossMonth" />
 
           <template #empty>
             <el-empty class="vab-data-empty" />

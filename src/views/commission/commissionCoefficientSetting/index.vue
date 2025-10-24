@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="美工类型" :name="0" >
+      <el-tab-pane label="美工类型" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-button type="primary" @click="showParamSetting">参数设定</el-button>
@@ -12,19 +12,22 @@
                 <el-input v-model="keyWord" clearable placeholder="请输入搜索关键词" @input="fetchData" @keyup.enter="fetchData" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData"/>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border :cell-style="cellStyle"
-          class="noneHoverTable" :data="list" :header-cell-style="{ textAlign: 'center' }"
+          border
+          :cell-style="cellStyle"
+          class="noneHoverTable"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="姓名" min-width="" prop="userName"/>
-          <el-table-column label="角色" min-width="" prop="roleName"/>
+          <el-table-column label="姓名" min-width="" prop="userName" />
+          <el-table-column label="角色" min-width="" prop="roleName" />
           <el-table-column label="图片提成天数" min-width="" prop="pictureDay">
             <template #default="{ row }">
               <div class="none">
@@ -92,7 +95,11 @@
           <el-table-column label="长期提成单人比例" min-width="" prop="longSinglePersonProportion">
             <template #default="{ row }">
               <div class="none">
-                <el-input v-model="row.longSinglePersonProportion" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+                <el-input
+                  v-model="row.longSinglePersonProportion"
+                  @blur="clickCancel($event, row)"
+                  @keyup.enter="clickCancel($event, row)"
+                />
               </div>
               <span>{{ row.longSinglePersonProportion ? row.longSinglePersonProportion + '%' : '' }}</span>
             </template>
@@ -114,11 +121,11 @@
             </template>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"/>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="产品类型" :name="1" >
+      <el-tab-pane label="产品类型" :name="1">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
             <el-form inline @submit.prevent>
@@ -126,25 +133,32 @@
                 <el-input v-model="keyWord2" clearable placeholder="请输入搜索关键词" @input="fetchData2" @keyup.enter="fetchData2" />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData2"/>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="fetchData2" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
         <el-table
-          border :cell-style="cellStyle"
-          class="noneHoverTable" :data="list2" :header-cell-style="{ textAlign: 'center' }"
+          border
+          :cell-style="cellStyle"
+          class="noneHoverTable"
+          :data="list2"
+          :header-cell-style="{ textAlign: 'center' }"
           stripe
           @cell-click="changeInput"
         >
-          <el-table-column label="姓名" prop="userName"/>
-          <el-table-column label="角色" prop="roleName"/>
+          <el-table-column label="姓名" prop="userName" />
+          <el-table-column label="角色" prop="roleName" />
           <el-table-column label="产品开发类型">
             <el-table-column label="净利提成模式">
               <el-table-column label="产品经理净利提成比例" prop="productManagerProportion">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.productManagerProportion" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                    <el-input
+                      v-model="row.productManagerProportion"
+                      @blur="clickCancel2($event, row)"
+                      @keyup.enter="clickCancel2($event, row)"
+                    />
                   </div>
                   <span>{{ row.productManagerProportion ? row.productManagerProportion + '%' : '' }}</span>
                 </template>
@@ -152,7 +166,11 @@
               <el-table-column label="产品设计净利提成比例" prop="productDesignProportion">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.productDesignProportion" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                    <el-input
+                      v-model="row.productDesignProportion"
+                      @blur="clickCancel2($event, row)"
+                      @keyup.enter="clickCancel2($event, row)"
+                    />
                   </div>
                   <span>{{ row.productDesignProportion ? row.productDesignProportion + '%' : '' }}</span>
                 </template>
@@ -172,7 +190,11 @@
               <el-table-column label="默认总考核数" prop="defaultAssessmentNumber">
                 <template #default="{ row }">
                   <div class="none">
-                    <el-input v-model="row.defaultAssessmentNumber" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                    <el-input
+                      v-model="row.defaultAssessmentNumber"
+                      @blur="clickCancel2($event, row)"
+                      @keyup.enter="clickCancel2($event, row)"
+                    />
                   </div>
                   <span>{{ row.defaultAssessmentNumber ? row.defaultAssessmentNumber : '' }}</span>
                 </template>
@@ -228,20 +250,23 @@
                 <span>{{ row.day }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="退税提成比例" prop="taxRefundBonusRatio">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.taxRefundBonusRatio" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                </div>
+                <span>{{ row.taxRefundBonusRatio ? row.taxRefundBonusRatio + '%' : '' }}</span>
+              </template>
+            </el-table-column>
           </el-table-column>
           <template #empty>
-            <el-empty class="vab-data-empty"/>
+            <el-empty class="vab-data-empty" />
           </template>
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <vab-dialog
-      v-model="paramSetting"
-      :draggable="false"
-      title="参数设定"
-      width="20%"
-    >
-      <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 0 20px 0;">
+    <vab-dialog v-model="paramSetting" :draggable="false" title="参数设定" width="20%">
+      <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 0 20px 0">
         <el-form-item label="初始目标ACOS" prop="acos">
           <el-input v-model="form.acos" type="number" />
         </el-form-item>
@@ -249,7 +274,7 @@
           <el-input v-model="form.upperLimit" type="number" />
         </el-form-item>
         <el-form-item label="图片优化任务最低要求转化率" prop="minConversionRate">
-          <el-input v-model="form.minConversionRate" >
+          <el-input v-model="form.minConversionRate">
             <template #append>%</template>
           </el-input>
         </el-form-item>
@@ -257,7 +282,7 @@
           <el-input v-model="form.compensationDay" type="number" />
         </el-form-item>
         <el-form-item label="新品要求转化率打折比例" prop="newDiscountRatio">
-          <el-input v-model="form.newDiscountRatio" >
+          <el-input v-model="form.newDiscountRatio">
             <template #append>%</template>
           </el-input>
         </el-form-item>
@@ -265,13 +290,8 @@
           <el-input v-model="form.price" />
         </el-form-item>
       </el-form>
-      <el-table
-        border
-        class="noneHoverTable" :data="list3"
-        stripe
-        @cell-click="changeInput"
-      >
-        <el-table-column label="客单价" prop="unitPrice"/>
+      <el-table border class="noneHoverTable" :data="list3" stripe @cell-click="changeInput">
+        <el-table-column label="客单价" prop="unitPrice" />
         <el-table-column label="初始目标转化率" prop="targetRate">
           <template #default="{ row }">
             <div class="none">
@@ -294,12 +314,25 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { getCommissionArtTypeList, getCommissionProductTypeList, getCommissionSetting, updateCommissionArtType, updateCommissionProductType, updateCommissionSetting1, updateCommissionSetting2 } from '/@/api/devlocal/commission'
-import type { IGetCommissionArtTypeList, IGetCommissionProductTypeList, IGetCommissionSettingTableList, IUpdateCommissionSetting1Req } from '/@/type/commission/commissionType'
+import {
+  getCommissionArtTypeList,
+  getCommissionProductTypeList,
+  getCommissionSetting,
+  updateCommissionArtType,
+  updateCommissionProductType,
+  updateCommissionSetting1,
+  updateCommissionSetting2,
+} from '/@/api/devlocal/commission'
+import type {
+  IGetCommissionArtTypeList,
+  IGetCommissionProductTypeList,
+  IGetCommissionSettingTableList,
+  IUpdateCommissionSetting1Req,
+} from '/@/type/commission/commissionType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
-  name: 'CommissionCoefficientSetting'
+  name: 'CommissionCoefficientSetting',
 })
 
 const activeName = ref<number>(0)
@@ -318,7 +351,7 @@ const formRules = reactive<FormRules<IUpdateCommissionSetting1Req>>({
   upperLimit: [{ required: true, message: '请输入转化率加成上限', trigger: 'blur' }],
   minConversionRate: [{ required: true, message: '请输入最低转化率', trigger: 'blur' }],
   compensationDay: [{ required: true, message: '请输入断货补偿天数上限', trigger: 'blur' }],
-  newDiscountRatio: [{ required: true, message: '请输入新品要求转化率打折比例', trigger: 'blur' }]
+  newDiscountRatio: [{ required: true, message: '请输入新品要求转化率打折比例', trigger: 'blur' }],
 })
 const handleConfirmParamSetting = async () => {
   formRef.value?.validate(async (isValid) => {
@@ -329,7 +362,7 @@ const handleConfirmParamSetting = async () => {
         minConversionRate: Number(form.minConversionRate) / 100,
         compensationDay: form.compensationDay,
         newDiscountRatio: Number(form.newDiscountRatio) / 100,
-        price: form.price
+        price: form.price,
       })
       if (data) {
         $baseMessage('提交成功！', 'success')
@@ -337,7 +370,6 @@ const handleConfirmParamSetting = async () => {
       }
     }
   })
-
 }
 const showParamSetting = async () => {
   paramSetting.value = true
@@ -349,7 +381,6 @@ const showParamSetting = async () => {
   })
 }
 const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
-
   const firstChild = cell?.children[0]?.children[0]
   const secondChild = cell?.children[0]?.children[1]
 
@@ -365,19 +396,18 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
 
     focusAndSelectInput(cell)
   }
-
 }
 
 // table blur事件
-const clickCancel = async (event:any, value:any) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+const clickCancel = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -397,7 +427,7 @@ const clickCancel = async (event:any, value:any) => {
         renderingProportion: Number(value.renderingProportion) / 100,
         aPlusProportion: Number(value.aPlusProportion) / 100,
         videoProportion: Number(value.videoProportion) / 100,
-        instructionManualRate: Number(value.instructionManualRate) / 100
+        instructionManualRate: Number(value.instructionManualRate) / 100,
       })
     } catch {
       Object.assign(value, copyRow)
@@ -405,15 +435,15 @@ const clickCancel = async (event:any, value:any) => {
   }
 }
 // table blur事件
-const clickCancel2 = async (event:any, value:any) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+const clickCancel2 = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -432,22 +462,23 @@ const clickCancel2 = async (event:any, value:any) => {
         proportion: Number(value.proportion) / 100,
         day: value.day,
         defaultAssessmentNumber: value.defaultAssessmentNumber,
-        defaultOem: value.defaultOem
+        defaultOem: value.defaultOem,
+        taxRefundBonusRatio: value.taxRefundBonusRatio / 100,
       })
     } catch {
       Object.assign(value, copyRow)
     }
   }
 }
-const clickCancel3 = async (event:any, value:any) => {
-  const rootElement = getRootElement(event.srcElement, ".cell")
+const clickCancel3 = async (event: any, value: any) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
     const t1 = rootElement.children[0]
     const t2 = rootElement.children[1]
 
-    if (t1) t1.classList.add("none")
-    if (t2) t2.classList.remove("none")
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
   }
   if (isEqual(copyRow, value)) {
     return
@@ -457,7 +488,7 @@ const clickCancel3 = async (event:any, value:any) => {
     try {
       await updateCommissionSetting2({
         id: value.id,
-        targetRate: Number(value.targetRate) / 100
+        targetRate: Number(value.targetRate) / 100,
       })
     } catch {
       Object.assign(value, copyRow)
@@ -467,7 +498,7 @@ const clickCancel3 = async (event:any, value:any) => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getCommissionArtTypeList({
-    keyWord: keyWord.value
+    keyWord: keyWord.value,
   })
   list.value = data
   listLoading.value = false
@@ -475,7 +506,7 @@ const fetchData = async () => {
 const fetchData2 = async () => {
   listLoading.value = true
   const { data } = await getCommissionProductTypeList({
-    keyWord: keyWord2.value
+    keyWord: keyWord2.value,
   })
   list2.value = data
   list2.value.forEach((item) => {
@@ -501,16 +532,16 @@ const handleTabClick = (tab: TabsPaneContext) => {
     fetchData()
   }
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const index = data.columnIndex
   if (index === 0 || index === 1) {
     return {
       textAlign: 'center',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 onBeforeMount(() => {
@@ -558,8 +589,6 @@ onBeforeMount(() => {
 
         .noneHoverTable {
           flex: 1;
-
-
         }
       }
     }
@@ -576,5 +605,4 @@ onBeforeMount(() => {
     }
   }
 }
-
 </style>

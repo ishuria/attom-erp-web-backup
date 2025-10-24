@@ -72,6 +72,7 @@ export interface IUpdateCommissionProductTypeReq {
   yunzhouCount: number | null
   defaultOem?: number
   defaultAssessmentNumber?: number
+  taxRefundBonusRatio?: number
 }
 export interface IGetCommissionSettingRes {
   data: {
