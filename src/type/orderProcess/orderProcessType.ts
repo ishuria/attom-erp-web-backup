@@ -75,6 +75,14 @@ export interface IreviewId {
 export interface IreviewComponentId {
   reviewComponentId: number
 }
+
+export interface IReviewComponentUpdate {
+  reviewComponentId: number
+  invoice: number
+  purchaseId: number
+  customsDeclarationStatus: number
+}
+
 export interface IreviewStepNo3ComponentUpdate {
   /**
    * 实际税点

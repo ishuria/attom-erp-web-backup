@@ -3,6 +3,7 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  IReviewComponentUpdate,
   ISubmitReviewComponentQuery,
   ISubmitReviewConsumableQuery,
   IqualityInspectionId,
@@ -511,5 +512,13 @@ export function getProductPositionList(): Promise<{ data: { id: number; label: s
   return request({
     url: `${BASE_API}/product/position`,
     method: 'get',
+  })
+}
+
+export function updateReviewComponentPurchaseIdAndInvoiceCustomstatus(data?: IReviewComponentUpdate): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/stepsNo3/update/purchaseOrInvoice`,
+    method: 'post',
+    data,
   })
 }

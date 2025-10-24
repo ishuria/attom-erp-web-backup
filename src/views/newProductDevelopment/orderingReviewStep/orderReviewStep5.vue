@@ -34,6 +34,11 @@
         </el-table-column>
         <el-table-column align="center" label="零件ID" min-width="70" prop="existingPartsListId" width="100" />
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')" />
+        <el-table-column align="center" label="耗材勾选" prop="consumable" width="70">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.consumableCheck" :false-value="0" :true-value="1" @change="handleConsumableChange(row)" />
+          </template>
+        </el-table-column>
         <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
           <template #default="{ row }">
             <el-tooltip content=" " effect="dark" placement="top">
@@ -44,11 +49,6 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <!-- <el-table-column align="center" label="耗材" prop="consumable" width="70">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.consumableCheck" disabled :false-value="0" :true-value="1" />
-          </template>
-        </el-table-column> -->
         <el-table-column align="center" label="每个SKU需要数量" prop="quantity" width="100">
           <template #header>
             每个SKU
@@ -108,20 +108,8 @@
         <el-table-column align="left" label="供应商" prop="supplier" :width="flexColumnWidth(componentList, '供应商', 'supplier')" />
         <el-table-column align="center" label="开票" prop="oem" width="140">
           <template #default="{ row }">
-            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="">
+            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="updateReviewComponent(row)">
               <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="耗材勾选" prop="consumableCheck" width="70">
-          <template #default="{ row }">
-            <el-checkbox v-model="row.consumableCheck" disabled :false-value="0" :true-value="1" />
-          </template>
-        </el-table-column>
-        <el-table-column label="采购方" prop="purchase">
-          <template #default="{ row }">
-            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="">
-              <el-option v-for="b in purchaseOption" :key="b.id" :label="b.label" :value="b.id" />
             </el-select>
           </template>
         </el-table-column>
@@ -137,6 +125,19 @@
             开票
             <br />
             税点
+          </template>
+        </el-table-column>
+
+        <el-table-column label="采购方" prop="purchase">
+          <template #default="{ row }">
+            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="updateReviewComponent(row)">
+              <el-option v-for="b in purchaseOption" :key="b.id" :label="b.label" :value="b.id" />
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="报关状态" prop="consumable" width="70">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.customsDeclarationStatus" :false-value="0" :true-value="1" @change="updateReviewComponent(row)" />
           </template>
         </el-table-column>
 
@@ -192,7 +193,12 @@
 </template>
 
 <script lang="ts" setup>
-import { reviewStepNo3ComponentList, reviewStepNo3GetSelectVariantList } from '~/src/api/devlocal/orderProcess'
+import {
+  reviewStepNo3ComponentList,
+  reviewStepNo3GetSelectVariantList,
+  reviewStepNo3UpdateConsumableCheck,
+  updateReviewComponentPurchaseIdAndInvoiceCustomstatus,
+} from '~/src/api/devlocal/orderProcess'
 import { currencyList, invoicingList } from '../indexCommon'
 import { releasePo } from '/@/api/devlocal/orderingReview'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
@@ -306,6 +312,28 @@ const fetchDataComponent = async () => {
     console.error(error as Error)
   }
 }
+
+const handleConsumableChange = async (row: any) => {
+  debugger
+  await reviewStepNo3UpdateConsumableCheck({
+    reviewComponentId: row.reviewComponentId,
+    consumableCheck: row.consumableCheck,
+  })
+}
+
+const updateReviewComponent = async (row: any) => {
+  const { data } = await updateReviewComponentPurchaseIdAndInvoiceCustomstatus({
+    reviewComponentId: row.reviewComponentId,
+    purchaseId: row.purchaseId,
+    invoice: row.invoicing,
+    customsDeclarationStatus: row.customsDeclarationStatus,
+  })
+
+  if (data) {
+    $baseMessage('零件信息修改成功！', 'success', 'hey')
+  }
+}
+
 onBeforeMount(() => {
   fetchPurchaseAndRepository()
   fetchDataComponent()

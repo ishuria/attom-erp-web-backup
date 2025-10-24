@@ -1,7 +1,7 @@
 <template>
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
-      <el-tab-pane label="进行中" :name="7">
+      <el-tab-pane label="进行中" :name="8">
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -176,7 +176,8 @@
                         row.reviewStatus === 2 ||
                         row.reviewStatus === 3 ||
                         row.reviewStatus === 4 ||
-                        row.reviewStatus === 5
+                        row.reviewStatus === 5 ||
+                        row.reviewStatus === 7
                       "
                       @click="handleOrderReview(row)"
                     >
@@ -369,7 +370,8 @@
                         row.reviewStatus === 2 ||
                         row.reviewStatus === 3 ||
                         row.reviewStatus === 4 ||
-                        row.reviewStatus === 5
+                        row.reviewStatus === 5 ||
+                        row.reviewStatus === 7
                       "
                       @click="handleOrderReview(row)"
                     >
@@ -395,7 +397,7 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
-      <el-tab-pane label="已归档" :name="8">
+      <el-tab-pane label="已归档" :name="9">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
             <el-form inline :model="queryForm" @submit.prevent>
@@ -619,19 +621,20 @@ defineOptions({
   name: 'NewProductApprovalAndRecords',
 })
 
-const activeName = ref<number>(7)
+const activeName = ref<number>(8)
 const handleTabClick = (tab: TabsPaneContext) => {
   queryForm.status = Number(tab.props.name)
   queryData()
 }
 const reviewStatusOption = ref<{ label: string; value: number }[]>([
-  { label: '全部', value: 7 },
+  { label: '全部', value: 8 },
   { label: '编辑中', value: 0 },
   { label: '待审核', value: 1 },
   { label: '主管审批未通过', value: 2 },
   { label: 'SKU创建', value: 3 },
   { label: '运营分货', value: 4 },
   { label: '待发布PO', value: 5 },
+  { label: '待产品经理审核', value: 7 },
 ])
 const selectedRowIndex = ref<number>(-1)
 // 行点击处理函数
@@ -665,7 +668,7 @@ const queryForm = reactive<IReviewQueryReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
-  status: 7,
+  status: 8,
 })
 
 const dataList = ref<IReviewQueryItem[]>([])
@@ -728,6 +731,7 @@ const getStatusBaseColor = (status: number) => {
     3: '#67C23A', // SKU创建 - 绿色
     4: '#8E44AD', // 运营分货 - 紫色
     5: '#2AC3A2', // 待发布PO - 青绿
+    7: '#9AC332', // 待提交给采购审核
   }
   return colorMap[status] ?? '#909399'
 }
@@ -774,6 +778,9 @@ const generateStatus = (value: number) => {
     }
     case 6: {
       return '已完成'
+    }
+    case 7: {
+      return '待产品经理审核'
     }
     default: {
       return '未知'
