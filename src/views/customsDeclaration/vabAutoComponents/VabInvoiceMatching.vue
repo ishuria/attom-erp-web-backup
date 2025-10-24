@@ -195,7 +195,7 @@
     <template #footer>
       <div style="text-align: center">
         <el-button @click="closeInvoiceMatching">取消</el-button>
-        <el-button type="primary" @click="handleSubmitConfirm">确认</el-button>
+        <el-button :loading="confirmLoading" type="primary" @click="handleSubmitConfirm">确认</el-button>
       </div>
     </template>
     <vab-pagination
@@ -580,25 +580,40 @@ const handleConfirm = async () => {
     matchInvoiceLoading.value = false
   }
 }
-
+const confirmLoading = ref<boolean>(false)
 const handleSubmitConfirm = async () => {
-  const setIds = new Set(detailIds.value)
+  confirmLoading.value = true
+  // const setIds = new Set(detailIds.value)
 
-  list.value.forEach((item) => {
-    if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit) {
-      setIds.add(item.detailId!)
-    }
-  })
-  if (setIds.size > 0) {
-    const { data } = await submitConfirmTaxRefundInvoiceMatch(Array.from(setIds))
+  // list.value.forEach((item) => {
+  //   if (item.matchContractNumber || item.matchPo || item.customsDeclarationCount || item.customsDeclarationUnit) {
+  //     setIds.add(item.detailId!)
+  //   }
+  // })
+  // if (setIds.size > 0) {
+  //   const { data } = await submitConfirmTaxRefundInvoiceMatch(Array.from(setIds))
+  //   if (data) {
+  //     $baseMessage('确认成功！', 'success')
+  //     // 清空 detailIds，避免重复提交
+  //     detailIds.value = []
+  //     closeInvoiceMatching()
+  //   }
+  // } else {
+  //   closeInvoiceMatching()
+  // }
+
+  try {
+    const { data } = await submitConfirmTaxRefundInvoiceMatch()
     if (data) {
       $baseMessage('确认成功！', 'success')
       // 清空 detailIds，避免重复提交
       detailIds.value = []
       closeInvoiceMatching()
     }
-  } else {
+  } catch (error) {
     closeInvoiceMatching()
+  } finally {
+    confirmLoading.value = false
   }
 }
 
