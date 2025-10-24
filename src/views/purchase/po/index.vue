@@ -2341,9 +2341,10 @@ const handleSelectAllPoRow = (event: any) => {
 // }
 // 使用 computed 自动计算总价，避免手动累加
 const taxIncludedTotalPrice = computed(() => {
-  return selectedCompArray.value.reduce((total: number, item: any) => {
+  const total = selectedCompArray.value.reduce((total: number, item: any) => {
     return total + Number(item.taxIncludedPrice || 0)
   }, 0)
+  return Number(total.toFixed(2))
 })
 
 // 简化的勾选处理
