@@ -516,8 +516,6 @@
                     </template>
                     <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
                   </el-tooltip>
-                  <el-tag class="order-tag" effect="dark" @click="handleShowReleaseOrder(row)">订</el-tag>
-                  <el-tag class="order-tag" effect="dark" type="info" @click="showRemark(row)">备</el-tag>
                 </div>
 
                 <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
@@ -529,81 +527,84 @@
                   <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
                     <country-flag :country="row.flag" />
                   </span>
-                  <!-- 状态图标移到国旗后面 -->
-                  <div class="icon-div">
-                    <el-tooltip v-if="row.newArrivalDay <= 360" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">上新时间<=360天</div>
-                      </template>
-                      <!-- <vab-icon icon="calendar-2-fill" class="icon-green" /> -->
-                      <el-tag size="small" type="success">新</el-tag>
-                    </el-tooltip>
-                    <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">可以做outlet deal</div>
-                      </template>
-                      <!-- <vab-icon icon="discount-percent-fill" class="icon-green" /> -->
-                      <img src="../../../icon/outlet.png" style="width: 22px; height: 22px; margin-top: -2px" />
-                    </el-tooltip>
 
-                    <el-tooltip v-if="isOutOfStock(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">断货警告</div>
-                      </template>
-                      <vab-icon :class="handleOutOfStock(row)" icon="shopping-cart-2-fill" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">有低量配送费</div>
-                      </template>
-                      <!-- <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;"> -->
-                      <vab-icon class="icon-red" icon="home-6-line" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isWareHousing(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">低量仓储费预警</div>
-                      </template>
-                      <vab-icon class="icon-yellow" icon="home-6-line" />
-                      <!-- <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;"> -->
-                    </el-tooltip>
-                    <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">库龄警告</div>
-                      </template>
-                      <vab-icon :class="handleStorageAge(row)" icon="alarm-warning-fill" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isVoc(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
-                      </template>
-                      <vab-icon :class="handleVocSatisfaction(row.vocSatisfaction)" icon="emotion-unhappy-fill" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isAvailableSaleDayTotal(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">低动销预警</div>
-                      </template>
-                      <vab-icon :class="handleAvailableSaleDayTotal(row)" icon="line-chart-fill" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">高退货率</div>
-                      </template>
-                      <vab-icon :class="handleReturnGoods(row)" icon="reply-fill" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">FBA费异常</div>
-                      </template>
+                  <el-tag class="order-tag" effect="dark" @click.stop="handleShowReleaseOrder(row)">订</el-tag>
+                  <el-tag class="order-tag" effect="dark" type="info" @click.stop="showRemark(row)">备</el-tag>
+                </div>
+                <!-- 状态图标移到国旗后面 -->
+                <div class="icon-div">
+                  <el-tooltip v-if="row.newArrivalDay <= 360" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">上新时间<=360天</div>
+                    </template>
+                    <!-- <vab-icon icon="calendar-2-fill" class="icon-green" /> -->
+                    <el-tag size="small" type="success">新</el-tag>
+                  </el-tooltip>
+                  <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">可以做outlet deal</div>
+                    </template>
+                    <!-- <vab-icon icon="discount-percent-fill" class="icon-green" /> -->
+                    <img src="../../../icon/outlet.png" style="width: 22px; height: 22px; margin-top: -2px" />
+                  </el-tooltip>
 
-                      <img alt="FBA" src="../../../icon/FBA费异常.svg" style="width: 20px; height: 20px; margin-top: -1px" />
-                    </el-tooltip>
-                    <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">产品健康</div>
-                      </template>
-                      <vab-icon class="icon-green" icon="checkbox-circle-fill" />
-                    </el-tooltip>
-                  </div>
+                  <el-tooltip v-if="isOutOfStock(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">断货警告</div>
+                    </template>
+                    <vab-icon :class="handleOutOfStock(row)" icon="shopping-cart-2-fill" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">有低量配送费</div>
+                    </template>
+                    <!-- <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;"> -->
+                    <vab-icon class="icon-red" icon="home-6-line" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isWareHousing(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">低量仓储费预警</div>
+                    </template>
+                    <vab-icon class="icon-yellow" icon="home-6-line" />
+                    <!-- <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;"> -->
+                  </el-tooltip>
+                  <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">库龄警告</div>
+                    </template>
+                    <vab-icon :class="handleStorageAge(row)" icon="alarm-warning-fill" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isVoc(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
+                    </template>
+                    <vab-icon :class="handleVocSatisfaction(row.vocSatisfaction)" icon="emotion-unhappy-fill" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isAvailableSaleDayTotal(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">低动销预警</div>
+                    </template>
+                    <vab-icon :class="handleAvailableSaleDayTotal(row)" icon="line-chart-fill" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">高退货率</div>
+                    </template>
+                    <vab-icon :class="handleReturnGoods(row)" icon="reply-fill" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">FBA费异常</div>
+                    </template>
+
+                    <img alt="FBA" src="../../../icon/FBA费异常.svg" style="width: 20px; height: 20px; margin-top: -1px" />
+                  </el-tooltip>
+                  <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
+                    <template #content>
+                      <div class="custom-tooltip">产品健康</div>
+                    </template>
+                    <vab-icon class="icon-green" icon="checkbox-circle-fill" />
+                  </el-tooltip>
                 </div>
               </span>
               <!-- <span v-if="item.label === 'ASIN'">
@@ -3179,7 +3180,7 @@ const handleWidth = (item: any) => {
   if (activeName.value === 0) {
     switch (item.label) {
       case 'SKU': {
-        return flexColumnWidth(list.value, 'SKU', 'sku') + 90
+        return flexColumnWidth(list.value, 'SKU', 'sku') + 50
       }
       case 'ASIN': {
         return flexColumnWidth(list.value, 'ASIN', 'asin')
@@ -4198,7 +4199,7 @@ onBeforeMount(() => {
   width: 16px !important;
   height: 16px !important;
   padding: 0 !important;
-  margin: -2px 0px 0 4px;
+  margin: -2px 0 0 0;
   border-radius: 4px !important;
   font-size: 12px;
   font-weight: 600;
@@ -4386,6 +4387,7 @@ onBeforeMount(() => {
   .icon-div {
     display: flex;
     align-items: center;
+    margin-top: -6px;
 
     .el-tooltip {
       margin-right: 6px;
