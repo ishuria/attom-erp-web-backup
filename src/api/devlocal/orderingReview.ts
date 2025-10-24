@@ -197,6 +197,18 @@ export function reviewStepNo4Fail(params: { reviewId: number }): Promise<{ data:
     params,
   })
 }
+/**
+ * 新品订货审批-采购审核通过
+ * @param params
+ * @returns
+ */
+export function reviewStepNo5Pass(params: { reviewId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/stepNo5/pass`,
+    method: 'post',
+    params,
+  })
+}
 // 新品订货审批-发布PO
 export function releasePo(params?: IReviewCommonReq): Promise<IReviewStepResp> {
   return request({

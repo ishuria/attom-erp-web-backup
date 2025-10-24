@@ -1,58 +1,67 @@
 <template>
   <div class="step-form-container">
-    <el-page-header style="margin-bottom: 0px;" @back="goBack">
+    <el-page-header style="margin-bottom: 0px" @back="goBack">
       <template #content>
         <div class="flex items-center">
-          <span> <strong> 新品订货审批 </strong></span>
+          <span><strong>新品订货审批</strong></span>
         </div>
       </template>
     </el-page-header>
 
-    <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 800px;margin-bottom: 20px;">
+    <el-steps :active="active" align-center class="steps" :space="200" style="max-width: 800px; margin-bottom: 20px">
       <el-step title="主管终审" />
       <el-step title="SKU创建" />
       <el-step title="运营分货" />
       <el-step title="产品经理审核" />
+      <el-step title="采购审核" />
     </el-steps>
-    <order-review-step1 
-      v-if="active === 0" 
-      :review-id="route.query.reviewId" 
+    <order-review-step1
+      v-if="active === 0"
+      :review-id="route.query.reviewId"
       :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo" 
-      @change-step="handleSetStep" 
+      :review-step-no="route.query.reviewStepNo"
+      @change-step="handleSetStep"
     />
-    <order-review-step2 
-      v-if="active === 1" 
-      :review-id="route.query.reviewId" 
+    <order-review-step2
+      v-if="active === 1"
+      :review-id="route.query.reviewId"
       :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo" 
-      @change-step="handleSetStep" 
+      :review-step-no="route.query.reviewStepNo"
+      @change-step="handleSetStep"
     />
-    <order-review-step3 
-      v-if="active === 2" 
-      :review-id="route.query.reviewId" 
+    <order-review-step3
+      v-if="active === 2"
+      :review-id="route.query.reviewId"
       :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo" 
-      @change-step="handleSetStep" 
+      :review-step-no="route.query.reviewStepNo"
+      @change-step="handleSetStep"
     />
-    <order-review-step4 
-      v-if="active === 3" 
-      :review-id="route.query.reviewId" 
+    <order-review-step4
+      v-if="active === 3"
+      :review-id="route.query.reviewId"
       :review-status="route.query.reviewStatus"
-      :review-step-no="route.query.reviewStepNo" 
-      @change-step="handleSetStep" 
-   />
+      :review-step-no="route.query.reviewStepNo"
+      @change-step="handleSetStep"
+    />
+    <order-review-step5
+      v-if="active === 4"
+      :review-id="route.query.reviewId"
+      :review-status="route.query.reviewStatus"
+      :review-step-no="route.query.reviewStepNo"
+      @change-step="handleSetStep"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { handleActivePath } from '/@/utils/routes'
-import { useTabsStore } from '/@/store/modules/tabs'
 import { ref } from 'vue'
 import orderReviewStep1 from './orderingReviewStep/orderReviewStep1.vue'
 import orderReviewStep2 from './orderingReviewStep/orderReviewStep2.vue'
 import orderReviewStep3 from './orderingReviewStep/orderReviewStep3.vue'
 import orderReviewStep4 from './orderingReviewStep/orderReviewStep4.vue'
+import orderReviewStep5 from './orderingReviewStep/orderReviewStep5.vue'
+import { useTabsStore } from '/@/store/modules/tabs'
+import { handleActivePath } from '/@/utils/routes'
 defineOptions({
   name: 'OrderingReview',
 })
@@ -69,15 +78,14 @@ const handleSetStep = (_active: any) => {
   active.value = _active
 }
 
-
 watch(active, (newActive) => {
   if (newActive === 0) {
-    const orderStep1: any = orderStep1Ref.value;
+    const orderStep1: any = orderStep1Ref.value
     if (orderStep1) {
-      formData.value = orderStep1.form;
+      formData.value = orderStep1.form
     }
   }
-});
+})
 
 // back
 const goBack = async () => {

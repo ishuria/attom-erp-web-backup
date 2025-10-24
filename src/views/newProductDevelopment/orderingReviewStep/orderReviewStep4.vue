@@ -62,7 +62,7 @@
         运营重新分货
       </el-button>
       <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">
-        归档新品进度管理并发布采购计划
+        提交采购审核
       </el-button>
     </div>
   </div>
@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
-import { releasePo, reviewProductList, reviewStepNo4Fail, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { reviewProductList, reviewStepNo4Fail, reviewStepNo5Pass, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import { getPackageSiteList } from '/@/api/devlocal/packagingShipping'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem } from '/@/type/review/review'
@@ -181,35 +181,16 @@ const handleGoback = async () => {
     }
   })
 }
-// 当点击通过的时候
+// 当点击通过的时候 采购审核通过
 const handleSaveAndContinue = async () => {
-  const deleteVNode = h('div', {}, [
-    h(
-      'p',
-      {
-        style: {
-          color: 'origin',
-        },
-      },
-      '请再次确认，是否要真的发布PO！'
-    ),
-  ])
-  $baseConfirm(deleteVNode, '系统提示', async () => {
-    try {
-      releasePoLoading.value = true
-      const { data } = await releasePo({ reviewId: props.reviewId })
-      if (data === true) {
-        $baseMessage('发布PO成功！', 'success', 'hey')
-        await delVisitedRoute(handleActivePath(route, true))
-        router.push({
-          path: '/newProductDevelopment/newProductApprovalAndRecords',
-        })
-      }
-      releasePoLoading.value = false
-    } catch {
-      releasePoLoading.value = false
-    } finally {
-      releasePoLoading.value = false
+  $baseConfirm('确定要点击提交采购审核吗？', null, async () => {
+    const { data } = await reviewStepNo5Pass({ reviewId: Number(props.reviewId) })
+    if (data === true) {
+      $baseMessage('提交采购审核成功', 'success', 'hey')
+      await delVisitedRoute(handleActivePath(route, true))
+      router.push({
+        path: '/newProductDevelopment/newProductApprovalAndRecords',
+      })
     }
   })
 }
