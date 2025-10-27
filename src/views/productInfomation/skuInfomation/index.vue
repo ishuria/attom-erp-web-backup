@@ -203,7 +203,7 @@
                   <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" underline="never">打包工时</el-link>
+                  <el-link type="primary" underline="never" @click="showPackingTimeDetails">打包工时</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" underline="never">交期查看</el-link>
@@ -242,6 +242,8 @@
     </vab-dialog>
     <!-- 批量新增打包注意事项 -->
     <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" :sku-id-list="skuIdList" />
+    <!-- 打包工时明细 -->
+    <vab-packing-time-details v-model="packingTimeDetailsVisible" />
   </div>
 </template>
 
@@ -263,7 +265,10 @@ defineOptions({
 })
 
 const tableRef = ref()
-
+const packingTimeDetailsVisible = ref<boolean>(false)
+const showPackingTimeDetails = () => {
+  packingTimeDetailsVisible.value = true
+}
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const prop = data.column.prop
   if (
