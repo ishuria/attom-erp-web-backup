@@ -354,7 +354,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
 
@@ -594,7 +594,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -848,7 +848,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -1102,7 +1102,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -1357,7 +1357,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -1604,7 +1604,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -1749,7 +1749,7 @@
               <el-checkbox @change="handleSelectAllCompRow($event)" />
             </template>
             <template #default="{ row }">
-              <el-checkbox v-model="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
+              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
             </template>
           </el-table-column>
           <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
@@ -2307,22 +2307,27 @@ const handleSelectedPoRow = (event: any, row: any) => {
   } else {
     selectedPORow.value.delete(rowId)
   }
-  selectedPOArray.value = Array.from(selectedPORow.value)
+  // 延迟更新数组，避免频繁转换
+  nextTick(() => {
+    selectedPOArray.value = Array.from(selectedPORow.value)
+  })
 }
-// 全选po操作列
+// 全选po操作列 - 优化版本
 const handleSelectAllPoRow = (event: any) => {
   if (event) {
+    // 批量添加所有 ID 到 Set
+    const allIds = new Set(poList.value.map((item: any) => item.id) as number[])
+    selectedPORow.value = allIds as Set<number>
+    // 更新 UI 状态
     poList.value.forEach((item: any) => {
       item.selectedPoRow = true
-      selectedPORow.value.add(item.id)
     })
-    // console.log(selectedPORow.value);
   } else {
+    // 清空选择
+    selectedPORow.value.clear()
     poList.value.forEach((item: any) => {
       item.selectedPoRow = false
     })
-    selectedPORow.value.clear()
-    // console.log(selectedPORow.value);
   }
   selectedPOArray.value = Array.from(selectedPORow.value)
 }
@@ -2347,8 +2352,9 @@ const taxIncludedTotalPrice = computed(() => {
   return Number(total.toFixed(2))
 })
 
-// 简化的勾选处理
+// 简化的勾选处理 - 手动更新状态
 const handleSelectedCompRow = (event: any, row: any) => {
+  row.selectedCompRow = event // 手动更新状态
   if (event) {
     selectedCompArray.value.push(row)
   } else {
@@ -2357,7 +2363,6 @@ const handleSelectedCompRow = (event: any, row: any) => {
       selectedCompArray.value.splice(index, 1)
     }
   }
-  // 不需要手动计算，computed 会自动更新
 }
 // 全选零件操作列
 const handleSelectAllCompRow = (event: any) => {
@@ -3435,9 +3440,9 @@ const payHistoryCellClass = (data: { row: any; column: any; rowIndex: number; co
   return ''
 }
 
-onActivated(() => {
-  tableRef.value?.doLayout()
-})
+// onActivated(() => {
+//   tableRef.value?.doLayout()
+// })
 const fetchBonusData = async () => {
   const { data } = await getPurchaseBonus()
   procurementBonus.value = data.procurementBonus

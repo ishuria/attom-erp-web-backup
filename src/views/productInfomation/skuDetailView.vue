@@ -138,15 +138,12 @@
                   <el-select
                     v-model="sku.procurementManager"
                     clearable
-                    default-first-option
+                    :disabled="!ableToEdit"
                     filterable
-                    :loading="peopleLoading"
-                    placeholder="点击输入和搜索采购"
-                    remote
-                    :remote-method="queryRemoteprocurementManager"
+                    placeholder="点击输入或搜索采购"
                     @change="handleUpdateSku"
                   >
-                    <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-option v-for="item in procurementManagerList" :key="item.userId" :label="item.userName" :value="item.userId" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -738,6 +735,7 @@ import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getProductSkuDetailHistoryPriceList } from '~/src/api/devlocal/commission'
+import { useUserStore } from '~/src/store/modules/user'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
 import {
   addProductComponentOtherSku,
@@ -795,6 +793,16 @@ defineOptions({
   name: 'SkuDetailView',
 })
 
+const currentUserName = useUserStore().getUsername
+const roleCode = useAclStore().getRole[0]
+const ableToEdit = computed(() => {
+  return (
+    currentUserName === sku.value.productManager ||
+    currentUserName === sku.value.productDesign ||
+    currentUserName === sku.value.procurementManager ||
+    roleCode === ROLE_BOSS_CODE
+  )
+})
 const historyPriceVisible = ref<boolean>(false)
 const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
 const showPrices = async (row: any) => {
@@ -1091,6 +1099,16 @@ const queryRemoteprocurementManager = async (query: string) => {
     peopleOptions.value = []
   }
 }
+const procurementManagerList = ref<{ userId: number; userName: string }[]>([])
+/** 处理采购负责人下拉框显示状态变化 */
+const fetchProcurementManagerList = async () => {
+  // 当下拉框打开且选项列表为空时，自动加载所有数据
+
+  const { data } = await getUserProcurementName({
+    name: '',
+  })
+  procurementManagerList.value = data
+}
 
 const loading = ref(false) //供应商搜索loading
 const options = ref<any[]>([]) //供应商搜索选项
@@ -1326,7 +1344,7 @@ const handleUpdateSku = async () => {
     numCartons: sku.value.numCartons,
     productManager: sku.value.productManager,
     productDesign: sku.value.productDesign,
-    procurementManager: sku.value.procurementManager,
+    procurementManager: procurementManagerList.value.find((item: any) => item.userId === sku.value.procurementManager)?.userName,
   })
 }
 const handleRemarksChange = async () => {
@@ -1930,6 +1948,7 @@ onBeforeMount(() => {
   fetchComponentData()
   fetchPurchaseAndRepository()
   fetchInspection()
+  fetchProcurementManagerList()
 })
 onMounted(async () => {
   setImageColumnHeight()

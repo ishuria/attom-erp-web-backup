@@ -1,7 +1,6 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
-import { data } from 'autoprefixer'
 import { useAclStore } from './acl'
 import { useSettingsStore } from './settings'
 import { useTabsStore } from './tabs'
@@ -143,14 +142,16 @@ export const useUserStore = defineStore('user', {
       await aclStore.setFull(false)
       await aclStore.setRole([])
 
-      // 清除tabs
+      // 清除tabs（保留固定的标签页）
       await tabsStore.delAllVisitedRoutes()
 
-      // 清除localStorage中的相关缓存
-      if (storage === 'localStorage') {
-        // 只移除用户相关数据，不影响主题等设置
-        localStorage.removeItem('caughtRoutes')
-      }
+      // // 清除localStorage中的相关缓存
+      // if (storage === 'localStorage') {
+      //   // 只移除用户相关数据，不影响主题等设置
+      //   localStorage.removeItem('caughtRoutes')
+      // }
+      // 注意：delAllVisitedRoutes 已经清除了非固定的 tabs 并保存固定的 tabs 到 localStorage
+      // 这里不需要再次清除 localStorage.removeItem('caughtRoutes')，否则会丢失固定标签页
 
       // 重置用户信息
       this.setUsername('游客')
