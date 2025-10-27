@@ -522,6 +522,9 @@ const fetchData2 = async () => {
     if (item.proportion) {
       item.proportion = parseFloat((item.proportion * 100).toFixed(2))
     }
+    if (item.taxRefundBonusRatio) {
+      item.taxRefundBonusRatio = parseFloat((item.taxRefundBonusRatio * 100).toFixed(2))
+    }
   })
   listLoading.value = false
 }
