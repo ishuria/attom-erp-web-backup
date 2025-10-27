@@ -181,7 +181,7 @@
           </template>
 
           <template v-if="row['column0'] === 'procurementManager'">
-            <el-select
+            <!-- <el-select
               v-model="row[prop]"
               class="center-input"
               clearable
@@ -194,6 +194,16 @@
               @change="handleChangeProcurementManager(row, prop)"
             >
               <el-option v-for="item in peopleOptions" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select> -->
+            <el-select
+              v-model="row[prop]"
+              class="center-input"
+              clearable
+              filterable
+              placeholder="点击输入或搜索采购"
+              @change="handleChangeProcurementManager(row, prop)"
+            >
+              <el-option v-for="item in procurementManagerList" :key="item.userId" :label="item.userName" :value="item.userId" />
             </el-select>
           </template>
         </template>
@@ -946,6 +956,8 @@ const fetchVariantList = async () => {
     // 获取table数据
     const { data } = await reviewGetSkuList({ reviewId: classReviewId! })
 
+    // 默认采购负责人 赵梦凡
+    const defaultProcurementManager = procurementManagerList.value.find((item: any) => item.userName === '赵梦凡')
     skuVariantsData.value = data.map((item: any) => {
       if (item.productManagerId === -1) {
         // 如果新的table里面的产品经理存在,就是新的; 如果不存在,就是默认的
@@ -972,7 +984,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
-          procurementManager: item.procurementManager || '赵梦凡',
+          procurementManager: item.procurementManager || defaultProcurementManager?.userName,
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
           manufacturerEnName: item.manufacturerEnName,
@@ -982,7 +994,7 @@ const fetchVariantList = async () => {
           orderEntryId: undefined,
           productManagerId: item.productManagerId,
           productDesignId: item.productDesignId,
-          procurementManagerId: item.procurementManagerId,
+          procurementManagerId: item.procurementManagerId || defaultProcurementManager?.userId,
         }
       }
     })
@@ -1017,10 +1029,19 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
+/** 获取采购负责人列表 */
+const procurementManagerList = ref<{ userId: number; userName: string }[]>([])
+const fetchProcurementManagerList = async () => {
+  const { data } = await getUserProcurementName({
+    name: '',
+  })
+  procurementManagerList.value = data
+}
 onMounted(() => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchVariantList()
+  fetchProcurementManagerList()
 })
 </script>
 
