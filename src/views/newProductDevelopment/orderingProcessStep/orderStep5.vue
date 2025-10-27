@@ -972,7 +972,7 @@ const fetchVariantList = async () => {
           patent: item.patent,
           productManager: item.productManager,
           productDesign: item.productDesign,
-          procurementManager: item.procurementManager,
+          procurementManager: item.procurementManager || '赵梦凡',
           sampleRetention: item.sampleRetention === '' ? [] : item.sampleRetention.split(',').map(Number),
           packingGroup: item.checkStatus,
           manufacturerEnName: item.manufacturerEnName,
