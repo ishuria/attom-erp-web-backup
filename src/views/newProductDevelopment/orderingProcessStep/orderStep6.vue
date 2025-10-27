@@ -340,11 +340,11 @@ const fetchData = async () => {
   columnsChange = columns
   exchangeList.value = initData(checkTableData.value)
   // console.log(exchangeList.value)
-  Object.keys(exchangeList.value[17]).forEach((key, index) => {
-    if (key !== 'column0' && exchangeList.value[17][key]) {
-      exchangeList.value[17][key] = exchangeList.value[17][key].split(',').map(Number)
-    }
-  })
+  // Object.keys(exchangeList.value[17]).forEach((key, index) => {
+  //   if (key !== 'column0' && exchangeList.value[17][key]) {
+  //     exchangeList.value[17][key] = exchangeList.value[17][key].split(',').map(Number)
+  //   }
+  // })
 }
 let classReviewId: number | undefined
 
