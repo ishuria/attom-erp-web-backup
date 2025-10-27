@@ -54,6 +54,8 @@
             </template>
           </el-table-column>
           <el-table-column label="合同编号" min-width="200" prop="contractNumber" />
+          <el-table-column label="CIF" min-width="100" prop="cif" />
+          <el-table-column label="FOB" min-width="100" prop="fob" />
           <el-table-column label="未到发票" min-width="100" prop="notYetCount" />
           <el-table-column label="发票总数" min-width="100" prop="totalCount" />
           <el-table-column label="退税运费" min-width="100" prop="totalFreightFee" />
@@ -147,6 +149,8 @@
             </template>
           </el-table-column>
           <el-table-column label="合同编号" min-width="200" prop="contractNumber" />
+          <el-table-column label="CIF" min-width="100" prop="cif" />
+          <el-table-column label="FOB" min-width="100" prop="fob" />
           <el-table-column label="未到发票" min-width="100" prop="notYetCount" />
           <el-table-column label="发票总数" min-width="100" prop="totalCount" />
           <el-table-column label="退税运费" min-width="100" prop="totalFreightFee" />

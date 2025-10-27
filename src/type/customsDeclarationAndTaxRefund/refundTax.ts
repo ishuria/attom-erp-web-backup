@@ -13,6 +13,10 @@ export interface IGetTaxRefundBatchListRes {
 export interface IGetTaxRefundBatchList {
   // 合同编号
   contractNumber?: string
+  /** cif价格 */
+  cif?: string
+  /** fob价格 */
+  fob?: string
   // 报关单出库日期
   exportDate?: string
   // 主键id
