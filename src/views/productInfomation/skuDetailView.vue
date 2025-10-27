@@ -1099,11 +1099,9 @@ const queryRemoteprocurementManager = async (query: string) => {
     peopleOptions.value = []
   }
 }
+/** 获取采购负责人列表 */
 const procurementManagerList = ref<{ userId: number; userName: string }[]>([])
-/** 处理采购负责人下拉框显示状态变化 */
 const fetchProcurementManagerList = async () => {
-  // 当下拉框打开且选项列表为空时，自动加载所有数据
-
   const { data } = await getUserProcurementName({
     name: '',
   })
