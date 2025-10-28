@@ -803,6 +803,9 @@
               <span v-if="item.label === '最近入库'">
                 <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
               </span>
+              <span v-if="item.label === '美工长期'">
+                <el-checkbox v-model="row.artLongTermFlag" disabled />
+              </span>
             </template>
           </el-table-column>
           <template #empty>
