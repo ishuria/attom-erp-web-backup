@@ -81,6 +81,7 @@ export interface IReviewComponentUpdate {
   invoice: number
   purchaseId: number
   customsDeclarationStatus: number
+  defaultRepositoryId: number
 }
 
 export interface IreviewStepNo3ComponentUpdate {

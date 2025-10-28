@@ -20,17 +20,29 @@
                 end-placeholder="结束日期"
                 range-separator="至"
                 start-placeholder="开始日期"
+                style="width: 22em"
                 type="daterange"
                 value-format="YYYY-MM-DD"
                 @change="queryDateData"
               />
             </span>
-            <span style="margin: 0 0 calc(var(--el-margin) / 2) 0">
-              <el-text>
-                该区间剩余可退税金额：
-                <span style="font-weight: 600; color: rgb(83, 186, 177)">23234.56元</span>
-              </el-text>
-            </span>
+            <div
+              style="
+                margin: 0 0 calc(var(--el-margin) / 2) 0;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 10px;
+                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                border-radius: 6px;
+                border: 1px solid #7dd3fc;
+              "
+            >
+              <span style="font-size: 15px; color: #64748b">该区间剩余可退税金额：</span>
+              <span style="font-size: 18px; font-weight: 700; color: rgb(83, 186, 177); font-family: 'Arial', sans-serif">
+                ¥ {{ totalTaxRebate }}
+              </span>
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="9">
             <div class="custom-table-right-tools">
@@ -1073,11 +1085,13 @@ const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex
     textAlign: 'left',
   }
 }
+const totalTaxRebate = ref<number>(0)
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getTaxRefundList(queryForm)
   total.value = data?.total!
   list.value = data?.list!
+  totalTaxRebate.value = data?.totalTaxRebate!
   list.value.forEach((item: IGetTaxRefundBatchDetailList) => {
     item.payRecord = []
     if (Array.isArray(item.payRecordList)) {

@@ -25,6 +25,10 @@ class EncasementPermission {
   static readonly ENCASEMENT_DELETE = 'encasement:delete'
   /** 打印权限 */
   static readonly ENCASEMENT_PRINT = 'encasement:print'
+  /** 解锁权限 */
+  static readonly ENCASEMENT_UNLOCK = 'encasement:unlock'
+  /** 生成发货亚马逊模板文件权限 */
+  static readonly ENCASEMENT_GENERATE_AMAZON_TEMPLATE = 'encasement:generate:amazon:template'
 
   /**
    * 操作列权限

@@ -58,6 +58,7 @@ export interface IGetTaxRefundBatchDetailRes {
   data?: {
     list?: IGetTaxRefundBatchDetailList[]
     total?: number
+    totalTaxRebate?: number // 该区间剩余可退税金额
   }
 }
 

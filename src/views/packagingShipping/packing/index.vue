@@ -12,7 +12,9 @@
           发货(沃尔玛)
         </el-button>
         <!-- <el-button type="primary" @click="shippingPlanningVisible = true">发货规划</el-button> -->
-        <el-button type="primary" @click="handleUnlockEncasement">解锁</el-button>
+        <el-button v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UNLOCK] }" type="primary" @click="handleUnlockEncasement">
+          解锁
+        </el-button>
         <!-- <el-button
           v-permissions="{ permission: [EncasementPermission.ENCASEMENT_UPDATE_PLAN] }"
           type="primary"
@@ -37,7 +39,13 @@
           误差
         </el-button>
         <el-button type="primary" @click="showQuantityCheck">发货数检查</el-button>
-        <el-button type="primary" @click="sendShipmentCheckVisible = true">生成发货测试文件1</el-button>
+        <el-button
+          v-permissions="{ permission: [EncasementPermission.ENCASEMENT_GENERATE_AMAZON_TEMPLATE] }"
+          type="primary"
+          @click="sendShipmentCheckVisible = true"
+        >
+          生成发货测试文件1
+        </el-button>
 
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select
