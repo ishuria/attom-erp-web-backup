@@ -36,7 +36,13 @@
         <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(componentList, '零件名', 'componentName')" />
         <el-table-column align="center" label="耗材勾选" prop="consumable" width="70">
           <template #default="{ row }">
-            <el-checkbox v-model="row.consumableCheck" :false-value="0" :true-value="1" @change="handleConsumableChange(row)" />
+            <el-checkbox
+              v-model="row.consumableCheck"
+              :disabled="editDisabled"
+              :false-value="0"
+              :true-value="1"
+              @change="handleConsumableChange(row)"
+            />
           </template>
         </el-table-column>
         <el-table-column label="零件明细" prop="componentSuitDetail" width="100">
@@ -113,7 +119,13 @@
         <el-table-column align="left" label="供应商" prop="supplier" :width="flexColumnWidth(componentList, '供应商', 'supplier')" />
         <el-table-column align="center" label="开票" prop="oem" width="140">
           <template #default="{ row }">
-            <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="updateReviewComponent(row)">
+            <el-select
+              v-model="row.invoicing"
+              :disabled="editDisabled"
+              placeholder="请选择开票类型"
+              style="min-width: 100%"
+              @change="updateReviewComponent(row)"
+            >
               <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
           </template>
@@ -141,14 +153,26 @@
 
         <el-table-column label="采购方" prop="purchase" width="120">
           <template #default="{ row }">
-            <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="updateReviewComponent(row)">
+            <el-select
+              v-model="row.purchaseId"
+              :disabled="editDisabled"
+              placeholder="请选择默认采购方"
+              style="min-width: 100%"
+              @change="updateReviewComponent(row)"
+            >
               <el-option v-for="b in purchaseOption" :key="b.id" :label="b.label" :value="b.id" />
             </el-select>
           </template>
         </el-table-column>
         <el-table-column align="center" label="不报关" prop="consumable" width="70">
           <template #default="{ row }">
-            <el-checkbox v-model="row.customsDeclarationStatus" :false-value="0" :true-value="1" @change="updateReviewComponent(row)" />
+            <el-checkbox
+              v-model="row.customsDeclarationStatus"
+              :disabled="editDisabled"
+              :false-value="0"
+              :true-value="1"
+              @change="updateReviewComponent(row)"
+            />
           </template>
         </el-table-column>
 
@@ -164,7 +188,14 @@
         </el-table-column>
         <el-table-column label="收货仓库" min-width="150" prop="remarks">
           <template #default="{ row }">
-            <el-select v-model="row.defaultRepositoryId" filterable placeholder="输入和搜索默认收货仓库" style="min-width: 100%" @change="">
+            <el-select
+              v-model="row.defaultRepositoryId"
+              :disabled="editDisabled"
+              filterable
+              placeholder="输入和搜索默认收货仓库"
+              style="min-width: 100%"
+              @change="updateReviewComponent(row)"
+            >
               <el-option v-for="item in repositoryOption" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
@@ -204,20 +235,20 @@
 </template>
 
 <script lang="ts" setup>
+import { currencyList, invoicingList } from '../indexCommon'
+import { releasePo, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import {
   reviewStepNo3ComponentList,
   reviewStepNo3GetSelectVariantList,
   reviewStepNo3UpdateConsumableCheck,
   updateReviewComponentPurchaseIdAndInvoiceCustomstatus,
 } from '/@/api/devlocal/orderProcess'
-import { currencyList, invoicingList } from '../indexCommon'
-import { releasePo } from '/@/api/devlocal/orderingReview'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
-import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 import { convertString } from '/@/utils/stringUtils'
+import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'OrderReviewStep5',
@@ -253,7 +284,6 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   return ''
 }
 
-const editDisabled = ref<boolean>(false)
 // 发布Po的loading
 const releasePoLoading = ref<boolean>(false)
 const router = useRouter()
@@ -393,16 +423,24 @@ const updateReviewComponent = async (row: any) => {
     purchaseId: row.purchaseId,
     invoice: row.invoicing,
     customsDeclarationStatus: row.customsDeclarationStatus,
+    defaultRepositoryId: row.defaultRepositoryId,
   })
 
   if (data) {
     $baseMessage('零件信息修改成功！', 'success', 'hey')
   }
 }
-
+const editDisabled = ref<boolean>(false)
+const fetchSubmittedStatus = async () => {
+  const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 5 })
+  if (data === 1) {
+    editDisabled.value = true
+  }
+}
 onBeforeMount(() => {
   fetchPurchaseAndRepository()
   fetchDataComponent()
+  fetchSubmittedStatus()
 })
 </script>
 

@@ -1723,7 +1723,7 @@ const handleDefaultPurchase = async (row: any) => {
   }
   if (item.label === '埃托姆') {
     //选择了埃托姆
-    row.customsDeclarationStatus = 0
+    row.declareCustomsStatus = 0
     // 如果开票是无法开票 则切换成普票
     if (row.invoicing === 2) {
       row.invoicing = 1
@@ -1734,7 +1734,7 @@ const handleDefaultPurchase = async (row: any) => {
   }
   if (item!.label === '云舟') {
     if (row.invoicing === 1) {
-      row.customsDeclarationStatus = 1
+      row.declareCustomsStatus = 1
     } else if (row.invoicing === 2) {
       row.invoicing = 1
       $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
