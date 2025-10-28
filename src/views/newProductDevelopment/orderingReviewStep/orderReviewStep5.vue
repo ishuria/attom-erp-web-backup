@@ -146,7 +146,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="报关状态" prop="consumable" width="70">
+        <el-table-column align="center" label="不报关" prop="consumable" width="70">
           <template #default="{ row }">
             <el-checkbox v-model="row.customsDeclarationStatus" :false-value="0" :true-value="1" @change="updateReviewComponent(row)" />
           </template>
