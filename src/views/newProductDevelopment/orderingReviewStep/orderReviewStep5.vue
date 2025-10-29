@@ -382,8 +382,8 @@ const updateReviewComponent = async (row: any) => {
   // 埃托姆采购方：必须报关，不能无法开票
   if (item.label === '埃托姆') {
     row.customsDeclarationStatus = 0
-    if (row.invoicing === 2) {
-      row.invoicing = 1
+    if (row.invoicing === '2') {
+      row.invoicing = '1'
     }
     if (row.customsDeclarationStatus === 1) {
       row.customsDeclarationStatus = 0
@@ -393,19 +393,19 @@ const updateReviewComponent = async (row: any) => {
 
   // Attom采购方：强制无法开票
   if (item.label === 'Attom') {
-    row.invoicing = 2
-    if (row.invoicing !== 2) {
+    row.invoicing = '2'
+    if (row.invoicing !== '2') {
       $baseMessage('采购方为attom，无法开票', 'error')
     }
   }
 
   // 云舟采购方：普票+不报关组合
   if (item.label === '云舟') {
-    if (row.invoicing === 2) {
-      row.invoicing = 1
+    if (row.invoicing === '2') {
+      row.invoicing = '1'
       $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
     }
-    if (row.invoicing === 1) {
+    if (row.invoicing === '1') {
       row.customsDeclarationStatus = 1
       if (row.customsDeclarationStatus === 0) {
         $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
@@ -414,9 +414,9 @@ const updateReviewComponent = async (row: any) => {
   }
 
   // 通用规则：云舟和埃托姆不能选择无法开票
-  if (row.invoicing === 2 && (item.label === '云舟' || item.label === '埃托姆')) {
+  if (row.invoicing === '2' && (item.label === '云舟' || item.label === '埃托姆')) {
     $baseMessage('采购方为云舟或埃托姆，不能选择无法开票', 'error', 'hey')
-    row.invoicing = 1
+    row.invoicing = '1'
   }
   const { data } = await updateReviewComponentPurchaseIdAndInvoiceCustomstatus({
     reviewComponentId: row.reviewComponentId,
