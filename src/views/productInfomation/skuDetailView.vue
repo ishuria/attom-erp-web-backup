@@ -734,9 +734,8 @@ import type { FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getProductSkuDetailHistoryPriceList } from '~/src/api/devlocal/commission'
-import { useUserStore } from '~/src/store/modules/user'
 import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.vue'
+import { getProductSkuDetailHistoryPriceList } from '/@/api/devlocal/commission'
 import {
   addProductComponentOtherSku,
   createProductComponent,
@@ -782,6 +781,7 @@ import {
 import SkuPermission from '/@/permissions/sku'
 import { useAclStore } from '/@/store/modules/acl'
 import { useTabsStore } from '/@/store/modules/tabs'
+import { useUserStore } from '/@/store/modules/user'
 import { IGetCostReductionHistoryPriceList } from '/@/type/commission/commissionType'
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { handleClip } from '/@/utils/clipboard'

@@ -203,7 +203,7 @@
                   <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
-                  <el-link type="primary" underline="never" @click="showPackingTimeDetails">打包工时</el-link>
+                  <el-link type="primary" underline="never" @click.stop="showPackingTimeDetails(row)">打包工时</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" underline="never">交期查看</el-link>
@@ -243,20 +243,20 @@
     <!-- 批量新增打包注意事项 -->
     <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" :sku-id-list="skuIdList" />
     <!-- 打包工时明细 -->
-    <vab-packing-time-details v-model="packingTimeDetailsVisible" />
+    <vab-packing-time-details v-model="packingTimeDetailsVisible" :sku="sku" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
-import { hasPermission } from '~/src/utils/permission'
 import { copyProductSku, getProductList, updateProductStatus } from '/@/api/devlocal/productInformation'
 import SkuPermission from '/@/permissions/sku'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IgetProductList } from '/@/type/productInformation/skuInformationType'
 import handleClipboard from '/@/utils/clipboard'
+import { hasPermission } from '/@/utils/permission'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { calculateBrColumnWidth } from '/@/utils/tableColum'
 
@@ -266,8 +266,10 @@ defineOptions({
 
 const tableRef = ref()
 const packingTimeDetailsVisible = ref<boolean>(false)
-const showPackingTimeDetails = () => {
+const sku = ref<string>('')
+const showPackingTimeDetails = (row: any) => {
   packingTimeDetailsVisible.value = true
+  sku.value = row._sku[0]
 }
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const prop = data.column.prop

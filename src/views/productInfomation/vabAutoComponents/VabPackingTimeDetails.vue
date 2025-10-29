@@ -6,12 +6,18 @@
         <div class="chart-section">
           <div class="chart-header">
             <span>工时趋势图</span>
-            <el-select v-model="chartTimeRange" placeholder="请选择时间范围" style="width: 120px" @change="handleTimeRangeChange">
-              <el-option label="半年" value="halfYear" />
-              <el-option label="1年" value="oneYear" />
-              <el-option label="2年" value="twoYears" />
-              <el-option label="全部" value="all" />
-            </el-select>
+
+            <el-date-picker
+              v-model="chartTimeRange"
+              end-placeholder="结束日期"
+              range-separator="至"
+              :shortcuts="shortcuts"
+              start-placeholder="开始日期"
+              style="max-width: 300px"
+              type="daterange"
+              unlink-panels
+              @change="handleTimeRangeChange"
+            />
           </div>
           <div ref="chartContainer" class="chart-container">
             <vab-chart :option="lineChartOption" />
@@ -38,12 +44,20 @@
               </el-form>
             </vab-query-form-right-panel>
           </vab-query-form>
-          <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="800" stripe>
+          <el-table
+            v-loading="listLoading"
+            border
+            :cell-style="{ textAlign: 'center' }"
+            :data="list"
+            :header-cell-style="{ textAlign: 'center' }"
+            max-height="800"
+            stripe
+          >
             <el-table-column label="PO" min-width="100" prop="po" />
-            <el-table-column label="打包日期" min-width="100" prop="packingDate" />
-            <el-table-column label="打包工时(分钟)" min-width="110" prop="packingPerson" />
-            <el-table-column label="完成数量" min-width="100" prop="packingTime" />
-            <el-table-column label="每个用时(秒)" min-width="110" prop="packingRemark" />
+            <el-table-column label="打包日期" min-width="100" prop="startTime" />
+            <el-table-column label="打包工时(分钟)" min-width="110" prop="workingHours" />
+            <el-table-column label="完成数量" min-width="100" prop="goodCount" />
+            <el-table-column label="每个用时(秒)" min-width="110" prop="eachTime" />
             <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 700px" />
             </template>
@@ -63,11 +77,17 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import { getPackingTimeDetails, getPackingTimeDetailsChart } from '/@/api/devlocal/productInformation'
+import { IGetPackingTimeDetailsItem, IGetPackingTimeDetailsReq } from '/@/type/productInformation/skuCustomsClearance'
+import { formatDateToString } from '/@/utils/dateUtils'
+
 defineOptions({
   name: 'VabPackingTimeDetails',
 })
+
 const props = defineProps<{
   modelValue: boolean
+  sku: string
 }>()
 const emit = defineEmits(['update:modelValue'])
 const visible = computed({
@@ -78,15 +98,60 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
-const queryForm = reactive<any>({
+
+watch(
+  () => props.modelValue,
+  (newVal: boolean) => {
+    if (newVal) {
+      queryData()
+      handleTimeRangeChange()
+    }
+  },
+  { immediate: true }
+)
+
+const shortcuts = [
+  {
+    text: '半年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近6个月
+      start.setMonth(start.getMonth() - 6)
+      return [start, end]
+    },
+  },
+  {
+    text: '1年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近12个月
+      start.setFullYear(start.getFullYear() - 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '2年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近24个月
+      start.setFullYear(start.getFullYear() - 2)
+      return [start, end]
+    },
+  },
+]
+const queryForm = reactive<IGetPackingTimeDetailsReq>({
+  sku: props.sku,
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
 })
-const list = ref<any[]>([])
+const list = ref<IGetPackingTimeDetailsItem[]>([])
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-const chartTimeRange = ref<string>('halfYear')
+const chartTimeRange = ref<[Date, Date]>([new Date(new Date().setMonth(new Date().getMonth() - 6)), new Date()])
 const lineChartOption = ref<any>({
   tooltip: {
     trigger: 'axis',
@@ -103,7 +168,7 @@ const lineChartOption = ref<any>({
   },
   xAxis: {
     type: 'category',
-    data: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04', '2025-01-05'],
+    data: [],
     name: '打包日期',
   },
   yAxis: {
@@ -113,16 +178,17 @@ const lineChartOption = ref<any>({
   series: [
     {
       type: 'line',
-      data: [10, 20, 30, 40, 50],
+      data: [],
     },
   ],
 })
 const fetchData = async () => {
   listLoading.value = true
-  // const { data } = await getPackingTimeDetails(queryForm)
-  // list.value = data.list
-  // total.value = data.total
-  // listLoading.value = false
+  queryForm.sku = props.sku
+  const { data } = await getPackingTimeDetails(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
 }
 const queryData = () => {
   queryForm.pageNo = 1
@@ -138,11 +204,15 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 
-const handleTimeRangeChange = (value: string) => {
+const handleTimeRangeChange = async () => {
   // 根据选择的时间范围更新图表数据
-  console.log('选择的时间范围:', value)
-  // TODO: 根据时间范围调用不同的接口获取数据
-  // 这里可以根据实际需求实现数据筛选逻辑
+  const { data } = await getPackingTimeDetailsChart({
+    sku: props.sku,
+    startTime: formatDateToString(chartTimeRange.value[0]),
+    endTime: formatDateToString(chartTimeRange.value[1]),
+  })
+  lineChartOption.value.xAxis.data = data.dates
+  lineChartOption.value.series[0].data = data.times
 }
 </script>
 

@@ -203,7 +203,7 @@
                 </el-tooltip>
               </div>
               <div v-if="item.label === '问题原因'">
-                <el-select v-model="row.reason" placeholder="请选择问题原因" @change="changeProblemReason(row)">
+                <el-select v-model="row.reason" clearable placeholder="请选择问题原因" @change="changeProblemReason(row)">
                   <el-option v-for="item in problemReasonOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </div>
@@ -651,6 +651,7 @@ const problemReasonOption = [
   { label: '开票问题', value: 2 },
   { label: '其他', value: 3 },
   { label: '交期延误-自动', value: 4 },
+  { label: '新品', value: 5 },
 ]
 const problemComponentOption = [
   { label: '全部零件', value: -1 },

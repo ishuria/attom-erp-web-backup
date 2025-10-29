@@ -85,6 +85,10 @@ import type {
 } from '/@/type/productInformation/skuInformationType'
 
 import {
+  IGetPackingTimeDetailsChartReq,
+  IGetPackingTimeDetailsChartResp,
+  IGetPackingTimeDetailsReq,
+  IGetPackingTimeDetailsResp,
   SkuCustomsClearanceAddReq,
   SkuCustomsClearanceQueryReq,
   SkuCustomsClearanceQueryResp,
@@ -1077,6 +1081,30 @@ export function otainSkuCustomCleanList(data: SkuCustomsClearanceQueryReq): Prom
 export function addSkuCustomCleanList(data: SkuCustomsClearanceAddReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/sku/customs/clearance/import`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 获取sku打包工时明细
+ * @param data { sku: string; keyWord: string; pageNo: number; pageSize: number }
+ * @returns { data: any }
+ */
+export function getPackingTimeDetails(data: IGetPackingTimeDetailsReq): Promise<{ data: IGetPackingTimeDetailsResp }> {
+  return request({
+    url: `${BASE_API}/sku/packaging/time/detail`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 获取sku打包工时趋势图
+ * @param data { sku: string; startTime: Date; endTime: Date }
+ * @returns { data: IGetPackingTimeDetailsChartResp }
+ */
+export function getPackingTimeDetailsChart(data: IGetPackingTimeDetailsChartReq): Promise<{ data: IGetPackingTimeDetailsChartResp }> {
+  return request({
+    url: `${BASE_API}/sku/packaging/time/chart`,
     method: 'post',
     data,
   })

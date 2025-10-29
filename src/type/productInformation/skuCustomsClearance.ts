@@ -33,3 +33,47 @@ export interface SkuCustomsClearanceAddReq {
   /** 目标清关id */
   targetCustomClearanceId?: number
 }
+
+/** 获取sku打包工时明细查询参数 */
+export interface IGetPackingTimeDetailsReq {
+  /** sku */
+  sku?: string
+  /** 关键词 */
+  keyWord?: string
+  /** 当前页 */
+  pageNo?: number
+  /** 每页大小 */
+  pageSize?: number
+}
+
+/** 获取sku打包工时明细返回 */
+export interface IGetPackingTimeDetailsResp {
+  list: IGetPackingTimeDetailsItem[]
+  total: number
+}
+
+export interface IGetPackingTimeDetailsItem {
+  /** PO */
+  po?: string
+  /** 打包日期 */
+  startTime?: Date
+  /** 打包工时(分钟) */
+  workingHours?: number
+  /** 完成数量 */
+  goodCount?: number
+  /** 每个用时(秒) */
+  eachTime?: number
+}
+
+export interface IGetPackingTimeDetailsChartReq {
+  /** sku */
+  sku?: string
+  /** 开始日期 */
+  startTime?: string
+  /** 结束日期 */
+  endTime?: string
+}
+export interface IGetPackingTimeDetailsChartResp {
+  dates: Date[]
+  times: number[]
+}
