@@ -286,6 +286,10 @@ export interface IGetDevelopDesignTaskList {
    */
   jobRole?: string
   /**
+   * 不计利润分
+   */
+  notPlieScore?: number
+  /**
    * 计划发布日期
    */
   releaseData?: string
@@ -310,6 +314,7 @@ export interface IUpdateDevelopDesignTaskReq {
   id: number
   baseProportion: number
   rewardProportion: number
+  notPlieScore: number
 }
 export interface IGetReductionCostListRes {
   data?: {

@@ -284,12 +284,12 @@
           :header-cell-style="{ textAlign: 'center' }"
           stripe
         >
-          <el-table-column label="采购计划发布日期" min-width="120" prop="releaseData">
+          <el-table-column label="采购计划发布日期" min-width="50" prop="releaseData">
             <template #default="{ row }">
               {{ row.releaseData ? formatDate(new Date(row.releaseData)) : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="人员" min-width="120" prop="userName" />
+          <el-table-column label="人员" min-width="80" prop="userName" />
           <el-table-column label="图片" width="80">
             <template #default="{ row }">
               <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
@@ -305,25 +305,37 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="状态" min-width="100" prop="status">
+          <el-table-column label="状态" min-width="50" prop="status">
             <template #default="{ row }">
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="本职角色" min-width="100" prop="jobRole" />
-          <el-table-column label="提成角色" min-width="100" prop="commissionRole" />
-          <el-table-column label="净利提成基础比例" min-width="120" prop="baseProportion">
+          <el-table-column label="本职角色" min-width="60" prop="jobRole" />
+          <el-table-column label="提成角色" min-width="60" prop="commissionRole" />
+          <el-table-column label="不计利润分" min-width="40">
+            <template #default="{ row }">
+              <vab-icon
+                v-if="row.notPlieScore === 1"
+                icon="check-line"
+                :style="{
+                  color: '#5fdf5f',
+                  fontSize: '36px',
+                }"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column label="净利提成基础比例" min-width="90" prop="baseProportion">
             <template #default="{ row }">
               {{ row.baseProportion ? row.baseProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column label="超额完成奖励" min-width="120" prop="rewardProportion">
+          <el-table-column label="超额完成奖励" min-width="60" prop="rewardProportion">
             <template #default="{ row }">
               {{ row.rewardProportion ? row.rewardProportion + '%' : '' }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150">
+          <el-table-column fixed="right" label="操作" width="350">
             <template #default="{ row }">
               <el-link
                 v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_DEVELOP_UPDATE] })"
@@ -581,6 +593,12 @@
         </el-form-item>
         <el-form-item label="超额完成奖励" prop="rewardProportion">
           <el-input v-model="developForm.rewardProportion" type="number" />
+        </el-form-item>
+        <el-form-item label="不计利润分">
+          <el-select v-model="developForm.notPlieScore" clearable placeholder="请选择">
+            <el-option label="计入利润分" value="0" />
+            <el-option label="不计利润分" value="1" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -886,6 +904,7 @@ const handleConfirmDevelopUpdate = async () => {
     id: _id.value,
     baseProportion: Number(developForm.baseProportion) / 100,
     rewardProportion: Number(developForm.rewardProportion) / 100,
+    notPlieScore: developForm.notPlieScore,
   })
   if (data) {
     $baseMessage('修改产品开发设计任务成功！', 'success')
@@ -968,6 +987,7 @@ const showDevelopUpdate = (row: IGetDevelopDesignTaskList) => {
   _id.value = row.id!
   developForm.baseProportion = row.baseProportion
   developForm.rewardProportion = row.rewardProportion
+  developForm.notPlieScore = row.notPlieScore + ''
 }
 const showLongUpdate = (row: IGetLongCommissionTaskList) => {
   longUpdateVisible.value = true
