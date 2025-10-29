@@ -124,7 +124,7 @@
               :disabled="editDisabled"
               placeholder="请选择开票类型"
               style="min-width: 100%"
-              @change="updateReviewComponent(row)"
+              @change="handleInvoicingChange(row)"
             >
               <el-option v-for="dict in invoicingList" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
@@ -158,7 +158,7 @@
               :disabled="editDisabled"
               placeholder="请选择默认采购方"
               style="min-width: 100%"
-              @change="updateReviewComponent(row)"
+              @change="handleDefaultPurchase(row)"
             >
               <el-option v-for="b in purchaseOption" :key="b.id" :label="b.label" :value="b.id" />
             </el-select>
@@ -171,7 +171,7 @@
               :disabled="editDisabled"
               :false-value="0"
               :true-value="1"
-              @change="updateReviewComponent(row)"
+              @change="handleDeclareCustoms(row)"
             />
           </template>
         </el-table-column>
@@ -368,66 +368,117 @@ const handleConsumableChange = async (row: any) => {
   }
 }
 
-const updateReviewComponent = async (row: any) => {
+// 处理默认采购方
+const handleDefaultPurchase = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  let hasChanges = false
 
-  // 买单采购方：强制不报关
   if (item.type === 0) {
-    row.customsDeclarationStatus = 1
-    if (row.customsDeclarationStatus === 0) {
-      $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+    // 买单的采购方: 自动勾选不报关
+    if (row.customsDeclarationStatus !== 1) {
+      row.customsDeclarationStatus = 1
+      hasChanges = true
     }
   }
 
-  // 埃托姆采购方：必须报关，不能无法开票
   if (item.label === '埃托姆') {
-    row.customsDeclarationStatus = 0
+    // 埃托姆: 取消不报关
+    if (row.customsDeclarationStatus !== 0) {
+      row.customsDeclarationStatus = 0
+      hasChanges = true
+    }
+    // 如果开票是无法开票 则切换成普票
     if (row.invoicing === '2') {
       row.invoicing = '1'
+      hasChanges = true
     }
-    if (row.customsDeclarationStatus === 1) {
-      row.customsDeclarationStatus = 0
-      $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-    }
-  }
-
-  // Attom采购方：强制无法开票
-  if (item.label === 'Attom') {
-    row.invoicing = '2'
+  } else if (item.label === 'Attom') {
+    // Attom: 开票变成无法开票
     if (row.invoicing !== '2') {
-      $baseMessage('采购方为attom，无法开票', 'error')
+      row.invoicing = '2'
+      hasChanges = true
     }
   }
 
-  // 云舟采购方：普票+不报关组合
   if (item.label === '云舟') {
-    if (row.invoicing === '2') {
+    // 云舟: 如果开票是普票，则勾选不报关
+    if (row.invoicing === '1' && row.customsDeclarationStatus !== 1) {
+      row.customsDeclarationStatus = 1
+      hasChanges = true
+    } else if (row.invoicing === '2') {
       row.invoicing = '1'
       $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
-    }
-    if (row.invoicing === '1') {
-      row.customsDeclarationStatus = 1
-      if (row.customsDeclarationStatus === 0) {
-        $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
-      }
+      hasChanges = true
     }
   }
 
-  // 通用规则：云舟和埃托姆不能选择无法开票
-  if (row.invoicing === '2' && (item.label === '云舟' || item.label === '埃托姆')) {
+  // 只有发生变更时才发请求
+  if (hasChanges) {
+    updateReviewComponent(row)
+  }
+}
+// 处理不报关
+const handleDeclareCustoms = async (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  if (item.type === 0 && row.customsDeclarationStatus === 0) {
+    //如果选择了为买单的采购方
+    row.customsDeclarationStatus = 1
+    $baseMessage('采购方为买单，无法取消不报关勾选', 'error', 'hey')
+  } else if (row.purchaseId === 2 && row.customsDeclarationStatus === 1) {
+    //选择了埃托姆
+    row.customsDeclarationStatus = 0
+    $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
+  } else if (item.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
+    row.customsDeclarationStatus = 1
+    $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
+    return
+  } else {
+    updateReviewComponent(row)
+  }
+}
+
+const handleInvoicingChange = async (row: any) => {
+  const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
+  let hasChanges = false
+
+  if (item.label === 'Attom' && row.invoicing !== '2') {
+    $baseMessage('采购方为attom，无法开票', 'error')
+    row.invoicing = '2'
+    hasChanges = true
+  }
+
+  if (item.label === '云舟' && row.invoicing === '1') {
+    if (row.customsDeclarationStatus !== 1) {
+      row.customsDeclarationStatus = 1
+      hasChanges = true
+    }
+  }
+
+  if (row.invoicing === '2' && (item!.label === '云舟' || item!.label === '埃托姆')) {
     $baseMessage('采购方为云舟或埃托姆，不能选择无法开票', 'error', 'hey')
     row.invoicing = '1'
+    hasChanges = true
   }
-  const { data } = await updateReviewComponentPurchaseIdAndInvoiceCustomstatus({
-    reviewComponentId: row.reviewComponentId,
-    purchaseId: row.purchaseId,
-    invoice: row.invoicing,
-    customsDeclarationStatus: row.customsDeclarationStatus,
-    defaultRepositoryId: row.defaultRepositoryId,
-  })
 
-  if (data) {
-    $baseMessage('零件信息修改成功！', 'success', 'hey')
+  // 只有发生变更时才发请求
+  if (hasChanges) {
+    updateReviewComponent(row)
+  }
+}
+const updateReviewComponent = async (row: any) => {
+  try {
+    const { data } = await updateReviewComponentPurchaseIdAndInvoiceCustomstatus({
+      reviewComponentId: row.reviewComponentId,
+      purchaseId: row.purchaseId,
+      invoice: row.invoicing,
+      customsDeclarationStatus: row.customsDeclarationStatus,
+      defaultRepositoryId: row.defaultRepositoryId,
+    })
+    if (data) {
+      fetchDataComponent()
+    }
+  } catch (error) {
+    console.error('更新失败:', error)
   }
 }
 const editDisabled = ref<boolean>(false)
