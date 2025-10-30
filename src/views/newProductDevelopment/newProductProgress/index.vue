@@ -41,6 +41,7 @@
           @cell-click="changeInput"
           @row-click="handleRowClick"
         >
+          <el-table-column label="ID" prop="progressId" width="70" />
           <el-table-column label="优先级" prop="priority" width="120">
             <template #default="{ row }">
               <el-select v-model="row.priority" class="center-select" style="min-width: 100%" @change="updatePriority(row)">
@@ -266,6 +267,7 @@
           @cell-click="changeInput"
           @row-click="handleRowClick"
         >
+          <el-table-column label="ID" prop="progressId" width="70" />
           <el-table-column label="优先级" prop="priority" width="90">
             <template #default="{ row }">
               {{ priorityOptions.find((item) => item.value === row.priority)?.label }}

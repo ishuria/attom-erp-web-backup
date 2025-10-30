@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="单位" prop="unit" width="130" />
       <template #empty>
-        <el-empty class="vab-data-empty" description="暂无数据" />
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
       </template>
     </el-table>
 
