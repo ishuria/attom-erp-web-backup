@@ -6,6 +6,7 @@ import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPer
 import {
   IAssessAdjustRes,
   IGetFrontPageAssessmentDataRes,
+  IGetFrontPageAttendanceOverview,
   IGetFrontPageBonusRes,
   IGetFrontPageDestroyValueDetailRes,
   IGetFrontPageDestroyValueRes,
@@ -360,6 +361,34 @@ export function getLowVolumeProductStorageFee(data: {
 }): Promise<{ data: { list: ILowVolumeProductStorageFee[]; total: number } }> {
   return request({
     url: `${BASE_API}/low/volume/product/storageFees`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 首页-考勤概览-用户列表
+ * @returns 首页-考勤概览-用户列表
+ */
+export function getFrontPageAttendanceUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/front_page/attendance/user/select_option`,
+    method: 'get',
+  })
+}
+
+/**
+ * 首页-考勤概览
+ * @returns 首页-考勤概览
+ */
+export function getFrontPageAttendanceOverview(data: {
+  startMonth: string
+  endMonth: string
+  orderByField: string
+  orderDirection: string
+}): Promise<{ data: IGetFrontPageAttendanceOverview[] }> {
+  return request({
+    url: `${BASE_API}/front_page/attendance/user/list`,
     method: 'post',
     data,
   })

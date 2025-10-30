@@ -1,6 +1,23 @@
 <template>
   <div class="index-container no-background-container">
     <el-row :gutter="20">
+      <el-col v-if="ableViewAttendanceOverviewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <!-- 考勤概况 -->
+        <attendance-overview-card :list="attendanceOverviewList" @sort-change="handleAttendanceOverviewSortChange">
+          <template #select>
+            <el-date-picker
+              :key="attendanceOverviewDateRangeKey"
+              v-model="attendanceOverviewDateRange"
+              :clearable="false"
+              type="monthrange"
+              value-format="YYYY-MM"
+              @change="fetchAttendanceOverview"
+            />
+          </template>
+        </attendance-overview-card>
+      </el-col>
+    </el-row>
+    <el-row class="row-spacing" :gutter="20">
       <!-- 第一层 -->
       <el-col v-if="ableViewCommissionCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <top-card
@@ -387,6 +404,7 @@ import { colorList } from '../storeOperations/constantOption'
 import {
   getFrontPageAdjustDetailMonth,
   getFrontPageAssessmentData,
+  getFrontPageAttendanceOverview,
   getFrontPageBillingMonth,
   getFrontPageBonus,
   getFrontPageDestroyValue,
@@ -423,15 +441,18 @@ import {
   ROLE_GRAPHICDESIGNER_CODE,
   ROLE_GRAPHICDESIGNLEAD_CODE,
   ROLE_INDUSTRIAL_DESIGN_CODE,
+  ROLE_PACKAGER_CODE,
   ROLE_PRODUCTMANAGER_CODE,
   ROLE_PRODUCTMANNAGERLEAD_CODE,
   ROLE_PURCHASER_CODE,
   ROLE_PURCHASINGASSISTANT_CODE,
   ROLE_SUPPLY_CHAIN_MANG_CODE,
+  ROLE_WAREHOUSEMANNAGERlEAD_CODE,
 } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import {
+  IGetFrontPageAttendanceOverview,
   IGetFrontPageDestroyValueDetailItem,
   IGetFrontPageHistoryAssessmentRecordsItem,
   IGetFrontPageHistoryAssessmentRecordsReq,
@@ -493,6 +514,7 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
+const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -1107,6 +1129,40 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   lowStorageFeeQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   fetchLowVolumeProductStorageFee()
 }
+// 考勤概览-用户列表
+// const attendanceUserList = ref<{ id: number; label: string }[]>([])
+// const selectAttendanceUserId = ref<number>(-1)
+// const fetchAttendanceUserList = async () => {
+//   const { data } = await getFrontPageAttendanceUserList()
+//   attendanceUserList.value = data
+// }
+const attendanceOverviewList = ref<IGetFrontPageAttendanceOverview[]>([])
+const attendanceOverviewDateRange = ref<[string, string]>([getCurrentMonth(), getCurrentMonth()])
+const attendanceOverviewDateRangeKey = ref<number>(0)
+const fetchAttendanceOverview = async () => {
+  attendanceOverviewDateRangeKey.value++
+  const { data } = await getFrontPageAttendanceOverview({
+    startMonth: attendanceOverviewDateRange.value[0],
+    endMonth: attendanceOverviewDateRange.value[1],
+    orderByField: 'count',
+    orderDirection: 'descending',
+  })
+  attendanceOverviewList.value = data
+}
+const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { prop, order } = data
+  if (!prop || !order) return
+
+  const multiplier = order === 'ascending' ? 1 : -1
+  attendanceOverviewList.value = [...attendanceOverviewList.value].sort((a: any, b: any) => {
+    const av = a[prop]
+    const bv = b[prop]
+    if (prop === 'month') {
+      return av.localeCompare(bv) * multiplier
+    }
+    return ((av ?? 0) - (bv ?? 0)) * multiplier
+  })
+}
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -1152,6 +1208,9 @@ onBeforeMount(async () => {
   if (ableViewLowVolumeProductStorageFeeCard) {
     fetchOperateUserList()
     fetchLowVolumeProductStorageFee()
+  }
+  if (ableViewAttendanceOverviewCard) {
+    fetchAttendanceOverview()
   }
 })
 </script>

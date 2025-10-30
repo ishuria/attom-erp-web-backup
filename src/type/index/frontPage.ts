@@ -280,3 +280,12 @@ export interface ILowVolumeProductStorageFee {
   /** 建议清算 */
   recommendClearing: number
 }
+
+export interface IGetFrontPageAttendanceOverview {
+  userName: string
+  month: string
+  count: number
+  sWorkCount: number
+  lateCount: number
+  lateDuration: number
+}
