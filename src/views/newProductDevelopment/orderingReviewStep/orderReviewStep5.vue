@@ -371,13 +371,11 @@ const handleConsumableChange = async (row: any) => {
 // 处理默认采购方
 const handleDefaultPurchase = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  let hasChanges = false
 
   if (item.type === 0) {
     // 买单的采购方: 自动勾选不报关
     if (row.customsDeclarationStatus !== 1) {
       row.customsDeclarationStatus = 1
-      hasChanges = true
     }
   }
 
@@ -385,18 +383,15 @@ const handleDefaultPurchase = async (row: any) => {
     // 埃托姆: 取消不报关
     if (row.customsDeclarationStatus !== 0) {
       row.customsDeclarationStatus = 0
-      hasChanges = true
     }
     // 如果开票是无法开票 则切换成普票
     if (row.invoicing === '2') {
       row.invoicing = '1'
-      hasChanges = true
     }
   } else if (item.label === 'Attom') {
     // Attom: 开票变成无法开票
     if (row.invoicing !== '2') {
       row.invoicing = '2'
-      hasChanges = true
     }
   }
 
@@ -404,18 +399,14 @@ const handleDefaultPurchase = async (row: any) => {
     // 云舟: 如果开票是普票，则勾选不报关
     if (row.invoicing === '1' && row.customsDeclarationStatus !== 1) {
       row.customsDeclarationStatus = 1
-      hasChanges = true
     } else if (row.invoicing === '2') {
       row.invoicing = '1'
       $baseMessage('采购方为云舟，不能选择无法开票', 'error', 'hey')
-      hasChanges = true
     }
   }
 
-  // 只有发生变更时才发请求
-  if (hasChanges) {
-    updateReviewComponent(row)
-  }
+  // 采购方变更后，无论是否有字段变更都更新一次，保持与其他页面一致
+  await updateReviewComponent(row)
 }
 // 处理不报关
 const handleDeclareCustoms = async (row: any) => {
@@ -428,7 +419,7 @@ const handleDeclareCustoms = async (row: any) => {
     //选择了埃托姆
     row.customsDeclarationStatus = 0
     $baseMessage('采购方为埃托姆，必须报关，无法勾选不报关', 'error', 'hey')
-  } else if (item.label === '云舟' && row.invoicing === 1 && row.customsDeclarationStatus === 0) {
+  } else if (item.label === '云舟' && row.invoicing === '1' && row.customsDeclarationStatus === 0) {
     row.customsDeclarationStatus = 1
     $baseMessage('采购方为云舟，开票类型为普票，无法取消不报关勾选', 'error', 'hey')
     return
@@ -439,31 +430,24 @@ const handleDeclareCustoms = async (row: any) => {
 
 const handleInvoicingChange = async (row: any) => {
   const item = purchaseOption.value.find((i: any) => row.purchaseId === i.id)
-  let hasChanges = false
 
   if (item.label === 'Attom' && row.invoicing !== '2') {
     $baseMessage('采购方为attom，无法开票', 'error')
     row.invoicing = '2'
-    hasChanges = true
   }
 
   if (item.label === '云舟' && row.invoicing === '1') {
     if (row.customsDeclarationStatus !== 1) {
       row.customsDeclarationStatus = 1
-      hasChanges = true
     }
   }
 
   if (row.invoicing === '2' && (item!.label === '云舟' || item!.label === '埃托姆')) {
     $baseMessage('采购方为云舟或埃托姆，不能选择无法开票', 'error', 'hey')
     row.invoicing = '1'
-    hasChanges = true
   }
 
-  // 只有发生变更时才发请求
-  if (hasChanges) {
-    updateReviewComponent(row)
-  }
+  updateReviewComponent(row)
 }
 const updateReviewComponent = async (row: any) => {
   try {
