@@ -79,7 +79,7 @@
           :cell-style="cellStyle"
           class="noneHoveTable custom-table-hover"
           :data="list"
-          :default-sort="{ prop: 'payDate', order: 'descending' }"
+          :default-sort="{ prop: 'sellableDay', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
           stripe
@@ -317,6 +317,7 @@
           :cell-style="cellStyle2"
           class="noneHoveTable custom-table-hover"
           :data="list"
+          :default-sort="{ prop: 'signDate', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
           stripe
@@ -690,6 +691,9 @@ const fetchColumn2 = async () => {
     if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
       delete item.width
     }
+    if (['signDate'].includes(item.prop)) {
+      item.sortable = true
+    }
   })
 }
 const handleWidth = (item: any) => {
@@ -1027,8 +1031,8 @@ const queryForm = reactive<any>({
   status: 0, //0待签收 1签收
   signUserId: -1,
   signDate: '',
-  orderByField: 'payDate',
-  orderDirection: 'desc',
+  orderByField: 'sellableDay',
+  orderDirection: 'descending',
   filterProblemComponent: -1,
 })
 const handleSizeChange = (value: number) => {

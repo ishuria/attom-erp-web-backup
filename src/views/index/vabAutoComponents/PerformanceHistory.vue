@@ -63,7 +63,7 @@ const option = reactive<any>({
               "></span>
               <span>考核完成数</span>
             </div>
-            <span style="font-weight: bold; color: #333;">${groupTotal}</span>
+            <span style="font-weight: bold; color: #333;">${groupTotal.toFixed(2)}</span>
           </div>
           <div style="margin-top: 2px; padding-left: 10px;">
             ${groupItems

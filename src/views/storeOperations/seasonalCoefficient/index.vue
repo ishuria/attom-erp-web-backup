@@ -575,10 +575,15 @@ const updateChartForDailyData = (dayLabels: string[], title: string = '季节系
         },
         label: {
           formatter: function (params: any) {
-            const date = new Date(params.value)
-            const month = date.getMonth() + 1
-            const day = date.getDate()
-            return `${month}月${day}日`
+            // 仅在横轴显示“几月几日”，纵轴保留数值
+            if (params && params.axisDimension === 'x') {
+              const date = new Date(params.value)
+              const month = date.getMonth() + 1
+              const day = date.getDate()
+              return `${month}月${day}日`
+            }
+            const v = Number(params?.value)
+            return isNaN(v) ? `${params?.value ?? ''}` : v.toFixed(2)
           },
         },
       },
