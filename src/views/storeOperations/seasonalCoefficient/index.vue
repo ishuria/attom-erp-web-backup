@@ -39,146 +39,312 @@
       :cell-style="cellStyle"
       class="noneHoverTable"
       :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
+      :header-cell-style="headerCellStyle"
       stripe
       @cell-click="changeInput"
     >
-      <el-table-column label="品名">
-        <el-table-column label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')" />
-      </el-table-column>
+      <el-table-column fixed="left" label="品名" prop="kindName" :width="flexColumnWidth(list, '品名', 'kindName')" />
       <el-table-column label="1月">
         <el-table-column label="实际值" prop="janActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.janActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.janActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.janActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="janReference" />
+        <el-table-column label="最值日" prop="janPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.janPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.janPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="2月">
         <el-table-column label="实际值" prop="febActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.febActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.febActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.febActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="febReference" />
+        <el-table-column label="最值日" prop="febPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.febPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.febPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="3月">
         <el-table-column label="实际值" prop="marActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.marActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.marActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.marActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="marReference" />
+        <el-table-column label="最值日" prop="marPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.marPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.marPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="4月">
         <el-table-column label="实际值" prop="aprActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.aprActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.aprActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.aprActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="aprReference" />
+        <el-table-column label="最值日" prop="aprPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.aprPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.aprPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="5月">
         <el-table-column label="实际值" prop="mayActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.mayActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.mayActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.mayActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="mayReference" />
+        <el-table-column label="最值日" prop="mayPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.mayPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.mayPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="6月">
         <el-table-column label="实际值" prop="junActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.junActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.junActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.junActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="junReference" />
+        <el-table-column label="最值日" prop="junPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.junPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.junPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="7月">
         <el-table-column label="实际值" prop="julActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.julActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.julActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.julActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="julReference" />
+        <el-table-column label="最值日" prop="julPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.julPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.julPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="8月">
         <el-table-column label="实际值" prop="augActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.augActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.augActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.augActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="augReference" />
+        <el-table-column label="最值日" prop="augPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.augPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.augPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="9月">
         <el-table-column label="实际值" prop="sepActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.sepActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.sepActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.sepActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="sepReference" />
+        <el-table-column label="最值日" prop="sepPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.sepPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.sepPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="10月">
         <el-table-column label="实际值" prop="octActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.octActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.octActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.octActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="octReference" />
+        <el-table-column label="最值日" prop="octPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.octPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.octPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="11月">
         <el-table-column label="实际值" prop="novActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.novActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.novActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.novActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="novReference" />
+        <el-table-column label="最值日" prop="novPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.novPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.novPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="12月">
         <el-table-column label="实际值" prop="decActual">
           <template #default="{ row }">
             <div class="none">
-              <el-input v-model="row.decActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+              <el-input v-model.trim="row.decActual" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.decActual }}</span>
           </template>
         </el-table-column>
         <el-table-column label="参考值" prop="decReference" />
+        <el-table-column label="最值日" prop="decPeakDay">
+          <template #header>
+            <el-popover>
+              <template #reference>最值日</template>
+              设定当月销量的最大值或者最小值在哪一天
+            </el-popover>
+          </template>
+          <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.decPeakDay" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
+            <span>{{ row.decPeakDay }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column fixed="right" label="操作" width="120">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="viewChart(row)">查看</el-link>
           <span style="margin: 0 5px"></span>
@@ -270,6 +436,7 @@ import type {
   IGetSeasonalCoefficientList,
   IGetSeasonalCoefficientListReq,
   ISiteList,
+  IUpdateSeasonalCoefficientReq,
 } from '/@/type/storeOperation/seasonalCoefficientType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
@@ -867,7 +1034,40 @@ const clickCancel = async (event: any, value: any) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
-      await updateSeasonalCoefficient(value)
+      // 确保传递完整的更新数据，包括所有实际值和最值日字段
+      const updateData: IUpdateSeasonalCoefficientReq = {
+        id: value.id,
+        janActual: value.janActual,
+        febActual: value.febActual,
+        marActual: value.marActual,
+        aprActual: value.aprActual,
+        mayActual: value.mayActual,
+        junActual: value.junActual,
+        julActual: value.julActual,
+        augActual: value.augActual,
+        sepActual: value.sepActual,
+        octActual: value.octActual,
+        novActual: value.novActual,
+        decActual: value.decActual,
+        janPeakDay: value.janPeakDay,
+        febPeakDay: value.febPeakDay,
+        marPeakDay: value.marPeakDay,
+        aprPeakDay: value.aprPeakDay,
+        mayPeakDay: value.mayPeakDay,
+        junPeakDay: value.junPeakDay,
+        julPeakDay: value.julPeakDay,
+        augPeakDay: value.augPeakDay,
+        sepPeakDay: value.sepPeakDay,
+        octPeakDay: value.octPeakDay,
+        novPeakDay: value.novPeakDay,
+        decPeakDay: value.decPeakDay,
+      }
+      const { data } = await updateSeasonalCoefficient(updateData)
+      if (data) {
+        $baseMessage('更新成功！', 'success')
+      } else {
+        $baseMessage('更新失败！', 'error')
+      }
     } catch {
       Object.assign(value, copyRow)
     }
@@ -875,19 +1075,84 @@ const clickCancel = async (event: any, value: any) => {
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const index = data.columnIndex
-  if (index === 0) {
+  const label = data.column.label
+  const prop = data.column.property
+
+  // 最值日列添加右边框作为月份分组分隔
+  const peakDayProps = [
+    'janPeakDay',
+    'febPeakDay',
+    'marPeakDay',
+    'aprPeakDay',
+    'mayPeakDay',
+    'junPeakDay',
+    'julPeakDay',
+    'augPeakDay',
+    'sepPeakDay',
+    'octPeakDay',
+    'novPeakDay',
+    'decPeakDay',
+  ]
+
+  if (label === '品名') {
     return {
       textAlign: 'left',
     }
-  } else if (index % 2 === 0) {
+  }
+  if (label === '参考值') {
     return {
       textAlign: 'center',
       color: '#999',
+      cursor: 'not-allowed',
     }
   }
+
+  // 最值日列添加右边框
+  if (peakDayProps.includes(prop)) {
+    return {
+      textAlign: 'center',
+      cursor: 'pointer',
+      borderRight: '2px solid #cbd5e1',
+    }
+  }
+
   return {
+    textAlign: 'center',
     cursor: 'pointer',
+  }
+}
+
+// 表头样式 - 区分月份分组
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  const monthLabels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+
+  // 月份分组表头 - 使用不同的背景色区分
+  if (monthLabels.includes(label)) {
+    const monthIndex = monthLabels.indexOf(label)
+    // 奇数月份（1,3,5,7,9,11月）- 蓝色系
+    if (monthIndex % 2 === 0) {
+      return {
+        textAlign: 'center',
+        background: 'var(--el-color-primary-light-9)',
+        // borderLeft: '3px solid var(--el-color-primary-light-9)',
+        fontWeight: '600',
+        // borderRight: '2px solid var(--el-color-primary-light-9)',
+      }
+    } else {
+      // 偶数月份（2,4,6,8,10,12月）- 粉色系
+      return {
+        textAlign: 'center',
+        background: 'var(--el-color-success-light-9)',
+        // borderLeft: '3px solid var(--el-color-success-light-9)',
+        fontWeight: '600',
+        // borderRight: '2px solid var(--el-color-success-light-9)',
+      }
+    }
+  }
+
+  // 其他列（实际值、参考值、最值日）
+  return {
     textAlign: 'center',
   }
 }
@@ -940,10 +1205,17 @@ onBeforeMount(() => {
       min-height: 32px;
       line-height: 32px;
     }
-    /* 隐藏第二行表头 */
-    .el-table__header-wrapper .el-table__header tr:nth-child(2) {
-      display: none;
-    }
+
+    // // 月份分组分隔线 - 每个月结束的列添加右边框
+    // .el-table__header th[colspan='3'] {
+    //   // 月份分组结束列添加右边框作为分隔
+    //   border-right: 2px solid #cbd5e1 !important;
+    // }
+
+    // // 月份分组内的列（实际值、参考值、最值日）样式
+    // .el-table__header th.el-table__cell {
+    //   font-weight: 500;
+    // }
   }
 }
 .none {

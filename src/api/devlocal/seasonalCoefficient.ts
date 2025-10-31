@@ -10,6 +10,7 @@ import type {
   IId,
   ISite,
   ISiteList,
+  IUpdateSeasonalCoefficientReq,
 } from '/@/type/storeOperation/seasonalCoefficientType'
 
 /**
@@ -46,7 +47,7 @@ export function getSeasonalCoefficientSiteList(): Promise<{ data: ISiteList[] }>
 /**
  * @description 修改季节系数
  */
-export function updateSeasonalCoefficient(data: IGetSeasonalCoefficientListReq): Promise<IBooleanResp> {
+export function updateSeasonalCoefficient(data: IUpdateSeasonalCoefficientReq): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/seasonal/coefficient/update`,
     method: 'post',

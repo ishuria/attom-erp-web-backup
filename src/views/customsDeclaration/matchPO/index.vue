@@ -1373,8 +1373,8 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
 
   columns.forEach((column, index) => {
     // 第一列显示'合计'
-    switch (index) {
-      case 0: {
+    switch (column.label) {
+      case '费用名': {
         sums[index] = h('div', { style: { fontWeight: '600' } }, ['总计（RMB）'])
         return
       }
@@ -1384,7 +1384,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
       //   ])
       //   return
       // }
-      case 7: {
+      case '实际总费用': {
         const values = data.map((item) => {
           // 计算每一行的合计值：实际总费用 * 实际汇率
           const estimateCost = Number(item['actualCost'])
@@ -1408,7 +1408,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
 
         break
       }
-      case 4: {
+      case '预估总费用': {
         const values = data.map((item) => {
           // 计算每一行的合计值：预估总费用 * 暂估汇率
           const estimateCost = Number(item['estimateCost'])
@@ -1504,38 +1504,36 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   return ''
 }
 const firstLegFreightStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  switch (data.columnIndex) {
-    case 0:
-    case 13:
-    case 15: {
+  switch (data.column.label) {
+    case '费用名':
+    case '合并报关的货代单号':
+    case '合并清关的货代单号':
+    case '付款日期':
+    case '差额': {
       return {
         textAlign: 'left',
         cursor: 'not-allowed',
       }
     }
-    case 4: {
+    case '预估总费用': {
       return {
         fontWeight: '600',
         textAlign: 'left',
         cursor: 'not-allowed',
       }
     }
-    case 9:
-    case 11: {
-      return {
-        textAlign: 'center',
-        cursor: 'not-allowed',
-      }
-    }
-    case 7: {
+    case '实际总费用': {
       return {
         fontWeight: '600',
-        textAlign: 'center',
+        textAlign: 'left',
+        cursor: 'pointer',
       }
     }
-    case 2:
-    case 3:
-    case 5: {
+
+    case '数量':
+    case '单价':
+    case '暂估汇率':
+    case '实际汇率': {
       return {
         textAlign: 'left',
         cursor: 'pointer',

@@ -151,3 +151,30 @@ export interface IAddSeasonalCoefficientReq {
   octActual: number
   sepActual: number
 }
+export interface IUpdateSeasonalCoefficientReq {
+  id: number
+  aprActual?: number
+  augActual?: number
+  decActual?: number
+  febActual?: number
+  janActual?: number
+  julActual?: number
+  junActual?: number
+  marActual?: number
+  mayActual?: number
+  novActual?: number
+  octActual?: number
+  sepActual?: number
+  janPeakDay?: number
+  febPeakDay?: number
+  marPeakDay?: number
+  aprPeakDay?: number
+  mayPeakDay?: number
+  junPeakDay?: number
+  julPeakDay?: number
+  augPeakDay?: number
+  sepPeakDay?: number
+  octPeakDay?: number
+  novPeakDay?: number
+  decPeakDay?: number
+}

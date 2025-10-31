@@ -1032,7 +1032,7 @@ const queryForm = reactive<any>({
   signUserId: -1,
   signDate: '',
   orderByField: 'sellableDay',
-  orderDirection: 'descending',
+  orderDirection: 'desc',
   filterProblemComponent: -1,
 })
 const handleSizeChange = (value: number) => {
