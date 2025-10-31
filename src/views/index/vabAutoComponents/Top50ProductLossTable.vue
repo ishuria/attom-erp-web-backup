@@ -49,6 +49,9 @@
       </el-table-column>
       <el-table-column label="产品经理" min-width="95" prop="productManager" />
       <el-table-column label="运营" min-width="95" prop="operationUserName" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
   </vab-card>

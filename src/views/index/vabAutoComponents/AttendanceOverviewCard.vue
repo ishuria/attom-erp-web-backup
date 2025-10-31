@@ -1,5 +1,5 @@
 <template>
-  <vab-card :body-style="{ height: '522px' }" class="attendance-overview-card" skeleton>
+  <vab-card :body-style="{ height: '422px' }" class="attendance-overview-card" skeleton>
     <template #header>
       <vab-icon icon="align-top" />
       考勤概况
@@ -11,12 +11,12 @@
       border
       :cell-style="{ textAlign: 'center' }"
       :data="list"
-      :default-sort="{ prop: 'count', order: 'descending' }"
+      :default-sort="{ prop: 'month', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
       @sort-change="handleSortChange"
     >
-      <el-table-column label="月份" min-width="100" prop="month" />
+      <el-table-column label="月份" min-width="100" prop="month" sortable="custom" />
       <el-table-column label="姓名" min-width="100" prop="userName" />
       <el-table-column label="餐补次数" min-width="100" prop="count" sortable="custom" />
       <el-table-column label="缺卡" min-width="100" prop="sWorkCount" sortable="custom" />

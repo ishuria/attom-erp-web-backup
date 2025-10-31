@@ -26,8 +26,28 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="父体ASIN" min-width="130" prop="parentASIN" />
+      <el-table-column label="计分组名" min-width="130" prop="parentASIN">
+        <template #default="{ row }">
+          <el-popover v-if="row.skus && row.skus.length > 0" placement="top" trigger="hover" :width="360">
+            <template #reference>
+              <span style="cursor: pointer; color: var(--el-color-primary)">
+                {{ row.parentASIN }}
+              </span>
+            </template>
+            <div style="max-height: 300px; overflow-y: auto">
+              <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
+              <div v-for="sku in row.skus" :key="sku" style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)">
+                {{ sku }}
+              </div>
+            </div>
+          </el-popover>
+          <span v-else>{{ row.parentASIN }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="产品总分" prop="productTotalScore" width="100" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </vab-card>

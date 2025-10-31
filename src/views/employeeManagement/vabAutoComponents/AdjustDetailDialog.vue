@@ -71,7 +71,7 @@
             <el-checkbox v-model="row.oem" disabled :false-value="0" :true-value="1" />
           </template>
         </el-table-column>
-        <el-table-column label="父体" prop="parent" width="130" />
+        <el-table-column label="计分组名" prop="parent" width="130" />
         <el-table-column label="备注" prop="remark" />
         <el-table-column
           column-key="source"
@@ -136,8 +136,8 @@
             <el-radio :label="2">OEM和完成数</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="父体" prop="parent">
-          <el-input v-model="addForm.parent" placeholder="请输入父体" />
+        <el-form-item label="计分组名" prop="parent">
+          <el-input v-model="addForm.parent" placeholder="请输入计分组名" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="addForm.remark" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入备注" :rows="2" type="textarea" />

@@ -12,6 +12,9 @@
       <el-table-column label="总调整" prop="totalNumber" width="100" />
       <el-table-column label="备注" prop="remark" />
       <el-table-column label="调整数" prop="number" width="100" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
   </vab-card>
 </template>

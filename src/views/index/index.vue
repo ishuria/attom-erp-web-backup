@@ -1,23 +1,6 @@
 <template>
   <div class="index-container no-background-container">
     <el-row :gutter="20">
-      <el-col v-if="ableViewAttendanceOverviewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-        <!-- 考勤概况 -->
-        <attendance-overview-card :list="attendanceOverviewList" @sort-change="handleAttendanceOverviewSortChange">
-          <template #select>
-            <el-date-picker
-              :key="attendanceOverviewDateRangeKey"
-              v-model="attendanceOverviewDateRange"
-              :clearable="false"
-              type="monthrange"
-              value-format="YYYY-MM"
-              @change="fetchAttendanceOverview"
-            />
-          </template>
-        </attendance-overview-card>
-      </el-col>
-    </el-row>
-    <el-row class="row-spacing" :gutter="20">
       <!-- 第一层 -->
       <el-col v-if="ableViewCommissionCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <top-card
@@ -212,7 +195,22 @@
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
       </el-col> -->
     <!-- 第四层 -->
-    <el-row v-if="ableProductManagerViewCard || ableProductManagerLeadViewCard" class="row-spacing" :gutter="20">
+    <el-row v-if="ableViewAttendanceOverviewCard" class="row-spacing" :gutter="20">
+      <el-col v-if="ableViewAttendanceOverviewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <!-- 考勤概况 -->
+        <attendance-overview-card :list="attendanceOverviewList" @sort-change="handleAttendanceOverviewSortChange">
+          <template #select>
+            <el-date-picker
+              :key="attendanceOverviewDateRangeKey"
+              v-model="attendanceOverviewDateRange"
+              :clearable="false"
+              type="monthrange"
+              value-format="YYYY-MM"
+              @change="fetchAttendanceOverview"
+            />
+          </template>
+        </attendance-overview-card>
+      </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank1List" :my-name="myName" name="超额完成数" :show-medal="true" title="超额完成排行">
           <template #select>
@@ -257,16 +255,6 @@
           </template>
         </rank>
       </el-col>
-      <!-- 职级提成 -->
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
-        <job-level-commission-table :list="jobLevelCommissionList">
-          <template #select>
-            <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
-              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </job-level-commission-table>
-      </el-col>
     </el-row>
     <!-- 第五层 -->
     <el-row v-if="ableProductManagerViewCard || ableViewTop30ProductSaleCard" class="row-spacing" :gutter="20">
@@ -280,6 +268,16 @@
             <el-date-picker v-model="selectDate" :clearable="false" type="monthrange" value-format="YYYY-MM" @change="fetchData" />
           </template>
         </performance-history>
+      </el-col>
+      <!-- 职级提成 -->
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+        <job-level-commission-table :list="jobLevelCommissionList">
+          <template #select>
+            <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </job-level-commission-table>
       </el-col>
     </el-row>
     <el-row v-if="ableBossViewCard" class="row-spacing" :gutter="20">
@@ -1139,29 +1137,44 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
 const attendanceOverviewList = ref<IGetFrontPageAttendanceOverview[]>([])
 const attendanceOverviewDateRange = ref<[string, string]>([getCurrentMonth(), getCurrentMonth()])
 const attendanceOverviewDateRangeKey = ref<number>(0)
+// 考勤概况排序字段和方向
+const attendanceOverviewSortField = ref<string>('month')
+const attendanceOverviewSortDirection = ref<string>('desc')
+
 const fetchAttendanceOverview = async () => {
   attendanceOverviewDateRangeKey.value++
   const { data } = await getFrontPageAttendanceOverview({
     startMonth: attendanceOverviewDateRange.value[0],
     endMonth: attendanceOverviewDateRange.value[1],
-    orderByField: 'count',
-    orderDirection: 'descending',
+    // 默认排序：月份 > 餐补次数，由后端处理
+    orderByField: attendanceOverviewSortField.value,
+    orderDirection: attendanceOverviewSortDirection.value,
   })
   attendanceOverviewList.value = data
 }
-const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; order: any }) => {
-  const { prop, order } = data
-  if (!prop || !order) return
 
-  const multiplier = order === 'ascending' ? 1 : -1
-  attendanceOverviewList.value = [...attendanceOverviewList.value].sort((a: any, b: any) => {
-    const av = a[prop]
-    const bv = b[prop]
-    if (prop === 'month') {
-      return av.localeCompare(bv) * multiplier
+// 考勤概况排序处理 - 由后端处理排序
+const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+
+  if (attendanceOverviewSortField.value === prop) {
+    // 同一列，切换排序方向
+    if (!order) {
+      // 如果没有order，根据当前方向切换
+      if (attendanceOverviewSortDirection.value === 'asc') {
+        column.order = 'descending'
+      } else if (attendanceOverviewSortDirection.value === 'desc') {
+        column.order = 'ascending'
+      }
     }
-    return ((av ?? 0) - (bv ?? 0)) * multiplier
-  })
+  } else {
+    // 切换列，默认降序
+    column.order = 'descending'
+  }
+
+  attendanceOverviewSortField.value = prop
+  attendanceOverviewSortDirection.value = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchAttendanceOverview()
 }
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {

@@ -192,6 +192,7 @@ export interface IGetFrontPageProductProfitRes {
   imageUrl?: string
   parentASIN?: string
   productTotalScore?: number
+  skus?: string[] // 产品sku列表
 }
 
 export interface IGetFrontPageMonthlyAssessment {
