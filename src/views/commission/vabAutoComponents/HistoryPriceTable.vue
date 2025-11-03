@@ -33,6 +33,12 @@
           </template>
         </el-table-column>
         <el-table-column label="PO" min-width="110" prop="po" />
+        <el-table-column
+          v-if="beforePrice || afterPrice"
+          label="供应商"
+          prop="supplier"
+          :width="flexColumnWidth(list, '供应商', 'supplier')"
+        />
         <el-table-column label="出厂单价" min-width="100" prop="unitPrice" />
         <el-table-column label="开票" min-width="100" prop="invoicing" />
         <el-table-column label="采购方" min-width="100" prop="purchase" />
@@ -46,6 +52,7 @@
 
 <script lang="ts" setup>
 import { ArrowRight } from '@element-plus/icons-vue'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import type { IGetCostReductionHistoryPriceList } from '/@/type/commission/commissionType'
 import { formatDate } from '/@/utils/dateUtils'
 
