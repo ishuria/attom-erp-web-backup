@@ -204,7 +204,7 @@
             <el-checkbox v-model="row.qgStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
           </template>
         </el-table-column>
-        <el-table-column label="运费核对默认展示" min-width="100" prop="costShowStatus">
+        <!-- <el-table-column label="运费核对默认展示" min-width="100" prop="costShowStatus">
           <template #header>
             运费核对
             <br />
@@ -213,7 +213,7 @@
           <template #default="{ row }">
             <el-checkbox v-model="row.costShowStatus" :false-value="0" :true-value="1" @change="modifyFeeNameSetting(row)" />
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="计入退税资料运费" min-width="100" prop="costShowStatus">
           <template #header>
             计入退税

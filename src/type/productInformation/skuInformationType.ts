@@ -1259,6 +1259,8 @@ export interface IUpdateCustomsClearanceSku {
    * 用途中文
    */
   usageZh?: string
+  /** FDA申报费 */
+  fdaFlag?: boolean
 }
 export interface IGetCustomsClearanceRatioRes {
   data?: {
