@@ -11,7 +11,7 @@
               <el-form-item>
                 <el-date-picker
                   v-model="leftStartDate"
-                  :disabled-date="disabledDate"
+                  :disabled-date="currentRoleCode === ROLE_BOSS_CODE ? undefined : disabledDate"
                   :editable="false"
                   placeholder="开始日期"
                   type="date"

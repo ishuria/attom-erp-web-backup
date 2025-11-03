@@ -46,13 +46,14 @@ export function getOperationOrderSpringFestival(): Promise<{ data: IGetOperation
   })
 }
 // 产品订货-春节备货系数修改
-export function updateOperationOrderSpringFestival(data: IGetOperationOrderSpringFestival): Promise<{ data: boolean }> {
+export function updateOperationOrderSpringFestival(data: IGetOperationOrderSpringFestival): Promise<{ data: number }> {
   return request({
     url: `${BASE_API}/operation/order/spring/festival/update`,
     method: 'post',
     data,
   })
 }
+
 // 产品订货-发货数列表查询
 export function getOperationOrderShippingInspection(): Promise<{ data: any }> {
   return request({

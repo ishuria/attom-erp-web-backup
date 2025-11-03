@@ -176,7 +176,7 @@
           <el-table-column :fixed="fixed" label="操作" width="180">
             <template #default="{ row }">
               <el-dropdown>
-                <el-button text type="primary" @click="handleSampleCosting(row)">
+                <el-button text type="primary" @click="handleSampleCosting(row, 1)">
                   拿样与核算
                   <el-icon class="el-icon--right">
                     <arrow-down />
@@ -184,7 +184,7 @@
                 </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="handleSampleCosting(row)">
+                    <el-dropdown-item @click="handleSampleCosting(row, 1)">
                       <el-link type="primary" underline="never">拿样与核算</el-link>
                     </el-dropdown-item>
                     <!--                    <el-dropdown-item @click="addProgressMold">-->
@@ -380,7 +380,24 @@
 
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">
-              <el-button text type="primary" @click="handleCopyAchivedProgress(row)">复制到进行中</el-button>
+              <el-dropdown>
+                <el-button text type="primary" @click="handleSampleCosting(row, 0)">
+                  拿样与核算
+                  <el-icon class="el-icon--right">
+                    <arrow-down />
+                  </el-icon>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="handleSampleCosting(row, 0)">
+                      <el-link type="primary" underline="never">拿样与核算</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleCopyAchivedProgress(row)">
+                      <el-link type="primary" underline="never">复制到进行中</el-link>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
           </el-table-column>
           <template #empty>
@@ -1276,13 +1293,14 @@ const handleCurrentChange = (value: number) => {
   fetchData()
 }
 // 拿样与核算
-const handleSampleCosting = (row: IProgress) => {
+const handleSampleCosting = (row: IProgress, button: number) => {
   router.push({
     path: '/newProductDevelopment/productProgressComponent',
     query: {
       title: '零件清单',
       progressId: row.progressId,
       product: `${row.product!} ${row.mainSearchTerms!}`,
+      button: button,
     },
   })
 }

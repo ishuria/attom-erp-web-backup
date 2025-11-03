@@ -701,9 +701,11 @@ const operationSelect = () => {
 // 确定修改春节备货
 const handleConfirmSpringFestival = async () => {
   const { data } = await updateOperationOrderSpringFestival(stockUpForm)
-  if (data) {
-    $baseMessage('修改春节备货成功！', 'success')
+  if (data === 0) {
+    $baseMessage('触发成功！', 'success')
     stockUpVisible.value = false
+  } else if (data === -1) {
+    $baseMessage('有任务执行中', 'warning')
   }
 }
 // 打开春节备货

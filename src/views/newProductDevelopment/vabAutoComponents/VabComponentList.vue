@@ -1,7 +1,7 @@
 <template>
   <!-- 零件清单 -->
   <div style="flex-grow: 2; width: 100%">
-    <vab-query-form style="margin-top: 0">
+    <vab-query-form v-if="isEditable" style="margin-top: 0">
       <vab-query-form-left-panel>
         <el-button type="primary" @click="addComponentHandler">新增零件</el-button>
         <el-button type="primary" @click="addSampleHandler">拿样并新增</el-button>
@@ -495,6 +495,10 @@ defineComponent({
 
 const table1Loading = defineModel('table1Loading', { type: Boolean, default: false })
 
+const route = useRoute()
+// 使用 computed 提供响应式，并且使用更清晰的命名
+const isEditable = computed(() => route.query.button === '1')
+
 const props = defineProps<{
   progressId: string
   trialCalculationData: (() => Promise<void>) | undefined
@@ -505,7 +509,6 @@ const wangEditorVisible = ref<boolean>(false)
 const progressLog = ref<string>('')
 const wangEditorTitle = ref<string>('')
 const classify = ref<string>('')
-const route = useRoute()
 const createComponentVisible = ref<boolean>(false) //添加零件显示与否
 const createConsumableVisible = ref<boolean>(false) //添加耗材显示与否
 const remarkVisible = ref<boolean>(false)

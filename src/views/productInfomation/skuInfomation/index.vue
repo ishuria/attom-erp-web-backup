@@ -202,8 +202,8 @@
                 <el-dropdown-item v-if="hasPermission({ permission: [SkuPermission.SKU_COPY] })" @click="handleCopySku(row)">
                   <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <el-link type="primary" underline="never" @click.stop="showPackingTimeDetails(row)">打包工时</el-link>
+                <el-dropdown-item @click.stop="showPackingTimeDetails(row)">
+                  <el-link type="primary" underline="never">打包工时</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
                   <el-link type="primary" underline="never">交期查看</el-link>

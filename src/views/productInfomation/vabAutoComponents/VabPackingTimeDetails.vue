@@ -50,7 +50,7 @@
             :cell-style="{ textAlign: 'center' }"
             :data="list"
             :header-cell-style="{ textAlign: 'center' }"
-            max-height="800"
+            max-height="700"
             stripe
           >
             <el-table-column label="PO" min-width="100" prop="po" />
