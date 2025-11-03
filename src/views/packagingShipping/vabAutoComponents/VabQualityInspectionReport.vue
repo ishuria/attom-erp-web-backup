@@ -294,17 +294,17 @@
             <span style="margin-left: 4px; color: var(--el-color-danger)">*</span>
           </template>
           <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
-            <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell">
+            <div v-for="(item, index) in basePictureImgList" :key="item.id || `base-${item.sort}`" class="image-cell">
               <!-- 有图片时显示 -->
               <div v-if="item.imgUrl" class="image-preview">
                 <img alt="" :src="item.imgUrl" />
                 <div class="image-actions">
                   <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
-                  <el-icon @click="handleImageRemove(item.id, index, 0)"><delete /></el-icon>
+                  <el-icon @click="handleBaseImageRemove(item.id, item.sort)"><delete /></el-icon>
                 </div>
               </div>
               <!-- 无图片时显示 -->
-              <div v-else class="upload-placeholder" @click="showUploadDialog(0, index)">
+              <div v-else class="upload-placeholder" @click="showBaseUploadDialog(item.sort)">
                 <el-icon><plus /></el-icon>
               </div>
               <div class="image-text">
@@ -669,23 +669,35 @@ const uploadImage = async (file: File) => {
     uploadImgForm.append('file', file)
     uploadImgForm.append('reportId', String(reportId.value))
     uploadImgForm.append('type', String(imageUploadType.value))
+    uploadImgForm.append('sort', String(imageUploadIndex.value))
 
     const { data } = await uploadPackageInspectionImage(uploadImgForm)
     if (data) {
       switch (imageUploadType.value) {
         case 0: {
-          basePictureImgList.value[imageUploadIndex.value].imgUrl = data.imgUrl
-          basePictureImgList.value[imageUploadIndex.value].id = data.id
-
+          // 通过 sort 查找对应的项目并更新
+          const item = basePictureImgList.value.find((item) => item.sort === imageUploadIndex.value)
+          if (item) {
+            item.imgUrl = data.imgUrl
+            item.id = data.id
+          }
           break
         }
         case 1: {
-          componentDetailImgList.value.push(data)
+          // 零件细节图片：使用上传时计算的 sort（已在 imageUploadIndex.value 中）
+          componentDetailImgList.value.push({
+            ...data,
+            sort: imageUploadIndex.value, // 使用上传时计算的 sort
+          } as any)
 
           break
         }
         case 2: {
-          finishedImgList.value.push(data)
+          // 成品组装图片：使用上传时计算的 sort（已在 imageUploadIndex.value 中）
+          finishedImgList.value.push({
+            ...data,
+            sort: imageUploadIndex.value, // 使用上传时计算的 sort
+          } as any)
 
           break
         }
@@ -700,25 +712,46 @@ const uploadImage = async (file: File) => {
     console.error(error)
   }
 }
+// 删除基础图片 - 使用 sort 查找
+const handleBaseImageRemove = async (id: number, sort: number) => {
+  try {
+    $baseConfirm('确定删除图片吗？', null, async () => {
+      const { data } = await deletePackageInspectionImage({ id })
+      if (data) {
+        const item = basePictureImgList.value.find((item) => item.sort === sort)
+        if (item) {
+          item.imgUrl = ''
+          $baseMessage('图片删除成功！', 'success')
+        }
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const handleImageRemove = async (id: number, index: number, type: number) => {
   try {
     $baseConfirm('确定删除图片吗？', null, async () => {
       const { data } = await deletePackageInspectionImage({ id })
       if (data) {
         switch (type) {
-          case 0: {
-            basePictureImgList.value[index].imgUrl = ''
-            $baseMessage('图片删除成功！', 'success')
-            break
-          }
           case 1: {
-            componentDetailImgList.value.splice(index, 1)
-            $baseMessage('图片删除成功！', 'success')
+            // 通过 id 查找并删除，不依赖 index（因为后端可能按 sort 排序）
+            const itemIndex = componentDetailImgList.value.findIndex((item) => item.id === id)
+            if (itemIndex !== -1) {
+              componentDetailImgList.value.splice(itemIndex, 1)
+              $baseMessage('图片删除成功！', 'success')
+            }
             break
           }
           case 2: {
-            finishedImgList.value.splice(index, 1)
-            $baseMessage('图片删除成功！', 'success')
+            // 通过 id 查找并删除，不依赖 index（因为后端可能按 sort 排序）
+            const itemIndex = finishedImgList.value.findIndex((item) => item.id === id)
+            if (itemIndex !== -1) {
+              finishedImgList.value.splice(itemIndex, 1)
+              $baseMessage('图片删除成功！', 'success')
+            }
             break
           }
         }
@@ -728,11 +761,30 @@ const handleImageRemove = async (id: number, index: number, type: number) => {
     console.error(error)
   }
 }
+// 打开基础图片上传弹窗 - 使用 sort
+const showBaseUploadDialog = (sort: number) => {
+  imageUploadVisible.value = true
+  imageUploadType.value = 0
+  imageUploadIndex.value = sort
+}
+
 // 打开上传图片弹窗
 const showUploadDialog = (type: number, index: number) => {
   imageUploadVisible.value = true
   imageUploadType.value = type
-  imageUploadIndex.value = index
+  if (type === 1) {
+    // 零件细节图片：sort 依次递增，计算当前最大 sort + 1
+    const maxSort =
+      componentDetailImgList.value.length > 0 ? Math.max(...componentDetailImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
+    imageUploadIndex.value = maxSort + 1
+  } else if (type === 2) {
+    // 成品组装图片：sort 依次递增，计算当前最大 sort + 1
+    const maxSort = finishedImgList.value.length > 0 ? Math.max(...finishedImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
+    imageUploadIndex.value = maxSort + 1
+  } else {
+    // 基础图片：使用传入的 index（即 sort）
+    imageUploadIndex.value = index
+  }
 }
 const validate = async () => {
   try {
@@ -934,14 +986,14 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 
 // 重置所有数据
 const resetAllData = () => {
-  // 重置图片列表 - 保持标题和描述信息
+  // 重置图片列表 - 保持标题和描述信息，并添加 sort 字段
   basePictureImgList.value = [
-    { title: '产品零件图', desc: '展示所有零件及对应数量' },
-    { title: '产品包装图', desc: '展示包装完后的外包装' },
-    { title: '包装测量图(长)', desc: '展示实际测量尺的刻度' },
-    { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度' },
-    { title: '包装测量图(高)', desc: '展示实际测量尺的刻度' },
-    { title: '包装测量图(重量)', desc: '展示出称的读数' },
+    { title: '产品零件图', desc: '展示所有零件及对应数量', sort: 0 },
+    { title: '产品包装图', desc: '展示包装完后的外包装', sort: 1 },
+    { title: '包装测量图(长)', desc: '展示实际测量尺的刻度', sort: 2 },
+    { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度', sort: 3 },
+    { title: '包装测量图(高)', desc: '展示实际测量尺的刻度', sort: 4 },
+    { title: '包装测量图(重量)', desc: '展示出称的读数', sort: 5 },
   ]
   componentDetailImgList.value = []
   finishedImgList.value = []
@@ -1007,31 +1059,46 @@ const fetchData = async () => {
       }
     }
 
-    // 处理图片列表
+    // 处理图片列表 - 按 sort 字段匹配后端数据
     if (data.basePictureImgList && data.basePictureImgList.length > 0) {
-      basePictureImgList.value = basePictureImgList.value.map((localItem, index) => {
-        const serverItem = data.basePictureImgList[index]
+      const serverList = data.basePictureImgList as any[]
+      basePictureImgList.value = basePictureImgList.value.map((localItem: any) => {
+        // 通过 sort 字段查找对应的后端数据
+        const serverItem = serverList.find((item: any) => (item as any).sort === localItem.sort)
+
         if (serverItem) {
+          // 找到匹配的后端数据，保留本地的 title 和 desc，更新图片和 id
           return {
-            ...localItem, // 保持标题和描述
-            imgUrl: serverItem.imgUrl || '',
-            id: serverItem.id || '',
+            title: localItem.title, // 保留本地的标题
+            desc: localItem.desc, // 保留本地的描述
+            imgUrl: (serverItem as any).imgUrl || '',
+            id: (serverItem as any).id || '',
+            sort: (serverItem as any).sort ?? localItem.sort, // 优先使用后端的 sort
           }
         }
-        return localItem
+
+        // 如果没有找到匹配的后端数据，保留本地数据
+        return {
+          ...localItem,
+          sort: localItem.sort,
+        }
       })
     }
 
+    // 加载零件细节图片 - 后端已按 sort 排序
     componentDetailImgList.value =
       data.componentPictureImgList?.map((item: any) => ({
         imgUrl: item.imgUrl || '',
         id: item.id || '',
+        sort: (item as any).sort ?? 0, // 保存 sort 字段
       })) || []
 
+    // 加载成品组装图片 - 后端已按 sort 排序
     finishedImgList.value =
       data.assemblyDrawingPictureImgList?.map((item: any) => ({
         imgUrl: item.imgUrl || '',
         id: item.id || '',
+        sort: (item as any).sort ?? 0, // 保存 sort 字段
       })) || []
 
     // 设置组件列表和报告详情

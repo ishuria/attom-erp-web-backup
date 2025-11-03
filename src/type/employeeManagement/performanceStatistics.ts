@@ -246,6 +246,7 @@ export interface IGetUserAttendanceList {
   // 总奖金
   totalBonus?: number
   noAssessment?: number
+  procurementBonusCrossMonth?: number
 }
 
 export interface IAddAdjustDetailReq {

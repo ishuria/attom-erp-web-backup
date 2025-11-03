@@ -945,6 +945,7 @@ const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
   if (row.artDesignPicture != null) totalBonus += row.artDesignPicture
   if (row.artDesignLongTime != null) totalBonus += row.artDesignLongTime
   if (row.developmentDesign != null) totalBonus += row.developmentDesign
+  if (row.procurementBonusCrossMonth != null) totalBonus += row.procurementBonusCrossMonth
   return totalBonus.toFixed(2)
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
