@@ -111,7 +111,7 @@
             <el-date-picker
               :key="datePickerKey"
               v-model="date"
-              :disabled-date="disabledDate"
+              :disabled-date="currentRoleCode === ROLE_BOSS_CODE ? undefined : disabledDate"
               :editable="false"
               end-placeholder="结束日期"
               range-separator="至"
@@ -232,6 +232,8 @@
 import { ArrowDown, Check, Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import type { FormInstance } from 'element-plus'
+import { ROLE_BOSS_CODE } from '~/src/const/role'
+import { useAclStore } from '~/src/store/modules/acl'
 import {
   getMorkPackageList,
   getPackageTimeDay,
@@ -265,7 +267,7 @@ const disabledDate = (time: Date) => {
   // 不能选择早于上月的1号，不能选择晚于今天的日期
   return date.isBefore(lastMonth, 'day') || date.isAfter(now, 'day')
 }
-
+const currentRoleCode = useAclStore().getRole[0]
 // 修改可见
 const modifyVisible = ref<boolean>(false)
 const modifyForm = reactive<any>({
