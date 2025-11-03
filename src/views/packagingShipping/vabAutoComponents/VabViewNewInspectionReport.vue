@@ -1,13 +1,16 @@
 <template>
   <!-- 质检报告 -->
-  <vab-dialog v-model="visible" class="custom-dialog" :draggable="false" title="新品质检报告" top="3vh" width="50%" @close="closeQualityInspection">
-    <el-form
-      :inline="true"
-      :model="qualityInspectionForm"
-      require-asterisk-position="right"
-      style="margin-right: 20px; margin-left: 20px"
-    >
-      <el-divider style="margin-top: 0"><span style="font-size: var(--el-font-size-base);">基础信息</span></el-divider>
+  <vab-dialog
+    v-model="visible"
+    class="custom-dialog"
+    :draggable="false"
+    title="新品质检报告"
+    top="3vh"
+    width="50%"
+    @close="closeQualityInspection"
+  >
+    <el-form :inline="true" :model="qualityInspectionForm" require-asterisk-position="right" style="margin-right: 20px; margin-left: 20px">
+      <el-divider style="margin-top: 0"><span style="font-size: var(--el-font-size-base)">基础信息</span></el-divider>
       <el-row justify="space-between" style="width: 100%">
         <el-col :span="8">
           <el-form-item label="日期" style="min-width: 95%">
@@ -20,9 +23,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="PO" style="min-width: 100%;">
-            <el-select 
-              v-model="qualityInspectionForm.poList"   
+          <el-form-item label="PO" style="min-width: 100%">
+            <el-select
+              v-model="qualityInspectionForm.poList"
               collapse-tags
               collapse-tags-tooltip
               disabled
@@ -40,12 +43,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="16">
-          <el-form-item label="产品名称" prop="productName" style="min-width: 100%;">
+          <el-form-item label="产品名称" prop="productName" style="min-width: 100%">
             <el-input v-model="qualityInspectionForm.productName" disabled />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-divider style="margin-top: 10px"><span style="font-size: var(--el-font-size-base);">信息完善</span></el-divider>
+      <el-divider style="margin-top: 10px"><span style="font-size: var(--el-font-size-base)">信息完善</span></el-divider>
       <el-row justify="space-between" style="width: 100%">
         <el-col :span="16">
           <el-form-item inline label="包装尺寸" prop="packingSize" style="min-width: 95%">
@@ -63,7 +66,7 @@
               </el-input>
               <span style="display: inline-block; font-size: 1.5em; text-align: center">×</span>
               <el-input v-model.trim="qualityInspectionForm.packageHeight" disabled placeholder="高" style="flex: 1; margin-right: 0">
-                <template #suffix >
+                <template #suffix>
                   <el-icon class="el-input__icon" style="font-style: normal">cm</el-icon>
                 </template>
               </el-input>
@@ -73,7 +76,7 @@
         <el-col :span="8">
           <el-form-item label="包装重量" prop="packageWeight" style="min-width: 100%">
             <el-input v-model.trim="qualityInspectionForm.packageWeight" disabled placeholder="克">
-              <template #suffix >
+              <template #suffix>
                 <el-icon class="el-input__icon" style="font-style: normal">g</el-icon>
               </template>
             </el-input>
@@ -81,21 +84,23 @@
         </el-col>
       </el-row>
       <el-form-item label="" prop="materialComposition" style="margin-bottom: 10px">
-        <template #label>
-          材质构成（用于报关，需要精确填写）
-        </template>
+        <template #label>材质构成（用于报关，需要精确填写）</template>
       </el-form-item>
-      <el-table 
-        border 
+      <el-table
+        border
         :cell-class-name="clearPadding"
-        :cell-style="componentListCellStyle" 
+        :cell-style="componentListCellStyle"
         :data="componentList"
         :header-cell-style="{ textAlign: 'center' }"
         stripe
       >
-        <el-table-column label="图片" prop="componentImgUrl" width="75" >        
+        <el-table-column label="图片" prop="componentImgUrl" width="75">
           <template #default="{ row }">
-            <el-image :src="row.componentImgUrl" style="display: block; width: 75px; height: 75px" @click="showPreviewImage(row.componentImgUrl)">
+            <el-image
+              :src="row.componentImgUrl"
+              style="display: block; width: 75px; height: 75px"
+              @click="showPreviewImage(row.componentImgUrl)"
+            >
               <template #error><el-icon /></template>
             </el-image>
           </template>
@@ -105,12 +110,12 @@
         <el-table-column label="材质1重量(g)" prop="weight1" />
         <el-table-column label="材质2名称" prop="material2" :width="flexColumnWidth(componentList, '材质2名称', 'material2')" />
         <el-table-column label="材质2重量(g)" prop="weight2" />
-        <el-table-column label="材质3名称" prop="material3" :width="flexColumnWidth(componentList, '材质3名称', 'material3')"/>
+        <el-table-column label="材质3名称" prop="material3" :width="flexColumnWidth(componentList, '材质3名称', 'material3')" />
         <el-table-column label="材质3重量(g)" prop="weight3" />
-        <el-table-column label="材质4名称" prop="material4" :width="flexColumnWidth(componentList, '材质4名称', 'material4')"/>
+        <el-table-column label="材质4名称" prop="material4" :width="flexColumnWidth(componentList, '材质4名称', 'material4')" />
         <el-table-column label="材质4重量(g)" prop="weight4" />
       </el-table>
-      <el-divider style="margin-top: 30px"><span style="font-size: var(--el-font-size-base);">质检结果</span></el-divider>
+      <el-divider style="margin-top: 30px"><span style="font-size: var(--el-font-size-base)">质检结果</span></el-divider>
       <!-- <vab-query-form>
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showPrecautions">修改SKU质检项</el-button>
@@ -134,16 +139,11 @@
         <el-table-column label="备注" min-width="150" prop="remark" />
       </el-table>
     </el-form>
-    
-    <el-form 
-      label-position="left" 
-      label-width="auto" 
-      require-asterisk-position="right" 
-      style="margin: 20px 20px 0 20px"
-    >
+
+    <el-form label-position="left" label-width="auto" require-asterisk-position="right" style="margin: 20px 20px 0 20px">
       <el-form-item label="基础图片" style="margin-bottom: 50px" validate-position="right">
         <div style="display: flex; flex-wrap: wrap; gap: 40px 20px">
-          <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell" >
+          <div v-for="(item, index) in basePictureImgList" :key="index" class="image-cell">
             <!-- 有图片时显示 -->
             <div v-if="item.imgUrl" class="image-preview">
               <img alt="" :src="item.imgUrl" />
@@ -161,13 +161,16 @@
       <el-form-item label="零件细节">
         <template #label>
           <el-tooltip content="" effect="dark" placement="top">
-            <div class="questionIcon">零件细节<el-icon><question-filled /></el-icon></div>
+            <div class="questionIcon">
+              零件细节
+              <el-icon><question-filled /></el-icon>
+            </div>
             <template #content>
               <div class="custom-tooltip">展示产品局部细节，重要技术参数细节(尺寸/厚度/重量/粘接处/焊接处/贴边处/表面处理等)</div>
             </template>
           </el-tooltip>
         </template>
-        <div style="display: flex; flex-wrap: wrap;">
+        <div style="display: flex; flex-wrap: wrap">
           <!-- 图片预览部分 -->
           <div v-for="(item, index) in componentDetailImgList" :key="index" class="image-cell" style="margin-right: 20px">
             <div v-if="item.imgUrl" class="image-preview">
@@ -182,13 +185,16 @@
       <el-form-item label="成品组装图">
         <template #label>
           <el-tooltip content="" effect="dark" placement="top">
-            <div class="questionIcon">成品组装图<el-icon><question-filled /></el-icon></div>
+            <div class="questionIcon">
+              成品组装图
+              <el-icon><question-filled /></el-icon>
+            </div>
             <template #content>
               <div class="custom-tooltip">展示产品组装后的图片，多角度拍摄(包含整体正面、侧面、背面、顶部等)</div>
             </template>
           </el-tooltip>
         </template>
-        <div style="display: flex; flex-wrap: wrap;">
+        <div style="display: flex; flex-wrap: wrap">
           <!-- 图片预览部分 -->
           <div v-for="(item, index) in finishedImgList" :key="index" class="image-cell" style="margin-right: 20px">
             <div v-if="item.imgUrl" class="image-preview">
@@ -200,29 +206,41 @@
           </div>
         </div>
       </el-form-item>
-      <el-form-item label="备注" prop="remark" >
+      <el-form-item label="备注" prop="remark">
         <template #label>
           <span style="margin-right: 6px">备注</span>
         </template>
-        <el-input v-model="qualityInspectionForm.remark" disabled placeholder="请输入备注" resize="none" :rows="2" type="textarea"/>
+        <el-input v-model="qualityInspectionForm.remark" disabled placeholder="请输入备注" resize="none" :rows="2" type="textarea" />
       </el-form-item>
-      <el-form-item label="质检打包数" prop="packageCount" >
-        <el-input v-model.trim="qualityInspectionForm.packageCount" clearable disabled placeholder="产品经理打包套数" style="min-width: 100%"/>
+      <el-form-item label="质检打包数" prop="packageCount">
+        <el-input
+          v-model.trim="qualityInspectionForm.packageCount"
+          clearable
+          disabled
+          placeholder="产品经理打包套数"
+          style="min-width: 100%"
+        />
       </el-form-item>
-      <el-form-item label="结论" prop="status" >
+      <el-form-item label="结论" prop="status">
         <el-radio-group v-model="qualityInspectionForm.status" disabled>
-          <el-radio :value="1" >通过</el-radio>
-          <el-radio :value="0" >不通过</el-radio>
+          <el-radio :value="1">通过</el-radio>
+          <el-radio :value="0">不通过</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item v-if="qualityInspectionForm.status === 0" label="原因" prop="reason"  >
-        <el-input v-model="qualityInspectionForm.reason"  clearable disabled placeholder="质检不通过的原因" style="min-width: 100%"/>
+      <el-form-item v-if="qualityInspectionForm.status === 0" label="原因" prop="reason">
+        <el-input v-model="qualityInspectionForm.reason" clearable disabled placeholder="质检不通过的原因" style="min-width: 100%" />
       </el-form-item>
-      <el-form-item v-if="qualityInspectionForm.status === 0" label="处理方式" prop="processingMethod" >
-        <el-input v-model="qualityInspectionForm.processingMethod" clearable disabled placeholder="整批售后、打包全检、部分售后等"  style="min-width: 100%"/>
+      <el-form-item v-if="qualityInspectionForm.status === 0" label="处理方式" prop="processingMethod">
+        <el-input
+          v-model="qualityInspectionForm.processingMethod"
+          clearable
+          disabled
+          placeholder="整批售后、打包全检、部分售后等"
+          style="min-width: 100%"
+        />
       </el-form-item>
     </el-form>
-    
+
     <template #footer>
       <!-- <div style="margin-right: 20px">
         <el-button type="warning" @click="closeQualityInspection">取消</el-button>
@@ -255,44 +273,100 @@ const visible = computed({
   },
   set(value) {
     emit('update:modelValue', value)
-  }
+  },
 })
-watch(() => props.modelValue, (value) => {
-  if (value) {
-    initData()
+watch(
+  () => props.modelValue,
+  (value) => {
+    if (value) {
+      initData()
+    }
   }
-})
+)
 const initData = () => {
+  // 先清空旧数据，避免显示上一个报告的图片
+  basePictureImgList.value = [
+    { title: '产品零件图', desc: '展示所有零件及对应数量', sort: 0 },
+    { title: '产品包装图', desc: '展示包装完后的外包装', sort: 1 },
+    { title: '包装测量图(长)', desc: '展示实际测量尺的刻度', sort: 2 },
+    { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度', sort: 3 },
+    { title: '包装测量图(高)', desc: '展示实际测量尺的刻度', sort: 4 },
+    { title: '包装测量图(重量)', desc: '展示出称的读数', sort: 5 },
+  ]
+  componentDetailImgList.value = []
+  finishedImgList.value = []
+
   // console.log(props.reportData)
   Object.assign(qualityInspectionForm, props.reportData)
   componentList.value = props.reportData.componentList
   reportDetailList.value = props.reportData.reportDetailList
-  
+
   qualityInspectionForm.date = qualityInspectionForm.date ? qualityInspectionForm.date.split(' ')[0] : ''
   qualityInspectionForm.poList = qualityInspectionForm.poList[0].split(',')
-  
-  // 处理基础图片列表
-   if (qualityInspectionForm.basePictureImgList && qualityInspectionForm.basePictureImgList.length > 0) {
-    basePictureImgList.value = qualityInspectionForm.basePictureImgList.map((item: any) => ({
-      imgUrl: item.imgUrl || '',
-      id: item.id || ''
-    }))
+
+  // 处理基础图片列表 - 按 sort 字段匹配，保留本地 title 和 desc
+  if (qualityInspectionForm.basePictureImgList && qualityInspectionForm.basePictureImgList.length > 0) {
+    const serverList = qualityInspectionForm.basePictureImgList as any[]
+
+    // 检查后端数据是否有 sort（非 null）
+    const hasSort = serverList.some((item: any) => item.sort !== null && item.sort !== undefined)
+
+    if (hasSort) {
+      // 后端有 sort，按 sort 匹配
+      basePictureImgList.value = basePictureImgList.value.map((localItem: any) => {
+        const sort = localItem.sort ?? 0
+        const serverItem = serverList.find((item: any) => (item as any).sort === sort)
+
+        if (serverItem) {
+          // 找到匹配的后端数据，保留本地的 title 和 desc
+          return {
+            title: localItem.title,
+            desc: localItem.desc,
+            imgUrl: (serverItem as any).imgUrl || '',
+            id: (serverItem as any).id || '',
+            sort: (serverItem as any).sort ?? sort,
+          }
+        }
+
+        // 如果没有找到匹配的后端数据，保留本地数据
+        return {
+          ...localItem,
+          sort: sort,
+        }
+      })
+    } else {
+      // 后端 sort 为 null，按 serverList 顺序返回，补充本地 title 和 desc
+      basePictureImgList.value = serverList.map((serverItem: any, index: number) => {
+        const localItem = basePictureImgList.value[index] || basePictureImgList.value[basePictureImgList.value.length - 1]
+        return {
+          title: localItem?.title || '',
+          desc: localItem?.desc || '',
+          imgUrl: (serverItem as any).imgUrl || '',
+          id: (serverItem as any).id || '',
+          sort: index, // 按顺序设置 sort
+        }
+      })
+    }
   }
-  
+
   // 处理零件细节图片列表
   if (qualityInspectionForm.componentPictureImgList && qualityInspectionForm.componentPictureImgList.length > 0) {
     componentDetailImgList.value = qualityInspectionForm.componentPictureImgList.map((item: any) => ({
       imgUrl: item.imgUrl || '',
-      id: item.id || ''
+      id: item.id || '',
     }))
+  } else {
+    componentDetailImgList.value = []
   }
-  
+
   // 处理成品组装图片列表
   if (qualityInspectionForm.assemblyDrawingPictureImgList && qualityInspectionForm.assemblyDrawingPictureImgList.length > 0) {
     finishedImgList.value = qualityInspectionForm.assemblyDrawingPictureImgList.map((item: any) => ({
       imgUrl: item.imgUrl || '',
-      id: item.id || ''
+      id: item.id || '',
     }))
+  } else {
+    finishedImgList.value = []
   }
 }
 
@@ -301,12 +375,12 @@ const imagePreviewList = ref<string[]>([])
 const componentList = ref<IComponentList[]>([])
 const reportDetailList = ref<ReportDetailList[]>([])
 const basePictureImgList = ref<any[]>([
-  { title: '产品零件图', desc: '展示所有零件及对应数量' },
-  { title: '产品包装图', desc: '展示包装完后的外包装' },
-  { title: '包装测量图(长)', desc: '展示实际测量尺的刻度' },
-  { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度' },
-  { title: '包装测量图(高)', desc: '展示实际测量尺的刻度' },
-  { title: '包装测量图(重量)', desc: '展示出称的读数' }
+  { title: '产品零件图', desc: '展示所有零件及对应数量', sort: 0 },
+  { title: '产品包装图', desc: '展示包装完后的外包装', sort: 1 },
+  { title: '包装测量图(长)', desc: '展示实际测量尺的刻度', sort: 2 },
+  { title: '包装测量图(宽)', desc: '展示实际测量尺的刻度', sort: 3 },
+  { title: '包装测量图(高)', desc: '展示实际测量尺的刻度', sort: 4 },
+  { title: '包装测量图(重量)', desc: '展示出称的读数', sort: 5 },
 ])
 const componentDetailImgList = ref<PictureImgList[]>([])
 const finishedImgList = ref<PictureImgList[]>([])
@@ -362,20 +436,20 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
 .image-cell {
   width: 135px;
   height: 135px;
-  
+
   // 有图片时的样式
   .image-preview {
     position: relative;
     width: 100%;
     height: 100%;
-    
+
     img {
       width: 100%;
       height: 100%;
       cursor: pointer;
       object-fit: fill;
     }
-    
+
     .image-actions {
       position: absolute;
       top: 0;
@@ -389,21 +463,21 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
       background: rgba(0, 0, 0, 0);
       opacity: 0;
       transition: all 0.3s ease;
-      
+
       .el-icon {
         font-size: 20px;
         color: #fff;
         cursor: pointer;
-        
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-    
+
     &:hover .image-actions {
-      background: rgba(0, 0, 0, 0.45);  // 悬停时的背景色
-      opacity: 1;  // 悬停时完全显示
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
     }
   }
   // 没图片时的样式
@@ -415,14 +489,14 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
     height: 100%;
     cursor: pointer;
     border: 1px dashed var(--el-border-color);
-    
+
     &:hover {
       border-color: var(--el-color-primary);
       .el-icon {
         color: var(--el-color-primary);
       }
     }
-    
+
     .el-icon {
       font-size: 20px;
       color: #999;
@@ -447,7 +521,7 @@ const qualityInspectionCellStyle = (data: { row: any; column: any; rowIndex: num
   }
   .desc {
     margin-top: 1px;
-    font-size: 12px; 
+    font-size: 12px;
     color: #999;
   }
 }
