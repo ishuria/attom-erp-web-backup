@@ -339,7 +339,7 @@
       </el-col>
     </el-row>
     <!-- 低动销仓储费 -->
-    <el-row class="row-spacing" :gutter="20">
+    <el-row v-if="ableViewLowVolumeProductStorageFeeCard" class="row-spacing" :gutter="20">
       <el-col :lg="15" :md="24" :sm="24" :xl="15" :xs="24">
         <low-volume-product-storage-fees
           :current-page="lowStorageFeeQueryForm.pageNo"
@@ -363,12 +363,7 @@
           @sort-change="handleSortChange"
         >
           <template #select>
-            <el-select
-              v-model="selectOperationUserId"
-              placeholder="请选择运营人员"
-              style="width: 5em"
-              @change="fetchLowVolumeProductStorageFee"
-            >
+            <el-select v-model="selectOperationUserId" style="width: 5em" @change="fetchLowVolumeProductStorageFee">
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </template>
@@ -395,7 +390,6 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
@@ -511,8 +505,12 @@ const ableViewTop50ProductLossCard =
 const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
-  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
+  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
+  currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
+
 const type = ref<number>(0)
 const selectOption = [
   { label: '站点', value: 0 },
@@ -1089,9 +1087,14 @@ const lowVolumeProductStorageFeeList = ref<ILowVolumeProductStorageFee[]>([])
 const selectOperationUserId = ref<number>(-1)
 const operateUserList = ref<{ id: number; label: string }[]>([])
 const fetchOperateUserList = async () => {
-  const { data } = await getDistributionOptionUserList()
+  const { data } = await getFrontPageProductManagerSelectOption({ type: 2 })
   operateUserList.value = data
-  operateUserList.value.unshift({ id: -1, label: '全部' })
+  if (operateUserList.value.length > 0) {
+    selectOperationUserId.value = operateUserList.value.find((item) => item.label.includes(myName))?.id || -1
+  }
+  if (!selectOperationUserId.value) {
+    selectOperationUserId.value = operateUserList.value[0].id || -1
+  }
 }
 const lowStorageFeeQueryForm = reactive<any>({
   pageNo: 1,
@@ -1219,8 +1222,8 @@ onBeforeMount(async () => {
     fetchJobLevelCommission()
   }
   if (ableViewLowVolumeProductStorageFeeCard) {
-    fetchOperateUserList()
-    fetchLowVolumeProductStorageFee()
+    await fetchOperateUserList()
+    await fetchLowVolumeProductStorageFee()
   }
   if (ableViewAttendanceOverviewCard) {
     fetchAttendanceOverview()
