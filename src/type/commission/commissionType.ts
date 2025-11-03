@@ -71,6 +71,7 @@ export interface IUpdateCommissionProductTypeReq {
   productManagerProportion: number | null
   proportion: number | null
   yunzhouCount: number | null
+  yunzhouNoBgCount?: number
   defaultOem?: number
   defaultAssessmentNumber?: number
   taxRefundBonusRatio?: number

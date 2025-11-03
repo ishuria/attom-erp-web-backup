@@ -259,6 +259,18 @@
                   <el-option label="不报关" :value="1" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -504,6 +516,18 @@
                   <el-option label="全部报关状态" :value="-1" />
                   <el-option label="报关" :value="0" />
                   <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -752,6 +776,18 @@
                   <el-option label="全部报关状态" :value="-1" />
                   <el-option label="报关" :value="0" />
                   <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1005,6 +1041,18 @@
                   <el-option label="全部报关状态" :value="-1" />
                   <el-option label="报关" :value="0" />
                   <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1262,6 +1310,18 @@
                   <el-option label="不报关" :value="1" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1517,6 +1577,18 @@
                   <el-option label="不报关" :value="1" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -1660,6 +1732,18 @@
                   <el-option label="全部报关状态" :value="-1" />
                   <el-option label="报关" :value="0" />
                   <el-option label="不报关" :value="1" />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="">
+                <el-select
+                  v-model="queryForm.procurementManager"
+                  clearable
+                  placeholder="采购负责人筛选"
+                  style="width: 150px"
+                  value-key="userId"
+                  @change="queryData"
+                >
+                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -2085,6 +2169,7 @@ import {
   updateComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
+import { getUserProcurementName } from '/@/api/devlocal/user'
 import { ROLE_ACCOUNTANT_CODE, ROLE_BOSS_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
 import PoPermission from '/@/permissions/po'
 import { useAclStore } from '/@/store/modules/acl'
@@ -3292,13 +3377,15 @@ const handleCalculateWidth = (item: any) => {
     }
   }
 }
-
+const procurementManagerOptions = ref<any>([])
+const deraltProcurementManager = { userId: -1, userName: '全部采购负责人' }
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 50,
   keyWord: '',
   status: 0, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
   customsStatus: -1,
+  procurementManager: deraltProcurementManager,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -3337,7 +3424,15 @@ const queryData = () => {
 const fetchData = async () => {
   try {
     listLoading.value = true
-    const { data } = await getPoList(queryForm)
+    const params = {
+      keyWord: queryForm.keyWord,
+      status: queryForm.status,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+      customsStatus: queryForm.customsStatus,
+      procurementManagerId: queryForm.procurementManager.userId,
+    }
+    const { data } = await getPoList(params)
     if (data) {
       listLoading.value = false
       total.value = data.total
@@ -3490,8 +3585,19 @@ const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
     }, 50)
   }
 }
+// 获取采购负责人列表
+const queryProcurementManagerData = async () => {
+  procurementManagerOptions.value = []
+  const { data } = await getUserProcurementName({
+    name: '',
+  })
+  data.unshift(deraltProcurementManager)
+  procurementManagerOptions.value = data
+}
+
 onMounted(() => {
   initColumnConfig()
+  queryProcurementManagerData()
   nextTick(() => {
     const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
     const scrollBarPosition = savedStatus.scrollTop
@@ -3540,6 +3646,7 @@ onMounted(() => {
     // }, 50)
   })
 })
+
 onUnmounted(() => {
   let length = tabsStore.getVisitedRoutes.length
   if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {

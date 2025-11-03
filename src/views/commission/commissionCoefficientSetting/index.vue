@@ -210,12 +210,20 @@
             </el-table-column>
           </el-table-column>
           <el-table-column label="产品采购类型(供应链)">
-            <el-table-column label="云舟计件" prop="yunzhouCount">
+            <el-table-column label="云舟报关计件" prop="yunzhouCount">
               <template #default="{ row }">
                 <div class="none">
                   <el-input v-model="row.yunzhouCount" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
                 </div>
                 <span>{{ row.yunzhouCount }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="云舟不报关计件" prop="yunzhouNoBgCount">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input v-model="row.yunzhouNoBgCount" @blur="clickCancel2($event, row)" @keyup.enter="clickCancel2($event, row)" />
+                </div>
+                <span>{{ row.yunzhouNoBgCount }}</span>
               </template>
             </el-table-column>
             <el-table-column label="埃托姆计件" prop="aiTuoMCount">
@@ -457,6 +465,7 @@ const clickCancel2 = async (event: any, value: any) => {
         productDesignProportion: Number(value.productDesignProportion) / 100,
         delivery: Number(value.delivery) / 100,
         yunzhouCount: value.yunzhouCount,
+        yunzhouNoBgCount: value.yunzhouNoBgCount,
         aiTuoMCount: value.aiTuoMCount,
         attomCount: value.attomCount,
         proportion: Number(value.proportion) / 100,
