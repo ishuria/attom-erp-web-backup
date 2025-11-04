@@ -179,7 +179,7 @@ export default {
      * @param {function} callback 若不使用Promise,可以使用此参数指定MessageBox关闭后的回调
      */
 
-    const $baseDiyAlert = (content: string | VNode, title = '温馨提示',confirmButtonText = '确定', callback?: any) => {
+    const $baseDiyAlert = (content: string | VNode, title = '温馨提示', confirmButtonText: string = '确定', callback?: any) => {
       if (title && typeof title == 'function') {
         callback = title
         title = '温馨提示'
@@ -187,7 +187,7 @@ export default {
       ElMessageBox.alert(content, title, {
         confirmButtonText: confirmButtonText,
         dangerouslyUseHTMLString: true, // 此处可能引起跨站攻击，建议配置为false
-        draggable: true,
+        draggable: false,
         callback: () => {
           if (callback) callback()
         },

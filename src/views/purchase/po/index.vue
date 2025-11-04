@@ -261,14 +261,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -520,14 +520,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -780,14 +780,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1045,14 +1045,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1312,14 +1312,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1579,14 +1579,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -1736,14 +1736,14 @@
               </el-form-item>
               <el-form-item label="">
                 <el-select
-                  v-model="queryForm.procurementManager"
+                  v-model="queryForm.publisher"
                   clearable
-                  placeholder="采购负责人筛选"
+                  placeholder="发布人筛选"
                   style="width: 150px"
                   value-key="userId"
                   @change="queryData"
                 >
-                  <el-option v-for="item in procurementManagerOptions" :key="item.userId" :label="item.userName" :value="item" />
+                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -2159,6 +2159,7 @@ import {
   generateRemittance,
   getComponentPayRecord,
   getPoList,
+  getPoPublisherList,
   getPurchaseBonus,
   getPurchaseCostReduction,
   purchaseTotalAp,
@@ -2168,7 +2169,6 @@ import {
   updateComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
-import { getUserProcurementName } from '/@/api/devlocal/user'
 import { ROLE_ACCOUNTANT_CODE, ROLE_BOSS_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
 import PoPermission from '/@/permissions/po'
 import { useAclStore } from '/@/store/modules/acl'
@@ -3376,15 +3376,15 @@ const handleCalculateWidth = (item: any) => {
     }
   }
 }
-const procurementManagerOptions = ref<any>([])
-const deraltProcurementManager = { userId: -1, userName: '全部采购负责人' }
+const publisherOptions = ref<any>([])
+const deraltPublisher = { userId: -1, userName: '全部发布人' }
 const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 50,
   keyWord: '',
   status: 0, //2待付款 3部分付款 4已付全款 5超额付款 6已完结 7已删除
   customsStatus: -1,
-  procurementManager: deraltProcurementManager,
+  publisher: deraltPublisher,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -3429,7 +3429,7 @@ const fetchData = async () => {
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
       customsStatus: queryForm.customsStatus,
-      procurementManagerId: queryForm.procurementManager.userId,
+      publisherId: queryForm.publisher.userId,
     }
     const { data } = await getPoList(params)
     if (data) {
@@ -3607,19 +3607,19 @@ const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
     }, 50)
   }
 }
-// 获取采购负责人列表
-const queryProcurementManagerData = async () => {
-  procurementManagerOptions.value = []
-  const { data } = await getUserProcurementName({
+// 获取采购发版人列表
+const queryPublisherData = async () => {
+  publisherOptions.value = []
+  const { data } = await getPoPublisherList({
     name: '',
   })
-  data.unshift(deraltProcurementManager)
-  procurementManagerOptions.value = data
+  data.unshift(deraltPublisher)
+  publisherOptions.value = data
 }
 
 onMounted(() => {
   initColumnConfig()
-  queryProcurementManagerData()
+  queryPublisherData()
   nextTick(() => {
     const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
     const scrollBarPosition = savedStatus.scrollTop

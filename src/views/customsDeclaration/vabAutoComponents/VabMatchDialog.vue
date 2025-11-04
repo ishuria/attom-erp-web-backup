@@ -480,6 +480,7 @@ import {
   insertAllMatchComponent,
   lockMatchShipment,
   submitMatchShipment,
+  submitMatchShipmentCheck,
   updateMatchComponentCustomCount,
   updateMatchQuality,
   updateMatchSkuActualCount,
@@ -1461,12 +1462,14 @@ const confirmMatchLoading = ref<boolean>(false)
 const handleConfirmCheckMatch = async () => {
   confirmMatchLoading.value = true
   try {
-    const { data } = await submitMatchShipment({
-      id: props.shipId,
-    })
-    if (data) {
-      $baseMessage('确认提交成功!', 'success')
-      emit('updateMatchVisible', false)
+    const params = { id: props.shipId }
+    const { data } = await submitMatchShipmentCheck(params)
+    if (data === true) {
+      const { data } = await submitMatchShipment(params)
+      if (data) {
+        $baseMessage('确认提交成功!', 'success')
+        emit('updateMatchVisible', false)
+      }
     }
   } catch (error) {
     console.error(error)

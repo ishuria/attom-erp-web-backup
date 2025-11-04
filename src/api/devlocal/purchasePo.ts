@@ -59,6 +59,8 @@ import type {
   IUpdateSkuDetail,
 } from '/@/type/purchase/po'
 
+import type { IGetAllNameReq } from '/@/type/user/userType'
+
 // 采购计划-获取采购计划PlanPo
 export function getPlanPoList(data?: IGetPlanPoListQuery): Promise<IGetPlanPoListResp> {
   return request({
@@ -702,5 +704,14 @@ export function updatePurchaseComponentCustomInfo(data: IGetPurchaseComponentCus
     url: `${BASE_API}/purchase/component/custom/update`,
     method: 'post',
     data,
+  })
+}
+
+// 采购订单 - 查询列表
+export function getPoPublisherList(params?: IGetAllNameReq) {
+  return request({
+    url: `${BASE_API}/purchase/po/release/user/list`,
+    method: 'get',
+    params,
   })
 }

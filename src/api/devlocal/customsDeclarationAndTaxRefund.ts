@@ -312,6 +312,16 @@ export const submitMatchShipment = (params: IId): Promise<IBooleanRes> => {
   })
 }
 /**
+ * @description 匹配PO、报关资料-匹配-确定提交check
+ */
+export const submitMatchShipmentCheck = (params: IId): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/match/submit/check`,
+    method: 'post',
+    params,
+  })
+}
+/**
  * @description 匹配PO、报关资料-匹配-确定提交
  */
 export const updateMatchQuality = (data: IUpdateMatchQuality): Promise<IBooleanRes> => {

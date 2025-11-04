@@ -159,7 +159,7 @@ const handleData = async (response: any): Promise<any> => {
   }
 
   if (code == 6000) {
-    gp.$baseAlert(errMsg, '提示')
+    gp.$baseDiyAlert(errMsg, '提示')
     return
   }
   // 异常处理
