@@ -87,6 +87,7 @@
                     v-model="sku.productManager"
                     clearable
                     default-first-option
+                    :disabled="!ableToEditProductManager"
                     filterable
                     :loading="peopleLoading"
                     placeholder="点击输入和搜索产品经理"
@@ -104,6 +105,7 @@
                     v-model="sku.productDesign"
                     clearable
                     default-first-option
+                    :disabled="!ableToEditProductDesign"
                     filterable
                     :loading="peopleLoading"
                     placeholder="点击输入和搜索产品设计"
@@ -138,7 +140,7 @@
                   <el-select
                     v-model="sku.procurementManager"
                     clearable
-                    :disabled="!ableToEdit"
+                    :disabled="!ableToEditProcurementManager"
                     filterable
                     placeholder="点击输入或搜索采购"
                     @change="handleUpdateSku"
@@ -795,13 +797,19 @@ defineOptions({
 
 const currentUserName = useUserStore().getUsername
 const roleCode = useAclStore().getRole[0]
-const ableToEdit = computed(() => {
+const ableToEditProcurementManager = computed(() => {
   return (
-    currentUserName === sku.value.productManager ||
-    currentUserName === sku.value.productDesign ||
+    ableToEditProductManager.value ||
+    ableToEditProductDesign.value ||
     currentUserName === sku.value.procurementManager ||
     roleCode === ROLE_BOSS_CODE
   )
+})
+const ableToEditProductManager = computed(() => {
+  return currentUserName === sku.value.productManager || sku.value.supervisorNames.includes(currentUserName)
+})
+const ableToEditProductDesign = computed(() => {
+  return currentUserName === sku.value.productDesign || ableToEditProductManager.value
 })
 const historyPriceVisible = ref<boolean>(false)
 const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
