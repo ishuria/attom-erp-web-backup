@@ -207,10 +207,9 @@
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
           @select-all-po-row="handleSelectAllPoRow"
-          @selected-comp-row="handleSelectedCompRow"
           @selected-po-row="handleSelectedPoRow"
+          @selection-change="handleSelectionChange"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -281,10 +280,9 @@
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
           @select-all-po-row="handleSelectAllPoRow"
-          @selected-comp-row="handleSelectedCompRow"
           @selected-po-row="handleSelectedPoRow"
+          @selection-change="handleSelectionChange"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -355,10 +353,9 @@
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
           @select-all-po-row="handleSelectAllPoRow"
-          @selected-comp-row="handleSelectedCompRow"
           @selected-po-row="handleSelectedPoRow"
+          @selection-change="handleSelectionChange"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -426,10 +423,9 @@
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
           @select-all-po-row="handleSelectAllPoRow"
-          @selected-comp-row="handleSelectedCompRow"
           @selected-po-row="handleSelectedPoRow"
+          @selection-change="handleSelectionChange"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -497,10 +493,9 @@
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
           @select-all-po-row="handleSelectAllPoRow"
-          @selected-comp-row="handleSelectedCompRow"
           @selected-po-row="handleSelectedPoRow"
+          @selection-change="handleSelectionChange"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -568,8 +563,6 @@
           @po-detail="handleDelPoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
-          @selected-comp-row="handleSelectedCompRow"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -596,7 +589,7 @@
           :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
           :row-class-name="stripedRowClass"
-          :show-comp-operation="true"
+          :show-comp-operation="false"
           :show-po-operation="false"
           :span-method="lastTowTabSpanMethod"
           :table-column-width="tableColumnWidth"
@@ -606,8 +599,6 @@
           @po-detail="handleDelPoDetail"
           @preview-image="showPreviewImage"
           @row-click="handleRowClick"
-          @select-all-comp-row="handleSelectAllCompRow"
-          @selected-comp-row="handleSelectedCompRow"
           @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
@@ -1007,8 +998,10 @@ const imagePreviewClose = () => {
 const poList = ref<any>([])
 // po选中的行
 const selectedPORow = ref<Set<number>>(new Set())
-// po选中的行转化为数组
-const selectedPOArray = ref<any>([])
+// po选中的行转化为数组（使用 computed 按需计算，避免每次选择都更新）
+const selectedPOArray = computed(() => {
+  return Array.from(selectedPORow.value)
+})
 
 // component选中的行转化为数组
 const selectedCompArray = ref<any>([])
@@ -1115,10 +1108,6 @@ const handleSelectedPoRow = (event: any, row: any) => {
   } else {
     selectedPORow.value.delete(rowId)
   }
-  // 延迟更新数组，避免频繁转换
-  nextTick(() => {
-    selectedPOArray.value = Array.from(selectedPORow.value)
-  })
 }
 // 全选po操作列 - 优化版本（使用批量更新减少响应式更新）
 const handleSelectAllPoRow = (event: any) => {
@@ -1131,7 +1120,6 @@ const handleSelectAllPoRow = (event: any) => {
       poList.value.forEach((item: any) => {
         item.selectedPoRow = true
       })
-      selectedPOArray.value = Array.from(selectedPORow.value)
     })
   } else {
     // 清空选择
@@ -1140,7 +1128,6 @@ const handleSelectAllPoRow = (event: any) => {
       poList.value.forEach((item: any) => {
         item.selectedPoRow = false
       })
-      selectedPOArray.value = []
     })
   }
 }
@@ -1161,42 +1148,8 @@ const selectedPoIds = computed(() => {
   return Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',')
 })
 
-// 简化的勾选处理 - 手动更新状态
-const handleSelectedCompRow = (event: any, row: any) => {
-  row.selectedCompRow = event // 手动更新状态
-  if (event) {
-    selectedCompArray.value.push(row)
-  } else {
-    const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
-    if (index > -1) {
-      selectedCompArray.value.splice(index, 1)
-    }
-  }
-}
-// 全选零件操作列 - 优化版本（使用批量更新减少响应式更新）
-const handleSelectAllCompRow = (event: any) => {
-  if (event) {
-    // 先同步收集所有需要添加的项（避免重复添加已选中的项）
-    const itemsToAdd = poList.value.filter((item: any) => !item.selectedCompRow)
-
-    // 使用 nextTick 批量更新 UI 状态和数组，减少响应式更新次数
-    nextTick(() => {
-      // 批量更新 UI 状态
-      poList.value.forEach((item: any) => {
-        item.selectedCompRow = true
-      })
-      // 批量添加到数组（只添加之前未选中的项）
-      selectedCompArray.value = [...selectedCompArray.value, ...itemsToAdd]
-    })
-  } else {
-    // 取消全选：使用 nextTick 批量更新
-    nextTick(() => {
-      poList.value.forEach((item: any) => {
-        item.selectedCompRow = false
-      })
-      selectedCompArray.value = []
-    })
-  }
+const handleSelectionChange = (rows: any[]) => {
+  selectedCompArray.value = rows
 }
 // 付款进度是否修改
 let flag = false
@@ -1331,11 +1284,8 @@ const clearTableSelect = () => {
     item.selectedPoRow = false
   })
   selectedPORow.value.clear()
-  selectedPOArray.value = []
 
-  selectedCompArray.value.forEach((item: any) => {
-    item.selectedCompRow = false
-  })
+  // 原生选择列会自动处理选中状态，这里只需要清除数组
   selectedCompArray.value = []
 
   // // 重置含税价格合计
@@ -2194,32 +2144,32 @@ const fetchData = async () => {
     if (data) {
       listLoading.value = false
       total.value = data.total
-      poList.value = data.list
+      // 先清空选择状态
       selectedPORow.value.clear()
       selectedCompArray.value = []
-      // taxIncludedTotalPrice.value = 0
-      // 每个零件的付款进度进行处理
-      poList.value.forEach((item: any) => {
-        item.selectedCompRow = false
-        item.selectedPoRow = false
-        item.payPrice = Number(item.payPrice).toFixed(2)
-        item.paymentRecord = item.payRecordList
-          .map((record: any) => {
-            const percentage = parseInt(record.percentage.replace('%', '')) // 去掉%并转换为整数
-            const createTime = record.createTime.split(' ')[0]
-            if (percentage < 0) {
-              return `
-                <span class="create-time">${createTime}</span>:
-                <span class="red">${percentage}%</span>
-                <span class="pay-price">(${record.payPrice})</span>`
-            } else {
-              return `
-                <span class="create-time">${createTime}</span>:
-                <span class="percentage">${percentage}%</span>
-                <span class="pay-price">(${record.payPrice})</span>`
-            }
-          })
-          .join('<br>')
+
+      // 批量处理数据，减少响应式更新次数
+      // 使用 map 创建新数组，一次性替换 poList，而不是逐个修改属性
+      poList.value = data.list.map((item: any) => {
+        // 处理付款记录字符串
+        const paymentRecord = item.payRecordList
+          ? item.payRecordList
+              .map((record: any) => {
+                const percentage = parseInt(record.percentage.replace('%', ''))
+                const createTime = record.createTime.split(' ')[0]
+                const percentageClass = percentage < 0 ? 'red' : 'percentage'
+                return `<span class="create-time">${createTime}</span>: <span class="${percentageClass}">${percentage}%</span> <span class="pay-price">(${record.payPrice})</span>`
+              })
+              .join('<br>')
+          : ''
+
+        // 返回新对象，批量设置所有属性，减少响应式触发
+        return {
+          ...item,
+          selectedPoRow: false,
+          payPrice: Number(item.payPrice).toFixed(2),
+          paymentRecord,
+        }
       })
       calculateColumnWidth()
     }
@@ -2660,5 +2610,13 @@ onMounted(() => {
     color: #606266;
     margin-top: 4px;
   }
+}
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+}
+.el-table :deep(.clear-padding) {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 </style>

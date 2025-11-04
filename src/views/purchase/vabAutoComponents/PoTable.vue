@@ -13,6 +13,7 @@
         :row-class-name="rowClassName"
         :span-method="spanMethod"
         @row-click="$emit('rowClick', $event)"
+        @selection-change="$emit('selectionChange', $event)"
       >
         <!-- PO操作列 -->
         <el-table-column v-if="showPoOperation" label="PO操作" prop="selectedPoRow" width="50">
@@ -80,15 +81,8 @@
           </template>
         </el-table-column>
 
-        <!-- 零件操作列 -->
-        <el-table-column v-if="showCompOperation" label="零件操作" prop="selectedCompRow" width="50">
-          <template #header>
-            <el-checkbox @change="$emit('selectAllCompRow', $event)" />
-          </template>
-          <template #default="{ row }">
-            <el-checkbox :model-value="row.selectedCompRow" @change="$emit('selectedCompRow', $event, row)" />
-          </template>
-        </el-table-column>
+        <!-- 零件操作列：使用原生选择列 -->
+        <el-table-column v-if="showCompOperation" type="selection" width="50" />
 
         <!-- 动态列：零件信息 -->
         <el-table-column
@@ -164,8 +158,7 @@ defineEmits<{
   rowClick: [row: any]
   selectAllPoRow: [event: any]
   selectedPoRow: [event: any, row: any]
-  selectAllCompRow: [event: any]
-  selectedCompRow: [event: any, row: any]
+  selectionChange: [rows: any[]]
   poDetail: [row: any]
   clipboard: [event: any, text: string]
   previewImage: [url: string]
@@ -199,8 +192,9 @@ defineEmits<{
   }
 }
 // 勾选框放大
-.el-checkbox {
+:deep(.el-checkbox) {
   transform: scale(1.2);
+  transform-origin: center;
 }
 // 斑马纹样式
 .noneHoveTable :deep(.el-table__row--striped) {
