@@ -4,114 +4,38 @@
       <el-tab-pane label="全部" :name="0">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handlePackageTaskRelease"
-            >
-              发布打包任务
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <!-- 使用按钮组件 -->
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :package-task-loading="releasePackageTaskLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="true"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @package-task-release="handlePackageTaskRelease"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
             <!-- 列设置面板 -->
@@ -250,1632 +174,441 @@
                 </div>
               </el-popover>
             </div>
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <!-- 使用查询表单组件 -->
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <!-- 使用表格组件 -->
+        <po-table
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :component-columns="componentColumns"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllPoRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
-            </template>
-          </el-table-column>
-
-          <!-- 第一组：PO操作到站点 (支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in poBasicColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
-            <template v-if="item.label === 'PO'" #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-            <template v-else-if="item.label === '数据来源'" #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-            <template v-else-if="item.label === '发布日期'" #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-
-          <!-- 第二组：SKU相关 (支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in skuColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
-            <template v-if="item.label === 'SKU图片'" #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template v-if="item.label === 'SKU图片'" #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-            <template v-if="item.label === 'SKU'" #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-
-          <!-- 第三组：零件和其他信息 (不支持合并单元格) -->
-          <el-table-column
-            v-for="(item, index) in componentColumns.filter((col: any) => col.checked)"
-            :key="item.label"
-            :label="item.label"
-            :min-width="handleCalculateWidth(item)"
-            :prop="item.prop"
-          >
-            <template v-if="item.label === '签收日期'" #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-            <template v-else-if="item.label === '货币'" #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-            <template v-else-if="item.label === '不报关'" #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-            <template v-else-if="item.label === '付款记录'" #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :po-basic-columns="poBasicColumns"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="true"
+          :sku-columns="skuColumns"
+          :span-method="objectSpanMethod"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handlePoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @select-all-po-row="handleSelectAllPoRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @selected-po-row="handleSelectedPoRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="待付款" :name="2">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <!-- 使用按钮组件 -->
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="false"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <!-- 使用查询表单组件 -->
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <!-- 使用固定列表格组件 -->
+        <po-fixed-table
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllPoRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image :src="row.skuImageUrl" style="width: 100%; height: 100%" @click="showPreviewImage(row.skuImageUrl)">
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="true"
+          :span-method="objectSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handlePoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @select-all-po-row="handleSelectAllPoRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @selected-po-row="handleSelectedPoRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="部分付款" :name="3">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <!-- 使用按钮组件 -->
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="false"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <!-- 使用查询表单组件 -->
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef2"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <!-- 使用固定列表格组件 -->
+        <po-fixed-table
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllPoRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :lazy="true"
-                :src="row.skuImageUrl"
-                style="width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="true"
+          :span-method="objectSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handlePoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @select-all-po-row="handleSelectAllPoRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @selected-po-row="handleSelectedPoRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="已付全款" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="false"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef3"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <po-fixed-table
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllPoRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :lazy="true"
-                :src="row.skuImageUrl"
-                style="width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="true"
+          :span-method="objectSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handlePoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @select-all-po-row="handleSelectAllPoRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @selected-po-row="handleSelectedPoRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="超额付款" :name="5">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="false"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef4"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <po-fixed-table
           :cell-class-name="getCellClass"
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO操作" prop="selectedPoRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllPoRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox v-model="row.selectedPoRow" @change="handleSelectedPoRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handlePoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :lazy="true"
-                :src="row.skuImageUrl"
-                style="width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="true"
+          :span-method="objectSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handlePoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @select-all-po-row="handleSelectAllPoRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @selected-po-row="handleSelectedPoRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="已完结" :name="6">
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
-            <el-button
-              v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
-              :loading="priceSharingLoading"
-              type="primary"
-              @click="handleShowTotalPriceSharing"
-            >
-              总价分摊
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.GENERATE_CONTRACT] }"
-              :loading="generateContractLoading"
-              type="primary"
-              @click="handleGenerateContract"
-            >
-              生成合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.AGGREGATION_CONTRACT] }"
-              :loading="mergeContractLoading"
-              type="primary"
-              @click="handleShowMergeContract"
-            >
-              聚合合同
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.REMITTANCE_TEMPLATE] }"
-              :loading="moneyTransferLoading"
-              type="primary"
-              @click="handleShowGenerateMoneyTransfer"
-            >
-              生成汇款模板
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COST_REDUCTION_APPLY] }"
-              :loading="reduceCostLoading"
-              type="primary"
-              @click="handleReduceCost"
-            >
-              降本提成申请
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.COMPONENT_AUTO_QUERY] }"
-              type="primary"
-              @click="handleShowAutomaticSignature"
-            >
-              自动签收设定
-            </el-button>
-            <el-button v-permissions="{ permission: [PoPermission.DELETE] }" :loading="delLoading" type="danger" @click="handleDelPo">
-              删除
-            </el-button>
-            <div
-              v-if="
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="success">采购奖金：{{ procurementBonus }}</el-text>
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="danger">
-                跨月调整金额：{{ procurementBonusCrossMonth }}
-              </el-text>
-            </div>
-            <div
-              v-if="
-                currentRoleCode === ROLE_ACCOUNTANT_CODE ||
-                currentRoleCode === ROLE_BOSS_CODE ||
-                currentRoleCode === ROLE_PURCHASINGASSISTANT_CODE ||
-                currentRoleCode === ROLE_PURCHASER_CODE
-              "
-              style="margin: 0 10px 10px 0"
-            >
-              <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0" type="primary">
-                含税价格合计：{{ taxIncludedTotalPrice }}
-              </el-text>
-            </div>
-            <el-button
-              v-permissions="{ permission: ['purchase:pay'] }"
-              :loading="fullPaymentLoading"
-              type="success"
-              @click="handlePaymentPaid"
-            >
-              已付全款/尾款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_BATCH] }"
-              :loading="installmentLoading"
-              type="warning"
-              @click="handleShowInstallment"
-            >
-              分批付款
-            </el-button>
-            <el-button
-              v-permissions="{ permission: [PoPermission.PAY_REFUND] }"
-              :loading="refundLoading"
-              type="danger"
-              @click="handleShowRefund"
-            >
-              退款
-            </el-button>
+            <po-action-buttons
+              :current-role-code="currentRoleCode"
+              :del-loading="delLoading"
+              :full-payment-loading="fullPaymentLoading"
+              :generate-contract-loading="generateContractLoading"
+              :installment-loading="installmentLoading"
+              :merge-contract-loading="mergeContractLoading"
+              :money-transfer-loading="moneyTransferLoading"
+              :price-sharing-loading="priceSharingLoading"
+              :procurement-bonus="procurementBonus"
+              :procurement-bonus-cross-month="procurementBonusCrossMonth"
+              :reduce-cost-loading="reduceCostLoading"
+              :refund-loading="refundLoading"
+              :show-bonus-info="true"
+              :show-common-buttons="true"
+              :show-package-task-button="false"
+              :show-payment-buttons="true"
+              :tax-included-total-price="taxIncludedTotalPrice"
+              @automatic-signature="handleShowAutomaticSignature"
+              @delete="handleDelPo"
+              @generate-contract="handleGenerateContract"
+              @generate-money-transfer="handleShowGenerateMoneyTransfer"
+              @installment="handleShowInstallment"
+              @merge-contract="handleShowMergeContract"
+              @payment-paid="handlePaymentPaid"
+              @reduce-cost="handleReduceCost"
+              @refund="handleShowRefund"
+              @total-price-sharing="handleShowTotalPriceSharing"
+            />
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="8">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef5"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <po-fixed-table
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="lastTowTabSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="130" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :lazy="true"
-                :src="row.skuImageUrl"
-                style="width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="false"
+          :span-method="lastTowTabSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handleDelPoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="已删除" :name="7">
         <vab-query-form>
           <vab-query-form-right-panel :span="24">
-            <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
-              <!-- 新增：报关状态筛选 -->
-              <el-form-item label="">
-                <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="queryData">
-                  <el-option label="全部报关状态" :value="-1" />
-                  <el-option label="报关" :value="0" />
-                  <el-option label="不报关" :value="1" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="">
-                <el-select
-                  v-model="queryForm.publisher"
-                  clearable
-                  placeholder="发布人筛选"
-                  style="width: 150px"
-                  value-key="userId"
-                  @change="queryData"
-                >
-                  <el-option v-for="item in publisherOptions" :key="item.userId" :label="item.userName" :value="item" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-input
-                  v-model.trim="queryForm.keyWord"
-                  class="search-input"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="debouncedQueryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" native-type="submit" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
+            <po-query-form
+              :list-loading="listLoading"
+              :publisher-options="publisherOptions"
+              :query-form="queryForm"
+              @input="debouncedQueryData"
+              @query="queryData"
+            />
           </vab-query-form-right-panel>
         </vab-query-form>
-
-        <el-table
-          ref="tableRef6"
-          v-loading="listLoading"
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          border
+        <po-fixed-table
           :cell-class-name="getLastTwoCellClass"
           :cell-style="lastTwoTabCellStyle"
-          class="noneHoveTable custom-table-hover"
           :data="poList"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :row-class-name="stripedRowClass"
-          :span-method="lastTowTabSpanMethod"
-          @row-click="handleRowClick"
-        >
-          <el-table-column label="PO" min-width="120" prop="po">
-            <template #default="{ row }">
-              <span class="copySku">
-                <el-link style="margin-right: 3px" type="primary" @click="handleDelPoDetail(row)">{{ row.po }}</el-link>
-                <vab-icon icon="file-copy-2-fill" @click="handleClipboard($event, row.po)" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数据来源" width="110">
-            <template #default="{ row }">
-              {{ row.oldErpId ? '老系统数据' : '新系统数据' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="发布日期" min-width="115" prop="releaseDate">
-            <template #default="{ row }">
-              {{ row.releaseDate.split(' ')[0] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="请购人" prop="createUserName" />
-
-          <el-table-column label="发布人" prop="userName" />
-          <el-table-column label="站点" min-width="135" prop="siteName" />
-          <el-table-column label="SKU图片" width="82">
-            <template #header>
-              SKU
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :lazy="true"
-                :src="row.skuImageUrl"
-                style="width: 100%; height: 100%"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(poList, 'SKU', 'sku', 50)">
-            <template #default="{ row }">
-              <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="数量" prop="purchaseSkuNumber" :width="flexColumnWidth(poList, '数量', 'purchaseSkuNumber')" />
-          <el-table-column label="零件操作" prop="selectedCompRow" width="50">
-            <template #header>
-              <el-checkbox @change="handleSelectAllCompRow($event)" />
-            </template>
-            <template #default="{ row }">
-              <el-checkbox :model-value="row.selectedCompRow" @change="handleSelectedCompRow($event, row)" />
-            </template>
-          </el-table-column>
-          <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(poList, '零件名', 'componentName')" />
-          <el-table-column label="零件数量" prop="purchaseCount" :width="flexColumnWidth(poList, '零件数量', 'purchaseCount')" />
-          <el-table-column label="单位" prop="unit" :width="flexColumnWidth(poList, '单位', 'unit')" />
-          <el-table-column label="含税运费" min-width="100" prop="freight" />
-          <el-table-column label="模具含税" min-width="100" prop="moldCost" />
-          <el-table-column label="含税总价" prop="taxIncludedPrice" :width="flexColumnWidth(poList, '含税总价', 'taxIncludedPrice')" />
-          <el-table-column label="已付金额" prop="payPrice" :width="flexColumnWidth(poList, '已付金额', 'payPrice')" />
-          <el-table-column label="货币" prop="currency" width="90">
-            <template #default="{ row }">
-              {{ currencyMap[row.currency as CurrencyCode] }}
-            </template>
-          </el-table-column>
-          <el-table-column label="付款记录" :min-width="tableColumnWidth" prop="paymentRecord">
-            <template #default="{ row }">
-              <div class="hover-opacity" style="cursor: pointer" @click="handleShowPaymentHistory(row)" v-html="row.paymentRecord"></div>
-            </template>
-          </el-table-column>
-          <el-table-column label="供应商" min-width="250" prop="suppliser" :width="flexColumnWidth(poList, '供应商', 'suppliser')" />
-          <el-table-column label="采购方" min-width="100" prop="purchase" />
-          <el-table-column label="不报关" min-width="75" prop="customsDeclarationStatus">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.customsDeclarationStatus" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="签收日期" min-width="115" prop="signDate">
-            <template #default="{ row }">
-              {{ row.signDate ? row.signDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
-          </template>
-        </el-table>
-        <vab-pagination
-          v-permissions="{ permission: [PoPermission.QUERY] }"
-          :current-page="queryForm.pageNo"
+          :handle-calculate-width="handleCalculateWidth"
+          :lazy-load-image="true"
+          :list-loading="listLoading"
+          :page-no="queryForm.pageNo"
           :page-size="queryForm.pageSize"
+          :row-class-name="stripedRowClass"
+          :show-comp-operation="true"
+          :show-po-operation="false"
+          :span-method="lastTowTabSpanMethod"
+          :table-column-width="tableColumnWidth"
           :total="total"
+          @clipboard="handleClipboard"
           @current-change="handleCurrentChange"
+          @po-detail="handleDelPoDetail"
+          @preview-image="showPreviewImage"
+          @row-click="handleRowClick"
+          @select-all-comp-row="handleSelectAllCompRow"
+          @selected-comp-row="handleSelectedCompRow"
+          @show-payment-history="handleShowPaymentHistory"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
@@ -2143,8 +876,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
-import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, dayjs } from 'element-plus'
+import { Delete, Plus, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
+import { type FormInstance, type FormRules, type TabsPaneContext, dayjs } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
@@ -2169,7 +902,6 @@ import {
   updateComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
-import { ROLE_ACCOUNTANT_CODE, ROLE_BOSS_CODE, ROLE_PURCHASER_CODE, ROLE_PURCHASINGASSISTANT_CODE } from '/@/const/role'
 import PoPermission from '/@/permissions/po'
 import { useAclStore } from '/@/store/modules/acl'
 import { useRoutesStore } from '/@/store/modules/routes'
@@ -2177,8 +909,6 @@ import { useTabsStore } from '/@/store/modules/tabs'
 import handleClipboard from '/@/utils/clipboard'
 import { handleMatched, handleTabs } from '/@/utils/routes'
 import { flexColumnWidth } from '/@/utils/tableColum'
-import type { CurrencyCode } from '/@/views/purchase/constantOption'
-import { currencyMap } from '/@/views/purchase/constantOption'
 
 defineOptions({
   name: 'Po',
@@ -2259,12 +989,6 @@ const routesStore = useRoutesStore()
 const { getAllRoutes: allRoutes } = storeToRefs(routesStore)
 const tabsStore = useTabsStore()
 const { changeTabsMeta } = tabsStore
-const tableRef = ref<TableInstance>()
-const tableRef2 = ref<TableInstance>()
-const tableRef3 = ref<TableInstance>()
-const tableRef4 = ref<TableInstance>()
-const tableRef5 = ref<TableInstance>()
-const tableRef6 = ref<TableInstance>()
 // 合同列表
 const contractList = ref<any>([])
 
@@ -2396,44 +1120,45 @@ const handleSelectedPoRow = (event: any, row: any) => {
     selectedPOArray.value = Array.from(selectedPORow.value)
   })
 }
-// 全选po操作列 - 优化版本
+// 全选po操作列 - 优化版本（使用批量更新减少响应式更新）
 const handleSelectAllPoRow = (event: any) => {
   if (event) {
     // 批量添加所有 ID 到 Set
     const allIds = new Set(poList.value.map((item: any) => item.id) as number[])
     selectedPORow.value = allIds as Set<number>
-    // 更新 UI 状态
-    poList.value.forEach((item: any) => {
-      item.selectedPoRow = true
+    // 使用 nextTick 批量更新 UI 状态，减少响应式更新次数
+    nextTick(() => {
+      poList.value.forEach((item: any) => {
+        item.selectedPoRow = true
+      })
+      selectedPOArray.value = Array.from(selectedPORow.value)
     })
   } else {
     // 清空选择
     selectedPORow.value.clear()
-    poList.value.forEach((item: any) => {
-      item.selectedPoRow = false
+    nextTick(() => {
+      poList.value.forEach((item: any) => {
+        item.selectedPoRow = false
+      })
+      selectedPOArray.value = []
     })
   }
-  selectedPOArray.value = Array.from(selectedPORow.value)
 }
-// // 将选择的component行加入到component数组里
-// const handleSelectedCompRow = (event: any, row: any) => {
-//   if (event) {
-//     selectedCompArray.value.push(row)
-//     // 累加含税总价
-//     taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value + Number(row.taxIncludedPrice)).toFixed(2))
-//   } else {
-//     const index = selectedCompArray.value.findIndex((item: any) => item.componentId === row.componentId)
-//     selectedCompArray.value.splice(index, 1)
-//     // 累减含税总价
-//     taxIncludedTotalPrice.value = Number((taxIncludedTotalPrice.value - Number(row.taxIncludedPrice)).toFixed(2))
-//   }
-// }
 // 使用 computed 自动计算总价，避免手动累加
 const taxIncludedTotalPrice = computed(() => {
   const total = selectedCompArray.value.reduce((total: number, item: any) => {
     return total + Number(item.taxIncludedPrice || 0)
   }, 0)
   return Number(total.toFixed(2))
+})
+
+// 提取 componentIds 和 poIds（用于传递到后端）
+const selectedComponentIds = computed(() => {
+  return selectedCompArray.value.map((item: any) => item.componentId).join(',')
+})
+
+const selectedPoIds = computed(() => {
+  return Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',')
 })
 
 // 简化的勾选处理 - 手动更新状态
@@ -2448,23 +1173,29 @@ const handleSelectedCompRow = (event: any, row: any) => {
     }
   }
 }
-// 全选零件操作列
+// 全选零件操作列 - 优化版本（使用批量更新减少响应式更新）
 const handleSelectAllCompRow = (event: any) => {
   if (event) {
-    poList.value.forEach((item: any) => {
-      item.selectedCompRow = true
-      selectedCompArray.value.push(item)
-      // taxIncludedTotalPrice.value += Number(item.taxIncludedPrice)
+    // 先同步收集所有需要添加的项（避免重复添加已选中的项）
+    const itemsToAdd = poList.value.filter((item: any) => !item.selectedCompRow)
+
+    // 使用 nextTick 批量更新 UI 状态和数组，减少响应式更新次数
+    nextTick(() => {
+      // 批量更新 UI 状态
+      poList.value.forEach((item: any) => {
+        item.selectedCompRow = true
+      })
+      // 批量添加到数组（只添加之前未选中的项）
+      selectedCompArray.value = [...selectedCompArray.value, ...itemsToAdd]
     })
-    // taxIncludedTotalPrice.value = Number(taxIncludedTotalPrice.value.toFixed(2))
-    // console.log(selectedCompRow.value);
   } else {
-    poList.value.forEach((item: any) => {
-      item.selectedCompRow = false
+    // 取消全选：使用 nextTick 批量更新
+    nextTick(() => {
+      poList.value.forEach((item: any) => {
+        item.selectedCompRow = false
+      })
+      selectedCompArray.value = []
     })
-    selectedCompArray.value = []
-    // taxIncludedTotalPrice.value = 0
-    // console.log(selectedCompRow.value);
   }
 }
 // 付款进度是否修改
@@ -2545,11 +1276,9 @@ const handlePaymentPaid = async () => {
   }
   try {
     fullPaymentLoading.value = true
-    let componentIds: string = selectedCompArray.value.map((item: any) => item.componentId).join(',')
-    let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',')
     const { data } = await updateComponentAllPay({
-      componentIds,
-      poIds,
+      componentIds: selectedComponentIds.value,
+      poIds: selectedPoIds.value,
     })
     if (data === true) {
       $baseMessage('已付尾款/全款成功', 'success', 'hey')
@@ -2619,12 +1348,10 @@ const handleConfirmInstallment = async () => {
     if (valid) {
       try {
         installmentLoading.value = true
-        let componentIds: string = selectedCompArray.value.map((item: any) => item.componentId).join(',')
-        let poIds: string = Array.from(new Set(selectedCompArray.value.map((item: any) => item.id))).join(',')
         const { data } = await updateComponentPayPart({
           componentInfo: {
-            componentIds,
-            poIds,
+            componentIds: selectedComponentIds.value,
+            poIds: selectedPoIds.value,
           },
           unitPrice: installmentForm.price,
           percentage: installmentForm.percent,
@@ -2778,9 +1505,8 @@ const handleConfirmTotalPriceSharing = async () => {
           return
         }
         priceSharingLoading.value = true
-        let componentIds: string = selectedCompArray.value.map((item: any) => item.componentId).join(',')
         const { data } = await purchaseTotalAp({
-          componentIds,
+          componentIds: selectedComponentIds.value,
           totalMoney: totalPriceSharingForm.tax,
           totalFreight: totalPriceSharingForm.shippingFee,
         })
@@ -2825,7 +1551,7 @@ const handleGenerateContract = async () => {
       }
     })
   } else {
-    poSkuComponentId = selectedCompArray.value.map((item: any) => item.componentId)
+    poSkuComponentId = selectedComponentIds.value.split(',').filter(Boolean)
   }
 
   try {
@@ -3038,27 +1764,27 @@ const handlePoDetail = async (row: any) => {
     del = 'false'
   }
 
-  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
-  const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef
-  const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef
-  const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef
-  const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef
-  const wrapRef = scrollBarRef.wrapRef
-  const wrapRef2 = scrollBarRef2.wrapRef
-  const wrapRef3 = scrollBarRef3.wrapRef
-  const wrapRef4 = scrollBarRef4.wrapRef
-  const wrapRef5 = scrollBarRef5.wrapRef
-  const wrapRef6 = scrollBarRef6.wrapRef
-  const poStatus = {
-    scrollTop: wrapRef.scrollTop,
-    scrollTop2: wrapRef2.scrollTop,
-    scrollTop3: wrapRef3.scrollTop,
-    scrollTop4: wrapRef4.scrollTop,
-    scrollTop5: wrapRef5.scrollTop,
-    scrollTop6: wrapRef6.scrollTop,
-  }
-  sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
+  // const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+  // const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
+  // const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef
+  // const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef
+  // const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef
+  // const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef
+  // const wrapRef = scrollBarRef.wrapRef
+  // const wrapRef2 = scrollBarRef2.wrapRef
+  // const wrapRef3 = scrollBarRef3.wrapRef
+  // const wrapRef4 = scrollBarRef4.wrapRef
+  // const wrapRef5 = scrollBarRef5.wrapRef
+  // const wrapRef6 = scrollBarRef6.wrapRef
+  // const poStatus = {
+  //   scrollTop: wrapRef.scrollTop,
+  //   scrollTop2: wrapRef2.scrollTop,
+  //   scrollTop3: wrapRef3.scrollTop,
+  //   scrollTop4: wrapRef4.scrollTop,
+  //   scrollTop5: wrapRef5.scrollTop,
+  //   scrollTop6: wrapRef6.scrollTop,
+  // }
+  // sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 
   const matched = handleMatched(allRoutes.value, '/purchase/poDetail')
   const tab = handleTabs({
@@ -3108,27 +1834,27 @@ const handleDelPoDetail = (row: any) => {
     },
   })
 
-  const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-  const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
-  const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef
-  const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef
-  const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef
-  const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef
-  const wrapRef = scrollBarRef.wrapRef
-  const wrapRef2 = scrollBarRef2.wrapRef
-  const wrapRef3 = scrollBarRef3.wrapRef
-  const wrapRef4 = scrollBarRef4.wrapRef
-  const wrapRef5 = scrollBarRef5.wrapRef
-  const wrapRef6 = scrollBarRef6.wrapRef
-  const poStatus = {
-    scrollTop: wrapRef.scrollTop,
-    scrollTop2: wrapRef2.scrollTop,
-    scrollTop3: wrapRef3.scrollTop,
-    scrollTop4: wrapRef4.scrollTop,
-    scrollTop5: wrapRef5.scrollTop,
-    scrollTop6: wrapRef6.scrollTop,
-  }
-  sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
+  // const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+  // const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef
+  // const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef
+  // const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef
+  // const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef
+  // const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef
+  // const wrapRef = scrollBarRef.wrapRef
+  // const wrapRef2 = scrollBarRef2.wrapRef
+  // const wrapRef3 = scrollBarRef3.wrapRef
+  // const wrapRef4 = scrollBarRef4.wrapRef
+  // const wrapRef5 = scrollBarRef5.wrapRef
+  // const wrapRef6 = scrollBarRef6.wrapRef
+  // const poStatus = {
+  //   scrollTop: wrapRef.scrollTop,
+  //   scrollTop2: wrapRef2.scrollTop,
+  //   scrollTop3: wrapRef3.scrollTop,
+  //   scrollTop4: wrapRef4.scrollTop,
+  //   scrollTop5: wrapRef5.scrollTop,
+  //   scrollTop6: wrapRef6.scrollTop,
+  // }
+  // sessionStorage.setItem('poStatus', JSON.stringify(poStatus))
 }
 
 const showPreviewImage = (url: string) => {
@@ -3340,42 +2066,75 @@ const handleChecked = async (item: any) => {
   })
 }
 
-// 计算列宽
+// 计算列宽 - 使用缓存优化性能，避免每次渲染都重新计算
+const columnWidthCache = ref<Map<string, number>>(new Map())
+
+// 计算列宽函数 - 使用缓存
 const handleCalculateWidth = (item: any) => {
+  // 如果使用固定宽度（付款记录），直接返回
+  if (item.label === '付款记录') {
+    return tableColumnWidth.value
+  }
+
+  // 如果缓存中有该列的宽度，直接返回
+  const cacheKey = item.label
+  if (columnWidthCache.value.has(cacheKey)) {
+    return columnWidthCache.value.get(cacheKey)!
+  }
+
+  // 计算宽度并缓存
+  let width = item.minWidth
   switch (item.label) {
     case 'SKU': {
-      return flexColumnWidth(poList.value, 'SKU', 'sku')
+      width = flexColumnWidth(poList.value, 'SKU', 'sku')
+      break
     }
     case '数量': {
-      return flexColumnWidth(poList.value, '数量', 'purchaseSkuNumber')
+      width = flexColumnWidth(poList.value, '数量', 'purchaseSkuNumber')
+      break
     }
-
     case '零件名': {
-      return flexColumnWidth(poList.value, '零件名', 'componentName')
+      width = flexColumnWidth(poList.value, '零件名', 'componentName')
+      break
     }
     case '零件数量': {
-      return flexColumnWidth(poList.value, '零件数量', 'purchaseCount')
+      width = flexColumnWidth(poList.value, '零件数量', 'purchaseCount')
+      break
     }
     case '单位': {
-      return flexColumnWidth(poList.value, '单位', 'unit')
+      width = flexColumnWidth(poList.value, '单位', 'unit')
+      break
     }
     case '含税总价': {
-      return flexColumnWidth(poList.value, '含税总价', 'taxIncludedPrice')
+      width = flexColumnWidth(poList.value, '含税总价', 'taxIncludedPrice')
+      break
     }
     case '已付金额': {
-      return flexColumnWidth(poList.value, '已付金额', 'payPrice')
+      width = flexColumnWidth(poList.value, '已付金额', 'payPrice')
+      break
     }
     case '供应商': {
-      return flexColumnWidth(poList.value, '供应商', 'suppliser')
-    }
-    case '付款记录': {
-      return tableColumnWidth.value
+      width = flexColumnWidth(poList.value, '供应商', 'suppliser')
+      break
     }
     default: {
-      return item.minWidth
+      width = item.minWidth
     }
   }
+
+  // 缓存计算结果
+  columnWidthCache.value.set(cacheKey, width)
+  return width
 }
+
+// 监听 poList 变化，清空缓存，确保数据更新后重新计算
+watch(
+  () => poList.value.length,
+  () => {
+    columnWidthCache.value.clear()
+  },
+  { deep: false }
+)
 const publisherOptions = ref<any>([])
 const deraltPublisher = { userId: -1, userName: '全部发布人' }
 const queryForm = reactive<any>({
@@ -3598,15 +2357,7 @@ onBeforeMount(() => {
   }
   fetchData()
 })
-const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
-  if (scrollBarPosition) {
-    const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-    const wrapRef = scrollBarRef.wrapRef
-    setTimeout(() => {
-      wrapRef.scrollTop = scrollBarPosition
-    }, 50)
-  }
-}
+
 // 获取采购发版人列表
 const queryPublisherData = async () => {
   publisherOptions.value = []
@@ -3616,65 +2367,73 @@ const queryPublisherData = async () => {
   data.unshift(deraltPublisher)
   publisherOptions.value = data
 }
-
+// const setScrollPosition = (scrollBarPosition: number, tableRef: any) => {
+//   if (scrollBarPosition) {
+//     const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
+//     const wrapRef = scrollBarRef.wrapRef
+//     setTimeout(() => {
+//       wrapRef.scrollTop = scrollBarPosition
+//     }, 50)
+//   }
+// }
 onMounted(() => {
   initColumnConfig()
   queryPublisherData()
-  nextTick(() => {
-    const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
-    const scrollBarPosition = savedStatus.scrollTop
-    const scrollBarPosition2 = savedStatus.scrollTop2
-    const scrollBarPosition3 = savedStatus.scrollTop3
-    const scrollBarPosition4 = savedStatus.scrollTop4
-    const scrollBarPosition5 = savedStatus.scrollTop5
-    const scrollBarPosition6 = savedStatus.scrollTop6
-    if (scrollBarPosition) {
-      setScrollPosition(scrollBarPosition, tableRef)
-    }
-    if (scrollBarPosition2) {
-      setScrollPosition(scrollBarPosition2, tableRef2)
-    }
-    if (scrollBarPosition3) {
-      setScrollPosition(scrollBarPosition3, tableRef3)
-    }
-    if (scrollBarPosition4) {
-      setScrollPosition(scrollBarPosition4, tableRef4)
-    }
-    if (scrollBarPosition5) {
-      setScrollPosition(scrollBarPosition5, tableRef5)
-    }
-    if (scrollBarPosition6) {
-      setScrollPosition(scrollBarPosition6, tableRef6)
-    }
-    // const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
-    // const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
-    // const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
-    // const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
-    // const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
-    // const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
-    // const wrapRef = scrollBarRef.wrapRef
-    // const wrapRef2 = scrollBarRef2.wrapRef
-    // const wrapRef3 = scrollBarRef3.wrapRef
-    // const wrapRef4 = scrollBarRef4.wrapRef
-    // const wrapRef5 = scrollBarRef5.wrapRef
-    // const wrapRef6 = scrollBarRef6.wrapRef
-    // setTimeout(() => {
-    //   wrapRef.scrollTop = scrollBarPosition;
-    //   wrapRef2.scrollTop = scrollBarPosition2;
-    //   wrapRef3.scrollTop = scrollBarPosition3;
-    //   wrapRef4.scrollTop = scrollBarPosition4;
-    //   wrapRef5.scrollTop = scrollBarPosition5;
-    //   wrapRef6.scrollTop = scrollBarPosition6;
-    // }, 50)
-  })
+  // nextTick(() => {
+  //   const savedStatus = JSON.parse(sessionStorage.getItem('poStatus') || '{}')
+  //   const scrollBarPosition = savedStatus.scrollTop
+  //   const scrollBarPosition2 = savedStatus.scrollTop2
+  //   const scrollBarPosition3 = savedStatus.scrollTop3
+  //   const scrollBarPosition4 = savedStatus.scrollTop4
+  //   const scrollBarPosition5 = savedStatus.scrollTop5
+  //   const scrollBarPosition6 = savedStatus.scrollTop6
+  //   if (scrollBarPosition) {
+  //     setScrollPosition(scrollBarPosition, tableRef)
+  //   }
+  //   if (scrollBarPosition2) {
+  //     setScrollPosition(scrollBarPosition2, tableRef2)
+  //   }
+  //   if (scrollBarPosition3) {
+  //     setScrollPosition(scrollBarPosition3, tableRef3)
+  //   }
+  //   if (scrollBarPosition4) {
+  //     setScrollPosition(scrollBarPosition4, tableRef4)
+  //   }
+  //   if (scrollBarPosition5) {
+  //     setScrollPosition(scrollBarPosition5, tableRef5)
+  //   }
+  //   if (scrollBarPosition6) {
+  //     setScrollPosition(scrollBarPosition6, tableRef6)
+  //   }
+  //   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef;
+  //   const scrollBarRef2: any = tableRef2.value!.$refs.scrollBarRef;
+  //   const scrollBarRef3: any = tableRef3.value!.$refs.scrollBarRef;
+  //   const scrollBarRef4: any = tableRef4.value!.$refs.scrollBarRef;
+  //   const scrollBarRef5: any = tableRef5.value!.$refs.scrollBarRef;
+  //   const scrollBarRef6: any = tableRef6.value!.$refs.scrollBarRef;
+  //   const wrapRef = scrollBarRef.wrapRef
+  //   const wrapRef2 = scrollBarRef2.wrapRef
+  //   const wrapRef3 = scrollBarRef3.wrapRef
+  //   const wrapRef4 = scrollBarRef4.wrapRef
+  //   const wrapRef5 = scrollBarRef5.wrapRef
+  //   const wrapRef6 = scrollBarRef6.wrapRef
+  //   setTimeout(() => {
+  //     wrapRef.scrollTop = scrollBarPosition;
+  //     wrapRef2.scrollTop = scrollBarPosition2;
+  //     wrapRef3.scrollTop = scrollBarPosition3;
+  //     wrapRef4.scrollTop = scrollBarPosition4;
+  //     wrapRef5.scrollTop = scrollBarPosition5;
+  //     wrapRef6.scrollTop = scrollBarPosition6;
+  //   }, 50)
+  // })
 })
 
-onUnmounted(() => {
-  let length = tabsStore.getVisitedRoutes.length
-  if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
-    sessionStorage.removeItem('poStatus')
-  }
-})
+// onUnmounted(() => {
+//   let length = tabsStore.getVisitedRoutes.length
+//   if (tabsStore.getVisitedRoutes[length - 1].name !== 'PoDetail') {
+//     sessionStorage.removeItem('poStatus')
+//   }
+// })
 </script>
 
 <style lang="scss" scoped>
@@ -3704,35 +2463,14 @@ onUnmounted(() => {
           .right-panel {
             margin-bottom: 5px !important;
           }
-          // .el-form {
-          //   .el-form-item:first-child {
-          //     margin-bottom: 5px !important;
-
-          //     .el-check-tag,
-          //     .el-form-item__label {
-          //       margin: 0 10px 5px 0;
-          //       border-radius: 99px;
-          //     }
-          //   }
-          //   .el-form-item:nth-child(2) {
-          //     margin-bottom: 5px !important;
-          //   }
-          //   .el-form-item:last-child {
-          //     margin-bottom: 5px !important;
-          //   }
-          // }
         }
 
-        .el-table {
+        .po-table-container {
           flex: 1;
-          .clear-padding {
-            padding-top: 0px !important;
-            padding-bottom: 0px !important;
-            .cell {
-              padding-right: 0px !important;
-              padding-left: 0px !important;
-            }
-          }
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
         }
       }
     }
@@ -3742,35 +2480,6 @@ onUnmounted(() => {
 // 设置行高
 :deep(.el-table .el-table__body .cell) {
   max-height: 81.2px;
-}
-// 设置付款记录表的行高
-// :deep(.payRecord .el-table__body .cell) {
-//   min-height: 72.2px;
-//   line-height: 72.2px;
-// }
-.hide :deep(.el-upload--picture-card) {
-  display: none;
-}
-// 让图片过渡消失
-:deep(.form-upload .el-upload-list--picture-card .el-upload-list__item) {
-  padding: 0;
-  margin: 0;
-  transition: none;
-}
-// 控制编辑框显示与隐藏
-.none {
-  display: none;
-}
-.noneHoveTable :deep(.el-checkbox) {
-  transform: scale(1.2); // 放大 20%
-  transform-origin: center; // 确保放大从中心开始
-}
-// 斑马纹样式
-.noneHoveTable :deep(.el-table__row--striped) {
-  background-color: #fafafa !important;
-}
-.noneHoveTable :deep(.el-table__row--striped > td.el-table__cell) {
-  background-color: #fafafa !important;
 }
 
 // 弹出框padding
@@ -3804,14 +2513,7 @@ onUnmounted(() => {
 :deep(.yellow) {
   color: #e6a23c;
 }
-.el-table :deep(.clear-padding .cell) {
-  padding-right: 0px !important;
-  padding-left: 0px !important;
-}
-.el-table :deep(.clear-padding) {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-}
+
 :deep(.create-time) {
   color: #4e88f3; /* 设置 createTime 的颜色 */
 }
@@ -3823,22 +2525,7 @@ onUnmounted(() => {
 :deep(.pay-price) {
   color: #8d5fcc; /* 设置 payPrice 的颜色 */
 }
-.hover-opacity {
-  transition: opacity 0.3s; /* 添加过渡效果 */
-}
 
-.hover-opacity:hover {
-  opacity: 0.5; /* Hover 时透明度 */
-}
-.copySku {
-  cursor: pointer;
-  -webkit-user-select: text;
-  user-select: text;
-  transition: all 0.3s;
-  &:hover {
-    color: #000;
-  }
-}
 // 选中且不被禁用的样式
 :deep(.el-checkbox__input.is-checked .el-checkbox__inner) {
   background-color: var(--el-checkbox-checked-bg-color);
@@ -3945,11 +2632,6 @@ onUnmounted(() => {
   }
 }
 
-.column-label {
-  flex: 1;
-  color: var(--el-text-color-primary);
-}
-
 .handle {
   cursor: grab;
 }
@@ -3974,24 +2656,9 @@ onUnmounted(() => {
   .rule-item {
     display: flex;
     align-items: center;
-
     font-size: 16px;
     color: #606266;
-
     margin-top: 4px;
-
-    // &:last-child {
-    //   margin-bottom: 0;
-    // }
-
-    // .rule-icon {
-    //   color: var(--el-color-primary);
-    //   font-size: 18px;
-    // }
   }
-}
-// 搜索框宽度设置
-.search-input {
-  width: 300px !important;
 }
 </style>
