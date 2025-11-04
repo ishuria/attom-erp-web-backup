@@ -84,7 +84,9 @@
         <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column v-if="!editDisabled" label="操作" width="100">
           <template #default="{ row }">
-            <el-link :disabled="row.ableDelete === 0" type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
+            <el-link :disabled="isBoss ? undefined : row.ableDelete === 0" type="danger" underline="never" @click="deleteDetail(row)">
+              删除
+            </el-link>
           </template>
         </el-table-column>
         <template #empty>
