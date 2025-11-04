@@ -1271,11 +1271,6 @@ const handleInsertAllBg = async (row: IGetMatchPackageList) => {
       $baseMessage('打包任务数没有好的数量，不能进行匹配！', 'error')
       return
     }
-    // sku的实际发货数量大于打包任务好的数量
-    if (row.skuActualCount >= row.goodCount!) {
-      $baseMessage('此条任务填入（报关）已完成，无法填入在此点击填入（报关）！', 'error')
-      return
-    }
     match2ListLoading.value = true
     const { data } = await insertAllMatchComponent({
       id: _id.value,
