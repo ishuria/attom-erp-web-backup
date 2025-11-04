@@ -2146,7 +2146,6 @@
 import { Delete, Plus, Search, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TableInstance, type TabsPaneContext, dayjs } from 'element-plus'
 import { debounce } from 'lodash-es'
-import { ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import { downloadFile } from '/@/api/devlocal/download'
@@ -3487,19 +3486,42 @@ const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.id
 }
-let previous: any = null
-let currentGroupIndex = 0 // 当前组索引
+// 按 SKU 分组计算斑马纹 - 使用 computed 缓存，避免重复计算
+const skuStripedMap = computed(() => {
+  const map = new Map<string, boolean>()
+  let currentSkuGroupIndex = 0
+  let lastSkuKey: string | null = null
 
-const stripedRowClass = (_row: any) => {
-  const { row } = _row
+  // 遍历数据，为每个 SKU 组分配斑马纹状态
+  poList.value.forEach((row: any) => {
+    // 使用 poSkuId 和 id 组合作为 SKU 的唯一标识（与合并逻辑保持一致）
+    const skuKey = `${row.id}_${row.poSkuId}`
 
-  const stripedClass = row.id % 2 === 0 ? 'el-table__row--striped' : ''
+    // 如果是新的 SKU 组，切换斑马纹状态
+    if (skuKey !== lastSkuKey) {
+      currentSkuGroupIndex++
+      lastSkuKey = skuKey
+    }
+
+    // 奇数 SKU 组显示斑马纹
+    map.set(skuKey, currentSkuGroupIndex % 2 === 1)
+  })
+
+  return map
+})
+
+const stripedRowClass = ({ row, rowIndex }: { row: any; rowIndex: number }): string => {
+  // 按 SKU 来判断斑马纹（与合并逻辑保持一致）
+  const skuKey = `${row.id}_${row.poSkuId}`
+  const isStriped = skuStripedMap.value.get(skuKey) || false
+  const stripedClass = isStriped ? 'el-table__row--striped' : ''
 
   // 选中状态
   const selectedClass = row.id === selectedRowIndex.value ? 'select-row' : ''
 
-  // 组合类名
-  return [stripedClass, selectedClass].filter(Boolean).join(' ')
+  // 组合类名，确保返回字符串
+  const classNames = [stripedClass, selectedClass].filter(Boolean)
+  return classNames.length > 0 ? classNames.join(' ') : ''
 }
 // 设置零件名显示样式和图片撑满样式
 const getCellClass = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
@@ -3743,6 +3765,14 @@ onUnmounted(() => {
   transform: scale(1.2); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
+// 斑马纹样式
+.noneHoveTable :deep(.el-table__row--striped) {
+  background-color: #fafafa !important;
+}
+.noneHoveTable :deep(.el-table__row--striped > td.el-table__cell) {
+  background-color: #fafafa !important;
+}
+
 // 弹出框padding
 :deep(.moldDialog .el-dialog__body) {
   padding-top: 0;
