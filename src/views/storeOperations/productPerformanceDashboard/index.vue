@@ -2132,7 +2132,7 @@ import type { CSSProperties } from 'vue'
 import CountryFlag from 'vue-country-flag-next'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
-import { ROLE_BOSS_CODE } from '~/src/const/role'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '~/src/const/role'
 import { useUserStore } from '~/src/store/modules/user'
 import { months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
@@ -2186,7 +2186,7 @@ defineOptions({
 
 const userName = useUserStore().getUsername
 const currentRole = useAclStore().getRole
-const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE))
+const isBoss = computed(() => currentRole.includes(ROLE_BOSS_CODE) || currentRole.includes(ROLE_ECOMMERCEOPERATIONLEAD_CODE))
 // 发布订货里面的sku列表
 const skuList = ref<{ value: string; label: string }[]>([])
 const releaseOrderVisible = ref<boolean>(false)

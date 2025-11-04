@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" :lazy="true" type="border-card" @tab-click="handleTabClick">
       <el-tab-pane label="全部" :name="0">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.PACKAGE_TASK_REPLEASE] }"
               :loading="priceSharingLoading"
@@ -113,7 +113,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <!-- 列设置面板 -->
             <div class="column-settings">
               <el-popover popper-style="max-height: 550px; overflow: auto;" :width="250">
@@ -406,7 +406,7 @@
       </el-tab-pane>
       <el-tab-pane label="待付款" :name="2">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
@@ -508,7 +508,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -666,7 +666,7 @@
       </el-tab-pane>
       <el-tab-pane label="部分付款" :name="3">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
@@ -768,7 +768,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -931,7 +931,7 @@
       </el-tab-pane>
       <el-tab-pane label="已付全款" :name="4">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
@@ -1033,7 +1033,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -1198,7 +1198,7 @@
       </el-tab-pane>
       <el-tab-pane label="超额付款" :name="5">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
@@ -1300,7 +1300,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">
@@ -1465,7 +1465,7 @@
       </el-tab-pane>
       <el-tab-pane label="已完结" :name="6">
         <vab-query-form>
-          <vab-query-form-left-panel :span="18">
+          <vab-query-form-left-panel :span="16">
             <el-button
               v-permissions="{ permission: [PoPermission.TOTAL_PRICE_ALLOCATION] }"
               :loading="priceSharingLoading"
@@ -1567,7 +1567,7 @@
               退款
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel :span="6">
+          <vab-query-form-right-panel :span="8">
             <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
               <!-- 新增：报关状态筛选 -->
               <el-form-item label="">

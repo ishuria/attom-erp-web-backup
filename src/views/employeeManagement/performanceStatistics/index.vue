@@ -43,7 +43,7 @@
           :cell-style="{ textAlign: 'center' }"
           class="all-table"
           :data="list"
-          :default-sort="{ prop: 'totalBonus', order: 'descending' }"
+          :default-sort="{ prop: 'month', order: 'descending' }"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
           @sort-change="handleSortChange"
@@ -746,7 +746,7 @@ const queryForm = reactive<IGetAssessmentListReq>({
   startDate: '',
   endDate: '',
   status: 0,
-  orderByField: 'totalBonus',
+  orderByField: 'month',
   orderDirection: 'desc',
 })
 const list = ref<IGetUserAttendanceList[]>([])
