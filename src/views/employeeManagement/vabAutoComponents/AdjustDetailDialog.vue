@@ -84,9 +84,7 @@
         <el-table-column label="创建时间" prop="createTime" width="130" />
         <el-table-column v-if="!editDisabled" label="操作" width="100">
           <template #default="{ row }">
-            <el-link :disabled="isBoss ? undefined : row.ableDelete === 0" type="danger" underline="never" @click="deleteDetail(row)">
-              删除
-            </el-link>
+            <el-link :disabled="row.ableDelete === 0" type="danger" underline="never" @click="deleteDetail(row)">删除</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -350,12 +348,19 @@ const closeAdd = () => {
   addFormRef.value?.resetFields()
 }
 const deleteDetail = async (row: IGetAdjustDetail) => {
-  const { data } = await deleteAdjustDetail(row)
-  if (data) {
-    $baseMessage('删除成功！', 'success')
-    queryData()
-    emit('query-data')
-  }
+  $baseConfirm('您确定要删除当前项吗', null, async () => {
+    try {
+      const { data } = await deleteAdjustDetail(row)
+      if (data) {
+        $baseMessage('删除成功！', 'success')
+        queryData()
+        emit('query-data')
+      }
+    } catch (error) {
+      console.error(error)
+      $baseMessage('删除失败！', 'error')
+    }
+  })
 }
 </script>
 
