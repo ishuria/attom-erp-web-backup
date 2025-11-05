@@ -130,6 +130,19 @@ export function uploadFile(data: FormData) {
   })
 }
 /**
+ * 编辑器图片上传
+ * @param data FormData
+ * @returns
+ */
+export function uploadEditorImage(data: FormData) {
+  return request({
+    url: `${BASE_API}/editor/image/upload`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+/**
  * 图片删除功能
  */
 export function deleteImage(data: FormData) {

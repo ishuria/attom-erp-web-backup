@@ -26,6 +26,7 @@
 import type { IDomEditor, IToolbarConfig } from '@wangeditor/editor'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
+import { uploadEditorImage } from '/@/api/devlocal/progress'
 
 defineOptions({
   name: 'WangEditor',
@@ -99,14 +100,88 @@ watch(
   { immediate: true }
 )
 
+// 图片上传插入函数类型定义
+type InsertImageFnType = (url: string, alt?: string, href?: string) => void
+
 const editorConfig = reactive<any>({
   placeholder: '请输入内容...',
   MENU_CONF: {
     uploadImage: {
-      server: '', // 您的服务器地址，注意：当前接口格式特殊与其他vab接口不同，请查看vip文档
-      fieldName: 'vab-file-name',
+      // 基本配置
       allowedFileTypes: ['image/*'],
-      headers: {}, // 如需传递token请写到在这里
+      maxFileSize: 2 * 1024 * 1024, // 2MB
+      maxNumberOfFiles: 1, // 单次最多上传1张图片
+
+      // 上传之前的回调
+      onBeforeUpload(file: File) {
+        // 验证文件类型
+        if (!file.type.startsWith('image/')) {
+          $baseMessage('只能上传图片文件!', 'error', 'hey')
+          return false
+        }
+        // 验证文件大小
+        if (file.size > 2 * 1024 * 1024) {
+          $baseMessage('图片大小不能超过 2MB!', 'error', 'hey')
+          return false
+        }
+        return file
+      },
+
+      // 上传进度回调
+      onProgress(progress: number) {
+        // progress 是 0-100 的数字
+        // console.log('上传进度:', progress)
+      },
+
+      // 自定义上传功能 - 使用项目现有的 uploadFile API
+      async customUpload(file: File, insertFn: InsertImageFnType) {
+        try {
+          // 创建 FormData
+          const formData = new FormData()
+          formData.append('file', file)
+
+          // 调用项目现有的上传接口
+          const { data } = await uploadEditorImage(formData)
+
+          // 根据实际返回格式处理
+          // 根据代码中的实际返回格式：{ data: { fileId, url } }
+          // 从 index.vue 中可以看到：const { fileId, url } = data
+          let imageUrl = ''
+          if (data?.url) {
+            // 如果返回 { data: { url: "xxx" } } 格式（这是正确的格式）
+            imageUrl = data.url
+          } else if (typeof data === 'string') {
+            // 如果直接返回 URL 字符串
+            imageUrl = data
+          } else {
+            throw new Error('上传失败：无法获取图片地址')
+          }
+
+          // 插入图片到编辑器
+          insertFn(imageUrl, file.name, imageUrl)
+          $baseMessage('图片上传成功!', 'success', 'hey')
+        } catch (error: any) {
+          console.error('图片上传失败:', error)
+          $baseMessage(error?.message || '图片上传失败，请重试', 'error', 'hey')
+        }
+      },
+
+      // 单个文件上传成功之后
+      onSuccess(file: File, res: any) {
+        // console.log(`${file.name} 上传成功`, res)
+      },
+
+      // 单个文件上传失败
+      onFailed(file: File, res: any) {
+        console.error(`${file.name} 上传失败`, res)
+        $baseMessage('图片上传失败', 'error', 'hey')
+      },
+
+      // 上传错误，或者触发 timeout 超时
+      onError(file: File, err: any, res: any) {
+        console.error(`${file.name} 上传出错`, err, res)
+        $baseMessage('图片上传出错，请重试', 'error', 'hey')
+      },
     },
     fontSize: {
       fontSizeList: ['16px', '18px', '20px', '22px', '24px', '28px', '32px', '36px', '48px', '72px'],
