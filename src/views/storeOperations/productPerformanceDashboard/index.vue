@@ -3617,6 +3617,7 @@ const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex
       '月ACOS',
       'VOC满意度',
       '剩余库存',
+      '订单月额',
     ].includes(data.column.label)
   ) {
     return 'header-cell clearLR-padding'
@@ -3927,6 +3928,7 @@ const fetchColumn = async () => {
         'monthReturnGoods',
         'monthAcos',
         'grossProfit',
+        'monthOrderSales',
       ].includes(item.prop)
     ) {
       item.sortable = true
@@ -3976,6 +3978,7 @@ const fetchAsinColumn = async () => {
         'fbaStorageFee',
         'monthReturnGoods',
         'monthAcos',
+        'monthOrderSales',
       ].includes(item.prop)
     ) {
       item.sortable = true
@@ -4006,6 +4009,7 @@ const fetchPAsinColumn = async () => {
         'fbaStorageFee',
         'monthReturnGoods',
         'monthAcos',
+        'monthOrderSales',
       ].includes(item.prop)
     ) {
       item.sortable = true
