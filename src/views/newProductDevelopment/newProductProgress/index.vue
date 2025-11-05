@@ -17,7 +17,7 @@
                   v-model.trim="queryForm.productKeyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
+                  @input="debouncedQueryData"
                   @keyup.enter="queryData"
                 />
               </el-form-item>
@@ -244,7 +244,7 @@
                     v-model.trim="queryForm.productKeyWord"
                     clearable
                     placeholder="请输入搜索关键词"
-                    @input="queryData"
+                    @input="debouncedQueryData"
                     @keyup.enter="queryData"
                   />
                 </el-form-item>
@@ -638,7 +638,7 @@ import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue
 import { ElLink, type FormInstance, type TableInstance, type TableTooltipData, type TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
 import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
@@ -773,17 +773,30 @@ const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
-// 新品进度列表
-const progressList = ref<IProgress[]>([])
-const columnWidths = computed(() => ({
-  currentPhaseStatus: flexColumnWidth(progressList.value, '当前阶段', 'currentPhaseStatus', 0),
-  sharerName: flexColumnWidth(progressList.value, '参与人员', 'other', 0),
-  product: Math.max(
-    flexColumnWidth(progressList.value, '中文品名', 'product', 0),
-    flexColumnWidth(progressList.value, '中文品名', 'mainSearchTerms', 0)
-  ),
-  targetMonthlySales: flexColumnWidth(progressList.value, '目标月销', 'targetMonthlySales', 0),
-}))
+// 新品进度列表 - 使用 shallowRef 减少深度响应式追踪，提升性能
+const progressList = shallowRef<IProgress[]>([])
+// 优化：使用 computed 缓存列宽度，但只在数据变化时重新计算
+// 注意：由于使用了 shallowRef，需要确保 computed 能正确追踪变化
+const columnWidths = computed(() => {
+  // 如果列表为空，返回默认值，避免不必要的计算
+  if (!progressList.value || progressList.value.length === 0) {
+    return {
+      currentPhaseStatus: 120,
+      sharerName: 100,
+      product: 200,
+      targetMonthlySales: 120,
+    }
+  }
+  return {
+    currentPhaseStatus: flexColumnWidth(progressList.value, '当前阶段', 'currentPhaseStatus', 0),
+    sharerName: flexColumnWidth(progressList.value, '参与人员', 'other', 0),
+    product: Math.max(
+      flexColumnWidth(progressList.value, '中文品名', 'product', 0),
+      flexColumnWidth(progressList.value, '中文品名', 'mainSearchTerms', 0)
+    ),
+    targetMonthlySales: flexColumnWidth(progressList.value, '目标月销', 'targetMonthlySales', 0),
+  }
+})
 let tableClickProgressId = ref<number>(0)
 // 点击上传图标的行下标
 let tableClickRowIndex = ref<number>(0)
@@ -1111,13 +1124,28 @@ const onEnd = debounce(async () => {
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getList(queryForm)
+  // 立即显示数据，不阻塞渲染
   progressList.value = data.list
   total.value = data.total
-  nextTick(() => {
-    imageListWidth.value = 0 // 重置为初始值
-    getImageColumnWidth()
-  })
   listLoading.value = false
+
+  // 优化：延迟计算列宽度，避免阻塞首屏渲染
+  // 使用 requestIdleCallback 或 setTimeout 延迟执行非关键计算
+  if (typeof requestIdleCallback !== 'undefined') {
+    requestIdleCallback(
+      () => {
+        imageListWidth.value = 0 // 重置为初始值
+        getImageColumnWidth()
+      },
+      { timeout: 300 }
+    )
+  } else {
+    // 降级方案：延迟执行
+    setTimeout(() => {
+      imageListWidth.value = 0 // 重置为初始值
+      getImageColumnWidth()
+    }, 100)
+  }
 }
 let _row: any = null
 const progressId = ref<number>(-1)
@@ -1265,6 +1293,11 @@ const queryData = () => {
   })
   fetchData()
 }
+
+// 防抖处理搜索输入，减少请求频率
+const debouncedQueryData = debounce(() => {
+  queryData()
+}, 300)
 /**
  * 分页大小的改变
  */

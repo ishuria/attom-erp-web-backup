@@ -111,707 +111,29 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <div v-show="listLoading">
-          <el-skeleton animated :loading="listLoading">
-            <template #template>
-              <div style="display: flex; flex-direction: column; height: calc(100vh - 270px)">
-                <div style="display: flex; flex: 1; flex-direction: column; padding: 0">
-                  <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
-                  <div style="display: flex; justify-content: center; margin-top: 20px">
-                    <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-skeleton>
-        </div>
-        <el-table
-          v-show="!listLoading"
-          v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          class="noneHoverTable"
+        <performance-table
+          :active-name="activeName"
+          :columns="checkList1"
           :data="list"
           :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
-          :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
+          :is-boss="isBoss"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
+          :row-key="(row: any) => row.id || row.skuId"
+          :seasonal-x-data="seasonalXData"
+          :type="'sku'"
+          :user-name="userName"
+          :x-axis="xAxis"
           @cell-click="cellClick"
+          @image-preview="imagePreviewShow"
+          @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-release-order="handleShowReleaseOrder"
+          @show-remark="showRemark"
           @sort-change="sortChange"
-        >
-          <el-table-column
-            v-for="item in checkList1"
-            :key="item.columnId"
-            :fixed="item.isFixed"
-            :label="item.label"
-            :min-width="handleWidth(item)"
-            :prop="item.prop"
-            :sortable="item.sortable ? 'custom' : false"
-            :width="item.width"
-          >
-            <template #header>
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势
-                <br />
-                (点击看明细)
-              </span>
-              <span v-if="item.label === '小类排名'">
-                小类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === '大类排名'">
-                大类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === 'VOC满意度'">
-                VOC满意度
-                <br />
-                (点击看明细)
-              </span>
-
-              <span v-if="item.label === '2周广告点击'">
-                2周广告
-                <br />
-                点击
-              </span>
-
-              <span v-if="item.prop === 'outletDeal'">
-                可报
-                <br />
-                Outlet Deal
-              </span>
-              <span v-if="item.label === '今销'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今销
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '今广'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今广
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '头部产品#'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    头部产品#
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">
-                      大于60：头部垄断较小
-                      <br />
-                      30 - 60：头部垄断中等
-                      <br />
-                      小于30：头部垄断严重
-                    </div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === 'FBA差异'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    FBA差异
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">=自量FBA - 亚马逊FBA</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">月广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利润'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利润
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的净利润</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算净利润率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退款%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退款%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退款占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退货%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退货%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退货占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告销售'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告销售
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告销售</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告支出'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告支出
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告支出</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === 'FBA仓储费'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    FBA仓储费
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip-new">
-                      过去30天的FBA仓储费
-                      <br />
-                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
-                    </div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '可售总'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    可售总
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应ASIN的(总FBA库存+在途数量)的可售天数+断货天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '可售'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    可售
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应ASIN的总FBA库存数的可售天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周广告
-                    <br />
-                    转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">2周订单数之和/2周点击之和</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周总转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周总转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应的ASIN的2周总转化率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '自量FBA'">
-                自量FBA
-                <br />
-                亚马逊FBA
-              </span>
-              <span v-if="item.label === '剩余库存'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    剩余库存
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">总库存+接收中/可售库存</div>
-                  </template>
-                </el-tooltip>
-              </span>
-            </template>
-            <template #default="{ row }">
-              <span v-if="item.label === '图片'">
-                <el-image
-                  fit="fill"
-                  :src="row.skuImgUrl"
-                  style="display: block; width: 75px; height: 75px"
-                  @click="imagePreviewShow(row.skuImgUrl)"
-                >
-                  <template #error><el-icon /></template>
-                </el-image>
-              </span>
-              <!-- SKU 展示-->
-              <span v-if="item.label === 'SKU'" class="sku-container">
-                <div>
-                  <span class="copySku" @click="handleClipboard($event, row.sku)">
-                    <!-- <el-tooltip effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">{{ row.sku }}</div>
-                      </template>
-                      <el-link class="sku-text" :href="row.amazonUrl" target="_blank">{{ row.sku }}</el-link>
-                    </el-tooltip> -->
-                    <el-link class="sku-text" :href="row.amazonUrl" target="_blank">{{ row.sku }}</el-link>
-                    <el-tooltip effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">复制SKU</div>
-                      </template>
-                      <vab-icon icon="file-copy-2-fill" />
-                    </el-tooltip>
-                  </span>
-                  <el-tooltip effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">复制ASIN</div>
-                    </template>
-                    <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
-                  </el-tooltip>
-                </div>
-
-                <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
-                  <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                  <span>
-                    <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
-                  </span>
-                  <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
-                    <country-flag :country="row.flag" />
-                  </span>
-
-                  <el-tag class="order-tag" effect="dark" @click.stop="handleShowReleaseOrder(row)">订</el-tag>
-                  <el-tag class="order-tag" effect="dark" type="info" @click.stop="showRemark(row)">备</el-tag>
-                </div>
-                <!-- 状态图标移到国旗后面 -->
-                <div class="icon-div">
-                  <el-tooltip v-if="row.newArrivalDay <= 360" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">上新时间<=360天</div>
-                    </template>
-                    <!-- <vab-icon icon="calendar-2-fill" class="icon-green" /> -->
-                    <el-tag size="small" type="success">新</el-tag>
-                  </el-tooltip>
-                  <el-tooltip v-if="row.outletDeal === 1" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">可以做outlet deal</div>
-                    </template>
-                    <!-- <vab-icon icon="discount-percent-fill" class="icon-green" /> -->
-                    <img src="../../../icon/outlet.png" style="width: 22px; height: 22px; margin-top: -2px" />
-                  </el-tooltip>
-
-                  <el-tooltip v-if="isOutOfStock(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">断货警告</div>
-                    </template>
-                    <vab-icon :class="handleOutOfStock(row)" icon="shopping-cart-2-fill" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isLowDelivery(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">有低量配送费</div>
-                    </template>
-                    <!-- <img src="../../../icon/低量配送费.svg" style="width: 22px; height: 22px; margin-top: -2px;"> -->
-                    <vab-icon class="icon-red" icon="home-6-line" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isWareHousing(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">低量仓储费预警</div>
-                    </template>
-                    <vab-icon class="icon-yellow" icon="home-6-line" />
-                    <!-- <img src="../../../icon/低量仓储费.svg" style="width: 20px; height: 20px; margin-top: -2px;"> -->
-                  </el-tooltip>
-                  <el-tooltip v-if="isStorageAge(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">库龄警告</div>
-                    </template>
-                    <vab-icon :class="handleStorageAge(row)" icon="alarm-warning-fill" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isVoc(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">VOC满意度: {{ row.vocSatisfaction }}</div>
-                    </template>
-                    <vab-icon :class="handleVocSatisfaction(row.vocSatisfaction)" icon="emotion-unhappy-fill" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isAvailableSaleDayTotal(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">低动销预警</div>
-                    </template>
-                    <vab-icon :class="handleAvailableSaleDayTotal(row)" icon="line-chart-fill" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isReturnGoods(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">高退货率</div>
-                    </template>
-                    <vab-icon :class="handleReturnGoods(row)" icon="reply-fill" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isFBA(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">FBA费异常</div>
-                    </template>
-
-                    <img alt="FBA" src="../../../icon/FBA费异常.svg" style="width: 20px; height: 20px; margin-top: -1px" />
-                  </el-tooltip>
-                  <el-tooltip v-if="isHealthy(row)" effect="dark" placement="top">
-                    <template #content>
-                      <div class="custom-tooltip">产品健康</div>
-                    </template>
-                    <vab-icon class="icon-green" icon="checkbox-circle-fill" />
-                  </el-tooltip>
-                </div>
-              </span>
-              <!-- <span v-if="item.label === 'ASIN'">
-                 {{ row.asin }}
-                </span>
-                <span v-if="item.label === '父体ASIN'">
-                  <el-link type="primary">{{ row.parentAsin }}</el-link>
-                </span> -->
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
-                </div>
-              </span>
-              <span v-if="item.label === '运营分类'">
-                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateOpeType(row)">
-                  <el-option v-for="a in row.operationTypeList" :key="a.id" :label="a.label" :value="a.id" />
-                </el-select>
-              </span>
-              <span v-if="item.label === '停产'">
-                <el-checkbox
-                  v-if="row.operationUserName === userName || row.developName.includes(userName) || isBoss"
-                  v-model="row.stopProductStatus"
-                  :false-value="0"
-                  :true-value="1"
-                  @change="handleUpdateSKUStopStatus(row)"
-                />
-                <vab-icon
-                  v-else-if="row.stopProductStatus === 1"
-                  icon="checkbox-circle-fill"
-                  style="color: var(--el-color-danger); font-size: 23px"
-                />
-                <vab-icon
-                  v-else-if="row.stopProductStatus === 0 || row.stopProductStatus === null"
-                  icon="close-circle-fill"
-                  style="color: var(--el-color-success); font-size: 23px"
-                />
-              </span>
-              <span v-if="item.label === '自量FBA'">
-                {{ row.currencyIcon + (row.selfAssessmentFba ?? '') }}
-                <br />
-                {{ row.currencyIcon + (row.amazonFba ?? '') }}
-              </span>
-              <span v-if="label1.includes(item.label)">
-                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
-              </span>
-              <span v-if="label2.includes(item.label)">
-                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
-              </span>
-              <span v-if="label3.includes(item.label)">
-                <!-- 处理 天 -->
-
-                {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
-              </span>
-              <span v-if="item.label === '断货'">
-                <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
-                <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
-                <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
-              </span>
-              <span v-if="label4.includes(item.label)">
-                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
-              </span>
-              <span v-if="item.label === 'VOC满意度'">
-                {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
-                <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">
-                  极差 {{ formatPercentage(row.vocDefect, 2) }}
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === '一般'" class="customTag customTag-fair">
-                  一般 {{ formatPercentage(row.vocDefect, 2) }}
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === '不合格'" class="customTag customTag-poor">
-                  不合格 {{ formatPercentage(row.vocDefect, 2) }}
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === '良好'" class="customTag customTag-good">
-                  良好 {{ formatPercentage(row.vocDefect, 2) }}
-                </el-tag>
-                <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">
-                  极好 {{ formatPercentage(row.vocDefect, 2) }}
-                </el-tag>
-              </span>
-              <span v-if="item.label === '状态'">
-                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
-                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
-                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
-                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
-              </span>
-              <span v-if="item.label === '广告'">
-                <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
-                <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
-              </span>
-              <span v-if="item.label === '运营备注'">
-                <el-tooltip content=" " effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
-                  </template>
-                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '饼图'">
-                <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="row.pieList" />
-                </div>
-              </span>
-              <span v-if="item.label === '季节趋势'">
-                <div style="width: 100%; height: 50px">
-                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
-                </div>
-              </span>
-              <span v-if="item.label === '当前售价'">
-                <el-link type="primary" @click="handleRouterPush(row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
-              </span>
-              <span v-if="item.label === '小类排名'">
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowSubcategoryRanking }}</div>
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
-                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowSubcategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '大类排名'">
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowMajorCategoryRanking }}</div>
-                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon
-                    v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0"
-                    class="arrow-down"
-                    icon="arrow-down-fill"
-                  />
-                  <span style="color: #999">{{ Math.abs(row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowMajorCategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '剩余库存'">
-                {{ row.fbaCount }}
-                <span style="color: var(--el-color-warning)">
-                  {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
-                </span>
-                / {{ row.availableInventory }}
-              </span>
-              <span v-if="item.label === '库龄'">
-                <span v-html="row.storageAge"></span>
-              </span>
-              <span v-if="item.label === '订货#'">
-                {{ row.orderCount }}
-                <br />
-                <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-              </span>
-              <span v-if="item.label === '开发人员'">
-                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
-                  </template>
-                  <span v-html="row._developName"></span>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center">
-                <div style="width: fit-content; text-align: left">
-                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
-                  <div>({{ row.tWksClicks }})</div>
-                </div>
-              </span>
-              <span v-if="item.label === '最近入库'">
-                <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
-              </span>
-              <span v-if="item.label === '美工长期'">
-                <el-checkbox v-model="row.artLongTermFlag" disabled />
-              </span>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
+          @update-ope-type="handleUpdateOpeType"
+          @update-stop-status="handleUpdateSKUStopStatus"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -929,563 +251,29 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <div v-show="listLoading">
-          <el-skeleton animated :loading="listLoading">
-            <template #template>
-              <div style="display: flex; flex-direction: column; height: calc(100vh - 270px)">
-                <div style="display: flex; flex: 1; flex-direction: column; padding: 0">
-                  <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
-                  <div style="display: flex; justify-content: center; margin-top: 20px">
-                    <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-skeleton>
-        </div>
-        <el-table
-          v-show="!listLoading"
-          v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          class="noneHoverTable"
+        <performance-table
+          :active-name="activeName"
+          :columns="checkList2"
           :data="asinList"
-          :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
+          :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+          :is-boss="isBoss"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
+          :row-key="(row: any) => row.id || row.asinId"
+          :seasonal-x-data="seasonalXData"
+          :type="'asin'"
+          :user-name="userName"
+          :x-axis="xAxis"
           @cell-click="cellClick"
+          @image-preview="imagePreviewShow"
+          @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-release-order="handleShowReleaseOrder"
+          @show-remark="showRemark"
           @sort-change="asinSortChange"
-        >
-          <el-table-column
-            v-for="item in checkList2"
-            :key="item.columnId"
-            :fixed="item.isFixed"
-            :label="item.label"
-            :min-width="handleWidth(item)"
-            :prop="item.prop"
-            :sortable="item.sortable"
-            :width="item.width"
-          >
-            <template #header>
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势
-                <br />
-                (点击看明细)
-              </span>
-              <span v-if="item.label === '小类排名'">
-                小类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === '大类排名'">
-                大类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === '2周广告转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周广告
-                    <br />
-                    转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">2周订单数之和/2周点击之和</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周总转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周总转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应的ASIN的2周总转化率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告点击'">
-                2周广告
-                <br />
-                点击
-              </span>
-              <span v-if="item.label === '可售'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    可售
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应ASIN的总FBA库存数的可售天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.prop === 'outletDeal'">
-                可报
-                <br />
-                Outlet Deal
-              </span>
-              <span v-if="item.label === '今销'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今销
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '今广'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今广
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '头部产品#'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    头部产品#
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">
-                      大于60：头部垄断较小
-                      <br />
-                      30 - 60：头部垄断中等
-                      <br />
-                      小于30：头部垄断严重
-                    </div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">月广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利润'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利润
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的净利润</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算净利润率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退款%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退款%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退款占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退货%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退货%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退货占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告销售'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告销售
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告销售</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告支出'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告支出
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告支出</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === 'FBA仓储费'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    FBA仓储费
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip-new">
-                      过去30天的FBA仓储费
-                      <br />
-                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
-                    </div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '可售总'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    可售总
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应ASIN的(总FBA库存+在途数量)的可售天数+断货天数</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '剩余库存'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    剩余库存
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">总库存+接收中/可售库存</div>
-                  </template>
-                </el-tooltip>
-              </span>
-            </template>
-            <template #default="{ row }">
-              <span v-if="item.label === '图片'">
-                <el-image
-                  fit="fill"
-                  :src="row.asinImgUrl"
-                  style="display: block; width: 75px; height: 75px"
-                  @click="imagePreviewShow(row.asinImgUrl)"
-                >
-                  <template #error>
-                    <el-icon />
-                  </template>
-                </el-image>
-              </span>
-              <span v-if="item.label === 'ASIN'">
-                <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
-                <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
-                  <vab-icon icon="file-copy-2-fill" />
-                </span>
-
-                <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
-                  <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-                  <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
-                    <country-flag :country="row.flag" />
-                  </span>
-                </div>
-              </span>
-              <span v-if="item.label === 'SKU'">
-                <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ row._skuFull }}</div>
-                  </template>
-                  <span v-html="row._sku"></span>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '父体ASIN'">
-                <el-link type="primary">{{ row.parentAsin }}</el-link>
-              </span>
-              <span v-if="item.label === '停产'">
-                <el-checkbox
-                  v-if="row.operationUserName === userName || row.developName.includes(userName) || isBoss"
-                  v-model="row.stopProductStatus"
-                  :false-value="0"
-                  :true-value="1"
-                  @change="handleUpdateASINStopStatus(row)"
-                />
-                <vab-icon
-                  v-else-if="row.stopProductStatus === 1"
-                  icon="checkbox-circle-fill"
-                  style="color: var(--el-color-danger); font-size: 23px"
-                />
-                <vab-icon
-                  v-else-if="row.stopProductStatus === 0 || row.stopProductStatus === null"
-                  icon="close-circle-fill"
-                  style="color: var(--el-color-success); font-size: 23px"
-                />
-              </span>
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
-                </div>
-              </span>
-              <span v-if="item.label === '运营分类'">
-                <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateAsinOpeType(row)">
-                  <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
-                </el-select>
-              </span>
-              <span v-if="label1.includes(item.label)">
-                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
-              </span>
-              <span v-if="label2.includes(item.label)">
-                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
-              </span>
-              <span v-if="label3.includes(item.label)">
-                <!-- 处理 天 -->
-                {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
-              </span>
-              <span v-if="item.label === '断货'">
-                <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
-                <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
-                <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
-              </span>
-              <span v-if="label4.includes(item.label)">
-                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
-              </span>
-              <span v-if="item.label === '当前售价'">
-                <el-link type="primary" @click="handleRouterPush(row)">{{ row.currencyIcon + row.sellingPrice }}</el-link>
-              </span>
-              <span v-if="item.label === '广告'">
-                <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
-                <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
-              </span>
-              <span v-if="item.label === '状态'">
-                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
-                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
-                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
-                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
-              </span>
-              <span v-if="item.label === '运营备注'">
-                <el-tooltip content=" " effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ removeHtmlTags(row.operationRemark) }}</div>
-                  </template>
-                  <el-text style="vertical-align: middle" truncated>{{ removeHtmlTags(row.operationRemark) }}</el-text>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '饼图'">
-                <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="row?.pieList" />
-                </div>
-              </span>
-              <span v-if="item.label === '季节趋势'">
-                <div style="width: 100%; height: 50px">
-                  <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
-                </div>
-              </span>
-              <span v-if="item.label === '小类排名'">
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowSubcategoryRanking }}</div>
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
-                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowSubcategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '大类排名'">
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowMajorCategoryRanking }}</div>
-                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon
-                    v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0"
-                    class="arrow-down"
-                    icon="arrow-down-fill"
-                  />
-                  <span style="color: #999">{{ Math.abs(row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowMajorCategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '剩余库存'">
-                {{ row.fbaCount }}
-                <span style="color: var(--el-color-warning)">
-                  {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
-                </span>
-                / {{ row.availableInventory }}
-              </span>
-              <span v-if="item.label === '库龄'">
-                <span v-html="row.storageAge"></span>
-              </span>
-              <span v-if="item.label === '订货#'">
-                {{ row.orderCount }}
-                <br />
-                <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-              </span>
-              <span v-if="item.label === '开发人员'">
-                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
-                  </template>
-                  <span v-html="row._developName"></span>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center">
-                <div style="width: fit-content; text-align: left">
-                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
-                  <div>({{ row.tWksClicks }})</div>
-                </div>
-              </span>
-              <span v-if="item.label === '最近入库'">
-                <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
-              </span>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
+          @update-ope-type="handleUpdateAsinOpeType"
+          @update-stop-status="handleUpdateASINStopStatus"
+        />
         <vab-pagination
           :current-page="asinQueryForm.pageNo"
           :page-size="asinQueryForm.pageSize"
@@ -1605,436 +393,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <div v-show="listLoading">
-          <el-skeleton animated :loading="listLoading">
-            <template #template>
-              <div style="display: flex; flex-direction: column; height: calc(100vh - 270px)">
-                <div style="display: flex; flex: 1; flex-direction: column; padding: 0">
-                  <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
-                  <div style="display: flex; justify-content: center; margin-top: 20px">
-                    <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-skeleton>
-        </div>
-        <el-table
-          v-show="!listLoading"
-          v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          class="noneHoverTable"
+        <performance-table
+          :active-name="activeName"
+          :columns="checkList3"
           :data="pAsinList"
-          :header-cell-class-name="headerCell"
-          :header-cell-style="{ textAlign: 'center', verticalAlign: 'top' }"
+          :default-sort="{ prop: 'currentSalesNumber', order: 'descending' }"
+          :is-boss="isBoss"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
+          :row-key="(row: any) => row.id || row.parentAsinId"
+          :seasonal-x-data="seasonalXData"
+          :type="'pAsin'"
+          :user-name="userName"
+          :x-axis="xAxis"
           @cell-click="cellClick"
+          @image-preview="imagePreviewShow"
+          @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-release-order="handleShowReleaseOrder"
+          @show-remark="showRemark"
           @sort-change="pAsinSortChange"
-        >
-          <el-table-column
-            v-for="item in checkList3"
-            :key="item.columnId"
-            :fixed="item.isFixed"
-            :label="item.label"
-            :min-width="handleWidth(item)"
-            :prop="item.prop"
-            :sortable="item.sortable"
-            :width="item.width"
-          >
-            <template #header>
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                销量趋势
-                <br />
-                (点击看明细)
-              </span>
-              <span v-if="item.label === '小类排名'">
-                小类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === '大类排名'">
-                大类
-                <br />
-                (可点)
-              </span>
-              <span v-if="item.label === '2周广告转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周广告
-                    <br />
-                    转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">2周订单数之和/2周点击之和</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周总转化'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    2周总转化
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">SKU对应的ASIN的2周总转化率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告点击'">
-                2周广告
-                <br />
-                点击
-              </span>
-              <span v-if="item.label === '今销'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今销
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '今广'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    今广
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">今日广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">月广告销售占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '结算月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    结算
-                    <br />
-                    月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月量'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月量
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销量</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '订单月额'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    订单月额
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的订单销售额</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利润'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利润
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的净利润</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月净利'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月净利
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的结算净利润率</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退款%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退款%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退款占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月退货%'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月退货%
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的退货占比</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告销售'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告销售
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告销售</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月广告支出'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月广告支出
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的广告支出</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '月TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    月TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去30天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年ACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年ACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的ACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '1年TACOS'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    1年TACOS
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">过去360天的TACOS</div>
-                  </template>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === 'FBA仓储费'">
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    FBA仓储费
-                    <el-icon><question-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip-new">
-                      过去30天的FBA仓储费
-                      <br />
-                      数值 = 领星的FBA仓储费 + FBA仓储费差异 + FBA长期仓储费 + FBA长期仓储费差异
-                    </div>
-                  </template>
-                </el-tooltip>
-              </span>
-            </template>
-            <template #default="{ row }">
-              <span v-if="item.label === '图片'">
-                <el-image
-                  fit="fill"
-                  :src="row.asinImgUrl"
-                  style="display: block; width: 75px; height: 75px"
-                  @click="imagePreviewShow(row.asinImgUrl)"
-                >
-                  <template #error>
-                    <el-icon />
-                  </template>
-                </el-image>
-              </span>
-
-              <!-- 父体ASIN 展示 -->
-              <span v-if="item.label === '父体ASIN'">
-                <el-link type="primary">{{ row.parentAsin }}</el-link>
-                <div class="rate-wrapper" style="cursor: pointer" @click="goToReview(row.asin)">
-                  <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-                  <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-                  <span class="rate-count">{{ row.commentsNumbers }}</span>
-                  <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
-                    <country-flag :country="row.flag" />
-                  </span>
-                </div>
-              </span>
-              <span v-if="item.label === 'SKU'">
-                <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ row._skuFull }}</div>
-                  </template>
-                  <span v-html="row._sku"></span>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '销量趋势(点击看明细)'">
-                <div class="custom-bar">
-                  <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
-                </div>
-              </span>
-              <span v-if="label1.includes(item.label)">
-                {{ row[label1Map.get(item.label) as string] ? row.currencyIcon + row[label1Map.get(item.label) as string] : '' }}
-              </span>
-              <span v-if="label2.includes(item.label)">
-                {{ formatPercentage(row[label2Map.get(item.label) as string], 2) }}
-              </span>
-              <span v-if="label4.includes(item.label)">
-                {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
-              </span>
-              <span v-if="item.label === '广告'">
-                <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
-                <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
-              </span>
-              <span v-if="item.label === '状态'">
-                <el-tag v-if="row.status === 0" type="danger">停售</el-tag>
-                <el-tag v-if="row.status === 1" type="success">正常</el-tag>
-                <el-tag v-if="row.status === -1" type="info">领星未同步</el-tag>
-                <el-tag v-if="row.status === 2" type="warning">链接不完整</el-tag>
-              </span>
-              <span v-if="item.label === '饼图'">
-                <div style="width: 100%; height: 60px">
-                  <vab-echarts-chart-pie :data="row?.pieList || []" />
-                </div>
-              </span>
-              <span v-if="item.label === '小类排名'">
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowSubcategoryRanking }}</div>
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon v-if="row.nowSubcategoryRanking - row.beforeSubcategoryRanking > 0" class="arrow-down" icon="arrow-down-fill" />
-                  <span style="color: #999">{{ Math.abs(row.nowSubcategoryRanking - row.beforeSubcategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowSubcategoryRanking !== null &&
-                    row.beforeSubcategoryRanking !== null &&
-                    row.nowSubcategoryRanking - row.beforeSubcategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowSubcategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '大类排名'">
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking !== 0
-                  "
-                >
-                  <div>{{ row.nowMajorCategoryRanking }}</div>
-                  <vab-icon v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking < 0" class="arrow-up" icon="arrow-up-fill" />
-                  <vab-icon
-                    v-if="row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking > 0"
-                    class="arrow-down"
-                    icon="arrow-down-fill"
-                  />
-                  <span style="color: #999">{{ Math.abs(row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking) }}</span>
-                </div>
-                <div
-                  v-if="
-                    row.nowMajorCategoryRanking !== null &&
-                    row.beforeMajorCategoryRanking !== null &&
-                    row.nowMajorCategoryRanking - row.beforeMajorCategoryRanking === 0
-                  "
-                >
-                  <el-space>
-                    {{ row.nowMajorCategoryRanking }}
-                    <span style="font-weight: 600">-</span>
-                  </el-space>
-                </div>
-              </span>
-              <span v-if="item.label === '开发人员'">
-                <el-tooltip content=" " :disabled="!row.overflow_developName" effect="dark" placement="top">
-                  <template #content>
-                    <div class="custom-tooltip">{{ row._developNameFull }}</div>
-                  </template>
-                  <span v-html="row._developName"></span>
-                </el-tooltip>
-              </span>
-              <span v-if="item.label === '2周广告点击'" style="display: flex; justify-content: center">
-                <div style="width: fit-content; text-align: left">
-                  <div>{{ formatPercentage(row.tWksClickRate, 2) }}</div>
-                  <div>({{ row.tWksClicks }})</div>
-                </div>
-              </span>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" />
-          </template>
-        </el-table>
+        />
         <vab-pagination
           :current-page="pAsinQueryForm.pageNo"
           :page-size="pAsinQueryForm.pageSize"
@@ -2123,13 +502,12 @@
 </template>
 
 <script lang="ts" setup>
-import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
-import type { CSSProperties } from 'vue'
-import CountryFlag from 'vue-country-flag-next'
+import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '~/src/const/role'
@@ -2175,10 +553,9 @@ import type {
   IOperationAmazonSkuRankList,
   IOperationAmazonSkuVocList,
 } from '/@/type/storeOperation/productPerformanceType'
-import handleClipboard, { handleClip } from '/@/utils/clipboard'
-import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { getAmazonStars, handleImgUrl } from '/@/utils/rate'
 import { _addData } from '/@/utils/skuOptions'
-import { calculateBrColumnWidth, flexColumnWidth, processField, removeHtmlTags } from '/@/utils/tableColum'
+import { processField } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'ProductPerformanceDashboard',
@@ -2281,157 +658,17 @@ const tableRowClassName = ({ row }: { row: any }) => {
   }
   return ''
 }
-const goToReview = (asin: string) => {
-  window.open(`https://www.amazon.com/product-reviews/${asin}`, '_blank')
-}
 
-// 判断断货
-const isOutOfStock = (row: any) => {
-  if (row.fbaCount === 0 || row.outOfStock > 0) {
-    return true
-  }
-  return false
-}
-// 判断低量
-const isLowDelivery = (row: any) => {
-  if (row.lowVolumeDelivery === 1) {
-    return true
-  }
-  return false
-}
-const isWareHousing = (row: any) => {
-  if (row.warehousing >= 28 && row.warehousing <= 35) {
-    return true
-  }
-  return false
-}
-// 判断库龄
-const isStorageAge = (row: any) => {
-  if (!row.inventoryAgeLevel1Days && !row.inventoryAgeLevel2Days && !row.inventoryAgeLevel3Days) {
-    return false
-  }
-  if (!row.inventoryAgeLevel1Days || !row.inventoryAgeLevel2Days || !row.inventoryAgeLevel3Days) {
-    return true
-  }
-  return false
-}
-const isVoc = (row: any) => {
-  if (row.vocSatisfaction === '一般' || row.vocSatisfaction === '不合格' || row.vocSatisfaction === '极差') {
-    return true
-  }
-  return false
-}
-// 判断可售总
-const isAvailableSaleDayTotal = (row: any) => {
-  if (row.esAvailableSaleDayTotal > 180) {
-    return true
-  }
-  return false
-}
-// 判断月退货率
-const isReturnGoods = (row: any) => {
-  if (row.monthReturnGoods >= 0.05) {
-    return true
-  }
-  return false
-}
-// 判断FBA
-const isFBA = (row: any) => {
-  if (row.differenceFba < 0) {
-    return true
-  }
-  return false
-}
-const isHealthy = (row: any) => {
-  if (
-    !isOutOfStock(row) &&
-    !isLowDelivery(row) &&
-    !isWareHousing(row) &&
-    !isStorageAge(row) &&
-    !isVoc(row) &&
-    !isAvailableSaleDayTotal(row) &&
-    !isReturnGoods(row) &&
-    !isFBA(row)
-  ) {
-    return true
-  }
-  return false
-}
-const handleOutOfStock = (row: any) => {
-  let className = ''
-  if (row.outOfStock > 0) {
-    className = 'icon-yellow'
-  }
-  if (row.fbaCount === 0) {
-    className = 'icon-red'
-  }
-  return className
-}
-const handleLowDelivery = (row: any) => {
-  let className = ''
-  if (row.warehousing >= 28 && row.warehousing <= 35) {
-    className = 'icon-yellow'
-  }
-  if (row.lowVolumeDelivery === 1) {
-    className = 'icon-red'
-  }
-  return className
-}
-const handleStorageAge = (row: any) => {
-  let className = ''
-  if (!row.inventoryAgeLevel1Days) {
-    className = 'icon-yellow'
-  }
-  if (!row.inventoryAgeLevel2Days) {
-    className = 'icon-orange'
-  }
-  if (!row.inventoryAgeLevel3Days) {
-    className = 'icon-red'
-  }
-  return className
-}
-const handleVocSatisfaction = (voc: string) => {
-  if (voc === '一般') {
-    return 'icon-yellow'
-  } else if (voc === '不合格') {
-    return 'icon-orange'
-  } else if (voc === '极差') {
-    return 'icon-red'
-  }
-}
-const handleAvailableSaleDayTotal = (row: any) => {
-  let className = ''
-  if (row.esAvailableSaleDayTotal > 180) {
-    className = 'icon-yellow'
-  }
-  if (row.esAvailableSaleDayTotal > 270) {
-    className = 'icon-orange'
-  }
-  if (row.esAvailableSaleDayTotal > 365) {
-    className = 'icon-red'
-  }
-  return className
-}
-const handleReturnGoods = (row: any) => {
-  let className = ''
-  if (row.monthReturnGoods >= 0.05) {
-    className = 'icon-yellow'
-  }
-  if (row.monthReturnGoods >= 0.08) {
-    className = 'icon-red'
-  }
-  return className
-}
-// 防抖处理
+// 防抖处理 - 减少延迟时间，优化 INP（从 700ms 改为 300ms）
 const debouncedQueryData = debounce(() => {
   queryData()
-}, 700)
+}, 300)
 const debouncedQueryAsinData = debounce(() => {
   queryAsinData()
-}, 700)
+}, 300)
 const debouncedQueryPAsinData = debounce(() => {
   queryPAsinData()
-}, 700)
+}, 300)
 
 const vocVisible = ref<boolean>(false)
 const vocValue = ref<IOperationAmazonSkuVocList[]>([])
@@ -2532,7 +769,7 @@ const indeterminate = ref<boolean>(false)
 const queryForm = reactive<any>({
   keyword: '',
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 10,
   site: [],
   operationUserId: undefined,
   developUserId: undefined,
@@ -2561,7 +798,7 @@ const queryForm = reactive<any>({
 const asinQueryForm = reactive<any>({
   keyword: '',
   pageNo: 1,
-  pageSize: 20,
+  pageSize: 10,
   site: [],
   operationUserId: '',
   developUserId: '',
@@ -2597,9 +834,11 @@ const pAsinQueryForm = reactive<any>({
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
-const list = ref<IGetOperationAmazonSKUList[]>([])
-const asinList = ref<IGetOperationAsinList[]>([])
-const pAsinList = ref<IGetOperationParentAsinList[]>([])
+// 优化：使用 shallowRef 减少深度响应式追踪，提升性能
+// 表格数据不需要深度响应式，只需要浅层响应式即可
+const list = shallowRef<IGetOperationAmazonSKUList[]>([])
+const asinList = shallowRef<IGetOperationAsinList[]>([])
+const pAsinList = shallowRef<IGetOperationParentAsinList[]>([])
 const { site } = toRefs(queryForm)
 const aclStore = useAclStore()
 
@@ -2743,70 +982,6 @@ const showRemark = (row: any) => {
   remarkVisible.value = true
 }
 
-const label1 = [
-  '今销',
-  'FBA仓储费',
-  'FBA差异',
-  '月净利润',
-  '结算月额',
-  '订单月额',
-  '月广告销售',
-  '月广告支出',
-  '预计下月仓储费',
-  '盈亏售价',
-  '30毛利售价',
-]
-const label2 = [
-  '试算毛利',
-  '2周广告转化',
-  // '2周广告点击',
-  '2周总转化',
-  '月净利',
-  '月ACOS',
-  '月TACOS',
-  '1年ACOS',
-  '1年TACOS',
-  '月退货%',
-  '月退款%',
-]
-const label3 = ['上新', '可售', '可售总']
-const label4 = ['今广', '半年有货率', '月广%']
-const label1Map = new Map([
-  ['今销', 'currentSalesPrice'],
-  ['FBA仓储费', 'fbaStorageFee'],
-  ['FBA差异', 'differenceFba'],
-  ['月净利润', 'monthNetProfit'],
-  ['结算月额', 'monthSalesPrice'],
-  ['订单月额', 'monthOrderSales'],
-  ['月广告销售', 'monthAdvSales'],
-  ['月广告支出', 'monthAdvExpenditure'],
-  ['预计下月仓储费', 'estimateNextMonthStorageFee'],
-  ['盈亏售价', 'profitLossSellingPrice'],
-  ['30毛利售价', 'grossSellingPrice'],
-])
-const label2Map = new Map([
-  ['试算毛利', 'grossProfit'],
-  ['2周广告转化', 'tWksAdvRate'],
-  // ['2周广告点击', 'tWksClickRate'],
-  ['2周总转化', 'tWksTotalConv'],
-  ['月净利', 'monthNetProfitMargin'],
-  ['月ACOS', 'monthAcos'],
-  ['月TACOS', 'monthTacos'],
-  ['1年ACOS', 'yearAcos'],
-  ['1年TACOS', 'yearTacos'],
-  ['月退货%', 'monthReturnGoods'],
-  ['月退款%', 'monthRefund'],
-])
-const label3Map = new Map([
-  ['上新', 'newArrivalDay'],
-  ['可售', 'esAvailableSaleDay'],
-  ['可售总', 'esAvailableSaleDayTotal'],
-])
-const label4Map = new Map([
-  ['今广', 'currentAdvertisement'],
-  ['半年有货率', 'availableRate'],
-  ['月广%', 'monthAdv'],
-])
 let _seasonalCoefficient = {
   actualList: [],
   referenceList: [],
@@ -2879,9 +1054,11 @@ const confirmUpdateRemark = async () => {
     _row.value.operationRemark = remark.value
   }
 }
+// 优化：直接过滤，对小数组来说比缓存更快
 const checkList1 = computed(() => {
   return columns.value.filter((_: any) => _.checked)
 })
+// 优化：直接过滤，对小数组来说比缓存更快
 const checkList2 = computed(() => {
   return columnsAsin.value.filter((_: any) => _.checked)
 })
@@ -3178,92 +1355,6 @@ const handleCloseKeyWordTrend = (value: boolean) => {
   keyWordTrendVisible.value = value
 }
 
-// 处理自适应宽度
-const handleWidth = (item: any) => {
-  if (activeName.value === 0) {
-    switch (item.label) {
-      case 'SKU': {
-        return flexColumnWidth(list.value, 'SKU', 'sku') + 50
-      }
-      case 'ASIN': {
-        return flexColumnWidth(list.value, 'ASIN', 'asin')
-      }
-      case '父体ASIN': {
-        return flexColumnWidth(list.value, '父体ASIN', 'parentAsin')
-      }
-      case '运营分类': {
-        return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
-      }
-      case '产品描述': {
-        return flexColumnWidth(list.value, '产品描述', 'productDesc')
-      }
-      case '开发人员': {
-        return calculateBrColumnWidth(list.value, (row: any) => row._developName, 90)
-      }
-      case '剩余库存': {
-        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
-        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
-        return `${Number(availableWidth) + Number(fbaWidth) + 30}px`
-      }
-      case '最近入库': {
-        return 120
-      }
-      default: {
-        return item.minWidth
-      }
-    }
-  } else if (activeName.value === 1) {
-    switch (item.label) {
-      case 'SKU': {
-        return calculateBrColumnWidth(asinList.value, (row: any) => row._sku, 100)
-      }
-      case 'ASIN': {
-        return flexColumnWidth(asinList.value, 'ASIN-ASIN-ASIN-ASI', 'asin', 60)
-      }
-      case '父体ASIN': {
-        return flexColumnWidth(asinList.value, '父体ASIN', 'parentAsin')
-      }
-      case '运营分类': {
-        return flexColumnWidth(asinList.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
-      }
-      case '产品描述': {
-        return flexColumnWidth(asinList.value, '产品描述', 'productDesc')
-      }
-      case '开发人员': {
-        return calculateBrColumnWidth(asinList.value, (row: any) => row._developName, 100)
-      }
-      case '最近入库': {
-        return 120
-      }
-      case '剩余库存': {
-        const availableWidth = flexColumnWidth(list.value, '剩余库存', 'availableInventory')
-        const fbaWidth = flexColumnWidth(list.value, '/', 'fbaCount', 0)
-        return `${Number(availableWidth) + Number(fbaWidth) + 30}px`
-      }
-      default: {
-        return item.minWidth
-      }
-    }
-  } else {
-    switch (item.label) {
-      case 'SKU': {
-        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._sku, 100, 30)
-      }
-      case '父体ASIN': {
-        return flexColumnWidth(pAsinList.value, '父体ASIN-ASIN-ASIN', 'parentAsin')
-      }
-      case '产品描述': {
-        return flexColumnWidth(pAsinList.value, '产品描述', 'productDesc')
-      }
-      case '开发人员': {
-        return calculateBrColumnWidth(pAsinList.value, (row: any) => row._developName, 100)
-      }
-      default: {
-        return item.minWidth
-      }
-    }
-  }
-}
 let copyRow: any
 const chartLoading = ref<boolean>(false)
 const rankValue = ref<IOperationAmazonSkuRankList[]>([])
@@ -3601,158 +1692,7 @@ const changeCurrencyPASIN = async () => {
     queryPAsinData()
   }
 }
-const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  const label = data.column.label
-  if (
-    [
-      '今销',
-      '月净利润',
-      '结算月额',
-      '结算月量',
-      '2周广告转化',
-      '2周总转化',
-      'FBA差异',
-      '月退货%',
-      'FBA仓储费',
-      '月ACOS',
-      'VOC满意度',
-      '剩余库存',
-      '订单月额',
-    ].includes(data.column.label)
-  ) {
-    return 'header-cell clearLR-padding'
-  }
 
-  return 'clearLR-padding'
-}
-const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  if (['SKU', 'ASIN', '父体ASIN', '库龄', '产品描述', '运营分类', '运营负责人', '开发人员'].includes(label)) {
-    return {
-      textAlign: 'left',
-    }
-  } else if (label === '运营备注') {
-    return {
-      textAlign: 'left',
-      cursor: 'pointer',
-    }
-  } else if (['小类排名', '大类排名', 'VOC满意度'].includes(label)) {
-    return {
-      textAlign: 'center',
-      cursor: 'pointer',
-    }
-  } else
-    switch (label) {
-      case 'FBA差异': {
-        if (data.row.differenceFba > 0) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-success)',
-          }
-        } else {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-danger)',
-          }
-        }
-      }
-      case '月净利': {
-        const monthNetProfitMargin = data.row.monthNetProfitMargin * 100
-        if (monthNetProfitMargin >= 20) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-success)',
-          }
-        } else if (monthNetProfitMargin < 20 && monthNetProfitMargin > 0) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-warning)',
-          }
-        } else {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-danger)',
-          }
-        }
-      }
-      case '月净利润': {
-        if (data.row.monthNetProfit > 0) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-success)',
-          }
-        } else {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-danger)',
-          }
-        }
-      }
-      case '月ACOS': {
-        const monthAcos = data.row.monthAcos * 100
-        if (monthAcos > 35) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-danger)',
-          }
-        } else if (monthAcos <= 35 && monthAcos > 30) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-warning)',
-          }
-        } else {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-success)',
-          }
-        }
-      }
-      case '1年ACOS': {
-        const yearAcos = data.row.yearAcos * 100
-        if (yearAcos > 35) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-danger)',
-          }
-        } else if (yearAcos <= 35 && yearAcos > 30) {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-warning)',
-          }
-        } else {
-          return {
-            textAlign: 'center',
-
-            color: 'var(--el-color-success)',
-          }
-        }
-      }
-      default: {
-        return {
-          textAlign: 'center',
-        }
-      }
-    }
-}
-const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  const label = data.column.label
-  if (label === '图片' || label === '饼图') {
-    return 'clear-padding'
-  }
-  return ''
-}
 const fetchCurrencyList = async () => {
   const { data } = await getCurrencyList()
   currencyList.value = data
@@ -3807,6 +1747,29 @@ const reorderSeasonalData = (data: number[]) => {
   const currentMonthIndex = getCurrentMonthIndex()
   return [...data.slice(currentMonthIndex), ...data.slice(0, currentMonthIndex)]
 }
+// 生成库龄HTML的辅助函数（避免重复创建函数）
+const generateStorageAgeHtml = (item: any): string => {
+  return `
+      <div class="storage-list">
+        <div class="storage-item">
+          <span class="value1">181-270</span>
+        <span class="value2">${item.inventoryAgeLevel1Days || 0}</span>
+        <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel1Value || 0})</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">271-360</span>
+        <span class="value2">${item.inventoryAgeLevel2Days || 0}</span>
+        <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel2Value || 0})</span>
+        </div>
+        <div class="storage-item">
+          <span class="value1">361+</span>
+        <span class="value2">${item.inventoryAgeLevel3Days || 0}</span>
+        <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel3Value || 0})</span>
+        </div>
+      </div>
+    `
+}
+
 const fetchData = async () => {
   if (listLoading.value) return
   listLoading.value = true
@@ -3816,35 +1779,47 @@ const fetchData = async () => {
     siteIds: site.join(','),
   })
   total.value = data.total
-  list.value = data.list
-  list.value.forEach((item) => {
-    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
-    processField(item, 'developName', 2)
-    if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
+  // 优化：立即处理关键字段（displayRating、skuImgUrl、storageAge），确保库龄等字段能立即显示
+  // 这些字段是首屏必需的，需要立即生成
+  // 先处理数据，然后再赋值，确保 shallowRef 能正确检测到变化
+  const processedList = data.list.map((item: any) => {
     item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
-    item.storageAge = `
-      <div class="storage-list">
-        <div class="storage-item">
-          <span class="value1">181-270</span>
-          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})</span>
-        </div>
-        <div class="storage-item">
-          <span class="value1">271-360</span>
-          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})</span>
-        </div>
-        <div class="storage-item">
-          <span class="value1">361+</span>
-          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})</span>
-        </div>
-      </div>
-    `
+    if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
+    item.storageAge = generateStorageAgeHtml(item)
+    return item
   })
+  // 优化：立即显示处理后的数据，不阻塞渲染
+  // 使用 shallowRef 时，直接赋值即可，不需要深度响应式
+  list.value = processedList
   listLoading.value = false
+
+  // 优化：延迟处理非关键数据，让首屏先显示
+  // 使用 requestIdleCallback 或 setTimeout 延迟处理
+  // 先显示原始数据，让用户看到内容，再处理格式化
+  if (typeof requestIdleCallback !== 'undefined') {
+    requestIdleCallback(
+      () => {
+        // 只处理非关键字段
+        list.value.forEach((item: any) => {
+          item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+          processField(item, 'developName', 2)
+        })
+      },
+      { timeout: 400 } // 增加到 400ms，让首屏完全渲染后再处理
+    )
+  } else {
+    // 降级方案：延迟处理
+    setTimeout(() => {
+      // 只处理非关键字段
+      list.value.forEach((item: any) => {
+        item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+        processField(item, 'developName', 2)
+      })
+    }, 150) // 增加到 150ms，让首屏先渲染
+  }
 }
 const asinTotal = ref<number>(0)
+
 const fetchAsinData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = asinQueryForm
@@ -3853,37 +1828,26 @@ const fetchAsinData = async () => {
     siteIds: site.join(','),
   })
   asinTotal.value = data.total
-  asinList.value = data.list
-  asinList.value.forEach((item) => {
+  // 优化：立即处理关键字段（displayRating、asinImgUrl、storageAge、_actualList、_sku、_developName），确保所有字段能立即显示
+  // 这些字段是首屏必需的，需要立即生成
+  // 先处理数据，然后再赋值，确保 shallowRef 能正确检测到变化
+  const processedAsinList = data.list.map((item: any) => {
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
+    item.storageAge = generateStorageAgeHtml(item)
+    // 立即处理季节趋势、SKU和开发人员字段，确保能正常显示
     item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
-    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
-
-    item.storageAge = `
-      <div class="storage-list">
-        <div class="storage-item">
-          <span class="value1">181-270</span>
-          <span class="value2">${item.inventoryAgeLevel1Days ? item.inventoryAgeLevel1Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel1Value ? item.inventoryAgeLevel1Value : 0})</span>
-        </div>
-        <div class="storage-item">
-          <span class="value1">271-360</span>
-          <span class="value2">${item.inventoryAgeLevel2Days ? item.inventoryAgeLevel2Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel2Value ? item.inventoryAgeLevel2Value : 0})</span>
-        </div>
-        <div class="storage-item">
-          <span class="value1">361+</span>
-          <span class="value2">${item.inventoryAgeLevel3Days ? item.inventoryAgeLevel3Days : 0}</span>
-          <span class="value3">(${item.currencyIcon}${item.inventoryAgeLevel3Value ? item.inventoryAgeLevel3Value : 0})</span>
-        </div>
-      </div>
-    `
+    return item
   })
+  // 优化：立即显示处理后的数据，不阻塞渲染
+  // 使用 shallowRef，提升性能
+  asinList.value = processedAsinList
   listLoading.value = false
 }
 const pAsinTotal = ref<number>(0)
+
 const fetchPAsinData = async () => {
   listLoading.value = true
   const { site, ...filterQueryForm } = pAsinQueryForm
@@ -3892,13 +1856,20 @@ const fetchPAsinData = async () => {
     siteIds: site.join(','),
   })
   pAsinTotal.value = data.total
-  pAsinList.value = data.list
-  pAsinList.value.forEach((item) => {
+  // 优化：立即处理关键字段（displayRating、asinImgUrl、_sku、_developName），确保所有字段能立即显示
+  // 这些字段是首屏必需的，需要立即生成
+  // 先处理数据，然后再赋值，确保 shallowRef 能正确检测到变化
+  const processedPAsinList = data.list.map((item: any) => {
+    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
+    // 立即处理SKU和开发人员字段，确保能正常显示
     processField(item, 'sku', 2)
     processField(item, 'developName', 2)
-    if (item.asinImgUrl) item.asinImgUrl = handleImgUrl(item.asinImgUrl)
-    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+    return item
   })
+  // 优化：立即显示处理后的数据，不阻塞渲染
+  // 使用 shallowRef，提升性能
+  pAsinList.value = processedPAsinList
   listLoading.value = false
 }
 
@@ -4075,37 +2046,71 @@ const fetchUpdateDate = async () => {
   saleUpdateDate.value[activeName.value + 10] = date
   // console.log(saleUpdateDate.value)
 }
+// 优化首屏渲染：优先级处理
+// 1. 立即执行：关键数据（首屏表格数据）
+// 2. 延迟执行：非关键数据（下拉选项、配置等）
 onBeforeMount(() => {
-  // 获取更新日期
-  fetchUpdateDate()
-  // 设置运营和开发人是否可选以及boss默认站点为美国
+  // 设置运营和开发人是否可选以及boss默认站点为美国（同步操作，立即执行）
   operationAndDevelopSelect()
-  // 获取站点列表
-  fetchSiteList()
-  // 获取币种列表
-  fetchCurrencyList()
-  // 获取默认币种
-  fetchCurrency()
-  // 获取运营人员列表
-  fetchOperateUserList()
-  // 获取开发人员列表
-  fetchDevelopUserList()
-  // 获取默认运营人和开发人
-  fetchUser()
+
+  // 优化：不等待列配置，直接加载数据（列配置可以延迟加载）
+  // 优先加载首屏表格数据（关键路径）
   if (activeName.value === 0) {
-    fetchData()
-    fetchColumn()
+    // 直接加载数据，不等待列配置（列配置可以并行加载）
+    fetchData() // 表格数据 - 最优先
+    fetchColumn() // 列配置 - 并行加载，不阻塞
+    fetchCurrency() // 币种 - 并行加载，不阻塞
     tabLoadStatus.value.tab0 = true
   } else if (activeName.value === 1) {
-    fetchAsinColumn()
-    fetchAsinData()
+    fetchAsinData() // 表格数据 - 最优先
+    fetchAsinColumn() // 列配置 - 并行加载，不阻塞
+    fetchAsinCurrency() // 币种 - 并行加载，不阻塞
     tabLoadStatus.value.tab1 = true
   } else {
-    fetchPAsinColumn()
-    fetchPAsinData()
+    fetchPAsinData() // 表格数据 - 最优先
+    fetchPAsinColumn() // 列配置 - 并行加载，不阻塞
+    fetchPAsinCurrency() // 币种 - 并行加载，不阻塞
     tabLoadStatus.value.tab2 = true
   }
-  // console.log(aclStore.getRole)
+
+  // 优化：更激进的延迟加载策略（使用 requestIdleCallback，完全不阻塞首屏）
+  // 这些数据不影响首屏内容显示，可以大幅延迟加载
+  if (typeof requestIdleCallback !== 'undefined') {
+    // 使用 requestIdleCallback 在浏览器空闲时加载
+    requestIdleCallback(
+      () => {
+        // 获取更新日期
+        fetchUpdateDate()
+        // 获取站点列表
+        fetchSiteList()
+        // 获取币种列表
+        fetchCurrencyList()
+        // 获取运营人员列表
+        fetchOperateUserList()
+        // 获取开发人员列表
+        fetchDevelopUserList()
+        // 获取默认运营人和开发人
+        fetchUser()
+      },
+      { timeout: 500 } // 最多等待 500ms，之后强制执行
+    )
+  } else {
+    // 降级方案：延迟更长时间（从 100ms 增加到 300ms）
+    setTimeout(() => {
+      // 获取更新日期
+      fetchUpdateDate()
+      // 获取站点列表
+      fetchSiteList()
+      // 获取币种列表
+      fetchCurrencyList()
+      // 获取运营人员列表
+      fetchOperateUserList()
+      // 获取开发人员列表
+      fetchDevelopUserList()
+      // 获取默认运营人和开发人
+      fetchUser()
+    }, 300) // 延迟 300ms，让首屏完全渲染
+  }
 })
 </script>
 
@@ -4128,6 +2133,7 @@ onBeforeMount(() => {
         display: flex;
         flex-direction: column;
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
+        min-height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important; /* 固定高度，避免 CLS */
 
         .vab-query-form {
           .left-panel {
@@ -4144,8 +2150,18 @@ onBeforeMount(() => {
           }
         }
 
+        .performance-table-wrapper {
+          width: 100%;
+          flex: 1;
+          min-height: 0; /* 允许 flex 子元素收缩 */
+          display: flex;
+          flex-direction: column;
+          overflow: hidden; /* 防止溢出 */
+        }
         .el-table {
           flex: 1;
+          min-height: 0; /* 允许 flex 子元素收缩 */
+          overflow: auto; /* 允许表格滚动 */
 
           .copySku {
             display: inline-block; /* 使宽度适应内容，方便点击 */

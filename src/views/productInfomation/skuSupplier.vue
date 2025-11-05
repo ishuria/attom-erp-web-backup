@@ -105,8 +105,8 @@
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
       <el-table-column label="开票" prop="oem" width="130">
         <template #default="{ row }">
-          <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleCurrencyChange(row)">
-            <el-option v-for="dict in invoicingNumList" :key="dict.value" :label="dict.label" :value="dict.value" />
+          <el-select v-model="row.invoicing" placeholder="请选择开票类型" style="min-width: 100%" @change="handleInvoicingChange(row)">
+            <el-option v-for="dict in getFilteredInvoicingOptions(row)" :key="dict.value" :label="dict.label" :value="dict.value" />
           </el-select>
         </template>
       </el-table-column>
@@ -128,7 +128,7 @@
 
       <el-table-column label="默认采购方" min-width="160" prop="purchaseId">
         <template #default="{ row }">
-          <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="handleCurrencyChange(row)">
+          <el-select v-model="row.purchaseId" placeholder="请选择默认采购方" style="min-width: 100%" @change="handlePurchaseChange(row)">
             <el-option v-for="item in purchaseOption" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -560,6 +560,64 @@ const clickCancel = async (event: any, value: any) => {
     }
   }
 }
+// 根据采购方过滤开票选项
+const getFilteredInvoicingOptions = (row: any) => {
+  if (!purchaseOption.value || !row.purchaseId) {
+    return invoicingNumList
+  }
+  const purchaseItem = purchaseOption.value.find((item: any) => item.id === row.purchaseId)
+  if (!purchaseItem) {
+    return invoicingNumList
+  }
+  const purchaseLabel = purchaseItem.label
+  // 只允许5种组合：
+  // 1. 云舟+专票 (invoicing = 0)
+  // 2. 云舟+普票 (invoicing = 1)
+  // 3. 埃托姆+专票 (invoicing = 0)
+  // 4. 埃托姆+普票 (invoicing = 1)
+  // 5. attom+不开票 (invoicing = 2)
+  if (purchaseLabel === '云舟' || purchaseLabel === '埃托姆') {
+    // 云舟和埃托姆只能选择专票或普票
+    return invoicingNumList.filter((item) => item.value === 0 || item.value === 1)
+  } else if (purchaseLabel === 'Attom' || purchaseLabel === 'attom') {
+    // attom只能选择不开票
+    return invoicingNumList.filter((item) => item.value === 2)
+  }
+  return invoicingNumList
+}
+
+// 处理开票类型变更
+const handleInvoicingChange = async (row: any) => {
+  await handleCurrencyChange(row)
+}
+
+// 处理采购方变更
+const handlePurchaseChange = async (row: any) => {
+  const purchaseItem = purchaseOption.value?.find((item: any) => item.id === row.purchaseId)
+  if (purchaseItem) {
+    const purchaseLabel = purchaseItem.label
+    // 验证并自动调整开票类型
+    if (purchaseLabel === '云舟' || purchaseLabel === '埃托姆') {
+      // 云舟和埃托姆只能选择专票或普票
+      if (row.invoicing === 2) {
+        $baseMessage('采购方为云舟或埃托姆，不能选择无法开票，已自动调整为普票', 'warning', 'hey')
+        row.invoicing = 1
+        await handleCurrencyChange(row)
+        return
+      }
+    } else if (purchaseLabel === 'Attom') {
+      // attom只能选择无法开票
+      if (row.invoicing === 0 || row.invoicing === 1) {
+        $baseMessage('采购方为Attom，只能选择无法开票', 'warning', 'hey')
+        row.invoicing = 2
+        await handleCurrencyChange(row)
+        return
+      }
+    }
+  }
+  await handleCurrencyChange(row)
+}
+
 const handleCurrencyChange = async (row: any) => {
   await updateProductComponentSuppliser({
     ...row,
