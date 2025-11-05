@@ -89,7 +89,7 @@
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
-                      <img :alt="image.imageId" :src="image.imageUrl" />
+                      <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
                       <div class="image-actions">
                         <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
                         <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
@@ -172,6 +172,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="新款评估编号" prop="evaluationId" width="120" />
 
           <el-table-column :fixed="fixed" label="操作" width="180">
             <template #default="{ row }">
@@ -314,7 +315,7 @@
                 <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
-                      <img :alt="image.imageId" :src="image.imageUrl" />
+                      <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
                       <div class="image-actions">
                         <el-icon @click="handlePictureCardPreview(image, row)"><zoom-in /></el-icon>
                         <el-icon @click="handleRemove(image, row)"><delete /></el-icon>
@@ -377,6 +378,7 @@
               </el-tooltip>
             </template>
           </el-table-column>
+          <el-table-column label="新款评估编号" prop="evaluationId" width="120" />
 
           <el-table-column fixed="right" label="操作" width="190">
             <template #default="{ row }">

@@ -221,6 +221,13 @@
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
                     <el-dropdown-item
+                      v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })"
+                      :disabled="!canFinishTask(row)"
+                      @click="handleFinish(row)"
+                    >
+                      <el-link :disabled="!canFinishTask(row)" type="success" underline="never">完成</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
                     >
