@@ -5,6 +5,8 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
+  IGetTrendOverviewReq,
+  ITrendOverview,
   IUpdateOperationAmazonCostReq,
 } from '/@/type/storeOperation/productAnalysisType'
 
@@ -81,5 +83,17 @@ export function getOperationAmazonPackagingInformation(params: {
     url: `${BASE_API}/operation/amazon/packaging/information`,
     method: 'get',
     params,
+  })
+}
+/**
+ * @description 运营-产品分析-趋势总览
+ * @param data IGetTrendOverviewReq
+ * @returns { data: ITrendOverview[] }
+ */
+export function getTrendOverview(data: IGetTrendOverviewReq): Promise<{ data: ITrendOverview[] }> {
+  return request({
+    url: `${BASE_API}/product/analysis/trend/overview`,
+    method: 'post',
+    data,
   })
 }

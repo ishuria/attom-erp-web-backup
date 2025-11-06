@@ -218,3 +218,87 @@ export interface IGetOperationAmazonPackagingInformationRes {
   weight: number
   imgUrl: string
 }
+
+export interface IGetTrendOverviewReq {
+  sku: string
+  siteId: number
+  asin: string
+  type: number
+  startDate: string
+  endDate: string
+}
+
+export interface ITrendOverview {
+  /** 日期 */
+  date?: string
+  /** 销售额 */
+  amount?: number
+  /** 销量 */
+  volume?: number
+  /** 广告销售额 */
+  adSalesAmount?: number
+  /** 广告花费【组成广告花费项目的总计】 */
+  spend?: number
+  /** 净利润（订单） */
+  grossOrderProfit?: number
+  /** 预计下月仓储费 */
+  estimatedStorageCostNextMonth?: number
+  /** 点击成本 */
+  clickCost?: number
+  /** 客单价 */
+  averageOrderValue?: number
+  /** cpa */
+  cpa?: number
+  /** 广告转化率 */
+  adConversionRate?: number
+  /** 自然转化率 */
+  organicConversionRate?: number
+  /** 综合转化率 */
+  totalConversionRate?: number
+  /** 退货率 */
+  returnRate?: number
+  /** 退款率 */
+  refundRate?: number
+  /** 净利润率 */
+  netProfitMargin?: number
+  tacos?: number
+  acos?: number
+  /** 广告点击率 */
+  adClickRate?: number
+  /** 总访客 */
+  sessionsTotal?: number
+  /** PC端访客 */
+  sessions?: number
+  /** 移动端访客 */
+  sessionsMobile?: number
+  /** 自然点击 */
+  organicClicks?: number
+  /** 自然点击占比 */
+  organicClickShare?: number
+  /** 广告点击占比 */
+  adClickShare?: number
+  /** Rating */
+  lastStar?: number
+  /** 库存 */
+  stock?: number
+  /** 小类排名 */
+  smallRank?: number
+  /** 大类排名 */
+  largeRank?: number
+  /** 点击量 */
+  clicks?: number
+  /** 广告销量 */
+  adSales?: number
+  /** 自然销量 */
+  organicSales?: number
+  /** 展示 */
+  impressions?: number
+  /** 退货量 */
+  returnGoodsCount?: number
+  /** 退款金额 */
+  returnAmount?: number
+  /** 销售额(利润报表) */
+  totalSalesAmount?: number
+  /** 净利润（利润报表） */
+  grossProfit?: number
+}

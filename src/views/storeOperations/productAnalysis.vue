@@ -7,7 +7,7 @@
         <div style="position: relative">
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
             <el-tab-pane label="趋势总览" :name="0">
-              <vab-trend-overview />
+              <vab-trend-overview :compare-type="compareType" :select-date-range="selectDateRange" :select-field="selectField" />
             </el-tab-pane>
             <el-tab-pane label="SP广告饼图" :name="1">
               <vab-ad-pie-tab />
@@ -32,15 +32,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-radio-group>
-                  <el-radio style="margin-right: 10px" value="0">同比</el-radio>
-                  <el-radio value="1">环比</el-radio>
+                <el-radio-group v-model="compareType">
+                  <el-radio style="margin-right: 10px" :value="0">同比</el-radio>
+                  <el-radio :value="1">环比</el-radio>
                 </el-radio-group>
-              </el-form-item>
-              <el-form-item>
-                <el-select v-model="selectDate">
-                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-date-picker
@@ -48,6 +43,7 @@
                   :disabled-date="(time: Date) => time.getTime() > Date.now()"
                   end-placeholder="结束日期"
                   range-separator="至"
+                  :shortcuts="dateShortcuts"
                   start-placeholder="开始日期"
                   type="daterange"
                 />
@@ -258,11 +254,75 @@ defineOptions({
 const route: any = useRoute()
 const router: any = useRouter()
 // 选择的维度 SKU ASIN 父体ASIN
-const selectField = ref<Number>(0)
-// 选择的日期
-const selectDate = ref<Number>(0)
+const selectField = ref<number>(0)
 // 选择的日期范围
 const selectDateRange = ref<[string, string]>(getLast30DaysStringTime())
+// 同比/环比类型：0=同比，1=环比
+const compareType = ref<number>(0)
+
+// 日期选择器快捷选项
+const dateShortcuts = [
+  {
+    text: '30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 29)
+      return [start, end]
+    },
+  },
+  {
+    text: '60天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 59)
+      return [start, end]
+    },
+  },
+  {
+    text: '180天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 179)
+      return [start, end]
+    },
+  },
+  {
+    text: '360天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 359)
+      return [start, end]
+    },
+  },
+  {
+    text: '本月',
+    value: () => {
+      const end = new Date()
+      const start = new Date(end.getFullYear(), end.getMonth(), 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '上月',
+    value: () => {
+      const end = new Date(new Date().getFullYear(), new Date().getMonth(), 0)
+      const start = new Date(end.getFullYear(), end.getMonth(), 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '全部',
+    value: () => {
+      const end = new Date()
+      const start = new Date('2020-01-01') // 设置一个较早的起始日期
+      return [start, end]
+    },
+  },
+]
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const activeName = ref<number>(0)

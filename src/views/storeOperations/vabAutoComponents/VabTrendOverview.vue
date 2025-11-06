@@ -55,19 +55,26 @@
         </vab-draggable>
       </el-popover>
     </div>
-    <el-table border :cell-style="{ textAlign: 'center' }" :data="data" :header-cell-style="{ textAlign: 'center' }">
+    <el-table
+      v-loading="loading"
+      border
+      :cell-style="{ textAlign: 'center' }"
+      :data="trendList"
+      :header-cell-style="{ textAlign: 'center' }"
+    >
       <el-table-column
         v-for="(item, index) in checkList1"
         :key="index"
         :fixed="item.isFixed"
+        :formatter="item.formatter"
         :label="item.label"
         :min-width="item.minWidth"
         :prop="item.prop"
         :width="item.width"
       />
-      <!-- <template #empty>
-        <el-empty class="vab-data-empty"></el-empty>
-      </template> -->
+      <template #empty>
+        <el-empty class="vab-data-empty" data-label="暂无数据" style="min-height: 300px" />
+      </template>
     </el-table>
     <vab-pagination
       :current-page="queryForm.pageNo"
@@ -83,12 +90,28 @@
 import { Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getTrendOverview } from '/@/api/devlocal/productAnalysis'
+import { ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
 import { getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'VabTrendOverview',
 })
 
+// Props 定义
+interface Props {
+  selectField?: number // 展示维度：0=SKU, 1=ASIN, 2=父体ASIN
+  compareType?: number // 同比/环比：0=同比, 1=环比
+  selectDateRange?: [string, string] // 日期范围
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  selectField: 0,
+  compareType: 0,
+  selectDateRange: () => ['', ''],
+})
+
+const loading = ref<boolean>(false)
 // 切换日，周，月
 const radio = ref<string>('day')
 const amount = 42442.71
@@ -117,6 +140,18 @@ const columns = ref<any>([
     isFixed: 'left',
   },
   {
+    label: '销售额(订单)',
+    prop: 'amount',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '销量(订单)',
+    prop: 'volume',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '广告销量',
     prop: 'adSales',
     checked: true,
@@ -129,38 +164,32 @@ const columns = ref<any>([
     minWidth: 100,
   },
   {
-    label: '销售额(订单)',
-    prop: 'totalSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
     label: '广告销售额',
-    prop: 'adSalesData',
+    prop: 'adSalesAmount',
     checked: true,
     minWidth: 110,
   },
   {
     label: '广告花费',
-    prop: 'adCostData',
+    prop: 'spend',
     checked: true,
     minWidth: 100,
   },
   {
     label: '净利润(订单)',
-    prop: 'netProfitData',
+    prop: 'grossOrderProfit',
     checked: true,
     minWidth: 100,
   },
-  // {
-  //   label: '预计下月仓储费',
-  //   prop: 'expectedStorageCostData',
-  //   checked: true,
-  //   minWidth: 140,
-  // },
+  {
+    label: '预计下月仓储费',
+    prop: 'estimatedStorageCostNextMonth',
+    checked: true,
+    minWidth: 140,
+  },
   {
     label: '退款金额',
-    prop: 'refundPrice',
+    prop: 'returnAmount',
     checked: true,
     minWidth: 90,
   },
@@ -178,12 +207,12 @@ const columns = ref<any>([
   },
   {
     label: '客单价',
-    prop: 'priceData',
+    prop: 'averageOrderValue',
     checked: true,
     minWidth: 90,
   },
   {
-    label: '获客成本',
+    label: 'CPA(获客成本)',
     prop: 'cpa',
     checked: true,
     minWidth: 90,
@@ -193,94 +222,133 @@ const columns = ref<any>([
     prop: 'adConversionRate',
     checked: true,
     minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : '-'
+    },
   },
   {
     label: '自然转化率',
-    prop: 'naturalConversionRate',
+    prop: 'organicConversionRate',
     checked: true,
     minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : '-'
+    },
   },
   {
     label: '综合转化率',
-    prop: 'overallConversionRate',
+    prop: 'totalConversionRate',
     checked: true,
     minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '退货率',
     prop: 'returnRate',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '退款率',
     prop: 'refundRate',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '净利润率',
     prop: 'netProfitMargin',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
-  // {
-  //   label: '毛利润率',
-  //   prop: 'grossProfitMargin',
-  //   checked: true,
-  //   minWidth: 90,
-  // },
   {
     label: 'TACOS',
     prop: 'tacos',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: 'ACOS',
     prop: 'acos',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '广告点击率',
     prop: 'adClickRate',
     checked: true,
     minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '总访客',
-    prop: 'totalVisitors',
+    prop: 'sessionsTotal',
     checked: true,
     minWidth: 90,
   },
   {
     label: 'PC端访客',
-    prop: 'pcVisitors',
+    prop: 'sessions',
     checked: true,
     minWidth: 110,
   },
   {
     label: '移动端访客',
-    prop: 'mobileVisitors',
+    prop: 'sessionsMobile',
     checked: true,
     minWidth: 110,
   },
   {
+    label: '自然点击',
+    prop: 'organicClicks',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告点击',
+    prop: 'clicks',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '自然点击占比',
-    prop: 'organicVisitors',
+    prop: 'organicClickShare',
     checked: true,
     minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: '广告点击占比',
-    prop: 'adVisitors',
+    prop: 'adClickShare',
     checked: true,
     minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
   },
   {
     label: 'Rating',
-    prop: 'rating',
+    prop: 'lastStar',
     checked: true,
     minWidth: 100,
   },
@@ -291,28 +359,46 @@ const columns = ref<any>([
     minWidth: 130,
   },
   {
+    label: '点击量',
+    prop: 'clicks',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '小类排名',
-    prop: 'subcategoryRanking',
+    prop: 'smallRank',
     checked: true,
     minWidth: 100,
   },
   {
     label: '大类排名',
-    prop: 'categoryRanking',
+    prop: 'largeRank',
     checked: true,
     minWidth: 100,
   },
   {
-    label: '广告展现量',
-    prop: 'adImpressions',
+    label: '展示',
+    prop: 'impressions',
     checked: true,
     minWidth: 110,
   },
   {
     label: '退货量',
-    prop: 'returnQuantity',
+    prop: 'returnGoodsCount',
     checked: true,
     minWidth: 100,
+  },
+  {
+    label: '销售额(利润报表)',
+    prop: 'totalSalesAmount',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '净利润（利润报表）',
+    prop: 'grossProfit',
+    checked: true,
+    minWidth: 130,
   },
 ])
 // 卡片配置数组
@@ -383,7 +469,7 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   // { label: '毛利润', },
   { label: '点击成本', disabled: false },
   { label: '客单价', disabled: false },
-  { label: '获客成本', disabled: false },
+  { label: 'CPA(获客成本)', disabled: false },
   { label: '广告转化率', disabled: false },
   { label: '自然转化率', disabled: false },
   { label: '综合转化率', disabled: false },
@@ -407,45 +493,9 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '退货量', disabled: false },
 ])
 
-type IData = {
-  date: string
-  adSales: number
-  organicSales: number
-  totalSales: number
-  adSalesData: number
-  adCostData: number
-  netProfitData: number
-  expectedStorageCostData: number
-  refundPrice: number
-  grossProfit: number
-  clickCost: number
-  priceData: number
-  cpa: number
-  adConversionRate: number
-  naturalConversionRate: number
-  overallConversionRate: number
-  returnRate: number
-  refundRate: number
-  netProfitMargin: number
-  grossProfitMargin: number
-  tacos: number
-  acos: number
-  adClickRate: number
-  totalVisitors: number
-  pcVisitors: number
-  mobileVisitors: number
-  organicVisitors: number
-  adVisitors: number
-  rating: number
-  stock: number
-  subcategoryRanking: number
-  categoryRanking: number
-  adImpressions: number
-  returnQuantity: number
-}
 const groups = {
   price1: ['销售额(订单)', '广告销售额', '广告花费', '净利润(订单)', '退款金额'],
-  price2: ['点击成本', '客单价', '获客成本'],
+  price2: ['点击成本', '客单价', 'CPA(获客成本)'],
   percent1: ['广告转化率', '自然转化率', '综合转化率'],
   percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
   percent3: ['广告点击率'],
@@ -457,381 +507,384 @@ const groups = {
   int6: ['广告展现量'],
   int7: ['退货量'],
 }
-// name -> prop
+// name -> prop (根据 ITrendOverview 接口)
 const nameMapProp: Record<string, IDataProp> = {
   广告销量: 'adSales',
   自然销量: 'organicSales',
-  '销售额(订单)': 'totalSales',
-  广告销售额: 'adSalesData',
-  广告花费: 'adCostData',
-  '净利润(订单)': 'netProfitData',
-  // '预计下月仓储费': 'expectedStorageCostData',
-  退款金额: 'refundPrice',
-  // '毛利润': 'grossProfit',
+  '销售额(订单)': 'amount',
+  广告销售额: 'adSalesAmount',
+  广告花费: 'spend',
+  '净利润(订单)': 'grossOrderProfit',
+  预计下月仓储费: 'estimatedStorageCostNextMonth',
+  退款金额: 'returnAmount',
   点击成本: 'clickCost',
-  客单价: 'priceData',
-  获客成本: 'cpa',
+  客单价: 'averageOrderValue',
+  'CPA(获客成本)': 'cpa',
   广告转化率: 'adConversionRate',
-  自然转化率: 'naturalConversionRate',
-  综合转化率: 'overallConversionRate',
+  自然转化率: 'organicConversionRate',
+  综合转化率: 'totalConversionRate',
   退货率: 'returnRate',
   退款率: 'refundRate',
   净利润率: 'netProfitMargin',
-  // '毛利润率': 'grossProfitMargin',
   TACOS: 'tacos',
   ACOS: 'acos',
   广告点击率: 'adClickRate',
-  总访客: 'totalVisitors',
-  PC端访客: 'pcVisitors',
-  移动端访客: 'mobileVisitors',
-  自然点击占比: 'organicVisitors',
-  广告点击占比: 'adVisitors',
-  Rating: 'rating',
+  总访客: 'sessionsTotal',
+  PC端访客: 'sessions',
+  移动端访客: 'sessionsMobile',
+  自然点击: 'organicClicks',
+  自然点击占比: 'organicClickShare',
+  广告点击占比: 'adClickShare',
+  Rating: 'lastStar',
   库存: 'stock',
-  小类排名: 'subcategoryRanking',
-  大类排名: 'categoryRanking',
-  广告展现量: 'adImpressions',
-  退货量: 'returnQuantity',
+  小类排名: 'smallRank',
+  大类排名: 'largeRank',
+  点击量: 'clicks',
+  展示: 'impressions',
+  退货量: 'returnGoodsCount',
+  '销售额(利润报表)': 'totalSalesAmount',
+  '净利润（利润报表）': 'grossProfit',
 }
 type IDataProp =
   | 'adSales'
   | 'organicSales'
-  | 'totalSales'
-  | 'adSalesData'
-  | 'adCostData'
-  | 'netProfitData'
-  | 'expectedStorageCostData'
-  | 'refundPrice'
-  | 'grossProfit'
+  | 'amount'
+  | 'adSalesAmount'
+  | 'spend'
+  | 'grossOrderProfit'
+  | 'estimatedStorageCostNextMonth'
   | 'clickCost'
-  | 'priceData'
+  | 'averageOrderValue'
   | 'cpa'
   | 'adConversionRate'
-  | 'naturalConversionRate'
-  | 'overallConversionRate'
+  | 'organicConversionRate'
+  | 'totalConversionRate'
   | 'returnRate'
   | 'refundRate'
   | 'netProfitMargin'
-  | 'grossProfitMargin'
   | 'tacos'
   | 'acos'
   | 'adClickRate'
-  | 'totalVisitors'
-  | 'pcVisitors'
-  | 'mobileVisitors'
-  | 'organicVisitors'
-  | 'adVisitors'
-  | 'rating'
+  | 'sessionsTotal'
+  | 'sessions'
+  | 'sessionsMobile'
+  | 'organicClicks'
+  | 'organicClickShare'
+  | 'adClickShare'
+  | 'lastStar'
   | 'stock'
-  | 'subcategoryRanking'
-  | 'categoryRanking'
-  | 'adImpressions'
-  | 'returnQuantity'
+  | 'smallRank'
+  | 'largeRank'
+  | 'clicks'
+  | 'impressions'
+  | 'returnGoodsCount'
+  | 'returnAmount'
+  | 'totalSalesAmount'
+  | 'grossProfit'
 
-const data: IData[] = [
-  {
-    date: '2023-10-14',
-    adSales: 100,
-    organicSales: 200,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 20,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 3,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-10-19',
-    adSales: 50,
-    organicSales: 100,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 20,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 3,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-11-01',
-    adSales: 100,
-    organicSales: 200,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 20,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 2,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-11-02',
-    adSales: 50,
-    organicSales: 100,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 20,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 3,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-12-01',
-    adSales: 100,
-    organicSales: 200,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 60,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 3,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-12-02',
-    adSales: 50,
-    organicSales: 100,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 60,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 2,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-12-08',
-    adSales: 100,
-    organicSales: 200,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 60,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 1,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-  {
-    date: '2024-12-09',
-    adSales: 100,
-    organicSales: 200,
-    totalSales: 100,
-    adSalesData: 150,
-    adCostData: 60,
-    netProfitData: 33,
-    expectedStorageCostData: 25,
-    refundPrice: 28,
-    grossProfit: 35,
-    clickCost: 12,
-    priceData: 60,
-    cpa: 90,
-    adConversionRate: 66,
-    naturalConversionRate: 100,
-    overallConversionRate: 90,
-    returnRate: 80,
-    refundRate: 70,
-    netProfitMargin: 110,
-    grossProfitMargin: 120,
-    tacos: 33.33,
-    acos: 26.75,
-    adClickRate: 300,
-    totalVisitors: 1000,
-    pcVisitors: 520,
-    mobileVisitors: 490,
-    organicVisitors: 450,
-    adVisitors: 550,
-    rating: 3,
-    stock: 1000,
-    subcategoryRanking: 2,
-    categoryRanking: 10,
-    adImpressions: 1200,
-    returnQuantity: 100,
-  },
-]
-const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month'): any[] => {
+// const data: IData[] = [
+//   {
+//     date: '2023-10-14',
+//     adSales: 100,
+//     organicSales: 200,
+//     amount: 100,
+//     adSalesData: 150,
+//     adCostData: 20,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 3,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-10-19',
+//     adSales: 50,
+//     organicSales: 100,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 20,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 3,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-11-01',
+//     adSales: 100,
+//     organicSales: 200,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 20,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 2,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-11-02',
+//     adSales: 50,
+//     organicSales: 100,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 20,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 3,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-12-01',
+//     adSales: 100,
+//     organicSales: 200,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 60,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 3,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-12-02',
+//     adSales: 50,
+//     organicSales: 100,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 60,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 2,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-12-08',
+//     adSales: 100,
+//     organicSales: 200,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 60,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 1,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+//   {
+//     date: '2024-12-09',
+//     adSales: 100,
+//     organicSales: 200,
+//     totalSales: 100,
+//     adSalesData: 150,
+//     adCostData: 60,
+//     netProfitData: 33,
+//     expectedStorageCostData: 25,
+//     refundPrice: 28,
+//     grossProfit: 35,
+//     clickCost: 12,
+//     priceData: 60,
+//     cpa: 90,
+//     adConversionRate: 66,
+//     naturalConversionRate: 100,
+//     overallConversionRate: 90,
+//     returnRate: 80,
+//     refundRate: 70,
+//     netProfitMargin: 110,
+//     grossProfitMargin: 120,
+//     tacos: 33.33,
+//     acos: 26.75,
+//     adClickRate: 300,
+//     totalVisitors: 1000,
+//     pcVisitors: 520,
+//     mobileVisitors: 490,
+//     organicVisitors: 450,
+//     adVisitors: 550,
+//     rating: 3,
+//     stock: 1000,
+//     subcategoryRanking: 2,
+//     categoryRanking: 10,
+//     adImpressions: 1200,
+//     returnQuantity: 100,
+//   },
+// ]
+const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month'): any[] => {
   const groupedData: Record<string, number> = {}
-  const adCostData: Record<string, number> = {} // ∑广告花费
-  const totalSales: Record<string, number> = {} // ∑销售额(订单)
-  // const grossProfit: Record<string, number> = {} // ∑毛利润
-  const netProfitData: Record<string, number> = {} // ∑净利润(订单)
-  const refundPrice: Record<string, number> = {} // ∑退款金额
-  const returnQuantity: Record<string, number> = {} // ∑退货量
-  const totalBarSales: Record<string, number> = {} // ∑总销量
-  const totalVisitors: Record<string, number> = {} // ∑总访客
-  const adVisitors: Record<string, number> = {} // ∑广告点击量
-  const adSales: Record<string, number> = {} // ∑广告销量
-  const adSalesData: Record<string, number> = {} // ∑广告销售额
-  const adImpressions: Record<string, number> = {} // ∑广告展现量
+  const spendData: Record<string, number> = {} // ∑广告花费
+  const amountData: Record<string, number> = {} // ∑销售额(订单)
+  const grossOrderProfitData: Record<string, number> = {} // ∑净利润(订单)
+  const returnAmountData: Record<string, number> = {} // ∑退款金额
+  const returnGoodsCountData: Record<string, number> = {} // ∑退货量
+  const totalSalesData: Record<string, number> = {} // ∑总销量
+  const sessionsTotalData: Record<string, number> = {} // ∑总访客
+  const clicksData: Record<string, number> = {} // ∑广告点击量
+  const adSalesData: Record<string, number> = {} // ∑广告销量
+  const adSalesAmountData: Record<string, number> = {} // ∑广告销售额
+  const impressionsData: Record<string, number> = {} // ∑广告展现量
 
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
@@ -842,18 +895,20 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
   }
 
   data.forEach((item) => {
+    if (!item.date) return // 跳过没有日期的数据
     const timeKey = getTimeKey(item.date) // 获取分组键（周或月）
 
     switch (type) {
-      case 'subcategoryRanking':
-      case 'categoryRanking':
-      case 'rating': {
+      case 'smallRank':
+      case 'largeRank':
+      case 'lastStar': {
         // 取最小值
         if (!groupedData[timeKey]) {
           groupedData[timeKey] = Infinity
         }
-        if (item[type] < groupedData[timeKey]) {
-          groupedData[timeKey] = item[type]
+        const value = item[type] ?? Infinity
+        if (value < groupedData[timeKey]) {
+          groupedData[timeKey] = value
         }
 
         break
@@ -861,145 +916,138 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
       case 'tacos': {
         // 处理TACOS类型，计算 ∑广告花费 / ∑销售额(订单)
         if (!groupedData[timeKey]) {
-          adCostData[timeKey] = 0
-          totalSales[timeKey] = 0
+          spendData[timeKey] = 0
+          amountData[timeKey] = 0
         }
-        adCostData[timeKey] += item.adCostData
-        totalSales[timeKey] += item.totalSales
-        groupedData[timeKey] = formatNumber((adCostData[timeKey] / totalSales[timeKey]) * 100)
+        spendData[timeKey] += item.spend ?? 0
+        amountData[timeKey] += item.amount ?? 0
+        groupedData[timeKey] = formatNumber((spendData[timeKey] / amountData[timeKey]) * 100)
 
         break
       }
-      // case 'grossProfitMargin': {
-      //   // 处理毛利润率类型，计算 ∑毛利润 / ∑销售额(订单)
-      //   if (!groupedData[timeKey]) {
-      //     grossProfit[timeKey] = 0
-      //     totalSales[timeKey] = 0
-      //   }
-      //   grossProfit[timeKey] += item.grossProfit
-      //   totalSales[timeKey] += item.totalSales
-      //   groupedData[timeKey] = formatNumber(grossProfit[timeKey] / totalSales[timeKey] * 100)
-
-      // break;
-      // }
       case 'netProfitMargin': {
         // 处理净利润率类型，计算 ∑净利润(订单) / ∑销售额(订单)
         if (!groupedData[timeKey]) {
-          netProfitData[timeKey] = 0
-          totalSales[timeKey] = 0
+          grossOrderProfitData[timeKey] = 0
+          amountData[timeKey] = 0
         }
-        netProfitData[timeKey] += item.netProfitData
-        totalSales[timeKey] += item.totalSales
-        groupedData[timeKey] = formatNumber((netProfitData[timeKey] / totalSales[timeKey]) * 100)
+        grossOrderProfitData[timeKey] += item.grossOrderProfit ?? 0
+        amountData[timeKey] += item.amount ?? 0
+        groupedData[timeKey] = formatNumber((grossOrderProfitData[timeKey] / amountData[timeKey]) * 100)
 
         break
       }
       case 'refundRate': {
         // 处理退款率类型，计算 ∑退款金额 / ∑销售额(订单)
         if (!groupedData[timeKey]) {
-          refundPrice[timeKey] = 0
-          totalSales[timeKey] = 0
+          returnAmountData[timeKey] = 0
+          amountData[timeKey] = 0
         }
-        refundPrice[timeKey] += item.refundPrice
-        totalSales[timeKey] += item.totalSales
-        groupedData[timeKey] = formatNumber((refundPrice[timeKey] / totalSales[timeKey]) * 100)
+        returnAmountData[timeKey] += item.returnAmount ?? 0
+        amountData[timeKey] += item.amount ?? 0
+        groupedData[timeKey] = formatNumber((returnAmountData[timeKey] / amountData[timeKey]) * 100)
 
         break
       }
       case 'returnRate': {
         // 处理退货率类型，计算 ∑退货量 / ∑总销量
         if (!groupedData[timeKey]) {
-          returnQuantity[timeKey] = 0
-          totalBarSales[timeKey] = 0
+          returnGoodsCountData[timeKey] = 0
+          totalSalesData[timeKey] = 0
         }
-        returnQuantity[timeKey] += item.returnQuantity
-        totalBarSales[timeKey] += item.adSales + item.organicSales
-        groupedData[timeKey] = formatNumber((returnQuantity[timeKey] / totalBarSales[timeKey]) * 100)
+        returnGoodsCountData[timeKey] += item.returnGoodsCount ?? 0
+        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        groupedData[timeKey] = formatNumber((returnGoodsCountData[timeKey] / totalSalesData[timeKey]) * 100)
 
         break
       }
-      case 'overallConversionRate': {
+      case 'totalConversionRate': {
         // 处理综合转化率类型，计算 ∑总销量 / ∑总访客
         if (!groupedData[timeKey]) {
-          totalVisitors[timeKey] = 0
-          totalBarSales[timeKey] = 0
+          sessionsTotalData[timeKey] = 0
+          totalSalesData[timeKey] = 0
         }
-        totalVisitors[timeKey] += item.totalVisitors
-        totalBarSales[timeKey] += item.adSales + item.organicSales
-        groupedData[timeKey] = formatNumber((totalBarSales[timeKey] / totalVisitors[timeKey]) * 100)
+        sessionsTotalData[timeKey] += item.sessionsTotal ?? 0
+        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        groupedData[timeKey] = formatNumber((totalSalesData[timeKey] / sessionsTotalData[timeKey]) * 100)
 
         break
       }
-      case 'naturalConversionRate':
+      case 'organicConversionRate':
       case 'adConversionRate': {
-        // 处理自然转化率/广告转化率类型，计算 ∑广告销量 / ∑广告点击量
+        // 处理自然转化率/广告转化率类型，计算 ∑销量 / ∑点击量
         if (!groupedData[timeKey]) {
-          adSales[timeKey] = 0
-          adVisitors[timeKey] = 0
+          adSalesData[timeKey] = 0
+          clicksData[timeKey] = 0
         }
-        adSales[timeKey] += item.adSales
-        adVisitors[timeKey] += item.adVisitors
-        groupedData[timeKey] = formatNumber((adSales[timeKey] / adVisitors[timeKey]) * 100)
+        if (type === 'organicConversionRate') {
+          adSalesData[timeKey] += item.organicSales ?? 0
+          clicksData[timeKey] += item.organicClicks ?? 0
+        } else {
+          adSalesData[timeKey] += item.adSales ?? 0
+          clicksData[timeKey] += item.clicks ?? 0
+        }
+        groupedData[timeKey] = formatNumber((adSalesData[timeKey] / clicksData[timeKey]) * 100)
 
         break
       }
       case 'cpa': {
-        // 处理获客成本, ∑广告花费 / ∑总销量
+        // CPA(获客成本), ∑广告花费 / ∑总销量
         if (!groupedData[timeKey]) {
-          adCostData[timeKey] = 0
-          totalBarSales[timeKey] = 0
+          spendData[timeKey] = 0
+          totalSalesData[timeKey] = 0
         }
-        adCostData[timeKey] += item.adCostData
-        totalBarSales[timeKey] += item.adSales + item.organicSales
-        groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalBarSales[timeKey])
+        spendData[timeKey] += item.spend ?? 0
+        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        groupedData[timeKey] = formatNumber(spendData[timeKey] / totalSalesData[timeKey])
 
         break
       }
-      case 'priceData': {
+      case 'averageOrderValue': {
         // 客单价, ∑销售额(订单)/ ∑总销量
         if (!groupedData[timeKey]) {
-          totalSales[timeKey] = 0
-          totalBarSales[timeKey] = 0
+          amountData[timeKey] = 0
+          totalSalesData[timeKey] = 0
         }
-        totalSales[timeKey] += item.totalSales
-        totalBarSales[timeKey] += item.adSales + item.organicSales
-        groupedData[timeKey] = formatNumber(totalSales[timeKey] / totalBarSales[timeKey])
+        amountData[timeKey] += item.amount ?? 0
+        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        groupedData[timeKey] = formatNumber(amountData[timeKey] / totalSalesData[timeKey])
 
         break
       }
       case 'clickCost': {
         // 点击成本, ∑广告花费/ ∑广告点击量
         if (!groupedData[timeKey]) {
-          adCostData[timeKey] = 0
-          adVisitors[timeKey] = 0
+          spendData[timeKey] = 0
+          clicksData[timeKey] = 0
         }
-        adCostData[timeKey] += item.adCostData
-        adVisitors[timeKey] += item.adVisitors
-        groupedData[timeKey] = formatNumber(adCostData[timeKey] / adVisitors[timeKey])
+        spendData[timeKey] += item.spend ?? 0
+        clicksData[timeKey] += item.clicks ?? 0
+        groupedData[timeKey] = formatNumber(spendData[timeKey] / clicksData[timeKey])
 
         break
       }
       case 'acos': {
         // ∑广告花费 / ∑总广告销售额
         if (!groupedData[timeKey]) {
-          adCostData[timeKey] = 0
-          adSalesData[timeKey] = 0
+          spendData[timeKey] = 0
+          adSalesAmountData[timeKey] = 0
         }
-        adCostData[timeKey] += item.adCostData
-        adSalesData[timeKey] += item.adSalesData
-        groupedData[timeKey] = formatNumber((adCostData[timeKey] / adSalesData[timeKey]) * 100)
+        spendData[timeKey] += item.spend ?? 0
+        adSalesAmountData[timeKey] += item.adSalesAmount ?? 0
+        groupedData[timeKey] = formatNumber((spendData[timeKey] / adSalesAmountData[timeKey]) * 100)
 
         break
       }
       case 'adClickRate': {
         // ∑广告点击量 / ∑广告展现量
         if (!groupedData[timeKey]) {
-          adVisitors[timeKey] = 0
-          adImpressions[timeKey] = 0
+          clicksData[timeKey] = 0
+          impressionsData[timeKey] = 0
         }
-        adVisitors[timeKey] += item.adVisitors
-        adImpressions[timeKey] += item.adImpressions
-        groupedData[timeKey] = formatNumber((adVisitors[timeKey] / adImpressions[timeKey]) * 100)
+        clicksData[timeKey] += item.clicks ?? 0
+        impressionsData[timeKey] += item.impressions ?? 0
+        groupedData[timeKey] = formatNumber((clicksData[timeKey] / impressionsData[timeKey]) * 100)
 
         break
       }
@@ -1008,7 +1056,8 @@ const getGroupedData = (data: IData[], type: IDataProp, groupBy: 'week' | 'month
         if (!groupedData[timeKey]) {
           groupedData[timeKey] = 0
         }
-        groupedData[timeKey] += item[type]
+        const value = item[type] ?? 0
+        groupedData[timeKey] += value
       }
     }
   })
@@ -1024,12 +1073,12 @@ const formatNumber = (value: number): number => {
 }
 
 // 按周分组并累加
-const getWeeklyData = (data: IData[], type: IDataProp): any[] => {
+const getWeeklyData = (data: ITrendOverview[], type: IDataProp): any[] => {
   return getGroupedData(data, type, 'week')
 }
 
 // 按月分组并累加
-const getMonthlyData = (data: IData[], type: IDataProp): any[] => {
+const getMonthlyData = (data: ITrendOverview[], type: IDataProp): any[] => {
   return getGroupedData(data, type, 'month')
 }
 
@@ -1083,20 +1132,20 @@ const handleSwitchTime = () => {
   let organicSalesData: any[] = []
   switch (radio.value) {
     case 'day': {
-      adSalesData = data
-      organicSalesData = data
+      adSalesData = trendList.value
+      organicSalesData = trendList.value
 
       break
     }
     case 'week': {
-      adSalesData = getWeeklyData(data, 'adSales')
-      organicSalesData = getWeeklyData(data, 'organicSales')
+      adSalesData = getWeeklyData(trendList.value, 'adSales')
+      organicSalesData = getWeeklyData(trendList.value, 'organicSales')
 
       break
     }
     case 'month': {
-      adSalesData = getMonthlyData(data, 'adSales')
-      organicSalesData = getMonthlyData(data, 'organicSales')
+      adSalesData = getMonthlyData(trendList.value, 'adSales')
+      organicSalesData = getMonthlyData(trendList.value, 'organicSales')
 
       break
     }
@@ -1106,7 +1155,7 @@ const handleSwitchTime = () => {
   option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
   option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
 
-  updateYAxisData(data)
+  updateYAxisData(trendList.value)
   updateChart()
 }
 // 更新 Y 轴数据随时间切换的函数
@@ -1179,7 +1228,7 @@ const initChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: data.map((item: any) => item.date),
+      data: trendList.value.map((item: any) => item.date),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1264,7 +1313,7 @@ const initChart = () => {
         name: '广告销量',
         type: 'bar',
         yAxisIndex: 0,
-        data: data.map((item: any) => item.adSales),
+        data: trendList.value.map((item: any) => item.adSales),
         barWidth: 20,
         itemStyle: {
           color: '#409EFF',
@@ -1276,7 +1325,7 @@ const initChart = () => {
         name: '自然销量',
         type: 'bar',
         yAxisIndex: 0,
-        data: data.map((item: any) => item.organicSales),
+        data: trendList.value.map((item: any) => item.organicSales),
         barWidth: 20,
         itemStyle: {
           color: '#67C23A',
@@ -1413,7 +1462,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       updateYAxisOffsets()
     }
   }
-  updateYAxisData(data)
+  updateYAxisData(trendList.value)
   updateChart()
   return false
 }
@@ -1460,7 +1509,7 @@ function getYAxisColor() {
 // 根据数据组和数据名称获取数据
 function getDataForName(dataName: string) {
   const prop = nameMapProp[dataName]
-  return data.map((item: any) => item[prop]) || []
+  return trendList.value.map((item: ITrendOverview) => item[prop]) || []
 }
 
 // 处理选中的值重复问题
@@ -1512,6 +1561,41 @@ const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   // fetchData()
 }
+const trendList = ref<ITrendOverview[]>([])
+const route = useRoute()
+const fetchData = async () => {
+  loading.value = true
+  const { data } = await getTrendOverview({
+    sku: route.query.sku as string,
+    siteId: Number(route.query.site),
+    asin: route.query.asin as string,
+    type: props.selectField,
+    startDate: props.selectDateRange[0],
+    endDate: props.selectDateRange[1],
+  })
+  trendList.value = data
+  loading.value = false
+}
+
+// 监听 trendList 变化，更新图表
+watch(
+  () => trendList.value,
+  () => {
+    if (chartInstance && trendList.value.length > 0) {
+      handleSwitchTime()
+    }
+  },
+  { deep: true, immediate: false }
+)
+
+// 监听 props 变化，重新获取数据
+watch(
+  () => [props.selectField, props.compareType, props.selectDateRange],
+  () => {
+    fetchData()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   if (chartContainer.value) {
@@ -1523,8 +1607,8 @@ onMounted(() => {
     })
     chartObserver.observe(chartContainer.value)
     initChart()
-    handleSwitchTime()
   }
+  fetchData()
   // 初始化下拉项的禁用状态
   updateDropdownItemsDisabled()
 })
