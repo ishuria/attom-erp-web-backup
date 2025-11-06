@@ -15,6 +15,27 @@
                   <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
               </el-form-item>
+              <el-form-item>
+                <el-button
+                  v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_PICTURE_BATCH_CANCEL] })"
+                  :loading="batchBtnLoading"
+                  plain
+                  type="danger"
+                  @click="batchCancleTask"
+                >
+                  批量取消
+                </el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_PICTURE_BATCH_UPDATE] })"
+                  plain
+                  type="info"
+                  @click="showBatchUpdateArtDesign"
+                >
+                  批量修改
+                </el-button>
+              </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -34,7 +55,15 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+        <el-table
+          border
+          :cell-style="cellStyle"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+          @selection-change="handleSelectionArtDesignTaskChange"
+        >
+          <el-table-column type="selection" width="55" />
           <el-table-column label="实际完成日期" min-width="120" prop="actualFinishDate">
             <template #default="{ row }">
               {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
@@ -53,6 +82,7 @@
             <template #default="{ row }">
               <el-tag v-if="row.status === '未上架'" type="info">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '结束'" type="danger">{{ row.status }}</el-tag>
+              <el-tag v-if="row.status === '取消'">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '暂停'" type="warning">{{ row.status }}</el-tag>
               <el-tag v-if="row.status === '进行中'" type="success">{{ row.status }}</el-tag>
             </template>
@@ -561,6 +591,38 @@
         <el-button type="primary" @click="handleConfirmUpdatePicture">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 美工图片批量修改 -->
+    <vab-dialog v-model="pictureBatchUpdateVisible" title="美工图片批量修改" width="20%">
+      <el-form ref="pictureBatchUpdateFormRef" label-position="right" label-width="auto" :model="pictureBatchUpdateForm" style="margin: 0">
+        <el-form-item label="要求完成日期" prop="requiredCompletionDate">
+          <el-date-picker
+            v-model="pictureBatchUpdateForm.requiredCompletionDate"
+            :disabled="batchBtnLoading"
+            type="date"
+            value-format="YYYY-MM-DD"
+          />
+        </el-form-item>
+        <el-form-item label="合作提成比例" prop="cooperationCommissionRatio">
+          <el-input v-model="pictureBatchUpdateForm.cooperationCommissionRatio" :disabled="batchBtnLoading" type="number" />
+        </el-form-item>
+        <el-form-item label="单人提成比例" prop="individualCommissionRate">
+          <el-input v-model="pictureBatchUpdateForm.individualCommissionRate" :disabled="batchBtnLoading" type="number" />
+        </el-form-item>
+        <el-form-item label="合作权重" prop="cooperationWeight">
+          <el-input v-model="pictureBatchUpdateForm.cooperationWeight" :disabled="batchBtnLoading" type="number" />
+        </el-form-item>
+        <el-form-item label="合作加成倍数" prop="addition">
+          <el-input v-model="pictureBatchUpdateForm.addition" :disabled="batchBtnLoading" type="number" />
+        </el-form-item>
+        <el-form-item label="最低要求转化率" prop="lowRate">
+          <el-input v-model="pictureBatchUpdateForm.lowRate" :disabled="batchBtnLoading" type="number" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="pictureBatchUpdateForm = false">取消</el-button>
+        <el-button :loading="batchBtnLoading" type="primary" @click="batchUpdateTask">确认</el-button>
+      </template>
+    </vab-dialog>
     <!-- 美工长期修改 -->
     <vab-dialog v-model="longUpdateVisible" title="美工长期修改" width="20%">
       <el-form ref="longFormRef" label-position="right" label-width="auto" :model="longForm" :rules="longFormRules" style="margin: 0">
@@ -648,6 +710,8 @@ import handleClipboard from '~/src/utils/clipboard'
 import { hasPermission } from '~/src/utils/permission'
 import { designTypeOption } from '../../newProductTask/constantOption'
 import {
+  batchCancleCommissionTaskPicture,
+  batchUpdateCommissionTaskPicture,
   continueCommissionTaskPicture,
   continueDevelopDesignTask,
   continueLongCommissionTask,
@@ -1077,6 +1141,84 @@ const handleContinuePicture = async (row: IGetCommissionTaskPictureList) => {
     }
   })
 }
+
+// 多选操作
+const selectArtDesignList = ref<IGetCommissionTaskPictureList[]>([])
+const batchBtnLoading = ref<boolean>(false)
+const handleSelectionArtDesignTaskChange = (val: IGetCommissionTaskPictureList[]) => {
+  selectArtDesignList.value = val
+}
+
+// 批量取消美工图片任务
+const batchCancleTask = async () => {
+  try {
+    batchBtnLoading.value = true
+    let ids: number[] = []
+    selectArtDesignList.value.forEach((el) => {
+      ids.push(el.id!)
+    })
+    if (ids.length === 0) {
+      batchBtnLoading.value = false
+      $baseMessage('请选择需要批量取消的美工图片任务！', 'warning')
+      return
+    }
+    $baseConfirm('确定要取消美工图片任务吗？', null, async () => {
+      const { data } = await batchCancleCommissionTaskPicture({
+        ids: ids,
+      })
+      if (data) {
+        $baseMessage('取消成功！', 'success')
+        batchBtnLoading.value = false
+        queryData()
+      }
+    })
+  } catch (error) {
+    batchBtnLoading.value = false
+  }
+}
+
+const pictureBatchUpdateVisible = ref<boolean>(false)
+const pictureBatchUpdateForm = reactive<any>({})
+
+// 批量修改按钮
+const showBatchUpdateArtDesign = async () => {
+  if (selectArtDesignList.value.length === 0) {
+    $baseMessage('请选择需要批量修改的美工图片任务！', 'warning')
+    return
+  }
+  pictureBatchUpdateVisible.value = true
+}
+
+// 批量修改美工图片任务
+const batchUpdateTask = async () => {
+  try {
+    batchBtnLoading.value = true
+    let ids: number[] = []
+    selectArtDesignList.value.forEach((el) => {
+      ids.push(el.id!)
+    })
+    $baseConfirm('确定要批量修改美工图片任务吗？', null, async () => {
+      const { commissionDays, ...filterForm } = pictureBatchUpdateForm
+      const { data } = await batchUpdateCommissionTaskPicture({
+        ids: ids,
+        ...filterForm,
+        cooperationCommissionRatio: Number(filterForm.cooperationCommissionRatio) / 100,
+        individualCommissionRate: Number(filterForm.individualCommissionRate) / 100,
+        lowRate: Number(filterForm.lowRate) / 100,
+      })
+      if (data) {
+        $baseMessage('批量修改美工图片成功！', 'success')
+        batchBtnLoading.value = false
+        pictureBatchUpdateVisible.value = false
+        queryData()
+      }
+    })
+  } catch (error) {
+    batchBtnLoading.value = false
+    pictureBatchUpdateVisible.value = false
+  }
+}
+
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()

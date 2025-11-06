@@ -3,6 +3,7 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  IBatchUpdateCommissionTaskPictureReq,
   IGetCommissionArtTypeListRes,
   IGetCommissionDetailDevelopListReq,
   IGetCommissionDetailDevelopListRes,
@@ -138,6 +139,29 @@ export function updateCommissionTaskPicture(data: IUpdateCommissionTaskPictureRe
     data,
   })
 }
+
+/**
+ * @description 提成任务-美工图片批量修改
+ */
+export function batchUpdateCommissionTaskPicture(data: IBatchUpdateCommissionTaskPictureReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/commission/task/picture/batch/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 提成任务-美工图片批量取消
+ */
+export function batchCancleCommissionTaskPicture(data: { ids: number[] }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/commission/task/picture/batch/cancel`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 提成任务-美工长期列表查询
  */

@@ -193,6 +193,18 @@ export interface IUpdateCommissionTaskPictureReq {
   addition: number
   lowRate: number
 }
+
+export interface IBatchUpdateCommissionTaskPictureReq {
+  ids: number[]
+  requiredCompletionDate: string
+  commissionDays: number
+  cooperationCommissionRatio: number
+  individualCommissionRate: number
+  cooperationWeight: number
+  addition: number
+  lowRate: number
+}
+
 export interface IGetLongCommissionTaskListReq {
   keyWord: string
   pageNo: number

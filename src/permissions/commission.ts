@@ -1,6 +1,10 @@
 class CommissionPermission {
   /** 提成任务-美工图片-修改权限 */
   static readonly COMMISSION_TASK_PICTURE_UPDATE = 'commission:task:picture:update'
+  /** 提成任务-美工图片-批量修改权限 */
+  static readonly COMMISSION_TASK_PICTURE_BATCH_UPDATE = 'commission:task:picture:batch:update'
+  /** 提成任务-美工图片-批量取消权限 */
+  static readonly COMMISSION_TASK_PICTURE_BATCH_CANCEL = 'commission:task:picture:batch:cancel'
   /** 提成任务-美工图片-暂停权限 */
   static readonly COMMISSION_TASK_PICTURE_PAUSE = 'commission:task:picture:pause'
   /** 提成任务-美工图片-继续权限 */
