@@ -247,7 +247,7 @@ import { getProductComponentPurchase, getProductComponentStore } from '/@/api/de
 import { useTabsStore } from '/@/store/modules/tabs'
 import { IGetSelectVariantsList, IreviewStepNo3ComponentList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
-import { convertString } from '/@/utils/stringUtils'
+import { convertString, toPercentage } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
@@ -341,8 +341,8 @@ const fetchDataComponent = async () => {
     componentList.value.forEach((item: any) => {
       item.currency = convertString(item.currency)
       item.invoicing = convertString(item.invoicing)
-      item.actualTaxRate = item.actualTaxRate * 100
-      item.invoicingTaxRate = item.invoicingTaxRate * 100
+      item.actualTaxRate = toPercentage(item.actualTaxRate)
+      item.invoicingTaxRate = toPercentage(item.invoicingTaxRate)
     })
     // 获取下拉变体列表
     const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: Number(props.reviewId) })

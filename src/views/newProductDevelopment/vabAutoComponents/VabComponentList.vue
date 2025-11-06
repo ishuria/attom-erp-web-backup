@@ -486,7 +486,7 @@ import type { IProgressProdcutComponent, ISuppliersAddReq } from '/@/type/progre
 import type { ISubmitPurchaseComponent, ISubmitPurchaseConsumable } from '/@/type/purchase/po'
 import { handleClip } from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { convertString } from '/@/utils/stringUtils'
+import { convertString, toDecimal, toPercentage } from '/@/utils/stringUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineComponent({
@@ -563,15 +563,6 @@ const formattedPrice = (price: string) => {
     return ''
   }
   return Number(price).toFixed(2)
-}
-
-// 处理浮点数精度问题的工具函数
-const toPercentage = (value: number) => {
-  return Math.round(value * 100 * 100) / 100
-}
-
-const toDecimal = (value: number) => {
-  return Math.round(value * 100) / 10000
 }
 
 watchEffect(() => {

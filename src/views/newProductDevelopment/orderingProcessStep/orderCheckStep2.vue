@@ -282,7 +282,7 @@ import {
 } from '/@/api/devlocal/orderProcess'
 import type { IGetSelectVariantsList, IreviewStepNo3ComponentList, IreviewStepNo3VariantList } from '/@/type/orderProcess/orderProcessType'
 import { _setStepNo } from '/@/utils/stepNoState'
-import { convertString } from '/@/utils/stringUtils'
+import { convertString, toPercentage } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
 
 defineOptions({
@@ -386,8 +386,8 @@ const fetchDataComponent = async () => {
     componentList.value.forEach((item: any) => {
       item.currency = convertString(item.currency)
       item.invoicing = convertString(item.invoicing)
-      item.actualTaxRate = item.actualTaxRate * 100
-      item.invoicingTaxRate = item.invoicingTaxRate * 100
+      item.actualTaxRate = toPercentage(item.actualTaxRate)
+      item.invoicingTaxRate = toPercentage(item.invoicingTaxRate)
     })
     // console.log(componentList.value);
   } catch (error) {
