@@ -79,7 +79,7 @@
                 :false-value="'0'"
                 size="large"
                 :true-value="'1'"
-                @change="handleCheckbox(row.oem)"
+                @change="(val) => handleCheckbox(val, row)"
               />
             </template>
           </el-table-column>
@@ -305,7 +305,7 @@
                 :false-value="'0'"
                 size="large"
                 :true-value="'1'"
-                @change="handleCheckbox(row.oem)"
+                @change="(val) => handleCheckbox(val, row)"
               />
             </template>
           </el-table-column>
@@ -836,6 +836,7 @@ const progressLogCopy = ref<string | undefined>('')
 const remarkCopy = ref<string | undefined>('')
 const classify = ref<string>('')
 const tableClickIdx = ref<any>(0)
+const currentRow = ref<any>(undefined) // 保存当前编辑的行数据
 
 // 共享
 const sharedVisible = ref<boolean>(false)
@@ -1165,18 +1166,18 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     _row = row
     return
   }
-  // 获取行的下标
-  tableClickIdx.value = progressList.value.indexOf(row)
+  // 保存当前编辑的行数据（用于后续操作）
+  currentRow.value = row
+
   if (column.property == 'progressLog') {
     const { data } = await getProgressLog({ progressId: row.progressId })
-    // progressLogCopy.value = progressList.value[tableClickIdx.value].progressLog
     progressLogCopy.value = data
     wangEditorTitle.value = '编辑开发日志'
     classify.value = 'progressLog'
     progressId.value = row.progressId
     wangEditorLogVisible.value = !wangEditorLogVisible.value
   } else if (column.property == 'remark') {
-    remarkCopy.value = progressList.value[tableClickIdx.value].remark
+    remarkCopy.value = row.remark
     wangEditorTitle.value = '编辑备注'
     classify.value = 'remark'
     progressId.value = row.progressId
@@ -1198,11 +1199,10 @@ const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) =>
     focusAndSelectInput(cell)
   }
 }
-const handleCheckbox = async (value: any) => {
-  // console.log(value);
-  // console.log(tableClickIdx.value)
-  progressList.value[tableClickIdx.value].oem = value
-  await updateProgressManage(progressList.value[tableClickIdx.value])
+const handleCheckbox = async (value: any, row: any) => {
+  // 通过 row 直接更新，不依赖索引
+  row.oem = value
+  await updateProgressManage(row)
 }
 const updateProductName = async () => {
   updateFormRef.value?.validate(async (valid: boolean) => {
@@ -1254,18 +1254,39 @@ const clickCancel = async (event: any, value: any) => {
  * 当点击确认时，子组件传递给父组件的新的val
  */
 const clickLog = async (val: any) => {
-  // console.log('新的val', val);
+  try {
+    if (!currentRow.value || !currentRow.value.progressId) {
+      $baseMessage('数据错误，请刷新页面重试', 'error', 'hey')
+      return
+    }
+    // 更新保存的行数据
+    currentRow.value.progressLog = val
 
-  progressList.value[tableClickIdx.value].progressLog = val
-  progressLogCopy.value = val
-  // console.log('点击log执行了');
-  await updateProgressLog({ progressId: progressList.value[tableClickIdx.value].progressId, progressLog: val }) //发送更新数据请求
+    // 发送更新请求
+    const { data } = await updateProgressLog({
+      progressId: currentRow.value.progressId,
+      progressLog: val,
+    })
+  } catch (error: any) {
+    console.error('更新开发日志失败:', error)
+  }
 }
+
 const clickRemark = async (val: any) => {
-  progressList.value[tableClickIdx.value].remark = val
-  remarkCopy.value = val
-  // console.log('点击remark执行了');
-  await updateProgressManage(progressList.value[tableClickIdx.value]) //发送更新数据请求
+  try {
+    if (!currentRow.value || !currentRow.value.progressId) {
+      $baseMessage('数据错误，请刷新页面重试', 'error', 'hey')
+      return
+    }
+
+    // 更新保存的行数据
+    currentRow.value.remark = val
+
+    // 发送更新请求
+    const { data } = await updateProgressManage(currentRow.value)
+  } catch (error: any) {
+    console.error('更新备注失败:', error)
+  }
 }
 
 /**
@@ -1374,16 +1395,22 @@ const handleCancle = () => {
 }
 const handleSubmit = async () => {
   try {
+    if (!currentRow.value || !currentRow.value.progressId) {
+      $baseMessage('数据错误，请刷新页面重试', 'error', 'hey')
+      return
+    }
+
     const { data } = await updateProgressMoldAdd({
       ...form.value,
-      progressId: progressList.value[tableClickIdx.value].progressId,
-      productName: progressList.value[tableClickIdx.value].product,
+      progressId: currentRow.value.progressId,
+      productName: currentRow.value.product,
     })
     if (data === true) {
       $baseMessage('开模申请信息提交成功!', 'success', 'hey')
     }
   } catch (error) {
     console.log(error)
+    $baseMessage('开模申请提交失败，请重试', 'error', 'hey')
   }
   moldVisible.value = false
   form.value = {

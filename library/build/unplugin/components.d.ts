@@ -180,6 +180,7 @@ declare module 'vue' {
     Transactions: typeof import('./../../../src/views/goods/vabAutoComponents/Transactions.vue')['default']
     TreeCustomNodeClass: typeof import('./../../../src/views/vab/tree/vabAutoComponents/TreeCustomNodeClass.vue')['default']
     TreeCustomNodeContent: typeof import('./../../../src/views/vab/tree/vabAutoComponents/TreeCustomNodeContent.vue')['default']
+    TrendCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/TrendCard.vue')['default']
     UploadBasic: typeof import('./../../../src/views/vab/upload/vabAutoComponents/UploadBasic.vue')['default']
     UploadLimitCover: typeof import('./../../../src/views/vab/upload/vabAutoComponents/UploadLimitCover.vue')['default']
     User: typeof import('./../../../src/views/other/workflow/vabAutoComponents/propertySetting/User.vue')['default']

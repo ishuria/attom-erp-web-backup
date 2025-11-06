@@ -274,8 +274,12 @@ const handleCloseDialog = () => {
 }
 // 点击保存
 const handleSave = () => {
-  if (!editorRef.value) return
-  emit('clickChild', editorRef.value.getHtml())
+  if (!editorRef.value) {
+    console.warn('编辑器实例不存在，无法保存')
+    return
+  }
+  const htmlContent = editorRef.value.getHtml()
+  emit('clickChild', htmlContent)
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   clearTimer()
   const key = props.progressId ? `${props.classify}_${props.progressId}` : props.classify
@@ -285,8 +289,12 @@ const handleSave = () => {
  * 当确认对话框的时候
  */
 const handleConfirmDialog = () => {
-  if (!editorRef.value) return
-  emit('clickChild', editorRef.value.getHtml())
+  if (!editorRef.value) {
+    console.warn('编辑器实例不存在，无法确认')
+    return
+  }
+  const htmlContent = editorRef.value.getHtml()
+  emit('clickChild', htmlContent)
   emit('clickBoolean', false)
   $baseMessage(`${props.title}保存成功`, 'success', 'hey')
   dflag.value = false
