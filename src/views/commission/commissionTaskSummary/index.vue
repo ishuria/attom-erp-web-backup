@@ -619,7 +619,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="pictureBatchUpdateForm = false">取消</el-button>
+        <el-button @click="cancleUpdateTask">取消</el-button>
         <el-button :loading="batchBtnLoading" type="primary" @click="batchUpdateTask">确认</el-button>
       </template>
     </vab-dialog>
@@ -1187,6 +1187,11 @@ const showBatchUpdateArtDesign = async () => {
     return
   }
   pictureBatchUpdateVisible.value = true
+}
+
+const cancleUpdateTask = () => {
+  pictureBatchUpdateVisible.value = false
+  batchBtnLoading.value = false
 }
 
 // 批量修改美工图片任务
