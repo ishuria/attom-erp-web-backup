@@ -10,6 +10,7 @@
         :data="componentList"
         :header-cell-style="{ 'text-align': 'center' }"
         stripe
+        @cell-click="changeInput"
       >
         <el-table-column align="center" fixed="left" label="属于变体" min-width="140" prop="variant">
           <template #default="{ row }">
@@ -137,6 +138,9 @@
             税点
           </template>
           <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.actualTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
             <span>{{ row.actualTaxRate != null ? row.actualTaxRate + '%' : '' }}</span>
           </template>
         </el-table-column>
@@ -146,7 +150,11 @@
             <br />
             税点
           </template>
+
           <template #default="{ row }">
+            <div class="none">
+              <el-input v-model.trim="row.invoicingTaxRate" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
+            </div>
             <span>{{ row.invoicingTaxRate != null ? row.invoicingTaxRate + '%' : '' }}</span>
           </template>
         </el-table-column>
@@ -235,17 +243,19 @@
 </template>
 
 <script lang="ts" setup>
+import { isEqual } from 'lodash-es'
+import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { currencyList, invoicingList } from '../indexCommon'
 import { releasePo, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import {
   reviewStepNo3ComponentList,
-  reviewStepNo3GetSelectVariantList,
+  reviewStepNo3ComponentUpdate,
   reviewStepNo3UpdateConsumableCheck,
   updateReviewComponentPurchaseIdAndInvoiceCustomstatus,
 } from '/@/api/devlocal/orderProcess'
 import { getProductComponentPurchase, getProductComponentStore } from '/@/api/devlocal/productInformation'
 import { useTabsStore } from '/@/store/modules/tabs'
-import { IGetSelectVariantsList, IreviewStepNo3ComponentList } from '/@/type/orderProcess/orderProcessType'
+import { IreviewStepNo3ComponentList } from '/@/type/orderProcess/orderProcessType'
 import { handleActivePath } from '/@/utils/routes'
 import { convertString, toPercentage } from '/@/utils/stringUtils'
 import { flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
@@ -331,8 +341,7 @@ const fetchPurchaseAndRepository = async () => {
   const { data: repository } = await getProductComponentStore()
   repositoryOption.value = repository
 }
-// 查询下拉变体列表
-const variantsSelectList = ref<IGetSelectVariantsList[]>([])
+
 // 获取拿样零件添加数据
 const fetchDataComponent = async () => {
   try {
@@ -344,10 +353,6 @@ const fetchDataComponent = async () => {
       item.actualTaxRate = toPercentage(item.actualTaxRate)
       item.invoicingTaxRate = toPercentage(item.invoicingTaxRate)
     })
-    // 获取下拉变体列表
-    const { data: variantSelectList } = await reviewStepNo3GetSelectVariantList({ reviewId: Number(props.reviewId) })
-    variantsSelectList.value = variantSelectList
-    variantsSelectList.value.unshift({ label: '变体共用', id: 0 })
   } catch (error) {
     console.error(error as Error)
   }
@@ -465,6 +470,56 @@ const updateReviewComponent = async (row: any) => {
     console.error('更新失败:', error)
   }
 }
+let _row: any
+const changeInput = async (row: any, column: any, cell: HTMLTableCellElement) => {
+  const firstChild = cell?.children[0]?.children[0]
+  const secondChild = cell?.children[0]?.children[1]
+
+  if (!firstChild || !secondChild || !firstChild.classList || !secondChild.classList) {
+    return
+  }
+
+  _row = JSON.parse(JSON.stringify(row))
+
+  if (firstChild.classList.contains('none')) {
+    firstChild.classList.remove('none')
+    secondChild.classList.add('none')
+
+    focusAndSelectInput(cell)
+  }
+}
+// 零件table blur事件
+const clickCancel = async (event: any, value: any) => {
+  // 获取根元素，避免重复调用 getRootElement
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    // 更新 t1 和 t2 的 class
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(_row, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    try {
+      const actualTaxRate = (value.actualTaxRate ?? 0) / 100
+      const invoicingTaxRate = (value.invoicingTaxRate ?? 0) / 100
+      const processedValue = {
+        ...value,
+        actualTaxRate,
+        invoicingTaxRate,
+      }
+      await reviewStepNo3ComponentUpdate(processedValue)
+      await fetchDataComponent()
+    } catch {
+      Object.assign(value, _row)
+    }
+  }
+}
 const editDisabled = ref<boolean>(false)
 const fetchSubmittedStatus = async () => {
   const { data } = await reviewStepSubmittedStatus({ reviewId: Number(props.reviewId), step: 5 })
@@ -495,5 +550,8 @@ onBeforeMount(() => {
 }
 .el-checkbox {
   transform: scale(1.2);
+}
+.none {
+  display: none;
 }
 </style>
