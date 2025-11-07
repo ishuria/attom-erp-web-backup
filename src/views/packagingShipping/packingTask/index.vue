@@ -2000,6 +2000,7 @@
 <script lang="ts" setup>
 import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
+import { debounce } from 'lodash-es'
 import { ref } from 'vue'
 import PackingTaskPermission from '~/src/permissions/packingTask'
 import { formatDate } from '~/src/utils/dateUtils'
@@ -2444,8 +2445,9 @@ const handleCloseFinishTask = () => {
   finishTaskVisible.value = false
 }
 const finishConfirmLoading = ref<boolean>(false)
+
 // 结束任务的确定
-const handleConfirmFinishTask = async () => {
+const handleConfirmFinishTask = debounce(async () => {
   if (selectFinishTaskRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
@@ -2467,7 +2469,7 @@ const handleConfirmFinishTask = async () => {
   } finally {
     finishConfirmLoading.value = false
   }
-}
+}, 1000)
 // 开始任务的取消
 const handleCloseStartTask = () => {
   startTaskTableRef.value?.clearSelection()
