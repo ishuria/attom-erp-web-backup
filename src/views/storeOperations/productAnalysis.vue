@@ -8,6 +8,7 @@
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
             <el-tab-pane label="趋势总览" :name="0">
               <vab-trend-overview
+                v-if="activeName === 0"
                 :compare-type="compareType"
                 :select-date-range="selectDateRange"
                 :select-field="selectField"
@@ -15,16 +16,16 @@
               />
             </el-tab-pane>
             <el-tab-pane label="SP广告饼图" :name="1">
-              <vab-ad-pie-tab />
+              <vab-ad-pie-tab v-if="activeName === 1" />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
               <vab-cost-analysis v-if="activeName === 2" :sku="sku" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
-              <vab-comment-reviews />
+              <vab-comment-reviews v-if="activeName === 3" />
             </el-tab-pane>
             <el-tab-pane label="退货分析" :name="4">
-              <vab-return-analysis />
+              <vab-return-analysis v-if="activeName === 4" />
             </el-tab-pane>
             <el-tab-pane label="竞品" :name="5" />
           </el-tabs>
@@ -343,7 +344,7 @@ const dateShortcuts = [
 ]
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
-const activeName = ref<number>(0)
+const activeName = ref<number>(Number(route.query.activeName) || 0)
 const titleChangeVisible = ref<boolean>(false)
 const descChangeVisible = ref<boolean>(false)
 const imgChangeVisible = ref<boolean>(false)

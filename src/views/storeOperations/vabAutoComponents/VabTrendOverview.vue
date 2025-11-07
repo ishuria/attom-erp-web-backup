@@ -1182,7 +1182,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       updateYAxisOffsets()
     }
   }
-  updateYAxisData(trendList.value)
+  updateYAxisData(fullTrendList.value)
   updateChart()
   return false
 }
