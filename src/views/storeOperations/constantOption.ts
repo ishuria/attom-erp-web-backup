@@ -426,3 +426,294 @@ export const orderColumns = [
     minWidth: 75,
   },
 ]
+
+export const trendOverviewColumns = [
+  {
+    label: '日期',
+    prop: 'date',
+    disableCheck: true,
+    checked: true,
+    width: 115,
+    isFixed: 'left',
+  },
+  {
+    label: '销售额(订单)',
+    prop: 'amount',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '销量(订单)',
+    prop: 'volume',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告销量',
+    prop: 'adSales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '自然销量',
+    prop: 'organicSales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告销售额',
+    prop: 'adSalesAmount',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '广告花费',
+    prop: 'spend',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '净利润(订单)',
+    prop: 'grossOrderProfit',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '预计下月仓储费',
+    prop: 'estimatedStorageCostNextMonth',
+    checked: true,
+    minWidth: 140,
+  },
+  {
+    label: '退款金额',
+    prop: 'returnAmount',
+    checked: true,
+    minWidth: 90,
+  },
+  // {
+  //   label: '毛利润',
+  //   prop: 'grossProfit',
+  //   checked: true,
+  //   minWidth: 90,
+  // },
+  {
+    label: '点击成本',
+    prop: 'clickCost',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '客单价',
+    prop: 'averageOrderValue',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: 'CPA(获客成本)',
+    prop: 'cpa',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: '广告转化率',
+    prop: 'adConversionRate',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : '-'
+    },
+  },
+  {
+    label: '自然转化率',
+    prop: 'organicConversionRate',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : '-'
+    },
+  },
+  {
+    label: '综合转化率',
+    prop: 'totalConversionRate',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '退货率',
+    prop: 'returnRate',
+    checked: true,
+    minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '退款率',
+    prop: 'refundRate',
+    checked: true,
+    minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '净利润率',
+    prop: 'netProfitMargin',
+    checked: true,
+    minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: 'TACOS',
+    prop: 'tacos',
+    checked: true,
+    minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: 'ACOS',
+    prop: 'acos',
+    checked: true,
+    minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '广告点击率',
+    prop: 'adClickRate',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '总访客',
+    prop: 'sessionsTotal',
+    checked: true,
+    minWidth: 90,
+  },
+  {
+    label: 'PC端访客',
+    prop: 'sessions',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '移动端访客',
+    prop: 'sessionsMobile',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '自然点击',
+    prop: 'organicClicks',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '自然点击占比',
+    prop: 'organicClickShare',
+    checked: true,
+    minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: '广告点击占比',
+    prop: 'adClickShare',
+    checked: true,
+    minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${cellValue}%` : ''
+    },
+  },
+  {
+    label: 'Rating',
+    prop: 'lastStar',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '库存',
+    prop: 'stock',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '小类排名',
+    prop: 'smallRank',
+    checked: true,
+    minWidth: 100,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      if (Array.isArray(cellValue)) {
+        // 如果是数组，显示所有类别和排名，用逗号分隔
+        return cellValue.map((item: { category: string; smallRank: number }) => `${item.smallRank}`).join(',')
+      }
+      return cellValue != null ? cellValue : ''
+    },
+  },
+  {
+    label: '大类排名',
+    prop: 'largeRank',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告点击',
+    prop: 'clicks',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告销量',
+    prop: 'adSales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '自然销量',
+    prop: 'organicSales',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '广告展现量',
+    prop: 'impressions',
+    checked: true,
+    minWidth: 110,
+  },
+  {
+    label: '退货量',
+    prop: 'returnGoodsCount',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '退款金额',
+    prop: 'returnAmount',
+    checked: true,
+    minWidth: 100,
+  },
+  {
+    label: '销售额(利润报表)',
+    prop: 'totalSalesAmount',
+    checked: true,
+    minWidth: 130,
+  },
+  {
+    label: '净利润(利润报表)',
+    prop: 'grossProfit',
+    checked: true,
+    minWidth: 130,
+  },
+]

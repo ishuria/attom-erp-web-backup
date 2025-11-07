@@ -219,13 +219,68 @@ export interface IGetOperationAmazonPackagingInformationRes {
   imgUrl: string
 }
 
-export interface IGetTrendOverviewReq {
+// 表格分页数据请求
+export interface IGetTrendOverviewTableReq {
   sku: string
   siteId: number
   asin: string
   type: number
   startDate: string
   endDate: string
+  compareType: number // 0=同比, 1=环比
+  pageNo: number // 页码（从1开始）
+  pageSize: number // 每页数量
+}
+
+// 图表完整数据请求（不需要分页）
+export interface IGetTrendOverviewChartReq {
+  sku: string
+  siteId: number
+  asin: string
+  type: number
+  startDate: string
+  endDate: string
+  compareType: number // 0=同比, 1=环比
+}
+
+/**
+ * 卡片汇总数据（用于显示卡片的值、对比值和趋势）
+ * 后端返回格式：Map<字段名, ICardSummary>
+ * 例如：{ "销售额(订单)": { currentValue: 1000, compareValue: 900, changePercentage: 11.11, changeType: "up" } }
+ */
+export interface ICardSummary {
+  /** 当前值（当前日期范围的汇总） */
+  currentValue: number | null
+  /** 对比值（同比或环比周期的汇总） */
+  compareValue: number | null
+  /** 变化百分比（正数表示上升，负数表示下降，例如：11.11 表示上升 11.11%） */
+  changePercentage: number | null
+  /** 变化类型：up=上升, down=下降 */
+  changeType: 'up' | 'down' | null
+}
+
+/**
+ * 趋势总览表格响应（分页数据）
+ */
+export interface IGetTrendOverviewTableRes {
+  data: {
+    /** 详细数据列表（分页数据，用于表格显示） */
+    list: ITrendOverview[]
+    /** 总记录数（用于分页） */
+    total: number
+  }
+}
+
+/**
+ * 趋势总览图表响应（完整数据）
+ */
+export interface IGetTrendOverviewChartRes {
+  data: {
+    /** 完整数据列表（用于图表计算） */
+    list: ITrendOverview[]
+    /** 卡片汇总数据 Map<字段名, ICardSummary> */
+    summary?: Record<string, ICardSummary>
+  }
 }
 
 export interface ITrendOverview {
@@ -281,8 +336,8 @@ export interface ITrendOverview {
   lastStar?: number
   /** 库存 */
   stock?: number
-  /** 小类排名 */
-  smallRank?: number
+  /** 小类排名 - 可以是单个数字或数组（多个类别） */
+  smallRank?: number | Array<{ category: string; performanceId: number; smallRank: number }>
   /** 大类排名 */
   largeRank?: number
   /** 点击量 */
@@ -301,4 +356,5 @@ export interface ITrendOverview {
   totalSalesAmount?: number
   /** 净利润（利润报表） */
   grossProfit?: number
+  pageViewsTotal?: number
 }

@@ -1476,6 +1476,7 @@ const cellClick = async (row: any, column: any) => {
           sku: row.sku,
           asin: row.asin,
           site: row.site,
+          icon: row.currencyIcon,
         },
       })
       _addData(row)

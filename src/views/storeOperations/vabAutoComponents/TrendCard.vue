@@ -1,5 +1,5 @@
 <template>
-  <vab-card class="top-card" shadow="always" @click="handleClick">
+  <vab-card v-loading="loading" class="top-card" shadow="always" @click="handleClick">
     <div class="parting-line" :class="partingLineClass"></div>
     <el-dropdown>
       <span>
@@ -48,6 +48,7 @@ interface Props {
   active?: boolean
   colorType?: 'primary' | 'orange' | 'green' | 'red' | 'purple' | 'yellow'
   dropdownItems: DropdownItem[]
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -56,6 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   trendType: 'down',
   active: false,
   colorType: 'primary',
+  loading: false,
 })
 
 const emit = defineEmits<{

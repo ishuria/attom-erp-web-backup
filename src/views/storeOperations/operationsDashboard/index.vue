@@ -3,19 +3,19 @@
     <el-row :gutter="10" style="height: 100%">
       <el-col :span="18" style="height: 100%">
         <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
-          <div style="height: 500px; margin-bottom: 10px;">
+          <div style="height: 500px; margin-bottom: 10px">
             <vab-card class="card5" style="height: 100%">
               <vab-query-form>
                 <vab-query-form-left-panel :span="12">
                   <el-form inline>
                     <el-form-item label="运营">
-                      <el-select style="max-width: 2em"/>
+                      <el-select style="max-width: 2em" />
                     </el-form-item>
                     <el-form-item label="开发人">
-                      <el-select style="max-width: 2em"/>
+                      <el-select style="max-width: 2em" />
                     </el-form-item>
                     <el-form-item label="站点">
-                      <el-select style="max-width: 3em"/>
+                      <el-select style="max-width: 3em" />
                     </el-form-item>
                   </el-form>
                 </vab-query-form-left-panel>
@@ -23,18 +23,13 @@
                   <el-form inline>
                     <el-form-item>
                       <el-radio-group>
-                        <el-radio style="margin-right: 10px;" value="0">同比</el-radio>
-                        <el-radio style="margin-right: 10px;" value="1">环比</el-radio>
+                        <el-radio style="margin-right: 10px" value="0">同比</el-radio>
+                        <el-radio style="margin-right: 10px" value="1">环比</el-radio>
                       </el-radio-group>
                     </el-form-item>
-                    <el-form-item >
-                      <el-select style="max-width: 3em; margin-right: 10px;">
-                        <el-option 
-                          v-for="item in dateOption"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
+                    <el-form-item>
+                      <el-select style="max-width: 3em; margin-right: 10px">
+                        <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
                       </el-select>
                     </el-form-item>
                     <el-form-item>
@@ -42,7 +37,7 @@
                         end-placeholder="结束日期"
                         range-separator="至"
                         start-placeholder="开始日期"
-                        style="max-width: 18em;"
+                        style="max-width: 18em"
                         type="daterange"
                       />
                     </el-form-item>
@@ -53,8 +48,8 @@
                 <!-- 总销售额 -->
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard1Click">
-                    <div class="parting-line" :class="{ 'parting-line-primary': card1Active }" ></div>
-                    <el-dropdown >
+                    <div class="parting-line" :class="{ 'parting-line-primary': card1Active }"></div>
+                    <el-dropdown>
                       <span>
                         {{ card1Text }}
                         <el-icon class="el-icon--right">
@@ -62,12 +57,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem1(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem1(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -86,7 +81,7 @@
                 </el-col>
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard2Click">
-                    <div class="parting-line" :class="{ 'parting-line-orange': card2Active }" ></div>
+                    <div class="parting-line" :class="{ 'parting-line-orange': card2Active }"></div>
                     <el-dropdown>
                       <span>
                         {{ card2Text }}
@@ -95,12 +90,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem2(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem2(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -119,7 +114,7 @@
                 </el-col>
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard3Click">
-                    <div class="parting-line" :class="{ 'parting-line-green': card3Active }" ></div>
+                    <div class="parting-line" :class="{ 'parting-line-green': card3Active }"></div>
                     <el-dropdown>
                       <span>
                         {{ card3Text }}
@@ -128,12 +123,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem3(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem3(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -152,7 +147,7 @@
                 </el-col>
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard4Click">
-                    <div class="parting-line" :class="{ 'parting-line-red': card4Active }" ></div>
+                    <div class="parting-line" :class="{ 'parting-line-red': card4Active }"></div>
                     <el-dropdown>
                       <span>
                         {{ card4Text }}
@@ -161,12 +156,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem4(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem4(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -185,7 +180,7 @@
                 </el-col>
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard5Click">
-                    <div class="parting-line" :class="{ 'parting-line-purple': card5Active }" ></div>
+                    <div class="parting-line" :class="{ 'parting-line-purple': card5Active }"></div>
                     <el-dropdown>
                       <span>
                         {{ card5Text }}
@@ -194,12 +189,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem5(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem5(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -218,7 +213,7 @@
                 </el-col>
                 <el-col :span="4">
                   <vab-card class="top-card" shadow="always" @click="handleCard6Click">
-                    <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }" ></div>
+                    <div class="parting-line" :class="{ 'parting-line-yellow': card6Active }"></div>
                     <el-dropdown>
                       <span>
                         {{ card6Text }}
@@ -227,12 +222,12 @@
                         </el-icon>
                       </span>
                       <template #dropdown>
-                        <el-dropdown-menu style="max-height: 450px; overflow: auto;">
+                        <el-dropdown-menu style="max-height: 450px; overflow: auto">
                           <el-dropdown-item
                             v-for="(item, index) in dropdownItems"
                             :key="index"
-                            @click="handleSwitchItem6(item)"
                             :disabled="item.disabled"
+                            @click="handleSwitchItem6(item)"
                           >
                             {{ item.label }}
                           </el-dropdown-item>
@@ -259,43 +254,42 @@
                   </el-radio-group>
                 </vab-query-form-right-panel>
               </vab-query-form>
-              <div ref="chartContainer1" style="width: 100%; height: 250px;"></div>
+              <div ref="chartContainer1" style="width: 100%; height: 250px"></div>
             </vab-card>
           </div>
-          <div style=" display: flex;flex: 1; gap: 10px;">
-            <vab-card class="card2-title" style=" display: flex;flex: 1; flex-direction: column; margin-bottom: 0;" title="产品成本波动监控">
+          <div style="display: flex; flex: 1; gap: 10px">
+            <vab-card class="card2-title" style="display: flex; flex: 1; flex-direction: column; margin-bottom: 0" title="产品成本波动监控">
               <el-table border :data="fakeTableData3" size="small" style="flex: 1">
-                <el-table-column label="日期" min-width="115" prop="date"/>
+                <el-table-column label="日期" min-width="115" prop="date" />
                 <el-table-column label="SKU" min-width="160" prop="sku">
                   <template #default="{ row }">
                     <span v-html="row.sku"></span>
                   </template>
                 </el-table-column>
-                <el-table-column label="价格变动" min-width="110" prop="price"/>
-                <el-table-column label="毛利率变动" min-width="110" prop="profit"/>
-                <el-table-column label="类型" min-width="125" prop="type"/>
-                <el-table label="站点" min-width="110" prop="site"/>
+                <el-table-column label="价格变动" min-width="110" prop="price" />
+                <el-table-column label="毛利率变动" min-width="110" prop="profit" />
+                <el-table-column label="类型" min-width="125" prop="type" />
+                <el-table label="站点" min-width="110" prop="site" />
               </el-table>
-              <vab-pagination 
+              <vab-pagination
                 :current-page="queryForm2.pageNo"
                 :page-size="queryForm2.pageSize"
                 :total="total2"
                 @current-change="handleCurrentChange2"
                 @size-change="handleSizeChange2"
-
               />
             </vab-card>
-            <vab-card class="card3-title" style=" display: flex;flex: 1; flex-direction: column; margin-bottom: 0;" title="即将断货产品预警">
+            <vab-card class="card3-title" style="display: flex; flex: 1; flex-direction: column; margin-bottom: 0" title="即将断货产品预警">
               <el-table border :data="fakeTableData3" size="small" style="flex: 1">
                 <el-table-column label="SKU" min-width="150" prop="sku">
                   <template #default="{ row }">
                     <span v-html="row.sku"></span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="可售天数" min-width="100" prop="availableDays"/>
-                <el-table-column align="center" label="预计断货" min-width="100" prop="expectedOutOfStock"/>
-                <el-table-column align="center" label="月销量" min-width="90" prop="monthlySales"/>
-                <el-table-column align="center" label="剩余库存" min-width="100" prop="remainingStock"/>
+                <el-table-column align="center" label="可售天数" min-width="100" prop="availableDays" />
+                <el-table-column align="center" label="预计断货" min-width="100" prop="expectedOutOfStock" />
+                <el-table-column align="center" label="月销量" min-width="90" prop="monthlySales" />
+                <el-table-column align="center" label="剩余库存" min-width="100" prop="remainingStock" />
                 <el-table-column align="center" label="广告" min-width="70" prop="advertisement">
                   <template #default="{ row }">
                     <el-tag v-if="row.advertisement === '开'" type="danger">{{ row.advertisement }}</el-tag>
@@ -304,12 +298,12 @@
                 </el-table-column>
                 <el-table-column align="center" label="当前毛利" min-width="100" prop="currentProfit">
                   <template #default="{ row }">
-                    <span :class="{'green': row.currentProfit >= 25, 'red': row.currentProfit < 25}">{{ row.currentProfit }}%</span>
+                    <span :class="{ green: row.currentProfit >= 25, red: row.currentProfit < 25 }">{{ row.currentProfit }}%</span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="站点" min-width="110" prop="site"/>
+                <el-table-column align="center" label="站点" min-width="110" prop="site" />
               </el-table>
-              <vab-pagination 
+              <vab-pagination
                 :current-page="queryForm1.pageNo"
                 :page-size="queryForm1.pageSize"
                 :total="total1"
@@ -322,9 +316,9 @@
       </el-col>
       <el-col :span="6" style="height: 100%">
         <div style="display: flex; flex-direction: column; width: 100%; height: 100%">
-          <div style="height: 500px; margin-bottom: 10px;">
-            <vab-card class="card4" style="height: 100%;" title="库龄">
-              <div style=" margin-top: 25px;text-align: right;">
+          <div style="height: 500px; margin-bottom: 10px">
+            <vab-card class="card4" style="height: 100%" title="库龄">
+              <div style="margin-top: 25px; text-align: right">
                 <el-radio-group v-model="ageRadio" @change="handleSwitchBar">
                   <el-radio-button label="数量" :value="0" />
                   <el-radio-button label="占比" :value="1" />
@@ -335,7 +329,13 @@
                   <div ref="chartContainer2" style="width: 100%; height: 300px; margin-top: 30px"></div>
                 </el-col>
                 <el-col :span="15">
-                  <el-table :data="percentageAgeData" :header-cell-style="headerCellStyle" max-height="280" show-summary style="margin-top: 30px">
+                  <el-table
+                    :data="percentageAgeData"
+                    :header-cell-style="headerCellStyle"
+                    max-height="280"
+                    show-summary
+                    style="margin-top: 30px"
+                  >
                     <el-table-column label="项目" min-width="110" prop="name">
                       <template #default="{ row, $index }">
                         <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
@@ -343,29 +343,27 @@
                         </span>
                       </template>
                     </el-table-column>
-                    <el-table-column v-if="ageRadio === 0" align="right" label="FBA仓" min-width="90" prop="value"/>
+                    <el-table-column v-if="ageRadio === 0" align="right" label="FBA仓" min-width="90" prop="value" />
                     <el-table-column v-if="ageRadio === 1" align="right" label="FBA仓" min-width="90" prop="percentage">
-                      <template #default="{ row }">
-                        {{ row.percentage }}%
-                      </template>
+                      <template #default="{ row }">{{ row.percentage }}%</template>
                     </el-table-column>
-                    <el-table-column label="预估下月费用" min-width="120"/>
+                    <el-table-column label="预估下月费用" min-width="120" />
                   </el-table>
                 </el-col>
               </el-row>
             </vab-card>
           </div>
-          <div style="flex: 1;">
-            <vab-card class="card1-title" style=" display: flex; flex-direction: column;height: 100%;" title="断货后即将上架产品">
+          <div style="flex: 1">
+            <vab-card class="card1-title" style="display: flex; flex-direction: column; height: 100%" title="断货后即将上架产品">
               <el-table border :data="fakeData1" size="small" style="flex: 1">
-                <el-table-column label="SKU" min-width="170" prop="sku"/>
-                <el-table-column label="断货前月销量" min-width="130" prop="sales"/>
+                <el-table-column label="SKU" min-width="170" prop="sku" />
+                <el-table-column label="断货前月销量" min-width="130" prop="sales" />
                 <el-table-column label="最近入库" min-width="100" prop="recently">
                   <template #default="{ row }">
-                    <span :class="{ 'green': row.recently === '已入库' }">{{ row.recently }}</span>
+                    <span :class="{ green: row.recently === '已入库' }">{{ row.recently }}</span>
                   </template>
                 </el-table-column>
-                <el-table label="站点" min-width="110" prop="site"/>
+                <el-table label="站点" min-width="110" prop="site" />
               </el-table>
             </vab-card>
           </div>
@@ -383,7 +381,7 @@ import { dateOption, storageAgeColorList } from '../constantOption'
 import { getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
-  name: 'OperationsDashboard'
+  name: 'OperationsDashboard',
 })
 
 // const leftCards = [
@@ -411,7 +409,7 @@ const card3Text = ref<string>('净利润率')
 const card4Text = ref<string>('广告销售额')
 const card5Text = ref<string>('广告销售占比')
 const card6Text = ref<string>('ACOS')
-const dropdownItems = reactive<{ label: string, disabled: boolean }[]>([
+const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '总销售额', disabled: false },
   { label: '净利润', disabled: false },
   { label: '净利润率', disabled: false },
@@ -451,48 +449,155 @@ type IData = {
   refundPrice: number
   adCostData: number
 }
-type IYProp = 'sales' | 'totalSales'|'adSalesData'|'netProfitData'|'expectedStorageCostData'|
-  'refundRate' | 'netProfitMargin' | 'tacos' | 'acos' | 'adSalesRatio' | 'refundPrice' | 'adCostData'
+type IYProp =
+  | 'sales'
+  | 'totalSales'
+  | 'adSalesData'
+  | 'netProfitData'
+  | 'expectedStorageCostData'
+  | 'refundRate'
+  | 'netProfitMargin'
+  | 'tacos'
+  | 'acos'
+  | 'adSalesRatio'
+  | 'refundPrice'
+  | 'adCostData'
 // name -> prop
 const nameMapProp: Record<string, IYProp> = {
-  '销量': 'sales',
-  '总销售额': 'totalSales',
-  '广告销售额': 'adSalesData',
-  '广告花费': 'adCostData',
-  '净利润': 'netProfitData',
-  '预计下月仓储费': 'expectedStorageCostData',
-  '退款金额': 'refundPrice',
-  '退款率': 'refundRate',
-  '净利润率': 'netProfitMargin',
-  'TACOS': 'tacos',
-  'ACOS': 'acos',
-  '广告销售占比': 'adSalesRatio'
+  销量: 'sales',
+  总销售额: 'totalSales',
+  广告销售额: 'adSalesData',
+  广告花费: 'adCostData',
+  净利润: 'netProfitData',
+  预计下月仓储费: 'expectedStorageCostData',
+  退款金额: 'refundPrice',
+  退款率: 'refundRate',
+  净利润率: 'netProfitMargin',
+  TACOS: 'tacos',
+  ACOS: 'acos',
+  广告销售占比: 'adSalesRatio',
 }
 const data1 = ref<IData[]>([
-  { date: "2023-10-14", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-10-19", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-11-01", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-11-02", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-12-01", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-12-02", sales: 50, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-12-08", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   },
-  { date: "2024-12-09", sales: 100, totalSales: 100, adSalesData: 150, netProfitData: 33, expectedStorageCostData: 25, 
-    refundRate: 70, netProfitMargin: 110, tacos: 33.33, acos: 26.75, adSalesRatio: 30, refundPrice: 10, adCostData: 15
-   }
+  {
+    date: '2023-10-14',
+    sales: 100,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-10-19',
+    sales: 50,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-11-01',
+    sales: 100,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-11-02',
+    sales: 50,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-12-01',
+    sales: 100,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-12-02',
+    sales: 50,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-12-08',
+    sales: 100,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
+  {
+    date: '2024-12-09',
+    sales: 100,
+    totalSales: 100,
+    adSalesData: 150,
+    netProfitData: 33,
+    expectedStorageCostData: 25,
+    refundRate: 70,
+    netProfitMargin: 110,
+    tacos: 33.33,
+    acos: 26.75,
+    adSalesRatio: 30,
+    refundPrice: 10,
+    adCostData: 15,
+  },
 ])
 const data2 = ref<any[]>([
   { name: '0-90', value: 11800 },
@@ -509,13 +614,13 @@ const fakeData1 = [
     sku: 'HOME-0020-WHT\n碗架-木把手白色',
     sales: 500,
     recently: '11天/389',
-    site: '美国亚马逊'
+    site: '美国亚马逊',
   },
   {
     sku: 'HOME-0020-WHT\n碗架-木把手白色',
     sales: 200,
     recently: '已入库',
-    site: '美国亚马逊'
+    site: '美国亚马逊',
   },
 ]
 const fakeTableData3 = [
@@ -531,7 +636,7 @@ const fakeTableData3 = [
     date: '2024-12-30',
     type: 'SKU实际价格',
     price: '20->25',
-    profit: '30%->25%'
+    profit: '30%->25%',
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -545,7 +650,7 @@ const fakeTableData3 = [
     date: '2024-12-30',
     type: 'FBA配送费',
     price: '30->28',
-    profit: '28%->30%'
+    profit: '28%->30%',
   },
   {
     sku: 'SKU123456<br />碗架-木把手白色',
@@ -559,7 +664,7 @@ const fakeTableData3 = [
     date: '2024-12-30',
     type: '打包成本',
     price: '20->25',
-    profit: '30%->25%'
+    profit: '30%->25%',
   },
   {
     sku: 'SKU123456<br />奶酪板-磁吸拼接',
@@ -573,7 +678,7 @@ const fakeTableData3 = [
     date: '2024-12-30',
     type: '头程运费',
     price: '20->25',
-    profit: '30%->25%'
+    profit: '30%->25%',
   },
   {
     sku: 'SKU123456<br />碗架-木把手白色',
@@ -612,12 +717,12 @@ const fakeTableData3 = [
 
 const queryForm1 = reactive<any>({
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total1 = ref<number>(0)
 const queryForm2 = reactive<any>({
   pageNo: 1,
-  pageSize: 20
+  pageSize: 20,
 })
 const total2 = ref<number>(0)
 const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'): any[] => {
@@ -626,87 +731,87 @@ const getGroupedData = (data: IData[], type: IYProp, groupBy: 'week' | 'month'):
   const totalSales: Record<string, number> = {} // ∑总销售额
   const netProfitData: Record<string, number> = {} // ∑净利润
   const refundPrice: Record<string, number> = {} // ∑退款金额
-  const adSalesData: Record<string, number > = {} // ∑广告销售额
-  
+  const adSalesData: Record<string, number> = {} // ∑广告销售额
+
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
     if (groupBy === 'week') {
       return getWeekOfYear(date) // 获取 "YYYY-Wxx"
     }
-    return date.slice(0, 7) // 提取 "YYYY-MM" 
+    return date.slice(0, 7) // 提取 "YYYY-MM"
   }
 
   data.forEach((item) => {
     const timeKey = getTimeKey(item.date) // 获取分组键（周或月）
 
     switch (type) {
-    case 'tacos': {
-      // 处理TACOS类型，计算 ∑广告花费 / ∑总销售额
-      if (!groupedData[timeKey]) {
-        adCostData[timeKey] = 0
-        totalSales[timeKey] = 0
+      case 'tacos': {
+        // 处理TACOS类型，计算 ∑广告花费 / ∑总销售额
+        if (!groupedData[timeKey]) {
+          adCostData[timeKey] = 0
+          totalSales[timeKey] = 0
+        }
+        adCostData[timeKey] += item.adCostData
+        totalSales[timeKey] += item.totalSales
+        groupedData[timeKey] = formatNumber((adCostData[timeKey] / totalSales[timeKey]) * 100)
+
+        break
       }
-      adCostData[timeKey] += item.adCostData
-      totalSales[timeKey] += item.totalSales
-      groupedData[timeKey] = formatNumber(adCostData[timeKey] / totalSales[timeKey] * 100) 
-    
-    break;
-    }
-    case 'netProfitMargin': {
-      // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
-      if (!groupedData[timeKey]) {
-        netProfitData[timeKey] = 0
-        totalSales[timeKey] = 0
+      case 'netProfitMargin': {
+        // 处理净利润率类型，计算 ∑净利润 / ∑总销售额
+        if (!groupedData[timeKey]) {
+          netProfitData[timeKey] = 0
+          totalSales[timeKey] = 0
+        }
+        netProfitData[timeKey] += item.netProfitData
+        totalSales[timeKey] += item.totalSales
+        groupedData[timeKey] = formatNumber((netProfitData[timeKey] / totalSales[timeKey]) * 100)
+
+        break
       }
-      netProfitData[timeKey] += item.netProfitData
-      totalSales[timeKey] += item.totalSales
-      groupedData[timeKey] = formatNumber(netProfitData[timeKey] / totalSales[timeKey] * 100) 
-    
-    break;
-    }
-    case 'refundRate': {
-      // 处理退款率类型，计算 ∑退款金额 / ∑总销售额
-      if (!groupedData[timeKey]) {
-        refundPrice[timeKey] = 0
-        totalSales[timeKey] = 0
+      case 'refundRate': {
+        // 处理退款率类型，计算 ∑退款金额 / ∑总销售额
+        if (!groupedData[timeKey]) {
+          refundPrice[timeKey] = 0
+          totalSales[timeKey] = 0
+        }
+        refundPrice[timeKey] += item.refundPrice
+        totalSales[timeKey] += item.totalSales
+        groupedData[timeKey] = formatNumber((refundPrice[timeKey] / totalSales[timeKey]) * 100)
+
+        break
       }
-      refundPrice[timeKey] += item.refundPrice
-      totalSales[timeKey] += item.totalSales
-      groupedData[timeKey] = formatNumber(refundPrice[timeKey] / totalSales[timeKey] * 100)
-    
-    break;
-    }
-    case 'acos': {
-      // ∑广告花费 / ∑总广告销售额
-      if (!groupedData[timeKey]) {
-        adCostData[timeKey] = 0
-        adSalesData[timeKey] = 0
+      case 'acos': {
+        // ∑广告花费 / ∑总广告销售额
+        if (!groupedData[timeKey]) {
+          adCostData[timeKey] = 0
+          adSalesData[timeKey] = 0
+        }
+        adCostData[timeKey] += item.adCostData
+        adSalesData[timeKey] += item.adSalesData
+        groupedData[timeKey] = formatNumber((adCostData[timeKey] / adSalesData[timeKey]) * 100)
+
+        break
       }
-      adCostData[timeKey] += item.adCostData
-      adSalesData[timeKey] += item.adSalesData
-      groupedData[timeKey] = formatNumber(adCostData[timeKey] / adSalesData[timeKey]  * 100)
-    
-    break;
-    }
-    case 'adSalesRatio': {
-      // 总广告销售额 / ∑总销售额
-      if (!groupedData[timeKey]) {
-        totalSales[timeKey] = 0
-        adSalesData[timeKey] = 0
+      case 'adSalesRatio': {
+        // 总广告销售额 / ∑总销售额
+        if (!groupedData[timeKey]) {
+          totalSales[timeKey] = 0
+          adSalesData[timeKey] = 0
+        }
+        totalSales[timeKey] += item.totalSales
+        adSalesData[timeKey] += item.adSalesData
+        groupedData[timeKey] = formatNumber((totalSales[timeKey] / adSalesData[timeKey]) * 100)
+
+        break
       }
-      totalSales[timeKey] += item.totalSales
-      adSalesData[timeKey] += item.adSalesData
-      groupedData[timeKey] = formatNumber(totalSales[timeKey] / adSalesData[timeKey]  * 100)
-    
-    break;
-    }
-    default: {
-      // 其他类型，累加值
-      if (!groupedData[timeKey]) {
-        groupedData[timeKey] = 0
+      default: {
+        // 其他类型，累加值
+        if (!groupedData[timeKey]) {
+          groupedData[timeKey] = 0
+        }
+        groupedData[timeKey] += item[type]
       }
-      groupedData[timeKey] += item[type]
-    }
     }
   })
 
@@ -732,25 +837,24 @@ const getMonthlyData = (data: IData[], type: IYProp): any[] => {
 
 // 切换 日，周，月
 const handleSwitchTime = () => {
- 
   let salesData: any[] = []
   switch (timeRadio.value) {
-  case 'day': {
-    salesData = data1.value
-  
-  break;
-  }
-  case 'week': {
-    salesData = getWeeklyData(data1.value, 'sales')
-  
-  break;
-  }
-  case 'month': {
-    salesData = getMonthlyData(data1.value, 'sales')
-  
-  break;
-  }
-  // No default
+    case 'day': {
+      salesData = data1.value
+
+      break
+    }
+    case 'week': {
+      salesData = getWeeklyData(data1.value, 'sales')
+
+      break
+    }
+    case 'month': {
+      salesData = getMonthlyData(data1.value, 'sales')
+
+      break
+    }
+    // No default
   }
   option1.value.xAxis.data = salesData.map((item: any) => item.date)
   option1.value.series[0].data = salesData.map((d: any) => d.sales)
@@ -765,24 +869,24 @@ const updateYAxisData = (data: any[]) => {
       const prop = nameMapProp[s.name]
       let processedData: any[] = []
       switch (timeRadio.value) {
-      case 'day': {
-        processedData = data
-      
-      break;
+        case 'day': {
+          processedData = data
+
+          break
+        }
+        case 'week': {
+          processedData = getWeeklyData(data, prop)
+
+          break
+        }
+        case 'month': {
+          processedData = getMonthlyData(data, prop)
+
+          break
+        }
+        // No default
       }
-      case 'week': {
-        processedData = getWeeklyData(data, prop)
-      
-      break;
-      }
-      case 'month': {
-        processedData = getMonthlyData(data, prop)
-      
-      break;
-      }
-      // No default
-      }
-      s.data = processedData.map((d: any) => d[prop]) 
+      s.data = processedData.map((d: any) => d[prop])
     }
   })
 }
@@ -795,20 +899,13 @@ const handleCanSelect = (cardActive: boolean) => {
 }
 // 更新所有下拉项的禁用状态
 const updateDropdownItemsDisabled = () => {
-  const selectedTexts = [
-    card1Text.value,
-    card2Text.value,
-    card3Text.value,
-    card4Text.value,
-    card5Text.value,
-    card6Text.value
-  ]
-  
-  dropdownItems.forEach(item => {
+  const selectedTexts = [card1Text.value, card2Text.value, card3Text.value, card4Text.value, card5Text.value, card6Text.value]
+
+  dropdownItems.forEach((item) => {
     item.disabled = selectedTexts.includes(item.label)
   })
 }
-const handleSwitchItem1 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem1 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card1Active.value)
   if (can) {
     card1Text.value = item.label
@@ -816,7 +913,7 @@ const handleSwitchItem1 = (item: { label: string, disabled: boolean }) => {
     updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem2 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem2 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card2Active.value)
   if (can) {
     card2Text.value = item.label
@@ -824,7 +921,7 @@ const handleSwitchItem2 = (item: { label: string, disabled: boolean }) => {
     updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem3 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem3 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card3Active.value)
   if (can) {
     card3Text.value = item.label
@@ -832,7 +929,7 @@ const handleSwitchItem3 = (item: { label: string, disabled: boolean }) => {
     updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem4 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem4 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card4Active.value)
   if (can) {
     card4Text.value = item.label
@@ -840,7 +937,7 @@ const handleSwitchItem4 = (item: { label: string, disabled: boolean }) => {
     updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem5 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem5 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card5Active.value)
   if (can) {
     card5Text.value = item.label
@@ -848,7 +945,7 @@ const handleSwitchItem5 = (item: { label: string, disabled: boolean }) => {
     updateDropdownItemsDisabled()
   }
 }
-const handleSwitchItem6 = (item: { label: string, disabled: boolean }) => {
+const handleSwitchItem6 = (item: { label: string; disabled: boolean }) => {
   const can = handleCanSelect(card6Active.value)
   if (can) {
     card6Text.value = item.label
@@ -867,7 +964,7 @@ function updateYAxisIndex() {
     })
   })
 }
-type IDataGroup =  'price1' | 'percent1'| 'percent2'
+type IDataGroup = 'price1' | 'percent1' | 'percent2'
 
 const getYAxisFormat = (groupName: string) => {
   if (groupName === 'price1') {
@@ -881,27 +978,27 @@ const getYAxisFormat = (groupName: string) => {
 // 获取对应的颜色
 function getYAxisColor() {
   switch (clickCard.value) {
-  case 'card1': {
-    return '#ff99cc'
-  }
-  case 'card2': {
-    return '#E6A23C'
-  }
-  case 'card3': {
-    return '#34a9a9'
-  }
-  case 'card4': {
-    return '#e36060'
-  }
-  case 'card5': {
-    return '#8a7ae3'
-  }
-  case 'card6': {
-    return '#ffd700'
-  }
-  default: {
-    return '#999'
-  }
+    case 'card1': {
+      return '#ff99cc'
+    }
+    case 'card2': {
+      return '#E6A23C'
+    }
+    case 'card3': {
+      return '#34a9a9'
+    }
+    case 'card4': {
+      return '#e36060'
+    }
+    case 'card5': {
+      return '#8a7ae3'
+    }
+    case 'card6': {
+      return '#ffd700'
+    }
+    default: {
+      return '#999'
+    }
   }
 }
 
@@ -913,7 +1010,7 @@ function getDataForName(dataName: string) {
 function updateYAxisOffsets() {
   // 重设每个 Y 轴的 offset，确保不重叠
   option1.value.yAxis.forEach((yAxis: any, index: number) => {
-    yAxis.offset = Math.floor(index / 2) * 60; // 每两个 Y 轴之间间隔 60px
+    yAxis.offset = Math.floor(index / 2) * 60 // 每两个 Y 轴之间间隔 60px
     // 保证 Y 轴位置不重叠
     yAxis.position = index % 2 === 0 ? 'left' : 'right'
   })
@@ -934,13 +1031,13 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       }
       yAxisIndex = currentYAxisCount
       yAxisMapping.set(dataGroup, yAxisIndex)
- 
+
       // 新增 Y 轴配置
       option1.value.yAxis.push({
         type: 'value',
         name: dataName,
         position: currentYAxisCount % 2 === 0 ? 'left' : 'right',
-        offset: (Math.floor(currentYAxisCount / 2)) * 50,
+        offset: Math.floor(currentYAxisCount / 2) * 50,
         nameTextStyle: {
           // fontWeight: 'bold',
           color: getYAxisColor(),
@@ -962,7 +1059,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         splitLine: {
           show: false,
         },
-        boundaryGap: [0, 0.1]  // 为顶部留出空间
+        boundaryGap: [0, 0.1], // 为顶部留出空间
       })
 
       currentYAxisCount++
@@ -971,9 +1068,9 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
     // 添加新 series
     option1.value.series.push({
-      name: dataName, 
-      type: 'line', 
-      yAxisIndex, 
+      name: dataName,
+      type: 'line',
+      yAxisIndex,
       data: getDataForName(dataName),
       smooth: true,
       symbol: 'circle',
@@ -985,7 +1082,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         color: getYAxisColor(),
       },
       emphasis: {
-        focus: 'series'
+        focus: 'series',
       },
     })
   } else {
@@ -999,12 +1096,10 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     if (seriesIndex !== -1) {
       option1.value.series.splice(seriesIndex, 1) // 移除对应的 series
     }
-  
+
     // 如果当前字段所属的组的所有 series 都被移除，移除对应的 Y 轴
-    const isGroupEmpty = option1.value.series.every(
-      (s: any) => s.yAxisIndex !== yAxisMapping.get(dataGroup)
-    )
-    
+    const isGroupEmpty = option1.value.series.every((s: any) => s.yAxisIndex !== yAxisMapping.get(dataGroup))
+
     if (isGroupEmpty) {
       const yAxisIndex = yAxisMapping.get(dataGroup)
 
@@ -1014,14 +1109,14 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       // 更新所有 series 的 yAxisIndex
       option1.value.series.forEach((s: any) => {
         if (s.yAxisIndex > yAxisIndex) {
-          s.yAxisIndex--  // 大于已删除的 Y 轴的index，都减一
+          s.yAxisIndex-- // 大于已删除的 Y 轴的index，都减一
         }
       })
 
       // 移除 Y 轴配置
       option1.value.yAxis = option1.value.yAxis.filter((yAxis: any, index: number) => index !== yAxisIndex)
 
-      updateYAxisIndex()  // 更新 yAxisMapping 和 series 的对应索引
+      updateYAxisIndex() // 更新 yAxisMapping 和 series 的对应索引
       updateYAxisOffsets()
     }
   }
@@ -1042,34 +1137,32 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 // }
 const handleCard1Click = () => {
   card1Active.value = !card1Active.value
-  
+
   if (card1Active.value) {
     selectedItems.push(card1Text.value)
     clickCard.value = 'card1'
   }
   const dataGroup = getGroup(card1Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value) 
+  const moreThan3 = handleSelectionChange(card1Active.value, dataGroup, card1Text.value)
   if (moreThan3) {
     card1Active.value = false
     selectedItems.pop()
   }
-  
 }
 
 const handleCard2Click = () => {
   card2Active.value = !card2Active.value
-  
+
   if (card2Active.value) {
     selectedItems.push(card2Text.value)
     clickCard.value = 'card2'
   }
   const dataGroup = getGroup(card2Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value) 
+  const moreThan3 = handleSelectionChange(card2Active.value, dataGroup, card2Text.value)
   if (moreThan3) {
     card2Active.value = false
     selectedItems.pop()
   }
-  
 }
 const handleCard3Click = () => {
   card3Active.value = !card3Active.value
@@ -1079,7 +1172,7 @@ const handleCard3Click = () => {
     clickCard.value = 'card3'
   }
   const dataGroup = getGroup(card3Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value) 
+  const moreThan3 = handleSelectionChange(card3Active.value, dataGroup, card3Text.value)
   if (moreThan3) {
     card3Active.value = false
     selectedItems.pop()
@@ -1087,13 +1180,13 @@ const handleCard3Click = () => {
 }
 const handleCard4Click = () => {
   card4Active.value = !card4Active.value
-  
+
   if (card4Active.value) {
     selectedItems.push(card4Text.value)
     clickCard.value = 'card4'
   }
   const dataGroup = getGroup(card4Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value) 
+  const moreThan3 = handleSelectionChange(card4Active.value, dataGroup, card4Text.value)
   if (moreThan3) {
     card4Active.value = false
     selectedItems.pop()
@@ -1101,13 +1194,13 @@ const handleCard4Click = () => {
 }
 const handleCard5Click = () => {
   card5Active.value = !card5Active.value
-  
+
   if (card5Active.value) {
     selectedItems.push(card5Text.value)
     clickCard.value = 'card5'
   }
   const dataGroup = getGroup(card5Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value) 
+  const moreThan3 = handleSelectionChange(card5Active.value, dataGroup, card5Text.value)
   if (moreThan3) {
     card5Active.value = false
     selectedItems.pop()
@@ -1115,18 +1208,17 @@ const handleCard5Click = () => {
 }
 const handleCard6Click = () => {
   card6Active.value = !card6Active.value
- 
+
   if (card6Active.value) {
     selectedItems.push(card6Text.value)
     clickCard.value = 'card6'
   }
   const dataGroup = getGroup(card6Text.value) as IDataGroup
-  const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value) 
+  const moreThan3 = handleSelectionChange(card6Active.value, dataGroup, card6Text.value)
   if (moreThan3) {
     card6Active.value = false
     selectedItems.pop()
   }
-  
 }
 const groups = {
   price1: ['总销售额', '广告销售额', '净利润', '预计下月仓储费'],
@@ -1137,7 +1229,7 @@ const groups = {
  * @description 获取字段所属组
  * @param item 所有可以选择的字段
  */
- function getGroup(item: string): string | null {
+function getGroup(item: string): string | null {
   for (const [group, fields] of Object.entries(groups)) {
     if (fields.includes(item)) {
       return group
@@ -1175,14 +1267,14 @@ const initChart1 = () => {
         // 最终html字符串
         const resHtmlStr = titleHtmlStr + contentHtmlStr
         return resHtmlStr
-      }
+      },
     },
     grid: {
       left: '50',
       bottom: '6%',
       right: '60',
       top: '13%',
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -1216,7 +1308,7 @@ const initChart1 = () => {
             color: '#409EFF',
           },
         },
-        boundaryGap: [0, 0.1]  // 为顶部留出空间
+        boundaryGap: [0, 0.1], // 为顶部留出空间
       },
     ],
     series: [
@@ -1230,13 +1322,13 @@ const initChart1 = () => {
           color: '#409EFF',
         },
         opacity: 0.9,
-        stack: 'sales'
+        stack: 'sales',
       },
     ],
-  };
+  }
 
   // 设置图表实例的配置项
-  chartInstance1?.setOption(option1.value);
+  chartInstance1?.setOption(option1.value)
 }
 const initChart2 = () => {
   option2.value = {
@@ -1248,11 +1340,11 @@ const initChart2 = () => {
 
         // tooltip详情内容
         let itemHtmlStrArr = ''
-      
-        itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
+
+        itemHtmlStrArr = `<div style="display: flex;align-items:center;">
           ${params.marker}
           <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px 0 2px;">${params.seriesName}: </div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${ageRadio.value === 0 ? '$': ''}${params.value}${ageRadio.value === 1 ? '%': ''}</span>
+          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${ageRadio.value === 0 ? '$' : ''}${params.value}${ageRadio.value === 1 ? '%' : ''}</span>
         </div>`
 
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
@@ -1262,12 +1354,12 @@ const initChart2 = () => {
         const resHtmlStr = titleHtmlStr + contentHtmlStr
         return resHtmlStr
       },
-      confine: true
+      confine: true,
     },
     grid: {
       top: 10,
       bottom: 10,
-      containLabel: true
+      containLabel: true,
     },
     xAxis: {
       type: 'category',
@@ -1277,16 +1369,16 @@ const initChart2 = () => {
       },
       axisLine: {
         lineStyle: {
-          color: '#999'
-        }
+          color: '#999',
+        },
       },
       axisLabel: {
-        fontSize: '14px'
+        fontSize: '14px',
       },
     },
     yAxis: {
       type: 'value',
-      boundaryGap: [0, 0.1]  // 为顶部留出空间
+      boundaryGap: [0, 0.1], // 为顶部留出空间
     },
     series: [
       {
@@ -1295,10 +1387,10 @@ const initChart2 = () => {
         stack: '总量',
         data: [data2.value[4].value],
         itemStyle: {
-          color: storageAgeColorList[4]
+          color: storageAgeColorList[4],
         },
         emphasis: {
-          focus: 'series'
+          focus: 'series',
         },
       },
       {
@@ -1307,10 +1399,10 @@ const initChart2 = () => {
         stack: '总量',
         data: [data2.value[3].value],
         itemStyle: {
-          color: storageAgeColorList[3]
+          color: storageAgeColorList[3],
         },
         emphasis: {
-          focus: 'series'
+          focus: 'series',
         },
       },
       {
@@ -1319,10 +1411,10 @@ const initChart2 = () => {
         stack: '总量',
         data: [data2.value[2].value],
         itemStyle: {
-          color: storageAgeColorList[2]
+          color: storageAgeColorList[2],
         },
         emphasis: {
-          focus: 'series'
+          focus: 'series',
         },
       },
       {
@@ -1331,10 +1423,10 @@ const initChart2 = () => {
         stack: '总量',
         data: [data2.value[1].value],
         itemStyle: {
-          color: storageAgeColorList[1]
+          color: storageAgeColorList[1],
         },
         emphasis: {
-          focus: 'series'
+          focus: 'series',
         },
       },
       {
@@ -1344,13 +1436,13 @@ const initChart2 = () => {
         barWidth: '40%',
         data: [data2.value[0].value],
         itemStyle: {
-          color: storageAgeColorList[0]
+          color: storageAgeColorList[0],
         },
         emphasis: {
-          focus: 'series'
+          focus: 'series',
         },
       },
-    ]
+    ],
   }
   chartInstance2?.setOption(option2.value)
 }
@@ -1364,30 +1456,28 @@ const updateChart2 = () => {
 const handleSwitchBar = () => {
   const threshold = 10
   if (ageRadio.value === 0) {
-  
     option2.value.series.forEach((seriesItem: any, index: number) => {
       const value = percentageAgeData[4 - index].value
       const percentage = percentageAgeData[4 - index].percentage
       seriesItem.data = [value]
       if (percentage > threshold) {
         seriesItem.label = {
-          show: false, 
+          show: false,
         }
       }
     })
     option2.value.yAxis.axisLabel = {}
   } else if (ageRadio.value === 1) {
-
     option2.value.series.forEach((seriesItem: any, index: number) => {
       const percentage = percentageAgeData[4 - index].percentage
       seriesItem.data = [percentage]
       seriesItem.label = {
         show: percentage > threshold, // 当占比大于阈值时显示比例
-        formatter: (params: any) => `${params.value}%`, 
+        formatter: (params: any) => `${params.value}%`,
       }
     })
     option2.value.yAxis.axisLabel = {
-      formatter: '{value}%'
+      formatter: '{value}%',
     }
   }
   updateChart2()
@@ -1413,13 +1503,13 @@ const handleSizeChange2 = (value: number) => {
 const headerCellStyle = (): CSSProperties => {
   return {
     backgroundColor: '#f2f5fa',
-    textAlign: 'center'
+    textAlign: 'center',
   }
 }
 onBeforeMount(() => {
-  percentageAgeData = data2.value.map(item => ({
+  percentageAgeData = data2.value.map((item) => ({
     ...item,
-    percentage: ((item.value / totalAgeValue) * 100).toFixed(2)
+    percentage: ((item.value / totalAgeValue) * 100).toFixed(2),
   }))
 })
 onMounted(() => {
@@ -1454,9 +1544,9 @@ onMounted(() => {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
       font-size: calc(var(--el-font-size-base) + 2px);
-      font-weight: 600;  
+      font-weight: 600;
       color: #6aa74d;
-      background-color: rgba(153, 219, 112, 0.2); 
+      background-color: rgba(153, 219, 112, 0.2);
     }
     .el-card__body {
       display: flex;
@@ -1466,14 +1556,14 @@ onMounted(() => {
   }
 }
 .green {
-  color: #67C23A; 
+  color: #67c23a;
 }
 .red {
-  color: #F56C6C;
+  color: #f56c6c;
 }
 .table-item {
   position: relative;
-  padding-left: 13px; 
+  padding-left: 13px;
 
   &::before {
     position: absolute;
@@ -1493,9 +1583,9 @@ onMounted(() => {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
       font-size: calc(var(--el-font-size-base) + 2px);
-      font-weight: 600;  
+      font-weight: 600;
       color: #4f6d7a;
-      background-color: rgba(115, 153, 192, 0.2);  
+      background-color: rgba(115, 153, 192, 0.2);
     }
     .el-card__body {
       display: flex;
@@ -1510,9 +1600,9 @@ onMounted(() => {
       justify-content: center;
       padding: 12px 20px; /* 增加一些内边距 */
       font-size: calc(var(--el-font-size-base) + 2px); /* 增加字体大小 */
-      font-weight: 600; 
+      font-weight: 600;
       color: #ff8c69;
-      background-color: rgba(253, 149, 118, 0.15);  
+      background-color: rgba(253, 149, 118, 0.15);
     }
 
     .el-card__body {
@@ -1557,7 +1647,7 @@ onMounted(() => {
       padding-left: 10px;
     }
   }
-      
+
   .el-tag {
     float: right;
   }
@@ -1578,7 +1668,7 @@ onMounted(() => {
       background: #ff99cc;
     }
     &-orange {
-      background: #E6A23C;
+      background: #e6a23c;
     }
     &-green {
       background: #34a9a9;

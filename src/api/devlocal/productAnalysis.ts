@@ -5,8 +5,10 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
-  IGetTrendOverviewReq,
-  ITrendOverview,
+  IGetTrendOverviewChartReq,
+  IGetTrendOverviewChartRes,
+  IGetTrendOverviewTableReq,
+  IGetTrendOverviewTableRes,
   IUpdateOperationAmazonCostReq,
 } from '/@/type/storeOperation/productAnalysisType'
 
@@ -86,13 +88,26 @@ export function getOperationAmazonPackagingInformation(params: {
   })
 }
 /**
- * @description 运营-产品分析-趋势总览
- * @param data IGetTrendOverviewReq
- * @returns { data: ITrendOverview[] }
+ * @description 运营-产品分析-趋势总览-表格数据（分页）
+ * @param data IGetTrendOverviewTableReq
+ * @returns IGetTrendOverviewTableRes
  */
-export function getTrendOverview(data: IGetTrendOverviewReq): Promise<{ data: ITrendOverview[] }> {
+export function getTrendOverviewTable(data: IGetTrendOverviewTableReq): Promise<IGetTrendOverviewTableRes> {
   return request({
-    url: `${BASE_API}/product/analysis/trend/overview`,
+    url: `${BASE_API}/product/analysis/trend/overview/table`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 运营-产品分析-趋势总览-图表数据（完整数据）
+ * @param data IGetTrendOverviewChartReq
+ * @returns IGetTrendOverviewChartRes
+ */
+export function getTrendOverviewChart(data: IGetTrendOverviewChartReq): Promise<IGetTrendOverviewChartRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/trend/overview/chart`,
     method: 'post',
     data,
   })

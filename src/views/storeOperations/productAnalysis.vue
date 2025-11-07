@@ -7,7 +7,12 @@
         <div style="position: relative">
           <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
             <el-tab-pane label="趋势总览" :name="0">
-              <vab-trend-overview :compare-type="compareType" :select-date-range="selectDateRange" :select-field="selectField" />
+              <vab-trend-overview
+                :compare-type="compareType"
+                :select-date-range="selectDateRange"
+                :select-field="selectField"
+                :selected-sku="selectedSku"
+              />
             </el-tab-pane>
             <el-tab-pane label="SP广告饼图" :name="1">
               <vab-ad-pie-tab />
@@ -28,7 +33,18 @@
             <el-form v-if="activeName === 0" inline>
               <el-form-item label="展示">
                 <el-select v-model="selectField">
-                  <el-option v-for="item in levelOption" :key="item.value" :label="item.label" :value="item.value" />
+                  <el-option
+                    v-for="item in levelOption"
+                    :key="item.value"
+                    :disabled="item.value === 2"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="selectField === 0 && skuOptions.length > 1" label="SKU">
+                <el-select v-model="selectedSku" placeholder="请选择SKU">
+                  <el-option v-for="item in skuOptions" :key="item" :label="item" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -259,6 +275,8 @@ const selectField = ref<number>(0)
 const selectDateRange = ref<[string, string]>(getLast30DaysStringTime())
 // 同比/环比类型：0=同比，1=环比
 const compareType = ref<number>(0)
+// 选择的SKU（当selectField为0时使用）
+const selectedSku = ref<string>('')
 
 // 日期选择器快捷选项
 const dateShortcuts = [
@@ -420,6 +438,8 @@ onBeforeMount(() => {
     }
     queryForm3.sku = skuOptions.value[0]
     sku.value = queryForm3.sku
+    // 初始化趋势总览的SKU选择
+    selectedSku.value = skuOptions.value[0]
   }
 })
 
@@ -438,6 +458,10 @@ watch(
       }
       queryForm3.sku = skuOptions.value[0]
       sku.value = queryForm3.sku
+      // 更新趋势总览的SKU选择
+      if (!selectedSku.value || !skuOptions.value.includes(selectedSku.value)) {
+        selectedSku.value = skuOptions.value[0]
+      }
     }
   },
   { immediate: true }
@@ -445,6 +469,7 @@ watch(
 onMounted(() => {
   setImageHeight()
   activeName.value = Number(route.query.activeName)
+  selectField.value = Number(route.query.field)
 })
 watch(
   () => route.query.field,

@@ -7,6 +7,7 @@
             :active="card.active"
             :color-type="card.colorType"
             :dropdown-items="dropdownItems"
+            :loading="chartLoading"
             :previous-value="card.previousValue"
             :title="card.title"
             :trend-percentage="card.trendPercentage"
@@ -26,7 +27,7 @@
           </el-radio-group>
         </vab-query-form-right-panel>
       </vab-query-form>
-      <div ref="chartContainer" style="width: 100%; height: 350px"></div>
+      <div ref="chartContainer" v-loading="chartLoading" style="width: 100%; height: 350px"></div>
     </vab-card>
     <div style="margin-bottom: 10px; text-align: right">
       <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
@@ -35,9 +36,9 @@
             <vab-icon icon="settings-line" />
           </el-button>
         </template>
-        <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+        <vab-draggable v-model="checkList1" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
           <div
-            v-for="item in columns"
+            v-for="item in checkList1"
             :key="item.label"
             :class="{ 'non-draggable': item.disableCheck }"
             style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
@@ -56,7 +57,7 @@
       </el-popover>
     </div>
     <el-table
-      v-loading="loading"
+      v-loading="tableLoading"
       border
       :cell-style="{ textAlign: 'center' }"
       :data="trendList"
@@ -90,9 +91,10 @@
 import { Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getTrendOverview } from '/@/api/devlocal/productAnalysis'
-import { ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
-import { getWeekOfYear } from '/@/utils/dateUtils'
+import { trendOverviewColumns } from '../constantOption'
+import { getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
+import { ICardSummary, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
+import { formatDateToString, getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'VabTrendOverview',
@@ -103,20 +105,23 @@ interface Props {
   selectField?: number // 展示维度：0=SKU, 1=ASIN, 2=父体ASIN
   compareType?: number // 同比/环比：0=同比, 1=环比
   selectDateRange?: [string, string] // 日期范围
+  selectedSku?: string // 选择的SKU（当selectField为0时使用）
 }
 
 const props = withDefaults(defineProps<Props>(), {
   selectField: 0,
   compareType: 0,
   selectDateRange: () => ['', ''],
+  selectedSku: '',
 })
 
-const loading = ref<boolean>(false)
+const tableLoading = ref<boolean>(false) // 表格加载状态
+const chartLoading = ref<boolean>(false) // 图表加载状态
 // 切换日，周，月
 const radio = ref<string>('day')
 const amount = 42442.71
 // 控制数字显示为美元形式
-const formattedAmount = amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+const formattedAmount = amount.toString()
 const chartContainer = ref(null)
 let chartInstance: echarts.ECharts | null = null
 let chartObserver: ResizeObserver
@@ -125,334 +130,69 @@ const queryForm = reactive<any>({
   pageSize: 20,
 })
 const total = ref<number>(0)
+const route = useRoute()
+// 获取币种符号，从路由参数获取，默认为美元符号
+const currencySymbol = computed(() => {
+  return (route.query.icon as string) || '$'
+})
 const checkList1 = computed(() => {
-  return columns.value.filter((_: any) => _.checked)
+  return trendOverviewColumns.filter((item) => item.checked)
 })
 // 记录点击的是哪个card
 const clickCard = ref<string>('')
-const columns = ref<any>([
-  {
-    label: '日期',
-    prop: 'date',
-    disableCheck: true,
-    checked: true,
-    width: 115,
-    isFixed: 'left',
-  },
-  {
-    label: '销售额(订单)',
-    prop: 'amount',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '销量(订单)',
-    prop: 'volume',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '广告销量',
-    prop: 'adSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自然销量',
-    prop: 'organicSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '广告销售额',
-    prop: 'adSalesAmount',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '广告花费',
-    prop: 'spend',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '净利润(订单)',
-    prop: 'grossOrderProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '预计下月仓储费',
-    prop: 'estimatedStorageCostNextMonth',
-    checked: true,
-    minWidth: 140,
-  },
-  {
-    label: '退款金额',
-    prop: 'returnAmount',
-    checked: true,
-    minWidth: 90,
-  },
-  // {
-  //   label: '毛利润',
-  //   prop: 'grossProfit',
-  //   checked: true,
-  //   minWidth: 90,
-  // },
-  {
-    label: '点击成本',
-    prop: 'clickCost',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '客单价',
-    prop: 'averageOrderValue',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: 'CPA(获客成本)',
-    prop: 'cpa',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '广告转化率',
-    prop: 'adConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : '-'
-    },
-  },
-  {
-    label: '自然转化率',
-    prop: 'organicConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : '-'
-    },
-  },
-  {
-    label: '综合转化率',
-    prop: 'totalConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '退货率',
-    prop: 'returnRate',
-    checked: true,
-    minWidth: 90,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '退款率',
-    prop: 'refundRate',
-    checked: true,
-    minWidth: 90,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '净利润率',
-    prop: 'netProfitMargin',
-    checked: true,
-    minWidth: 90,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: 'TACOS',
-    prop: 'tacos',
-    checked: true,
-    minWidth: 90,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: 'ACOS',
-    prop: 'acos',
-    checked: true,
-    minWidth: 90,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '广告点击率',
-    prop: 'adClickRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '总访客',
-    prop: 'sessionsTotal',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: 'PC端访客',
-    prop: 'sessions',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '移动端访客',
-    prop: 'sessionsMobile',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '自然点击',
-    prop: 'organicClicks',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '广告点击',
-    prop: 'clicks',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自然点击占比',
-    prop: 'organicClickShare',
-    checked: true,
-    minWidth: 130,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '广告点击占比',
-    prop: 'adClickShare',
-    checked: true,
-    minWidth: 130,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: 'Rating',
-    prop: 'lastStar',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '库存',
-    prop: 'stock',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '点击量',
-    prop: 'clicks',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '小类排名',
-    prop: 'smallRank',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '大类排名',
-    prop: 'largeRank',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '展示',
-    prop: 'impressions',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '退货量',
-    prop: 'returnGoodsCount',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '销售额(利润报表)',
-    prop: 'totalSalesAmount',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '净利润（利润报表）',
-    prop: 'grossProfit',
-    checked: true,
-    minWidth: 130,
-  },
-])
+
 // 卡片配置数组
 const cards = ref([
   {
     title: '销售额(订单)',
-    value: formattedAmount,
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'primary' as const,
   },
   {
     title: '广告销售额',
-    value: formattedAmount,
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'orange' as const,
   },
   {
     title: '广告花费',
-    value: formattedAmount,
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'green' as const,
   },
   {
     title: 'ACOS',
-    value: '26.58%',
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '0.00%',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'red' as const,
   },
   {
     title: '点击成本',
-    value: formattedAmount,
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '0.00',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'purple' as const,
   },
   {
     title: 'TACOS',
-    value: '15.24%',
-    previousValue: '$47.026.96',
-    trendPercentage: '-9.75%',
+    value: '0.00%',
+    previousValue: '',
+    trendPercentage: '',
     trendType: 'down' as const,
     active: false,
     colorType: 'yellow' as const,
@@ -464,9 +204,8 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '广告销售额', disabled: false },
   { label: '广告花费', disabled: false },
   { label: '净利润(订单)', disabled: false },
-  // { label: '预计下月仓储费' },
+  { label: '预计下月仓储费', disabled: false },
   { label: '退款金额', disabled: false },
-  // { label: '毛利润', },
   { label: '点击成本', disabled: false },
   { label: '客单价', disabled: false },
   { label: 'CPA(获客成本)', disabled: false },
@@ -476,30 +215,33 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '退货率', disabled: false },
   { label: '退款率', disabled: false },
   { label: '净利润率', disabled: false },
-  // { label: '毛利润率', },
   { label: 'TACOS', disabled: false },
   { label: 'ACOS', disabled: false },
   { label: '广告点击率', disabled: false },
   { label: '总访客', disabled: false },
   { label: 'PC端访客', disabled: false },
   { label: '移动端访客', disabled: false },
+  { label: '自然点击', disabled: false },
   { label: '自然点击占比', disabled: false },
   { label: '广告点击占比', disabled: false },
   { label: 'Rating', disabled: false },
   { label: '库存', disabled: false },
   { label: '小类排名', disabled: false },
   { label: '大类排名', disabled: false },
+  { label: '广告点击', disabled: false },
   { label: '广告展现量', disabled: false },
   { label: '退货量', disabled: false },
+  { label: '销售额(利润报表)', disabled: false },
+  { label: '净利润(利润报表)', disabled: false },
 ])
 
 const groups = {
-  price1: ['销售额(订单)', '广告销售额', '广告花费', '净利润(订单)', '退款金额'],
+  price1: ['销售额(订单)', '广告销售额', '广告花费', '净利润(订单)', '预计下月仓储费', '退款金额', '销售额(利润报表)', '净利润(利润报表)'],
   price2: ['点击成本', '客单价', 'CPA(获客成本)'],
   percent1: ['广告转化率', '自然转化率', '综合转化率'],
   percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
   percent3: ['广告点击率'],
-  int1: ['总访客', 'PC端访客', '移动端访客', '自然点击占比', '广告点击占比'],
+  int1: ['销量(订单)', '广告销量', '自然销量', '总访客', 'PC端访客', '移动端访客', '自然点击', '广告点击', '自然点击占比', '广告点击占比'],
   int2: ['Rating'],
   int3: ['库存'],
   int4: ['小类排名'],
@@ -507,11 +249,12 @@ const groups = {
   int6: ['广告展现量'],
   int7: ['退货量'],
 }
-// name -> prop (根据 ITrendOverview 接口)
+// name -> prop (根据 ITrendOverview 接口，与 constantOption.ts 中的 trendOverviewColumns 对应)
 const nameMapProp: Record<string, IDataProp> = {
+  '销售额(订单)': 'amount',
+  '销量(订单)': 'volume',
   广告销量: 'adSales',
   自然销量: 'organicSales',
-  '销售额(订单)': 'amount',
   广告销售额: 'adSalesAmount',
   广告花费: 'spend',
   '净利润(订单)': 'grossOrderProfit',
@@ -539,20 +282,22 @@ const nameMapProp: Record<string, IDataProp> = {
   库存: 'stock',
   小类排名: 'smallRank',
   大类排名: 'largeRank',
-  点击量: 'clicks',
-  展示: 'impressions',
+  广告点击: 'clicks',
+  广告展现量: 'impressions',
   退货量: 'returnGoodsCount',
   '销售额(利润报表)': 'totalSalesAmount',
-  '净利润（利润报表）': 'grossProfit',
+  '净利润(利润报表)': 'grossProfit',
 }
 type IDataProp =
+  | 'amount'
+  | 'volume'
   | 'adSales'
   | 'organicSales'
-  | 'amount'
   | 'adSalesAmount'
   | 'spend'
   | 'grossOrderProfit'
   | 'estimatedStorageCostNextMonth'
+  | 'returnAmount'
   | 'clickCost'
   | 'averageOrderValue'
   | 'cpa'
@@ -578,300 +323,9 @@ type IDataProp =
   | 'clicks'
   | 'impressions'
   | 'returnGoodsCount'
-  | 'returnAmount'
   | 'totalSalesAmount'
   | 'grossProfit'
 
-// const data: IData[] = [
-//   {
-//     date: '2023-10-14',
-//     adSales: 100,
-//     organicSales: 200,
-//     amount: 100,
-//     adSalesData: 150,
-//     adCostData: 20,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 3,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-10-19',
-//     adSales: 50,
-//     organicSales: 100,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 20,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 3,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-11-01',
-//     adSales: 100,
-//     organicSales: 200,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 20,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 2,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-11-02',
-//     adSales: 50,
-//     organicSales: 100,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 20,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 3,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-12-01',
-//     adSales: 100,
-//     organicSales: 200,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 60,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 3,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-12-02',
-//     adSales: 50,
-//     organicSales: 100,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 60,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 2,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-12-08',
-//     adSales: 100,
-//     organicSales: 200,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 60,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 1,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-//   {
-//     date: '2024-12-09',
-//     adSales: 100,
-//     organicSales: 200,
-//     totalSales: 100,
-//     adSalesData: 150,
-//     adCostData: 60,
-//     netProfitData: 33,
-//     expectedStorageCostData: 25,
-//     refundPrice: 28,
-//     grossProfit: 35,
-//     clickCost: 12,
-//     priceData: 60,
-//     cpa: 90,
-//     adConversionRate: 66,
-//     naturalConversionRate: 100,
-//     overallConversionRate: 90,
-//     returnRate: 80,
-//     refundRate: 70,
-//     netProfitMargin: 110,
-//     grossProfitMargin: 120,
-//     tacos: 33.33,
-//     acos: 26.75,
-//     adClickRate: 300,
-//     totalVisitors: 1000,
-//     pcVisitors: 520,
-//     mobileVisitors: 490,
-//     organicVisitors: 450,
-//     adVisitors: 550,
-//     rating: 3,
-//     stock: 1000,
-//     subcategoryRanking: 2,
-//     categoryRanking: 10,
-//     adImpressions: 1200,
-//     returnQuantity: 100,
-//   },
-// ]
 const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month'): any[] => {
   const groupedData: Record<string, number> = {}
   const spendData: Record<string, number> = {} // ∑广告花费
@@ -885,6 +339,8 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
   const adSalesData: Record<string, number> = {} // ∑广告销量
   const adSalesAmountData: Record<string, number> = {} // ∑广告销售额
   const impressionsData: Record<string, number> = {} // ∑广告展现量
+  const pageViewsTotalData: Record<string, number> = {} // ∑pageViewsTotal
+  const organicClicksData: Record<string, number> = {} // ∑自然点击量
 
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
@@ -906,8 +362,16 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
         if (!groupedData[timeKey]) {
           groupedData[timeKey] = Infinity
         }
-        const value = item[type] ?? Infinity
-        if (value < groupedData[timeKey]) {
+        const value = item[type]
+        // 如果是数组，取第一个类别的排名（或最小值）
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            const minRank = Math.min(...value.map((v: { category: string; smallRank: number }) => v.smallRank))
+            if (minRank < groupedData[timeKey]) {
+              groupedData[timeKey] = minRank
+            }
+          }
+        } else if (typeof value === 'number' && value < groupedData[timeKey]) {
           groupedData[timeKey] = value
         }
 
@@ -956,7 +420,7 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           totalSalesData[timeKey] = 0
         }
         returnGoodsCountData[timeKey] += item.returnGoodsCount ?? 0
-        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        totalSalesData[timeKey] += item.volume ?? 0
         groupedData[timeKey] = formatNumber((returnGoodsCountData[timeKey] / totalSalesData[timeKey]) * 100)
 
         break
@@ -968,7 +432,7 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           totalSalesData[timeKey] = 0
         }
         sessionsTotalData[timeKey] += item.sessionsTotal ?? 0
-        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        totalSalesData[timeKey] += item.volume ?? 0
         groupedData[timeKey] = formatNumber((totalSalesData[timeKey] / sessionsTotalData[timeKey]) * 100)
 
         break
@@ -998,7 +462,7 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           totalSalesData[timeKey] = 0
         }
         spendData[timeKey] += item.spend ?? 0
-        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        totalSalesData[timeKey] += item.volume ?? 0
         groupedData[timeKey] = formatNumber(spendData[timeKey] / totalSalesData[timeKey])
 
         break
@@ -1010,7 +474,7 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           totalSalesData[timeKey] = 0
         }
         amountData[timeKey] += item.amount ?? 0
-        totalSalesData[timeKey] += (item.adSales ?? 0) + (item.organicSales ?? 0)
+        totalSalesData[timeKey] += item.volume ?? 0
         groupedData[timeKey] = formatNumber(amountData[timeKey] / totalSalesData[timeKey])
 
         break
@@ -1051,6 +515,28 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
 
         break
       }
+      case 'adClickShare': {
+        // ∑广告点击量 / ∑pageViewsTotal
+        if (!groupedData[timeKey]) {
+          clicksData[timeKey] = 0
+          pageViewsTotalData[timeKey] = 0
+        }
+        clicksData[timeKey] += item.clicks ?? 0
+        pageViewsTotalData[timeKey] += item.pageViewsTotal ?? 0
+        groupedData[timeKey] = formatNumber((clicksData[timeKey] / pageViewsTotalData[timeKey]) * 100)
+        break
+      }
+      case 'organicClickShare': {
+        // ∑自然点击量 / ∑pageViewsTotal
+        if (!groupedData[timeKey]) {
+          organicClicksData[timeKey] = 0
+          pageViewsTotalData[timeKey] = 0
+        }
+        organicClicksData[timeKey] += item.organicClicks ?? 0
+        pageViewsTotalData[timeKey] += item.pageViewsTotal ?? 0
+        groupedData[timeKey] = formatNumber((organicClicksData[timeKey] / pageViewsTotalData[timeKey]) * 100)
+        break
+      }
       default: {
         // 其他类型，累加值
         if (!groupedData[timeKey]) {
@@ -1058,6 +544,8 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
         }
         const value = item[type] ?? 0
         groupedData[timeKey] += value
+        // 保留两位小数
+        groupedData[timeKey] = formatNumber(groupedData[timeKey])
       }
     }
   })
@@ -1070,6 +558,70 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
 // 金额保留两位小数
 const formatNumber = (value: number): number => {
   return Number(value.toFixed(2))
+}
+
+// 格式化卡片值（根据字段类型格式化）
+const formatCardValue = (fieldName: string, value: number | null): string => {
+  if (value == null) return ''
+  const groupName = getGroup(fieldName)
+  if (groupName === 'price1' || groupName === 'price2') {
+    // 金额类型，使用动态币种符号，保留两位小数
+    return `${currencySymbol.value}${value.toFixed(2)}`
+  } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
+    // 百分比类型，保留两位小数
+    return `${value.toFixed(2)}%`
+  } else {
+    // 整数类型，保留两位小数
+    return value.toFixed(0)
+  }
+}
+
+// 格式化对比值（根据字段类型格式化）
+const formatCompareValue = (fieldName: string, value: number | null): string => {
+  if (value == null) return ''
+  const groupName = getGroup(fieldName)
+  if (groupName === 'price1' || groupName === 'price2') {
+    // 金额类型，使用动态币种符号，保留两位小数
+    return `${currencySymbol.value}${value.toFixed(2)}`
+  } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
+    // 百分比类型，保留两位小数
+    return `${value.toFixed(2)}%`
+  } else {
+    // 整数类型，保留两位小数
+    return value.toFixed(0)
+  }
+}
+
+// 更新卡片数据
+const updateCardsData = () => {
+  cards.value.forEach((card) => {
+    const summary = cardSummary.value[card.title]
+    if (summary) {
+      // 更新当前值（如果为 null 则显示 "null"）
+      if (summary.currentValue != null) {
+        card.value = formatCardValue(card.title, summary.currentValue)
+      } else {
+        card.value = 'null'
+      }
+      // 更新对比值（如果为 null 则显示 "null"）
+      if (summary.compareValue != null) {
+        card.previousValue = formatCompareValue(card.title, summary.compareValue)
+      } else {
+        card.previousValue = 'null'
+      }
+      // 更新趋势百分比（如果为 null 则显示 "null"）
+      if (summary.changePercentage != null) {
+        const sign = summary.changePercentage >= 0 ? '+' : ''
+        card.trendPercentage = `${sign}${summary.changePercentage.toString()}%`
+      } else {
+        card.trendPercentage = 'null'
+      }
+      // 更新趋势类型（使用类型断言，因为 TypeScript 推断为字面量类型）
+      if (summary.changeType) {
+        ;(card as { trendType: 'up' | 'down' }).trendType = summary.changeType
+      }
+    }
+  })
 }
 
 // 按周分组并累加
@@ -1106,6 +658,8 @@ const handleSwitchItem = (index: number, item: { label: string; disabled: boolea
     cards.value[index].title = item.label
     cards.value[index].active = false
     updateDropdownItemsDisabled()
+    // 更新卡片数据（因为字段改变了）
+    updateCardsData()
   }
 }
 
@@ -1130,22 +684,23 @@ const option = ref<any>({})
 const handleSwitchTime = () => {
   let adSalesData: any[] = []
   let organicSalesData: any[] = []
+  // 图表使用完整数据（fullTrendList），表格使用分页数据（trendList）
   switch (radio.value) {
     case 'day': {
-      adSalesData = trendList.value
-      organicSalesData = trendList.value
+      adSalesData = fullTrendList.value
+      organicSalesData = fullTrendList.value
 
       break
     }
     case 'week': {
-      adSalesData = getWeeklyData(trendList.value, 'adSales')
-      organicSalesData = getWeeklyData(trendList.value, 'organicSales')
+      adSalesData = getWeeklyData(fullTrendList.value, 'adSales')
+      organicSalesData = getWeeklyData(fullTrendList.value, 'organicSales')
 
       break
     }
     case 'month': {
-      adSalesData = getMonthlyData(trendList.value, 'adSales')
-      organicSalesData = getMonthlyData(trendList.value, 'organicSales')
+      adSalesData = getMonthlyData(fullTrendList.value, 'adSales')
+      organicSalesData = getMonthlyData(fullTrendList.value, 'organicSales')
 
       break
     }
@@ -1155,34 +710,62 @@ const handleSwitchTime = () => {
   option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
   option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
 
-  updateYAxisData(trendList.value)
+  updateYAxisData(fullTrendList.value)
   updateChart()
 }
-// 更新 Y 轴数据随时间切换的函数
+// 更新 Y 轴数据随时间切换的函数（使用完整数据）
 const updateYAxisData = (data: any[]) => {
   option.value.series.forEach((s: any, index: number) => {
     if (index !== 0 && index !== 1) {
-      const prop = nameMapProp[s.name]
-      let processedData: any[] = []
-      switch (radio.value) {
-        case 'day': {
-          processedData = data
-
-          break
+      // 检查是否为多类别系列（格式：小类排名-类别名）
+      // 只有小类排名支持多类别（使用完整数据）
+      if (s.name.includes('-') && s.name.startsWith('小类排名-')) {
+        const [dataName, category] = s.name.split('-', 2)
+        const prop = nameMapProp[dataName]
+        let processedData: any[] = []
+        switch (radio.value) {
+          case 'day': {
+            processedData = data
+            break
+          }
+          case 'week': {
+            processedData = getWeeklyData(data, prop)
+            break
+          }
+          case 'month': {
+            processedData = getMonthlyData(data, prop)
+            break
+          }
         }
-        case 'week': {
-          processedData = getWeeklyData(data, prop)
-
-          break
+        // 从数组格式中提取对应类别的数据
+        s.data = processedData.map((d: any) => {
+          const value = d[prop]
+          if (Array.isArray(value)) {
+            const catData = value.find((cat: { category: string; performanceId: number; smallRank: number }) => cat.category === category)
+            return catData ? catData.smallRank : null
+          }
+          return null
+        })
+      } else {
+        // 单类别模式
+        const prop = nameMapProp[s.name]
+        let processedData: any[] = []
+        switch (radio.value) {
+          case 'day': {
+            processedData = data
+            break
+          }
+          case 'week': {
+            processedData = getWeeklyData(data, prop)
+            break
+          }
+          case 'month': {
+            processedData = getMonthlyData(data, prop)
+            break
+          }
         }
-        case 'month': {
-          processedData = getMonthlyData(data, prop)
-
-          break
-        }
-        // No default
+        s.data = processedData.map((d: any) => d[prop])
       }
-      s.data = processedData.map((d: any) => d[prop])
     }
   })
 }
@@ -1197,20 +780,25 @@ const initChart = () => {
         let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">${params[0].name}</div>`
 
         // tooltip详情内容
-        const itemHtmlStrArr = params.map((item) => {
-          const groupName = getGroup(item.seriesName)
-          let value = item.value
-          if (groupName === 'price1' || groupName === 'price2') {
-            value = `$${value}`
-          } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
-            value = `${value}%`
-          }
-          return `<div style="display: flex;align-items:center;">
+        const itemHtmlStrArr = params
+          .filter((item) => {
+            // 过滤掉值为 null 或 undefined 的项
+            return item.value !== null && item.value !== undefined && item.value !== ''
+          })
+          .map((item) => {
+            const groupName = getGroup(item.seriesName)
+            let value = item.value
+            if (groupName === 'price1' || groupName === 'price2') {
+              value = `${currencySymbol.value}${value}`
+            } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
+              value = `${value}%`
+            }
+            return `<div style="display: flex;align-items:center;">
             ${item.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">${item.seriesName}</div>
             <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${value}</span>
           </div>`
-        })
+          })
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
           ${itemHtmlStrArr.join('')}
         </div>`
@@ -1228,7 +816,7 @@ const initChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: trendList.value.map((item: any) => item.date),
+      data: fullTrendList.value.map((item: any) => item.date),
       axisTick: {
         alignWithLabel: true,
       },
@@ -1251,7 +839,7 @@ const initChart = () => {
           // fontWeight: 'bold',
           fontSize: '14px',
         },
-        min: 0,
+        // 移除 min: 0，允许显示负数
         axisLine: {
           show: true,
           lineStyle: {
@@ -1313,7 +901,7 @@ const initChart = () => {
         name: '广告销量',
         type: 'bar',
         yAxisIndex: 0,
-        data: trendList.value.map((item: any) => item.adSales),
+        data: fullTrendList.value.map((item: any) => item.adSales),
         barWidth: 20,
         itemStyle: {
           color: '#409EFF',
@@ -1325,7 +913,7 @@ const initChart = () => {
         name: '自然销量',
         type: 'bar',
         yAxisIndex: 0,
-        data: trendList.value.map((item: any) => item.organicSales),
+        data: fullTrendList.value.map((item: any) => item.organicSales),
         barWidth: 20,
         itemStyle: {
           color: '#67C23A',
@@ -1359,6 +947,107 @@ function updateYAxisOffsets() {
 }
 function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataName: string) {
   if (selected) {
+    // 检查是否为多类别字段（小类排名）
+    if (isMultiCategoryField(dataName)) {
+      const multiCategoryData = getMultiCategoryData(dataName)
+      const prop = nameMapProp[dataName]
+
+      // 检查第一条数据是否为数组格式（使用完整数据）
+      const firstItem = fullTrendList.value[0]?.[prop]
+      if (Array.isArray(firstItem) && multiCategoryData.length > 0) {
+        // 多类别模式：为每个类别创建一条曲线
+        let yAxisIndex: number
+
+        // 1. 处理是否共用y轴还是添加新的y轴
+        if (yAxisMapping.has(dataGroup)) {
+          yAxisIndex = yAxisMapping.get(dataGroup)
+        } else {
+          if (currentYAxisCount >= 4) {
+            $baseMessage('最多只能支持三个额外的 Y 轴，请重新选择', 'error')
+            return true
+          }
+          yAxisIndex = currentYAxisCount
+          yAxisMapping.set(dataGroup, yAxisIndex)
+
+          // 新增 Y 轴配置
+          option.value.yAxis.push({
+            type: 'value',
+            name: dataName,
+            position: currentYAxisCount % 2 === 0 ? 'left' : 'right',
+            offset: Math.floor(currentYAxisCount / 2) * 60,
+            nameTextStyle: {
+              color: getYAxisColor(),
+              fontSize: '14px',
+              align: currentYAxisCount % 2 === 0 ? 'right' : 'left',
+            },
+            axisLabel: {
+              formatter: getYAxisFormat(dataGroup),
+              fontSize: '14px',
+            },
+            // 移除 min: 0，允许显示负数
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: getYAxisColor(),
+              },
+            },
+            splitLine: {
+              show: false,
+            },
+            boundaryGap: [0, 0.1],
+          })
+
+          currentYAxisCount++
+          updateYAxisOffsets()
+        }
+
+        // 为每个类别添加一条曲线
+        const baseColor = getYAxisColor()
+        multiCategoryData.forEach((catData, index) => {
+          // 为不同类别使用不同颜色（基于基础颜色的变体）
+          const colorVariants = [
+            baseColor,
+            adjustColorBrightness(baseColor, -20),
+            adjustColorBrightness(baseColor, -40),
+            adjustColorBrightness(baseColor, 20),
+          ]
+          const seriesColor = colorVariants[index % colorVariants.length] || baseColor
+
+          option.value.series.push({
+            name: `${dataName}-${catData.category}`,
+            type: 'line',
+            yAxisIndex,
+            data: catData.data,
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 6,
+            lineStyle: {
+              color: seriesColor,
+            },
+            itemStyle: {
+              color: seriesColor,
+            },
+            emphasis: {
+              focus: 'series',
+            },
+          })
+          selectedItems.push(`${dataName}-${catData.category}`)
+        })
+
+        // 确保 xAxis 数据已设置（使用完整数据）
+        if (!option.value.xAxis?.data || option.value.xAxis.data.length === 0) {
+          // 如果 xAxis 数据为空，使用 fullTrendList 的日期
+          option.value.xAxis = option.value.xAxis || {}
+          option.value.xAxis.data = fullTrendList.value.map((item: ITrendOverview) => item.date || '').filter(Boolean)
+        }
+
+        // 更新图表
+        updateChart()
+        return false
+      }
+    }
+
+    // 单类别模式：原有逻辑
     let yAxisIndex: number
 
     // 1. 处理是否共用y轴还是添加新的y轴
@@ -1391,7 +1080,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
           formatter: getYAxisFormat(dataGroup),
           fontSize: '14px',
         },
-        min: 0,
+        // 移除 min: 0，允许显示负数
         axisLine: {
           show: true,
           lineStyle: {
@@ -1429,14 +1118,45 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     })
   } else {
     // 取消选中时，移除选中的字段
-    const index = selectedItems.indexOf(dataName)
-    if (index !== -1) {
-      selectedItems.splice(index, 1)
-    }
-    // 取消选中时，移除对应的 series
-    const seriesIndex = option.value.series.findIndex((s: any) => s.name === dataName)
-    if (seriesIndex !== -1) {
-      option.value.series.splice(seriesIndex, 1) // 移除对应的 series
+    // 如果是多类别字段，需要移除所有相关 series
+    if (isMultiCategoryField(dataName)) {
+      const prop = nameMapProp[dataName]
+      const firstItem = fullTrendList.value[0]?.[prop]
+      if (Array.isArray(firstItem)) {
+        // 移除所有以 dataName 开头的 series
+        const seriesToRemove = option.value.series.filter((s: any) => s.name.startsWith(dataName))
+        seriesToRemove.forEach((series: any) => {
+          const seriesIndex = option.value.series.findIndex((s: any) => s.name === series.name)
+          if (seriesIndex !== -1) {
+            option.value.series.splice(seriesIndex, 1)
+          }
+          const itemIndex = selectedItems.indexOf(series.name)
+          if (itemIndex !== -1) {
+            selectedItems.splice(itemIndex, 1)
+          }
+        })
+      } else {
+        // 单值模式
+        const index = selectedItems.indexOf(dataName)
+        if (index !== -1) {
+          selectedItems.splice(index, 1)
+        }
+        const seriesIndex = option.value.series.findIndex((s: any) => s.name === dataName)
+        if (seriesIndex !== -1) {
+          option.value.series.splice(seriesIndex, 1)
+        }
+      }
+    } else {
+      // 单类别模式
+      const index = selectedItems.indexOf(dataName)
+      if (index !== -1) {
+        selectedItems.splice(index, 1)
+      }
+      // 取消选中时，移除对应的 series
+      const seriesIndex = option.value.series.findIndex((s: any) => s.name === dataName)
+      if (seriesIndex !== -1) {
+        option.value.series.splice(seriesIndex, 1) // 移除对应的 series
+      }
     }
 
     // 如果当前字段所属的组的所有 series 都被移除，移除对应的 Y 轴
@@ -1482,9 +1202,10 @@ type IDataGroup = 'price1' | 'price2' | 'percent1' | 'percent2' | 'percent3' | '
 
 const getYAxisFormat = (groupName: string) => {
   if (groupName === 'price1' || groupName === 'price2') {
-    return '${value}'
+    // ECharts formatter 使用 {value} 作为占位符
+    return (value: number) => `${currencySymbol.value}${value}`
   } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
-    return '{value}%'
+    return (value: number) => `${value}%`
   } else {
     return '{value}'
   }
@@ -1506,10 +1227,58 @@ function getYAxisColor() {
   return '#999'
 }
 
-// 根据数据组和数据名称获取数据
+// 调整颜色亮度（用于多类别时生成不同颜色）
+function adjustColorBrightness(color: string, percent: number): string {
+  const num = parseInt(color.replace('#', ''), 16)
+  const amt = Math.round(2.55 * percent)
+  const R = Math.min(255, Math.max(0, (num >> 16) + amt))
+  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt))
+  const B = Math.min(255, Math.max(0, (num & 0x0000ff) + amt))
+  return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)
+}
+
+// 根据数据组和数据名称获取数据（用于图表，使用完整数据）
 function getDataForName(dataName: string) {
   const prop = nameMapProp[dataName]
-  return trendList.value.map((item: ITrendOverview) => item[prop]) || []
+  return fullTrendList.value.map((item: ITrendOverview) => item[prop]) || []
+}
+
+// 检查字段是否支持多类别（数组格式）
+// 只有小类排名支持多类别，大类排名只有一条曲线
+function isMultiCategoryField(dataName: string): boolean {
+  return dataName === '小类排名'
+}
+
+// 获取多类别数据（用于排名类字段）
+function getMultiCategoryData(dataName: string): Array<{ category: string; data: (number | null)[] }> {
+  const prop = nameMapProp[dataName]
+  const categories = new Set<string>()
+
+  // 先收集所有类别（使用完整数据）
+  fullTrendList.value.forEach((item: ITrendOverview) => {
+    const value = item[prop]
+    if (Array.isArray(value)) {
+      value.forEach((cat: { category: string; performanceId: number; smallRank: number }) => {
+        categories.add(cat.category)
+      })
+    }
+  })
+
+  // 为每个类别提取数据，保留所有类别（包括数据为空的）（使用完整数据）
+  return Array.from(categories).map((category) => {
+    const data = fullTrendList.value.map((item: ITrendOverview) => {
+      const value = item[prop]
+      if (Array.isArray(value)) {
+        // 精确匹配类别名称
+        const catData = value.find((cat: { category: string; performanceId: number; smallRank: number }) => cat.category === category)
+        if (catData) {
+          return catData.smallRank
+        }
+      }
+      return null
+    })
+    return { category, data }
+  })
 }
 
 // 处理选中的值重复问题
@@ -1545,7 +1314,7 @@ const handleMove = (event: any) => {
   const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
 
-  if (columns.value[targetIndex]?.disableCheck) {
+  if (checkList1.value[targetIndex]?.disableCheck) {
     return false // 禁止移动到目标
   }
 
@@ -1554,34 +1323,84 @@ const handleMove = (event: any) => {
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  // fetchData()
+  fetchTableData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   queryForm.pageNo = 1
-  // fetchData()
+  fetchTableData()
 }
-const trendList = ref<ITrendOverview[]>([])
-const route = useRoute()
-const fetchData = async () => {
-  loading.value = true
-  const { data } = await getTrendOverview({
-    sku: route.query.sku as string,
+const trendList = ref<ITrendOverview[]>([]) // 表格显示的数据（分页数据）
+const fullTrendList = ref<ITrendOverview[]>([]) // 完整数据（用于图表计算）
+const cardSummary = ref<Record<string, ICardSummary>>({})
+
+// 获取请求参数（公共部分）
+const getRequestParams = () => {
+  let skuValue = route.query.sku as string
+  if (props.selectField === 0 && props.selectedSku) {
+    // 如果选择的是SKU维度且有选中的SKU，使用选中的SKU
+    skuValue = props.selectedSku
+  }
+  return {
+    sku: skuValue,
     siteId: Number(route.query.site),
     asin: route.query.asin as string,
     type: props.selectField,
-    startDate: props.selectDateRange[0],
-    endDate: props.selectDateRange[1],
-  })
-  trendList.value = data
-  loading.value = false
+    startDate: formatDateToString(new Date(props.selectDateRange[0])),
+    endDate: formatDateToString(new Date(props.selectDateRange[1])),
+    compareType: props.compareType,
+  }
 }
 
-// 监听 trendList 变化，更新图表
+// 获取表格数据（分页）
+const fetchTableData = async () => {
+  tableLoading.value = true
+  try {
+    const requestParams = getRequestParams()
+    const { data } = await getTrendOverviewTable({
+      ...requestParams,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+    })
+    // 表格数据（分页数据）
+    trendList.value = data.list || []
+    // 更新总数
+    total.value = data.total || 0
+  } catch (error) {
+    console.error('获取表格数据失败:', error)
+    trendList.value = []
+    total.value = 0
+  } finally {
+    tableLoading.value = false
+  }
+}
+
+// 获取图表数据（完整数据）
+const fetchChartData = async () => {
+  chartLoading.value = true
+  try {
+    const requestParams = getRequestParams()
+    const { data } = await getTrendOverviewChart(requestParams)
+    // 卡片汇总数据
+    cardSummary.value = data.summary || {}
+    // 图表数据（完整数据）
+    fullTrendList.value = data.list || []
+    // 更新卡片数据（在图表数据加载完成后更新）
+    updateCardsData()
+  } catch (error) {
+    console.error('获取图表数据失败:', error)
+    fullTrendList.value = []
+    cardSummary.value = {}
+  } finally {
+    chartLoading.value = false
+  }
+}
+
+// 监听 fullTrendList 变化，更新图表（图表需要完整数据）
 watch(
-  () => trendList.value,
+  () => fullTrendList.value,
   () => {
-    if (chartInstance && trendList.value.length > 0) {
+    if (chartInstance && fullTrendList.value.length > 0) {
       handleSwitchTime()
     }
   },
@@ -1590,9 +1409,16 @@ watch(
 
 // 监听 props 变化，重新获取数据
 watch(
-  () => [props.selectField, props.compareType, props.selectDateRange],
+  () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku],
   () => {
-    fetchData()
+    fetchChartData()
+  },
+  { deep: true }
+)
+watch(
+  () => [props.selectField, props.selectDateRange, props.selectedSku],
+  () => {
+    fetchTableData()
   },
   { deep: true }
 )
@@ -1608,7 +1434,8 @@ onMounted(() => {
     chartObserver.observe(chartContainer.value)
     initChart()
   }
-  fetchData()
+  fetchChartData()
+  fetchTableData()
   // 初始化下拉项的禁用状态
   updateDropdownItemsDisabled()
 })
