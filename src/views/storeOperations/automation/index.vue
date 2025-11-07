@@ -90,26 +90,26 @@
           <el-table-column label="站点" prop="siteName" />
           <el-table-column label="运营" prop="operationUser" />
           <el-table-column label="规则开关">
-            <template #default="row">
+            <template #default="scope1">
               <el-switch
-                v-model="row.roleStatus"
-                active-value="1"
-                inactive-value="0"
-                number
+                v-model="scope1.row.roleStatus"
+                :active-value="1"
+                :inactive-value="0"
                 style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                @change="updateRoleStatus(scope1.row)"
               />
             </template>
           </el-table-column>
           <el-table-column label="操作对象">
             <template #default="scope">
-              <el-select v-model="scope.row.group" placeholder="请选择操作对象">
+              <el-select v-model="scope.row.group" placeholder="请选择操作对象" @change="updateSelectType(scope.row)">
                 <el-option v-for="item in scope.row.operationTypeList" :key="item.code" :label="item.name" :value="item" />
               </el-select>
             </template>
           </el-table-column>
           <el-table-column label="操作广告类型">
             <template #default="scope">
-              <el-select v-model="scope.row.operationAdvType" multiple placeholder="请选择广告类型">
+              <el-select v-model="scope.row.operationAdvType" multiple placeholder="请选择广告类型" @change="updateSelectType(scope.row)">
                 <el-option v-for="item in scope.row.operationAdvTypeList" :key="item.code" :label="item.name" :value="item" />
               </el-select>
             </template>
@@ -288,6 +288,12 @@
     <!-- 批量修改 -->
     <vab-dialog v-model="pictureBatchUpdateVisible" :title="dialogTitle" width="23%">
       <el-form ref="pictureBatchUpdateFormRef" label-position="right" label-width="auto" :model="pictureBatchUpdateForm" style="margin: 0">
+        <el-form-item label="规则开关" prop="roleStatus">
+          <el-select v-model="pictureBatchUpdateForm.roleStatus" :disabled="batchBtnLoading" placeholder="请填入信息">
+            <el-option label="关闭广告" :value="0" />
+            <el-option label="开启广告" :value="1" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="操作对象" prop="requiredCompletionDate">
           <el-select v-model="pictureBatchUpdateForm.group" :disabled="batchBtnLoading" placeholder="请选择操作对象">
             <el-option v-for="item in operationTypeList" :key="item.code" :label="item.name" :value="item" />
@@ -364,7 +370,6 @@ import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/d
 import { isEqual } from 'lodash-es'
 import { useAclStore } from '/@/store/modules/acl'
 import { getUserAmazonOperation } from '/@/api/devlocal/productPerformance'
-import { title } from 'node:process'
 defineOptions({
   name: 'Automation',
 })
@@ -406,7 +411,7 @@ const pictureBatchUpdateForm = reactive<IAutoMationUpdateReq>({
   openRating: undefined,
   openStock: undefined,
   operationAdvType: [],
-  roleStatus: undefined,
+  roleStatus: 0,
 })
 
 let copyRow: IAutoMationItem
@@ -476,7 +481,7 @@ const sizeChange = (value: number) => {
 }
 
 // 创建blur修改
-const clickCreateCancel = async (event: any, value: IAutoMationItem, index: number) => {
+const clickCreateCancel = (event: any, value: IAutoMationItem, index: number) => {
   const rootElement = getRootElement(event.srcElement, '.cell')
 
   if (rootElement) {
@@ -490,31 +495,35 @@ const clickCreateCancel = async (event: any, value: IAutoMationItem, index: numb
     return
   }
   if (event.type === 'blur') {
-    const advTypes = value.operationAdvType.map((el) => el.code).join(',')
-
-    const { data } = await updateOperationAutoMation({
-      id: value.id,
-      closeDays: value.closeDays,
-      closeOutStockDays: value.closeOutStockDays,
-      closeRating: value.closeRating,
-      closeGrossProfit: value.closeGrossProfit,
-      closeStock: value.closeStock,
-      openAdvAcos: value.openAdvAcos,
-      openDays: value.openDays,
-      openGrossProfit: value.openGrossProfit,
-      openOutStockDays: value.openOutStockDays,
-      openRating: value.openRating,
-      openStock: value.openStock,
-      groupId: value.group.code,
-      operationAdvTypeStr: advTypes,
-      roleStatus: value.roleStatus,
-    })
-
-    if (data) {
-      $baseMessage('修改成功！', 'success')
-    }
+    updateCommon(value)
   }
   queryData()
+}
+
+const updateCommon = async (value: IAutoMationItem) => {
+  const advTypes = value.operationAdvType.map((el) => el.code).join(',')
+
+  const { data } = await updateOperationAutoMation({
+    id: value.id,
+    closeDays: value.closeDays,
+    closeOutStockDays: value.closeOutStockDays,
+    closeRating: value.closeRating,
+    closeGrossProfit: value.closeGrossProfit,
+    closeStock: value.closeStock,
+    openAdvAcos: value.openAdvAcos,
+    openDays: value.openDays,
+    openGrossProfit: value.openGrossProfit,
+    openOutStockDays: value.openOutStockDays,
+    openRating: value.openRating,
+    openStock: value.openStock,
+    groupId: value.group.code,
+    operationAdvTypeStr: advTypes,
+    roleStatus: value.roleStatus,
+  })
+
+  if (data) {
+    $baseMessage('修改成功！', 'success')
+  }
 }
 
 const currentChange = (value: number) => {
@@ -595,6 +604,7 @@ const handleSelectionChange = (val: IAutoMationItem[]) => {
 // 批量修改按钮
 const showBatchUpdateOperationAutoRules = async () => {
   dialogTitle.value = '批量修改'
+  resetForm()
   if (multipleSelection.value.length === 0) {
     $baseMessage('请选择需要批量修改的数据！', 'warning')
     return
@@ -624,7 +634,6 @@ const batchUpdateTask = async () => {
           groupId: filterForm.group?.code,
           operationAdvTypeStr: advsTypes,
         }
-        debugger
         const { data } = await updateBatchOperationAutoMation(params)
         if (data) {
           $baseMessage('批量修改成功！', 'success')
@@ -669,6 +678,7 @@ const queryDefautlParmas = async () => {
   operationAdvTypeList.value = operationAutoMationList.value[0].operationAdvTypeList
   const { data } = await queryDefaultParamsOperationAutoMation()
   pictureBatchUpdateForm.closeDays = data?.closeDays!
+  pictureBatchUpdateForm.roleStatus = data?.roleStatus!
   pictureBatchUpdateForm.closeGrossProfit = data?.closeGrossProfit!
   pictureBatchUpdateForm.closeOutStockDays = data?.closeOutStockDays!
   pictureBatchUpdateForm.closeRating = data?.closeRating!
@@ -698,12 +708,20 @@ const resetForm = () => {
   pictureBatchUpdateForm.openRating = undefined
   pictureBatchUpdateForm.openStock = undefined
   pictureBatchUpdateForm.operationAdvType = undefined
-  pictureBatchUpdateForm.roleStatus = undefined
+  pictureBatchUpdateForm.roleStatus = 0
 }
 
 const cancleUpdateTask = () => {
   pictureBatchUpdateVisible.value = false
   batchBtnLoading.value = false
+}
+
+const updateRoleStatus = (value: IAutoMationItem) => {
+  updateCommon(value)
+}
+
+const updateSelectType = (value: IAutoMationItem) => {
+  updateCommon(value)
 }
 
 onBeforeMount(() => {
