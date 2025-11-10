@@ -1,6 +1,7 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import type {
   IAutoMationDefaultPramsRules,
+  IAutomationLogRules,
   IAutoMationQueryReq,
   IAutoMationResult,
   IAutoMationRules,
@@ -68,5 +69,17 @@ export function updateDefailtParmasOperationAutoMation(data?: IAutoMationUpdateR
     url: `${BASE_API}/operation/auto/rules/update/default`,
     method: 'post',
     data,
+  })
+}
+
+export function querySystemOperationLogListOperationAutoMation(params: {
+  pageNo: number
+  pageSize: number
+  id: number
+}): Promise<IAutomationLogRules> {
+  return request({
+    url: `${BASE_API}/operation/auto/rules/log`,
+    method: 'get',
+    params,
   })
 }

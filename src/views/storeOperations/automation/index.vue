@@ -79,7 +79,7 @@
           @cell-click="changeCreateInput"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="38" />
+          <el-table-column fixed="left" type="selection" width="38" />
           <el-table-column class="image-wall" label="图片" width="75">
             <template #default="{ row }">
               <el-image
@@ -106,7 +106,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作对象">
+          <el-table-column label="操作对象" width="130">
             <template #default="scope">
               <el-select
                 v-model="scope.row.group"
@@ -118,7 +118,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="操作广告类型">
+          <el-table-column label="操作广告类型" width="130">
             <template #default="scope">
               <el-select
                 v-model="scope.row.operationAdvType"
@@ -293,9 +293,17 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="操作" width="130">
+          <el-table-column label="系统最新操作日期" prop="lastUpdateTime" width="110">
+            <template #header>
+              系统最新
+              <br />
+              操作日期
+            </template>
+          </el-table-column>
+
+          <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="">系统操作日志</el-link>
+              <el-link type="primary" underline="never" @click="openSystemOperationLog(row)">系统操作日志</el-link>
             </template>
           </el-table-column>
           <template #empty>
@@ -380,27 +388,28 @@
       </template>
     </vab-dialog>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <automation-system-operation-log :id="logId" v-model="systemOperationLogVisible" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { Search, InfoFilled } from '@element-plus/icons-vue'
+import { InfoFilled, Search } from '@element-plus/icons-vue'
+import type { CheckboxValueType } from 'element-plus'
+import { isEqual } from 'lodash-es'
+import { CSSProperties } from 'vue'
 import {
+  queryDefaultParamsOperationAutoMation,
   queryOperationAutoMationList,
-  updateOperationAutoMation,
   updateBatchOperationAutoMation,
   updateDefailtParmasOperationAutoMation,
-  queryDefaultParamsOperationAutoMation,
+  updateOperationAutoMation,
 } from '/@/api/devlocal/operationAutoMation'
-import type { IAutoMationQueryReq, IAutoMationItem, IAutoMationUpdateReq, IOperationType } from '/@/type/storeOperation/autoMation'
-import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import type { CheckboxValueType } from 'element-plus'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
-import { isEqual } from 'lodash-es'
-import { useAclStore } from '/@/store/modules/acl'
 import { getUserAmazonOperation } from '/@/api/devlocal/productPerformance'
-import { CSSProperties } from 'vue'
-import { flexColumnWidth } from '~/src/utils/tableColum'
+import { useAclStore } from '/@/store/modules/acl'
+import type { IAutoMationItem, IAutoMationQueryReq, IAutoMationUpdateReq, IOperationType } from '/@/type/storeOperation/autoMation'
+import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'Automation',
 })
@@ -437,6 +446,7 @@ const imagePreviewShow = (url: string) => {
 const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
+const systemOperationLogVisible = ref<boolean>(false)
 const pictureBatchUpdateForm = reactive<IAutoMationUpdateReq>({
   closeDays: undefined,
   closeGrossProfit: undefined,
@@ -462,6 +472,13 @@ const operateUserList = ref<OptionType[]>([])
 const queryTotal = ref<number>(0)
 const disabledDev = ref<boolean>(false)
 const multipleSelection = ref<IAutoMationItem[]>([])
+const logId = ref<number>(-1)
+// 打开系统操作日志
+const openSystemOperationLog = (row: IAutoMationItem) => {
+  logId.value = row.id!
+  systemOperationLogVisible.value = true
+}
+
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()

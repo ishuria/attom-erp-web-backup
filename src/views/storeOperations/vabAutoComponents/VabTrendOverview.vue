@@ -714,12 +714,12 @@ const updateXAxisLabel = (dataLength: number) => {
       rotate: 45, // 旋转45度
       interval: Math.ceil(dataLength / 20), // 间隔显示，最多显示20个标签
     }
-  } else if (dataLength > 30) {
+  } else if (dataLength >= 20) {
     // 中等数量数据点，轻微旋转
     option.value.xAxis.axisLabel = {
       ...option.value.xAxis.axisLabel,
       fontSize: '14px',
-      rotate: 0,
+      rotate: 30,
       interval: 0, // 显示所有标签
     }
   } else {
@@ -746,6 +746,153 @@ const updateBarWidth = () => {
       }
     })
   }
+}
+
+// 递归计算 y 轴范围，确保包含 0 刻度和固定行数
+const row = 5 // 预定行数（刻度数）
+
+const recursion = ({ min, max }: { min: number; max: number }) => {
+  if ((max !== 0 && !max) || (min !== 0 && !min)) {
+    return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
+  }
+
+  // 减少一位预定行数，用来展示 0 刻度
+  const interval = Math.ceil((max - min) / (row - 1))
+
+  // 将最大最小根据间隔取整
+  max = Math.ceil(max / interval) * interval
+  min = Math.floor(min / interval) * interval
+
+  // 实际 0 刻度线以上间隔数
+  const top = Math.ceil(Math.abs(max) / interval)
+
+  // 实际 0 刻度线以下间隔数
+  const bottom = Math.ceil(Math.abs(min) / interval)
+
+  // 实际总间隔数
+  const total = top + bottom
+
+  // 根据预定行数，重新推算包含 0 刻度的最终间隔
+  const _interval = Math.ceil((total * interval) / row)
+
+  // 根据最终推算间隔，重置最大数
+  const _max = Math.ceil(_interval * row + min)
+
+  // 根据最终推算间隔，重置最小数
+  const _min = Math.floor(min / _interval) * _interval
+
+  // 推算过后的 0 刻度以上间隔数
+  const _top = Math.ceil(Math.abs(_max) / _interval)
+
+  // 推算过后的 0 刻度以下间隔数
+  const _bottom = Math.ceil(Math.abs(_min) / _interval)
+
+  if (_top + _bottom !== row) {
+    return recursion({ min: _min, max: _max })
+  }
+
+  return {
+    max: _max,
+    min: _min,
+    interval: _interval,
+    top: _top,
+    bottom: _bottom,
+  }
+}
+
+// 计算单个 y 轴的最大最小和间隔
+const calcYAxisRange = (yAxisIndex: number) => {
+  // 收集该 y 轴对应的所有 series 的数据值
+  const allValues: number[] = []
+
+  if (option.value.series && Array.isArray(option.value.series)) {
+    option.value.series.forEach((series: any) => {
+      // 只收集属于当前 y 轴的 series 数据
+      if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
+        series.data.forEach((value: any) => {
+          if (value !== null && value !== undefined && value !== '') {
+            const numValue = Number(value)
+            if (!isNaN(numValue)) {
+              allValues.push(numValue)
+            }
+          }
+        })
+      }
+    })
+  }
+
+  if (allValues.length === 0) {
+    return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
+  }
+
+  // 原始最大
+  let max = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
+  max = max < 0 ? 0 : max
+
+  // 原始最小
+  let min = Math.min(...allValues)
+  min = min > 0 ? 0 : min
+
+  return {
+    ...recursion({ min, max }),
+  }
+}
+
+// 计算所有 y 轴的范围，并确保 0 值对齐
+const calculateAlignedYAxisRanges = () => {
+  if (!option.value.yAxis || !Array.isArray(option.value.yAxis)) {
+    return []
+  }
+
+  // 为每个 y 轴计算初始范围
+  const ranges = option.value.yAxis.map((yAxis: any, index: number) => {
+    return calcYAxisRange(index)
+  })
+
+  // 如果有多个 y 轴，需要对齐
+  if (ranges.length > 1) {
+    // 从第一个 y 轴开始，依次与后面的 y 轴对齐
+    for (let i = 0; i < ranges.length - 1; i++) {
+      for (let j = i + 1; j < ranges.length; j++) {
+        const left = ranges[i]
+        const right = ranges[j]
+
+        // 值的比例
+        const leftRange = left.max - left.min
+        const rightRange = right.max - right.min
+        const ratio = leftRange && rightRange ? leftRange / rightRange : 1
+
+        if (ratio) {
+          // 对齐最大值
+          if (left.max < right.max * ratio) {
+            // 同比例下，右边的最大值大，左边向右对齐
+            left.max = Math.ceil(right.max * ratio)
+          } else {
+            // 同比例下，左边的最大值大，右边向左对齐
+            right.max = Math.ceil(left.max / ratio)
+          }
+
+          // 对齐最小值
+          if (left.min < right.min * ratio) {
+            // 同比例下，左边最小值更小，右边向左边对齐
+            right.min = Math.floor(left.min / ratio)
+          } else {
+            // 同比例下，右边最小值更小，左边向右边对齐
+            left.min = Math.floor(right.min * ratio)
+          }
+
+          // 重新根据指定段数，计算最大最小和间隔
+          const leftRecalculated = recursion({ min: left.min, max: left.max })
+          const rightRecalculated = recursion({ min: right.min, max: right.max })
+
+          ranges[i] = leftRecalculated
+          ranges[j] = rightRecalculated
+        }
+      }
+    }
+  }
+
+  return ranges
 }
 
 // 切换 日，周，月
@@ -784,6 +931,8 @@ const handleSwitchTime = () => {
   updateXAxisLabel(dataLength)
 
   updateYAxisData(fullTrendList.value)
+  // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
+  applyAlignedYAxisRanges()
   updateChart()
 }
 // 更新 Y 轴数据随时间切换的函数（使用完整数据）
@@ -913,6 +1062,8 @@ const initChart = () => {
           // fontWeight: 'bold',
           fontSize: '14px',
         },
+        // 使用递归算法计算 min、max 和 interval，确保 0 值对齐
+        // 初始时不设置，在 applyAlignedYAxisRanges 中统一设置
         axisLine: {
           show: true,
           lineStyle: {
@@ -954,8 +1105,26 @@ const initChart = () => {
   const dataLength = fullTrendList.value.length
   updateXAxisLabel(dataLength)
 
+  // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
+  applyAlignedYAxisRanges()
+
   // 设置图表实例的配置项
   chartInstance?.setOption(option.value)
+}
+
+// 应用对齐后的 y 轴范围到所有 y 轴
+const applyAlignedYAxisRanges = () => {
+  const ranges = calculateAlignedYAxisRanges()
+
+  if (option.value.yAxis && Array.isArray(option.value.yAxis)) {
+    option.value.yAxis.forEach((yAxis: any, index: number) => {
+      if (ranges[index]) {
+        yAxis.min = ranges[index].min
+        yAxis.max = ranges[index].max
+        yAxis.interval = ranges[index].interval
+      }
+    })
+  }
 }
 
 // 更新图表
@@ -1014,7 +1183,8 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
               formatter: getYAxisFormat(dataGroup),
               fontSize: '14px',
             },
-            // 移除 min: 0，允许显示负数
+            // 使用递归算法计算 min、max 和 interval，确保 0 值对齐
+            // 初始时不设置，在 applyAlignedYAxisRanges 中统一设置
             axisLine: {
               show: true,
               lineStyle: {
@@ -1071,6 +1241,8 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
           option.value.xAxis.data = fullTrendList.value.map((item: ITrendOverview) => item.date || '').filter(Boolean)
         }
 
+        // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
+        applyAlignedYAxisRanges()
         // 更新图表
         updateChart()
         return false
@@ -1110,7 +1282,8 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
           formatter: getYAxisFormat(dataGroup),
           fontSize: '14px',
         },
-        // 移除 min: 0，允许显示负数
+        // 使用递归算法计算 min、max 和 interval，确保 0 值对齐
+        // 初始时不设置，在 applyAlignedYAxisRanges 中统一设置
         axisLine: {
           show: true,
           lineStyle: {
@@ -1146,6 +1319,9 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         focus: 'series',
       },
     })
+
+    // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
+    applyAlignedYAxisRanges()
   } else {
     // 取消选中时，移除选中的字段
     // 如果是多类别字段，需要移除所有相关 series

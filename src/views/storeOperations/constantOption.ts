@@ -442,7 +442,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 100,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -469,7 +469,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 110,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -478,7 +478,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 100,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -487,7 +487,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 100,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -502,7 +502,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 90,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   // {
@@ -517,7 +517,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 90,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -526,7 +526,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 90,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
     },
   },
   {
@@ -541,7 +541,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 110,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : '-'
+      return cellValue != null ? `${cellValue}%` : ''
     },
   },
   {
@@ -550,7 +550,7 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 110,
     formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : '-'
+      return cellValue != null ? `${cellValue}%` : ''
     },
   },
   {

@@ -18,6 +18,7 @@ declare module 'vue' {
     AssessmentPie: typeof import('./../../../src/views/index/vabAutoComponents/AssessmentPie.vue')['default']
     AttendanceOverviewCard: typeof import('./../../../src/views/index/vabAutoComponents/AttendanceOverviewCard.vue')['default']
     Authorization: typeof import('./../../../src/views/index/vabAutoComponents/Authorization.vue')['default']
+    AutomationSystemOperationLog: typeof import('./../../../src/views/storeOperations/vabAutoComponents/AutomationSystemOperationLog.vue')['default']
     CheckFreightTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/checkFreightTable.vue')['default']
     CommissionSitePie: typeof import('./../../../src/views/index/vabAutoComponents/CommissionSitePie.vue')['default']
     CommissionTypePie: typeof import('./../../../src/views/index/vabAutoComponents/CommissionTypePie.vue')['default']

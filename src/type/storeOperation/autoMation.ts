@@ -185,3 +185,74 @@ export interface IAutoMationResult {
 export interface IAutoMationDefaultPramsRules {
   data?: IAutoMationItem
 }
+
+export interface IAutomationLogRules {
+  data?: {
+    /** 数据列表 */
+    list: IAutomationLogItem[]
+    /** 总页数 */
+    total: number
+  }
+}
+
+export interface IAutomationLogItem {
+  closeDays: number
+  /**
+   * 关闭广告-毛利率
+   */
+  closeGrossProfit: number
+  /**
+   * 关闭广告-断货天数
+   */
+  closeOutStockDays: number
+  /**
+   * 关闭广告-rating
+   */
+  closeRating: number
+  /**
+   * 关闭广告-可售库存数
+   */
+  closeStock: number
+  /**
+   * 操作对象
+   */
+  group: IOperationType
+  /**
+   * 主键
+   */
+  id: number
+  /**
+   * 开启广告-广告acos
+   */
+  openAdvAcos: number
+  /**
+   * 开启广告-剩余可售天数
+   */
+  openDays: number
+  /**
+   * 开启广告-毛利率
+   */
+  openGrossProfit: number
+  /**
+   * 开启广告-断货天数
+   */
+  openOutStockDays: number
+  /**
+   * 开启广告-rating
+   */
+  openRating: number
+  /**
+   * 开启广告-可售库存数
+   */
+  openStock: number
+  /**
+   * 操作广告类型,参考attom_dictionary_item表
+   */
+  operationAdvType: IOperationType[]
+  /**
+   * 规则开关 0关 1开
+   */
+  roleStatus: number
+  operationTypeList: IOperationType[]
+  operationAdvTypeList: IOperationType[]
+}
