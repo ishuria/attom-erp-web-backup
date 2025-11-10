@@ -18,6 +18,7 @@ import {
   IGetFrontPagePerformanceHistory,
   IGetFrontPagePerformanceHistoryReq,
   IGetFrontPageProductProfitRes,
+  IGetFrontPageProfitScoreRes,
   IGetFrontPageProgressProjectsRes,
   ILowVolumeProductStorageFee,
   IRankItem,
@@ -391,5 +392,22 @@ export function getFrontPageAttendanceOverview(data: {
     url: `${BASE_API}/front_page/attendance/user/list`,
     method: 'post',
     data,
+  })
+}
+/**
+ *
+ * 首页-利润分预览
+ * @param params
+ * @returns
+ */
+export function getFrontPageProfitScore(params: {
+  month: string
+  pageNo: number
+  pageSize: number
+}): Promise<{ data: IGetFrontPageProfitScoreRes }> {
+  return request({
+    url: `${BASE_API}/front_page/profit/score`,
+    method: 'get',
+    params,
   })
 }

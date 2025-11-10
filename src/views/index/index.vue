@@ -369,6 +369,15 @@
           </template>
         </low-volume-product-storage-fees>
       </el-col>
+      <el-col :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
+        <profit-share-preview-card :list="profitSharePreviewList" :loading="profitSharePreviewLoading">
+          <template #select>
+            <el-select v-model="selectProfitSharePreviewMonth" placeholder="月份" style="max-width: 5em" @change="fetchProfitSharePreview">
+              <el-option v-for="item in profitSharePreviewMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </profit-share-preview-card>
+      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -409,6 +418,7 @@ import {
   getFrontPageLeadDestroyValue,
   getFrontPagePerformanceHistory,
   getFrontPageProductManagerSelectOption,
+  getFrontPageProfitScore,
   getFrontPageProgressProjects,
   getFrontPageRankAssessmentFinish,
   getFrontPageRankNewProductCommission,
@@ -453,6 +463,7 @@ import {
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPageProductProfitRes,
+  IGetFrontPageProfitScoreItem,
   IGetFrontPageProgressProjectsItem,
   ILowVolumeProductStorageFee,
   IPieItem,
@@ -1178,6 +1189,29 @@ const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; o
   attendanceOverviewSortField.value = prop
   attendanceOverviewSortDirection.value = column.order === 'ascending' ? 'asc' : 'desc'
   fetchAttendanceOverview()
+}
+const profitSharePreviewList = ref<IGetFrontPageProfitScoreItem[]>([])
+const profitSharePreviewTotal = ref<number>(0)
+
+// 获取上个月
+const getLastMonth = (): string => {
+  const today = new Date()
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+  const year = lastMonth.getFullYear()
+  const month = String(lastMonth.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
+
+// 构建一个只有本月和上月的数组
+const profitSharePreviewMonthList = ref<string[]>([getCurrentMonth(), getLastMonth()])
+const selectProfitSharePreviewMonth = ref<string>(profitSharePreviewMonthList.value[0])
+const profitSharePreviewLoading = ref<boolean>(false)
+const fetchProfitSharePreview = async () => {
+  profitSharePreviewLoading.value = true
+  const { data } = await getFrontPageProfitScore({ month: selectProfitSharePreviewMonth.value!, pageNo: 1, pageSize: 50 })
+  profitSharePreviewList.value = data.list
+  profitSharePreviewTotal.value = data.total
+  profitSharePreviewLoading.value = false
 }
 onBeforeMount(async () => {
   if (ableViewCommissionCard) {

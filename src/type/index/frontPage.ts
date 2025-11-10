@@ -290,3 +290,16 @@ export interface IGetFrontPageAttendanceOverview {
   lateCount: number
   lateDuration: number
 }
+export interface IGetFrontPageProfitScoreRes {
+  total: number
+  list: IGetFrontPageProfitScoreItem[]
+}
+export interface IGetFrontPageProfitScoreItem {
+  userName: string
+  month: string
+  skus: string[]
+  totalScore: number
+  groupName: string
+  monthProfitScore: number
+  pileProfitScore: number
+}
