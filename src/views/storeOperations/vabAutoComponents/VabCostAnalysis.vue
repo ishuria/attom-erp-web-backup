@@ -256,7 +256,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="长(cm)" min-width="120" prop="length">
+      <el-table-column label="长(cm)" prop="length" :width="flexColumnWidth(list, '长(cm)', 'length1', 60)">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -266,7 +266,7 @@
           <span v-if="row.length1">({{ row.length1 != null ? row.length1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="宽(cm)" min-width="120" prop="width">
+      <el-table-column label="宽(cm)" prop="width" :width="flexColumnWidth(list, '宽(cm)', 'width1', 60)">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -276,7 +276,7 @@
           <span v-if="row.width1">({{ row.width1 != null ? row.width1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="高(cm)" min-width="90" prop="height">
+      <el-table-column label="高(cm)" prop="height" :width="flexColumnWidth(list, '高(cm)', 'height1', 60)">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -286,7 +286,7 @@
           <span v-if="row.height1">({{ row.height1 != null ? row.height1 + 'cm' : '' }})</span>
         </template>
       </el-table-column>
-      <el-table-column label="重量(g)" min-width="120" prop="weight">
+      <el-table-column label="重量(g)" prop="weight" :width="flexColumnWidth(list, '重量(g)', 'weight1', 60)">
         <template #default="{ row }">
           <div v-if="row.sizeSource === 0" class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
@@ -438,6 +438,7 @@ import * as echarts from 'echarts'
 import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
 import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'

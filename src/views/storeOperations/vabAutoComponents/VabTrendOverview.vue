@@ -680,6 +680,74 @@ function getGroup(item: string): string | null {
 let selectedItems: string[] = []
 const option = ref<any>({})
 
+// 根据数据点数量动态计算柱状图宽度
+const calculateBarWidth = (dataLength: number) => {
+  // 如果数据点少于30个，使用固定宽度
+  if (dataLength <= 30) {
+    return 20
+  }
+  // 如果数据点少于60个，使用较小的固定宽度
+  if (dataLength <= 60) {
+    return 15
+  }
+  // 如果数据点少于90个，使用更小的固定宽度
+  if (dataLength <= 90) {
+    return 10
+  }
+  // 如果数据点很多（如180天），使用百分比宽度，确保柱状图不会堆在一起
+  // 计算每个柱子的可用空间，使用80%的可用空间
+  return `${Math.max(80 / dataLength, 0.5)}%`
+}
+
+// 根据数据点数量调整 x 轴标签显示策略
+const updateXAxisLabel = (dataLength: number) => {
+  if (!option.value.xAxis) {
+    return
+  }
+
+  // 如果数据点很多，调整标签显示策略
+  if (dataLength > 60) {
+    // 旋转标签，避免重叠
+    option.value.xAxis.axisLabel = {
+      ...option.value.xAxis.axisLabel,
+      fontSize: '12px',
+      rotate: 45, // 旋转45度
+      interval: Math.ceil(dataLength / 20), // 间隔显示，最多显示20个标签
+    }
+  } else if (dataLength > 30) {
+    // 中等数量数据点，轻微旋转
+    option.value.xAxis.axisLabel = {
+      ...option.value.xAxis.axisLabel,
+      fontSize: '14px',
+      rotate: 0,
+      interval: 0, // 显示所有标签
+    }
+  } else {
+    // 少量数据点，正常显示
+    option.value.xAxis.axisLabel = {
+      ...option.value.xAxis.axisLabel,
+      fontSize: '14px',
+      rotate: 0,
+      interval: 0, // 显示所有标签
+    }
+  }
+}
+
+// 更新柱状图宽度
+const updateBarWidth = () => {
+  const dataLength = option.value.xAxis?.data?.length || 0
+  const barWidth = calculateBarWidth(dataLength)
+
+  // 更新所有柱状图系列的宽度
+  if (option.value.series && Array.isArray(option.value.series)) {
+    option.value.series.forEach((series: any) => {
+      if (series.type === 'bar') {
+        series.barWidth = barWidth
+      }
+    })
+  }
+}
+
 // 切换 日，周，月
 const handleSwitchTime = () => {
   let adSalesData: any[] = []
@@ -709,6 +777,11 @@ const handleSwitchTime = () => {
   option.value.xAxis.data = adSalesData.map((item: any) => item.date)
   option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
   option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
+
+  // 根据数据点数量调整柱状图宽度和 x 轴标签
+  const dataLength = option.value.xAxis.data.length
+  updateBarWidth()
+  updateXAxisLabel(dataLength)
 
   updateYAxisData(fullTrendList.value)
   updateChart()
@@ -821,8 +894,9 @@ const initChart = () => {
         alignWithLabel: true,
       },
       axisLabel: {
-        // fontWeight: 'bold',
         fontSize: '14px',
+        rotate: 0,
+        interval: 0, // 默认显示所有标签
       },
     },
     yAxis: [
@@ -839,7 +913,6 @@ const initChart = () => {
           // fontWeight: 'bold',
           fontSize: '14px',
         },
-        // 移除 min: 0，允许显示负数
         axisLine: {
           show: true,
           lineStyle: {
@@ -848,53 +921,6 @@ const initChart = () => {
         },
         boundaryGap: [0, 0.1], // 为顶部留出空间
       },
-      // {
-      //   type: 'value',
-      //   name: '销售额(订单)',
-      //   position: 'right',
-      //   axisLabel: {
-      //     formatter: '${value}',
-      //     fontWeight: 'bold',
-      //   },
-      //   min: 0,
-      //   nameTextStyle: {
-      //     color: '#f7ab1b',
-      //     align: 'left',
-      //   },
-      //   axisLine: {
-      //     show: true,
-      //     lineStyle: {
-      //       color: '#f7ab1b',
-      //     },
-      //   },
-      //   splitLine: {
-      //     show: false,
-      //   },
-      // },
-      // {
-      //   type: 'value',
-      //   name: '花费',
-      //   offset: 70,
-      //   position: 'right',
-      //   axisLabel: {
-      //     formatter: '${value}',
-      //     fontWeight: 'bold',
-      //   },
-      //   min: 0,
-      //   nameTextStyle: {
-      //     color: '#40c9c6',
-      //     align: 'left',
-      //   },
-      //   axisLine: {
-      //     show: true,
-      //     lineStyle: {
-      //       color: '#40c9c6',
-      //     },
-      //   },
-      //   splitLine: {
-      //     show: false,
-      //   },
-      // },
     ],
     series: [
       {
@@ -902,7 +928,7 @@ const initChart = () => {
         type: 'bar',
         yAxisIndex: 0,
         data: fullTrendList.value.map((item: any) => item.adSales),
-        barWidth: 20,
+        barWidth: calculateBarWidth(fullTrendList.value.length),
         itemStyle: {
           color: '#409EFF',
         },
@@ -914,7 +940,7 @@ const initChart = () => {
         type: 'bar',
         yAxisIndex: 0,
         data: fullTrendList.value.map((item: any) => item.organicSales),
-        barWidth: 20,
+        barWidth: calculateBarWidth(fullTrendList.value.length),
         itemStyle: {
           color: '#67C23A',
         },
@@ -923,6 +949,10 @@ const initChart = () => {
       },
     ],
   }
+
+  // 根据数据点数量调整 x 轴标签显示策略
+  const dataLength = fullTrendList.value.length
+  updateXAxisLabel(dataLength)
 
   // 设置图表实例的配置项
   chartInstance?.setOption(option.value)

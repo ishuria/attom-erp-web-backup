@@ -441,6 +441,9 @@ export const trendOverviewColumns = [
     prop: 'amount',
     checked: true,
     minWidth: 100,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: '销量(订单)',
@@ -465,18 +468,27 @@ export const trendOverviewColumns = [
     prop: 'adSalesAmount',
     checked: true,
     minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: '广告花费',
     prop: 'spend',
     checked: true,
     minWidth: 100,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: '净利润(订单)',
     prop: 'grossOrderProfit',
     checked: true,
     minWidth: 100,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: '预计下月仓储费',
@@ -489,6 +501,9 @@ export const trendOverviewColumns = [
     prop: 'returnAmount',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   // {
   //   label: '毛利润',
@@ -501,12 +516,18 @@ export const trendOverviewColumns = [
     prop: 'clickCost',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: '客单价',
     prop: 'averageOrderValue',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : '-'
+    },
   },
   {
     label: 'CPA(获客成本)',
@@ -675,18 +696,6 @@ export const trendOverviewColumns = [
     minWidth: 100,
   },
   {
-    label: '广告销量',
-    prop: 'adSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自然销量',
-    prop: 'organicSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
     label: '广告展现量',
     prop: 'impressions',
     checked: true,
@@ -695,12 +704,6 @@ export const trendOverviewColumns = [
   {
     label: '退货量',
     prop: 'returnGoodsCount',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '退款金额',
-    prop: 'returnAmount',
     checked: true,
     minWidth: 100,
   },

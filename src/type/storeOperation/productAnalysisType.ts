@@ -357,4 +357,6 @@ export interface ITrendOverview {
   /** 净利润（利润报表） */
   grossProfit?: number
   pageViewsTotal?: number
+  /** 币种 */
+  currencyIcon?: string
 }
