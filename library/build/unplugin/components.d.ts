@@ -173,6 +173,7 @@ declare module 'vue' {
     Step1: typeof import('./../../../src/views/vab/form/vabAutoComponents/Step1.vue')['default']
     Step2: typeof import('./../../../src/views/vab/form/vabAutoComponents/Step2.vue')['default']
     Step3: typeof import('./../../../src/views/vab/form/vabAutoComponents/Step3.vue')['default']
+    StorageAgeCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/StorageAgeCard.vue')['default']
     SystemStatus: typeof import('./../../../src/views/index/vabAutoComponents/SystemStatus.vue')['default']
     TariffBillUpload: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/TariffBillUpload.vue')['default']
     TodoList: typeof import('./../../../src/views/index/vabAutoComponents/TodoList.vue')['default']

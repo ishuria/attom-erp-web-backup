@@ -1788,35 +1788,15 @@ const fetchData = async () => {
     item.storageAge = generateStorageAgeHtml(item)
     return item
   })
+  // 立即处理所有数据，确保数据能直接显示
+  processedList.forEach((item: any) => {
+    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+    processField(item, 'developName', 2)
+  })
   // 优化：立即显示处理后的数据，不阻塞渲染
   // 使用 shallowRef 时，直接赋值即可，不需要深度响应式
   list.value = processedList
   listLoading.value = false
-
-  // 优化：延迟处理非关键数据，让首屏先显示
-  // 使用 requestIdleCallback 或 setTimeout 延迟处理
-  // 先显示原始数据，让用户看到内容，再处理格式化
-  if (typeof requestIdleCallback !== 'undefined') {
-    requestIdleCallback(
-      () => {
-        // 只处理非关键字段
-        list.value.forEach((item: any) => {
-          item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
-          processField(item, 'developName', 2)
-        })
-      },
-      { timeout: 400 } // 增加到 400ms，让首屏完全渲染后再处理
-    )
-  } else {
-    // 降级方案：延迟处理
-    setTimeout(() => {
-      // 只处理非关键字段
-      list.value.forEach((item: any) => {
-        item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
-        processField(item, 'developName', 2)
-      })
-    }, 150) // 增加到 150ms，让首屏先渲染
-  }
 }
 const asinTotal = ref<number>(0)
 
@@ -2267,17 +2247,31 @@ onBeforeMount(() => {
 // :deep(.noneHoverTable .el-table__body tr.el-table__row--striped > td.el-table__cell) {
 //   background-color: #fafafa !important; /* 保持原有条纹颜色 */
 // }
-.el-table {
-  :deep() {
-    .select-row > td {
+// 选中行高亮样式 - 需要覆盖所有可能的样式
+:deep(.noneHoverTable) {
+  .el-table__body tr.select-row {
+    & > td.el-table__cell {
       background-color: #7bddde !important;
     }
-    // 普通行hover时保持白色
-    .el-table__body tr:not(.select-row) {
-      &.hover-row > td,
-      &:hover > td {
-        background-color: #ffffff !important;
-      }
+    // 处理条纹行
+    &.el-table__row--striped > td.el-table__cell {
+      background-color: #7bddde !important;
+    }
+    // 处理 hover 状态
+    &.hover-row > td.el-table__cell {
+      background-color: #7bddde !important;
+    }
+  }
+  // 普通行hover时保持白色
+  .el-table__body tr:not(.select-row) {
+    &.hover-row > td.el-table__cell,
+    &:hover > td.el-table__cell {
+      background-color: #ffffff !important;
+    }
+    // 条纹行 hover 时保持条纹颜色
+    &.el-table__row--striped.hover-row > td.el-table__cell,
+    &.el-table__row--striped:hover > td.el-table__cell {
+      background-color: #fafafa !important;
     }
   }
 }

@@ -23,35 +23,15 @@
         />
       </el-col>
       <el-col :span="8">
-        <vab-card class="card2" style="height: 400px" title="库龄">
-          <div style="margin-bottom: 15px; text-align: right">
-            <el-radio-group v-model="ageRadio" size="small" @change="handleSwitchBar">
-              <el-radio-button label="数量" :value="0" />
-              <el-radio-button label="占比" :value="1" />
-            </el-radio-group>
-          </div>
-          <el-row>
-            <el-col :span="9">
-              <div ref="chartContainer2" style="width: 100%; height: 322px"></div>
-            </el-col>
-            <el-col :span="15">
-              <el-table :data="percentageAgeData" :header-cell-style="headerCellStyle" max-height="325" show-summary>
-                <el-table-column label="项目" min-width="110" prop="name">
-                  <template #default="{ row, $index }">
-                    <span class="table-item" :style="{ '--dot-color': storageAgeColorList[$index] }">
-                      {{ row.name }}
-                    </span>
-                  </template>
-                </el-table-column>
-                <el-table-column v-if="ageRadio === 0" align="right" label="FBA仓" min-width="90" prop="value" />
-                <el-table-column v-if="ageRadio === 1" align="right" label="FBA仓" min-width="90" prop="percentage">
-                  <template #default="{ row }">{{ row.percentage }}%</template>
-                </el-table-column>
-                <el-table-column label="预估下月费用" min-width="120" />
-              </el-table>
-            </el-col>
-          </el-row>
-        </vab-card>
+        <storage-age-card
+          :additional-columns="[{ label: '预估下月费用', minWidth: 120 }]"
+          card-class="card2"
+          :chart-data="data2"
+          :colors="storageAgeColorList"
+          :name-column="{ label: '项目', prop: 'name', minWidth: 110 }"
+          :table-data="percentageAgeData"
+          :value-column="{ label: 'FBA仓', prop: 'value', minWidth: 90, align: 'right' }"
+        />
       </el-col>
       <el-col :span="8">
         <vab-card class="card3" style="height: 150px">
@@ -480,14 +460,9 @@ const queryForm = reactive<IGetOperationAmazonCostListReq>({
 })
 
 const isOverflow = ref(false)
-// chartContainer1 和 chartInstance1 已移至 VabPieChartTable 组件
-const chartContainer2 = ref<HTMLElement | null>(null)
 const chartContainer3 = ref<HTMLElement | null>(null)
-let chartInstance2: echarts.ECharts | null = null
 let chartInstance3: echarts.ECharts | null = null
-let chartObserver2: ResizeObserver
 let chartObserver3: ResizeObserver
-const option2 = ref<any>({})
 const option3 = ref<any>({})
 
 // 支出构成数据
@@ -510,7 +485,6 @@ const data3 = ref<any[]>([
   { date: '2024-12-25', sku: 115, fba: 93, cost: 83, freight: 73 },
 ])
 
-const ageRadio = ref<number>(0)
 const imageHeight = ref<number>(0)
 const card4Select = ref<number>(0)
 // 日期选择框是否可见
@@ -519,7 +493,9 @@ const card4DateRange = ref<[string, string]>(['', ''])
 // 计算总和
 const totalValue = ref<number>(0)
 // 计算库龄总和
-const totalAgeValue = data2.value.reduce((sum, item) => sum + item.value, 0)
+const totalAgeValue = computed(() => {
+  return data2.value.reduce((sum, item) => sum + item.value, 0)
+})
 const formattedTotalValue = computed(() => {
   return totalValue.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
 })
@@ -537,7 +513,20 @@ const percentageData = computed(() => {
     percentage: `${((item.value / total) * 100).toFixed(2)}%`,
   }))
 })
-let percentageAgeData: any[]
+// 计算库龄占比数据
+const percentageAgeData = computed(() => {
+  const total = totalAgeValue.value
+  if (total === 0) {
+    return data2.value.map((item) => ({
+      ...item,
+      percentage: '0.00',
+    }))
+  }
+  return data2.value.map((item) => ({
+    ...item,
+    percentage: ((item.value / total) * 100).toFixed(2),
+  }))
+})
 let copyRow: any
 
 // 修改产品核算的站点
@@ -627,154 +616,6 @@ const handleClickCancel = () => {
   option3.value.legend.data = ['SKU实际价格', 'FBA配送费', '打包成本', '头程运费']
   option3.value.grid.top = 40
   updateChart3()
-}
-// 切换是百分比还是数量
-const handleSwitchBar = () => {
-  const threshold = 10
-  if (ageRadio.value === 0) {
-    option2.value.series.forEach((seriesItem: any, index: number) => {
-      const value = percentageAgeData[4 - index].value
-      const percentage = percentageAgeData[4 - index].percentage
-      seriesItem.data = [value]
-      if (percentage > threshold) {
-        seriesItem.label = {
-          show: false,
-        }
-      }
-    })
-    option2.value.yAxis.axisLabel = {}
-  } else if (ageRadio.value === 1) {
-    option2.value.series.forEach((seriesItem: any, index: number) => {
-      const percentage = percentageAgeData[4 - index].percentage
-      seriesItem.data = [percentage]
-      seriesItem.label = {
-        show: percentage > threshold, // 当占比大于阈值时显示比例
-        formatter: (params: any) => `${params.value}%`,
-      }
-    })
-    option2.value.yAxis.axisLabel = {
-      formatter: '{value}%',
-    }
-  }
-  updateChart2()
-}
-
-// initChart1 已移至 VabPieChartTable 组件
-const initChart2 = () => {
-  option2.value = {
-    tooltip: {
-      trigger: 'item',
-      formatter: (params: any) => {
-        // tooltip标题
-        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">库龄</div>`
-
-        // tooltip详情内容
-        let itemHtmlStrArr = ''
-
-        itemHtmlStrArr = `<div style="display: flex;align-items:center;">
-          ${params.marker}
-          <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px 0 2px;">${params.seriesName}: </div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${ageRadio.value === 0 ? '$' : ''}${params.value}${ageRadio.value === 1 ? '%' : ''}</span>
-        </div>`
-
-        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
-          ${itemHtmlStrArr}
-        </div>`
-        // 最终html字符串
-        const resHtmlStr = titleHtmlStr + contentHtmlStr
-        return resHtmlStr
-      },
-      confine: true,
-    },
-    grid: {
-      top: 10,
-      bottom: 20,
-      containLabel: true,
-    },
-    xAxis: {
-      type: 'category',
-      data: ['FBA仓'],
-      axisTick: {
-        alignWithLabel: true,
-      },
-      axisLine: {
-        lineStyle: {
-          color: '#999',
-        },
-      },
-      axisLabel: {
-        fontSize: '14px',
-      },
-    },
-    yAxis: {
-      type: 'value',
-      boundaryGap: [0, 0.1], // 为顶部留出空间
-    },
-    series: [
-      {
-        name: '365+',
-        type: 'bar',
-        stack: '总量',
-        data: [data2.value[4].value],
-        itemStyle: {
-          color: storageAgeColorList[4],
-        },
-        emphasis: {
-          focus: 'series',
-        },
-      },
-      {
-        name: '271-365',
-        type: 'bar',
-        stack: '总量',
-        data: [data2.value[3].value],
-        itemStyle: {
-          color: storageAgeColorList[3],
-        },
-        emphasis: {
-          focus: 'series',
-        },
-      },
-      {
-        name: '181-270+',
-        type: 'bar',
-        stack: '总量',
-        data: [data2.value[2].value],
-        itemStyle: {
-          color: storageAgeColorList[2],
-        },
-        emphasis: {
-          focus: 'series',
-        },
-      },
-      {
-        name: '91-180',
-        type: 'bar',
-        stack: '总量',
-        data: [data2.value[1].value],
-        itemStyle: {
-          color: storageAgeColorList[1],
-        },
-        emphasis: {
-          focus: 'series',
-        },
-      },
-      {
-        name: '0-90',
-        type: 'bar',
-        stack: '总量',
-        barWidth: '40%',
-        data: [data2.value[0].value],
-        itemStyle: {
-          color: storageAgeColorList[0],
-        },
-        emphasis: {
-          focus: 'series',
-        },
-      },
-    ],
-  }
-  chartInstance2?.setOption(option2.value)
 }
 // 获取 CSS 变量的值
 const fontSizeBase = getComputedStyle(document.documentElement).getPropertyValue('--el-font-size-base').trim()
@@ -866,9 +707,6 @@ const initChart3 = () => {
     ],
   }
   chartInstance3?.setOption(option3.value)
-}
-const updateChart2 = () => {
-  chartInstance2?.setOption(option2.value, true)
 }
 const updateChart3 = () => {
   chartInstance3?.setOption(option3.value, true)
@@ -1054,10 +892,6 @@ watch(
 onBeforeMount(() => {
   fetchCostAccountingChannelData()
   // fetchSalesSiteList()
-  percentageAgeData = data2.value.map((item) => ({
-    ...item,
-    percentage: ((item.value / totalAgeValue) * 100).toFixed(2),
-  }))
   // 初始化时，如果 props 有值，手动触发一次数据获取
   // 避免 watch 的 immediate 在组件创建时立即触发
   if (props.sku) {
@@ -1068,17 +902,6 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  // chartContainer1 相关逻辑已移至 VabPieChartTable 组件
-  if (chartContainer2.value) {
-    chartInstance2 = echarts.init(chartContainer2.value)
-    chartObserver2 = new ResizeObserver(() => {
-      if (chartInstance2) {
-        chartInstance2.resize()
-      }
-    })
-    chartObserver2.observe(chartContainer2.value)
-    initChart2()
-  }
   if (chartContainer3.value) {
     chartInstance3 = echarts.init(chartContainer3.value)
     chartObserver3 = new ResizeObserver(() => {
