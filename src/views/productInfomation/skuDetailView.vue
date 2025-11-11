@@ -806,10 +806,10 @@ const ableToEditProcurementManager = computed(() => {
   )
 })
 const ableToEditProductManager = computed(() => {
-  return currentUserName === sku.value.productManager || sku.value.supervisorNames.includes(currentUserName)
+  return currentUserName === sku.value.productManager || sku.value.supervisorNames.includes(currentUserName) || roleCode === ROLE_BOSS_CODE
 })
 const ableToEditProductDesign = computed(() => {
-  return currentUserName === sku.value.productDesign || ableToEditProductManager.value
+  return currentUserName === sku.value.productDesign || ableToEditProductManager.value || roleCode === ROLE_BOSS_CODE
 })
 const historyPriceVisible = ref<boolean>(false)
 const historyPriceList = ref<IGetCostReductionHistoryPriceList[]>([])
