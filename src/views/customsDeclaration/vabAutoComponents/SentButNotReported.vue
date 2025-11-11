@@ -235,7 +235,7 @@ const handleArchive = (row: IGetYfwbAggregationList) => {
     })
     if (data) {
       $baseMessage('归档成功!', 'success')
-      queryAggregationData()
+      fetchAggregationData()
     }
   })
 }
@@ -323,7 +323,7 @@ const handleArchiveAgg = async () => {
     const { data } = await archiveShipmentYfwbAggregation(req)
     if (data) {
       $baseMessage('聚合归档成功！', 'success')
-      queryAggregationData()
+      fetchAggregationData()
     }
   })
 }
