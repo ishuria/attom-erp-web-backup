@@ -259,7 +259,7 @@
     <!-- 第五层 -->
     <el-row v-if="ableProductManagerViewCard || ableViewTop30ProductSaleCard" class="row-spacing" :gutter="20">
       <!-- 产品经理绩效历史 -->
-      <el-col v-if="ableProductManagerViewCard" :lg="10" :md="12" :sm="24" :xl="10" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <performance-history :list="historyList">
           <template #select>
             <el-select v-model="userId" placeholder="人员" style="max-width: 5em" @change="fetchData">
@@ -269,8 +269,25 @@
           </template>
         </performance-history>
       </el-col>
+      <el-col v-if="ableProductManagerViewCard" :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
+        <profit-share-preview-card
+          :list="profitSharePreviewList"
+          :loading="profitSharePreviewLoading"
+          :page-no="profitSharePreviewQueryForm.pageNo"
+          :page-size="profitSharePreviewQueryForm.pageSize"
+          :total="profitSharePreviewTotal"
+          @current-change="handleProfitSharePreviewCurrentChange"
+          @size-change="handleProfitSharePreviewSizeChange"
+        >
+          <template #select>
+            <el-select v-model="selectProfitSharePreviewMonth" placeholder="月份" style="max-width: 5em" @change="fetchProfitSharePreview">
+              <el-option v-for="item in profitSharePreviewMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </profit-share-preview-card>
+      </el-col>
       <!-- 职级提成 -->
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
         <job-level-commission-table :list="jobLevelCommissionList">
           <template #select>
             <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
@@ -369,15 +386,6 @@
           </template>
         </low-volume-product-storage-fees>
       </el-col>
-      <el-col :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
-        <profit-share-preview-card :list="profitSharePreviewList" :loading="profitSharePreviewLoading">
-          <template #select>
-            <el-select v-model="selectProfitSharePreviewMonth" placeholder="月份" style="max-width: 5em" @change="fetchProfitSharePreview">
-              <el-option v-for="item in profitSharePreviewMonthList" :key="item" :label="item" :value="item" />
-            </el-select>
-          </template>
-        </profit-share-preview-card>
-      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -470,7 +478,7 @@ import {
   IRankItem,
   IWarehouseCapacityItem,
 } from '/@/type/index/frontPage'
-import { getCurrentMonth, getLast30DaysStringTime, getLastYearStringMonth } from '/@/utils/dateUtils'
+import { getCurrentMonth, getLast30DaysStringTime, getLastMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
@@ -1192,23 +1200,35 @@ const handleAttendanceOverviewSortChange = (data: { column: any; prop: string; o
 }
 const profitSharePreviewList = ref<IGetFrontPageProfitScoreItem[]>([])
 const profitSharePreviewTotal = ref<number>(0)
-
-// 获取上个月
-const getLastMonth = (): string => {
-  const today = new Date()
-  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-  const year = lastMonth.getFullYear()
-  const month = String(lastMonth.getMonth() + 1).padStart(2, '0')
-  return `${year}-${month}`
-}
-
 // 构建一个只有本月和上月的数组
 const profitSharePreviewMonthList = ref<string[]>([getCurrentMonth(), getLastMonth()])
-const selectProfitSharePreviewMonth = ref<string>(profitSharePreviewMonthList.value[0])
+// 初始化为当前月份，确保有值
+const selectProfitSharePreviewMonth = ref<string>(getCurrentMonth())
 const profitSharePreviewLoading = ref<boolean>(false)
+const profitSharePreviewQueryForm = reactive({
+  pageNo: 1,
+  pageSize: 50,
+})
+
+const handleProfitSharePreviewCurrentChange = (val: number) => {
+  profitSharePreviewQueryForm.pageNo = val
+  fetchProfitSharePreview()
+}
+
+const handleProfitSharePreviewSizeChange = (val: number) => {
+  profitSharePreviewQueryForm.pageSize = val
+  fetchProfitSharePreview()
+}
 const fetchProfitSharePreview = async () => {
+  if (!selectProfitSharePreviewMonth.value) {
+    return
+  }
   profitSharePreviewLoading.value = true
-  const { data } = await getFrontPageProfitScore({ month: selectProfitSharePreviewMonth.value!, pageNo: 1, pageSize: 50 })
+  const { data } = await getFrontPageProfitScore({
+    month: selectProfitSharePreviewMonth.value,
+    pageNo: profitSharePreviewQueryForm.pageNo,
+    pageSize: profitSharePreviewQueryForm.pageSize,
+  })
   profitSharePreviewList.value = data.list
   profitSharePreviewTotal.value = data.total
   profitSharePreviewLoading.value = false
@@ -1235,6 +1255,8 @@ onBeforeMount(async () => {
     await fetchRankOverAchieved()
     await fetchRankAssessmentFinish()
     await fetchRankNewProductCommission()
+    // 初始化时获取利润分成预览数据
+    await fetchProfitSharePreview()
   }
   if (ableViewTop30ProductSaleCard) {
     fetchTop30ProductSale()

@@ -9,17 +9,41 @@
     </template>
 
     <el-table v-loading="loading" border :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }">
-      <el-table-column label="月份" prop="month" />
-      <el-table-column label="姓名" prop="userName" />
-      <el-table-column label="利润组名" prop="groupName" />
-      <el-table-column label="总利润分" prop="totalScore" />
-      <el-table-column label="预计利润分" prop="monthProfitScore" />
-      <el-table-column label="累计利润分" prop="pileProfitScore" />
+      <el-table-column label="月份" min-width="90" prop="month" />
+      <el-table-column label="姓名" min-width="95" prop="userName" />
+      <el-table-column label="利润组名" min-width="130" prop="groupName">
+        <template #default="{ row }">
+          <el-popover v-if="row.skus && row.skus.length > 0" placement="top" trigger="hover" :width="360">
+            <template #reference>
+              <span style="cursor: pointer; color: var(--el-color-primary)">
+                {{ row.groupName }}
+              </span>
+            </template>
+            <div style="max-height: 300px; overflow-y: auto">
+              <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
+              <div v-for="sku in row.skus" :key="sku" style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)">
+                {{ sku }}
+              </div>
+            </div>
+          </el-popover>
+          <span v-else>{{ row.groupName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="总利润分" min-width="100" prop="totalProfit" />
+      <el-table-column label="预计利润分" min-width="110" prop="monthProfitScore" />
+      <el-table-column label="累计利润分" min-width="115" prop="pileProfitScore" />
 
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
     </el-table>
+    <vab-pagination
+      :current-page="pageNo"
+      :page-size="pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
   </vab-card>
 </template>
 
@@ -33,6 +57,22 @@ defineOptions({
 const props = defineProps<{
   list: IGetFrontPageProfitScoreItem[]
   loading: boolean
+  pageNo: number
+  pageSize: number
+  total: number
+}>()
+
+const handleCurrentChange = (val: number) => {
+  emit('current-change', val)
+}
+
+const handleSizeChange = (val: number) => {
+  emit('size-change', val)
+}
+
+const emit = defineEmits<{
+  (e: 'current-change', val: number): void
+  (e: 'size-change', val: number): void
 }>()
 </script>
 

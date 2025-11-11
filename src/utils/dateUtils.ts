@@ -192,3 +192,11 @@ export const formatDateToString = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
 }
+// 获取上个月
+export const getLastMonth = (): string => {
+  const today = new Date()
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+  const year = lastMonth.getFullYear()
+  const month = String(lastMonth.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
