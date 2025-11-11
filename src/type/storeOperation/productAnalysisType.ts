@@ -2,6 +2,7 @@ export interface IGetOperationAmazonCostListReq {
   sku: string
   pageNo: number
   pageSize: number
+  siteId: number
 }
 
 export interface IGetOperationAmazonCostListRes {
@@ -280,6 +281,7 @@ export interface IGetTrendOverviewChartRes {
     list: ITrendOverview[]
     /** 卡片汇总数据 Map<字段名, ICardSummary> */
     summary?: Record<string, ICardSummary>
+    symbol?: string
   }
 }
 
@@ -359,4 +361,15 @@ export interface ITrendOverview {
   pageViewsTotal?: number
   /** 币种 */
   currencyIcon?: string
+}
+export interface IGetExpenseCompositionRes {
+  data: {
+    list: IGetExpenseComposition[]
+    totalExpenditure: number
+    symbol: string
+  }
+}
+export interface IGetExpenseComposition {
+  name: string
+  value: number
 }

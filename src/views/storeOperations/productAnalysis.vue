@@ -1,6 +1,16 @@
 <template>
   <div class="default-table-detail-container">
-    <el-page-header :content="'商品分析和操作日志'" @back="goBack" />
+    <div style="display: flex; align-items: center">
+      <el-page-header :content="'商品分析和操作日志'" @back="goBack" />
+      <el-select
+        v-model="selectedSite"
+        placeholder="请选择站点"
+        style="width: 200px; margin-top: -20px; margin-left: -20px"
+        @change="handleSiteChange"
+      >
+        <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+      </el-select>
+    </div>
     <el-row :gutter="20">
       <!-- 左侧 -->
       <el-col :span="18">
@@ -12,6 +22,7 @@
                 :compare-type="compareType"
                 :select-date-range="selectDateRange"
                 :select-field="selectField"
+                :selected-site="selectedSite"
                 :selected-sku="selectedSku"
               />
             </el-tab-pane>
@@ -19,7 +30,7 @@
               <vab-ad-pie-tab v-if="activeName === 1" />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis v-if="activeName === 2" :sku="sku" />
+              <vab-cost-analysis v-if="activeName === 2" :selected-site="selectedSite" :sku="sku" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
               <vab-comment-reviews v-if="activeName === 3" />
@@ -260,6 +271,7 @@ import { Star } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
 import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
+import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 import { useTabsStore } from '/@/store/modules/tabs'
 import { handleActivePath } from '/@/utils/routes'
@@ -426,6 +438,25 @@ const sku = ref<string>('')
 const handleChangeSku = () => {
   sku.value = queryForm3.sku
 }
+
+// 站点相关
+const siteList = ref<{ id: number; label: string }[]>([])
+const selectedSite = ref<number | undefined>(route.query.site ? Number(route.query.site) : undefined)
+
+// 获取站点列表
+const fetchSiteList = async () => {
+  try {
+    const { data } = await getDistributionSiteList()
+    siteList.value = data
+  } catch (error) {
+    console.error('获取站点列表失败:', error)
+  }
+}
+
+// 站点变化处理
+const handleSiteChange = (siteId: number | undefined) => {
+  selectedSite.value = siteId
+}
 onBeforeMount(() => {
   // 检查 store 中是否已有数据
   if (skuOptionsStore.data.sku) {
@@ -471,12 +502,25 @@ onMounted(() => {
   setImageHeight()
   activeName.value = Number(route.query.activeName)
   selectField.value = Number(route.query.field)
+  // 获取站点列表
+  fetchSiteList()
 })
 watch(
   () => route.query.field,
   (newField) => {
     if (newField) {
       selectField.value = Number(newField)
+    }
+  }
+)
+// 监听路由中的站点参数变化
+watch(
+  () => route.query.site,
+  (newSite) => {
+    if (newSite) {
+      selectedSite.value = Number(newSite)
+    } else {
+      selectedSite.value = undefined
     }
   }
 )

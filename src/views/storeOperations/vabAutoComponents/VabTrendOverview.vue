@@ -106,6 +106,7 @@ interface Props {
   compareType?: number // 同比/环比：0=同比, 1=环比
   selectDateRange?: [string, string] // 日期范围
   selectedSku?: string // 选择的SKU（当selectField为0时使用）
+  selectedSite?: number | undefined // 选择的站点
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -113,6 +114,7 @@ const props = withDefaults(defineProps<Props>(), {
   compareType: 0,
   selectDateRange: () => ['', ''],
   selectedSku: '',
+  selectedSite: undefined,
 })
 
 const tableLoading = ref<boolean>(false) // 表格加载状态
@@ -132,9 +134,7 @@ const queryForm = reactive<any>({
 const total = ref<number>(0)
 const route = useRoute()
 // 获取币种符号，从路由参数获取，默认为美元符号
-const currencySymbol = computed(() => {
-  return (route.query.icon as string) || '$'
-})
+const currencySymbol = ref<string>('')
 const checkList1 = computed(() => {
   return trendOverviewColumns.filter((item) => item.checked)
 })
@@ -200,6 +200,7 @@ const cards = ref([
 ])
 
 const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
+  { label: '销量(订单)', disabled: false },
   { label: '销售额(订单)', disabled: false },
   { label: '广告销售额', disabled: false },
   { label: '广告花费', disabled: false },
@@ -1547,9 +1548,12 @@ const getRequestParams = () => {
     // 如果选择的是SKU维度且有选中的SKU，使用选中的SKU
     skuValue = props.selectedSku
   }
+  // 优先使用 props.selectedSite，如果没有则从 route.query.site 获取
+  const siteId = props.selectedSite !== undefined ? props.selectedSite : route.query.site ? Number(route.query.site) : undefined
+  // 如果 siteId 为 undefined，可能需要使用默认值或抛出错误，这里先使用 0 作为默认值
   return {
     sku: skuValue,
-    siteId: Number(route.query.site),
+    siteId: siteId ?? 0, // 如果 siteId 为 undefined，使用 0 作为默认值
     asin: route.query.asin as string,
     type: props.selectField,
     startDate: formatDateToString(new Date(props.selectDateRange[0])),
@@ -1591,6 +1595,7 @@ const fetchChartData = async () => {
     cardSummary.value = data.summary || {}
     // 图表数据（完整数据）
     fullTrendList.value = data.list || []
+    currencySymbol.value = data.symbol || ''
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
   } catch (error) {
@@ -1620,6 +1625,14 @@ watch(
     fetchChartData()
   },
   { deep: true }
+)
+// 单独监听 selectedSite 变化，确保能正确触发
+watch(
+  () => props.selectedSite,
+  () => {
+    fetchChartData()
+    fetchTableData()
+  }
 )
 watch(
   () => [props.selectField, props.selectDateRange, props.selectedSku],

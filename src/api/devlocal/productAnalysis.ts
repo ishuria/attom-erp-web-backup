@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import type {
+  IGetExpenseCompositionRes,
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
@@ -110,5 +111,17 @@ export function getTrendOverviewChart(data: IGetTrendOverviewChartReq): Promise<
     url: `${BASE_API}/product/analysis/trend/overview/chart`,
     method: 'post',
     data,
+  })
+}
+/**
+ * @description 运营-产品分析-支出构成
+ * @param params { sku: string; siteId: number }
+ * @returns IGetExpenseCompositionRes
+ */
+export function getExpenseComposition(params: { sku: string; siteId: number }): Promise<IGetExpenseCompositionRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/expense/breakdown`,
+    method: 'get',
+    params,
   })
 }

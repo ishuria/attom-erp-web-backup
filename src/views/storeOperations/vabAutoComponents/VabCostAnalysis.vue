@@ -2,29 +2,25 @@
   <div class="cost-container">
     <el-row :gutter="10">
       <el-col :span="8">
-        <vab-card class="card1" style="height: 400px" title="支出构成">
-          <el-row>
-            <el-col :span="9">
-              <!-- <span style="font-weight: 600;">支出构成</span> -->
-              <div ref="chartContainer1" style="width: 100%; height: 345px"></div>
-            </el-col>
-            <el-col :span="15">
-              <el-table :data="percentageData" :header-cell-style="headerCellStyle" max-height="325">
-                <el-table-column fixed="left" label="项目" min-width="170" prop="name">
-                  <template #default="{ row, $index }">
-                    <span class="table-item" :style="{ '--dot-color': colorList[$index] }">
-                      {{ row.name }}
-                    </span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="金额" min-width="60" prop="value">
-                  <template #default="{ row }">${{ row.value }}</template>
-                </el-table-column>
-                <el-table-column align="right" label="占比" min-width="90" prop="percentage" />
-              </el-table>
-            </el-col>
-          </el-row>
-        </vab-card>
+        <expense-breakdown-card
+          v-loading="expenseLoading"
+          card-class="card1"
+          :chart-data="data1"
+          :chart-title="'支出构成'"
+          :colors="colorList"
+          :fixed-left="true"
+          :name-column="{ label: '项目', prop: 'name', minWidth: 130 }"
+          :symbol="expenseSymbol"
+          :table-data="percentageData"
+          :title="'支出构成'"
+          :tooltip-title="'支出构成'"
+          :total-label="'总支出'"
+          :total-value="totalValue"
+          :value-columns="[
+            { label: '金额', prop: 'value', minWidth: 90, formatter: (row) => `${expenseSymbol}${row.value}` },
+            { label: '占比', prop: 'percentage', minWidth: 60, align: 'right' },
+          ]"
+        />
       </el-col>
       <el-col :span="8">
         <vab-card class="card2" style="height: 400px" title="库龄">
@@ -200,20 +196,27 @@
             <el-text>产品成本核算</el-text>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleOpenAdd">新增</el-button>
+            <el-button :loading="addLoading" type="primary" @click="handleConfirmAdd">新增</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
     </vab-query-form>
-    <el-table border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" @cell-click="cellClick">
+    <el-table
+      v-loading="costLoading"
+      border
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      @cell-click="cellClick"
+    >
       <el-table-column fixed="left" label="日期" min-width="115" prop="createTime" />
-      <el-table-column fixed="left" label="站点" min-width="175" prop="site">
+      <!-- <el-table-column fixed="left" label="站点" min-width="175" prop="site">
         <template #default="{ row }">
           <el-select v-model="row.site" placeholder="请选择站点" style="min-width: 100%" @change="handleUpdateList(row)">
             <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column fixed="left" label="售价" min-width="100" prop="sellingPrice">
         <template #default="{ row }">
           <div class="none">
@@ -407,6 +410,9 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 500px" />
+      </template>
     </el-table>
     <vab-pagination
       :current-page="queryForm.pageNo"
@@ -416,7 +422,7 @@
       @size-change="handleSizeChange"
     />
     <!-- 新增 -->
-    <vab-dialog v-model="addVisible" title="新增" width="20%">
+    <!-- <vab-dialog v-model="addVisible" title="新增" width="20%">
       <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" style="width: 100%">
         <el-form-item label="站点" prop="site">
           <el-select v-model="addForm.site" placeholder="请选择站点">
@@ -428,14 +434,13 @@
         <el-button @click="handleCloseAdd">取消</el-button>
         <el-button type="primary" @click="handleConfirmAdd">确定</el-button>
       </template>
-    </vab-dialog>
+    </vab-dialog> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import type { FormInstance, FormRules } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { flexColumnWidth } from '~/src/utils/tableColum'
@@ -446,6 +451,7 @@ import {
   addOperationAmazonCost,
   copyOperationAmazonCost,
   deleteOperationAmazonCost,
+  getExpenseComposition,
   getOperationAmazonCostList,
   getOperationAmazonPackagingInformation,
   reverseCalcOperationAmazonCost,
@@ -462,65 +468,32 @@ defineOptions({
   name: 'VabCostAnalysis',
 })
 
-const props = defineProps<{ sku: string }>()
-watch(
-  () => props.sku,
-  () => {
-    fetchData()
-    fetchPackagingInformation()
-  },
-  { immediate: false }
-)
-// 新增弹窗
-const addVisible = ref<boolean>(false)
-const addForm = reactive<any>({
-  site: '',
-})
-const addFormRef = ref<FormInstance>()
-const addFormRules = reactive<FormRules>({
-  site: [{ required: true, message: '请选择站点', trigger: 'change' }],
-})
+const props = defineProps<{ sku: string; selectedSite: number | undefined }>()
+
 const list = ref<IGetOperationAmazonCostList[]>([])
 const total = ref<number>(0)
 const queryForm = reactive<IGetOperationAmazonCostListReq>({
   sku: '',
   pageNo: 1,
   pageSize: 20,
+  siteId: 0,
 })
 
 const isOverflow = ref(false)
-const chartContainer1 = ref<HTMLElement | null>(null)
+// chartContainer1 和 chartInstance1 已移至 VabPieChartTable 组件
 const chartContainer2 = ref<HTMLElement | null>(null)
 const chartContainer3 = ref<HTMLElement | null>(null)
-let chartInstance1: echarts.ECharts | null = null
 let chartInstance2: echarts.ECharts | null = null
 let chartInstance3: echarts.ECharts | null = null
-let chartObserver1: ResizeObserver
 let chartObserver2: ResizeObserver
 let chartObserver3: ResizeObserver
-const option1 = ref<any>({})
 const option2 = ref<any>({})
 const option3 = ref<any>({})
 
-const data1 = ref<any[]>([
-  { value: 300, name: '平台费' },
-  { value: 600, name: 'FBA发货费' },
-  { value: 50, name: '其他订单费用' },
-  { value: 150, name: '广告费' },
-  { value: 100, name: '推广费' },
-  { value: 120, name: 'FBA仓储费' },
-  { value: 200, name: 'FBA国际物流运费' },
-  { value: 30, name: '调整费用' },
-  { value: 40, name: '平台其他费' },
-  { value: 60, name: '其他费用' },
-  { value: 500, name: '头程成本' },
-  { value: 100, name: '其他成本' },
-  { value: 800, name: '采购成本' },
-  { value: -20, name: '市场税退款额' },
-  { value: 70, name: '市场税' },
-  { value: -10, name: '销售税退款额' },
-  { value: 90, name: '销售税' },
-])
+// 支出构成数据
+const data1 = ref<Array<{ name: string; value: number }>>([])
+const expenseLoading = ref<boolean>(false)
+const expenseSymbol = ref<string>('$')
 const data2 = ref<any[]>([
   { name: '0-90', value: 11800 },
   { name: '91-180', value: 2644 },
@@ -544,15 +517,26 @@ const card4Select = ref<number>(0)
 const dateRangeSelectVisible = ref<boolean>(false)
 const card4DateRange = ref<[string, string]>(['', ''])
 // 计算总和
-const totalValue = data1.value.reduce((sum, item) => sum + item.value, 0)
+const totalValue = ref<number>(0)
 // 计算库龄总和
 const totalAgeValue = data2.value.reduce((sum, item) => sum + item.value, 0)
-const formattedTotalValue = totalValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+const formattedTotalValue = computed(() => {
+  return totalValue.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+})
 // 计算占比
-const percentageData = data1.value.map((item) => ({
-  ...item,
-  percentage: `${((item.value / totalValue) * 100).toFixed(2)}%`,
-}))
+const percentageData = computed(() => {
+  const total = totalValue.value
+  if (total === 0) {
+    return data1.value.map((item) => ({
+      ...item,
+      percentage: '0.00%',
+    }))
+  }
+  return data1.value.map((item) => ({
+    ...item,
+    percentage: `${((item.value / total) * 100).toFixed(2)}%`,
+  }))
+})
 let percentageAgeData: any[]
 let copyRow: any
 
@@ -569,29 +553,18 @@ const handleUpdateList = async (row: IGetOperationAmazonCostList) => {
   }
 }
 // 确定新增
+const addLoading = ref<boolean>(false)
 const handleConfirmAdd = async () => {
-  addFormRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      const { data } = await addOperationAmazonCost({
-        sku: props.sku,
-        site: addForm.site,
-      })
-      if (data) {
-        $baseMessage('新增成功！', 'success')
-        handleCloseAdd()
-        fetchData()
-      }
-    }
+  addLoading.value = true
+  const { data } = await addOperationAmazonCost({
+    sku: props.sku,
+    site: props.selectedSite !== undefined ? props.selectedSite : 0,
   })
-}
-// 关闭新增弹窗
-const handleCloseAdd = () => {
-  addVisible.value = false
-}
-// 打开新增弹窗
-const handleOpenAdd = () => {
-  addVisible.value = true
-  addForm.site = ''
+  if (data) {
+    $baseMessage('新增成功！', 'success')
+    fetchData()
+  }
+  addLoading.value = false
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
@@ -686,78 +659,7 @@ const handleSwitchBar = () => {
   updateChart2()
 }
 
-const initChart1 = () => {
-  option1.value = {
-    tooltip: {
-      trigger: 'item',
-      confine: true,
-      formatter: (params: any) => {
-        // tooltip标题
-        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">支出构成</div>`
-
-        // tooltip详情内容
-        let itemHtmlStrArr = ''
-
-        // 计算销售额的百分比
-        itemHtmlStrArr = `<div style="display: flex;align-items:center;">
-          ${params.marker}
-          <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 10px 0 2px;">${params.data.name}: </div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">$${params.data.value} (${params.percent}%)</span>
-        </div>`
-
-        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
-          ${itemHtmlStrArr}
-        </div>`
-        // 最终html字符串
-        const resHtmlStr = titleHtmlStr + contentHtmlStr
-        return resHtmlStr
-      },
-    },
-    series: [
-      {
-        name: '支出构成',
-        type: 'pie',
-        radius: ['50%', '80%'],
-        left: 0,
-        right: 0,
-        // avoidLabelOverlap: false,
-        itemStyle: {
-          borderColor: '#fff',
-          borderWidth: 2,
-        },
-        label: {
-          show: true, // 始终显示
-          position: 'center',
-          formatter: [`{a|${formattedTotalValue}}`, '{b|总支出}'].join('\n'), // 设置显示的文字
-          rich: {
-            a: {
-              color: '#000',
-              fontSize: 17,
-              fontWeight: 550,
-              lineHeight: 28,
-            },
-            b: {
-              color: '#999',
-              fontSize: 14,
-              lineHeight: 20,
-            },
-          },
-        },
-        emphasis: {
-          label: {
-            show: true,
-          },
-        },
-        labelLine: {
-          show: false,
-        },
-        data: data1.value,
-        color: colorList,
-      },
-    ],
-  }
-  chartInstance1?.setOption(option1.value)
-}
+// initChart1 已移至 VabPieChartTable 组件
 const initChart2 = () => {
   option2.value = {
     tooltip: {
@@ -1078,47 +980,95 @@ const fetchSalesSiteList = async () => {
   siteList.value = data
   siteAddList.value = siteList.value.filter((item) => item.label !== '沃尔玛US美国')
 }
+const costLoading = ref<boolean>(false)
 // 获取成本核算数据
 const fetchData = async () => {
+  costLoading.value = true
   queryForm.sku = props.sku
+  queryForm.siteId = props.selectedSite !== undefined ? props.selectedSite : 0
   const { data } = await getOperationAmazonCostList(queryForm)
   list.value = data.list
   total.value = data.total
+  costLoading.value = false
 }
 const packagingInformation = ref<IGetOperationAmazonPackagingInformationRes>()
 const packagingLoading = ref<boolean>(false)
 const route = useRoute()
 const fetchPackagingInformation = async () => {
+  if (!props.sku) {
+    return
+  }
+  // 优先使用 props.selectedSite，如果没有则从 route.query.site 获取
+  const siteId = props.selectedSite !== undefined ? props.selectedSite : route.query.site ? Number(route.query.site) : undefined
+  // 检查 siteId 是否为 undefined 或 null，而不是使用 !siteId（因为 0 也是 falsy）
+  if (siteId === undefined || siteId === null) {
+    return
+  }
   packagingLoading.value = true
   try {
-    const { data } = await getOperationAmazonPackagingInformation({ sku: props.sku, site: Number(route.query.site) })
+    const { data } = await getOperationAmazonPackagingInformation({ sku: props.sku, site: siteId })
     packagingInformation.value = data
   } finally {
     packagingLoading.value = false
   }
 }
+// 获取支出构成数据
+const fetchExpenseComposition = async () => {
+  if (!props.sku) {
+    data1.value = []
+    totalValue.value = 0
+    expenseSymbol.value = '$'
+    return
+  }
+  const siteId = props.selectedSite !== undefined ? props.selectedSite : 0
+  expenseLoading.value = true
+  try {
+    const { data } = await getExpenseComposition({ sku: props.sku, siteId })
+    // 后端返回的数据格式是 { name, value }，直接使用
+    data1.value = data.list || []
+    totalValue.value = data.totalExpenditure ?? 0
+    expenseSymbol.value = data.symbol || '$'
+  } catch (error) {
+    console.error('获取支出构成数据失败:', error)
+    data1.value = []
+    totalValue.value = 0
+    expenseSymbol.value = '$'
+  } finally {
+    expenseLoading.value = false
+  }
+}
+// 合并监听 sku 和 selectedSite，统一处理数据获取
+// 使用 immediate: false，避免在组件创建时立即触发
+// 初始化时在 onBeforeMount 中手动调用
+watch(
+  () => [props.sku, props.selectedSite],
+  () => {
+    if (props.sku) {
+      fetchData()
+      fetchPackagingInformation()
+      fetchExpenseComposition()
+    }
+  },
+  { immediate: false }
+)
 onBeforeMount(() => {
-  fetchPackagingInformation()
   fetchCostAccountingChannelData()
-  fetchSalesSiteList()
+  // fetchSalesSiteList()
   percentageAgeData = data2.value.map((item) => ({
     ...item,
     percentage: ((item.value / totalAgeValue) * 100).toFixed(2),
   }))
-  fetchData()
+  // 初始化时，如果 props 有值，手动触发一次数据获取
+  // 避免 watch 的 immediate 在组件创建时立即触发
+  if (props.sku) {
+    fetchData()
+    fetchPackagingInformation()
+    fetchExpenseComposition()
+  }
 })
 
 onMounted(() => {
-  if (chartContainer1.value) {
-    chartInstance1 = echarts.init(chartContainer1.value)
-    chartObserver1 = new ResizeObserver(() => {
-      if (chartInstance1) {
-        chartInstance1.resize()
-      }
-    })
-    chartObserver1.observe(chartContainer1.value)
-    initChart1()
-  }
+  // chartContainer1 相关逻辑已移至 VabPieChartTable 组件
   if (chartContainer2.value) {
     chartInstance2 = echarts.init(chartContainer2.value)
     chartObserver2 = new ResizeObserver(() => {
