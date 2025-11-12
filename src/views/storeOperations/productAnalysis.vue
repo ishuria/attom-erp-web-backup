@@ -195,74 +195,16 @@
             <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%" type="textarea" />
           </div>
           <!-- 操作日志/事件清单 -->
-          <div style="display: flex; flex: 1; flex-direction: column; height: 100%">
-            <vab-query-form>
-              <vab-query-form-left-panel>
-                <el-form inline>
-                  <el-form-item>
-                    <el-text>操作日志/事件清单</el-text>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary">新增</el-button>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel>
-                <el-form inline>
-                  <el-form-item label="筛选展示">
-                    <el-select>
-                      <el-option v-for="item in filterShowOption" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-right-panel>
-            </vab-query-form>
-            <el-table border :data="fakeData" :header-cell-style="{ textAlign: 'center' }" stripe style="flex: 1">
-              <el-table-column align="center" label="日期" min-width="115" prop="date" />
-              <el-table-column label="类型" min-width="130" prop="type" />
-              <el-table-column label="内容" min-width="170" prop="content">
-                <template #default="{ row }">
-                  <el-link type="primary" @click="handleShowChange(row)">{{ row.content }}</el-link>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
+          <operation-log-card
+            :change-detail-config="changeDetailConfig"
+            :data="fakeData"
+            :filter-options="filterShowOption"
+            @add="handleAdd"
+            @content-click="handleShowChange"
+          />
         </div>
       </el-col>
     </el-row>
-    <vab-dialog v-model="titleChangeVisible" title="标题变化详情">
-      <el-table border :data="fakeChangeData">
-        <el-table-column label="变化类型">
-          <template #default="{ row }">
-            {{ '标题' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="变化前" />
-        <el-table-column label="变化后" />
-      </el-table>
-    </vab-dialog>
-    <vab-dialog v-model="descChangeVisible" title="描述变化详情">
-      <el-table border :data="fakeChangeData">
-        <el-table-column label="变化类型">
-          <template #default="{ row }">
-            {{ '描述' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="变化前" />
-        <el-table-column label="变化后" />
-      </el-table>
-    </vab-dialog>
-    <vab-dialog v-model="imgChangeVisible" title="图片变化详情">
-      <el-table border :data="fakeChangeData">
-        <el-table-column label="变化类型">
-          <template #default="{ row }">
-            {{ '图片' }}
-          </template>
-        </el-table-column>
-        <el-table-column label="变化前" />
-        <el-table-column label="变化后" />
-      </el-table>
-    </vab-dialog>
   </div>
 </template>
 
@@ -357,9 +299,6 @@ const dateShortcuts = [
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const activeName = ref<number>(Number(route.query.activeName) || 0)
-const titleChangeVisible = ref<boolean>(false)
-const descChangeVisible = ref<boolean>(false)
-const imgChangeVisible = ref<boolean>(false)
 // 评分
 const rate = ref<number>(4.7)
 const returnRadio = ref<number>(0)
@@ -384,25 +323,33 @@ const fakeData = [
   },
 ]
 const fakeChangeData = [{}]
+// 变化详情配置
+const changeDetailConfig = computed(() => ({
+  标题修改: {
+    title: '标题变化详情',
+    type: '标题',
+    data: fakeChangeData,
+  },
+  描述修改: {
+    title: '描述变化详情',
+    type: '描述',
+    data: fakeChangeData,
+  },
+  图片修改: {
+    title: '图片变化详情',
+    type: '图片',
+    data: fakeChangeData,
+  },
+}))
+// 处理新增
+const handleAdd = () => {
+  // TODO: 实现新增逻辑
+  console.log('新增操作日志')
+}
+// 处理内容点击（保留用于其他逻辑，组件内部已处理对话框显示）
 const handleShowChange = (row: any) => {
-  switch (row.content) {
-    case '标题修改': {
-      titleChangeVisible.value = true
-
-      break
-    }
-    case '描述修改': {
-      descChangeVisible.value = true
-
-      break
-    }
-    case '图片修改': {
-      imgChangeVisible.value = true
-
-      break
-    }
-    // No default
-  }
+  // 组件内部已处理对话框显示，这里可以添加其他逻辑
+  console.log('点击内容:', row)
 }
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))

@@ -998,36 +998,106 @@ const initChart = () => {
   option.value = {
     tooltip: {
       trigger: 'axis',
+      backgroundColor: 'rgba(238, 246, 253, 0.7)',
+      borderWidth: 0,
+      confine: true,
       formatter: (params: any[]) => {
         // tooltip标题
-        let titleHtmlStr = `<div style="font-size: var(--el-font-size-base);color: #666;line-height: 1;">${params[0].name}</div>`
+        let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
 
-        // tooltip详情内容
-        const itemHtmlStrArr = params
-          .filter((item) => {
-            // 过滤掉值为 null 或 undefined 的项
-            return item.value !== null && item.value !== undefined && item.value !== ''
-          })
-          .map((item) => {
-            const groupName = getGroup(item.seriesName)
-            let value = item.value
-            if (groupName === 'price1' || groupName === 'price2') {
-              value = `${currencySymbol.value}${value}`
-            } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
-              value = `${value}%`
-            }
-            return `<div style="display: flex;align-items:center;">
-            ${item.marker}
-            <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">${item.seriesName}</div>
-            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${value}</span>
-          </div>`
-          })
-        const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
-          ${itemHtmlStrArr.join('')}
-        </div>`
-        // 最终html字符串
-        const resHtmlStr = titleHtmlStr + contentHtmlStr
-        return resHtmlStr
+        // 需要聚合的销量系列名称
+        const salesGroupNames = ['自然销量', '广告销量']
+        let salesTotal = 0
+        let salesGroupItems: any[] = []
+        let otherItems: any[] = []
+
+        // 分离销量组和其他项
+        params.forEach((item) => {
+          // 过滤掉值为 null 或 undefined 的项
+          if (item.value === null || item.value === undefined || item.value === '') {
+            return
+          }
+          if (salesGroupNames.includes(item.seriesName)) {
+            salesTotal += Number(item.value || 0)
+            salesGroupItems.push(item)
+          } else {
+            otherItems.push(item)
+          }
+        })
+
+        // 销量组 HTML（类似 PerformanceHistory 的样式）
+        let salesGroupHtml = ''
+        if (salesGroupItems.length > 0) {
+          salesGroupHtml = `
+            <div style="background: #fff; padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); margin-bottom: 5px;">
+              <div style="display: flex; justify-content: space-between; color: #333; font-size: 14px">
+                <div style="display: flex; align-items: center;">
+                  <span style="
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background-color: #409EFF;
+                    margin-right: 9px;
+                    color: #333;
+                  "></span>
+                  <span>销量(订单)</span>
+                </div>
+                <span style="font-weight: bold; color: #333;">${salesTotal.toFixed(0)}</span>
+              </div>
+              <div style="margin-top: 2px; padding-left: 10px;">
+                ${salesGroupItems
+                  .map(
+                    (item) => `
+                  <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 1px;">
+                    <div style="display: flex; align-items: center;">${item.marker}<span style="margin-left: 5px;">${item.seriesName}</span></div>
+                    <span>${item.value}</span>
+                  </div>
+                `
+                  )
+                  .join('')}
+              </div>
+            </div>
+          `
+        }
+
+        // 其他项的 HTML
+        const otherHtmlArr = otherItems.map((item) => {
+          const groupName = getGroup(item.seriesName)
+          let value = item.value
+          if (groupName === 'price1' || groupName === 'price2') {
+            value = `${currencySymbol.value}${value}`
+          } else if (groupName === 'percent1' || groupName === 'percent2' || groupName === 'percent3') {
+            value = `${value}%`
+          }
+          return `
+            <div style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              background: #fff;
+              padding: 3px 8px;
+              margin-bottom: 5px;
+              border-radius: 8px;
+              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+              font-size: 14px;
+            ">
+              <div style="display: flex; align-items: center;">
+                ${item.marker}
+                <span style="color: #333; margin-left: 6px;">${item.seriesName}</span>
+              </div>
+              <span style="font-weight: bold; color: #333;">${value}</span>
+            </div>
+          `
+        })
+
+        return `
+          <div style="padding: 0px; border-radius: 20px; width: 160px;">
+            ${titleHtmlStr}
+            ${otherHtmlArr.join('')}
+            ${salesGroupHtml}
+          </div>
+        `
       },
     },
     grid: {

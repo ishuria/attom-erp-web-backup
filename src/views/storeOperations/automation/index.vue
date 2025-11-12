@@ -132,7 +132,7 @@
             </template>
           </el-table-column>
           <el-table-column label="开启广告（满足全部条件）">
-            <el-table-column label="剩余可售天数" prop="openDays" width="120">
+            <el-table-column label="剩余可售天数≥" min-width="125" prop="openDays">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -145,7 +145,7 @@
                 <span>{{ row.openDays }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="可售库存数" prop="openStock" width="110">
+            <el-table-column label="可售库存数≥" min-width="110" prop="openStock">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -158,7 +158,7 @@
                 <span>{{ row.openStock }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="断货天数" prop="openOutStockDays" width="95">
+            <el-table-column label="断货天数≤" min-width="95" prop="openOutStockDays">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -171,11 +171,11 @@
                 <span>{{ row.openOutStockDays }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="广告ACOS" prop="openAdvAcos" width="120">
+            <el-table-column label="广告ACOS≤" min-width="120" prop="openAdvAcos">
               <template #header>
                 <el-tooltip content="" effect="dark" placement="top">
                   <div class="questionIcon">
-                    广告ACOS
+                    广告ACOS≤
                     <el-icon><info-filled /></el-icon>
                   </div>
                   <template #content>
@@ -196,7 +196,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Rating" prop="openRating" width="90">
+            <el-table-column label="Rating≥" min-width="90" prop="openRating">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -210,7 +210,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="毛利率大于" prop="openGrossProfit" width="110">
+            <el-table-column label="毛利率≥" min-width="110" prop="openGrossProfit">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -225,7 +225,7 @@
             </el-table-column>
           </el-table-column>
           <el-table-column label="关闭广告（满足任一条件）">
-            <el-table-column label="断货天数" prop="closeOutStockDays" width="95">
+            <el-table-column label="断货天数≥" min-width="95" prop="closeOutStockDays">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -238,7 +238,7 @@
                 <span>{{ row.closeOutStockDays }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="剩余可售天数" prop="closeDays" width="120">
+            <el-table-column label="剩余可售天数≤" min-width="125" prop="closeDays">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -251,7 +251,7 @@
                 <span>{{ row.closeDays }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="可售库存数" prop="closeStock" width="110">
+            <el-table-column label="可售库存数≤" min-width="110" prop="closeStock">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -265,7 +265,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="Rating" prop="closeRating" width="90">
+            <el-table-column label="Rating≤" min-width="90" prop="closeRating">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
@@ -279,7 +279,7 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="毛利率小于" prop="closeGrossProfit" width="110">
+            <el-table-column label="毛利率≤" min-width="110" prop="closeGrossProfit">
               <template #default="{ row, $index }">
                 <div class="none">
                   <el-input
