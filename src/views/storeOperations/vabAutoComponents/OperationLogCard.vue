@@ -21,15 +21,31 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border :data="filteredData" :header-cell-style="{ textAlign: 'center' }" stripe style="flex: 1">
+    <el-table
+      v-loading="loading"
+      border
+      :data="filteredData"
+      :header-cell-style="{ textAlign: 'center' }"
+      max-height="700"
+      stripe
+      style="flex: 1"
+    >
       <el-table-column align="center" label="日期" min-width="115" prop="date" />
       <el-table-column label="类型" min-width="130" prop="type" />
       <el-table-column label="内容" min-width="170" prop="content">
         <template #default="{ row }">
           <el-link type="primary" @click="handleContentClick(row)">{{ row.content }}</el-link>
+          <!-- {{ row.content }} -->
         </template>
       </el-table-column>
     </el-table>
+    <vab-pagination
+      :current-page="pageNo"
+      :page-size="pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
     <!-- 变化详情对话框 -->
     <vab-dialog v-model="changeDetailVisible" :title="changeDetailTitle">
       <el-table border :data="changeDetailData">
@@ -50,6 +66,9 @@
 </template>
 
 <script lang="ts" setup>
+import { getOperationLog } from '/@/api/devlocal/productAnalysis'
+import type { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
+
 defineOptions({
   name: 'OperationLogCard',
 })
@@ -73,7 +92,12 @@ interface ChangeDetailItem {
 interface Props {
   title?: string
   addButtonText?: string
-  data: LogItem[]
+  // 接口参数
+  asin?: string
+  siteId?: number
+  type?: number
+  // 如果提供了 data，则使用 data，否则从接口获取
+  data?: LogItem[]
   filterOptions?: FilterOption[]
   // 变化详情配置
   changeDetailConfig?: {
@@ -92,7 +116,10 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   title: '操作日志/事件清单',
   addButtonText: '新增',
-  data: () => [],
+  asin: '',
+  siteId: undefined,
+  type: undefined,
+  data: undefined,
   filterOptions: () => [
     { label: '全部', value: -1 },
     { label: '手动输入', value: 0 },
@@ -117,29 +144,120 @@ const afterProp = ref<string>('')
 const beforeFormatter = ref<((row: any) => string) | undefined>(undefined)
 const afterFormatter = ref<((row: any) => string) | undefined>(undefined)
 
-// 筛选后的数据
-const filteredData = computed(() => {
-  if (selectedFilter.value === -1) {
-    return props.data
+// 操作日志数据
+const logData = ref<LogItem[]>([])
+const loading = ref<boolean>(false)
+// 分页相关
+const pageNo = ref<number>(1)
+const pageSize = ref<number>(10)
+const total = ref<number>(0)
+
+// 类型映射：数字 -> 字符串
+const typeMap: Record<number, string> = {
+  0: '手动输入',
+  1: '系统抓取',
+  2: 'SP广告',
+}
+
+// 获取操作日志数据
+const fetchOperationLog = async () => {
+  // 如果提供了 data prop，则使用 data，不从接口获取
+  if (props.data !== undefined) {
+    logData.value = props.data
+    total.value = props.data.length
+    return
   }
-  // 根据类型筛选，假设 type 字段对应筛选值
-  // 这里需要根据实际数据结构调整
-  return props.data.filter((item) => {
+
+  // 如果没有提供必要的参数，不请求
+  if (!props.asin || props.siteId === undefined || props.type === undefined) {
+    logData.value = []
+    total.value = 0
+    return
+  }
+
+  loading.value = true
+  try {
+    const { data } = await getOperationLog({
+      asin: props.asin,
+      siteId: props.siteId,
+      type: props.type,
+      pageNo: pageNo.value,
+      pageSize: pageSize.value,
+    })
+    // 将接口返回的数据映射到组件需要的格式
+    logData.value = data.list.map((item: IGetOperationLog) => ({
+      date: item.date,
+      type: typeMap[item.type] || '未知',
+      content: item.content,
+    }))
+    total.value = data.total
+  } catch (error) {
+    console.error('获取操作日志数据失败:', error)
+    logData.value = []
+    total.value = 0
+  } finally {
+    loading.value = false
+  }
+}
+
+// 筛选后的数据（如果使用接口数据，筛选应该在接口层面处理，这里保留前端筛选逻辑用于 data prop）
+const filteredData = computed(() => {
+  const dataSource = props.data !== undefined ? props.data : logData.value
+  // 如果使用接口数据，且筛选不是"全部"，需要重新请求接口
+  if (props.data === undefined && selectedFilter.value !== -1) {
+    // 筛选逻辑在接口层面处理，这里直接返回数据
+    return dataSource
+  }
+  if (selectedFilter.value === -1) {
+    return dataSource
+  }
+  // 根据类型筛选（仅用于 data prop 的情况）
+  return dataSource.filter((item) => {
     // 如果 type 是字符串，需要映射到数值
-    const typeMap: Record<string, number> = {
+    const typeMapReverse: Record<string, number> = {
       手动输入: 0,
       系统抓取: 1,
+      SP广告: 2,
       广告: 2,
     }
-    const itemTypeValue = typeMap[item.type]
+    const itemTypeValue = typeMapReverse[item.type]
     return itemTypeValue !== undefined && itemTypeValue === selectedFilter.value
   })
 })
 
 // 处理筛选变化
 const handleFilterChange = () => {
-  // 筛选逻辑已在 computed 中处理
+  // 如果使用接口数据，筛选变化时需要重新请求（重置到第一页）
+  if (props.data === undefined) {
+    pageNo.value = 1
+    fetchOperationLog()
+  }
+  // 如果使用 data prop，筛选逻辑已在 computed 中处理
 }
+
+// 处理分页变化
+const handleCurrentChange = (page: number) => {
+  pageNo.value = page
+  fetchOperationLog()
+}
+
+const handleSizeChange = (size: number) => {
+  pageSize.value = size
+  pageNo.value = 1 // 切换每页条数时重置到第一页
+  fetchOperationLog()
+}
+
+// 监听 props 变化，重新获取数据（重置到第一页）
+watch(
+  () => [props.asin, props.siteId, props.type],
+  () => {
+    if (props.data === undefined) {
+      pageNo.value = 1
+      fetchOperationLog()
+    }
+  },
+  { immediate: true }
+)
 
 // 处理新增
 const handleAdd = () => {

@@ -23,7 +23,7 @@ export const filterShowOption = [
     value: 1,
   },
   {
-    label: '广告',
+    label: 'SP广告',
     value: 2,
   },
 ]

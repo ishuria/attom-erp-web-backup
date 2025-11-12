@@ -381,3 +381,31 @@ export interface IGetStorageAge {
   name: string
   value: number
 }
+
+export interface IGetSkuSiteDailyCostRes {
+  data: IGetSkuSiteDailyCost[]
+}
+export interface IGetSkuSiteDailyCost {
+  date: string
+  /** SKU实际价格 */
+  procurementCost: number
+  /** 打包成本 */
+  packingCost: number
+  /** FBA配送费 */
+  amazonFba: number
+  /** 试算毛利 */
+  grossProfit: number
+  /** 头程运费 */
+  firstMile: number
+}
+export interface IGetOperationLogRes {
+  data: {
+    list: IGetOperationLog[]
+    total: number
+  }
+}
+export interface IGetOperationLog {
+  date: string
+  type: number
+  content: string
+}

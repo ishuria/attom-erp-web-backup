@@ -196,9 +196,11 @@
           </div>
           <!-- 操作日志/事件清单 -->
           <operation-log-card
+            :asin="asin"
             :change-detail-config="changeDetailConfig"
-            :data="fakeData"
             :filter-options="filterShowOption"
+            :site-id="selectedSite"
+            :type="-1"
             @add="handleAdd"
             @content-click="handleShowChange"
           />
@@ -305,23 +307,8 @@ const returnRadio = ref<number>(0)
 // 初始化图片高度
 const imageHeight = ref<number>(0)
 const queryForm3 = reactive<any>({})
-const fakeData = [
-  {
-    date: '2024-12-31',
-    type: '系统抓取',
-    content: '标题修改',
-  },
-  {
-    date: '2024-12-31',
-    type: '系统抓取',
-    content: '描述修改',
-  },
-  {
-    date: '2024-12-31',
-    type: '系统抓取',
-    content: '图片修改',
-  },
-]
+// ASIN（从 route.query 获取，如果没有则使用默认值）
+const asin = ref<string>((route.query.asin as string) || 'B08N5M7S6K')
 const fakeChangeData = [{}]
 // 变化详情配置
 const changeDetailConfig = computed(() => ({
@@ -468,6 +455,15 @@ watch(
       selectedSite.value = Number(newSite)
     } else {
       selectedSite.value = undefined
+    }
+  }
+)
+// 监听路由中的 ASIN 参数变化
+watch(
+  () => route.query.asin,
+  (newAsin) => {
+    if (newAsin) {
+      asin.value = newAsin as string
     }
   }
 )

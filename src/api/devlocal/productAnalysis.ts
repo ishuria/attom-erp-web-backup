@@ -6,6 +6,8 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
+  IGetOperationLogRes,
+  IGetSkuSiteDailyCostRes,
   IGetStorageAgeRes,
   IGetTrendOverviewChartReq,
   IGetTrendOverviewChartRes,
@@ -137,5 +139,40 @@ export function getStorageAge(params: { sku: string; siteId: number }): Promise<
     url: `${BASE_API}/product/analysis/storage/age`,
     method: 'get',
     params,
+  })
+}
+/**
+ * @description 运营-产品分析-SKU每日成本
+ * @param params { sku: string; siteId: number; startDate: string; endDate: string }
+ * @returns IGetSkuSiteDailyCostRes
+ */
+export function getSkuSiteDailyCost(params: {
+  sku: string
+  siteId: number
+  startDate: string
+  endDate: string
+}): Promise<IGetSkuSiteDailyCostRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/sku/daily_cost`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * @description 运营-产品分析-操作日志
+ * @param params { asin: string; siteId: number; type: number }
+ * @returns IGetOperationLogRes
+ */
+export function getOperationLog(data: {
+  asin: string
+  siteId: number
+  type: number
+  pageNo: number
+  pageSize: number
+}): Promise<IGetOperationLogRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/operation/log`,
+    method: 'post',
+    data,
   })
 }

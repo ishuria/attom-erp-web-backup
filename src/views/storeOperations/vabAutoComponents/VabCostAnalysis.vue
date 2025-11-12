@@ -147,27 +147,13 @@
             </el-aside>
           </el-container>
         </vab-card>
-        <vab-card class="card4" style="position: relative; height: 240px">
-          <div ref="chartContainer3" style="width: 100%; height: 240px"></div>
-          <div v-if="!dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px">
-            <el-select v-model="card4Select" placeholder="请选择日期" size="default" style="max-width: 5em" @change="handleCard4Select">
-              <el-option v-for="item in card4Option" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </div>
-          <div v-if="dateRangeSelectVisible" style="position: absolute; top: 5px; right: 5px; display: flex; align-items: center">
-            <el-date-picker
-              v-model="card4DateRange"
-              :clearable="false"
-              :editable="false"
-              size="default"
-              style="max-width: 13em"
-              type="daterange"
-              value-format="YYYY-MM-DD"
-              @change="handleCard4DateSelect"
-            />
-            <el-icon class="custom-cancel" color="#999" @click="handleClickCancel"><circle-close /></el-icon>
-          </div>
-        </vab-card>
+        <sku-site-daily-cost-chart-card
+          v-model:date-range="card4DateRange"
+          v-loading="chart3Loading"
+          card-class="card4"
+          :chart-data="data3"
+          @date-range-change="handleCard4DateSelect"
+        />
       </el-col>
     </el-row>
     <vab-query-form>
@@ -420,12 +406,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CircleClose } from '@element-plus/icons-vue'
-import * as echarts from 'echarts'
+import { ArrowDown } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { flexColumnWidth } from '~/src/utils/tableColum'
-import { card4Option, colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
+import { colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
 import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import {
@@ -435,6 +420,7 @@ import {
   getExpenseComposition,
   getOperationAmazonCostList,
   getOperationAmazonPackagingInformation,
+  getSkuSiteDailyCost,
   getStorageAge,
   reverseCalcOperationAmazonCost,
   updateOperationAmazonCost,
@@ -443,6 +429,7 @@ import type {
   IGetOperationAmazonCostList,
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonPackagingInformationRes,
+  IGetSkuSiteDailyCost,
 } from '/@/type/storeOperation/productAnalysisType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
@@ -462,10 +449,6 @@ const queryForm = reactive<IGetOperationAmazonCostListReq>({
 })
 
 const isOverflow = ref(false)
-const chartContainer3 = ref<HTMLElement | null>(null)
-let chartInstance3: echarts.ECharts | null = null
-let chartObserver3: ResizeObserver
-const option3 = ref<any>({})
 
 // 支出构成数据
 const data1 = ref<Array<{ name: string; value: number }>>([])
@@ -474,19 +457,11 @@ const expenseSymbol = ref<string>('$')
 // 库龄数据
 const data2 = ref<Array<{ name: string; value: number }>>([])
 const storageAgeLoading = ref<boolean>(false)
-const data3 = ref<any[]>([
-  { date: '2024-12-20', sku: 100, fba: 90, cost: 80, freight: 70 },
-  { date: '2024-12-21', sku: 120, fba: 95, cost: 85, freight: 75 },
-  { date: '2024-12-22', sku: 110, fba: 92, cost: 82, freight: 72 },
-  { date: '2024-12-23', sku: 130, fba: 98, cost: 88, freight: 78 },
-  { date: '2024-12-24', sku: 105, fba: 87, cost: 79, freight: 68 },
-  { date: '2024-12-25', sku: 115, fba: 93, cost: 83, freight: 73 },
-])
+// 图表数据格式（直接使用后端字段）
+const data3 = ref<IGetSkuSiteDailyCost[]>([])
+const chart3Loading = ref<boolean>(false)
 
 const imageHeight = ref<number>(0)
-const card4Select = ref<number>(0)
-// 日期选择框是否可见
-const dateRangeSelectVisible = ref<boolean>(false)
 const card4DateRange = ref<[string, string]>(['', ''])
 // 计算总和
 const totalValue = ref<number>(0)
@@ -590,124 +565,34 @@ const handleReverseCalc = async (id: number) => {
     fetchData()
   }
 }
-const handleCard4Select = () => {
-  if (card4Select.value === 4) {
-    dateRangeSelectVisible.value = true
-    option3.value.legend.data = ['SKU实际价格', 'FBA配送费', '', '打包成本', '头程运费']
-    option3.value.grid.top = 60
-    updateChart3()
+// 获取SKU每日成本数据
+const fetchSkuSiteDailyCost = async () => {
+  if (!props.sku || !card4DateRange.value[0] || !card4DateRange.value[1]) {
+    data3.value = []
+    return
+  }
+  const siteId = props.selectedSite !== undefined ? props.selectedSite : 0
+  chart3Loading.value = true
+  try {
+    const { data } = await getSkuSiteDailyCost({
+      sku: props.sku,
+      siteId,
+      startDate: card4DateRange.value[0],
+      endDate: card4DateRange.value[1],
+    })
+    // 直接使用后端返回的数据
+    data3.value = data
+  } catch (error) {
+    console.error('获取SKU每日成本数据失败:', error)
+    data3.value = []
+  } finally {
+    chart3Loading.value = false
   }
 }
-const handleCard4DateSelect = () => {}
 
-// 监听日期变化，确保数据及时更新
-watch(
-  () => card4DateRange.value,
-  () => {
-    handleCard4DateSelect()
-  },
-  { deep: true }
-)
-const handleClickCancel = () => {
-  card4Select.value = 0
-  dateRangeSelectVisible.value = false
-  option3.value.legend.data = ['SKU实际价格', 'FBA配送费', '打包成本', '头程运费']
-  option3.value.grid.top = 40
-  updateChart3()
-}
-// 获取 CSS 变量的值
-const fontSizeBase = getComputedStyle(document.documentElement).getPropertyValue('--el-font-size-base').trim()
-const initChart3 = () => {
-  option3.value = {
-    legend: {
-      icon: 'circle',
-      left: 0,
-      top: 5,
-      textStyle: {
-        fontSize: parseInt(fontSizeBase) - 1,
-      },
-      itemWidth: 10,
-      itemHeight: 10,
-      itemGap: 5,
-      data: ['SKU实际价格', 'FBA配送费', '打包成本', '头程运费'],
-    },
-    tooltip: {
-      trigger: 'axis',
-      confine: true,
-    },
-    grid: {
-      top: 50,
-      bottom: 5,
-      left: 10,
-      right: 10,
-      containLabel: true,
-    },
-    xAxis: {
-      type: 'category',
-      data: data3.value.map((item) => item.date),
-      axisTick: {
-        alignWithLabel: true,
-      },
-      axisLabel: {
-        fontSize: parseInt(fontSizeBase) - 1,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      min: 'dataMin', // 自动以数据中的最小值为起点
-      boundaryGap: [0, 0.1],
-      axisLabel: {
-        fontSize: parseInt(fontSizeBase) - 1,
-      },
-    },
-    series: [
-      {
-        name: 'SKU实际价格',
-        type: 'line',
-        data: data3.value.map((item) => item.sku),
-        itemStyle: {
-          color: storageAgeColorList[4],
-        },
-        smooth: true,
-        symbol: 'none',
-        // symbolSize: 6,
-      },
-      {
-        name: 'FBA配送费',
-        type: 'line',
-        data: data3.value.map((item) => item.fba),
-        itemStyle: {
-          color: storageAgeColorList[3],
-        },
-        smooth: true,
-        symbol: 'none',
-      },
-      {
-        name: '打包成本',
-        type: 'line',
-        data: data3.value.map((item) => item.cost),
-        itemStyle: {
-          color: storageAgeColorList[2],
-        },
-        smooth: true,
-        symbol: 'none',
-      },
-      {
-        name: '头程运费',
-        type: 'line',
-        data: data3.value.map((item) => item.freight),
-        itemStyle: {
-          color: storageAgeColorList[1],
-        },
-        smooth: true,
-        symbol: 'none',
-      },
-    ],
-  }
-  chartInstance3?.setOption(option3.value)
-}
-const updateChart3 = () => {
-  chartInstance3?.setOption(option3.value, true)
+const handleCard4DateSelect = () => {
+  // 获取数据
+  fetchSkuSiteDailyCost()
 }
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
@@ -903,6 +788,10 @@ watch(
       fetchPackagingInformation()
       fetchExpenseComposition()
       fetchStorageAge()
+      // 如果日期范围已选择，重新获取图表数据
+      if (card4DateRange.value[0] && card4DateRange.value[1]) {
+        fetchSkuSiteDailyCost()
+      }
     }
   },
   { immediate: false }
@@ -921,16 +810,6 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  if (chartContainer3.value) {
-    chartInstance3 = echarts.init(chartContainer3.value)
-    chartObserver3 = new ResizeObserver(() => {
-      if (chartInstance3) {
-        chartInstance3.resize()
-      }
-    })
-    chartObserver3.observe(chartContainer3.value)
-    initChart3()
-  }
   nextTick(() => {
     setImageHeight()
   })
