@@ -2,6 +2,7 @@
   <div>
     <vab-dialog v-model="visible" width="85%">
       <el-table :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="60vh" stripe>
+        <el-table-column label="更新时间" min-width="100" prop="updateTime" />
         <el-table-column label="操作对象" min-width="110" prop="operationGroupName" />
         <el-table-column label="操作类型" min-width="100" prop="operationTypeName">
           <template #default="{ row }">
@@ -48,7 +49,7 @@
             <template #default="{ row }">{{ row.closeGrossProfit }}%</template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="更新时间" min-width="100" prop="updateTime" />
+
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>
