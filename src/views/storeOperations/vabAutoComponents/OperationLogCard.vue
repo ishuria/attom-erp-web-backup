@@ -97,7 +97,7 @@ const props = withDefaults(defineProps<Props>(), {
     { label: '全部', value: -1 },
     { label: '手动输入', value: 0 },
     { label: '系统抓取', value: 1 },
-    { label: '广告', value: 2 },
+    { label: 'SP广告', value: 2 },
   ],
   changeDetailConfig: () => ({}),
 })

@@ -62,6 +62,13 @@
           </vab-query-form-left-panel>
           <vab-query-form-right-panel :span="20">
             <el-form inline :model="productQueryForm" @submit.prevent>
+              <el-form-item label="">
+                <el-select v-model="productQueryForm.type" placeholder="请选择类型" @change="queryProductData">
+                  <el-option label="全部类型" :value="-1" />
+                  <el-option label="零件" :value="0" />
+                  <el-option label="耗材" :value="1" />
+                </el-select>
+              </el-form-item>
               <el-form-item>
                 <el-input
                   v-model="productQueryForm.keyWord"
@@ -91,6 +98,13 @@
           </el-table-column>
           <el-table-column label="零件ID" prop="id" />
           <el-table-column label="零件名" :min-width="flexColumnWidth(productList, '零件名', 'componentName')" prop="componentName" />
+          <el-table-column align="center" label="类型" prop="type">
+            <template #default="{ row }">
+              <el-tag :type="row.type === 0 ? 'success' : 'warning'">
+                {{ row.type === 0 ? '零件' : '耗材' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="零件采购总额(￥)" min-width="120" prop="componentPurchaseAmount" />
           <el-table-column
             label="供应商"
@@ -225,6 +239,7 @@ const productQueryForm = reactive<IGetPurchaseStatisticsSupplierListReq>({
   pageSize: 20,
   startDate: '',
   endDate: '',
+  type: -1,
 })
 
 const list = ref<IGetPurchaseStatisticsSupplierItem[]>([])

@@ -4,6 +4,7 @@ export interface IGetPurchaseStatisticsSupplierListReq {
   pageSize: number
   startDate: string
   endDate: string
+  type?: number
 }
 export interface IGetPurchaseStatisticsProductDetailListReq {
   keyWord: string
