@@ -373,3 +373,11 @@ export interface IGetExpenseComposition {
   name: string
   value: number
 }
+
+export interface IGetStorageAgeRes {
+  data: IGetStorageAge[]
+}
+export interface IGetStorageAge {
+  name: string
+  value: number
+}

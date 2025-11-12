@@ -6,6 +6,7 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
+  IGetStorageAgeRes,
   IGetTrendOverviewChartReq,
   IGetTrendOverviewChartRes,
   IGetTrendOverviewTableReq,
@@ -121,6 +122,19 @@ export function getTrendOverviewChart(data: IGetTrendOverviewChartReq): Promise<
 export function getExpenseComposition(params: { sku: string; siteId: number }): Promise<IGetExpenseCompositionRes> {
   return request({
     url: `${BASE_API}/product/analysis/expense/breakdown`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description 运营-产品分析-库龄
+ * @param params { sku: string; siteId: number }
+ * @returns IGetStorageAgeRes
+ */
+export function getStorageAge(params: { sku: string; siteId: number }): Promise<IGetStorageAgeRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/storage/age`,
     method: 'get',
     params,
   })

@@ -24,6 +24,7 @@
       </el-col>
       <el-col :span="8">
         <storage-age-card
+          v-loading="storageAgeLoading"
           :additional-columns="[{ label: '预估下月费用', minWidth: 120 }]"
           card-class="card2"
           :chart-data="data2"
@@ -434,6 +435,7 @@ import {
   getExpenseComposition,
   getOperationAmazonCostList,
   getOperationAmazonPackagingInformation,
+  getStorageAge,
   reverseCalcOperationAmazonCost,
   updateOperationAmazonCost,
 } from '/@/api/devlocal/productAnalysis'
@@ -469,13 +471,9 @@ const option3 = ref<any>({})
 const data1 = ref<Array<{ name: string; value: number }>>([])
 const expenseLoading = ref<boolean>(false)
 const expenseSymbol = ref<string>('$')
-const data2 = ref<any[]>([
-  { name: '0-90', value: 11800 },
-  { name: '91-180', value: 2644 },
-  { name: '181-270+', value: 1175 },
-  { name: '271-365', value: 152 },
-  { name: '365+', value: 293 },
-])
+// 库龄数据
+const data2 = ref<Array<{ name: string; value: number }>>([])
+const storageAgeLoading = ref<boolean>(false)
 const data3 = ref<any[]>([
   { date: '2024-12-20', sku: 100, fba: 90, cost: 80, freight: 70 },
   { date: '2024-12-21', sku: 120, fba: 95, cost: 85, freight: 75 },
@@ -875,6 +873,25 @@ const fetchExpenseComposition = async () => {
     expenseLoading.value = false
   }
 }
+// 获取库龄数据
+const fetchStorageAge = async () => {
+  if (!props.sku) {
+    data2.value = []
+    return
+  }
+  const siteId = props.selectedSite !== undefined ? props.selectedSite : 0
+  storageAgeLoading.value = true
+  try {
+    const { data } = await getStorageAge({ sku: props.sku, siteId })
+    // 后端返回的数据格式是 { name, value }，直接使用
+    data2.value = data || []
+  } catch (error) {
+    console.error('获取库龄数据失败:', error)
+    data2.value = []
+  } finally {
+    storageAgeLoading.value = false
+  }
+}
 // 合并监听 sku 和 selectedSite，统一处理数据获取
 // 使用 immediate: false，避免在组件创建时立即触发
 // 初始化时在 onBeforeMount 中手动调用
@@ -885,6 +902,7 @@ watch(
       fetchData()
       fetchPackagingInformation()
       fetchExpenseComposition()
+      fetchStorageAge()
     }
   },
   { immediate: false }
@@ -898,6 +916,7 @@ onBeforeMount(() => {
     fetchData()
     fetchPackagingInformation()
     fetchExpenseComposition()
+    fetchStorageAge()
   }
 })
 
