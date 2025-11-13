@@ -200,3 +200,17 @@ export const getLastMonth = (): string => {
   const month = String(lastMonth.getMonth() + 1).padStart(2, '0')
   return `${year}-${month}`
 }
+
+// 计算前7天的日期范围（今天往前推6天，共7天）
+export function getLast7DaysStringTime(): [string, string] {
+  const end = new Date()
+  const start = new Date()
+  start.setDate(start.getDate() - 6)
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  return [formatDate(start), formatDate(end)]
+}

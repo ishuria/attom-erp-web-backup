@@ -67,6 +67,13 @@
           <el-input-number v-model="filterForm.outOfStockMax" :min="0" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
+      <el-form-item label="预计下月仓储费">
+        <div class="flex">
+          <el-input-number v-model="filterForm.estimateNextMonthStorageFeeMin" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.estimateNextMonthStorageFeeMax" placeholder="最大值" style="flex: 1" />
+        </div>
+      </el-form-item>
       <el-form-item label="运营分类筛选">
         <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类" />
       </el-form-item>
@@ -134,6 +141,8 @@ watch(
         'monthSalesVolumeMax',
         'fbaMin',
         'fbaMax',
+        'estimateNextMonthStorageFeeMin',
+        'estimateNextMonthStorageFeeMax',
       ]
 
       numberFields.forEach((field) => {
@@ -175,6 +184,8 @@ const filterForm = reactive<any>({
   monthSalesVolumeMax: null,
   fbaMin: null,
   fbaMax: null,
+  estimateNextMonthStorageFeeMin: null,
+  estimateNextMonthStorageFeeMax: null,
   operationTypeId: null,
   advStatus: null,
   warehouseAge: [],
@@ -207,6 +218,8 @@ const clearFilterForm = () => {
     monthSalesVolumeMax: null,
     fbaMin: null,
     fbaMax: null,
+    estimateNextMonthStorageFeeMin: null,
+    estimateNextMonthStorageFeeMax: null,
     operationTypeId: null,
     advStatus: null,
     warehouseAge: [],

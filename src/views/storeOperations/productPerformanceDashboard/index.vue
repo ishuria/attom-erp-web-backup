@@ -128,6 +128,7 @@
           @image-preview="imagePreviewShow"
           @router-push="handleRouterPush"
           @row-click="handleRowClick"
+          @show-operation-log="showOperationLog"
           @show-release-order="handleShowReleaseOrder"
           @show-remark="showRemark"
           @sort-change="sortChange"
@@ -446,6 +447,14 @@
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 操作日志 -->
+    <vab-dialog v-model="operationLogVisible" title="新增操作日志" width="20%">
+      <el-input v-model="operationLog" placeholder="请输入操作日志" :rows="15" type="textarea" />
+      <template #footer>
+        <el-button @click="operationLogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUpdateOperationLog">确定</el-button>
+      </template>
+    </vab-dialog>
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
@@ -509,6 +518,7 @@ import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { addOperationLog } from '~/src/api/devlocal/productAnalysis'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '~/src/const/role'
 import { useUserStore } from '~/src/store/modules/user'
@@ -881,6 +891,8 @@ const handleConfirmFilter = async (filterForm: any) => {
       'monthSalesVolumeMax',
       'fbaMin',
       'fbaMax',
+      'estimateNextMonthStorageFeeMin',
+      'estimateNextMonthStorageFeeMax',
     ]
 
     numberFields.forEach((field) => {
@@ -980,6 +992,23 @@ const showRemark = (row: any) => {
   _row.value = row
   remark.value = row.operationRemark
   remarkVisible.value = true
+}
+const operationLogVisible = ref<boolean>(false)
+const operationLog = ref<string>('')
+const showOperationLog = (row: any) => {
+  _row.value = row
+  operationLogVisible.value = true
+}
+const confirmUpdateOperationLog = async () => {
+  const { data } = await addOperationLog({
+    asin: _row.value.asin,
+    siteId: _row.value.site,
+    content: operationLog.value,
+  })
+  if (data) {
+    $baseMessage('操作日志新增成功！', 'success')
+    operationLogVisible.value = false
+  }
 }
 
 let _seasonalCoefficient = {
@@ -1773,30 +1802,36 @@ const generateStorageAgeHtml = (item: any): string => {
 const fetchData = async () => {
   if (listLoading.value) return
   listLoading.value = true
-  const { site, ...filterQueryForm } = queryForm
-  const { data } = await getOperationAmazonSKUList({
-    ...filterQueryForm,
-    siteIds: site.join(','),
-  })
-  total.value = data.total
-  // 优化：立即处理关键字段（displayRating、skuImgUrl、storageAge），确保库龄等字段能立即显示
-  // 这些字段是首屏必需的，需要立即生成
-  // 先处理数据，然后再赋值，确保 shallowRef 能正确检测到变化
-  const processedList = data.list.map((item: any) => {
-    item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
-    if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
-    item.storageAge = generateStorageAgeHtml(item)
-    return item
-  })
-  // 立即处理所有数据，确保数据能直接显示
-  processedList.forEach((item: any) => {
-    item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
-    processField(item, 'developName', 2)
-  })
-  // 优化：立即显示处理后的数据，不阻塞渲染
-  // 使用 shallowRef 时，直接赋值即可，不需要深度响应式
-  list.value = processedList
-  listLoading.value = false
+  try {
+    const { site, ...filterQueryForm } = queryForm
+    const { data } = await getOperationAmazonSKUList({
+      ...filterQueryForm,
+      siteIds: site.join(','),
+    })
+    total.value = data.total
+    // 优化：立即处理关键字段（displayRating、skuImgUrl、storageAge），确保库龄等字段能立即显示
+    // 这些字段是首屏必需的，需要立即生成
+    // 先处理数据，然后再赋值，确保 shallowRef 能正确检测到变化
+    const processedList = data.list.map((item: any) => {
+      item.displayRating = getAmazonStars(item.rating!, item.commentsNumbers!)
+      if (item.skuImgUrl) item.skuImgUrl = handleImgUrl(item.skuImgUrl)
+      item.storageAge = generateStorageAgeHtml(item)
+      return item
+    })
+    // 立即处理所有数据，确保数据能直接显示
+    processedList.forEach((item: any) => {
+      item._actualList = reorderSeasonalData(item.seasonalCoefficient.actualList)
+      processField(item, 'developName', 2)
+    })
+    // 优化：立即显示处理后的数据，不阻塞渲染
+    // 使用 shallowRef 时，直接赋值即可，不需要深度响应式
+    list.value = processedList
+    listLoading.value = false
+  } catch (error) {
+    $baseMessage('获取数据失败', 'error')
+  } finally {
+    listLoading.value = false
+  }
 }
 const asinTotal = ref<number>(0)
 

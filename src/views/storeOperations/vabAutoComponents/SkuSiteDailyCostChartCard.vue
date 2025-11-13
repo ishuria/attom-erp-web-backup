@@ -116,20 +116,34 @@ const generateChartOption = () => {
       icon: 'circle',
       left: 0,
       top: 5,
+      orient: 'horizontal',
+      width: '50%', // 设置宽度，让图例在空间不足时自动换行
+      itemWidth: 10,
+      itemHeight: 10,
+      itemGap: 8,
       textStyle: {
         fontSize: parseInt(fontSizeBase) - 1,
       },
-      itemWidth: 10,
-      itemHeight: 10,
-      itemGap: 5,
       data: ['SKU实际价格', 'FBA配送费', '打包成本', '头程运费', '试算毛利'],
     },
     tooltip: {
       trigger: 'axis',
       confine: true,
+      formatter: (params: any) => {
+        if (Array.isArray(params)) {
+          let result = `${params[0].axisValue}<br/>`
+          params.forEach((item: any) => {
+            const value = item.value
+            const formattedValue = item.seriesName === '试算毛利' ? `${value}%` : value
+            result += `${item.marker}${item.seriesName}: ${formattedValue}<br/>`
+          })
+          return result
+        }
+        return ''
+      },
     },
     grid: {
-      top: 50,
+      top: 70, // 增加顶部空间，为换行的图例留出位置
       bottom: 5,
       left: 10,
       right: 10,

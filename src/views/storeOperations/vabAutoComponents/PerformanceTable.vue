@@ -58,6 +58,7 @@
             :x-axis="xAxis"
             @image-preview="emit('imagePreview', $event)"
             @router-push="emit('routerPush', $event)"
+            @show-operation-log="emit('showOperationLog', $event)"
             @show-release-order="emit('showReleaseOrder', $event)"
             @show-remark="emit('showRemark', $event)"
             @update-ope-type="emit('updateOpeType', $event)"
@@ -116,6 +117,7 @@ const emit = defineEmits<{
   rowClick: [row: any, column: any, event: Event]
   sortChange: [data: { column: any; prop: string; order: any }]
   imagePreview: [url: string]
+  showOperationLog: [row: any]
   showReleaseOrder: [row: any]
   showRemark: [row: any]
   updateOpeType: [row: any]

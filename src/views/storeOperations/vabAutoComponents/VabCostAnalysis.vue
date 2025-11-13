@@ -147,6 +147,7 @@
             </el-aside>
           </el-container>
         </vab-card>
+        <!-- 每日成本图表 -->
         <sku-site-daily-cost-chart-card
           v-model:date-range="card4DateRange"
           v-loading="chart3Loading"
@@ -409,6 +410,7 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { getLast7DaysStringTime } from '~/src/utils/dateUtils'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
 import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
@@ -462,16 +464,15 @@ const data3 = ref<IGetSkuSiteDailyCost[]>([])
 const chart3Loading = ref<boolean>(false)
 
 const imageHeight = ref<number>(0)
-const card4DateRange = ref<[string, string]>(['', ''])
+
+const card4DateRange = ref<[string, string]>(getLast7DaysStringTime())
 // 计算总和
 const totalValue = ref<number>(0)
 // 计算库龄总和
 const totalAgeValue = computed(() => {
   return data2.value.reduce((sum, item) => sum + item.value, 0)
 })
-const formattedTotalValue = computed(() => {
-  return totalValue.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
-})
+
 // 计算占比
 const percentageData = computed(() => {
   const total = totalValue.value
@@ -806,6 +807,10 @@ onBeforeMount(() => {
     fetchPackagingInformation()
     fetchExpenseComposition()
     fetchStorageAge()
+    // 如果日期范围已设置，获取图表数据
+    if (card4DateRange.value[0] && card4DateRange.value[1]) {
+      fetchSkuSiteDailyCost()
+    }
   }
 })
 

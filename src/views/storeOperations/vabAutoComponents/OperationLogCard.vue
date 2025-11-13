@@ -48,10 +48,10 @@
 
     <vab-pagination
       :current-page="pageNo"
+      layout="total, prev, pager, next"
       :page-size="pageSize"
       :total="total"
       @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
     />
 
     <vab-remark-dialog v-model="remarkVisible" :remark="addRemark" title="新增操作日志" @update:remark="handleAddRemark" />
