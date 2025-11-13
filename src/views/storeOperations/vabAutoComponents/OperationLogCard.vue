@@ -140,7 +140,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  add: []
   contentClick: [row: LogItem]
 }>()
 

@@ -1,14 +1,3 @@
-export const opeClassOption = [
-  {
-    label: '每日关注',
-    value: 0,
-  },
-  {
-    label: '停产',
-    value: 1,
-  },
-]
-
 export const filterShowOption = [
   {
     label: '全部',

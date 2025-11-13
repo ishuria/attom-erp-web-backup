@@ -127,6 +127,7 @@
             <template #default="scope">
               <el-popover v-if="scope.row.mold === '老品优化'" effect="dark" placement="top" trigger="hover" width="auto">
                 <template #default>
+                  <div>差额=销售额-老品优化前的销售额</div>
                   <div>
                     {{ scope.row.currencySymbol }}{{ scope.row.salesDifference }} - {{ scope.row.currencySymbol
                     }}{{ scope.row.salesDiffPrice }}

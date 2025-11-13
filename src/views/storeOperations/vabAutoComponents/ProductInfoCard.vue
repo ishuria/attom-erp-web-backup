@@ -3,7 +3,7 @@
     <el-container style="display: flex; gap: 10px; align-items: flex-start">
       <!-- 左侧图片 -->
       <el-aside :style="{ maxWidth: imageMaxWidth + 'px', padding: '0' }">
-        <el-image :src="imageUrl" style="display: block; border-radius: 10px" @load="handleImageLoad">
+        <el-image :src="productInfo?.skuImgUrl || ''" style="display: block; border-radius: 10px" @load="handleImageLoad">
           <template #error><el-icon /></template>
         </el-image>
       </el-aside>
@@ -11,28 +11,49 @@
       <el-main style="flex: 1; padding: 0; font-weight: 600">
         <!-- 标题和描述 -->
         <div style="margin-bottom: 15px">
-          <el-link class="custom-link" data-label="asin" style="font-weight: 600" type="primary">
-            {{ asin }}
+          <el-link
+            class="custom-link"
+            data-label="asin"
+            :href="productInfo?.amazonUrl"
+            style="font-weight: 600"
+            target="_blank"
+            type="primary"
+          >
+            {{ productInfo?.asin || '' }}
           </el-link>
-          <div style="margin-top: 6px">{{ sku }}</div>
-          <div style="margin-top: 6px">{{ title }}</div>
+          <div style="margin-top: 6px">{{ productInfo?.sku || '' }}</div>
+          <div style="margin-top: 6px">{{ productInfo?.productDesc || '' }}</div>
           <!-- 评分部分 -->
           <div class="rate-wrapper">
-            <span class="rate-value">{{ rating }}</span>
+            <span class="rate-value">{{ productInfo?.rating || 0 }}</span>
             <span><el-rate v-model="displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-            <span class="rate-count">{{ reviewCount }}</span>
+            <span class="rate-count">{{ productInfo?.commentsNumbers || 0 }}</span>
           </div>
         </div>
         <!-- 买家之声和缺陷率 -->
         <div style="font-weight: 600">
-          <el-link class="custom-link" style="margin-right: 10px; font-weight: 600" type="primary">买家之声</el-link>
-          <el-tag :class="['customTag', `customTag-${voiceOfCustomer}`]">{{ voiceOfCustomerText }}</el-tag>
+          <el-link
+            class="custom-link"
+            :href="`https://www.amazon.com/product-reviews/${productInfo?.asin}`"
+            style="margin-right: 10px; font-weight: 600"
+            target="_blank"
+            type="primary"
+          >
+            买家之声
+          </el-link>
+          <el-tag v-if="productInfo?.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
+          <el-tag v-if="productInfo?.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
+          <el-tag v-if="productInfo?.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
+          <el-tag v-if="productInfo?.vocSatisfaction === '良好'" class="customTag customTag-good">良好</el-tag>
+          <el-tag v-if="productInfo?.vocSatisfaction === '极好'" class="customTag customTag-excellent">极好</el-tag>
+          <!-- VOC满意度 -->
+
           <div data-label="缺陷率" style="margin-top: 6px">
             缺陷率：
-            <span style="color: #bad411">{{ defectRate }}%</span>
+            <span :style="{ color: vocColor }">{{ productInfo?.vocDefect || 0 }}%</span>
             | 缺陷订单：
-            <span style="color: #bad411">{{ defectOrders }}</span>
-            /{{ totalOrders }}
+            <span :style="{ color: vocColor }">{{ productInfo?.vocNcxCount || 0 }}</span>
+            /{{ productInfo?.vocTotalOrderCount || 0 }}
           </div>
         </div>
       </el-main>
@@ -43,39 +64,20 @@
 <script lang="ts" setup>
 import { Star } from '@element-plus/icons-vue'
 import { computed, nextTick, ref, watch } from 'vue'
+import { getAmazonStars } from '~/src/utils/rate'
+import type { IGetProductInfo } from '/@/type/storeOperation/productAnalysisType'
 
 defineOptions({
   name: 'ProductInfoCard',
 })
 
 interface Props {
-  // 产品信息
-  asin?: string
-  sku?: string
-  title?: string
-  imageUrl?: string
-  // 评分相关
-  rating?: number
-  reviewCount?: number
-  // 买家之声
-  voiceOfCustomer?: 'excellent' | 'good' | 'fair' | 'poor' | 'veryPoor'
-  // 缺陷率相关
-  defectRate?: number
-  defectOrders?: number
-  totalOrders?: number
+  // 直接传递产品信息对象
+  productInfo?: IGetProductInfo | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  asin: '',
-  sku: '',
-  title: '',
-  imageUrl: '',
-  rating: 0,
-  reviewCount: 0,
-  voiceOfCustomer: 'good',
-  defectRate: 0,
-  defectOrders: 0,
-  totalOrders: 0,
+  productInfo: null,
 })
 
 // 图片最大宽度（动态计算）
@@ -83,19 +85,31 @@ const imageMaxWidth = ref<number>(0)
 
 // 显示评分（用于 el-rate 组件）
 const displayRating = computed(() => {
-  return props.rating || 0
+  return getAmazonStars(props.productInfo?.rating || 0, props.productInfo?.commentsNumbers || 0)
 })
 
 // 买家之声文本映射
-const voiceOfCustomerText = computed(() => {
-  const map: Record<string, string> = {
-    excellent: 'Excellent',
-    good: 'Good',
-    fair: 'Fair',
-    poor: 'Poor',
-    veryPoor: 'Very Poor',
+const voiceOfCustomer = computed(() => {
+  const map: Record<string, 'excellent' | 'good' | 'fair' | 'poor' | 'veryPoor'> = {
+    excellent: 'excellent',
+    good: 'good',
+    fair: 'fair',
+    poor: 'poor',
+    veryPoor: 'veryPoor',
   }
-  return map[props.voiceOfCustomer] || 'Good'
+  return map[props.productInfo?.vocSatisfaction || 'good'] || 'good'
+})
+
+// 根据 vocSatisfaction 获取对应的颜色
+const vocColor = computed(() => {
+  const colorMap: Record<string, string> = {
+    极差: '#e32e00',
+    不合格: '#ff9900',
+    一般: '#ffc400',
+    良好: '#bad411',
+    极好: '#49850f',
+  }
+  return colorMap[props.productInfo?.vocSatisfaction || '良好'] || '#bad411'
 })
 
 // 处理图片加载，动态计算图片高度
@@ -114,13 +128,13 @@ const handleImageLoad = () => {
 
 // 监听 props 变化，重新计算图片高度
 watch(
-  () => [props.asin, props.sku, props.title, props.defectRate],
+  () => props.productInfo,
   () => {
     nextTick(() => {
       handleImageLoad()
     })
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 </script>
 

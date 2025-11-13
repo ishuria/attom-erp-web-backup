@@ -145,27 +145,24 @@
       <!-- 右侧 -->
       <el-col :span="6">
         <div class="right-sidebar">
-          <product-info-card
-            :asin="asin"
-            :defect-orders="40"
-            :defect-rate="4.09"
-            :image-url="'https://picsum.photos/200/200'"
-            :rating="4.6"
-            :review-count="484"
-            :sku="'NiHome-0451-MshRmLightSmallBRN'"
-            :title="'蘑菇小夜灯-小号棕色底座款'"
-            :total-orders="1201"
-            voice-of-customer="good"
-          />
+          <product-info-card :product-info="productInfo" />
           <!-- 运营备注 -->
           <div class="operation-remark" style="margin-bottom: 20px">
             <div style="margin-bottom: 10px">
               <el-text>运营备注</el-text>
-              <el-select style="width: 30%; margin-left: 10px">
-                <el-option v-for="item in opeClassOption" :key="item.value" :label="item.label" :value="item.value" />
+              <el-select v-model="operationTypeId" style="width: 30%; margin-left: 10px" @change="handleChangeOperationType">
+                <el-option v-for="item in operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
             </div>
-            <el-input placeholder="请输入运营备注" resize="none" :rows="6" style="width: 100%" type="textarea" />
+            <el-input
+              v-model="operationRemark"
+              placeholder="请输入运营备注"
+              resize="none"
+              :rows="6"
+              style="width: 100%"
+              type="textarea"
+              @change="handleChangeOperationRemark"
+            />
           </div>
           <!-- 操作日志/事件清单 -->
           <operation-log-card
@@ -174,7 +171,6 @@
             :filter-options="filterShowOption"
             :site-id="selectedSite"
             :type="-1"
-            @add="handleAdd"
             @content-click="handleShowChange"
           />
         </div>
@@ -185,11 +181,15 @@
 
 <script lang="ts" setup>
 import type { TabsPaneContext } from 'element-plus'
+import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } from '~/src/api/devlocal/productPerformance'
+import { OperationTypeList } from '~/src/type/storeOperation/productPerformanceType'
 import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
-import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
+import { adOption, dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
+import { getProductInfo } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 import { useTabsStore } from '/@/store/modules/tabs'
+import type { IGetProductInfo } from '/@/type/storeOperation/productAnalysisType'
 import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
@@ -296,15 +296,31 @@ const changeDetailConfig = computed(() => ({
     data: fakeChangeData,
   },
 }))
-// 处理新增
-const handleAdd = () => {
-  // TODO: 实现新增逻辑
-  console.log('新增操作日志')
-}
+
 // 处理内容点击（保留用于其他逻辑，组件内部已处理对话框显示）
 const handleShowChange = (row: any) => {
   // 组件内部已处理对话框显示，这里可以添加其他逻辑
   console.log('点击内容:', row)
+}
+const handleChangeOperationRemark = async () => {
+  const { data } = await updateRemarkAmazonOperation({
+    site: selectedSite.value,
+    asin: asin.value,
+    remark: operationRemark.value,
+  })
+  if (data) {
+    $baseMessage('运营备注修改成功！', 'success')
+  }
+}
+const handleChangeOperationType = async () => {
+  const { data } = await updateProductAnalysisOperateTypeList({
+    asin: asin.value,
+    site: selectedSite.value || 0,
+    typeId: operationTypeId.value,
+  })
+  if (data) {
+    $baseMessage('运营分类修改成功！', 'success')
+  }
 }
 const goBack = async () => {
   await delVisitedRoute(handleActivePath(route, true))
@@ -328,6 +344,10 @@ const isSingle = ref<boolean>(false)
 const sku = ref<string>('')
 const handleChangeSku = () => {
   sku.value = queryForm3.sku
+  // SKU变化时重新获取产品信息
+  if (sku.value && selectedSite.value !== undefined) {
+    fetchProductInfo()
+  }
 }
 
 // 站点相关
@@ -347,6 +367,37 @@ const fetchSiteList = async () => {
 // 站点变化处理
 const handleSiteChange = (siteId: number | undefined) => {
   selectedSite.value = siteId
+  // 站点变化时重新获取产品信息
+  if (sku.value && selectedSite.value !== undefined) {
+    fetchProductInfo()
+  }
+}
+
+// 产品信息（直接使用后端字段类型）
+const productInfo = ref<IGetProductInfo | null>(null)
+const operationTypeList = ref<OperationTypeList[]>([])
+const operationTypeId = ref<number>(0)
+const operationRemark = ref<string>('')
+// 获取产品信息
+const fetchProductInfo = async () => {
+  if (!sku.value || selectedSite.value === undefined) {
+    return
+  }
+  try {
+    const { data } = await getProductInfo({
+      sku: sku.value,
+      siteId: selectedSite.value,
+    })
+    // 直接使用后端返回的数据
+    productInfo.value = data
+    // 更新 asin
+    asin.value = data.asin || ''
+    operationTypeList.value = data.operationTypeList || []
+    operationTypeId.value = data.operationTypeId || 0
+    operationRemark.value = data.operationRemark || ''
+  } catch (error) {
+    console.error('获取产品信息失败:', error)
+  }
 }
 onBeforeMount(() => {
   // 检查 store 中是否已有数据
@@ -363,6 +414,10 @@ onBeforeMount(() => {
     sku.value = queryForm3.sku
     // 初始化趋势总览的SKU选择
     selectedSku.value = skuOptions.value[0]
+    // 初始化时获取产品信息
+    if (sku.value && selectedSite.value !== undefined) {
+      fetchProductInfo()
+    }
   }
 })
 

@@ -409,3 +409,75 @@ export interface IGetOperationLog {
   type: number
   content: string
 }
+export interface IGetProductInfoRes {
+  data: IGetProductInfo
+}
+export interface IGetProductInfo {
+  /**
+   * sku信息
+   */
+  sku: string
+
+  /**
+   * ASIN
+   */
+  asin: string
+
+  productDesc: string
+
+  /**
+   * 运营分类id
+   */
+  operationTypeId: number
+
+  /**
+   * 运营备注
+   */
+  operationRemark: string
+
+  /**
+   * voc满意度
+   */
+  vocSatisfaction: string
+
+  /**
+   * voc缺陷
+   */
+  vocDefect: number
+
+  /**
+   * voc不满意数量
+   */
+  vocNcxCount: number
+
+  /**
+   * voc总订单
+   */
+  vocTotalOrderCount: number
+
+  /**
+   * 评分
+   */
+  rating: number
+
+  /**
+   * 评论数
+   */
+  commentsNumbers: number
+
+  /**
+   * SKU图片地址
+   */
+  skuImgUrl: string
+
+  /**
+   * asin亚马逊前台地址
+   */
+  amazonUrl: string
+
+  operationTypeList: OperationTypeList[]
+}
+export interface OperationTypeList {
+  id: number
+  label: string
+}

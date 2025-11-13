@@ -7,6 +7,7 @@ import type {
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
   IGetOperationLogRes,
+  IGetProductInfoRes,
   IGetSkuSiteDailyCostRes,
   IGetStorageAgeRes,
   IGetTrendOverviewChartReq,
@@ -186,5 +187,17 @@ export function addOperationLog(data: { asin: string; siteId: number; content: s
     url: `${BASE_API}/product/analysis/operation/log/add`,
     method: 'post',
     data,
+  })
+}
+/**
+ * @description 运营-产品分析-产品信息
+ * @param params { sku: string; siteId: number }
+ * @returns IGetProductInfoRes
+ */
+export function getProductInfo(params: { sku: string; siteId: number }): Promise<IGetProductInfoRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/info`,
+    method: 'get',
+    params,
   })
 }
