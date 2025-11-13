@@ -86,7 +86,13 @@
           <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
+                <vue-draggable
+                  v-model="row.imageList"
+                  :animation="150"
+                  class="image-list"
+                  ghost-class="ghost"
+                  @end="() => onEnd(row, $index)"
+                >
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -312,7 +318,13 @@
           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="onEnd">
+                <vue-draggable
+                  v-model="row.imageList"
+                  :animation="150"
+                  class="image-list"
+                  ghost-class="ghost"
+                  @end="() => onEnd(row, $index)"
+                >
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -638,7 +650,7 @@ import { ArrowDown, Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue
 import { ElLink, type FormInstance, type TableInstance, type TableTooltipData, type TabsPaneContext } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { getEvaluationTrendList } from '~/src/api/devlocal/evaluation'
 import { getReviewIdByProgressId } from '~/src/api/devlocal/orderProcess'
@@ -773,10 +785,9 @@ const tableRef = ref<TableInstance>()
 const evaluationTableRef = ref<TableInstance>()
 // 表格加载loading状态
 const listLoading = ref<boolean>(true)
-// 新品进度列表 - 使用 shallowRef 减少深度响应式追踪，提升性能
-const progressList = shallowRef<IProgress[]>([])
+// 新品进度列表
+const progressList = ref<IProgress[]>([])
 // 优化：使用 computed 缓存列宽度，但只在数据变化时重新计算
-// 注意：由于使用了 shallowRef，需要确保 computed 能正确追踪变化
 const columnWidths = computed(() => {
   // 如果列表为空，返回默认值，避免不必要的计算
   if (!progressList.value || progressList.value.length === 0) {
@@ -1084,7 +1095,13 @@ const showUploadDialog = (row: any, index: number) => {
  */
 async function uploadImage(file: File) {
   try {
-    const sort = progressList.value[tableClickRowIndex.value].imageList!.length - 1
+    const currentRow = progressList.value[tableClickRowIndex.value]
+    // 确保 imageList 已初始化
+    if (!currentRow.imageList) {
+      currentRow.imageList = []
+    }
+    // sort 应该是当前数组长度（新图片会追加到最后）
+    const sort = currentRow.imageList.length
     let imageForm = new FormData()
 
     imageForm.append('file', file)
@@ -1094,10 +1111,19 @@ async function uploadImage(file: File) {
     const { data } = await uploadFile(imageForm)
     if (data) {
       const { fileId, url } = data
-      progressList.value[tableClickRowIndex.value].imageList?.push({
+      // 根据 sort 值插入到正确位置，保持排序
+      const newImage = {
         imageUrl: url,
         imageId: fileId,
-      })
+      }
+      // sort 值表示新图片应该插入的位置
+      if (sort >= currentRow.imageList.length) {
+        // 如果 sort 大于等于数组长度，追加到最后
+        currentRow.imageList.push(newImage)
+      } else {
+        // 否则插入到指定位置
+        currentRow.imageList.splice(sort, 0, newImage)
+      }
       $baseMessage('图片上传成功!', 'success', 'hey')
       imageUploadVisible.value = false
     } else {
@@ -1108,10 +1134,10 @@ async function uploadImage(file: File) {
   }
 }
 // 移动之后触发修改排序接口
-const onEnd = debounce(async () => {
+const onEnd = debounce(async (row: any, rowIndex: number) => {
   try {
     const idList =
-      progressList.value[tableClickRowIndex.value].imageList?.map((item: any) => {
+      row.imageList?.map((item: any) => {
         return item.imageId
       }) || []
     await updateProgressImgSort(idList)
