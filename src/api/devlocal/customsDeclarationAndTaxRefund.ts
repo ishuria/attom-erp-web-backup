@@ -945,6 +945,20 @@ export const checkTaxRefundInvoiceExport = (data: { fromDate: string; toDate: st
     data,
   })
 }
+
+/**
+ * 退税管理 云舟催票文件 前置接口
+ * @param data
+ * @returns
+ */
+export const taxRefundInvoiceBeforeCheck = (data: any): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/hasten/invoice/check`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * 退税批次 出口发票生成 前置接口
  * @param data

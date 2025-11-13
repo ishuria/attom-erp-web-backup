@@ -448,7 +448,7 @@
           <el-date-picker
             v-model="ticketReminderForm.shipmentDate"
             :clearable="true"
-            :editable="false"
+            :editable="true"
             end-placeholder="最晚发货日期"
             range-separator="至"
             start-placeholder="最早发货日期"
@@ -460,7 +460,7 @@
           <el-date-picker
             v-model="ticketReminderForm.dateRange"
             :clearable="true"
-            :editable="false"
+            :editable="true"
             end-placeholder="最晚付款日期"
             range-separator="至"
             start-placeholder="最早付款日期"
@@ -492,6 +492,12 @@
               @click="handleClip(ticketReminderForm.suppliser)"
             />
           </div>
+        </el-form-item>
+        <el-form-item label="催票选项">
+          <el-radio-group v-model="ticketReminderForm.status">
+            <el-radio border :value="0">仅需催票记录</el-radio>
+            <el-radio border :value="1">所有记录</el-radio>
+          </el-radio-group>
         </el-form-item>
         <!-- <el-form-item label="仅已报关" prop="">
           <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
@@ -541,7 +547,12 @@
 import { CopyDocument, Delete, Document, Download, Search } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
-import { checkTaxRefundInvoiceExport, deleteTaxRefundMatch, getTaxRefundList } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
+import {
+  checkTaxRefundInvoiceExport,
+  deleteTaxRefundMatch,
+  getTaxRefundList,
+  taxRefundInvoiceBeforeCheck,
+} from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import VabPdf from '/@/plugins/VabPdf'
 // import { useTabStateStore } from '/@/store/modules/tabsState'
@@ -888,11 +899,13 @@ type ITicketReminderForm = {
   dateRange: [string, string]
   shipmentDate: [string, string]
   suppliser: string
+  status: number
 }
 const ticketReminderForm = reactive<ITicketReminderForm>({
   dateRange: ['', ''],
   suppliser: '',
   shipmentDate: ['', ''],
+  status: 0,
 })
 const ticketReminderFormRules = reactive<FormRules<ITicketReminderForm>>({
   dateRange: [{ required: true, message: '请选择日期范围', trigger: 'change' }],
@@ -909,29 +922,34 @@ const handleConfirmTicketReminder = async () => {
     if (isValid) {
       try {
         generateLoading.value = true
-        const response = await downloadFilePD('/taxRefund/hasten/invoice', {
+
+        const params = {
           fromDate: ticketReminderForm.dateRange[0],
           toDate: ticketReminderForm.dateRange[1],
           suppliser: ticketReminderForm.suppliser,
           startDate: ticketReminderForm.shipmentDate[0],
           endDate: ticketReminderForm.shipmentDate[1],
-        })
+          status: ticketReminderForm.status,
+        }
+        const { data } = await taxRefundInvoiceBeforeCheck(params)
 
-        // 如果返回的是 JSON 类型，说明可能是错误信息
-        if (response.type === 'application/json') {
-          const reader = new FileReader()
-          reader.addEventListener('load', () => {
-            const result = JSON.parse(reader.result as string)
-            if (result.code === 5000) {
-              $baseMessage(result.msg, 'error')
-            }
-          })
-          reader.readAsText(response)
+        if (data) {
+          const response = await downloadFilePD('/taxRefund/hasten/invoice', params)
+          // 如果返回的是 JSON 类型，说明可能是错误信息
+          if (response.type === 'application/json') {
+            const reader = new FileReader()
+            reader.addEventListener('load', () => {
+              const result = JSON.parse(reader.result as string)
+              if (result.code === 5000) {
+                $baseMessage(result.msg, 'error')
+              }
+            })
+            reader.readAsText(response)
+          }
         }
         generateLoading.value = false
       } catch (error) {
         console.error(error)
-        $baseMessage('下载失败，请稍后重试', 'error')
         generateLoading.value = false
       }
     }
