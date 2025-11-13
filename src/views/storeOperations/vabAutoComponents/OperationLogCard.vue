@@ -36,8 +36,9 @@
       <el-table-column align="center" label="类型" prop="type" width="90" />
       <el-table-column label="内容" min-width="170" prop="content">
         <template #default="{ row }">
-          <el-link type="primary" @click="handleContentClick(row)">{{ row.content }}</el-link>
-          <!-- {{ row.content }} -->
+          <el-link class="content-link" type="primary" @click="handleContentClick(row)">
+            <span class="content-text">{{ row.content }}</span>
+          </el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -52,6 +53,8 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+
+    <vab-remark-dialog v-model="remarkVisible" :remark="addRemark" title="新增操作日志" @update:remark="handleAddRemark" />
 
     <!-- 变化详情对话框 -->
     <vab-dialog v-model="changeDetailVisible" :title="changeDetailTitle">
@@ -73,7 +76,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getOperationLog } from '/@/api/devlocal/productAnalysis'
+import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
 import type { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
 
 defineOptions({
@@ -150,7 +153,8 @@ const beforeProp = ref<string>('')
 const afterProp = ref<string>('')
 const beforeFormatter = ref<((row: any) => string) | undefined>(undefined)
 const afterFormatter = ref<((row: any) => string) | undefined>(undefined)
-
+const remarkVisible = ref<boolean>(false)
+const addRemark = ref<string>('')
 // 操作日志数据
 const logData = ref<LogItem[]>([])
 const loading = ref<boolean>(false)
@@ -214,25 +218,19 @@ const fetchOperationLog = async () => {
   }
 }
 
-// 筛选后的数据（如果使用接口数据，筛选应该在接口层面处理，这里保留前端筛选逻辑用于 data prop）
 const filteredData = computed(() => {
   const dataSource = props.data !== undefined ? props.data : logData.value
-  // 如果使用接口数据，且筛选不是"全部"，需要重新请求接口
   if (props.data === undefined && selectedFilter.value !== -1) {
-    // 筛选逻辑在接口层面处理，这里直接返回数据
     return dataSource
   }
   if (selectedFilter.value === -1) {
     return dataSource
   }
-  // 根据类型筛选（仅用于 data prop 的情况）
   return dataSource.filter((item) => {
-    // 如果 type 是字符串，需要映射到数值
     const typeMapReverse: Record<string, number> = {
       手动输入: 0,
       系统抓取: 1,
       SP广告: 2,
-      广告: 2,
     }
     const itemTypeValue = typeMapReverse[item.type]
     return itemTypeValue !== undefined && itemTypeValue === selectedFilter.value
@@ -273,7 +271,39 @@ watch(
 
 // 处理新增
 const handleAdd = () => {
-  emit('add')
+  remarkVisible.value = true
+}
+
+// 处理新增备注
+const handleAddRemark = async (remark: string) => {
+  if (!remark || !remark.trim()) {
+    $baseMessage('请输入操作日志内容', 'warning')
+    return
+  }
+
+  if (!props.asin || props.siteId === undefined) {
+    $baseMessage('缺少必要参数：asin 或 siteId', 'error')
+    return
+  }
+
+  loading.value = true
+  try {
+    await addOperationLog({
+      asin: props.asin,
+      siteId: props.siteId,
+      content: remark.trim(),
+    })
+    $baseMessage('新增操作日志成功', 'success')
+    addRemark.value = ''
+    remarkVisible.value = false
+    // 刷新列表数据
+    await fetchOperationLog()
+  } catch (error) {
+    console.error('新增操作日志失败:', error)
+    $baseMessage('新增操作日志失败，请稍后重试', 'error')
+  } finally {
+    loading.value = false
+  }
 }
 
 // 处理内容点击
@@ -314,6 +344,16 @@ const handleContentClick = (row: LogItem) => {
     flex-shrink: 0;
     padding: 16px 0;
     margin-top: 8px;
+  }
+
+  .content-link {
+    display: block;
+    width: 100%;
+
+    .content-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
   }
 }
 </style>

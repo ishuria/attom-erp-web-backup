@@ -176,3 +176,15 @@ export function getOperationLog(data: {
     data,
   })
 }
+/**
+ * @description 运营-产品分析-操作日志-新增
+ * @param data { asin: string; siteId: number; content: string }
+ * @returns { data: boolean }
+ */
+export function addOperationLog(data: { asin: string; siteId: number; content: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/analysis/operation/log/add`,
+    method: 'post',
+    data,
+  })
+}
