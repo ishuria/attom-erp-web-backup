@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; flex: 1; flex-direction: column; height: 100%">
+  <div class="operation-log-card">
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form inline>
@@ -21,7 +21,9 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
+
     <el-table
+      ref="tableRef"
       v-loading="loading"
       border
       :data="filteredData"
@@ -30,15 +32,19 @@
       stripe
       style="flex: 1"
     >
-      <el-table-column align="center" label="日期" min-width="115" prop="date" />
-      <el-table-column label="类型" min-width="130" prop="type" />
+      <el-table-column align="center" label="日期" prop="date" width="115" />
+      <el-table-column align="center" label="类型" prop="type" width="90" />
       <el-table-column label="内容" min-width="170" prop="content">
         <template #default="{ row }">
           <el-link type="primary" @click="handleContentClick(row)">{{ row.content }}</el-link>
           <!-- {{ row.content }} -->
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
+
     <vab-pagination
       :current-page="pageNo"
       :page-size="pageSize"
@@ -46,6 +52,7 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+
     <!-- 变化详情对话框 -->
     <vab-dialog v-model="changeDetailVisible" :title="changeDetailTitle">
       <el-table border :data="changeDetailData">
@@ -149,8 +156,10 @@ const logData = ref<LogItem[]>([])
 const loading = ref<boolean>(false)
 // 分页相关
 const pageNo = ref<number>(1)
-const pageSize = ref<number>(10)
+const pageSize = ref<number>(50)
 const total = ref<number>(0)
+// 表格引用
+const tableRef = ref()
 
 // 类型映射：数字 -> 字符串
 const typeMap: Record<number, string> = {
@@ -180,7 +189,12 @@ const fetchOperationLog = async () => {
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.siteId,
-      type: props.type,
+      type:
+        selectedFilter.value !== -1
+          ? typeof selectedFilter.value === 'number'
+            ? selectedFilter.value
+            : Number(selectedFilter.value)
+          : props.type,
       pageNo: pageNo.value,
       pageSize: pageSize.value,
     })
@@ -227,12 +241,10 @@ const filteredData = computed(() => {
 
 // 处理筛选变化
 const handleFilterChange = () => {
-  // 如果使用接口数据，筛选变化时需要重新请求（重置到第一页）
   if (props.data === undefined) {
     pageNo.value = 1
     fetchOperationLog()
   }
-  // 如果使用 data prop，筛选逻辑已在 computed 中处理
 }
 
 // 处理分页变化
@@ -282,3 +294,26 @@ const handleContentClick = (row: LogItem) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.operation-log-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+
+  .vab-query-form {
+    flex-shrink: 0;
+  }
+
+  :deep(.el-table) {
+    flex: 1;
+  }
+
+  .vab-pagination {
+    flex-shrink: 0;
+    padding: 16px 0;
+    margin-top: 8px;
+  }
+}
+</style>

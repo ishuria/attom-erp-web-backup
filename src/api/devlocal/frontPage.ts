@@ -404,6 +404,7 @@ export function getFrontPageProfitScore(params: {
   month: string
   pageNo: number
   pageSize: number
+  userId: number
 }): Promise<{ data: IGetFrontPageProfitScoreRes }> {
   return request({
     url: `${BASE_API}/front_page/profit/score`,

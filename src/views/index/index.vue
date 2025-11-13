@@ -280,6 +280,9 @@
           @size-change="handleProfitSharePreviewSizeChange"
         >
           <template #select>
+            <el-select v-model="selectProfitSharePreviewUserId" placeholder="人员" style="max-width: 5em" @change="fetchProfitSharePreview">
+              <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
             <el-select v-model="selectProfitSharePreviewMonth" placeholder="月份" style="max-width: 5em" @change="fetchProfitSharePreview">
               <el-option v-for="item in profitSharePreviewMonthList" :key="item" :label="item" :value="item" />
             </el-select>
@@ -524,10 +527,7 @@ const ableViewTop50ProductLossCard =
 const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_BOSS_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
-  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE ||
-  currentRoleCode === ROLE_PRODUCTMANAGER_CODE ||
-  currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE ||
-  currentRoleCode === ROLE_INDUSTRIAL_DESIGN_CODE
+  currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
 
 const type = ref<number>(0)
@@ -867,6 +867,7 @@ const fetchUpdateDate = async () => {
 const historyList = ref<IGetFrontPagePerformanceHistory[]>([])
 const selectDate = ref<[string, string]>(getLastYearStringMonth())
 const userList = ref<{ id: number; label: string }[]>([])
+const profitSharePreviewUserList = ref<{ id: number; label: string }[]>([])
 const userId = ref<number>()
 const fetchUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 0 })
@@ -877,6 +878,8 @@ const fetchUserList = async () => {
   if (!userId.value) {
     userId.value = userList.value[0].id
   }
+  profitSharePreviewUserList.value = data
+  profitSharePreviewUserList.value.unshift({ id: -1, label: '全部' })
   fetchData()
 }
 const lossUserList = ref<{ id: number; label: string }[]>([])
@@ -1204,6 +1207,7 @@ const profitSharePreviewTotal = ref<number>(0)
 const profitSharePreviewMonthList = ref<string[]>([getCurrentMonth(), getLastMonth()])
 // 初始化为当前月份，确保有值
 const selectProfitSharePreviewMonth = ref<string>(getCurrentMonth())
+const selectProfitSharePreviewUserId = ref<number>(-1)
 const profitSharePreviewLoading = ref<boolean>(false)
 const profitSharePreviewQueryForm = reactive({
   pageNo: 1,
@@ -1228,6 +1232,7 @@ const fetchProfitSharePreview = async () => {
     month: selectProfitSharePreviewMonth.value,
     pageNo: profitSharePreviewQueryForm.pageNo,
     pageSize: profitSharePreviewQueryForm.pageSize,
+    userId: selectProfitSharePreviewUserId.value,
   })
   profitSharePreviewList.value = data.list
   profitSharePreviewTotal.value = data.total

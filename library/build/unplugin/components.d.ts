@@ -132,6 +132,7 @@ declare module 'vue' {
     PortalDivider: typeof import('./../../../src/views/portal/vabAutoComponents/PortalDivider.vue')['default']
     PortalHeader: typeof import('./../../../src/views/portal/vabAutoComponents/PortalHeader.vue')['default']
     PoTable: typeof import('./../../../src/views/purchase/vabAutoComponents/PoTable.vue')['default']
+    ProductInfoCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/ProductInfoCard.vue')['default']
     ProductStatisticsDetail: typeof import('./../../../src/views/purchase/vabAutoComponents/productStatisticsDetail.vue')['default']
     ProfitSharePreviewCard: typeof import('./../../../src/views/index/vabAutoComponents/ProfitSharePreviewCard.vue')['default']
     ProgressIndeterminateProgress: typeof import('./../../../src/views/vab/progress/vabAutoComponents/ProgressIndeterminateProgress.vue')['default']

@@ -11,7 +11,7 @@
         <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
       </el-select>
     </div>
-    <el-row :gutter="20">
+    <el-row class="main-content-row" :gutter="20">
       <!-- 左侧 -->
       <el-col :span="18">
         <div style="position: relative">
@@ -144,48 +144,21 @@
       </el-col>
       <!-- 右侧 -->
       <el-col :span="6">
-        <div style="display: flex; flex-direction: column; height: 100%">
-          <vab-card>
-            <el-container style="display: flex; gap: 10px; align-items: flex-start">
-              <!-- 左侧图片 -->
-              <el-aside :style="{ maxWidth: imageHeight + 'px', padding: '0' }">
-                <el-image src="https://picsum.photos/200/200" style="display: block; border-radius: 10px">
-                  <template #error><el-icon /></template>
-                </el-image>
-              </el-aside>
-              <!-- 右侧内容 -->
-              <el-main style="flex: 1; padding: 0; font-weight: 600">
-                <!-- 标题和描述 -->
-                <div style="margin-bottom: 15px">
-                  <el-link class="custom-link" data-label="asin" style="font-weight: 600" type="primary">
-                    {{ 'B08N5M7S6K' }}
-                  </el-link>
-                  <div style="margin-top: 6px">NiHome-0451-MshRmLightSmallBRN</div>
-                  <div style="margin-top: 6px">蘑菇小夜灯-小号棕色底座款</div>
-                  <!-- 评分部分 -->
-                  <div class="rate-wrapper">
-                    <span class="rate-value">{{ 4.6 }}</span>
-                    <span><el-rate v-model="rate" class="custom-rate" disabled :void-icon="Star" /></span>
-                    <span class="rate-count">{{ 484 }}</span>
-                  </div>
-                </div>
-                <!-- 买家之声和缺陷率 -->
-                <div style="font-weight: 600">
-                  <el-link class="custom-link" style="margin-right: 10px; font-weight: 600" type="primary">买家之声</el-link>
-                  <el-tag class="customTag customTag-good">Good</el-tag>
-                  <div data-label="缺陷率" style="margin-top: 6px">
-                    缺陷率：
-                    <span style="color: #bad411">4.09%</span>
-                    | 缺陷订单：
-                    <span style="color: #bad411">40</span>
-                    /1201
-                  </div>
-                </div>
-              </el-main>
-            </el-container>
-          </vab-card>
+        <div class="right-sidebar">
+          <product-info-card
+            :asin="asin"
+            :defect-orders="40"
+            :defect-rate="4.09"
+            :image-url="'https://picsum.photos/200/200'"
+            :rating="4.6"
+            :review-count="484"
+            :sku="'NiHome-0451-MshRmLightSmallBRN'"
+            :title="'蘑菇小夜灯-小号棕色底座款'"
+            :total-orders="1201"
+            voice-of-customer="good"
+          />
           <!-- 运营备注 -->
-          <div style="margin-bottom: 20px">
+          <div class="operation-remark" style="margin-bottom: 20px">
             <div style="margin-bottom: 10px">
               <el-text>运营备注</el-text>
               <el-select style="width: 30%; margin-left: 10px">
@@ -211,7 +184,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Star } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
 import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption, opeClassOption } from './constantOption'
@@ -301,11 +273,7 @@ const dateShortcuts = [
 const tabsStore = useTabsStore()
 const { delVisitedRoute } = tabsStore
 const activeName = ref<number>(Number(route.query.activeName) || 0)
-// 评分
-const rate = ref<number>(4.7)
 const returnRadio = ref<number>(0)
-// 初始化图片高度
-const imageHeight = ref<number>(0)
 const queryForm3 = reactive<any>({})
 // ASIN（从 route.query 获取，如果没有则使用默认值）
 const asin = ref<string>((route.query.asin as string) || 'B08N5M7S6K')
@@ -343,17 +311,6 @@ const goBack = async () => {
   router.push({
     path: '/storeOperations/productPerformanceDashboard',
   })
-}
-// 动态设置图片列高度
-const setImageHeight = () => {
-  const dom1 = document.querySelector('.el-link[data-label="asin"]')
-  const dom2 = document.querySelector('div[data-label="缺陷率"]')
-
-  if (dom1 && dom2) {
-    const height1 = dom1.getBoundingClientRect()
-    const height2 = dom2.getBoundingClientRect()
-    imageHeight.value = height2.bottom - height1.top
-  }
 }
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
@@ -433,7 +390,6 @@ watch(
   { immediate: true }
 )
 onMounted(() => {
-  setImageHeight()
   activeName.value = Number(route.query.activeName)
   selectField.value = Number(route.query.field)
   // 获取站点列表
@@ -470,7 +426,53 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.main-content-row {
+  height: 100%;
+  min-height: 0;
+
+  .el-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+}
+
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+
+  :deep(.product-info-card) {
+    flex-shrink: 0;
+  }
+
+  .operation-remark {
+    flex-shrink: 0;
+  }
+
+  :deep(.operation-log-card) {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
 .default-table-detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+
+  .main-content-row {
+    flex: 1;
+    min-height: 0;
+  }
+
   :deep() {
     .el-form--inline {
       .el-form-item {
@@ -483,29 +485,6 @@ watch(
       text-align: right;
     }
 
-    .customTag {
-      width: 7em;
-      padding: 0 30px;
-      color: #fff;
-      border: 0;
-      border-radius: 17px;
-
-      &-veryPoor {
-        background-color: #e32e00;
-      }
-      &-good {
-        background-color: #bad411;
-      }
-      &-fair {
-        background-color: #ffc400;
-      }
-      &-poor {
-        background-color: #ff9900;
-      }
-      &-excellent {
-        background-color: #49850f;
-      }
-    }
     .vab-query-form {
       .left-panel {
         margin-bottom: 0;
