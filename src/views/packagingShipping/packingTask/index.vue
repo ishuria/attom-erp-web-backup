@@ -132,6 +132,24 @@
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
           <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
             <template #default="{ row }">
@@ -346,6 +364,24 @@
           <el-table-column label="带磁" min-width="70" prop="magnetic">
             <template #default="{ row }">
               <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
@@ -585,6 +621,24 @@
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -804,6 +858,24 @@
           <el-table-column label="带磁" min-width="70" prop="magnetic">
             <template #default="{ row }">
               <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
@@ -1029,6 +1101,24 @@
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -1250,6 +1340,24 @@
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
           <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
             <template #default="{ row }">
               <el-switch
@@ -1462,6 +1570,24 @@
           <el-table-column label="带磁" min-width="70" prop="magnetic">
             <template #default="{ row }">
               <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
+            <template #default="{ row }">
+              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="玩具" min-width="70" prop="toy">
+            <template #default="{ row }">
+              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            </template>
+          </el-table-column>
+          <el-table-column label="应季产品" min-width="70" prop="seasonal">
+            <template #default="{ row }">
+              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
               <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
             </template>
           </el-table-column>

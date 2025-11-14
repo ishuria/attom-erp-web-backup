@@ -52,6 +52,7 @@ export interface IupdateProductStatus {
   magnetic: number
   woodenProduct: number
   toy: number
+  seasonal: number
 }
 export interface ISkuId {
   skuId: number

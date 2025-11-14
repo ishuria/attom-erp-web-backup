@@ -128,6 +128,11 @@
           <el-checkbox v-model="row.toy" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
         </template>
       </el-table-column>
+      <el-table-column label="应季产品" min-width="75" prop="toy">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.seasonal" class="custom-checkbox" :false-value="0" :true-value="1" @change="handleUpdateStatus(row)" />
+        </template>
+      </el-table-column>
       <el-table-column label="总实际成本" min-width="100" prop="procurementCost" sortable="custom">
         <template #header>
           总实际
@@ -419,6 +424,7 @@ const handleUpdateStatus = async (row: IgetProductList) => {
     magnetic: row.magnetic,
     woodenProduct: row.woodenProduct,
     toy: row.toy,
+    seasonal: row.seasonal,
   })
 }
 const queryForm = reactive<any>({
