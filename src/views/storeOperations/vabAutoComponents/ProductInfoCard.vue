@@ -9,8 +9,8 @@
       </el-aside>
       <!-- 右侧内容 -->
       <el-main style="flex: 1; padding: 0; font-weight: 600">
-        <!-- 标题和描述 -->
-        <div style="margin-bottom: 15px">
+        <!-- 第一部分：产品基本信息 -->
+        <div class="product-info-section">
           <el-link
             class="custom-link"
             data-label="asin"
@@ -23,15 +23,10 @@
           </el-link>
           <div style="margin-top: 6px">{{ productInfo?.sku || '' }}</div>
           <div style="margin-top: 6px">{{ productInfo?.productDesc || '' }}</div>
-          <!-- 评分部分 -->
-          <div class="rate-wrapper">
-            <span class="rate-value">{{ productInfo?.rating || 0 }}</span>
-            <span><el-rate v-model="displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-            <span class="rate-count">{{ productInfo?.commentsNumbers || 0 }}</span>
-          </div>
         </div>
-        <!-- 买家之声和缺陷率 -->
-        <div style="font-weight: 600">
+
+        <!-- 第二部分：买家之声和评分 -->
+        <div class="product-info-section">
           <el-link
             class="custom-link"
             :href="`https://www.amazon.com/product-reviews/${productInfo?.asin}`"
@@ -41,6 +36,16 @@
           >
             买家之声
           </el-link>
+          <!-- 评分部分 -->
+          <div class="rate-wrapper">
+            <span class="rate-value">{{ productInfo?.rating || 0 }}</span>
+            <span><el-rate v-model="displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+            <span class="rate-count">{{ productInfo?.commentsNumbers || 0 }}</span>
+          </div>
+        </div>
+
+        <!-- 第三部分：VOC满意度和缺陷率 -->
+        <div class="product-info-section">
           <el-tag v-if="productInfo?.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
           <el-tag v-if="productInfo?.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
           <el-tag v-if="productInfo?.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
@@ -139,6 +144,14 @@ watch(
 </script>
 
 <style lang="scss" scoped>
+.product-info-section {
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 .customTag {
   width: 7em;
   padding: 0 30px;
