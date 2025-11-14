@@ -10,6 +10,11 @@
                   <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
+              <el-form-item label="人员">
+                <el-select v-model="queryForm.userId" placeholder="全部" @change="queryData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
               <el-form-item label="设计任务">
                 <el-select v-model="queryForm.designTaskId" placeholder="全部" @change="queryData">
                   <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
@@ -178,6 +183,11 @@
         <vab-query-form>
           <vab-query-form-left-panel>
             <el-form inline>
+              <el-form-item label="人员">
+                <el-select v-model="longQueryForm.userId" placeholder="全部" @change="longQueryData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
               <el-form-item label="设计任务">
                 <el-select v-model="longQueryForm.designTaskId" placeholder="全部" @change="longQueryData">
                   <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
@@ -288,7 +298,16 @@
       </el-tab-pane>
       <el-tab-pane label="产品开发设计" :name="2">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="人员">
+                <el-select v-model="developQueryForm.userId" placeholder="全部" @change="developQueryData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
             <el-form inline :model="developQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -409,7 +428,16 @@
       </el-tab-pane>
       <el-tab-pane label="采购降本" :name="3">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel>
+            <el-form inline>
+              <el-form-item label="人员">
+                <el-select v-model="costQueryForm.userId" placeholder="全部" @change="costQueryData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
             <el-form inline :model="costQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -706,6 +734,7 @@ import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules, TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import CommissionPermission from '~/src/permissions/commission'
+import { useUserStore } from '~/src/store/modules/user'
 import handleClipboard from '~/src/utils/clipboard'
 import { hasPermission } from '~/src/utils/permission'
 import { designTypeOption } from '../../newProductTask/constantOption'
@@ -721,6 +750,7 @@ import {
   getDevelopDesignTaskList,
   getLongCommissionTaskList,
   getReductionCostList,
+  getUserPersonLevelDropdownList,
   notPassReductionCostTask,
   passReductionCostTask,
   pauseCommissionTaskPicture,
@@ -749,6 +779,7 @@ defineOptions({
   name: 'CommissionTaskSummary',
 })
 
+const userName = useUserStore().getUsername
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   if (data.column.label === '图片') {
     return 'clear-padding'
@@ -810,22 +841,26 @@ const queryForm = reactive<IGetCommissionTaskPictureListReq>({
   pageNo: 1,
   pageSize: 20,
   designTaskId: -1,
+  userId: -1,
 })
 const longQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
   designTaskId: -1,
+  userId: -1,
 })
 const developQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  userId: -1,
 })
 const costQueryForm = reactive<IGetLongCommissionTaskListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  userId: -1,
 })
 const pictureUpdateVisible = ref<boolean>(false)
 const pictureUpdateForm = reactive<any>({})
@@ -1361,23 +1396,34 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     textAlign: 'center',
   }
 }
-onBeforeMount(() => {
+const userLevelList = ref<{ id: number; label: string }[]>([])
+const fetchUserLevelList = async () => {
+  const { data } = await getUserPersonLevelDropdownList()
+  userLevelList.value = data
+  const id = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
+  queryForm.userId = id
+  longQueryForm.userId = id
+  developQueryForm.userId = id
+  costQueryForm.userId = id
+}
+onBeforeMount(async () => {
   fetchSiteList()
+  await fetchUserLevelList()
   switch (activeName.value) {
     case 0: {
-      fetchData()
+      await fetchData()
       break
     }
     case 1: {
-      fetchLongData()
+      await fetchLongData()
       break
     }
     case 2: {
-      fetchDevelopData()
+      await fetchDevelopData()
       break
     }
     default: {
-      fetchCostData()
+      await fetchCostData()
     }
   }
 })

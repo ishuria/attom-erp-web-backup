@@ -105,6 +105,7 @@ export interface IGetCommissionTaskPictureListReq {
   pageNo: number
   pageSize: number
   designTaskId: number
+  userId: number
 }
 export interface IGetCommissionTaskPictureListRes {
   data: {
@@ -210,6 +211,7 @@ export interface IGetLongCommissionTaskListReq {
   pageNo: number
   pageSize: number
   designTaskId?: number
+  userId?: number
 }
 export interface IGetLongCommissionTaskListRes {
   data?: {

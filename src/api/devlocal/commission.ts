@@ -431,3 +431,13 @@ export function getProductSkuDetailHistoryPriceList(params: {
     params,
   })
 }
+/**
+ * 获取人员等级下拉列表
+ * @returns 人员等级下拉列表
+ */
+export function getUserPersonLevelDropdownList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/user/person/level/dropdown`,
+    method: 'get',
+  })
+}
