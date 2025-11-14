@@ -123,7 +123,7 @@
                     分数明细
                   </el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleCopyEvaluation(row.idNo)">
                   <el-link type="primary" underline="never">复制</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -239,6 +239,7 @@ import { type TableInstance } from 'element-plus'
 import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
 import {
+  copyEvaluation,
   getEstimatedCostAccountingList,
   getEvaluationScoreDetail,
   getEvaluationScoreParameter,
@@ -747,7 +748,15 @@ const updateSharedVisibleValue = (newValue: boolean) => {
 const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
-
+const handleCopyEvaluation = async (id: number) => {
+  $baseConfirm(`您确定要复制编号为 ${id} 的新款评估吗？`, null, async () => {
+    const { data } = await copyEvaluation({ id })
+    if (data) {
+      $baseMessage(`复制成功！`, 'success', 'hey')
+      fetchData()
+    }
+  })
+}
 const cellScoreStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '描述') {
     return {
