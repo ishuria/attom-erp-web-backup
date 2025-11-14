@@ -146,6 +146,11 @@
               </span>
             </template>
             <template #default="{ row }">
+              <span v-if="item.label === 'SKU'">
+                {{ row.sku }}
+                <br />
+                {{ row.poComponentName }}
+              </span>
               <span v-if="item.label === '发货日期'">
                 {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
               </span>
@@ -360,6 +365,11 @@
               </span>
             </template>
             <template #default="{ row }">
+              <span v-if="item.label === 'SKU'">
+                {{ row.sku }}
+                <br />
+                {{ row.poComponentName }}
+              </span>
               <span v-if="item.label === '发货日期'">
                 {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
               </span>
@@ -630,10 +640,7 @@ const handleCalculateWidth = (item: any) => {
       return flexColumnWidth(list.value, '供应商税号', 'suppliserTaxNumber', 50)
     }
     case 'SKU': {
-      return flexColumnWidth(list.value, 'SKU', 'sku')
-    }
-    case 'PO零件名': {
-      return flexColumnWidth(list.value, 'PO零件名', 'poComponentName')
+      return Math.max(flexColumnWidth(list.value, 'SKU', 'sku'), flexColumnWidth(list.value, 'PO零件名', 'poComponentName'))
     }
     case 'shipmentID': {
       return flexColumnWidth(list.value, 'shipmentID-', 'shipmentId')
