@@ -444,7 +444,7 @@
     <!-- 云舟催票文件 -->
     <vab-dialog v-model="ticketReminderVisible" title="生成云舟催票文件" width="25%" @close="closeTicketReminder">
       <el-form ref="ticketReminderFormRef" label-position="top" :model="ticketReminderForm" :rules="ticketReminderFormRules">
-        <el-form-item label="发货日期">
+        <el-form-item label="发货日期" prop="shipmentDate">
           <el-date-picker
             v-model="ticketReminderForm.shipmentDate"
             :clearable="true"
@@ -456,7 +456,7 @@
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="付款日期" prop="">
+        <el-form-item label="付款日期" prop="dateRange">
           <el-date-picker
             v-model="ticketReminderForm.dateRange"
             :clearable="true"
@@ -907,9 +907,21 @@ const ticketReminderForm = reactive<ITicketReminderForm>({
   shipmentDate: ['', ''],
   status: 0,
 })
+// 自定义校验器：dateRange 或 shipmentDate 必须填一个
+const validateDateRangeOrShipmentDate = (rule: any, value: any, callback: any) => {
+  const dateRangeFilled = ticketReminderForm.dateRange && ticketReminderForm.dateRange[0] && ticketReminderForm.dateRange[1]
+  const shipmentDateFilled = ticketReminderForm.shipmentDate && ticketReminderForm.shipmentDate[0] && ticketReminderForm.shipmentDate[1]
+
+  if (!dateRangeFilled && !shipmentDateFilled) {
+    callback(new Error('发货日期和付款日期至少需要填写一个'))
+  } else {
+    callback()
+  }
+}
+
 const ticketReminderFormRules = reactive<FormRules<ITicketReminderForm>>({
-  dateRange: [{ required: true, message: '请选择日期范围', trigger: 'change' }],
-  suppliser: [{ required: true, message: '请输入供应商', trigger: 'blur' }],
+  dateRange: [{ validator: validateDateRangeOrShipmentDate, trigger: 'change' }],
+  shipmentDate: [{ validator: validateDateRangeOrShipmentDate, trigger: 'change' }],
 })
 const ticketReminderFormRef = ref<FormInstance>()
 const closeTicketReminder = () => {

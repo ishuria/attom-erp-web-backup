@@ -71,7 +71,18 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="耗材" prop="consumable" width="70">
+        <el-table-column align="center" label="耗材" prop="consumable" width="90">
+          <template #header>
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">
+                耗材
+                <el-icon><info-filled /></el-icon>
+              </div>
+              <template #content>
+                <div class="custom-tooltip">仅低货值消耗品勾选。比如：纸箱，OPP袋，珍珠棉等。如有不确定的，向上级确认。</div>
+              </template>
+            </el-tooltip>
+          </template>
           <template #default="{ row }">
             <el-checkbox v-model="row.consumableCheck" :false-value="0" :true-value="1" @change="handleConsumableChange(row)" />
           </template>
@@ -590,7 +601,7 @@
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, InfoFilled, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { currencyList, invoicingList } from '../indexCommon'
@@ -1747,5 +1758,14 @@ onMounted(() => {
 }
 .el-checkbox {
   transform: scale(1.2);
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+  }
 }
 </style>

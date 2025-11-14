@@ -311,9 +311,8 @@
           </template>
         </el-table>
         <vab-pagination
-          v-model:limit="queryForm.pageSize"
-          v-model:page="queryForm.pageNo"
-          :default-page-size="queryForm.pageSize"
+          :page-no="queryForm.pageNo"
+          :page-size="queryForm.pageSize"
           :total="queryTotal"
           @current-change="currentChange"
           @size-change="sizeChange"
@@ -507,9 +506,7 @@ const fetchOperationUser = async () => {
 const fetchData = async () => {
   try {
     listLoading.value = true
-    const { data } = await queryOperationAutoMationList({
-      ...queryForm,
-    })
+    const { data } = await queryOperationAutoMationList(queryForm)
     if (data?.list.length == 0) {
       listLoading.value = false
       operationAutoMationList.value = []
@@ -527,13 +524,6 @@ const fetchData = async () => {
 const sizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: '1',
-      pageSize: value,
-    },
-  })
   fetchData()
 }
 
@@ -585,13 +575,6 @@ const updateCommon = async (value: IAutoMationItem) => {
 
 const currentChange = (value: number) => {
   queryForm.pageNo = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: value,
-      pageSize: queryForm.pageSize,
-    },
-  })
   fetchData()
 }
 
@@ -805,9 +788,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 }
 onBeforeMount(() => {
   operationAndDevelopSelect()
-  const { pageNo, pageSize } = route.query
-  queryForm.pageNo = Number(pageNo) || 1
-  queryForm.pageSize = Number(pageSize) || 50
   fetchData()
   fetchSiteList()
   fetchOperateUserList()

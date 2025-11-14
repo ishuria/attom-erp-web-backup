@@ -147,6 +147,12 @@
             <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
+        <el-form-item>
+          <!-- 提示 -->
+          <vab-alert show-icon type="warning">
+            <div>导入卖点里的产品尺寸，材质，颜色等信息可能和当前产品不同，需要检查和修改！</div>
+          </vab-alert>
+        </el-form-item>
       </el-form>
       <template #footer>
         <div style="margin-right: 10px">

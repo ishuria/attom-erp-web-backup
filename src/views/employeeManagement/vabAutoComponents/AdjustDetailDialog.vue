@@ -53,7 +53,7 @@
           :filters="[
             { text: '产品利润分', value: '0' },
             { text: '其他计分项', value: '1' },
-            { text: '考核数加回', value: '2' },
+            { text: '考核数调整', value: '2' },
           ]"
           label="细分类型"
           prop="detailType"
@@ -62,7 +62,7 @@
           <template #default="{ row }">
             <span v-show="row.detailType === 0">产品利润分</span>
             <span v-show="row.detailType === 1">其他计分项</span>
-            <span v-show="row.detailType === 2">考核数加回</span>
+            <span v-show="row.detailType === 2">考核数调整</span>
           </template>
         </el-table-column>
         <el-table-column label="调整数量" prop="adjustQuantity" width="100" />
@@ -241,7 +241,7 @@ const typeOption = [
 const detailTypeOption = [
   { label: '产品利润分', value: 0 },
   { label: '其他计分项', value: 1 },
-  { label: '考核数加回', value: 2 },
+  { label: '考核数调整', value: 2 },
 ]
 const queryForm = reactive<IGetAdjustDetailReq>({
   keyWord: '',
