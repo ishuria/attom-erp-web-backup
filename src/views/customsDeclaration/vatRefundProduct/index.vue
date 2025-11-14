@@ -170,6 +170,9 @@
               <span v-if="item.label === '利润率'">
                 {{ row.profitMargin ? row.profitMargin + '%' : '' }}
               </span>
+              <span v-if="item.label === '出口退税税率'">
+                {{ row.exportTaxRebateRate ? row.exportTaxRebateRate + '%' : '' }}
+              </span>
               <span v-if="item.label === '发票匹配日期'">
                 <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
               </span>
@@ -380,6 +383,9 @@
               </span>
               <span v-if="item.label === '利润率'">
                 {{ row.profitMargin ? row.profitMargin + '%' : '' }}
+              </span>
+              <span v-if="item.label === '出口退税税率'">
+                {{ row.exportTaxRebateRate ? row.exportTaxRebateRate + '%' : '' }}
               </span>
               <span v-if="item.label === '发票匹配日期'">
                 <div v-for="(item, index) in row.formattedMatchDate" :key="index" class="invoice-number-row">{{ item }}</div>
