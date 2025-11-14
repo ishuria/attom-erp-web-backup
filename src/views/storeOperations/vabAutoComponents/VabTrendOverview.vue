@@ -635,14 +635,6 @@ const getMonthlyData = (data: ITrendOverview[], type: IDataProp): any[] => {
   return getGroupedData(data, type, 'month')
 }
 
-// 已选中需要取消选中再进行选择
-const handleCanSelect = (cardActive: boolean) => {
-  if (cardActive) {
-    $baseMessage('请先取消选中，再进行选择！', 'error')
-    return false
-  }
-  return true
-}
 // 更新所有下拉项的禁用状态
 const updateDropdownItemsDisabled = () => {
   const selectedTexts = cards.value.map((card) => card.title)
@@ -654,14 +646,26 @@ const updateDropdownItemsDisabled = () => {
 
 // 统一的处理下拉项切换
 const handleSwitchItem = (index: number, item: { label: string; disabled: boolean }) => {
-  const can = handleCanSelect(cards.value[index].active)
-  if (can) {
-    cards.value[index].title = item.label
+  // 如果卡片已激活，切换字段时自动取消激活
+  if (cards.value[index].active) {
+    // 从选中项中移除旧字段
+    const oldTitle = cards.value[index].title
+    const oldIndex = selectedItems.indexOf(oldTitle)
+    if (oldIndex > -1) {
+      selectedItems.splice(oldIndex, 1)
+    }
+    // 取消激活状态
     cards.value[index].active = false
-    updateDropdownItemsDisabled()
-    // 更新卡片数据（因为字段改变了）
-    updateCardsData()
+    // 通知图表移除旧字段
+    const oldDataGroup = getGroup(oldTitle) as IDataGroup
+    handleSelectionChange(false, oldDataGroup, oldTitle)
   }
+
+  // 切换字段
+  cards.value[index].title = item.label
+  updateDropdownItemsDisabled()
+  // 更新卡片数据（因为字段改变了）
+  updateCardsData()
 }
 
 /**

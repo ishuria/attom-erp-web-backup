@@ -123,6 +123,9 @@
                     分数明细
                   </el-link>
                 </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-link type="primary" underline="never">复制</el-link>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
