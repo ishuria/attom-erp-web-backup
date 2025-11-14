@@ -108,7 +108,7 @@
             <span>{{ row.specificationModel }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '发票数量', 'invoiceCount')">
+        <el-table-column label="剩余发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '剩余发票数量', 'invoiceCount')">
           <template #default="{ row }">
             <div class="none">
               <el-input
