@@ -33,6 +33,7 @@ export interface IgetProductList {
   magnetic: number
   woodenProduct: number
   toy: number
+  seasonal: number
 }
 export interface IgetProductListResp {
   code: number
