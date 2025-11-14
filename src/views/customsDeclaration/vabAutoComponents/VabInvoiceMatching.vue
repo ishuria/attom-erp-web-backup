@@ -30,7 +30,7 @@
         :cell-style="cellStyle"
         class="noneHoveTable"
         :data="list"
-        :header-cell-style="{ textAlign: 'center' }"
+        :header-cell-style="headerCellStyle"
         max-height="800"
         :span-method="objectSpanMethod"
         @cell-click="cellClick"
@@ -87,6 +87,7 @@
             <span>{{ row.suppliser }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="发票行次" width="100" />
         <el-table-column label="开票品名" prop="invoiceName" :width="flexColumnWidth(list, '开票品名', 'invoiceName')">
           <template #default="{ row }">
             <div class="none">
@@ -228,10 +229,36 @@
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
-          <el-text style="margin: 0 10px calc(var(--el-margin) / 2) 0">
-            供应商：{{ _supplier }}，开票品名：{{ _invoiceName }}，单位：{{ _invoiceUnit }}，数量：{{ _invoiceCount }}，发票含税金额:
-            {{ _includingTaxPrice }}
-          </el-text>
+          <div class="invoice-info-tags">
+            <el-tag size="large" type="info">
+              <span style="font-weight: 500">供应商：</span>
+              <span>{{ _supplier || '--' }}</span>
+            </el-tag>
+            <el-tag size="large" type="success">
+              <span style="font-weight: 500">开票品名：</span>
+              <span>{{ _invoiceName || '--' }}</span>
+            </el-tag>
+            <el-tag size="large" type="warning">
+              <span style="font-weight: 500">单位：</span>
+              <span>{{ _invoiceUnit || '--' }}</span>
+            </el-tag>
+            <el-tag size="large">
+              <span style="font-weight: 500">数量：</span>
+              <span>
+                <span class="remaining-value">{{ _remainingCount ?? '--' }}</span>
+                <span style="margin: 0 4px">/</span>
+                <span>{{ _invoiceCount || 0 }}</span>
+              </span>
+            </el-tag>
+            <el-tag size="large" type="primary">
+              <span style="font-weight: 500">发票含税金额：</span>
+              <span>
+                <span class="remaining-value">{{ _remainingAmount ?? '--' }}</span>
+                <span style="margin: 0 4px">/</span>
+                <span>{{ _includingTaxPrice || 0 }}</span>
+              </span>
+            </el-tag>
+          </div>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="matchQueryForm" @submit.prevent>
@@ -259,22 +286,37 @@
         :header-cell-style="{ textAlign: 'center' }"
         max-height="50vh"
         @row-click="handleRowClick"
+        @sort-change="handleSortChange"
       >
-        <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(pagedData, '合同编号', 'contractNumber')" />
-        <el-table-column label="未匹配发票数" prop="notYetInvoice" width="125" />
-        <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" />
-        <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(pagedData, '运费', 'freightFee')" />
-        <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(pagedData, 'FOB售价', 'fobPrice')" />
-        <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(pagedData, '利润率', 'profitMargin')" />
-        <el-table-column label="汇率" prop="rate" width="80" />
-        <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(pagedData, '人民币售价', 'salePrice')" />
-        <el-table-column label="报关数量" prop="customsDeclarationCount" width="95" />
-        <el-table-column label="报关单位" prop="customsDeclarationUnit" width="95" />
-        <el-table-column label="PO" prop="po" width="100" />
-        <el-table-column label="含税成本价￥" prop="taxInclusiveCost" width="125" />
-        <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(pagedData, 'SKU', 'sku')" />
-        <el-table-column label="零件名" prop="componentName" :width="flexColumnWidth(pagedData, '零件名', 'componentName')" />
-        <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" />
+        <el-table-column
+          label="合同编号"
+          :min-width="flexColumnWidth(pagedData, '合同编号--', 'contractNumber')"
+          prop="contractNumber"
+          sortable
+        />
+        <el-table-column label="未匹配发票数" min-width="145" prop="notYetInvoice" sortable />
+        <!-- <el-table-column label="CIF售价" prop="cifPrice" :width="flexColumnWidth(pagedData, 'CIF售价', 'cifPrice')" /> -->
+        <!-- <el-table-column label="运费" prop="freightFee" :width="flexColumnWidth(pagedData, '运费', 'freightFee')" /> -->
+        <!-- <el-table-column label="FOB售价" prop="fobPrice" :width="flexColumnWidth(pagedData, 'FOB售价', 'fobPrice')" /> -->
+        <!-- <el-table-column label="利润率" prop="profitMargin" :width="flexColumnWidth(pagedData, '利润率', 'profitMargin')" /> -->
+        <!-- <el-table-column label="汇率" prop="rate" width="80" /> -->
+        <!-- <el-table-column label="人民币售价" prop="salePrice" :width="flexColumnWidth(pagedData, '人民币售价', 'salePrice')" /> -->
+        <el-table-column label="报关数量" min-width="95" prop="customsDeclarationCount" />
+        <el-table-column label="报关单位" min-width="95" prop="customsDeclarationUnit" />
+        <el-table-column label="PO" min-width="100" prop="po" sortable />
+        <el-table-column label="含税成本价￥" min-width="125" prop="taxInclusiveCost" />
+        <el-table-column
+          label="SKU"
+          :min-width="Math.max(flexColumnWidth(pagedData, 'SKU', 'sku'), flexColumnWidth(pagedData, '零件名', 'componentName'))"
+          prop="sku"
+        >
+          <template #default="{ row }">
+            {{ row.sku }}
+            <br />
+            {{ row.componentName }}
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" /> -->
         <el-table-column label="匹配" prop="status" width="70">
           <template #default="{ row }">
             <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
@@ -511,22 +553,29 @@ const matchListLoading = ref<boolean>(false)
 const matchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
 // 保存原始数据，用于搜索过滤
 const originalMatchList = ref<IGetTaxRefundInvoiceMatchList[]>([])
+// 排序状态
+const sortState = ref<{ prop: string; order: 'ascending' | 'descending' | null } | null>(null)
+
 const queryMatchData = () => {
   matchQueryForm.pageNo = 1
-  applyKeywordFilter()
+  applySortAndFilter()
 }
-// 计算当前页的数据
-const pagedData = computed(() => {
-  const start = (matchQueryForm.pageNo - 1) * matchQueryForm.pageSize
-  const end = start + matchQueryForm.pageSize
-  return matchList.value.slice(start, end) // 获取当前页的数据
-})
-// 根据关键词过滤数据
-const applyKeywordFilter = () => {
+
+// 处理排序变化
+const handleSortChange = ({ prop, order }: { prop: string; order: 'ascending' | 'descending' | null }) => {
+  sortState.value = order ? { prop, order } : null
+  applySortAndFilter()
+  matchQueryForm.pageNo = 1 // 排序后重置到第一页
+}
+
+// 应用排序和过滤
+const applySortAndFilter = () => {
+  // 先应用关键词过滤
   const keyword = matchQueryForm.keyWord.trim().toLowerCase()
+  let filteredData: IGetTaxRefundInvoiceMatchList[]
+
   if (keyword) {
-    // 基于原始数据进行过滤
-    matchList.value = originalMatchList.value.filter(
+    filteredData = originalMatchList.value.filter(
       (item: any) =>
         (item.contractNumber?.toString()?.toLowerCase() || '').includes(keyword) ||
         (item.po?.toString()?.toLowerCase() || '').includes(keyword) ||
@@ -536,10 +585,51 @@ const applyKeywordFilter = () => {
         (item.taxInclusiveCost?.toString()?.toLowerCase() || '').includes(keyword)
     )
   } else {
-    // 如果关键词为空，显示所有原始数据
-    matchList.value = [...originalMatchList.value]
+    filteredData = [...originalMatchList.value]
   }
+
+  // 再应用排序
+  if (sortState.value && sortState.value.order) {
+    const { prop, order } = sortState.value
+    filteredData.sort((a: any, b: any) => {
+      const aVal = a[prop]
+      const bVal = b[prop]
+
+      // 处理 null/undefined 值
+      if (aVal == null && bVal == null) return 0
+      if (aVal == null) return 1
+      if (bVal == null) return -1
+
+      // 数字类型排序
+      if (typeof aVal === 'number' && typeof bVal === 'number') {
+        return order === 'ascending' ? aVal - bVal : bVal - aVal
+      }
+
+      // 字符串类型排序
+      const aStr = String(aVal).toLowerCase()
+      const bStr = String(bVal).toLowerCase()
+      if (order === 'ascending') {
+        return aStr.localeCompare(bStr)
+      } else {
+        return bStr.localeCompare(aStr)
+      }
+    })
+  }
+
+  matchList.value = filteredData
 }
+
+// 根据关键词过滤数据（保持向后兼容）
+const applyKeywordFilter = () => {
+  applySortAndFilter()
+}
+
+// 计算当前页的数据
+const pagedData = computed(() => {
+  const start = (matchQueryForm.pageNo - 1) * matchQueryForm.pageSize
+  const end = start + matchQueryForm.pageSize
+  return matchList.value.slice(start, end) // 获取当前页的数据
+})
 const handleMatchCurrentChange = (value: number) => {
   matchQueryForm.pageNo = value
   // fetchMatchData()
@@ -622,6 +712,8 @@ const _invoiceName = ref<string>('')
 const _invoiceUnit = ref<string>('')
 const _invoiceCount = ref<number>(0)
 const _includingTaxPrice = ref<number>(0)
+const _remainingCount = ref<number | null>(null) // 剩余数量
+const _remainingAmount = ref<number | null>(null) // 剩余金额
 let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
@@ -643,8 +735,10 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _includingTaxPrice.value = row.includingTaxPrice!
     // 保存原始数据
     originalMatchList.value = data?.list! || []
+    // 重置排序状态
+    sortState.value = null
     // 显示过滤后的数据
-    matchList.value = [...originalMatchList.value]
+    applySortAndFilter()
     matchVisible.value = true
     matchListLoading.value = false
   } else {
@@ -773,9 +867,15 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
           backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
           textAlign: 'center',
         }
-      }
-      return {
-        textAlign: 'center',
+      } else if (label === 'PO总报关数') {
+        return {
+          textAlign: 'center',
+          color: '#999',
+        }
+      } else {
+        return {
+          textAlign: 'center',
+        }
       }
     }
   }
@@ -788,9 +888,15 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
           backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
           textAlign: 'center',
         }
-      }
-      return {
-        textAlign: 'center',
+      } else if (label === '实际报关数') {
+        return {
+          textAlign: 'center',
+          color: '#999',
+        }
+      } else {
+        return {
+          textAlign: 'center',
+        }
       }
     }
 
@@ -801,9 +907,15 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
           backgroundColor: 'rgba(142, 161, 231, 0.5)',
           textAlign: 'center',
         }
-      }
-      return {
-        textAlign: 'center',
+      } else if (label === '报关单位') {
+        return {
+          textAlign: 'center',
+          color: '#999',
+        }
+      } else {
+        return {
+          textAlign: 'center',
+        }
       }
     }
 
@@ -814,9 +926,15 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
           backgroundColor: 'rgba(172, 142, 253, 0.5)',
           textAlign: 'center',
         }
-      }
-      return {
-        textAlign: 'center',
+      } else if (label === '零件PO含税价') {
+        return {
+          textAlign: 'center',
+          color: '#999',
+        }
+      } else {
+        return {
+          textAlign: 'center',
+        }
       }
     }
   }
@@ -873,8 +991,37 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
   // 发票数量和发票单位与报关数量和报关单位不一致，报关数量和单位就标红
 }
+const headerCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column?.label
+  if (
+    label === '匹配合同号' ||
+    label === '匹配PO' ||
+    label === '零件PO含税价' ||
+    label === '实际报关数' ||
+    label === '报关单位' ||
+    label === 'PO总报关数'
+  ) {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-primary-light-9)',
+      color: 'var(--el-color-primary)',
+      fontWeight: 600,
+    }
+  } else if (label !== '操作') {
+    return {
+      textAlign: 'center',
+      backgroundColor: 'var(--el-color-danger-light-9)',
+      color: 'var(--el-color-danger)',
+      fontWeight: 600,
+    }
+  }
+  return {
+    textAlign: 'center',
+  }
+}
 const matchCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 12 || data.columnIndex === 13 || data.columnIndex === 14) {
+  const label = data.column?.label
+  if (label === '合同编号' || label === 'SKU') {
     return {
       textAlign: 'left',
     }
@@ -892,7 +1039,15 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
+  if (
+    columnIndex === 0 ||
+    columnIndex === 1 ||
+    columnIndex === 2 ||
+    columnIndex === 3 ||
+    columnIndex === 4 ||
+    columnIndex === 5 ||
+    columnIndex === 6
+  ) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
@@ -936,6 +1091,31 @@ const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
 </script>
 
 <style lang="scss" scoped>
+.invoice-info-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 10px calc(var(--el-margin) / 2) 0;
+
+  :deep(.el-tag) {
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+}
+
+.remaining-value {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 0 2px;
+  background-color: #fef0f0;
+  color: #f56c6c;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid #fbc4c4;
+  font-size: 15px;
+}
+
 .none {
   display: none;
 }
