@@ -166,6 +166,11 @@
               </template>
             </el-tooltip>
           </span>
+          <span v-if="item.label === '春节最晚订货日'">
+            春节最晚
+            <br />
+            订货日
+          </span>
         </template>
         <template #default="{ row }">
           <span v-if="item.label === '图片'">
@@ -406,6 +411,9 @@
       <el-form class="noneHoverTable" style="margin: auto 0">
         <el-form-item label="春节备货">
           <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
+        </el-form-item>
+        <el-form-item label="春节订货截止日期" label-position="top">
+          <el-date-picker v-model="stockUpForm.springFestivalOrderDeadline" clearable type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="节后开工日期" label-position="top">
           <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD" />
@@ -706,6 +714,8 @@ const handleConfirmSpringFestival = async () => {
     stockUpVisible.value = false
   } else if (data === -1) {
     $baseMessage('有任务执行中', 'warning')
+  } else if (data === null) {
+    $baseMessage('修改成功', 'success')
   }
 }
 // 打开春节备货
