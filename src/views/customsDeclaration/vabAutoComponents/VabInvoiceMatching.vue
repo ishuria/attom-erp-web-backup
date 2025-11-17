@@ -316,10 +316,9 @@
             {{ row.componentName }}
           </template>
         </el-table-column>
-        <!-- <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(pagedData, 'Shipment ID-', 'shipmentId')" /> -->
         <el-table-column label="匹配" prop="status" width="70">
           <template #default="{ row }">
-            <el-radio v-model="matchStatus" class="custom-radio" :label="row.uniqId" size="large">{{ '' }}</el-radio>
+            <el-checkbox v-model="row.matchFlag" size="large" />
           </template>
         </el-table-column>
       </el-table>
@@ -382,6 +381,7 @@ defineOptions({
 const pdfVisible = ref<boolean>(false)
 const pdfLoading = ref<boolean>(false)
 const source = ref<string>('')
+const matchInvoiceList = ref<any>([])
 
 const showPdf = (path: string) => {
   pdfLoading.value = true
@@ -646,16 +646,21 @@ const detailIds = ref<number[]>([])
 
 const handleConfirm = async () => {
   matchInvoiceLoading.value = true
-  if (matchStatus.value === -1) {
+  const taxRefundIdArr: number[] = []
+  matchList.value.forEach((el, idx) => {
+    if (el.matchFlag) {
+      taxRefundIdArr.push(el.id)
+    }
+  })
+
+  if (taxRefundIdArr.length === 0) {
     $baseMessage('请选择匹配项', 'warning')
+    matchInvoiceLoading.value = false
     return
   }
   try {
-    // 勾选匹配的value
-    const matchedItem = matchList.value.find((item: IGetTaxRefundInvoiceMatchList) => item.uniqId === matchStatus.value)
-
     const { data } = await submitTaxRefundInvoiceMatch({
-      id: matchedItem!.id,
+      taxRefundIds: taxRefundIdArr,
       detailId: matchQueryForm.detailId,
     })
     if (data) {
