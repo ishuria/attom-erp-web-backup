@@ -498,13 +498,18 @@ const handleFinishUpload = async () => {
 }
 // 发票匹配清空
 const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
-  cleanLoading.value = row.id!
+  console.log(row)
+  if (row.mId === null) {
+    $baseMessage('此记录未匹配，不能进行清空操作！', 'error')
+    return
+  }
+  cleanLoading.value = row.mId!
   $baseConfirm(
     '确定要清空吗？',
     null,
     async () => {
       const { data } = await cleanTaxRefundInvoice({
-        detailId: row.detailId!,
+        matchId: row.mId!,
       })
       if (data) {
         $baseMessage('清空成功！', 'success')
@@ -519,6 +524,10 @@ const handleCleanInvoice = async (row: IGetTaxRefundInvoiceList) => {
 }
 // 删除发票
 const handleDeleteInvoice = async (row: IGetTaxRefundInvoiceList) => {
+  if (!row.mId === false) {
+    $baseMessage('此发票有匹配不能删除！请先进行清空操作！', 'error')
+    return
+  }
   $baseConfirm('确定要删除吗？', null, async () => {
     const { data } = await deleteTaxRefundInvoice({
       id: row.id!,
@@ -723,11 +732,6 @@ let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchLoading.value = row.id! // 开始 loading
-  if (row.matchContractNumber) {
-    $baseMessage('请先清空再进行匹配！', 'warning')
-    matchLoading.value = null
-    return
-  }
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
@@ -1043,7 +1047,6 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
   if (
     columnIndex === 0 ||
     columnIndex === 1 ||
@@ -1068,6 +1071,23 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
     }
     // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
     if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
+      return { rowspan, colspan: 1 }
+    } else {
+      return { rowspan: 0, colspan: 0 }
+    }
+  }
+
+  if (columnIndex === 7 || columnIndex === 8 || columnIndex === 9 || columnIndex === 10 || columnIndex === 11 || columnIndex === 12) {
+    const id = row.detailId
+    let rowspan = 1
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      if (list.value[i].detailId === id) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+    if (rowIndex === 0 || list.value[rowIndex - 1].detailId !== id) {
       return { rowspan, colspan: 1 }
     } else {
       return { rowspan: 0, colspan: 0 }

@@ -190,6 +190,8 @@ export interface IGetTaxRefundInvoiceList {
    * 发票主键id
    */
   id?: number
+  /** 发票匹配中间表id */
+  mId?: number
   /**
    * 含税金额
    */
@@ -256,7 +258,7 @@ export interface ITaxRefundInvoiceRes {
 }
 
 export interface ICleanTaxRefundInvoice {
-  detailId: number
+  matchId: number
 }
 
 export interface IGetTaxRefundInvoiceMatchQuery {
