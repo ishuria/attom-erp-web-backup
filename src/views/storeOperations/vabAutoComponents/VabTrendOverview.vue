@@ -144,6 +144,15 @@ const clickCard = ref<string>('')
 // 卡片配置数组
 const cards = ref([
   {
+    title: '销量(订单)',
+    value: '',
+    previousValue: '',
+    trendPercentage: '',
+    trendType: 'down' as const,
+    active: false,
+    colorType: 'orange' as const,
+  },
+  {
     title: '销售额(订单)',
     value: '',
     previousValue: '',
@@ -151,15 +160,6 @@ const cards = ref([
     trendType: 'down' as const,
     active: false,
     colorType: 'primary' as const,
-  },
-  {
-    title: '广告销售额',
-    value: '',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'orange' as const,
   },
   {
     title: '广告花费',
@@ -202,7 +202,7 @@ const cards = ref([
 const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '销量(订单)', disabled: false },
   { label: '销售额(订单)', disabled: false },
-  { label: '广告销售额', disabled: false },
+  // { label: '广告销售额', disabled: false },
   { label: '广告花费', disabled: false },
   { label: '净利润(订单)', disabled: false },
   { label: '预计下月仓储费', disabled: false },
@@ -210,8 +210,8 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
   { label: '点击成本', disabled: false },
   { label: '客单价', disabled: false },
   { label: 'CPA(获客成本)', disabled: false },
-  { label: '广告转化率', disabled: false },
-  { label: '自然转化率', disabled: false },
+  // { label: '广告转化率', disabled: false },
+  // { label: '自然转化率', disabled: false },
   { label: '综合转化率', disabled: false },
   { label: '退货率', disabled: false },
   { label: '退款率', disabled: false },
@@ -237,9 +237,9 @@ const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
 ])
 
 const groups = {
-  price1: ['销售额(订单)', '广告销售额', '广告花费', '净利润(订单)', '预计下月仓储费', '退款金额', '销售额(利润报表)', '净利润(利润报表)'],
+  price1: ['销售额(订单)', '广告花费', '净利润(订单)', '预计下月仓储费', '退款金额', '销售额(利润报表)', '净利润(利润报表)'],
   price2: ['点击成本', '客单价', 'CPA(获客成本)'],
-  percent1: ['广告转化率', '自然转化率', '综合转化率'],
+  percent1: ['综合转化率'],
   percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
   percent3: ['广告点击率'],
   int1: ['销量(订单)', '广告销量', '自然销量', '总访客', 'PC端访客', '移动端访客', '自然点击', '广告点击', '自然点击占比', '广告点击占比'],
@@ -252,11 +252,10 @@ const groups = {
 }
 // name -> prop (根据 ITrendOverview 接口，与 constantOption.ts 中的 trendOverviewColumns 对应)
 const nameMapProp: Record<string, IDataProp> = {
-  '销售额(订单)': 'amount',
   '销量(订单)': 'volume',
-  广告销量: 'adSales',
-  自然销量: 'organicSales',
+  '销售额(订单)': 'amount',
   广告销售额: 'adSalesAmount',
+  自然销售额: 'organicSalesAmount',
   广告花费: 'spend',
   '净利润(订单)': 'grossOrderProfit',
   预计下月仓储费: 'estimatedStorageCostNextMonth',
@@ -264,8 +263,8 @@ const nameMapProp: Record<string, IDataProp> = {
   点击成本: 'clickCost',
   客单价: 'averageOrderValue',
   'CPA(获客成本)': 'cpa',
-  广告转化率: 'adConversionRate',
-  自然转化率: 'organicConversionRate',
+  // 广告转化率: 'adConversionRate',
+  // 自然转化率: 'organicConversionRate',
   综合转化率: 'totalConversionRate',
   退货率: 'returnRate',
   退款率: 'refundRate',
@@ -292,8 +291,7 @@ const nameMapProp: Record<string, IDataProp> = {
 type IDataProp =
   | 'amount'
   | 'volume'
-  | 'adSales'
-  | 'organicSales'
+  | 'organicSalesAmount'
   | 'adSalesAmount'
   | 'spend'
   | 'grossOrderProfit'
@@ -337,7 +335,7 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
   const totalSalesData: Record<string, number> = {} // ∑总销量
   const sessionsTotalData: Record<string, number> = {} // ∑总访客
   const clicksData: Record<string, number> = {} // ∑广告点击量
-  const adSalesData: Record<string, number> = {} // ∑广告销量
+  const organicSalesAmountData: Record<string, number> = {} // ∑自然销售额
   const adSalesAmountData: Record<string, number> = {} // ∑广告销售额
   const impressionsData: Record<string, number> = {} // ∑广告展现量
   const pageViewsTotalData: Record<string, number> = {} // ∑pageViewsTotal
@@ -438,24 +436,24 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
 
         break
       }
-      case 'organicConversionRate':
-      case 'adConversionRate': {
-        // 处理自然转化率/广告转化率类型，计算 ∑销量 / ∑点击量
-        if (!groupedData[timeKey]) {
-          adSalesData[timeKey] = 0
-          clicksData[timeKey] = 0
-        }
-        if (type === 'organicConversionRate') {
-          adSalesData[timeKey] += item.organicSales ?? 0
-          clicksData[timeKey] += item.organicClicks ?? 0
-        } else {
-          adSalesData[timeKey] += item.adSales ?? 0
-          clicksData[timeKey] += item.clicks ?? 0
-        }
-        groupedData[timeKey] = formatNumber((adSalesData[timeKey] / clicksData[timeKey]) * 100)
+      // case 'organicConversionRate':
+      // case 'adConversionRate': {
+      //   // 处理自然转化率/广告转化率类型，计算 ∑销量 / ∑点击量
+      //   if (!groupedData[timeKey]) {
+      //     adSalesData[timeKey] = 0
+      //     clicksData[timeKey] = 0
+      //   }
+      //   if (type === 'organicConversionRate') {
+      //     adSalesData[timeKey] += item.organicSales ?? 0
+      //     clicksData[timeKey] += item.organicClicks ?? 0
+      //   } else {
+      //     adSalesData[timeKey] += item.adSales ?? 0
+      //     clicksData[timeKey] += item.clicks ?? 0
+      //   }
+      //   groupedData[timeKey] = formatNumber((adSalesData[timeKey] / clicksData[timeKey]) * 100)
 
-        break
-      }
+      //   break
+      // }
       case 'cpa': {
         // CPA(获客成本), ∑广告花费 / ∑总销量
         if (!groupedData[timeKey]) {
@@ -913,22 +911,22 @@ const handleSwitchTime = () => {
       break
     }
     case 'week': {
-      adSalesData = getWeeklyData(fullTrendList.value, 'adSales')
-      organicSalesData = getWeeklyData(fullTrendList.value, 'organicSales')
+      adSalesData = getWeeklyData(fullTrendList.value, 'adSalesAmount')
+      organicSalesData = getWeeklyData(fullTrendList.value, 'organicSalesAmount')
 
       break
     }
     case 'month': {
-      adSalesData = getMonthlyData(fullTrendList.value, 'adSales')
-      organicSalesData = getMonthlyData(fullTrendList.value, 'organicSales')
+      adSalesData = getMonthlyData(fullTrendList.value, 'adSalesAmount')
+      organicSalesData = getMonthlyData(fullTrendList.value, 'organicSalesAmount')
 
       break
     }
     // No default
   }
   option.value.xAxis.data = adSalesData.map((item: any) => item.date)
-  option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
-  option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
+  option.value.series[1].data = adSalesData.map((d: any) => d.adSalesAmount)
+  option.value.series[0].data = organicSalesData.map((d: any) => d.organicSalesAmount)
 
   // 根据数据点数量调整柱状图宽度和 x 轴标签
   const dataLength = option.value.xAxis.data.length
@@ -1010,7 +1008,7 @@ const initChart = () => {
         let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
 
         // 需要聚合的销量系列名称
-        const salesGroupNames = ['自然销量', '广告销量']
+        const salesGroupNames = ['广告销售额', '自然销售额']
         let salesTotal = 0
         let salesGroupItems: any[] = []
         let otherItems: any[] = []
@@ -1029,6 +1027,13 @@ const initChart = () => {
           }
         })
 
+        // 按照 salesGroupNames 的顺序排序，确保"广告销售额"在"自然销售额"之前
+        salesGroupItems.sort((a, b) => {
+          const indexA = salesGroupNames.indexOf(a.seriesName)
+          const indexB = salesGroupNames.indexOf(b.seriesName)
+          return indexA - indexB
+        })
+
         // 销量组 HTML（类似 PerformanceHistory 的样式）
         let salesGroupHtml = ''
         if (salesGroupItems.length > 0) {
@@ -1045,9 +1050,9 @@ const initChart = () => {
                     margin-right: 9px;
                     color: #333;
                   "></span>
-                  <span>销量(订单)</span>
+                  <span>销售额(订单)</span>
                 </div>
-                <span style="font-weight: bold; color: #333;">${salesTotal.toFixed(0)}</span>
+                <span style="font-weight: bold; color: #333;">${currencySymbol.value}${salesTotal.toFixed(0)}</span>
               </div>
               <div style="margin-top: 2px; padding-left: 10px;">
                 ${salesGroupItems
@@ -1055,7 +1060,7 @@ const initChart = () => {
                     (item) => `
                   <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 1px;">
                     <div style="display: flex; align-items: center;">${item.marker}<span style="margin-left: 5px;">${item.seriesName}</span></div>
-                    <span>${item.value}</span>
+                    <span>${currencySymbol.value}${item.value}</span>
                   </div>
                 `
                   )
@@ -1096,7 +1101,7 @@ const initChart = () => {
         })
 
         return `
-          <div style="padding: 0px; border-radius: 20px; width: 160px;">
+          <div style="padding: 0px; border-radius: 20px; width: 180px;">
             ${titleHtmlStr}
             ${otherHtmlArr.join('')}
             ${salesGroupHtml}
@@ -1126,7 +1131,7 @@ const initChart = () => {
     yAxis: [
       {
         type: 'value',
-        name: '广告/自然销量',
+        name: '广告/自然销售额',
         position: 'left',
         nameTextStyle: {
           color: '#409EFF',
@@ -1150,25 +1155,25 @@ const initChart = () => {
     ],
     series: [
       {
-        name: '广告销量',
+        name: '自然销售额',
         type: 'bar',
         yAxisIndex: 0,
-        data: fullTrendList.value.map((item: any) => item.adSales),
+        data: fullTrendList.value.map((item: any) => item.organicSalesAmount),
         barWidth: calculateBarWidth(fullTrendList.value.length),
         itemStyle: {
-          color: '#409EFF',
+          color: '#67C23A',
         },
         opacity: 0.9,
         stack: 'sales',
       },
       {
-        name: '自然销量',
+        name: '广告销售额',
         type: 'bar',
         yAxisIndex: 0,
-        data: fullTrendList.value.map((item: any) => item.organicSales),
+        data: fullTrendList.value.map((item: any) => item.adSalesAmount),
         barWidth: calculateBarWidth(fullTrendList.value.length),
         itemStyle: {
-          color: '#67C23A',
+          color: '#409EFF',
         },
         opacity: 0.9,
         stack: 'sales',

@@ -426,6 +426,12 @@ export const trendOverviewColumns = [
     isFixed: 'left',
   },
   {
+    label: '销量(订单)',
+    prop: 'volume',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '销售额(订单)',
     prop: 'amount',
     checked: true,
@@ -435,26 +441,17 @@ export const trendOverviewColumns = [
     },
   },
   {
-    label: '销量(订单)',
-    prop: 'volume',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '广告销量',
-    prop: 'adSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自然销量',
-    prop: 'organicSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
     label: '广告销售额',
     prop: 'adSalesAmount',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
+  },
+  {
+    label: '自然销售额',
+    prop: 'organicSalesAmount',
     checked: true,
     minWidth: 110,
     formatter: (_row: any, _column: any, cellValue: any) => {
@@ -524,24 +521,24 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 90,
   },
-  {
-    label: '广告转化率',
-    prop: 'adConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '自然转化率',
-    prop: 'organicConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
+  // {
+  //   label: '广告转化率',
+  //   prop: 'adConversionRate',
+  //   checked: true,
+  //   minWidth: 110,
+  //   formatter: (_row: any, _column: any, cellValue: any) => {
+  //     return cellValue != null ? `${cellValue}%` : ''
+  //   },
+  // },
+  // {
+  //   label: '自然转化率',
+  //   prop: 'organicConversionRate',
+  //   checked: true,
+  //   minWidth: 110,
+  //   formatter: (_row: any, _column: any, cellValue: any) => {
+  //     return cellValue != null ? `${cellValue}%` : ''
+  //   },
+  // },
   {
     label: '综合转化率',
     prop: 'totalConversionRate',
