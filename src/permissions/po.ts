@@ -25,6 +25,8 @@ class PoPermission {
   static readonly PAY_RECORD = 'purchase:pay:record'
   /** 发布打包任务按钮权限 */
   static readonly PACKAGE_TASK_REPLEASE = 'purchase:packageTask:release'
+  /** PoSku替换按钮 */
+  static readonly PO_SKU_REPLACE = 'purchase:sku:replace'
 }
 
 export default PoPermission

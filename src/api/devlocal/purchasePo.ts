@@ -36,6 +36,7 @@ import type {
   IPoIds,
   IPoSkuComponentId,
   IPoSkuId,
+  IPurchaseSkuReplace,
   IPurchaseTotalAp,
   ISku,
   IStringResp,
@@ -713,5 +714,14 @@ export function getPoPublisherList(params?: IGetAllNameReq) {
     url: `${BASE_API}/purchase/po/release/user/list`,
     method: 'get',
     params,
+  })
+}
+
+// 采购订单-生成PO合同
+export function purchaseSkuReplace(data: IPurchaseSkuReplace) {
+  return request({
+    url: `${BASE_API}/purchase/sku/replace`,
+    method: 'post',
+    data,
   })
 }

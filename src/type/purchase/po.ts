@@ -960,3 +960,9 @@ export interface IPacakgeTaskReq {
   poId: number
   count: number
 }
+
+export interface IPurchaseSkuReplace {
+  replaceSku: string
+  poId: number
+  poSkuId: number
+}
