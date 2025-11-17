@@ -337,6 +337,8 @@ export interface IGetTaxRefundInvoiceMatchList {
    * 含税成本
    */
   taxInclusiveCost?: number
+
+  matchFlag: boolean
 }
 
 export interface IUpdateTaxRefundInvoice {
@@ -357,7 +359,7 @@ export interface IUpdateTaxRefundInvoiceDetail {
 }
 export interface ISubmitTaxRefundInvoiceMatch {
   detailId: number
-  id: number
+  taxRefundIds: number[]
 }
 export interface IGetTaxRefundProfitMarginQuery {
   fromDate: string
