@@ -1,7 +1,7 @@
 <template>
   <div class="operation-log-card">
     <vab-query-form>
-      <vab-query-form-left-panel>
+      <vab-query-form-left-panel :span="6">
         <el-form inline>
           <el-form-item>
             <el-text>{{ title }}</el-text>
@@ -11,12 +11,23 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-right-panel :span="18">
         <el-form inline>
-          <el-form-item label="筛选展示">
-            <el-select v-model="selectedFilter" @change="handleFilterChange">
+          <el-form-item label="">
+            <el-select v-model="selectedFilter" style="max-width: 100px" @change="handleFilterChange">
               <el-option v-for="item in filterOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-date-picker
+              v-model="dateRange"
+              end-placeholder="结束日期"
+              range-separator="至"
+              start-placeholder="开始日期"
+              style="max-width: 240px"
+              type="daterange"
+              @change="handleFilterChange"
+            />
           </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
@@ -76,6 +87,7 @@
 </template>
 
 <script lang="ts" setup>
+import { formatDateToString } from '~/src/utils/dateUtils'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
 import type { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
 
@@ -124,7 +136,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: '操作日志/事件清单',
+  title: '日志',
   addButtonText: '新增',
   asin: '',
   siteId: undefined,
@@ -144,6 +156,7 @@ const emit = defineEmits<{
 }>()
 
 const selectedFilter = ref<number | string>(-1)
+const dateRange = ref<[Date, Date] | null>(null)
 const changeDetailVisible = ref<boolean>(false)
 const changeDetailTitle = ref<string>('')
 const changeDetailType = ref<string>('')
@@ -189,7 +202,7 @@ const fetchOperationLog = async () => {
 
   loading.value = true
   try {
-    const { data } = await getOperationLog({
+    const requestParams: any = {
       asin: props.asin,
       siteId: props.siteId,
       type:
@@ -200,7 +213,15 @@ const fetchOperationLog = async () => {
           : props.type,
       pageNo: pageNo.value,
       pageSize: pageSize.value,
-    })
+    }
+
+    // 如果有日期范围，添加到请求参数
+    if (dateRange.value && dateRange.value.length === 2) {
+      requestParams.startDate = formatDateToString(dateRange.value[0])
+      requestParams.endDate = formatDateToString(dateRange.value[1])
+    }
+
+    const { data } = await getOperationLog(requestParams)
     // 将接口返回的数据映射到组件需要的格式
     logData.value = data.list.map((item: IGetOperationLog) => ({
       date: item.date,
@@ -333,6 +354,10 @@ const handleContentClick = (row: LogItem) => {
 
   .vab-query-form {
     flex-shrink: 0;
+
+    :deep(.el-form--inline .el-form-item) {
+      margin-right: 10px;
+    }
   }
 
   :deep(.el-table) {
