@@ -87,7 +87,7 @@
             <span>{{ row.suppliser }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票行次" width="100" />
+        <el-table-column label="发票行次" prop="no" width="100" />
         <el-table-column label="开票品名" prop="invoiceName" :width="flexColumnWidth(list, '开票品名', 'invoiceName')">
           <template #default="{ row }">
             <div class="none">
@@ -172,20 +172,30 @@
           :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')"
         />
         <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-        <el-table-column label="当前发票匹配数" prop="matchInvoiceCount" width="100" />
+        <el-table-column label="当前发票匹配数" prop="customsDeclarationCount" width="100" />
 
-        <el-table-column label="已匹配实际报关数" prop="customsDeclarationCount" width="110">
+        <el-table-column label="已匹配实际报关数" width="110">
           <template #header>
             已匹配
             <br />
             实际报关数
           </template>
+          <template #default="{ row }">
+            <div v-if="row.taxRefundCustomsDeclarationCount">
+              {{ row.taxRefundMatchCustomsDeclarationCount }} / {{ row.taxRefundCustomsDeclarationCount }}
+            </div>
+          </template>
         </el-table-column>
-        <el-table-column label="已匹配PO总报关数" prop="customsDeclarationCountTotal" width="110">
+        <el-table-column label="已匹配PO总报关数" width="110">
           <template #header>
             已匹配
             <br />
             PO总报关数
+          </template>
+          <template #default="{ row }">
+            <div v-if="row.customsDeclarationCountTotal">
+              {{ row.customsDeclarationMatchCount }} / {{ row.customsDeclarationCountTotal }}
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="报关单位" prop="customsDeclarationUnit" width="100" />
@@ -202,12 +212,18 @@
             <br />
             报关金额
           </template>
+          <template #default="{ row }">
+            <div v-if="row.taxRefundTotalInvoicePrice">{{ row.taxRefundMatchInvoicePrice }} / {{ row.taxRefundTotalInvoicePrice }}</div>
+          </template>
         </el-table-column>
-        <el-table-column label="已匹配PO总报关金额" prop="" width="125">
+        <el-table-column label="已匹配PO总报关金额" prop="" width="150">
           <template #header>
             已匹配
             <br />
             PO总报关金额
+          </template>
+          <template #default="{ row }">
+            <div v-if="row.poComponentTotalPrice">{{ row.poComponentMatchPrice }} / {{ row.poComponentTotalPrice }}</div>
           </template>
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="120">
@@ -758,6 +774,10 @@ const _remainingAmount = ref<number | null>(null) // 剩余金额
 let copyRow: any
 // 展示匹配
 const showMatch = async (row: IGetTaxRefundInvoiceList) => {
+  if (row.remainingCount === 0) {
+    $baseMessage('该发票剩余可匹配为0，不能进行匹配操作！', 'error')
+    return
+  }
   matchLoading.value = row.id! // 开始 loading
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
@@ -1103,15 +1123,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  if (
-    columnIndex === 0 ||
-    columnIndex === 1 ||
-    columnIndex === 2 ||
-    columnIndex === 3 ||
-    columnIndex === 4 ||
-    columnIndex === 5 ||
-    columnIndex === 6
-  ) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行

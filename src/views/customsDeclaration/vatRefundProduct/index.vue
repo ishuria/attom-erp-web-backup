@@ -515,15 +515,6 @@
             <el-radio border :value="1">所有记录</el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item label="仅已报关" prop="">
-          <el-checkbox :true-value="1" :false-value="0" ></el-checkbox>
-        </el-form-item>
-        <el-form-item label="采购方" prop="">
-          <el-select ></el-select>
-        </el-form-item> -->
-        <!-- <vab-alert type="error">
-          注意:系统生成催收文件的开票数量是按照PO数量，如果和供应商沟通拆分开票的系统无法识别，需要你手动处理。且当拆分的任何一张发票报关后，发票催收会跳过这个PO。
-        </vab-alert> -->
       </el-form>
       <template #footer>
         <el-button @click="closeTicketReminder">取消</el-button>
@@ -899,6 +890,7 @@ const handleDeleteMatch = async (row: IGetTaxRefundBatchDetailList) => {
     const { data } = await deleteTaxRefundMatch({
       id: row.id!,
       detailId: row.invoiceDetailId!,
+      matchId: row.matchId!,
     })
     if (data) {
       $baseMessage('删除匹配成功！', 'success')
@@ -1100,11 +1092,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       }
     }
   }
-  // else if (label !== '报关数量' && label !== '报关单位') {
-  //   return {
-  //     textAlign: 'center',
-  //   }
-  // }
   return {
     textAlign: 'left',
   }
@@ -1147,9 +1134,6 @@ const fetchData = async () => {
             }, 0)
             .toFixed(2)
         )
-        // console.log(item.payRecordTotal)
-        // console.log(item.taxInclusiveCost)
-        // console.log(item.payRecordTotal !== item.taxInclusiveCost)
       }
 
       item.payRecordList = item.payRecordList
@@ -1183,6 +1167,7 @@ const fetchData = async () => {
         invoiceNumber: record.invoiceNumber,
         invoiceFilePath: record.invoiceFilePath,
         invoiceDetailId: record.invoiceDetailId,
+        matchId: record.matchId,
         id: item.id,
       }))
     }
@@ -1195,10 +1180,6 @@ const fetchColumn = async () => {
   columns.value = data
   columns.value.forEach((item: any) => {
     item.minWidth = item.width
-    // 设置 最小宽度
-    // if (item.prop !== 'skuImageUrl' && item.prop !== 'componentUrl') {
-    //   delete item.width
-    // }
     if (['shipmentDate', 'contractNumber'].includes(item.prop)) {
       item.isFixed = true
     }
