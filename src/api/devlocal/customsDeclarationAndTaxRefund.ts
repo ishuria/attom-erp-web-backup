@@ -1046,3 +1046,16 @@ export function uploadTaxRefundCheckFile(data: FormData) {
     data,
   })
 }
+
+/**
+ * 退税管理 云舟催票文件 前置接口
+ * @param data
+ * @returns
+ */
+export const taxRefundCifPriceUpdate = (data: any): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/update`,
+    method: 'post',
+    data,
+  })
+}

@@ -157,6 +157,12 @@
               <span v-if="item.label === '报关单出口日期'">
                 {{ row.exportDate ? formatDate(new Date(row.exportDate)) : '' }}
               </span>
+              <div v-if="item.label === 'CIF售价$'">
+                <div v-if="row.cifPrice">
+                  {{ row.cifPrice }}
+                  <vab-icon class="edit-icon" icon="pencil-line" style="font-size: 20px" @click="handleCifPriceEdit(row)" />
+                </div>
+              </div>
               <span v-if="item.label === '含税成本￥'">
                 <el-text
                   v-if="
@@ -556,6 +562,18 @@
         <vab-pdf :source="source" />
       </div>
     </vab-dialog>
+
+    <!-- cif价格修改Dialog -->
+    <vab-dialog v-model="updateVisible" title="Cif价格修改" width="20%">
+      <el-form label-position="top">
+        <el-form-item label="Cif售价$">
+          <el-input v-model="updateCifPrice" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button :loading="cifUpdateLoading" type="primary" @click="handleCifPriceUpdate">确定修改</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -567,6 +585,7 @@ import {
   checkTaxRefundInvoiceExport,
   deleteTaxRefundMatch,
   getTaxRefundList,
+  taxRefundCifPriceUpdate,
   taxRefundInvoiceBeforeCheck,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFilePD } from '/@/api/devlocal/download'
@@ -980,6 +999,7 @@ const handleConfirmTicketReminder = async () => {
     }
   })
 }
+
 // pdf 可见
 const pdfVisible = ref<boolean>(false)
 // 批次利润率可见
@@ -1021,6 +1041,32 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
     secondChild.classList.add('none')
 
     focusAndSelectInput(cell)
+  }
+}
+
+// cif价格修改
+const updateVisible = ref<boolean>(false)
+const cifUpdateLoading = ref<boolean>(false)
+const updateCifPrice = ref<number>()
+const _row = ref<any>()
+const handleCifPriceEdit = (row: any) => {
+  updateVisible.value = true
+  updateCifPrice.value = row.cifPrice
+  _row.value = row
+}
+const handleCifPriceUpdate = async () => {
+  try {
+    cifUpdateLoading.value = true
+    const { data } = await taxRefundCifPriceUpdate({
+      id: _row.value.id,
+      cifPrice: updateCifPrice.value,
+    })
+    if (data) {
+      cifUpdateLoading.value = true
+      $baseMessage('cif售价修改成功！', 'success')
+    }
+  } catch (err) {
+    cifUpdateLoading.value = false
   }
 }
 
