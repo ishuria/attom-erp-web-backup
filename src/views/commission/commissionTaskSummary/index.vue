@@ -11,7 +11,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="人员">
-                <el-select v-model="queryForm.userId" placeholder="全部" @change="queryData">
+                <el-select v-model="queryForm.userId" filterable placeholder="全部" @change="queryData">
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -184,7 +184,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="longQueryForm.userId" placeholder="全部" @change="longQueryData">
+                <el-select v-model="longQueryForm.userId" filterable placeholder="全部" @change="longQueryData">
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -301,7 +301,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="developQueryForm.userId" placeholder="全部" @change="developQueryData">
+                <el-select v-model="developQueryForm.userId" filterable placeholder="全部" @change="developQueryData">
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -431,7 +431,7 @@
           <vab-query-form-left-panel>
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="costQueryForm.userId" placeholder="全部" @change="costQueryData">
+                <el-select v-model="costQueryForm.userId" filterable placeholder="全部" @change="costQueryData">
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>

@@ -4,13 +4,6 @@
       <vab-query-form-left-panel :span="18">
         <el-form inline>
           <template v-if="currentRoleCode === ROLE_BOSS_CODE">
-            <!-- 角色（如需） -->
-            <!-- <el-form-item label="角色">
-              <el-select v-model="developQueryForm.roleId" placeholder="请选择角色" @change="developQueryData">
-                <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
-              </el-select>
-            </el-form-item> -->
-            <!-- 人员（树形单选） -->
             <el-form-item label="人员">
               <el-tree-select
                 v-model="developQueryForm.userId"
@@ -25,12 +18,28 @@
                 @change="developQueryData"
               />
             </el-form-item>
-            <el-form-item label="站点">
-              <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
-                <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+          </template>
+          <template v-else>
+            <el-form-item label="人员">
+              <el-select v-model="developQueryForm.userId" filterable placeholder="全部" @change="developQueryData">
+                <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
             </el-form-item>
           </template>
+          <!-- 角色（如需） -->
+          <!-- <el-form-item label="角色">
+              <el-select v-model="developQueryForm.roleId" placeholder="请选择角色" @change="developQueryData">
+                <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
+              </el-select>
+            </el-form-item> -->
+          <!-- 人员（树形单选） -->
+
+          <el-form-item label="站点">
+            <el-select v-model="developQueryForm.site" placeholder="请选择站点" @change="developQueryData">
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="发放月份">
             <el-select v-model="developQueryForm.month" placeholder="请选择发放月份" @change="developQueryData">
               <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
@@ -196,10 +205,16 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { getCommissionDetailDevelopList, getCommissionTypeMonth, getDevelopDesignDetailPersonList } from '/@/api/devlocal/commission'
+import { ROLE_BOSS_CODE } from '~/src/const/role'
+import { useUserStore } from '~/src/store/modules/user'
+import {
+  getCommissionDetailDevelopList,
+  getCommissionTypeMonth,
+  getDevelopDesignDetailPersonList,
+  getUserPersonLevelDropdownList,
+} from '/@/api/devlocal/commission'
 import { getOperationUpdateDate } from '/@/api/devlocal/productPerformance'
 import { getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
-import { ROLE_BOSS_CODE } from '/@/const/role.ts'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetCommissionDetailDevelopList, IGetCommissionDetailDevelopListReq } from '/@/type/commission/commissionType'
 import handleClipboard from '/@/utils/clipboard'
@@ -563,6 +578,13 @@ const onlineOption = ref<{ id: number; label: string }[]>([
     label: '未上线',
   },
 ])
+const userName = useUserStore().getUsername
+const userLevelList = ref<{ id: number; label: string }[]>([])
+const fetchUserLevelList = async () => {
+  const { data } = await getUserPersonLevelDropdownList()
+  userLevelList.value = data
+  developQueryForm.userId = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
+}
 const fetchCommissionTypeMonth = async () => {
   const { data } = await getCommissionTypeMonth({ type: 2 })
   monthOption.value = data
@@ -572,6 +594,7 @@ const fetchCommissionTypeMonth = async () => {
 }
 onBeforeMount(async () => {
   fetchSiteList()
+  await fetchUserLevelList()
   fetchUpdateDate()
   fetchCommissionTypeMonth()
   fetchDevelopUserList()
