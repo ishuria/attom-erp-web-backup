@@ -340,6 +340,8 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
   const impressionsData: Record<string, number> = {} // ∑广告展现量
   const pageViewsTotalData: Record<string, number> = {} // ∑pageViewsTotal
   const organicClicksData: Record<string, number> = {} // ∑自然点击量
+  // 用于计算平均值的计数对象（预计下月仓储费和库存需要计算平均值）
+  const countData: Record<string, number> = {}
 
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
@@ -542,17 +544,35 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           groupedData[timeKey] = 0
         }
         const value = item[type] ?? 0
-        groupedData[timeKey] += value
-        // 保留两位小数
-        groupedData[timeKey] = formatNumber(groupedData[timeKey])
+        // 预计下月仓储费和库存需要计算平均值
+        if (type === 'estimatedStorageCostNextMonth' || type === 'stock') {
+          groupedData[timeKey] += value
+          // 计数
+          if (!countData[timeKey]) {
+            countData[timeKey] = 0
+          }
+          countData[timeKey]++
+        } else {
+          // 其他类型直接累加
+          groupedData[timeKey] += value
+          // 保留两位小数
+          groupedData[timeKey] = formatNumber(groupedData[timeKey])
+        }
       }
     }
   })
 
-  return Object.keys(groupedData).map((timeKey) => ({
-    date: timeKey,
-    [type]: groupedData[timeKey],
-  }))
+  return Object.keys(groupedData).map((timeKey) => {
+    let value = groupedData[timeKey]
+    // 预计下月仓储费和库存需要计算平均值
+    if ((type === 'estimatedStorageCostNextMonth' || type === 'stock') && countData[timeKey] && countData[timeKey] > 0) {
+      value = formatNumber(value / countData[timeKey])
+    }
+    return {
+      date: timeKey,
+      [type]: value,
+    }
+  })
 }
 // 金额保留两位小数
 const formatNumber = (value: number): number => {
@@ -1052,7 +1072,7 @@ const initChart = () => {
                   "></span>
                   <span>销售额(订单)</span>
                 </div>
-                <span style="font-weight: bold; color: #333;">${currencySymbol.value}${salesTotal.toFixed(0)}</span>
+                <span style="font-weight: bold; color: #333;">${currencySymbol.value}${salesTotal.toFixed(2)}</span>
               </div>
               <div style="margin-top: 2px; padding-left: 10px;">
                 ${salesGroupItems
