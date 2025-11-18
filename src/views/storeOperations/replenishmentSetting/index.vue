@@ -55,11 +55,15 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="产品分类" min-width="200" prop="type1" />
-      <el-table-column align="center" label="维持库存天数" min-width="230" prop="stockPileNumberDays" />
-      <el-table-column align="center" label="最小维持库存数量" min-width="160" prop="minStockPilNumber" />
-      <el-table-column align="center" label="交期安全天数" min-width="160" prop="safetyLeadTime" />
-      <el-table-column align="center" label="平均交期(近10次)" min-width="160" prop="avgLead" />
-      <el-table-column align="center" label="交期平均波动" min-width="160" prop="avgLeadFluctuation" />
+      <el-table-column align="center" label="维持库存天数" min-width="120" prop="stockPileNumberDays" />
+      <el-table-column align="center" label="最小维持库存数量" min-width="140" prop="minStockPilNumber" />
+      <el-table-column align="center" label="交期安全天数" min-width="120" prop="safetyLeadTime" />
+      <el-table-column align="center" label="平均交期(近10次)" min-width="140" prop="avgLead" />
+      <el-table-column align="center" label="交期平均波动" min-width="120" prop="avgLeadFluctuation" />
+      <el-table-column align="center" label="30个可售日销量" min-width="130" prop="available30Sales" />
+      <el-table-column align="center" label="半年有货率" min-width="110" prop="availableRate">
+        <template #default="{ row }">{{ row.availableRate }}%</template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
