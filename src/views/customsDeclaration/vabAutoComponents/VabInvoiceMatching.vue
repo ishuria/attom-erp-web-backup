@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="dflag" :draggable="false" title="发票匹配" top="10vh" width="90%" @close="closeInvoiceMatching">
+  <vab-dialog v-model="dflag" :draggable="false" title="发票匹配" top="10vh" width="97%" @close="closeInvoiceMatching">
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -108,7 +108,18 @@
             <span>{{ row.specificationModel }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="剩余发票数量" prop="invoiceCount" :width="flexColumnWidth(list, '剩余发票数量', 'invoiceCount')">
+        <el-table-column label="剩余发票数量" prop="invoiceCount" width="140">
+          <template #header>
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">
+                剩余发票数量
+                <el-icon><info-filled /></el-icon>
+              </div>
+              <template #content>
+                <div class="custom-tooltip">剩余未匹配的发票数量 / 发票总可匹配数量</div>
+              </template>
+            </el-tooltip>
+          </template>
           <template #default="{ row }">
             <div class="none">
               <el-input
@@ -118,7 +129,7 @@
                 @keyup.enter="clickDetailCancel($event, row)"
               />
             </div>
-            <span>{{ row.invoiceCount }}</span>
+            <span>{{ row.remainingCount }}/{{ row.invoiceCount }}</span>
           </template>
         </el-table-column>
         <el-table-column label="发票单位" prop="invoiceUnit" :width="flexColumnWidth(list, '发票单位', 'invoiceUnit')">
@@ -161,6 +172,23 @@
           :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')"
         />
         <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
+        <el-table-column label="当前发票匹配数" prop="matchInvoiceCount" width="100" />
+
+        <el-table-column label="已匹配实际报关数" prop="customsDeclarationCount" width="110">
+          <template #header>
+            已匹配
+            <br />
+            实际报关数
+          </template>
+        </el-table-column>
+        <el-table-column label="已匹配PO总报关数" prop="customsDeclarationCountTotal" width="110">
+          <template #header>
+            已匹配
+            <br />
+            PO总报关数
+          </template>
+        </el-table-column>
+        <el-table-column label="报关单位" prop="customsDeclarationUnit" width="100" />
         <el-table-column label="零件PO含税价" prop="taxInclusiveCost" width="100">
           <template #header>
             零件PO
@@ -168,22 +196,21 @@
             含税价
           </template>
         </el-table-column>
-        <el-table-column
-          label="实际报关数"
-          prop="customsDeclarationCount"
-          :width="flexColumnWidth(list, '实际报关数', 'customsDeclarationCount')"
-        />
-        <el-table-column
-          label="PO总报关数"
-          prop="customsDeclarationCountTotal"
-          :width="flexColumnWidth(list, 'PO总报关数', 'customsDeclarationCountTotal')"
-        />
-        <el-table-column
-          label="报关单位"
-          prop="customsDeclarationUnit"
-          :width="flexColumnWidth(list, '报关单位', 'customsDeclarationUnit')"
-        />
-        <el-table-column align="center" fixed="right" label="操作" width="130">
+        <el-table-column label="已匹配报关金额" prop="" width="100">
+          <template #header>
+            已匹配
+            <br />
+            报关金额
+          </template>
+        </el-table-column>
+        <el-table-column label="已匹配PO总报关金额" prop="" width="125">
+          <template #header>
+            已匹配
+            <br />
+            PO总报关金额
+          </template>
+        </el-table-column>
+        <el-table-column align="center" fixed="right" label="操作" width="120">
           <template #default="{ row }">
             <div style="display: flex">
               <el-button :disabled="matchLoading === row.detailId" link type="primary" @click="showMatch(row)">匹配</el-button>
@@ -347,7 +374,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search, UploadFilled } from '@element-plus/icons-vue'
+import { InfoFilled, Search, UploadFilled } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
@@ -870,13 +897,13 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 
   const flag = matchContractNumber == '' && matchPo !== '' && matchPo !== undefined
   if (flag) {
-    if (label === 'PO总报关数' || label === '发票数量') {
+    if (label === '已匹配PO总报关数' || label === '剩余发票数量') {
       if (data.row.invoiceCount !== data.row.customsDeclarationCountTotal) {
         return {
-          backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
+          backgroundColor: 'rgba(142, 198, 231, 0.5)',
           textAlign: 'center',
         }
-      } else if (label === 'PO总报关数') {
+      } else if (label === '已匹配PO总报关数') {
         return {
           textAlign: 'center',
           color: '#999',
@@ -891,13 +918,21 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 
   if (canCompare) {
     // 比较发票数量和报关数量
-    if (label === '发票数量' || label === '实际报关数') {
+    if (label === '剩余发票数量' || label === '已匹配实际报关数') {
       if (data.row.invoiceCount !== data.row.customsDeclarationCount) {
-        return {
-          backgroundColor: 'rgba(142, 198, 231, 0.5)', // 红色背景，可自定义
-          textAlign: 'center',
+        if (label === '已匹配实际报关数') {
+          return {
+            backgroundColor: 'rgba(142, 198, 231, 0.5)',
+            textAlign: 'center',
+            color: '#999',
+          }
+        } else {
+          return {
+            backgroundColor: 'rgba(142, 198, 231, 0.5)',
+            textAlign: 'center',
+          }
         }
-      } else if (label === '实际报关数') {
+      } else if (label === '已匹配实际报关数') {
         return {
           textAlign: 'center',
           color: '#999',
@@ -912,9 +947,17 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     // 比较发票单位和报关单位
     if (label === '发票单位' || label === '报关单位') {
       if (data.row.invoiceUnit !== data.row.customsDeclarationUnit) {
-        return {
-          backgroundColor: 'rgba(142, 161, 231, 0.5)',
-          textAlign: 'center',
+        if (label === '报关单位') {
+          return {
+            backgroundColor: 'rgba(142, 161, 231, 0.5)',
+            textAlign: 'center',
+            color: '#999',
+          }
+        } else {
+          return {
+            backgroundColor: 'rgba(142, 161, 231, 0.5)',
+            textAlign: 'center',
+          }
         }
       } else if (label === '报关单位') {
         return {
@@ -931,9 +974,17 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     // 比较发票含税金额和零件po含税价
     if (label === '发票含税金额' || label === '零件PO含税价') {
       if (data.row.includingTaxPrice !== data.row.taxInclusiveCost) {
-        return {
-          backgroundColor: 'rgba(172, 142, 253, 0.5)',
-          textAlign: 'center',
+        if (label === '零件PO含税价') {
+          return {
+            backgroundColor: 'rgba(172, 142, 253, 0.5)',
+            textAlign: 'center',
+            color: '#999',
+          }
+        } else {
+          return {
+            backgroundColor: 'rgba(172, 142, 253, 0.5)',
+            textAlign: 'center',
+          }
         }
       } else if (label === '零件PO含税价') {
         return {
@@ -959,7 +1010,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
     case '开票品名':
     case '规格型号':
-    case '发票数量':
+    case '剩余发票数量':
     case '发票单位':
     case '发票含税金额':
     case '发票未税金额': {
@@ -970,8 +1021,10 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
     case '匹配合同号':
     case '匹配PO':
-    case '实际报关数':
-    case '报关单位': {
+    case '已匹配实际报关数':
+    case '报关单位':
+    case '当前发票匹配数':
+    case '已匹配PO总报关数': {
       return {
         textAlign: 'center',
         cursor: 'not-allowed',
@@ -1005,10 +1058,13 @@ const headerCellStyle = (data: { row: any; column: any; rowIndex: number; column
   if (
     label === '匹配合同号' ||
     label === '匹配PO' ||
+    label === '当前发票匹配数' ||
     label === '零件PO含税价' ||
-    label === '实际报关数' ||
+    label === '已匹配实际报关数' ||
     label === '报关单位' ||
-    label === 'PO总报关数'
+    label === '已匹配PO总报关数' ||
+    label === '已匹配报关金额' ||
+    label === '已匹配PO总报关金额'
   ) {
     return {
       textAlign: 'center',
@@ -1164,6 +1220,15 @@ const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
       transform: scale(1.3);
       transform-origin: center;
     }
+  }
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
   }
 }
 </style>
