@@ -1063,9 +1063,11 @@ const handleCifPriceUpdate = async () => {
     })
     if (data) {
       cifUpdateLoading.value = true
+      updateVisible.value = false
       $baseMessage('cif售价修改成功！', 'success')
     }
   } catch (err) {
+    updateVisible.value = false
     cifUpdateLoading.value = false
   }
 }
