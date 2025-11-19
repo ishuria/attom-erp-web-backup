@@ -1400,11 +1400,11 @@ const userLevelList = ref<{ id: number; label: string }[]>([])
 const fetchUserLevelList = async () => {
   const { data } = await getUserPersonLevelDropdownList()
   userLevelList.value = data
-  const id = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
-  queryForm.userId = id
-  longQueryForm.userId = id
-  developQueryForm.userId = id
-  costQueryForm.userId = id
+  userLevelList.value.unshift({ id: -1, label: '全部' })
+  queryForm.userId = -1
+  longQueryForm.userId = -1
+  developQueryForm.userId = -1
+  costQueryForm.userId = -1
 }
 onBeforeMount(async () => {
   fetchSiteList()
