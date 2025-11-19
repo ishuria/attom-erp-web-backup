@@ -1,17 +1,18 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" width="90%">
+    <vab-dialog v-model="visible" title="系统操作日志" width="95%">
       <el-table :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="60vh" stripe>
-        <el-table-column label="更新时间" min-width="120" prop="updateTime" />
-        <el-table-column label="操作对象" min-width="110" prop="operationGroupName" />
-        <el-table-column label="操作类型" min-width="100" prop="operationType">
+        <el-table-column label="更新时间" prop="updateTime" width="115" />
+        <el-table-column label="操作对象" prop="operationGroupName" width="100" />
+        <el-table-column label="操作广告类型" prop="operationTypeName" width="120" />
+        <el-table-column label="操作类型" prop="operationType" width="100">
           <template #default="{ row }">
             <el-tag :type="row.operationType === 0 ? 'danger' : 'success'">
               {{ row.operationType === 0 ? '关广告' : '开广告' }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作广告类型" min-width="120" prop="operationTypeName" />
+
         <el-table-column label="操作结果" min-width="100" prop="operationResult">
           <template #default="{ row }">
             <el-tag :type="row.operationResult === 0 ? 'danger' : 'success'">
@@ -19,6 +20,7 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="广告活动名" min-width="150" prop="campaignName" />
         <el-table-column label="操作时">
           <el-table-column label="ACOS" min-width="90" prop="operationAcos">
             <template #default="{ row }">{{ row.operationAcos }}%</template>
