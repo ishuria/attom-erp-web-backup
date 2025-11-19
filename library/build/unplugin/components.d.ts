@@ -252,6 +252,7 @@ declare module 'vue' {
     VabFullscreen: typeof import('./../../components/VabFullscreen/index.vue')['default']
     VabGraphicStrokeAnimation: typeof import('./../../../src/views/other/echarts/vabAutoComponents/VabGraphicStrokeAnimation.vue')['default']
     VabHeader: typeof import('./../../components/VabHeader/index.vue')['default']
+    VabHtsDialog: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabHtsDialog.vue')['default']
     VabHtsTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabHtsTable.vue')['default']
     VabIconSelector: typeof import('./../../../src/plugins/VabIconSelector/index.vue')['default']
     VabImageUpload: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabImageUpload.vue')['default']

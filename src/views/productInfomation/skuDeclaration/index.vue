@@ -344,96 +344,7 @@
       </template>
     </vab-dialog>
     <!-- 查看HTS -->
-    <vab-dialog v-model="htsVisible" :draggable="false" title="查看和修改HTS" width="20%">
-      <el-form label-width="auto" style="margin-right: 0; margin-left: 0">
-        <el-form-item label="HTS美国">
-          <div class="hts-select-container">
-            <el-select v-model="htsForm.us" clearable filterable placeholder="请选择HTS美国" @change="handleChangeHtsUsa">
-              <el-option v-for="item in usaList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-button
-              v-if="htsForm.us"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHtsName(htsForm.us, usaList))"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="HTS英国">
-          <div class="hts-select-container">
-            <el-select v-model="htsForm.uk" clearable filterable placeholder="请选择HTS英国" @change="handleChangeHtsUk">
-              <el-option v-for="item in ukHtsList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-button
-              v-if="htsForm.uk"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHtsName(htsForm.uk, ukHtsList))"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="HTS德国">
-          <div class="hts-select-container">
-            <el-select v-model="htsForm.de" clearable filterable placeholder="请选择HTS德国" @change="handleChangeHtsDe">
-              <el-option v-for="item in deHtsList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-button
-              v-if="htsForm.de"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHtsName(htsForm.de, deHtsList))"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="HTS加拿大">
-          <div class="hts-select-container">
-            <el-select v-model="htsForm.ca" clearable filterable placeholder="请选择HTS加拿大" @change="handleChangeHtsCa">
-              <el-option v-for="item in caHtsList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-button
-              v-if="htsForm.ca"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHtsName(htsForm.ca, caHtsList))"
-            />
-          </div>
-        </el-form-item>
-        <el-form-item label="HTS日本">
-          <div class="hts-select-container">
-            <el-select v-model="htsForm.jp" clearable filterable placeholder="请选择HTS日本" @change="handleChangeHtsJp">
-              <el-option v-for="item in jpHtsList" :key="item.id" :label="item.label" :value="item.id" />
-            </el-select>
-            <el-button
-              v-if="htsForm.jp"
-              circle
-              class="copy-btn"
-              :icon="CopyDocument"
-              size="small"
-              type="primary"
-              @click="handleClip(getHtsName(htsForm.jp, jpHtsList))"
-            />
-          </div>
-        </el-form-item>
-      </el-form>
-      <!-- <template #footer>
-
-        <el-button @click="closeHts">取消</el-button>
-        <el-button type="primary" @click="confirmHts">确定</el-button>
-
-      </template> -->
-    </vab-dialog>
+    <vab-hts-dialog v-model="htsVisible" :sku-customs-declaration-id="id" />
     <!-- 查看清关信息 -->
     <vab-dialog v-model="clearanceVisible" :draggable="false" title="查看和修改清关信息" width="60%">
       <vab-query-form>
@@ -588,17 +499,15 @@
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument, Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { ref } from 'vue'
-import { handleClip } from '~/src/utils/clipboard'
 import {
   addCustomsClearanceSkuInfo,
   getCustomsClearanceCountryList,
   getCustomsClearanceRatio,
-  getCustomsClearanceSkuHtsList,
   getCustomsClearanceSkuInfo,
   getCustomsClearanceSkuList,
   getHtsSelectList,
@@ -677,15 +586,6 @@ const showAddClearance = async () => {
 }
 let id = -1
 const showHts = async (row: any) => {
-  // 重置表单
-  Object.keys(htsForm).forEach((key) => {
-    delete htsForm[key]
-  })
-
-  const { data } = await getCustomsClearanceSkuHtsList({ skuCustomsDeclarationId: row.id })
-  if (data && Object.keys(data).length > 0) {
-    Object.assign(htsForm, data)
-  }
   id = row.id
   htsVisible.value = true
 }
