@@ -1915,6 +1915,7 @@ const fetchColumn = async () => {
         'monthAcos',
         'grossProfit',
         'monthOrderSales',
+        'availableRate',
       ].includes(item.prop)
     ) {
       item.sortable = true
@@ -1965,6 +1966,7 @@ const fetchAsinColumn = async () => {
         'monthReturnGoods',
         'monthAcos',
         'monthOrderSales',
+        'availableRate',
       ].includes(item.prop)
     ) {
       item.sortable = true
