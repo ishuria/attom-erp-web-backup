@@ -19,6 +19,7 @@
             <el-tab-pane label="趋势总览" :name="0">
               <vab-trend-overview
                 v-if="activeName === 0"
+                :asin="asin"
                 :compare-type="compareType"
                 :select-date-range="selectDateRange"
                 :select-field="selectField"

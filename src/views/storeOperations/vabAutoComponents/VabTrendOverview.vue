@@ -84,6 +84,23 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <!-- 操作日志明细对话框 -->
+    <vab-dialog v-model="operationLogDialogVisible" title="操作日志明细" width="45%">
+      <el-table border :data="operationLogDetailList" max-height="700">
+        <el-table-column align="center" label="日期" prop="date" width="190" />
+        <el-table-column align="center" label="类型" prop="type" width="100" />
+        <el-table-column label="内容" min-width="170" prop="content">
+          <template #default="{ row }">
+            <el-link class="content-link" type="primary">
+              <span class="content-text">{{ row.content }}</span>
+            </el-link>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+        </template>
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -92,8 +109,8 @@ import { Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { trendOverviewColumns } from '../constantOption'
-import { getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
-import { ICardSummary, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
+import { getOperationLog, getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
+import { ICardSummary, IGetOperationLog, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString, getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
@@ -107,6 +124,7 @@ interface Props {
   selectDateRange?: [string, string] // 日期范围
   selectedSku?: string // 选择的SKU（当selectField为0时使用）
   selectedSite?: number | undefined // 选择的站点
+  asin?: string // ASIN，用于获取操作日志
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -115,6 +133,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectDateRange: () => ['', ''],
   selectedSku: '',
   selectedSite: undefined,
+  asin: '',
 })
 
 const tableLoading = ref<boolean>(false) // 表格加载状态
@@ -140,6 +159,15 @@ const checkList1 = computed(() => {
 })
 // 记录点击的是哪个card
 const clickCard = ref<string>('')
+// 操作日志相关
+const operationLogCountByDate = ref<Record<string, number>>({}) // 按日期统计的操作日志数量
+const operationLogDialogVisible = ref<boolean>(false) // 操作日志明细对话框显示状态
+const operationLogDetailList = ref<Array<{ date: string; type: string; content: string }>>([]) // 操作日志明细列表
+const typeMap: Record<number, string> = {
+  0: '手动输入',
+  1: '系统抓取',
+  2: 'SP广告',
+}
 
 // 卡片配置数组
 const cards = ref([
@@ -917,7 +945,20 @@ const calculateAlignedYAxisRanges = () => {
 
   return ranges
 }
-
+// 根据数据点数量动态计算泡泡大小，与柱状图宽度成比例
+const calculateSymbolSize = (dataLength: number) => {
+  if (dataLength <= 30) {
+    return 50
+  }
+  if (dataLength <= 60) {
+    return 40
+  }
+  if (dataLength <= 90) {
+    return 30
+  }
+  // 数据点很多时，使用较小的固定大小
+  return 25
+}
 // 切换 日，周，月
 const handleSwitchTime = () => {
   let adSalesData: any[] = []
@@ -947,6 +988,59 @@ const handleSwitchTime = () => {
   option.value.xAxis.data = adSalesData.map((item: any) => item.date)
   option.value.series[1].data = adSalesData.map((d: any) => d.adSalesAmount)
   option.value.series[0].data = organicSalesData.map((d: any) => d.organicSalesAmount)
+
+  // 添加操作日志 markPoint（只在日视图时显示）
+  if (radio.value === 'day' && option.value.series[0]) {
+    const markPointData: any[] = []
+    const dataLength = option.value.xAxis.data.length
+
+    const symbolSize = calculateSymbolSize(dataLength)
+
+    option.value.xAxis.data.forEach((date: string, index: number) => {
+      const count = operationLogCountByDate.value[date]
+      if (count && count > 0) {
+        // 计算该日期对应的销售额总和，作为 y 轴位置，让泡泡显示在柱状图最高值的顶部
+        const organicAmount = organicSalesData[index]?.organicSalesAmount || 0
+        const adAmount = adSalesData[index]?.adSalesAmount || 0
+        // 如果两个都大于0，那么totalAmount是两个的相加；如果其中一个小于0，那么totalAmount是另一个的值
+        let totalAmount: number = 0
+        if (organicAmount > 0 && adAmount > 0) {
+          totalAmount = organicAmount + adAmount
+        } else if (organicAmount < 0 && adAmount > 0) {
+          totalAmount = adAmount
+        } else if (organicAmount > 0 && adAmount < 0) {
+          totalAmount = organicAmount
+        }
+        const yPosition = totalAmount > 0 ? totalAmount : 0
+        markPointData.push({
+          name: `操作日志`,
+          value: count,
+          xAxis: index,
+          yAxis: yPosition,
+          symbolSize: symbolSize,
+          itemStyle: {
+            color: '#FF9800',
+            borderColor: '#fff',
+            borderWidth: 2,
+          },
+          label: {
+            show: true,
+            formatter: `{c}`,
+            color: '#fff',
+            fontWeight: 'bold',
+          },
+        })
+      }
+    })
+    option.value.series[0].markPoint = {
+      data: markPointData,
+    }
+  } else {
+    // 非日视图时移除 markPoint
+    if (option.value.series[0]) {
+      option.value.series[0].markPoint = undefined
+    }
+  }
 
   // 根据数据点数量调整柱状图宽度和 x 轴标签
   const dataLength = option.value.xAxis.data.length
@@ -1684,6 +1778,51 @@ const fetchTableData = async () => {
   }
 }
 
+// 获取操作日志数据并按日期统计
+const fetchOperationLogCount = async () => {
+  if (!props.asin || props.selectedSite === undefined) {
+    operationLogCountByDate.value = {}
+    return
+  }
+
+  try {
+    const { data } = await getOperationLog({
+      asin: props.asin,
+      siteId: props.selectedSite,
+      type: -1, // -1 表示获取所有类型
+      pageNo: 1,
+      pageSize: 2147483647, // 获取所有数据 (Integer.MAX_VALUE)
+      startDate: props.selectDateRange[0] || '',
+      endDate: props.selectDateRange[1] || '',
+    })
+
+    // 按日期统计操作日志数量
+    const countByDate: Record<string, number> = {}
+    data.list.forEach((item: IGetOperationLog) => {
+      const dateTime = item.date
+      if (dateTime) {
+        // 将 dateTime 转换为日期字符串（YYYY-MM-DD）
+        let dateStr: string
+        if (dateTime.includes(' ')) {
+          // 格式：2024-01-01 10:00:00
+          dateStr = dateTime.split(' ')[0]
+        } else if (dateTime.length >= 10) {
+          // 如果已经是 YYYY-MM-DD 格式，直接使用
+          dateStr = dateTime.substring(0, 10)
+        } else {
+          // 其他格式，尝试转换为 Date 对象
+          dateStr = formatDateToString(new Date(dateTime))
+        }
+        countByDate[dateStr] = (countByDate[dateStr] || 0) + 1
+      }
+    })
+    operationLogCountByDate.value = countByDate
+  } catch (error) {
+    console.error('获取操作日志数据失败:', error)
+    operationLogCountByDate.value = {}
+  }
+}
+
 // 获取图表数据（完整数据）
 const fetchChartData = async () => {
   chartLoading.value = true
@@ -1697,6 +1836,8 @@ const fetchChartData = async () => {
     currencySymbol.value = data.symbol || ''
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
+    // 获取操作日志数据
+    await fetchOperationLogCount()
   } catch (error) {
     console.error('获取图表数据失败:', error)
     fullTrendList.value = []
@@ -1719,7 +1860,7 @@ watch(
 
 // 监听 props 变化，重新获取数据
 watch(
-  () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku],
+  () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku, props.asin],
   () => {
     fetchChartData()
   },
@@ -1733,6 +1874,16 @@ watch(
     fetchTableData()
   }
 )
+// 监听操作日志数据变化，更新图表
+watch(
+  () => operationLogCountByDate.value,
+  () => {
+    if (chartInstance && fullTrendList.value.length > 0 && radio.value === 'day') {
+      handleSwitchTime()
+    }
+  },
+  { deep: true }
+)
 watch(
   () => [props.selectField, props.selectDateRange, props.selectedSku],
   () => {
@@ -1740,6 +1891,36 @@ watch(
   },
   { deep: true }
 )
+
+// 处理操作日志 markPoint 点击事件
+const handleOperationLogClick = async (date: string) => {
+  if (!props.asin || props.selectedSite === undefined) {
+    return
+  }
+
+  try {
+    const { data } = await getOperationLog({
+      asin: props.asin,
+      siteId: props.selectedSite,
+      type: -1, // -1 表示获取所有类型
+      pageNo: 1,
+      pageSize: 10000,
+      startDate: date,
+      endDate: date,
+    })
+
+    // 将接口返回的数据映射到组件需要的格式
+    operationLogDetailList.value = data.list.map((item: IGetOperationLog) => ({
+      date: item.date,
+      type: typeMap[item.type] || '未知',
+      content: item.content,
+    }))
+    operationLogDialogVisible.value = true
+  } catch (error) {
+    console.error('获取操作日志明细失败:', error)
+    $baseMessage('获取操作日志明细失败', 'error')
+  }
+}
 
 onMounted(() => {
   if (chartContainer.value) {
@@ -1751,6 +1932,19 @@ onMounted(() => {
     })
     chartObserver.observe(chartContainer.value)
     initChart()
+
+    // 监听图表点击事件
+    chartInstance.on('click', (params: any) => {
+      // 检查是否点击了 markPoint
+      if (params.componentType === 'markPoint' && params.data) {
+        // 从 markPoint 数据中获取 xAxis 索引，然后获取日期
+        const xAxisIndex = params.data.xAxis
+        if (xAxisIndex !== undefined && option.value.xAxis.data[xAxisIndex]) {
+          const date = option.value.xAxis.data[xAxisIndex]
+          handleOperationLogClick(date)
+        }
+      }
+    })
   }
   fetchChartData()
   fetchTableData()
@@ -1782,5 +1976,14 @@ onBeforeUnmount(() => chartObserver.disconnect())
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+.content-link {
+  display: block;
+  width: 100%;
+
+  .content-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 }
 </style>
