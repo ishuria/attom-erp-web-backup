@@ -30,6 +30,7 @@ import type {
   IId,
   IIds,
   IInsertAllMatchComponent,
+  IInvoiceDetailResp,
   IShipId,
   IStringRes,
   ISubmitMatchSentList,
@@ -60,6 +61,7 @@ import type {
   IGetTaxRefundProfitMarginQuery,
   IGetTaxRefundProfitMarginRes,
   ISubmitTaxRefundInvoiceMatch,
+  ITaxRefundInvoiceDelete,
   ITaxRefundInvoiceRes,
   IUpdateTaxRefundBatchDate,
   IUpdateTaxRefundBatchFreightFee,
@@ -799,6 +801,18 @@ export const submitTaxRefundInvoiceMatch = (data: ISubmitTaxRefundInvoiceMatch):
     data,
   })
 }
+
+/**
+ * @description 退税管理-发票剩余匹配信息获取
+ */
+export const getInvoiceDetail = (params: { detailId: number }): Promise<IInvoiceDetailResp> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/detail`,
+    method: 'get',
+    params,
+  })
+}
+
 /**
  * @description 退税管理-发票匹配第二次提交
  */
@@ -811,7 +825,7 @@ export const submitConfirmTaxRefundInvoiceMatch = (): Promise<IBooleanRes> => {
 /**
  * @description 退税管理-删除匹配
  */
-export const deleteTaxRefundMatch = (data: ISubmitTaxRefundInvoiceMatch): Promise<IBooleanRes> => {
+export const deleteTaxRefundMatch = (data: ITaxRefundInvoiceDelete): Promise<IBooleanRes> => {
   return request({
     url: `${BASE_API}/taxRefund/delete/match`,
     method: 'post',

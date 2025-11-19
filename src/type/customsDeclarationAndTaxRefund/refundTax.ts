@@ -122,6 +122,7 @@ export interface IGetTaxRefundBatchDetailList {
   // 退税额
   taxRebate?: number
   taxRefundsCost?: number
+  matchId?: number
   [property: string]: any
 }
 
@@ -172,12 +173,27 @@ export interface IGetTaxRefundInvoiceListRes {
 }
 
 export interface IGetTaxRefundInvoiceList {
+  no?: number
   /**
    * 实际报关数量
    */
   customsDeclarationCount?: number
+  /** 退税产品总报关数量 */
+  taxRefundCustomsDeclarationCount?: number
+  /** 退税产品匹配的发票数量 */
+  taxRefundMatchCustomsDeclarationCount?: number
+  /** 退税产品匹配的发票含税金额 */
+  taxRefundMatchInvoicePrice?: number
+  /** 退税产品总发票含税金额 */
+  taxRefundTotalInvoicePrice?: number
   /** Po报关总数 */
   customsDeclarationCountTotal?: number
+  /** po零件已匹配报关 */
+  customsDeclarationMatchCount?: number
+  /** po零件含税金额 */
+  poComponentTotalPrice?: number
+  /** po零件匹配金额 */
+  poComponentMatchPrice?: number
   /**
    * 报关单位
    */
@@ -190,6 +206,8 @@ export interface IGetTaxRefundInvoiceList {
    * 发票主键id
    */
   id?: number
+  /** 发票匹配中间表id */
+  mId?: number
   /**
    * 含税金额
    */
@@ -242,6 +260,7 @@ export interface IGetTaxRefundInvoiceList {
    * 供应商名称
    */
   suppliser?: string
+  remainingCount: number
   taxRefundId?: number
 }
 
@@ -256,7 +275,7 @@ export interface ITaxRefundInvoiceRes {
 }
 
 export interface ICleanTaxRefundInvoice {
-  detailId: number
+  matchId: number
 }
 
 export interface IGetTaxRefundInvoiceMatchQuery {
@@ -337,6 +356,8 @@ export interface IGetTaxRefundInvoiceMatchList {
    * 含税成本
    */
   taxInclusiveCost?: number
+
+  matchFlag: boolean
 }
 
 export interface IUpdateTaxRefundInvoice {
@@ -357,8 +378,15 @@ export interface IUpdateTaxRefundInvoiceDetail {
 }
 export interface ISubmitTaxRefundInvoiceMatch {
   detailId: number
-  id: number
+  taxRefundIds: number[]
 }
+
+export interface ITaxRefundInvoiceDelete {
+  detailId: number
+  id: number
+  matchId: number
+}
+
 export interface IGetTaxRefundProfitMarginQuery {
   fromDate: string
   toDate: string
