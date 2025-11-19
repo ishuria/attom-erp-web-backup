@@ -488,3 +488,10 @@ export interface IGetYfwbAggregationList {
   yfwbCount?: number
   id: number
 }
+
+export interface IInvoiceDetailResp {
+  data: {
+    matchableCount: number
+    matchablePrice: number
+  }
+}
