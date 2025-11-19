@@ -403,6 +403,7 @@ import {
   deleteTaxRefundInvoice,
   finishTaxRefundInvoice,
   finishTaxRefundInvoiceRepeat,
+  getInvoiceDetail,
   getTaxRefundInvoiceList,
   getTaxRefundInvoiceMatch,
   submitConfirmTaxRefundInvoiceMatch,
@@ -794,6 +795,7 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
   matchQueryForm.detailId = row.detailId!
   matchListLoading.value = true
   const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
+  getInvoiceDetailInfo(row.detailId!)
   if (data) {
     // 使用响应式赋值
     _supplier.value = row.suppliser!
@@ -822,6 +824,12 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     matchVisible.value = false
   }
   matchLoading.value = null // 结束 loading
+}
+
+const getInvoiceDetailInfo = async (id: number) => {
+  const { data } = await getInvoiceDetail({ detailId: id })
+  _remainingCount.value = data.matchableCount
+  _remainingAmount.value = data.matchablePrice
 }
 
 const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {

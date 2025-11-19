@@ -30,6 +30,7 @@ import type {
   IId,
   IIds,
   IInsertAllMatchComponent,
+  IInvoiceDetailResp,
   IShipId,
   IStringRes,
   ISubmitMatchSentList,
@@ -800,6 +801,18 @@ export const submitTaxRefundInvoiceMatch = (data: ISubmitTaxRefundInvoiceMatch):
     data,
   })
 }
+
+/**
+ * @description 退税管理-发票剩余匹配信息获取
+ */
+export const getInvoiceDetail = (params: { detailId: number }): Promise<IInvoiceDetailResp> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/detail`,
+    method: 'get',
+    params,
+  })
+}
+
 /**
  * @description 退税管理-发票匹配第二次提交
  */
