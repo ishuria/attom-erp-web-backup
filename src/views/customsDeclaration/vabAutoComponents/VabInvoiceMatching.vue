@@ -26,7 +26,6 @@
 
       <el-table
         border
-        :cell-class-name="clearPadding"
         :cell-style="cellStyle"
         class="noneHoveTable"
         :data="list"
@@ -129,7 +128,7 @@
                 @keyup.enter="clickDetailCancel($event, row)"
               />
             </div>
-            <span>{{ row.remainingCount }}/{{ row.invoiceCount }}</span>
+            <span>{{ row.remainingCount }} / {{ row.invoiceCount }}</span>
           </template>
         </el-table-column>
         <el-table-column label="发票单位" prop="invoiceUnit" :width="flexColumnWidth(list, '发票单位', 'invoiceUnit')">
@@ -172,7 +171,7 @@
           :width="flexColumnWidth(list, '匹配合同号', 'matchContractNumber')"
         />
         <el-table-column label="匹配PO" prop="matchPo" :width="flexColumnWidth(list, '匹配PO', 'matchPo')" />
-        <el-table-column label="当前发票匹配数" prop="customsDeclarationCount" width="100" />
+        <el-table-column label="当前发票匹配数" prop="customsDeclarationCount" width="95" />
 
         <el-table-column label="已匹配实际报关数" width="110">
           <template #header>
@@ -198,7 +197,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="报关单位" prop="customsDeclarationUnit" width="100" />
+        <el-table-column label="报关单位" prop="customsDeclarationUnit" width="95" />
         <el-table-column label="零件PO含税价" prop="taxInclusiveCost" width="100">
           <template #header>
             零件PO
@@ -206,7 +205,7 @@
             含税价
           </template>
         </el-table-column>
-        <el-table-column label="已匹配报关金额" prop="" width="100">
+        <el-table-column label="已匹配报关金额" prop="" width="120">
           <template #header>
             已匹配
             <br />
@@ -216,7 +215,7 @@
             <div v-if="row.taxRefundTotalInvoicePrice">{{ row.taxRefundMatchInvoicePrice }} / {{ row.taxRefundTotalInvoicePrice }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="已匹配PO总报关金额" prop="" width="150">
+        <el-table-column label="已匹配PO总报关金额" prop="" width="140">
           <template #header>
             已匹配
             <br />
@@ -234,6 +233,9 @@
             </div>
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+        </template>
       </el-table>
     </div>
     <template #footer>
@@ -361,9 +363,12 @@
         </el-table-column>
         <el-table-column label="匹配" prop="status" width="70">
           <template #default="{ row }">
-            <el-checkbox v-model="row.matchFlag" size="large" />
+            <el-checkbox v-model="row.matchFlag" size="large" @change="handleMatchFlagChange" />
           </template>
         </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+        </template>
       </el-table>
       <vab-pagination
         :current-page="matchQueryForm.pageNo"
@@ -380,7 +385,6 @@
       </div>
     </template>
   </vab-dialog>
-  <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="closeImagePreview" />
   <!-- 预览pdf -->
   <vab-dialog v-model="pdfVisible" top="5vh" @close="pdfVisible = false">
     <div v-loading="pdfLoading" class="pdf-container">
@@ -424,8 +428,6 @@ defineOptions({
 const pdfVisible = ref<boolean>(false)
 const pdfLoading = ref<boolean>(false)
 const source = ref<string>('')
-const matchInvoiceList = ref<any>([])
-
 const showPdf = (path: string) => {
   pdfLoading.value = true
   source.value = path
@@ -452,16 +454,6 @@ const closeInvoiceMatching = () => {
   emit('updateInvoiceMatchingVisible', false)
 }
 
-const imagePreviewVisible = ref<boolean>(false)
-const imagePreviewList = ref<string[]>([])
-const closeImagePreview = () => {
-  imagePreviewVisible.value = false
-}
-const showImagePreview = (url: string) => {
-  imagePreviewVisible.value = true
-  imagePreviewList.value = []
-  imagePreviewList.value.push(url)
-}
 // 上传发票可见
 const uploadInvoiceVisible = ref<boolean>(false)
 
@@ -620,6 +612,27 @@ const handleSortChange = ({ prop, order }: { prop: string; order: 'ascending' | 
   matchQueryForm.pageNo = 1 // 排序后重置到第一页
 }
 
+// 选中的PO，用于过滤
+const selectedPo = ref<string | null>(null)
+
+// 处理匹配复选框变化
+const handleMatchFlagChange = () => {
+  // 查找第一个选中的记录
+  const selectedItem = originalMatchList.value.find((item) => item.matchFlag === true)
+
+  if (selectedItem && selectedItem.po) {
+    // 如果有选中的记录，获取其 PO 并过滤
+    selectedPo.value = selectedItem.po
+  } else {
+    // 没有选中的记录，恢复显示全部
+    selectedPo.value = null
+  }
+  // 重新应用过滤
+  applySortAndFilter()
+  // 重置到第一页
+  matchQueryForm.pageNo = 1
+}
+
 // 应用排序和过滤
 const applySortAndFilter = () => {
   // 先应用关键词过滤
@@ -638,6 +651,11 @@ const applySortAndFilter = () => {
     )
   } else {
     filteredData = [...originalMatchList.value]
+  }
+
+  // 应用PO过滤（如果有选中的记录）
+  if (selectedPo.value) {
+    filteredData = filteredData.filter((item: any) => item.po === selectedPo.value)
   }
 
   // 再应用排序
@@ -671,27 +689,21 @@ const applySortAndFilter = () => {
   matchList.value = filteredData
 }
 
-// 根据关键词过滤数据（保持向后兼容）
-const applyKeywordFilter = () => {
-  applySortAndFilter()
-}
-
 // 计算当前页的数据
 const pagedData = computed(() => {
   const start = (matchQueryForm.pageNo - 1) * matchQueryForm.pageSize
   const end = start + matchQueryForm.pageSize
   return matchList.value.slice(start, end) // 获取当前页的数据
 })
+
 const handleMatchCurrentChange = (value: number) => {
   matchQueryForm.pageNo = value
-  // fetchMatchData()
 }
 const handleMatchSizeChange = (value: number) => {
   matchListLoading.value = true
   matchQueryForm.pageSize = value
   matchQueryForm.pageNo = 1
   matchListLoading.value = false
-  // fetchMatchData()
 }
 
 const detailIds = ref<number[]>([])
@@ -789,10 +801,19 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _invoiceUnit.value = row.invoiceUnit!
     _invoiceCount.value = row.invoiceCount!
     _includingTaxPrice.value = row.includingTaxPrice!
-    // 保存原始数据
-    originalMatchList.value = data?.list! || []
+    _remainingCount.value = row.remainingCount!
+    // _remainingAmount.value = row.remainingAmount!
     // 重置排序状态
     sortState.value = null
+    // 如果传入的 row 有 matchPo，则只显示相同 PO 的记录
+    // 先设置 selectedPo 和标志，再赋值 originalMatchList，避免 watch 覆盖
+    if (row.matchPo && row.matchPo.trim() !== '') {
+      selectedPo.value = row.matchPo
+    } else {
+      selectedPo.value = null
+    }
+    // 保存原始数据（在设置 selectedPo 之后，避免 watch 立即覆盖）
+    originalMatchList.value = data?.list! || []
     // 显示过滤后的数据
     applySortAndFilter()
     matchVisible.value = true
@@ -1115,12 +1136,12 @@ const matchCellStyle = (data: { row: any; column: any; rowIndex: number; columnI
     textAlign: 'center',
   }
 }
-const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.columnIndex === 10) {
-    return 'clear-padding'
-  }
-  return ''
-}
+// const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+//   if (data.columnIndex === 10) {
+//     return 'clear-padding'
+//   }
+//   return ''
+// }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
@@ -1162,16 +1183,7 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
     }
   }
 }
-const fetchMatchData = async () => {
-  matchListLoading.value = true
-  const { data } = await getTaxRefundInvoiceMatch(matchQueryForm)
-  matchTotal.value = data?.total!
-  // 保存原始数据
-  originalMatchList.value = data?.list! || []
-  // 显示过滤后的数据
-  matchList.value = [...originalMatchList.value]
-  matchListLoading.value = false
-}
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getTaxRefundInvoiceList(queryForm)
