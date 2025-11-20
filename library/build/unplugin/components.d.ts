@@ -270,6 +270,7 @@ declare module 'vue' {
     VabNav: typeof import('./../../components/VabNav/index.vue')['default']
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
     VabOperationalClassify: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabOperationalClassify.vue')['default']
+    VabPackagingInfoCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabPackagingInfoCard.vue')['default']
     VabPackingDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabPackingDialog.vue')['default']
     VabPackingInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabPackingInspectionReport.vue')['default']
     VabPackingPrecautions: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabPackingPrecautions.vue')['default']
