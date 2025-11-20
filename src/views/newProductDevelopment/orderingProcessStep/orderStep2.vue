@@ -152,17 +152,17 @@ const handleContinue = async () => {
   // 判断选择的零件里面是否供应商重复
   const { data } = await reviewStepNo3ComponentList({ reviewId: classReviewId! })
   const supplierList = data.map((item: any) => item.supplier)
-  const hasConflict = selectRows.value.some((item: any) => {
-    if (item.supplier && supplierList.includes(item.supplier)) {
-      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
-      return true
-    }
-    return false
-  })
+  // const hasConflict = selectRows.value.some((item: any) => {
+  //   if (item.supplier && supplierList.includes(item.supplier)) {
+  //     $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
+  //     return true
+  //   }
+  //   return false
+  // })
 
-  if (hasConflict) {
-    return
-  }
+  // if (hasConflict) {
+  //   return
+  // }
   selectRows.value.forEach((item: any) => {
     suppliserIds.value.push(item.supplierId)
   })
