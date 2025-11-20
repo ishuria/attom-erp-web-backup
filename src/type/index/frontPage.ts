@@ -303,3 +303,12 @@ export interface IGetFrontPageProfitScoreItem {
   monthProfitScore: number
   pileProfitScore: number
 }
+
+export interface IGetFrontPagePersonalBonusRes {
+  data: IGetFrontPagePersonalBonusItem[]
+}
+export interface IGetFrontPagePersonalBonusItem {
+  month: string
+  bonusType: string
+  bonus: number
+}

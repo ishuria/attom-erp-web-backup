@@ -126,6 +126,7 @@ declare module 'vue' {
     PerformanceTable: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTable.vue')['default']
     PerformanceTableCell: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTableCell.vue')['default']
     PerformanceTableHeader: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTableHeader.vue')['default']
+    PersonalBonusCard: typeof import('./../../../src/views/index/vabAutoComponents/PersonalBonusCard.vue')['default']
     PoActionButtons: typeof import('./../../../src/views/purchase/vabAutoComponents/PoActionButtons.vue')['default']
     PoFixedTable: typeof import('./../../../src/views/purchase/vabAutoComponents/PoFixedTable.vue')['default']
     PoQueryForm: typeof import('./../../../src/views/purchase/vabAutoComponents/PoQueryForm.vue')['default']
