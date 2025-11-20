@@ -443,7 +443,41 @@
 
           <el-table-column label="美工图片" min-width="100" prop="artDesignPicture" />
           <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime" />
-
+          <el-table-column label="新品任务数" min-width="110" prop="newProductTaskCount" />
+          <el-table-column label="老品任务数" min-width="110" prop="oldProductTaskCount" />
+          <el-table-column label="临时任务数" min-width="110" prop="tempTaskCount" />
+          <el-table-column label="设计任务数" min-width="110" prop="designTaskCount" />
+          <el-table-column label="新品任务按时完成率" min-width="145" prop="newProductOnTimeRate">
+            <template #default="{ row }">
+              <span>{{ row.newProductOnTimeRate != null ? `${row.newProductOnTimeRate}%` : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="老品任务按时完成率" min-width="145" prop="oldProductOnTimeRate">
+            <template #default="{ row }">
+              <span>{{ row.oldProductOnTimeRate != null ? `${row.oldProductOnTimeRate}%` : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="临时任务按时完成率" min-width="145" prop="tempTaskOnTimeRate">
+            <template #default="{ row }">
+              <span>{{ row.tempTaskOnTimeRate != null ? `${row.tempTaskOnTimeRate}%` : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="设计任务按时完成率" min-width="145" prop="designTaskOnTimeRate">
+            <template #default="{ row }">
+              <span>{{ row.designTaskOnTimeRate != null ? `${row.designTaskOnTimeRate}%` : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="任务总数" min-width="100" prop="totalTaskCount" />
+          <el-table-column label="总按时完成率" min-width="120" prop="totalOnTimeRate">
+            <template #default="{ row }">
+              <span>{{ row.totalOnTimeRate != null ? `${row.totalOnTimeRate}%` : '-' }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="100">
+            <template #default="{ row }">
+              <el-link type="primary" underline="never" @click="showArtDesignTaskDetail(row)">任务明细</el-link>
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -642,6 +676,8 @@
         <el-button type="primary" @click="handleCheckout">结账</el-button>
       </template>
     </vab-dialog>
+    <!-- 任务明细 -->
+    <art-design-task-detail-dialog v-model="artDesignTaskDetailVisible" :list="artDesignTaskDetailList" />
   </div>
 </template>
 
@@ -650,7 +686,9 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { getArtDesignTaskDetail } from '~/src/api/devlocal/imageTask'
 import PerformanceStatisticsPermission from '~/src/permissions/performanceStatistics'
+import { IGetArtDesignTaskList } from '~/src/type/listingTask/imageTaskType'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import {
   checkoutAssessmentNumber,
@@ -1024,12 +1062,24 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
+// -------------------------- 平面设计 --------------------------
+const artDesignTaskDetailVisible = ref<boolean>(false)
+const artDesignTaskDetailList = ref<IGetArtDesignTaskList[]>([])
+const showArtDesignTaskDetail = async (row: any) => {
+  artDesignTaskDetailVisible.value = true
+  const { data } = await getArtDesignTaskDetail({ userId: row.userId, month: row.month })
+  artDesignTaskDetailList.value = data
+}
+
 // tab切换
 const handleTabChange = () => {
   if (activeName.value === 2) {
     queryAssessmentData()
   } else if (activeName.value === 3) {
-    queryForm.status = 1
+    queryForm.status = 3
+    queryData()
+  } else if (activeName.value === 5) {
+    queryForm.status = 5
     queryData()
   } else {
     queryForm.status = 0

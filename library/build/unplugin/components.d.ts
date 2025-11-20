@@ -14,6 +14,7 @@ declare module 'vue' {
     AiTuoMuInvoiceImport: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuInvoiceImport.vue')['default']
     AiTuoMuTable: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/AiTuoMuTable.vue')['default']
     AlignSegmented: typeof import('./../../../src/views/login/vabAutoComponents/AlignSegmented.vue')['default']
+    ArtDesignTaskDetailDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/ArtDesignTaskDetailDialog.vue')['default']
     AssessmentNumberAdjust: typeof import('./../../../src/views/index/vabAutoComponents/AssessmentNumberAdjust.vue')['default']
     AssessmentPie: typeof import('./../../../src/views/index/vabAutoComponents/AssessmentPie.vue')['default']
     AttendanceOverviewCard: typeof import('./../../../src/views/index/vabAutoComponents/AttendanceOverviewCard.vue')['default']

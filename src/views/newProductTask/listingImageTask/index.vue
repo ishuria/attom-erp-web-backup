@@ -1240,6 +1240,8 @@ const getTaskTypeColor = (taskType: string) => {
       return 'primary' // 蓝色
     case '临时任务':
       return 'warning' // 橙色
+    case '设计任务':
+      return 'danger' // 红色
     default:
       return 'info' // 灰色
   }
@@ -1482,7 +1484,6 @@ const postTaskForm = reactive<any>({
   linkAddress: '',
 })
 const postTaskRules = reactive<FormRules<IAddArtDesignTaskReq>>({
-  sku: [{ required: true, message: '请输入和搜索SKU', trigger: 'change' }],
   taskType: [{ required: true, message: '请选择任务类型', trigger: 'change' }],
   sites: [{ required: true, message: '请选择站点', trigger: 'change' }],
   position: [{ required: true, message: '请选择产品分类', trigger: 'change' }],
