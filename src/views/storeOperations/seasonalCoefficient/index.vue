@@ -991,7 +991,7 @@ const clickCancel = async (event: any, value: any) => {
     if (t2) t2.classList.remove('none')
   }
 
-  // 检查是否有值被删除或设为0
+  // 只检查当前编辑的字段（通过比较找出变化的字段）
   const monthlyFields = [
     'janActual',
     'febActual',
@@ -1007,25 +1007,30 @@ const clickCancel = async (event: any, value: any) => {
     'decActual',
   ]
 
-  let hasInvalidValue = false
-  let invalidFields: string[] = []
-
+  // 找出当前被修改的字段（只检查实际值字段）
+  let currentField: string | null = null
   for (const field of monthlyFields) {
+    // 比较当前值和原始值，找出变化的字段
     const currentValue = value[field]
     const originalValue = copyRow[field]
 
-    // 检查是否为空、null、undefined或0
-    if (currentValue === '' || currentValue === null || currentValue === undefined || currentValue === 0 || currentValue === '0') {
-      hasInvalidValue = true
-      invalidFields.push(field)
+    // 如果值发生了变化，说明这是当前编辑的字段
+    if (currentValue !== originalValue) {
+      currentField = field
+      break
     }
   }
 
-  // 如果有无效值，恢复原值并提示
-  if (hasInvalidValue) {
-    Object.assign(value, copyRow)
-    $baseMessage('季节系数不能为空或0，请重新输入！', 'warning')
-    return
+  // 如果找到了当前编辑的字段，检查它是否为空或0
+  if (currentField) {
+    const currentValue = value[currentField]
+
+    // 如果当前值为空、null、undefined或0，则恢复原值并提示
+    if (currentValue === '' || currentValue === null || currentValue === undefined || currentValue === 0 || currentValue === '0') {
+      value[currentField] = copyRow[currentField]
+      $baseMessage('季节系数不能为空或0，请重新输入！', 'warning')
+      return
+    }
   }
 
   if (isEqual(copyRow, value)) {
