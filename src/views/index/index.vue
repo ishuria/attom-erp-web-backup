@@ -220,7 +220,7 @@
           </template>
         </rank>
       </el-col>
-      <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank4List" :my-name="myName" name="考核完成数" title="考核数完成排行">
           <template #select>
             <el-select v-model="selectFinishMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankAssessmentFinish">
