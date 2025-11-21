@@ -204,6 +204,9 @@
                 <el-dropdown-item v-if="hasPermission({ permission: [SkuPermission.SKU_DETAIL] })" @click="handleSkuDetail(row)">
                   <el-link type="primary" underline="never">SKU详情</el-link>
                 </el-dropdown-item>
+                <el-dropdown-item @click="handleViewHts(row)">
+                  <el-link type="primary" underline="never">查看HTS</el-link>
+                </el-dropdown-item>
                 <el-dropdown-item v-if="hasPermission({ permission: [SkuPermission.SKU_COPY] })" @click="handleCopySku(row)">
                   <el-link type="primary" underline="never">SKU复制</el-link>
                 </el-dropdown-item>
@@ -249,6 +252,8 @@
     <vab-batch-packing-precautions v-model="batchPackingPrecautionsVisible" :sku-id-list="skuIdList" />
     <!-- 打包工时明细 -->
     <vab-packing-time-details v-model="packingTimeDetailsVisible" :sku="sku" />
+    <!-- 查看HTS（只读） -->
+    <vab-hts-dialog v-model="htsVisible" :readonly="true" :sku="currentSku" />
   </div>
 </template>
 
@@ -275,6 +280,12 @@ const sku = ref<string>('')
 const showPackingTimeDetails = (row: any) => {
   packingTimeDetailsVisible.value = true
   sku.value = row._sku[0]
+}
+const htsVisible = ref<boolean>(false)
+const currentSku = ref<string>('')
+const handleViewHts = (row: any) => {
+  currentSku.value = row._sku[0] || row.sku
+  htsVisible.value = true
 }
 const headerCell = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   const prop = data.column.prop

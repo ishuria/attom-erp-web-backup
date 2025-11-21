@@ -123,7 +123,7 @@
           <el-table-column label="剩余提成天数" min-width="130">
             <template #default="{ row }">{{ row.remainingDays }} / {{ row.commissionDay }}</template>
           </el-table-column>
-          <el-table-column label="销售额/差额" min-width="110">
+          <el-table-column label="销售额/差额" min-width="120">
             <template #default="scope">
               <el-popover v-if="scope.row.mold === '老品优化'" effect="dark" placement="top" trigger="hover" width="auto">
                 <template #default>
@@ -133,7 +133,14 @@
                     }}{{ scope.row.salesDiffPrice }}
                   </div>
                 </template>
-                <template #reference>{{ scope.row.currencySymbol }}{{ scope.row.salePrice }}</template>
+                <template #reference>
+                  <span class="questionIcon">
+                    <span>{{ scope.row.currencySymbol }}{{ scope.row.salePrice }}</span>
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </span>
+                </template>
               </el-popover>
               <div v-else>{{ scope.row.currencySymbol }}{{ scope.row.salesDifference }}</div>
             </template>
@@ -332,7 +339,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { QuestionFilled, Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { TabsPaneContext } from 'element-plus'
 import type { CSSProperties } from 'vue'
@@ -354,6 +361,9 @@ import { colorList, redColorList } from '/@/views/commission/constantOption'
 
 defineOptions({
   name: 'CommissionArtDetails',
+  components: {
+    QuestionFilled,
+  },
 })
 const chartContainer = ref<HTMLElement | null>(null)
 let chartInstance: echarts.ECharts | null = null
@@ -778,6 +788,16 @@ onBeforeMount(async () => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.questionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .el-icon {
+    margin-left: 3px;
+    color: var(--el-color-primary);
   }
 }
 </style>

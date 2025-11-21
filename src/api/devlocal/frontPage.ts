@@ -17,6 +17,7 @@ import {
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
   IGetFrontPagePerformanceHistoryReq,
+  IGetFrontPagePersonalBonusRes,
   IGetFrontPageProductProfitRes,
   IGetFrontPageProfitScoreRes,
   IGetFrontPageProgressProjectsRes,
@@ -408,6 +409,18 @@ export function getFrontPageProfitScore(params: {
 }): Promise<{ data: IGetFrontPageProfitScoreRes }> {
   return request({
     url: `${BASE_API}/front_page/profit/score`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 首页-个人奖金
+ * @param params { month: string }
+ * @returns IGetFrontPagePersonalBonusRes
+ */
+export function getFrontPagePersonalBonus(params: { month: string }): Promise<IGetFrontPagePersonalBonusRes> {
+  return request({
+    url: `${BASE_API}/front_page/user/bonus`,
     method: 'get',
     params,
   })

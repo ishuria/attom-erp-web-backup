@@ -726,6 +726,13 @@ export function getNewPackageInspection(params: { sku: string }): Promise<IGetNe
     params,
   })
 }
+export function getNewPackageInspectionImages(params: { sku: string }): Promise<IGetNewPackageInspectionRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/package/img`,
+    method: 'get',
+    params,
+  })
+}
 /**
  * 新品质检报告内容修改
  * @param data

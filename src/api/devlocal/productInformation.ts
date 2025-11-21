@@ -1109,3 +1109,15 @@ export function getPackingTimeDetailsChart(data: IGetPackingTimeDetailsChartReq)
     data,
   })
 }
+/**
+ * 获取sku清关HTS列表
+ * @param params { sku: string }
+ * @returns { data: Map<string, number> }
+ */
+export function getSkuCustomsClearanceHtsList(params: { sku: string }): Promise<{ data: Map<string, number> }> {
+  return request({
+    url: `${BASE_API}/sku/customs/clearance/hts/list`,
+    method: 'get',
+    params,
+  })
+}

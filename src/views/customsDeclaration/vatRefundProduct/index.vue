@@ -1054,7 +1054,7 @@ const handleCifPriceUpdate = async () => {
       cifPrice: updateCifPrice.value,
     })
     if (data) {
-      cifUpdateLoading.value = true
+      cifUpdateLoading.value = false
       updateVisible.value = false
       $baseMessage('cif售价修改成功！', 'success')
     }

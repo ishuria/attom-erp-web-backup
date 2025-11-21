@@ -220,7 +220,7 @@
           </template>
         </rank>
       </el-col>
-      <el-col v-if="ableProductManagerViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
+      <el-col v-if="ableBossViewCard" :lg="4" :md="12" :sm="24" :xl="4" :xs="24">
         <rank :list="rank4List" :my-name="myName" name="考核完成数" title="考核数完成排行">
           <template #select>
             <el-select v-model="selectFinishMonth" placeholder="月份" style="max-width: 5em" @change="fetchRankAssessmentFinish">
@@ -359,8 +359,8 @@
       </el-col>
     </el-row>
     <!-- 低动销仓储费 -->
-    <el-row v-if="ableViewLowVolumeProductStorageFeeCard" class="row-spacing" :gutter="20">
-      <el-col :lg="15" :md="24" :sm="24" :xl="15" :xs="24">
+    <el-row class="row-spacing" :gutter="20">
+      <el-col v-if="ableViewLowVolumeProductStorageFeeCard" :lg="15" :md="24" :sm="24" :xl="15" :xs="24">
         <low-volume-product-storage-fees
           :current-page="lowStorageFeeQueryForm.pageNo"
           :list="lowVolumeProductStorageFeeList"
@@ -388,6 +388,15 @@
             </el-select>
           </template>
         </low-volume-product-storage-fees>
+      </el-col>
+      <el-col :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+        <personal-bonus-card :data="personalBonusData" :loading="personalBonusLoading">
+          <template #select>
+            <el-select v-model="selectPersonalBonusMonth" placeholder="月份" style="max-width: 5em" @change="fetchPersonalBonus">
+              <el-option v-for="item in historyMonthList" :key="item" :label="item" :value="item" />
+            </el-select>
+          </template>
+        </personal-bonus-card>
       </el-col>
     </el-row>
 
@@ -428,6 +437,7 @@ import {
   getFrontPageJobLevelCommission,
   getFrontPageLeadDestroyValue,
   getFrontPagePerformanceHistory,
+  getFrontPagePersonalBonus,
   getFrontPageProductManagerSelectOption,
   getFrontPageProfitScore,
   getFrontPageProgressProjects,
@@ -473,6 +483,7 @@ import {
   IGetFrontPageJobLevelCommission,
   IGetFrontPageMonthlyAssessment,
   IGetFrontPagePerformanceHistory,
+  IGetFrontPagePersonalBonusItem,
   IGetFrontPageProductProfitRes,
   IGetFrontPageProfitScoreItem,
   IGetFrontPageProgressProjectsItem,
@@ -952,6 +963,9 @@ const monthList = ref<string[]>([])
 const selectProfitMonth = ref<string>()
 const selectAssessmentPlusMonth = ref<string>()
 const selectAssessmentMinusMonth = ref<string>()
+const selectPersonalBonusMonth = ref<string>()
+const personalBonusData = ref<IGetFrontPagePersonalBonusItem[]>([])
+const personalBonusLoading = ref<boolean>(false)
 // 查询月份列表
 const fetchHistoryMonthList = async () => {
   const { data } = await getFrontPageHistoryMonthList()
@@ -1003,7 +1017,26 @@ const fetchBillingMonthList = async () => {
   selectNewProductMonth.value = data[0]
   selectNewProductOneYearMonth.value = data[0]
   selectJobLevelMonth.value = data[0]
+  selectPersonalBonusMonth.value = data[0]
 }
+
+// 获取个人奖金数据
+const fetchPersonalBonus = async () => {
+  if (!selectPersonalBonusMonth.value) {
+    return
+  }
+  personalBonusLoading.value = true
+  try {
+    const { data } = await getFrontPagePersonalBonus({ month: selectPersonalBonusMonth.value })
+    personalBonusData.value = data || []
+  } catch (error) {
+    console.error('获取个人奖金数据失败:', error)
+    personalBonusData.value = []
+  } finally {
+    personalBonusLoading.value = false
+  }
+}
+
 const fetchRankOverAchieved = async () => {
   const { data } = await getFrontPageRankOverAchieved({ month: selectAchievedMonth.value! })
   rank1List.value = data
@@ -1239,6 +1272,7 @@ const fetchProfitSharePreview = async () => {
   profitSharePreviewLoading.value = false
 }
 onBeforeMount(async () => {
+  await fetchBillingMonthList()
   if (ableViewCommissionCard) {
     fetchTotalBonus()
     fetchUpdateDate()
@@ -1250,7 +1284,6 @@ onBeforeMount(async () => {
 
   if (ableProductManagerViewCard) {
     // await fetchHistoryMonthList()
-    await fetchBillingMonthList()
     await fetchAdjustDetailMonthList()
     fetchUserList()
     fetchRankNewProductOneYearCommission()
@@ -1288,6 +1321,9 @@ onBeforeMount(async () => {
   }
   if (ableViewAttendanceOverviewCard) {
     fetchAttendanceOverview()
+  }
+  if (selectPersonalBonusMonth.value) {
+    fetchPersonalBonus()
   }
 })
 </script>
