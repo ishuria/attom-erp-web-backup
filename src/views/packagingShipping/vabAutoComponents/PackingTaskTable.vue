@@ -203,6 +203,12 @@
                 >
                   <el-link type="primary" underline="never">任务数修改</el-link>
                 </el-dropdown-item>
+                <el-dropdown-item
+                  v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_DELETE] })"
+                  @click="handleDelete(row)"
+                >
+                  <el-link type="danger" underline="never">删除</el-link>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -267,6 +273,7 @@ const emit = defineEmits<{
   showModify: [row: any]
   showModifyTask: [row: any]
   qualityCheckChange: [row: any]
+  deleteTask: [row: any]
 }>()
 
 // 过滤出可见的列
@@ -332,6 +339,10 @@ const handleShowModifyTask = (row: any) => {
 
 const handleQualityCheckChange = (row: any) => {
   emit('qualityCheckChange', row)
+}
+
+const handleDelete = (row: any) => {
+  emit('deleteTask', row)
 }
 
 // 图片取消padding

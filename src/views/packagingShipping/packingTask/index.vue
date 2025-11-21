@@ -51,6 +51,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @quality-check-change="handleShowPackingCount"
@@ -126,6 +127,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @quality-check-change="handleShowPackingCount"
@@ -214,6 +216,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @row-click="handleRowClick"
@@ -287,6 +290,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @row-click="handleRowClick"
@@ -360,6 +364,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @row-click="handleRowClick"
@@ -433,6 +438,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @row-click="handleRowClick"
@@ -499,6 +505,7 @@
           :loading="listLoading"
           :row-class-name="tableRowClassName"
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
           @get-package-code-path="getPackageCodePath"
           @image-preview="showPreviewImage"
           @row-click="handleRowClick"
@@ -969,6 +976,7 @@ import {
   confirmGoOffWork,
   confirmStartMoreTask,
   confirmStartTask,
+  deletePackageTask,
   generatePackageBarcode,
   getBarCodePath,
   getEndTaskList,
@@ -1334,6 +1342,18 @@ const handleShowFinishTask = async () => {
 }
 // 质检项目展示与否
 const qualityProjectVisible = ref<boolean>(false)
+// 删除任务
+const handleDeleteTask = (row: any) => {
+  $baseConfirm('确定删除该任务吗？', '系统提示', async () => {
+    const { data } = await deletePackageTask({
+      id: row.id,
+    })
+    if (data) {
+      $baseMessage('删除任务成功', 'success')
+      fetchData()
+    }
+  })
+}
 
 // 人员选择的padding
 const personSelectCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {

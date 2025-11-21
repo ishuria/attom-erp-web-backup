@@ -550,6 +550,14 @@ export function updatePackageTaskSite(data: IUpdatePackageTaskSite): Promise<IBo
     data,
   })
 }
+// 打包任务-删除
+export function deletePackageTask(params: { id: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/task/delete`,
+    method: 'post',
+    params,
+  })
+}
 
 /**
  * @description 零件签收打印
