@@ -1014,7 +1014,8 @@ const componentTableInputChange = async (row: any, column: any, cell: HTMLTableC
   if (firstChild.classList.contains('none')) {
     firstChild.classList.remove('none')
     secondChild.classList.add('none')
-
+    // 进入编辑模式时，禁用拖拽功能，避免干扰输入
+    isDraggingDisabled.value = true
     focusAndSelectInput(cell)
   }
 }
@@ -1030,6 +1031,8 @@ const componentClickCancel = async (event: any, value: IProgressProdcutComponent
     if (t1) t1.classList.add('none')
     if (t2) t2.classList.remove('none')
   }
+  // 无论数据是否变化，都要重新启用拖拽功能
+  isDraggingDisabled.value = false
   if (isEqual(rowCopy, value)) {
     return
   }
@@ -1065,6 +1068,8 @@ const includedInCostChange = async (row: IProgressProdcutComponent) => {
 const effectiveCountInputeHandle = (event: Event) => {
   const targetElement = event.target as HTMLInputElement
   targetElement.blur()
+  // 按 Enter 键后，重新启用拖拽功能
+  isDraggingDisabled.value = false
 }
 
 // 样品追踪
