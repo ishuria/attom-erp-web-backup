@@ -120,6 +120,7 @@ declare module 'vue' {
     MonthlyProductProfitTable: typeof import('./../../../src/views/index/vabAutoComponents/MonthlyProductProfitTable.vue')['default']
     NodePanel: typeof import('./../../../src/views/other/workflow/vabAutoComponents/lFComponents/NodePanel.vue')['default']
     OperationLogCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/OperationLogCard.vue')['default']
+    PackingTaskTable: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/PackingTaskTable.vue')['default']
     PageHeader: typeof import('./../../../src/views/index/vabAutoComponents/PageHeader.vue')['default']
     ParameterSettingsDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/ParameterSettingsDialog.vue')['default']
     Pending2: typeof import('./../../../src/views/index/vabAutoComponents/Pending2.vue')['default']
