@@ -511,25 +511,10 @@ watch(
 .right-sidebar {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
+  height: calc(var(--el-container-height) - var(--el-padding) - 52px - 15px) !important;
 
-  :deep(.product-info-card) {
-    flex-shrink: 0;
-  }
-
-  .operation-remark {
-    flex-shrink: 0;
-  }
-
-  :deep(.operation-log-card) {
+  :deep(.el-table) {
     flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
   }
 }
 

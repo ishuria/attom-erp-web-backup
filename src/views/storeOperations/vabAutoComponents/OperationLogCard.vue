@@ -33,16 +33,7 @@
       </vab-query-form-right-panel>
     </vab-query-form>
 
-    <el-table
-      ref="tableRef"
-      v-loading="loading"
-      border
-      :data="filteredData"
-      :header-cell-style="{ textAlign: 'center' }"
-      max-height="700"
-      stripe
-      style="flex: 1"
-    >
+    <el-table ref="tableRef" v-loading="loading" border :data="filteredData" :header-cell-style="{ textAlign: 'center' }" stripe>
       <el-table-column align="center" label="日期" prop="date" width="115" />
       <el-table-column align="center" label="类型" prop="type" width="90" />
       <el-table-column label="内容" min-width="170" prop="content">
@@ -87,9 +78,9 @@
 </template>
 
 <script lang="ts" setup>
-import { formatDateToString } from '~/src/utils/dateUtils'
 import { addOperationLog, getOperationLog } from '/@/api/devlocal/productAnalysis'
 import type { IGetOperationLog } from '/@/type/storeOperation/productAnalysisType'
+import { formatDateToString } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'OperationLogCard',
@@ -350,24 +341,11 @@ const handleContentClick = (row: LogItem) => {
   display: flex;
   flex: 1;
   flex-direction: column;
+  min-height: 0;
   height: 100%;
-
-  .vab-query-form {
-    flex-shrink: 0;
-
-    :deep(.el-form--inline .el-form-item) {
-      margin-right: 10px;
-    }
-  }
 
   :deep(.el-table) {
     flex: 1;
-  }
-
-  .vab-pagination {
-    flex-shrink: 0;
-    padding: 16px 0;
-    margin-top: 8px;
   }
 
   .content-link {
