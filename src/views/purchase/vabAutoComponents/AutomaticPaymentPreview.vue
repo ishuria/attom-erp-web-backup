@@ -36,25 +36,27 @@
       </template>
     </el-table>
     <template #footer>
-      <el-button :loading="loading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
+      <el-button :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
     </template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-import { purchaseAutoPaySubmit, purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
+import { purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
 import { IPurchasePoAutoPayQueryItem } from '/@/type/purchase/po'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'AutomaticPaymentPreview',
 })
-
+const props = defineProps<{
+  payAutoLoading: boolean
+}>()
+const emit = defineEmits(['submitAutoPay'])
 const visible = defineModel<boolean>({ default: false })
 
 const list = ref<IPurchasePoAutoPayQueryItem[]>([])
 const listLoading = ref<boolean>(false)
-const loading = ref<boolean>(false)
 const fetchData = async () => {
   listLoading.value = true
   try {
@@ -79,19 +81,7 @@ const getPriceClass = (price: number) => {
 }
 
 const handleSubmitAutoPay = async () => {
-  try {
-    loading.value = true
-    const { data } = await purchaseAutoPaySubmit()
-    if (data) {
-      $baseMessage('提交自动付款成功！', 'success')
-      // 提交成功后刷新数据
-      await fetchData()
-    }
-  } catch (error) {
-    console.error(error)
-  } finally {
-    loading.value = false
-  }
+  emit('submitAutoPay')
 }
 
 // 监听弹窗打开，每次打开时重新获取数据

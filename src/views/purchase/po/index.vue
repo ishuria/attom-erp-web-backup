@@ -878,7 +878,11 @@
     <!-- 添加自动付款 -->
     <vab-add-automatic-payment v-model="addAutomaticPaymentVisible" />
     <!-- 自动付款预览 -->
-    <automatic-payment-preview v-model="automaticPaymentPreviewVisible" />
+    <automatic-payment-preview
+      v-model="automaticPaymentPreviewVisible"
+      :pay-auto-loading="payAutoLoading"
+      @submit-auto-pay="handleSubmitAutoPay"
+    />
   </div>
 </template>
 
@@ -902,6 +906,7 @@ import {
   getPoPublisherList,
   getPurchaseBonus,
   getPurchaseCostReduction,
+  purchaseAutoPaySubmit,
   purchaseTotalAp,
   releasePackageTask,
   updateComponentAllPay,
@@ -973,6 +978,23 @@ const reductionCostFormRules = reactive<FormRules>({
   beforePrice: [{ required: true, message: '请输入优化前价格！', trigger: 'blur' }],
   afterPrice: [{ required: true, message: '请输入优化后价格！', trigger: 'blur' }],
 })
+const payAutoLoading = ref<boolean>(false)
+const handleSubmitAutoPay = async () => {
+  try {
+    payAutoLoading.value = true
+    const { data } = await purchaseAutoPaySubmit()
+    if (data) {
+      automaticPaymentPreviewVisible.value = false
+      $baseMessage('提交自动付款成功！', 'success')
+      // 提交成功后刷新数据
+      await fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    payAutoLoading.value = false
+  }
+}
 const closeReductionCost = () => {
   reductionCostFormRef.value?.resetFields()
   reductionCostVisible.value = false
