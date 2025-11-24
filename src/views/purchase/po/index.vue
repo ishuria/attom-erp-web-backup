@@ -887,8 +887,8 @@ import { Delete, Plus, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext, dayjs } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import { downloadFile } from '/@/api/devlocal/download'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
   aggregationContract,
   applyPurchaseReductionCost,
