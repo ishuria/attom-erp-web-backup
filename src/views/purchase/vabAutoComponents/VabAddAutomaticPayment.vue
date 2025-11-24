@@ -95,6 +95,7 @@ const handleConfirm = async () => {
 
         if (data) {
           $baseMessage('采购合同文件处理成功！', 'success')
+          dialogVisible.value = false
           loading.value = false
         }
       }
