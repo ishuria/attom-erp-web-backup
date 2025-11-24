@@ -107,17 +107,15 @@ const handleConfirm = async () => {
   }
 }
 
-// const resetForm = () => {
-//   formRef.value?.resetFields()
-//   form.path = null
-//   form.percent = null
-// }
+const resetForm = () => {
+  formRef.value?.resetFields()
+}
 
-// watch(dialogVisible, (visible) => {
-//   if (!visible) {
-//     resetForm()
-//   }
-// })
+watch(dialogVisible, (visible) => {
+  if (!visible) {
+    resetForm()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
