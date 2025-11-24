@@ -37,7 +37,7 @@ import type {
   IPoSkuComponentId,
   IPoSkuId,
   IPurchasePoAutoPay,
-  IPurchasePoAutoPayQueryResp,
+  IPurchasePoAutoPayQueryItem,
   IPurchaseSkuReplace,
   IPurchaseTotalAp,
   ISku,
@@ -738,7 +738,7 @@ export function purchaseAddAutoPay(data: IPurchasePoAutoPay) {
 }
 
 // 采购订单-po自动付款记录额列表查询
-export function purchaseQueryPayList(): Promise<{ data: IPurchasePoAutoPayQueryResp }> {
+export function purchaseQueryPayList(): Promise<{ data: IPurchasePoAutoPayQueryItem[] }> {
   return request({
     url: `${BASE_API}/auto/pay/list`,
     method: 'post',

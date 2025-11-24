@@ -876,9 +876,9 @@
 
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
     <!-- 添加自动付款 -->
-    <vab-add-automatic-payment v-model="addAutomaticPaymentVisible" @confirm="handleConfirmAddAutomaticPayment" />
+    <vab-add-automatic-payment v-model="addAutomaticPaymentVisible" />
     <!-- 自动付款预览 -->
-    <automatic-payment-preview v-model="automaticPaymentPreviewVisible" :data="automaticPaymentPreviewData" />
+    <automatic-payment-preview v-model="automaticPaymentPreviewVisible" />
   </div>
 </template>
 
@@ -924,33 +924,11 @@ defineOptions({
 // 添加自动付款
 const addAutomaticPaymentVisible = ref<boolean>(false)
 const automaticPaymentPreviewVisible = ref<boolean>(false)
-const automaticPaymentPreviewData = ref<any[]>([])
 const handleAddAutomaticPayment = () => {
   addAutomaticPaymentVisible.value = true
 }
-const handleAutomaticPaymentPreview = async () => {
+const handleAutomaticPaymentPreview = () => {
   automaticPaymentPreviewVisible.value = true
-  // try {
-  //   const { data } = await getAutomaticPaymentPreview({ ... })
-  //   automaticPaymentPreviewData.value = data || []
-  // } catch (error) {
-  //   console.error('获取自动付款预览数据失败:', error)
-  //   automaticPaymentPreviewData.value = []
-  // }
-}
-const handleConfirmAddAutomaticPayment = async (data: { path: string; percent: string }) => {
-  try {
-    // const { data: result } = await addAutomaticPayment({
-    //   path: data.path,
-    //   percent: data.percent,
-    // })
-    // if (result) {
-    //   $baseMessage('添加自动付款成功！', 'success')
-    //   addAutomaticPaymentVisible.value = false
-    // }
-  } catch (error) {
-    console.error('添加自动付款失败:', error)
-  }
 }
 const imageUploadVisible = ref<boolean>(false)
 const disabledDate = (time: Date) => {

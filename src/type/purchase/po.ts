@@ -975,9 +975,6 @@ export interface IPurchasePoAutoPay {
 }
 
 /** 自动付款路预览查询 */
-export interface IPurchasePoAutoPayQueryResp {
-  data: IPurchasePoAutoPayQueryItem[]
-}
 
 export interface IPurchasePoAutoPayQueryItem {
   addUserName: string

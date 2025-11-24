@@ -18,7 +18,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :loading="props.loading" type="primary" @click="handleConfirm">确认</el-button>
+      <el-button :loading="loading" type="primary" @click="handleConfirm">确认</el-button>
     </template>
   </vab-dialog>
 </template>
@@ -31,19 +31,17 @@ defineOptions({
   name: 'VabAddAutomaticPayment',
 })
 
-interface Props {
-  loading?: boolean
-}
+// interface Props {
+//   loading?: boolean
+// }
 
-const props = withDefaults(defineProps<Props>(), {
-  loading: false,
-})
-
-const emit = defineEmits<{
-  confirm: [data: { path: string; percent: string }]
-}>()
+// const props = withDefaults(defineProps<Props>(), {
+//   loading: false,
+// })
 
 const dialogVisible = defineModel<boolean>({ default: false })
+
+const loading = ref<boolean>(false)
 
 const formRef = ref<FormInstance>()
 
@@ -85,23 +83,26 @@ const rules = reactive<FormRules>({
 const handleConfirm = async () => {
   if (!formRef.value) return
 
-  await formRef.value.validate((isValid: boolean) => {
-    if (isValid) {
-      emit('confirm', {
-        path: form.path!,
-        percent: form.percent!,
-      })
-    }
-  })
+  try {
+    await formRef.value.validate(async (isValid: boolean) => {
+      if (isValid) {
+        loading.value = true
+        const { data } = await purchaseAddAutoPay({
+          path: form?.path!,
+          payProportion: Number(form?.percent!),
+          balancePayment: form?.type!,
+        })
 
-  const { data } = await purchaseAddAutoPay({
-    path: form?.path!,
-    payProportion: Number(form?.percent!),
-    balancePayment: form?.type!,
-  })
-
-  if (data) {
-    $baseMessage('采购合同文件处理成功！', 'success')
+        if (data) {
+          $baseMessage('采购合同文件处理成功！', 'success')
+          loading.value = false
+        }
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
   }
 }
 
