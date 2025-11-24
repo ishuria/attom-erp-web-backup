@@ -76,8 +76,22 @@
       >
         删除
       </el-button>
-      <el-button v-if="showCommonButtons" type="primary" @click="$emit('addAutomaticPayment')">添加自动付款</el-button>
-      <el-button v-if="showCommonButtons" type="primary" @click="$emit('automaticPaymentPreview')">自动付款预览</el-button>
+      <el-button
+        v-if="showCommonButtons"
+        v-permissions="{ permission: [PoPermission.PO_AUTO_PAY_ADD_PATH] }"
+        type="primary"
+        @click="$emit('addAutomaticPayment')"
+      >
+        添加自动付款
+      </el-button>
+      <el-button
+        v-if="showCommonButtons"
+        v-permissions="{ permission: [PoPermission.PO_AUTO_PAY_LIST] }"
+        type="primary"
+        @click="$emit('automaticPaymentPreview')"
+      >
+        自动付款预览
+      </el-button>
     </div>
 
     <!-- 统计信息 -->
@@ -221,7 +235,7 @@ defineEmits<{
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 950px;
+  max-width: 1050px;
 
   // 按钮间距，与 vab-query-form 保持一致
   :deep(.el-button) {

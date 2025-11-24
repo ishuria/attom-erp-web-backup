@@ -25,6 +25,7 @@
 
 <script lang="ts" setup>
 import type { FormInstance, FormRules } from 'element-plus'
+import { purchaseAddAutoPay } from '/@/api/devlocal/purchasePo'
 
 defineOptions({
   name: 'VabAddAutomaticPayment',
@@ -92,6 +93,16 @@ const handleConfirm = async () => {
       })
     }
   })
+
+  const { data } = await purchaseAddAutoPay({
+    path: form?.path!,
+    payProportion: Number(form?.percent!),
+    balancePayment: form?.type!,
+  })
+
+  if (data) {
+    $baseMessage('采购合同文件处理成功！', 'success')
+  }
 }
 
 // const resetForm = () => {
