@@ -811,6 +811,26 @@ const calcYAxisRange = (yAxisIndex: number) => {
     return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
   }
 
+  // 根据 yAxisIndex 找到对应的 dataGroup
+  let dataGroup: IDataGroup | undefined
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (index === yAxisIndex) {
+      dataGroup = group
+      break
+    }
+  }
+
+  // 如果是 Rating 组（int2），固定 min=0, max=5, interval=1
+  if (dataGroup === 'int2') {
+    return {
+      min: 0,
+      max: 5,
+      interval: 1,
+      top: 5,
+      bottom: 0,
+    }
+  }
+
   // 原始最大
   let max = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
   max = max < 0 ? 0 : max
@@ -835,7 +855,24 @@ const calculateAlignedYAxisRanges = () => {
     return calcYAxisRange(index)
   })
 
-  // 如果有多个 y 轴，需要对齐
+  // 记录哪些 Y 轴是 Rating 组（int2），需要保护其范围
+  const ratingYAxisIndices = new Set<number>()
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (group === 'int2') {
+      ratingYAxisIndices.add(index)
+    }
+  }
+
+  // 保存 Rating 组的原始值
+  const ratingOriginalRanges = new Map<number, { min: number; max: number; interval: number; top: number; bottom: number }>()
+  ratingYAxisIndices.forEach((index) => {
+    if (ranges[index]) {
+      ratingOriginalRanges.set(index, { ...ranges[index] })
+    }
+  })
+
+  // 如果有多个 y 轴，需要对齐（但保持各自独立的数据范围）
+  // 每个 Y 轴保持自己的数据范围，只确保 0 值对齐
   if (ranges.length > 1) {
     // 从第一个 y 轴开始，依次与后面的 y 轴对齐
     for (let i = 0; i < ranges.length - 1; i++) {
@@ -877,6 +914,13 @@ const calculateAlignedYAxisRanges = () => {
       }
     }
   }
+
+  // 恢复 Rating 组的原始值（确保固定为 min=0, max=5, interval=1）
+  ratingOriginalRanges.forEach((originalRange, index) => {
+    if (ranges[index]) {
+      ranges[index] = originalRange
+    }
+  })
 
   return ranges
 }
