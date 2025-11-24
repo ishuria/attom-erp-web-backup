@@ -25,6 +25,12 @@
           <el-link :href="row.path" target="_blank" type="primary">{{ row.path }}</el-link>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="状态" prop="status" width="100">
+        <template #default="{ row }">
+          <el-tag :type="row.status === '已付款' ? 'success' : 'danger'">{{ row.status }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="添加人" prop="addUserName" width="100" />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
       </template>
