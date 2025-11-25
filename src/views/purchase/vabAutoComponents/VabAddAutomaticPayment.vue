@@ -93,11 +93,13 @@ const handleConfirm = async () => {
           balancePayment: form?.type!,
         })
 
-        if (data) {
+        if (data === true) {
           $baseMessage('采购合同文件处理成功！', 'success')
-          dialogVisible.value = false
-          loading.value = false
+        } else {
+          $baseMessage('采购合同文件处理失败！请联系IT', 'error')
         }
+        dialogVisible.value = false
+        loading.value = false
       }
     })
   } catch (error) {
