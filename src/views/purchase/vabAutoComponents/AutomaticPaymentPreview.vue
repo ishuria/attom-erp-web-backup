@@ -5,9 +5,13 @@
     </div>
     <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="700" stripe>
       <el-table-column align="center" label="PO" prop="po" width="110" />
-      <el-table-column label="零件名" min-width="380" prop="componentName" />
+      <el-table-column label="零件名" min-width="300" prop="componentName" />
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
-      <el-table-column label="本次付款金额" prop="payPrice" width="120" />
+      <el-table-column label="本次付款金额" prop="payPrice" width="120">
+        <template #default="{ row }">
+          <span :class="{ 'price-negative': row.payPrice < 0 }">{{ row.payPrice }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="本次付款比例" prop="proportion" width="120">
         <template #default="{ row }">{{ row.proportion }}%</template>
       </el-table-column>
