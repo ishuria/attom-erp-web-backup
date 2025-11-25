@@ -65,6 +65,18 @@
       <el-table-column label="总重量(kg)" min-width="110" prop="totalWeight" />
       <el-table-column label="总体积(m3)" min-width="110" prop="totalVolume" />
       <el-table-column label="箱规号" min-width="135" prop="encasementNo" />
+      <el-table-column label="冻结箱号" min-width="110">
+        <template #default="{ row }">
+          <el-switch
+            v-model="row.freeze"
+            :active-value="1"
+            class="ml-2"
+            :inactive-value="0"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            @change="updateEncasementFreeze(row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="站点" min-width="130" prop="planSiteName" />
       <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')" />
       <el-table-column label="Description" prop="description" :width="flexColumnWidth(list, 'Description', 'description')" />
@@ -124,7 +136,7 @@
 import { ArrowDown, Search } from '@element-plus/icons-vue'
 import type { CSSProperties } from 'vue'
 import { downloadFileP } from '/@/api/devlocal/download'
-import { getShippedEncasementList } from '/@/api/devlocal/encasement'
+import { encasementFreezeUpdate, getShippedEncasementList } from '/@/api/devlocal/encasement'
 import type { IGetShippedEncasementList } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
 import { sumUniqueByField } from '/@/utils/mapUtil.ts'
@@ -240,6 +252,17 @@ const handleDownloadFile3 = async (row: IGetShippedEncasementList) => {
     .catch((error) => {
       console.log(error)
     })
+}
+// 冻结箱号修改
+const updateEncasementFreeze = async (val: any) => {
+  const { data } = await encasementFreezeUpdate({
+    encasementId: val.id,
+    freeze: val.freeze,
+  })
+
+  if (data) {
+    $baseMessage('冻结箱号修改成功！', 'success')
+  }
 }
 // 已装箱发货列表-walmart
 const handleDownloadFile4 = async (row: IGetShippedEncasementList) => {

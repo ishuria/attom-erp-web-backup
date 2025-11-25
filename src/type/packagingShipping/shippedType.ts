@@ -46,6 +46,8 @@ export interface IEncasementList {
    * 箱规号
    */
   encasementNo?: string
+  /** 冻结箱号 */
+  freeze: number
   /**
    * 毛重
    */
