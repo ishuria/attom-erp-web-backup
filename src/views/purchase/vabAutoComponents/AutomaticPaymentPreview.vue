@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="visible" title="自动付款预览" width="85%">
+  <vab-dialog v-model="visible" title="自动付款预览" width="87%">
     <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="700" stripe>
       <el-table-column align="center" label="PO" prop="po" width="110" />
       <el-table-column label="零件名" min-width="380" prop="componentName" />
@@ -31,18 +31,24 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="添加人" prop="addUserName" width="100" />
+      <el-table-column align="center" label="操作" width="100">
+        <template #default="{ row }">
+          <el-link type="danger" underline="never" @click="handleDelete(row)">删除</el-link>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
       </template>
     </el-table>
     <template #footer>
+      <el-button :loading="clearLoading" type="danger" @click="handleClear">清空</el-button>
       <el-button :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
     </template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-import { purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
+import { purchaseClearAutoPay, purchaseDeleteAutoPay, purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
 import { IPurchasePoAutoPayQueryItem } from '/@/type/purchase/po'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -82,6 +88,34 @@ const getPriceClass = (price: number) => {
 
 const handleSubmitAutoPay = async () => {
   emit('submitAutoPay')
+}
+const handleDelete = async (row: IPurchasePoAutoPayQueryItem) => {
+  try {
+    const { data } = await purchaseDeleteAutoPay({ id: row.id })
+    if (data) {
+      $baseMessage('删除成功', 'success')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+    $baseMessage('删除失败', 'error')
+  }
+}
+const clearLoading = ref<boolean>(false)
+const handleClear = async () => {
+  try {
+    clearLoading.value = true
+    const { data } = await purchaseClearAutoPay()
+    if (data) {
+      $baseMessage('清空成功', 'success')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+    $baseMessage('清空失败', 'error')
+  } finally {
+    clearLoading.value = false
+  }
 }
 
 // 监听弹窗打开，每次打开时重新获取数据

@@ -752,3 +752,22 @@ export function purchaseAutoPaySubmit(): Promise<{ data: boolean }> {
     method: 'post',
   })
 }
+
+// 采购订单-po自动付款删除
+export function purchaseDeleteAutoPay(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/record/del`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 采购订单-po自动付款清空
+ * @returns
+ */
+export function purchaseClearAutoPay(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/record/clean`,
+    method: 'post',
+  })
+}
