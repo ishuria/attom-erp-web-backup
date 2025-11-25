@@ -654,7 +654,7 @@
     <!-- 参数设定 -->
     <parameter-settings-dialog v-model="parameterSettingsVisible" />
     <!-- 考核数结账 -->
-    <vab-dialog v-model="checkoutVisible" title="考核数结账" width="20%" @close="closeCheckout">
+    <vab-dialog v-model="checkoutVisible" title="考核数结账" width="15%" @close="closeCheckout">
       <el-form label-position="top">
         <el-form-item label="请选择结账人员">
           <el-select v-model="userIdList" multiple placeholder="请选择结账人员">
@@ -662,14 +662,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="请选择结账月份">
-          <el-date-picker
-            v-model="checkoutDate"
-            end-placeholder="结束月份"
-            range-separator="至"
-            start-placeholder="开始月份"
-            type="monthrange"
-            value-format="YYYY-MM"
-          />
+          <el-date-picker v-model="checkoutDate" placeholder="请选择月份" style="min-width: 100%" type="month" value-format="YYYY-MM" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -744,18 +737,14 @@ const handleCheckout = async () => {
   // console.log(checkoutDate.value)
 
   // 检查结账日期是否有效
-  if (!checkoutDate.value || checkoutDate.value.length !== 2 || !checkoutDate.value[0] || !checkoutDate.value[1]) {
+  if (!checkoutDate.value) {
     $baseMessage('请选择结账月份！', 'warning')
     return
   }
 
-  // console.log(checkoutDate.value[0])
-  // console.log(checkoutDate.value[1])
-
   const { data } = await checkoutAssessmentNumber({
     userIdList: userIdList.value,
-    startMonth: checkoutDate.value[0],
-    endMonth: checkoutDate.value[1],
+    checkoutMonth: checkoutDate.value,
   })
   if (data) {
     $baseMessage('考核数结账成功且发送邮件成功！', 'success')
@@ -802,7 +791,7 @@ let copyRow: any
 /* ============================== 产品经理考核变量 ============================== */
 const assessmentDate = ref<[string, string]>(['', ''])
 // 结账月份
-const checkoutDate = ref<[string, string] | null>(null)
+const checkoutDate = ref<string | null>(null)
 const assessmentQueryForm = reactive<IGetAssessmentListReq>({
   keyWord: '',
   pageNo: 1,

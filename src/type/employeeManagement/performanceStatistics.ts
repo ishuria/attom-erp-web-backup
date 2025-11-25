@@ -286,9 +286,7 @@ export interface IGetAdjustDetail {
 export interface ICheckoutReq {
   userIdList: number[]
 
-  startMonth: string
-
-  endMonth: string
+  checkoutMonth: string
 }
 
 export interface IMinimumMonthlyAssessment {
