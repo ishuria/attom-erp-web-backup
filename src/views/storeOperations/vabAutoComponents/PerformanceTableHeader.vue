@@ -321,7 +321,7 @@
         <el-icon><question-filled /></el-icon>
       </div>
       <template #content>
-        <div class="custom-tooltip">总库存+接收中/可售库存</div>
+        <div class="custom-tooltip">总库存(接收中)/可售库存</div>
       </template>
     </el-tooltip>
   </span>

@@ -151,7 +151,7 @@
                 <el-icon><question-filled /></el-icon>
               </div>
               <template #content>
-                <div class="custom-tooltip">总库存+接收中/可售库存</div>
+                <div class="custom-tooltip">总库存(接收中)/可售库存</div>
               </template>
             </el-tooltip>
           </span>
@@ -255,7 +255,7 @@
           <span v-if="item.label === '剩余库存'">
             {{ row.fbaCount }}
             <span style="color: var(--el-color-warning)">
-              {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+              {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `(${row.acceptingCount})` }}
             </span>
             / {{ row.availableInventory }}
           </span>

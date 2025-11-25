@@ -15,10 +15,10 @@
         </el-form-item>
 
         <el-form-item label="产品主品名" prop="productName">
-          <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
+          <el-input v-model.trim="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
         </el-form-item>
         <el-form-item label="产品短描述" prop="productDesc">
-          <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
+          <el-input v-model.trim="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
         </el-form-item>
         <el-form-item label="主订货站点" prop="site">
           <el-select v-model="form.site" placeholder="选择订货站点" style="width: 240px">
@@ -142,8 +142,8 @@ const rules = reactive<any>({
 const handleVariantSkuMap = async () => {
   if (form.variantSku) {
     const { data } = await reviewSkuInfo({ sku: form.variantSku })
-    form.productName = data.productName
-    form.productDesc = data.productDesc
+    form.productName = data.productName?.replace(/[\n\r]/g, '') || ''
+    form.productDesc = data.productDesc?.replace(/[\n\r]/g, '') || ''
   }
 }
 const handleAddVariants = () => {
@@ -194,7 +194,19 @@ const submitAndContinueLoading = ref<boolean>(false)
 // let firstSave = false // 第一次保存
 const router = useRouter()
 // 当点击保存的时候
+// 去除换行符的辅助函数
+const removeNewlines = () => {
+  if (form.productName) {
+    form.productName = form.productName.replace(/[\n\r]/g, '')
+  }
+  if (form.productDesc) {
+    form.productDesc = form.productDesc.replace(/[\n\r]/g, '')
+  }
+}
+
 const handleSubmit = () => {
+  // 在保存前去除换行符
+  removeNewlines()
   saveLoading.value = true
   formRef.value?.validate((valid: any) => {
     if (valid) {
@@ -238,6 +250,8 @@ const handleSubmit = () => {
 
 let res: number
 const handleSubmitAndContinue = async () => {
+  // 在保存并继续前去除换行符
+  removeNewlines()
   submitAndContinueLoading.value = true
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
