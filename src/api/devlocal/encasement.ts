@@ -736,3 +736,27 @@ export const getSettlementObjectList = (): Promise<{ data: { id: number; label: 
     method: 'get',
   })
 }
+
+/**
+ * 冻结箱号修改
+ * @description
+ */
+export const encasementFreezeUpdate = (data: { encasementId: number; freeze: number }): Promise<IBoxNumber> => {
+  return request({
+    url: `${BASE_API}/encasement/freeze/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 检查箱号是否重复
+ * @description
+ */
+export const checkEncasementNo = (params: { boxNo: number }): Promise<IBoxNumber> => {
+  return request({
+    url: `${BASE_API}/encasement/check/boxNo`,
+    method: 'post',
+    params,
+  })
+}

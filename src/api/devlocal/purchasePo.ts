@@ -36,6 +36,8 @@ import type {
   IPoIds,
   IPoSkuComponentId,
   IPoSkuId,
+  IPurchasePoAutoPay,
+  IPurchasePoAutoPayQueryItem,
   IPurchaseSkuReplace,
   IPurchaseTotalAp,
   ISku,
@@ -723,5 +725,30 @@ export function purchaseSkuReplace(data: IPurchaseSkuReplace) {
     url: `${BASE_API}/purchase/sku/replace`,
     method: 'post',
     data,
+  })
+}
+
+// 采购订单-po自动付款添加合同路径
+export function purchaseAddAutoPay(data: IPurchasePoAutoPay) {
+  return request({
+    url: `${BASE_API}/auto/pay/add`,
+    method: 'post',
+    data,
+  })
+}
+
+// 采购订单-po自动付款记录额列表查询
+export function purchaseQueryPayList(): Promise<{ data: IPurchasePoAutoPayQueryItem[] }> {
+  return request({
+    url: `${BASE_API}/auto/pay/list`,
+    method: 'post',
+  })
+}
+
+// 采购订单-po自动付款提交
+export function purchaseAutoPaySubmit(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/submit`,
+    method: 'post',
   })
 }

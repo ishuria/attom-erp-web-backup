@@ -86,13 +86,7 @@
           <el-table-column label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable
-                  v-model="row.imageList"
-                  :animation="150"
-                  class="image-list"
-                  ghost-class="ghost"
-                  @end="() => onEnd(row, $index)"
-                >
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -318,13 +312,7 @@
           <el-table-column class="image-wall" label="示例图片" prop="imageList" :width="getImageColumnWidth()">
             <template #default="{ row, $index }">
               <div style="display: flex; align-items: center">
-                <vue-draggable
-                  v-model="row.imageList"
-                  :animation="150"
-                  class="image-list"
-                  ghost-class="ghost"
-                  @end="() => onEnd(row, $index)"
-                >
+                <vue-draggable v-model="row.imageList" :animation="150" class="image-list" ghost-class="ghost" @end="() => onEnd(row)">
                   <div v-for="(image, index) in row.imageList" :key="index" class="image-cell">
                     <div class="image-preview">
                       <img :alt="image.imageId" loading="lazy" :src="image.imageUrl" />
@@ -1134,17 +1122,33 @@ async function uploadImage(file: File) {
   }
 }
 // 移动之后触发修改排序接口
-const onEnd = debounce(async (row: any, rowIndex: number) => {
-  try {
-    const idList =
-      row.imageList?.map((item: any) => {
-        return item.imageId
-      }) || []
-    await updateProgressImgSort(idList)
-  } catch (error) {
-    console.error(error as Error)
+let debouncedOnEnd: ReturnType<typeof debounce> | null = null
+
+const onEnd = (row: any) => {
+  // 取消之前的 debounce（如果存在）
+  if (debouncedOnEnd) {
+    debouncedOnEnd.cancel()
   }
-}, 500)
+
+  // 创建新的 debounce 函数
+  debouncedOnEnd = debounce(async () => {
+    try {
+      const idList =
+        row.imageList?.map((item: any) => {
+          return item.imageId
+        }) || []
+      await updateProgressImgSort(idList)
+      $baseMessage('图片排序更新成功', 'success', 'hey')
+    } catch (error) {
+      console.error('更新图片排序失败:', error)
+      $baseMessage('更新图片排序失败，请稍后重试', 'error', 'hey')
+    }
+    debouncedOnEnd = null
+  }, 300)
+
+  // 执行 debounce 函数
+  debouncedOnEnd()
+}
 /**
  * 获取初始新品进度数据
  */

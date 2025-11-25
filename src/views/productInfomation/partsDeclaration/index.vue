@@ -292,6 +292,11 @@
           <span>{{ row.ratio }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="历史SKU" min-width="300" prop="historySku">
+        <template #default="{ row }">
+          <span class="history-sku-text">{{ row.historySku }}</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" />
       </template>
@@ -523,6 +528,10 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       color: '#999',
       cursor: 'not-allowed',
       textAlign: 'center',
+    }
+  } else if (label === '历史SKU') {
+    return {
+      textAlign: 'left',
     }
   } else {
     return {
@@ -917,5 +926,9 @@ const getHsName = (id: number | string) => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+.history-sku-text {
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>

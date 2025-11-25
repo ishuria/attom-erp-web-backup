@@ -20,6 +20,13 @@
       </el-row>
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
+          <el-switch
+            v-model="showOperationLogMarkPoint"
+            active-text="显示操作日志"
+            inactive-text="隐藏操作日志"
+            style="margin-right: 20px"
+            @change="handleToggleMarkPoint"
+          />
           <el-radio-group v-model="radio" size="small" @change="() => handleSwitchTime()">
             <el-radio-button label="日" value="day" />
             <el-radio-button label="周" value="week" />
@@ -170,6 +177,7 @@ const clickCard = ref<string>('')
 const operationLogCountByDate = ref<Record<string, number>>({}) // 按日期统计的操作日志数量
 const operationLogDialogVisible = ref<boolean>(false) // 操作日志明细对话框显示状态
 const operationLogDetailList = ref<Array<{ date: string; type: string; content: string }>>([]) // 操作日志明细列表
+const showOperationLogMarkPoint = ref<boolean>(true) // 控制操作日志泡泡的显示/隐藏
 const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
@@ -508,7 +516,7 @@ const updateCardsData = () => {
       } else {
         card.trendPercentage = 'null'
       }
-      // 更新趋势类型（使用类型断言，因为 TypeScript 推断为字面量类型）
+      // 更新趋势类型
       if (summary.changeType) {
         ;(card as { trendType: 'up' | 'down' }).trendType = summary.changeType
       }
@@ -604,6 +612,7 @@ const saveState = () => {
       })),
       radio: radio.value,
       selectedItems: [...selectedItems],
+      showOperationLogMarkPoint: showOperationLogMarkPoint.value,
     }
     localStorage.setItem(getStorageKey(), JSON.stringify(state))
   } catch (error) {
@@ -643,6 +652,11 @@ const restoreState = () => {
     // 恢复选中的折线项（需要在数据加载后恢复）
     if (state.selectedItems && Array.isArray(state.selectedItems)) {
       selectedItems = state.selectedItems.filter((item: string) => dropdownItems.some((dropdownItem) => dropdownItem.label === item))
+    }
+
+    // 恢复操作日志泡泡显示状态
+    if (typeof state.showOperationLogMarkPoint === 'boolean') {
+      showOperationLogMarkPoint.value = state.showOperationLogMarkPoint
     }
 
     return true
@@ -811,6 +825,26 @@ const calcYAxisRange = (yAxisIndex: number) => {
     return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
   }
 
+  // 根据 yAxisIndex 找到对应的 dataGroup
+  let dataGroup: IDataGroup | undefined
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (index === yAxisIndex) {
+      dataGroup = group
+      break
+    }
+  }
+
+  // 如果是 Rating 组（int2），固定 min=0, max=5, interval=1
+  if (dataGroup === 'int2') {
+    return {
+      min: 0,
+      max: 5,
+      interval: 1,
+      top: 5,
+      bottom: 0,
+    }
+  }
+
   // 原始最大
   let max = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
   max = max < 0 ? 0 : max
@@ -835,7 +869,24 @@ const calculateAlignedYAxisRanges = () => {
     return calcYAxisRange(index)
   })
 
-  // 如果有多个 y 轴，需要对齐
+  // 记录哪些 Y 轴是 Rating 组（int2），需要保护其范围
+  const ratingYAxisIndices = new Set<number>()
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (group === 'int2') {
+      ratingYAxisIndices.add(index)
+    }
+  }
+
+  // 保存 Rating 组的原始值
+  const ratingOriginalRanges = new Map<number, { min: number; max: number; interval: number; top: number; bottom: number }>()
+  ratingYAxisIndices.forEach((index) => {
+    if (ranges[index]) {
+      ratingOriginalRanges.set(index, { ...ranges[index] })
+    }
+  })
+
+  // 如果有多个 y 轴，需要对齐（但保持各自独立的数据范围）
+  // 每个 Y 轴保持自己的数据范围，只确保 0 值对齐
   if (ranges.length > 1) {
     // 从第一个 y 轴开始，依次与后面的 y 轴对齐
     for (let i = 0; i < ranges.length - 1; i++) {
@@ -877,6 +928,13 @@ const calculateAlignedYAxisRanges = () => {
       }
     }
   }
+
+  // 恢复 Rating 组的原始值（确保固定为 min=0, max=5, interval=1）
+  ratingOriginalRanges.forEach((originalRange, index) => {
+    if (ranges[index]) {
+      ranges[index] = originalRange
+    }
+  })
 
   return ranges
 }
@@ -956,6 +1014,14 @@ const updateOperationLogMarkPoint = () => {
     return
   }
 
+  // 如果关闭了显示，清空 markPoint 数据
+  if (!showOperationLogMarkPoint.value) {
+    if (option.value.series[0].markPoint) {
+      option.value.series[0].markPoint.data = []
+    }
+    return
+  }
+
   if (radio.value === 'day') {
     const markPointData = calculateMarkPointData()
     // 确保 markPoint 对象始终存在，只更新 data
@@ -969,6 +1035,12 @@ const updateOperationLogMarkPoint = () => {
       option.value.series[0].markPoint.data = []
     }
   }
+}
+
+// 切换 markPoint 显示/隐藏
+const handleToggleMarkPoint = () => {
+  updateOperationLogMarkPoint()
+  updateChart()
 }
 // 切换 日，周，月
 const handleSwitchTime = (shouldSave: boolean = true) => {

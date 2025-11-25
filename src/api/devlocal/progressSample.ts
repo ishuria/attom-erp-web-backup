@@ -252,6 +252,19 @@ export function costAccountingUpdateRowSort(data?: string[]): Promise<ICostAccou
 }
 
 /**
+ * 零件清单-表格table拖拽排序
+ * @param data
+ * @returns
+ */
+export function componentUpdateRowSort(data?: string[]): Promise<ICostAccountingUpdateSortResp> {
+  return request({
+    url: `${BASE_API}/progress/component/update/sort`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
  * 成本核算-复制
  * @param data
  * @returns

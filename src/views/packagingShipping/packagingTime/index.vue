@@ -76,6 +76,11 @@
                 <span v-html="row.po"></span>
               </template>
             </el-table-column>
+            <el-table-column label="好的数量" prop="count" width="100">
+              <template #default="{ row }">
+                <span v-html="row.count"></span>
+              </template>
+            </el-table-column>
             <el-table-column label="SKU" min-width="80" prop="sku">
               <template #default="{ row }">
                 <span v-html="row.sku"></span>
@@ -385,6 +390,7 @@ const fetchData = async () => {
   total.value = data?.total!
   leftList.value.forEach((item: any) => {
     item.po = item.po.replaceAll(',', '<br>')
+    item.count = item.count.replaceAll(',', '<br>')
     item.sku = item.sku.replaceAll(',', '<br>')
     item.productName = item.productName.replaceAll(',', '<br>')
     item.packTaskId = item.packTaskId.replaceAll(',', '<br>')
