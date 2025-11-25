@@ -359,6 +359,7 @@ export interface IReviewStepNo1Req {
    * 变体列表
    */
   variantList: IReviewStepNo1Variant[]
+  reason: string
 }
 
 export interface IReviewStepNo1Variant {

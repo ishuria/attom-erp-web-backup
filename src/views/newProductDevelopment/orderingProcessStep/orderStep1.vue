@@ -346,7 +346,7 @@ onMounted(async () => {
   text-align: center;
 }
 .list-container {
-  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px);
+  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 238px);
   ul {
     padding: 0;
     margin: 0;
