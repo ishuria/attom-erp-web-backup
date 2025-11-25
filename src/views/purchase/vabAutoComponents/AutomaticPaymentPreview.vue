@@ -41,8 +41,8 @@
       </template>
     </el-table>
     <template #footer>
-      <el-button :loading="clearLoading" type="danger" @click="handleClear">清空</el-button>
-      <el-button :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
+      <el-button :disabled="clearDisabled" :loading="clearLoading" type="danger" @click="handleClear">清空</el-button>
+      <el-button :disabled="clearDisabled" :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
     </template>
   </vab-dialog>
 </template>
@@ -117,7 +117,9 @@ const handleClear = async () => {
     clearLoading.value = false
   }
 }
-
+const clearDisabled = computed(() => {
+  return list.value.length === 0
+})
 // 监听弹窗打开，每次打开时重新获取数据
 watch(
   () => visible.value,
