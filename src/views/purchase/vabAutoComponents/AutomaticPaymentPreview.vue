@@ -1,5 +1,8 @@
 <template>
-  <vab-dialog v-model="visible" title="自动付款预览" width="87%">
+  <vab-dialog v-model="visible" title="自动付款预览" width="88%">
+    <div style="margin-bottom: 12px; text-align: center">
+      <el-text style="font-size: 16px; font-weight: 600">共 {{ list.length }} 条数据</el-text>
+    </div>
     <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="700" stripe>
       <el-table-column align="center" label="PO" prop="po" width="110" />
       <el-table-column label="零件名" min-width="380" prop="componentName" />
