@@ -40,6 +40,7 @@
           关税单上传
         </el-button>
         <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件校验上传</el-button>
+        <el-button type="primary" @click="uploadPreOrderCheck">预入单校验</el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -549,12 +550,40 @@
         </div>
       </template>
     </vab-dialog>
+
+    <!-- 预入单文件上传 -->
+    <vab-dialog v-model="uploadPreOrderFormVisible" title="预入单校验文件上传" width="25%">
+      <el-upload v-model:file-list="preOrderFiles" :auto-upload="false" drag multiple :show-file-list="true">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          将预入单excel文件拖拽至此处或
+          <em>点击上传</em>
+        </div>
+      </el-upload>
+
+      <el-upload v-model:file-list="taxRefundFiles" :auto-upload="false" drag multiple :show-file-list="true">
+        <el-icon class="el-icon--upload">
+          <upload-filled />
+        </el-icon>
+        <div class="el-upload__text">
+          退税报关资料文件拖拽至此处或
+          <em>点击上传</em>
+        </div>
+      </el-upload>
+      <template #footer>
+        <div style="text-align: center">
+          <el-button :loading="preOrderFormLoadingVisible" type="success" @click="handlePreOrderFormUploadSubmit">上传并提交</el-button>
+        </div>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
-import type { FormInstance, TableInstance } from 'element-plus'
+import type { FormInstance, TableInstance, UploadUserFile } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
@@ -583,6 +612,7 @@ import {
   updateShipmentLegCurrency,
   updateShipmentLegPay,
   updateShipmentPay,
+  uploadPreOrderFormCheckFile,
   uploadTaxRefundCheckFile,
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import { downloadFileP, downloadFilePDH } from '/@/api/devlocal/download'
@@ -664,6 +694,41 @@ const handleTaxRefundUpload = async () => {
     $baseMessage('退税报关文件上传失败', 'error')
   } finally {
     taxRefundLoadingVisible.value = false
+  }
+}
+
+// 预入单上传
+const uploadPreOrderFormVisible = ref<boolean>(false)
+const preOrderFormLoadingVisible = ref<boolean>(false)
+const preOrderFiles = ref<UploadUserFile[]>([])
+const taxRefundFiles = ref<UploadUserFile[]>([])
+const uploadPreOrderCheck = () => {
+  preOrderFiles.value = []
+  taxRefundFiles.value = []
+  uploadPreOrderFormVisible.value = true
+}
+
+const handlePreOrderFormUploadSubmit = async () => {
+  preOrderFormLoadingVisible.value = true
+  const formData = new FormData()
+  preOrderFiles.value.forEach((item: any) => {
+    formData.append('file1', item.raw)
+  })
+  taxRefundFiles.value.forEach((item: any) => {
+    formData.append('file2', item.raw)
+  })
+  try {
+    const { data } = await uploadPreOrderFormCheckFile(formData)
+    if (data) {
+      $baseMessage('预入单文件上传校验成功！', 'success')
+      uploadPreOrderFormVisible.value = false
+      preOrderFiles.value = []
+      taxRefundFiles.value = []
+    }
+  } catch {
+    $baseMessage('预入单文件上传失败', 'error')
+  } finally {
+    preOrderFormLoadingVisible.value = false
   }
 }
 

@@ -1,10 +1,17 @@
 <template>
-  <vab-dialog v-model="visible" title="自动付款预览" width="85%">
+  <vab-dialog v-model="visible" title="自动付款预览" width="88%">
+    <div style="margin-bottom: 12px; text-align: center">
+      <el-text style="font-size: 16px; font-weight: 600">共 {{ list.length }} 条数据</el-text>
+    </div>
     <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="700" stripe>
       <el-table-column align="center" label="PO" prop="po" width="110" />
-      <el-table-column label="零件名" min-width="380" prop="componentName" />
+      <el-table-column label="零件名" min-width="300" prop="componentName" />
       <el-table-column label="供应商" prop="suppliser" :width="flexColumnWidth(list, '供应商', 'suppliser')" />
-      <el-table-column label="本次付款金额" prop="payPrice" width="120" />
+      <el-table-column label="本次付款金额" prop="payPrice" width="120">
+        <template #default="{ row }">
+          <span :class="{ 'price-negative': row.payPrice < 0 }">{{ row.payPrice }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="本次付款比例" prop="proportion" width="120">
         <template #default="{ row }">{{ row.proportion }}%</template>
       </el-table-column>
@@ -31,18 +38,24 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="添加人" prop="addUserName" width="100" />
+      <el-table-column align="center" label="操作" width="100">
+        <template #default="{ row }">
+          <el-link type="danger" underline="never" @click="handleDelete(row)">删除</el-link>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
       </template>
     </el-table>
     <template #footer>
-      <el-button :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
+      <el-button :disabled="clearDisabled" :loading="clearLoading" type="danger" @click="handleClear">清空</el-button>
+      <el-button :disabled="clearDisabled" :loading="payAutoLoading" type="primary" @click="handleSubmitAutoPay">提交自动付款</el-button>
     </template>
   </vab-dialog>
 </template>
 
 <script lang="ts" setup>
-import { purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
+import { purchaseClearAutoPay, purchaseDeleteAutoPay, purchaseQueryPayList } from '/@/api/devlocal/purchasePo'
 import { IPurchasePoAutoPayQueryItem } from '/@/type/purchase/po'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -83,7 +96,37 @@ const getPriceClass = (price: number) => {
 const handleSubmitAutoPay = async () => {
   emit('submitAutoPay')
 }
-
+const handleDelete = async (row: IPurchasePoAutoPayQueryItem) => {
+  try {
+    const { data } = await purchaseDeleteAutoPay({ id: row.id })
+    if (data) {
+      $baseMessage('删除成功', 'success')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+    $baseMessage('删除失败', 'error')
+  }
+}
+const clearLoading = ref<boolean>(false)
+const handleClear = async () => {
+  try {
+    clearLoading.value = true
+    const { data } = await purchaseClearAutoPay()
+    if (data) {
+      $baseMessage('清空成功', 'success')
+      fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+    $baseMessage('清空失败', 'error')
+  } finally {
+    clearLoading.value = false
+  }
+}
+const clearDisabled = computed(() => {
+  return list.value.length === 0
+})
 // 监听弹窗打开，每次打开时重新获取数据
 watch(
   () => visible.value,

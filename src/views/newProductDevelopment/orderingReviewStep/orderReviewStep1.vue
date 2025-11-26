@@ -4,11 +4,11 @@
       <el-table
         ref="tableRef"
         border
+        class="review-table"
         :data="variantList"
         :header-cell-style="{ 'text-align': 'right' }"
         :show-header="false"
         stripe
-        style="width: auto; table-layout: fixed"
       >
         <!-- 第一列固定标签列 -->
         <el-table-column align="right" fixed :label="labelMap['column0']" :prop="'column0'" width="310">
@@ -202,15 +202,21 @@
       </el-table>
     </div>
     <div class="pay-button-group">
-      <el-button :disabled="editDisabled" type="danger" @click="handleGoback">不通过</el-button>
+      <el-button type="primary" @click="handleViewOrderApplication">查看订货申请</el-button>
+      <el-button :disabled="editDisabled" type="danger" @click="handleOpenFailReason">不通过</el-button>
       <el-button :disabled="editDisabled" native-type="submit" type="primary" @click="handleSaveAndContinue">通过</el-button>
     </div>
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <vab-remark-dialog
+      v-model="failReasonVisible"
+      :remark="failReason"
+      title="填写审核不通过原因"
+      @update:remark="handleReviewStepNo1Fail"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
 import { getChannelList } from '/@/api/devlocal/encasement'
 import { getSalesSiteList } from '/@/api/devlocal/evaluation'
 import { getProductPositionList, getReviewVariantPackageSampleList } from '/@/api/devlocal/orderProcess'
@@ -221,6 +227,7 @@ import {
   reviewStepNo1Pass,
   reviewStepSubmittedStatus,
 } from '/@/api/devlocal/orderingReview'
+import { updateBulkGoodsStatusByReviewId } from '/@/api/devlocal/progress'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IReviewCommonItem, IReviewStepNo1Req, IReviewStepNo1Variant, IVariantInfoItem } from '/@/type/review/review'
 import { handleActivePath } from '/@/utils/routes'
@@ -302,6 +309,16 @@ const handleUpdateGraphicDesign = (row: any, prop: string) => {
     return
   }
 }
+// 跳转到查看页面
+const handleViewOrderApplication = () => {
+  router.push({
+    path: '/newProductDevelopment/orderingProcess',
+    query: {
+      reviewStatus: 1,
+      reviewId: props.reviewId,
+    },
+  })
+}
 // 控制预览图片的隐藏显示
 const imagePreviewVisible = ref<boolean>(false)
 // 预览图片列表
@@ -316,7 +333,7 @@ const showPreviewImage = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
-const buildParams = (): IReviewStepNo1Req => {
+const buildParams = (reason: string): IReviewStepNo1Req => {
   let paramVArr: IReviewStepNo1Variant[] = []
   let vArr: any = []
   for (let i = 1; i < variantSize.value + 1; i++) {
@@ -344,6 +361,7 @@ const buildParams = (): IReviewStepNo1Req => {
   const params: IReviewStepNo1Req = {
     reviewId: props.reviewId,
     variantList: paramVArr,
+    reason: reason,
   }
 
   return params
@@ -364,7 +382,7 @@ const handleSaveAndContinue = async () => {
       ),
     ])
     $baseConfirm(deleteVNode, '系统提示', async () => {
-      const params = buildParams()
+      const params = buildParams('')
       const { data } = await reviewStepNo1Pass(params)
       if (data === true) {
         $baseMessage('审批通过成功！', 'success', 'hey')
@@ -378,8 +396,18 @@ const handleSaveAndContinue = async () => {
     console.error(error as Error)
   }
 }
+const failReason = ref<string>('')
+const failReasonVisible = ref<boolean>(false)
+const handleOpenFailReason = () => {
+  failReason.value = ''
+  failReasonVisible.value = true
+}
 // 当点击不通过的时候
-const handleGoback = () => {
+const handleReviewStepNo1Fail = (reason: string) => {
+  if (reason.trim() === '') {
+    $baseMessage('请填写审核不通过原因', 'error', 'hey')
+    return
+  }
   try {
     const deleteVNode = h('div', {}, [
       h(
@@ -393,9 +421,10 @@ const handleGoback = () => {
       ),
     ])
     $baseConfirm(deleteVNode, '系统提示', async () => {
-      const params = buildParams()
+      const params = buildParams(reason)
       const { data } = await reviewStepNo1Fail(params)
       if (data === true) {
+        failReasonVisible.value = false
         await delVisitedRoute(handleActivePath(route, true))
         $baseMessage('审核不通过提交成功', 'success', 'hey')
         await updateBulkGoodsStatusByReviewId({ reviewId: Number(props.reviewId), status: 1 })
@@ -501,5 +530,9 @@ onMounted(() => {
 :deep(.center-select) {
   text-align: center;
   text-align-last: center;
+}
+.review-table {
+  width: auto;
+  table-layout: fixed;
 }
 </style>

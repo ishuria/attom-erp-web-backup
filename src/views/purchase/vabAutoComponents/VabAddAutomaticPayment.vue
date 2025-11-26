@@ -6,8 +6,7 @@
       </el-form-item>
       <el-form-item label="付款类型">
         <el-radio-group v-model="form.type">
-          <el-radio :value="0">付全款</el-radio>
-          <el-radio :value="1">付尾款</el-radio>
+          <el-radio :value="1">付全款/尾款</el-radio>
           <el-radio :value="2">按比例</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -93,11 +92,13 @@ const handleConfirm = async () => {
           balancePayment: form?.type!,
         })
 
-        if (data) {
+        if (data === true) {
           $baseMessage('采购合同文件处理成功！', 'success')
-          dialogVisible.value = false
-          loading.value = false
+        } else {
+          $baseMessage('采购合同文件处理失败！请联系IT', 'error')
         }
+        dialogVisible.value = false
+        loading.value = false
       }
     })
   } catch (error) {

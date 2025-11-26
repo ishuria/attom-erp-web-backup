@@ -13,7 +13,7 @@
               :max-collapse-tags="1"
               multiple
               placeholder="全部站点"
-              style="width: 220px"
+              style="width: 250px"
               @change="queryData"
             >
               <template #header>
@@ -913,11 +913,11 @@ const handleWidth = (item: any) => {
     case '最近入库': {
       return 120
     }
-    case '订货#': {
-      const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
-      const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
-      return Math.max(width1, width2)
-    }
+    // case '订货#': {
+    //   const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
+    //   const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
+    //   return Math.max(width1, width2)
+    // }
     case 'ASIN': {
       return Number(item.minWidth) + 10
     }
@@ -1036,6 +1036,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
+  // // 初始化时全选所有站点
+  // if (data && data.length > 0) {
+  //   site.value = data.map((item) => item.id)
+  //   checkAll.value = true
+  //   indeterminate.value = false
+  // }
 }
 // 获取运营列表
 const fetchOperateUserList = async () => {

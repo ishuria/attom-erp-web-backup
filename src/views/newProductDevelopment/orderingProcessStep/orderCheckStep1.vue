@@ -1,35 +1,19 @@
 <template>
   <div>
     <el-space direction="vertical" style="width: 100%">
-      <el-form 
-        ref="formRef" 
-        label-position="right" 
-        label-width="170px" 
-        :model="form" 
-        @submit.prevent
-      >
+      <el-form ref="formRef" label-position="right" label-width="170px" :model="form" @submit.prevent>
         <el-form-item label="合并变体的SKU(若有)" prop="variantSku">
-          <el-input v-model="form.variantSku" disabled/>
+          <el-input v-model="form.variantSku" disabled />
         </el-form-item>
         <el-form-item label="产品主品名" prop="productName">
-          <el-input v-model="form.productName" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳"/>
+          <el-input v-model="form.productName" disabled placeholder="eg:碗架,硅胶吸管,水杯收纳" />
         </el-form-item>
         <el-form-item label="产品短描述" prop="productDesc">
           <el-input v-model="form.productDesc" disabled placeholder="eg:20管45×31.7CM" />
         </el-form-item>
         <el-form-item label="主订货站点" prop="site">
-          <el-select
-            v-model="form.site"
-            disabled
-            placeholder="选择订货站点"
-            style="width: 240px"
-          >
-            <el-option
-              v-for="item in siteOptions"
-              :key="item.id"
-              :label="item.label"
-              :value="item.id"
-            />
+          <el-select v-model="form.site" disabled placeholder="选择订货站点" style="width: 240px">
+            <el-option v-for="item in siteOptions" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -37,16 +21,16 @@
         <el-scrollbar>
           <ul class="vab-auto-box">
             <!-- list第一行 新增变体 -->
-            <li class="list-item"> 
-              <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular);">
+            <li class="list-item">
+              <div class="list-item-meta" style="font-size: var(--el-form-label-font-size); color: var(--el-text-color-regular)">
                 <div class="list-item-meta-content" style="text-align: center">
                   <el-space>
-                    <span style="width: 240px;">{{ "变体名" }}</span>
+                    <span style="width: 240px">{{ '变体名' }}</span>
                   </el-space>
                 </div>
                 <div class="list-item-meta-content" style="text-align: center">
                   <el-space>
-                    <span style="width: 240px;">{{ "订货数量" }}</span>
+                    <span style="width: 240px">{{ '订货数量' }}</span>
                   </el-space>
                 </div>
               </div>
@@ -54,10 +38,16 @@
             <li v-for="(item, index) in form.variantList" :key="index" class="list-item">
               <div class="list-item-meta">
                 <div class="list-item-meta-content">
-                  <el-input v-model="item.variantName" clearable disabled placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px"/>
+                  <el-input
+                    v-model="item.variantName"
+                    clearable
+                    disabled
+                    placeholder="黑色；白色；1大1小；海洋系列等"
+                    style="width: 240px"
+                  />
                 </div>
                 <div class="list-item-meta-content">
-                  <el-input v-model="item.quantity" clearable disabled style="width: 240px"/>
+                  <el-input v-model="item.quantity" clearable disabled style="width: 240px" />
                 </div>
               </div>
             </li>
@@ -72,7 +62,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { reviewStepNo1 } from '/@/api/devlocal/orderProcess'
@@ -96,18 +86,18 @@ const form = reactive<any>({
   productDesc: '',
   variantList: [
     {
-      variantName: '', 
+      variantName: '',
       amazonUSVariantQuantity: null,
       orderEntryId: null,
-    }
+    },
   ],
 })
-const siteOptions = ref<{ id: number, label: string }[]>([])
+const siteOptions = ref<{ id: number; label: string }[]>([])
 const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
   siteOptions.value = data
 }
-defineExpose({ form });
+defineExpose({ form })
 
 // 当点击下一步的时候
 const handleSubmitAndContinue = async () => {
@@ -122,20 +112,20 @@ const handleGoback = async () => {
 onMounted(async () => {
   fetchSiteData()
   if (route.query.reviewId) {
-    const { data }  = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) }) 
-    Object.assign(form, data);
+    const { data } = await reviewStepNo1({ reviewId: parseInt(route.query.reviewId) })
+    Object.assign(form, data)
   }
 })
 </script>
-  
+
 <style lang="scss" scoped>
 .pay-button-group {
-    display: block;
-    margin: 20px auto;
-    text-align: center;
+  display: block;
+  margin: 20px auto;
+  text-align: center;
 }
 .list-container {
-  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px); 
+  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 238px);
   ul {
     padding: 0;
     margin: 0;
@@ -199,4 +189,3 @@ onMounted(async () => {
   }
 }
 </style>
-  
