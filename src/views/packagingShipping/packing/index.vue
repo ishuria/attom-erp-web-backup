@@ -1554,6 +1554,13 @@ const showShippingAmazon = async () => {
     $baseMessage('选中的装箱记录中包含非亚马逊站点，请仅选择发往亚马逊的记录', 'error')
     return
   }
+  // 判断选中行中是否有已停产的记录
+  const discontinuedRows = selectRows.value.filter((item: any) => item.discontinued === 1)
+  if (discontinuedRows.length > 0) {
+    const discontinuedSkus = discontinuedRows.map((item: any) => item.sku).join(',')
+    $baseMessage(`${discontinuedSkus} 被运营标记停产无法发货。如要发货请联系运营取消停产标记后再发。`, 'error')
+    return
+  }
   // 清空上传列表
   fileList.value = []
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
@@ -1580,9 +1587,16 @@ const showShippingWalmart = async () => {
     $baseMessage('选中的装箱记录中包含非沃尔玛站点，请仅选择发往沃尔玛的记录', 'error')
     return
   }
+  // 判断选中行中是否有已停产的记录
+  const discontinuedRows = selectRows.value.filter((item: any) => item.discontinued === 1)
+  if (discontinuedRows.length > 0) {
+    const discontinuedSkus = discontinuedRows.map((item: any) => item.sku).join(',')
+    $baseMessage(`${discontinuedSkus} 被运营标记停产无法发货。如要发货请联系运营取消停产标记后再发。`, 'error')
+    return
+  }
   // 清空上传列表
   fileList.value = []
-  const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
+  const encasementIds = selectRows.value.map((item: any) => item.id).join('，')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
     const { data: res } = await getChannelList()
