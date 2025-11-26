@@ -236,6 +236,7 @@
           :row-class-name="stripedRowClass"
           :span-method="objectSpanMethod"
           @row-click="handleRowClick"
+          @sort-change="handleSortChange"
         >
           <el-table-column label="提交日期" min-width="115" prop="createTime">
             <template #default="{ row }">
@@ -267,7 +268,7 @@
           <el-table-column label="主站首单Po" min-width="115" prop="po" />
           <el-table-column label="首单实际成本" prop="poCost" width="125" />
           <el-table-column label="审批成本" min-width="100" prop="reviewCost" />
-          <el-table-column label="相差" min-width="100" prop="difference" />
+          <el-table-column label="相差" min-width="100" prop="difference" sortable="custom" />
           <el-table-column label="产品定位" :min-width="columnWidths.productPosition + 30" prop="productPosition" />
           <el-table-column label="Vine数量" min-width="100" prop="vineCount" />
           <el-table-column label="平面设计" min-width="90" prop="graphicDesign">
@@ -669,6 +670,8 @@ const queryForm = reactive<IReviewQueryReq>({
   pageNo: 1,
   pageSize: 20,
   status: 8,
+  orderByField: '',
+  orderDirection: 'desc',
 })
 
 const dataList = ref<IReviewQueryItem[]>([])
@@ -687,7 +690,23 @@ const keyWordTrendEchatsVisible = ref<boolean>(false)
 const formattedProgressLog = (str: string) => {
   return str.replaceAll(/([\u4e00-\u9fa5]) ([A-Za-z])/g, '$1<br>$2').replaceAll(/([A-Za-z]) ([\u4e00-\u9fa5])/g, '$1<br>$2')
 }
-
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryData()
+}
 // 分数明细
 const handleGetScoreById = async (idNo: number) => {
   const { data: evaluationId } = await getReviewEvaluationId({ reviewId: idNo })

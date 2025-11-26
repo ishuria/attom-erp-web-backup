@@ -8,6 +8,8 @@ export interface IReviewQueryReq {
   // 每页大小
   pageSize: number
   status: number
+  orderByField?: string
+  orderDirection?: string
 }
 
 /**
