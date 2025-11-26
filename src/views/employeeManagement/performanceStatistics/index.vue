@@ -261,6 +261,11 @@
               <el-checkbox v-model="row.noAssessment" :false-value="0" :true-value="1" @change="handleChangeNoAssessment(row)" />
             </template>
           </el-table-column>
+          <el-table-column label="未达标" min-width="100" prop="belowTarget">
+            <template #default="{ row }">
+              <el-checkbox v-model="row.belowTarget" disabled :false-value="0" :true-value="1" />
+            </template>
+          </el-table-column>
           <el-table-column label="新款采购额" min-width="110" prop="purchaseAmount" />
           <el-table-column label="新款评估跑分次数" min-width="145" prop="runsNumbers" />
           <el-table-column label="新品进度记录数" min-width="130" prop="progressNumbers" />
