@@ -363,21 +363,45 @@
       <el-tab-pane label="产品设计" :name="4">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+            <el-date-picker
+              v-model="date"
+              style="max-width: 300px"
+              type="monthrange"
+              value-format="YYYY-MM"
+              @change="productDesignQueryData"
+            />
+            <el-select
+              v-model="productDesignQueryForm.roleIdList"
+              multiple
+              placeholder="请选择角色"
+              style="margin-left: 20px; width: 600px"
+              @change="handleProductDesignRoleChange"
+            >
+              <template #header>
+                <el-checkbox
+                  v-model="productDesignCheckAll"
+                  :indeterminate="productDesignIndeterminate"
+                  @change="handleProductDesignCheckAll"
+                >
+                  全部
+                </el-checkbox>
+              </template>
+              <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
+            <el-form inline :model="productDesignQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model.trim="queryForm.keyWord"
+                  v-model.trim="productDesignQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keyup.enter="queryData"
+                  @input="productDesignQueryData"
+                  @keyup.enter="productDesignQueryData"
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="productDesignQueryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -389,6 +413,7 @@
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleSortChange"
         >
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
@@ -396,38 +421,52 @@
             <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
-          <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign" />
+          <el-table-column label="产品开发设计" min-width="130" prop="developmentDesign" sortable="custom" />
 
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
         </el-table>
         <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+          :current-page="productDesignQueryForm.pageNo"
+          :page-size="productDesignQueryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @current-change="handleProductDesignCurrentChange"
+          @size-change="handleProductDesignSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="平面设计" :name="5">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="queryData" />
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="artDesignQueryData" />
+            <el-select
+              v-model="artDesignQueryForm.roleIdList"
+              multiple
+              placeholder="请选择角色"
+              style="margin-left: 20px; width: 600px"
+              @change="handleArtDesignRoleChange"
+            >
+              <template #header>
+                <el-checkbox v-model="artDesignCheckAll" :indeterminate="artDesignIndeterminate" @change="handleArtDesignCheckAll">
+                  全部
+                </el-checkbox>
+              </template>
+              <el-option v-for="item in roleList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
+            <el-form inline :model="artDesignQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
-                  v-model.trim="queryForm.keyWord"
+                  v-model.trim="artDesignQueryForm.keyWord"
                   clearable
                   placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keyup.enter="queryData"
+                  @input="artDesignQueryData"
+                  @keyup.enter="artDesignQueryData"
                 />
               </el-form-item>
               <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="artDesignQueryData" />
               </el-form-item>
             </el-form>
           </vab-query-form-right-panel>
@@ -439,6 +478,7 @@
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @sort-change="handleSortChange"
         >
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
@@ -446,34 +486,64 @@
             <el-table-column label="角色" min-width="130" prop="roleName" />
           </el-table-column>
 
-          <el-table-column label="美工图片" min-width="100" prop="artDesignPicture" />
-          <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime" />
-          <el-table-column label="新品任务数" min-width="110" prop="newProductTaskCount" />
-          <el-table-column label="老品任务数" min-width="110" prop="oldProductTaskCount" />
-          <el-table-column label="临时任务数" min-width="110" prop="tempTaskCount" />
-          <el-table-column label="设计任务数" min-width="110" prop="designTaskCount" />
-          <el-table-column label="新品任务按时完成率" min-width="145" prop="newProductOnTimeRate">
+          <el-table-column label="美工图片" min-width="100" prop="artDesignPicture" sortable="custom" />
+          <el-table-column label="美工长期" min-width="100" prop="artDesignLongTime" sortable="custom" />
+          <el-table-column label="新品任务数" min-width="110" prop="newProductTaskCount" sortable />
+          <el-table-column label="老品任务数" min-width="110" prop="oldProductTaskCount" sortable />
+          <el-table-column label="临时任务数" min-width="110" prop="tempTaskCount" sortable />
+          <el-table-column label="设计任务数" min-width="110" prop="designTaskCount" sortable />
+          <el-table-column
+            label="新品任务按时完成率"
+            min-width="145"
+            prop="newProductOnTimeRate"
+            :sort-method="(a, b) => (a.newProductOnTimeRate ?? 0) - (b.newProductOnTimeRate ?? 0)"
+            sortable
+          >
             <template #default="{ row }">
               <span>{{ row.newProductOnTimeRate != null ? `${row.newProductOnTimeRate}%` : '-' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="老品任务按时完成率" min-width="145" prop="oldProductOnTimeRate">
+          <el-table-column
+            label="老品任务按时完成率"
+            min-width="145"
+            prop="oldProductOnTimeRate"
+            :sort-method="(a, b) => (a.oldProductOnTimeRate ?? 0) - (b.oldProductOnTimeRate ?? 0)"
+            sortable
+          >
             <template #default="{ row }">
               <span>{{ row.oldProductOnTimeRate != null ? `${row.oldProductOnTimeRate}%` : '-' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="临时任务按时完成率" min-width="145" prop="tempTaskOnTimeRate">
+          <el-table-column
+            label="临时任务按时完成率"
+            min-width="145"
+            prop="tempTaskOnTimeRate"
+            :sort-method="(a, b) => (a.tempTaskOnTimeRate ?? 0) - (b.tempTaskOnTimeRate ?? 0)"
+            sortable
+          >
             <template #default="{ row }">
               <span>{{ row.tempTaskOnTimeRate != null ? `${row.tempTaskOnTimeRate}%` : '-' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="设计任务按时完成率" min-width="145" prop="designTaskOnTimeRate">
+          <el-table-column
+            label="设计任务按时完成率"
+            min-width="145"
+            prop="designTaskOnTimeRate"
+            :sort-method="(a, b) => (a.designTaskOnTimeRate ?? 0) - (b.designTaskOnTimeRate ?? 0)"
+            sortable
+          >
             <template #default="{ row }">
               <span>{{ row.designTaskOnTimeRate != null ? `${row.designTaskOnTimeRate}%` : '-' }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="任务总数" min-width="100" prop="totalTaskCount" />
-          <el-table-column label="总按时完成率" min-width="120" prop="totalOnTimeRate">
+          <el-table-column label="任务总数" min-width="100" prop="totalTaskCount" sortable />
+          <el-table-column
+            label="总按时完成率"
+            min-width="120"
+            prop="totalOnTimeRate"
+            :sort-method="(a, b) => (a.totalOnTimeRate ?? 0) - (b.totalOnTimeRate ?? 0)"
+            sortable
+          >
             <template #default="{ row }">
               <span>{{ row.totalOnTimeRate != null ? `${row.totalOnTimeRate}%` : '-' }}</span>
             </template>
@@ -488,11 +558,11 @@
           </template>
         </el-table>
         <vab-pagination
-          :current-page="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
+          :current-page="artDesignQueryForm.pageNo"
+          :page-size="artDesignQueryForm.pageSize"
           :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+          @current-change="handleArtDesignCurrentChange"
+          @size-change="handleArtDesignSizeChange"
         />
       </el-tab-pane>
       <el-tab-pane label="采购" :name="6">
@@ -684,10 +754,9 @@ import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { getArtDesignTaskDetail } from '~/src/api/devlocal/imageTask'
-import PerformanceStatisticsPermission from '~/src/permissions/performanceStatistics'
-import { IGetArtDesignTaskList } from '~/src/type/listingTask/imageTaskType'
+import { getDevelopDesignDetailRoleList } from '/@/api/devlocal/commission'
 import { downloadFilePD } from '/@/api/devlocal/download'
+import { getArtDesignTaskDetail } from '/@/api/devlocal/imageTask'
 import {
   checkoutAssessmentNumber,
   getAdjustDetailByUser,
@@ -698,6 +767,7 @@ import {
   updateProductManagerAssessment,
   updateProductManagerNoAssessment,
 } from '/@/api/devlocal/performanceStatistics'
+import PerformanceStatisticsPermission from '/@/permissions/performanceStatistics'
 import type {
   IGetAdjustDetail,
   IGetAssessmentList,
@@ -705,6 +775,7 @@ import type {
   IGetProductManagerAssessmentList,
   IGetUserAttendanceList,
 } from '/@/type/employeeManagement/performanceStatistics'
+import { IGetArtDesignTaskList } from '/@/type/listingTask/imageTaskType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({
@@ -780,6 +851,30 @@ const queryForm = reactive<IGetAssessmentListReq>({
   status: 0,
   orderByField: 'month',
   orderDirection: 'desc',
+})
+// 平面设计 tab 专用的查询表单
+const artDesignQueryForm = reactive<IGetAssessmentListReq & { roleIdList?: number[] }>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 50,
+  startDate: '',
+  endDate: '',
+  status: 5,
+  orderByField: 'month',
+  orderDirection: 'desc',
+  roleIdList: [],
+})
+// 产品设计 tab 专用的查询表单
+const productDesignQueryForm = reactive<IGetAssessmentListReq & { roleIdList?: number[] }>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 50,
+  startDate: '',
+  endDate: '',
+  status: 4,
+  orderByField: 'month',
+  orderDirection: 'desc',
+  roleIdList: [],
 })
 const list = ref<IGetUserAttendanceList[]>([])
 /* ============================== 考核数设定变量 ============================== */
@@ -963,6 +1058,56 @@ const handleSizeChange = (value: number) => {
   queryForm.pageSize = value
   fetchData()
 }
+// 平面设计 tab 的查询函数
+const artDesignQueryData = () => {
+  artDesignQueryForm.pageNo = 1
+  artDesignQueryForm.startDate = date.value[0]
+  artDesignQueryForm.endDate = date.value[1]
+  fetchArtDesignData()
+}
+// 平面设计 tab 的数据获取函数
+const fetchArtDesignData = async () => {
+  listLoading.value = true
+  const { data } = await getUserAttendanceList(artDesignQueryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+// 平面设计 tab 的分页处理函数
+const handleArtDesignCurrentChange = (value: number) => {
+  artDesignQueryForm.pageNo = value
+  fetchArtDesignData()
+}
+const handleArtDesignSizeChange = (value: number) => {
+  artDesignQueryForm.pageNo = 1
+  artDesignQueryForm.pageSize = value
+  fetchArtDesignData()
+}
+// 产品设计 tab 的查询函数
+const productDesignQueryData = () => {
+  productDesignQueryForm.pageNo = 1
+  productDesignQueryForm.startDate = date.value[0]
+  productDesignQueryForm.endDate = date.value[1]
+  fetchProductDesignData()
+}
+// 产品设计 tab 的数据获取函数
+const fetchProductDesignData = async () => {
+  listLoading.value = true
+  const { data } = await getUserAttendanceList(productDesignQueryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+// 产品设计 tab 的分页处理函数
+const handleProductDesignCurrentChange = (value: number) => {
+  productDesignQueryForm.pageNo = value
+  fetchProductDesignData()
+}
+const handleProductDesignSizeChange = (value: number) => {
+  productDesignQueryForm.pageNo = 1
+  productDesignQueryForm.pageSize = value
+  fetchProductDesignData()
+}
 const handleChangeNoAssessment = async (row: IGetUserAttendanceList) => {
   await updateProductManagerNoAssessment({
     id: row.id!,
@@ -1041,20 +1186,53 @@ const cell3Style = (data: { row: any; column: any; rowIndex: number; columnIndex
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   // console.log(prop, order)
-  if (queryForm.orderByField === prop) {
+
+  // 平面设计 tab 的前端排序列（不需要调用后端接口）
+  const frontendSortProps = [
+    'newProductTaskCount',
+    'oldProductTaskCount',
+    'tempTaskCount',
+    'designTaskCount',
+    'newProductOnTimeRate',
+    'oldProductOnTimeRate',
+    'tempTaskOnTimeRate',
+    'designTaskOnTimeRate',
+    'totalTaskCount',
+    'totalOnTimeRate',
+  ]
+
+  // 如果是前端排序列，直接返回，不调用后端接口
+  if ((activeName.value === 4 || activeName.value === 5) && frontendSortProps.includes(prop)) {
+    return
+  }
+
+  // 根据当前 tab 选择使用哪个 queryForm
+  let currentForm = queryForm
+  if (activeName.value === 4) {
+    currentForm = productDesignQueryForm
+  } else if (activeName.value === 5) {
+    currentForm = artDesignQueryForm
+  }
+  if (currentForm.orderByField === prop) {
     if (!order) {
-      if (queryForm.orderDirection === 'asc') {
+      if (currentForm.orderDirection === 'asc') {
         column.order = 'descending'
-      } else if (queryForm.orderDirection === 'desc') {
+      } else if (currentForm.orderDirection === 'desc') {
         column.order = 'ascending'
       }
     }
   } else {
     column.order = 'descending'
   }
-  queryForm.orderByField = prop
-  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
-  queryData()
+  currentForm.orderByField = prop
+  currentForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  if (activeName.value === 4) {
+    productDesignQueryData()
+  } else if (activeName.value === 5) {
+    artDesignQueryData()
+  } else {
+    queryData()
+  }
 }
 // -------------------------- 平面设计 --------------------------
 const artDesignTaskDetailVisible = ref<boolean>(false)
@@ -1064,7 +1242,116 @@ const showArtDesignTaskDetail = async (row: any) => {
   const { data } = await getArtDesignTaskDetail({ userId: row.userId, month: row.month })
   artDesignTaskDetailList.value = data
 }
+const roleList = ref<{ id: number; label: string }[]>([])
+// 产品设计 tab 的全选状态计算属性
+const productDesignCheckAll = computed({
+  get: () => {
+    if (!roleList.value.length || !productDesignQueryForm.roleIdList) return false
+    // 排除"全部"选项（如果有的话），只计算实际角色选项
+    const validRoleIds = roleList.value.map((item) => item.id)
+    return (
+      productDesignQueryForm.roleIdList.length > 0 &&
+      productDesignQueryForm.roleIdList.length === validRoleIds.length &&
+      productDesignQueryForm.roleIdList.every((id) => validRoleIds.includes(id))
+    )
+  },
+  set: (val: boolean) => {
+    // 这个 setter 不会被直接调用，由 handleProductDesignCheckAll 处理
+  },
+})
 
+// 产品设计 tab 的半选状态计算属性
+const productDesignIndeterminate = computed(() => {
+  if (!roleList.value.length || !productDesignQueryForm.roleIdList) return false
+  const validRoleIds = roleList.value.map((item) => item.id)
+  const selectedCount = productDesignQueryForm.roleIdList.filter((id) => validRoleIds.includes(id)).length
+  return selectedCount > 0 && selectedCount < validRoleIds.length
+})
+
+// 处理产品设计 tab 的全选/取消全选
+const handleProductDesignCheckAll = (val: boolean | string | number) => {
+  if (Boolean(val)) {
+    // 全选：选择所有角色
+    productDesignQueryForm.roleIdList = roleList.value.map((item) => item.id)
+  } else {
+    // 取消全选：清空选择
+    productDesignQueryForm.roleIdList = []
+  }
+  productDesignQueryData()
+}
+
+// 处理产品设计 tab 的角色选择变化
+const handleProductDesignRoleChange = (value: number[]) => {
+  productDesignQueryForm.roleIdList = value
+  productDesignQueryData()
+}
+
+// 平面设计 tab 的全选状态计算属性
+const artDesignCheckAll = computed({
+  get: () => {
+    if (!roleList.value.length || !artDesignQueryForm.roleIdList) return false
+    // 排除"全部"选项（如果有的话），只计算实际角色选项
+    const validRoleIds = roleList.value.map((item) => item.id)
+    return (
+      artDesignQueryForm.roleIdList.length > 0 &&
+      artDesignQueryForm.roleIdList.length === validRoleIds.length &&
+      artDesignQueryForm.roleIdList.every((id) => validRoleIds.includes(id))
+    )
+  },
+  set: (val: boolean) => {
+    // 这个 setter 不会被直接调用，由 handleArtDesignCheckAll 处理
+  },
+})
+
+// 平面设计 tab 的半选状态计算属性
+const artDesignIndeterminate = computed(() => {
+  if (!roleList.value.length || !artDesignQueryForm.roleIdList) return false
+  const validRoleIds = roleList.value.map((item) => item.id)
+  const selectedCount = artDesignQueryForm.roleIdList.filter((id) => validRoleIds.includes(id)).length
+  return selectedCount > 0 && selectedCount < validRoleIds.length
+})
+
+// 处理平面设计 tab 的全选/取消全选
+const handleArtDesignCheckAll = (val: boolean | string | number) => {
+  if (Boolean(val)) {
+    // 全选：选择所有角色
+    artDesignQueryForm.roleIdList = roleList.value.map((item) => item.id)
+  } else {
+    // 取消全选：清空选择
+    artDesignQueryForm.roleIdList = []
+  }
+  artDesignQueryData()
+}
+
+// 处理平面设计 tab 的角色选择变化
+const handleArtDesignRoleChange = (value: number[]) => {
+  artDesignQueryForm.roleIdList = value
+  artDesignQueryData()
+}
+
+const fetchArtDesignRoleList = async () => {
+  const { data } = await getDevelopDesignDetailRoleList()
+  roleList.value = data
+  // 默认选择"平面设计主管"和"平面设计"（用于平面设计 tab）
+  const artDesignDefaultRoleIds: number[] = []
+  const artDesignManager = roleList.value.find((item) => item.label === '平面设计主管')
+  const artDesign = roleList.value.find((item) => item.label === '平面设计')
+  if (artDesignManager) artDesignDefaultRoleIds.push(artDesignManager.id)
+  if (artDesign) artDesignDefaultRoleIds.push(artDesign.id)
+  artDesignQueryForm.roleIdList = artDesignDefaultRoleIds.length > 0 ? artDesignDefaultRoleIds : []
+
+  // 默认选择"工业设计"、"产品经理主管"、"产品经理"、"平面设计主管"和"平面设计"（用于产品设计 tab）
+  const productDesignDefaultRoleIds: number[] = []
+  const industrialDesign = roleList.value.find((item) => item.label === '工业设计')
+  const productManagerDirector = roleList.value.find((item) => item.label === '产品经理主管')
+  const productManager = roleList.value.find((item) => item.label === '产品经理')
+  if (industrialDesign) productDesignDefaultRoleIds.push(industrialDesign.id)
+  if (productManagerDirector) productDesignDefaultRoleIds.push(productManagerDirector.id)
+  if (productManager) productDesignDefaultRoleIds.push(productManager.id)
+  if (artDesignManager) productDesignDefaultRoleIds.push(artDesignManager.id)
+  if (artDesign) productDesignDefaultRoleIds.push(artDesign.id)
+  productDesignQueryForm.roleIdList = productDesignDefaultRoleIds.length > 0 ? productDesignDefaultRoleIds : []
+}
 // tab切换
 const handleTabChange = () => {
   if (activeName.value === 2) {
@@ -1072,9 +1359,12 @@ const handleTabChange = () => {
   } else if (activeName.value === 3) {
     queryForm.status = 3
     queryData()
+  } else if (activeName.value === 4) {
+    // 产品设计 tab 使用独立的 productDesignQueryForm
+    productDesignQueryData()
   } else if (activeName.value === 5) {
-    queryForm.status = 5
-    queryData()
+    // 平面设计 tab 使用独立的 artDesignQueryForm
+    artDesignQueryData()
   } else {
     queryForm.status = 0
     queryData()
@@ -1083,7 +1373,13 @@ const handleTabChange = () => {
 watch(
   () => date.value,
   () => {
-    queryData()
+    if (activeName.value === 4) {
+      productDesignQueryData()
+    } else if (activeName.value === 5) {
+      artDesignQueryData()
+    } else {
+      queryData()
+    }
   },
   { deep: true }
 )
@@ -1094,13 +1390,15 @@ watch(
   },
   { deep: true }
 )
-onBeforeMount(() => {
+onBeforeMount(async () => {
   // 设置默认月份为当月
   const now = dayjs()
   const startOfMonth = now.startOf('month').format('YYYY-MM')
   const endOfMonth = now.endOf('month').format('YYYY-MM')
   date.value = [startOfMonth, endOfMonth]
   assessmentDate.value = [startOfMonth, endOfMonth]
+  // 获取角色列表（用于平面设计 tab）
+  await fetchArtDesignRoleList()
   // 获取考勤明细数据
   fetchData()
 })
