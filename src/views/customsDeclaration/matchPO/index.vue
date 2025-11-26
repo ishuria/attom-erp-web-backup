@@ -722,6 +722,8 @@ const handlePreOrderFormUploadSubmit = async () => {
     if (data) {
       $baseMessage('预入单文件上传校验成功！', 'success')
       uploadPreOrderFormVisible.value = false
+      preOrderFiles.value = []
+      taxRefundFiles.value = []
     }
   } catch {
     $baseMessage('预入单文件上传失败', 'error')

@@ -1123,6 +1123,8 @@ const handleCalculateTotalBonus = (row: IGetUserAttendanceList) => {
   if (row.artDesignLongTime != null) totalBonus += row.artDesignLongTime
   if (row.developmentDesign != null) totalBonus += row.developmentDesign
   if (row.procurementBonusCrossMonth != null) totalBonus += row.procurementBonusCrossMonth
+  if (row.taxRefundPrice != null) totalBonus += row.taxRefundPrice
+  if (row.taxRefundPriceCrossMonth != null) totalBonus += row.taxRefundPriceCrossMonth
   return totalBonus.toFixed(2)
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
