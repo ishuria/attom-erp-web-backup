@@ -1059,3 +1059,16 @@ export const taxRefundCifPriceUpdate = (data: any): Promise<IBooleanRes> => {
     data,
   })
 }
+
+/**
+ * 退税报关资料上传
+ * @returns
+ */
+export function uploadPreOrderFormCheckFile(data: FormData) {
+  return request({
+    url: `${BASE_API}/preOrderForm/check`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
