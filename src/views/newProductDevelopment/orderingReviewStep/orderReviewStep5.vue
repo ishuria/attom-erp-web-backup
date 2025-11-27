@@ -233,11 +233,14 @@
         </template>
       </el-table>
       <div class="pay-button-group">
+        <el-button :loading="releasePoLoading" native-type="submit" plain type="danger" @click="handlerNotPass">审批不通过</el-button>
         <el-button :disabled="editDisabled" :loading="releasePoLoading" native-type="submit" type="success" @click="handleSaveAndContinue">
           发布采购计划
         </el-button>
       </div>
     </div>
+
+    <vab-remark-dialog v-model="reasonVisible" :remark="reasonText" title="填写审核不通过原因" @update:remark="handleNotPassSubmit" />
   </div>
   <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
 </template>
@@ -246,7 +249,7 @@
 import { isEqual } from 'lodash-es'
 import { focusAndSelectInput, getRootElement } from '~/src/utils/nodeUtils'
 import { currencyList, invoicingList } from '../indexCommon'
-import { releasePo, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
+import { purchaseReviewNoFail, releasePo, reviewStepSubmittedStatus } from '/@/api/devlocal/orderingReview'
 import {
   reviewStepNo3ComponentList,
   reviewStepNo3ComponentUpdate,
@@ -299,7 +302,48 @@ const releasePoLoading = ref<boolean>(false)
 const router = useRouter()
 const route = useRoute()
 const tabsStore = useTabsStore()
+const reasonVisible = ref<boolean>(false)
+const reasonText = ref<string>('')
 const { delVisitedRoute } = tabsStore
+// 审批不通过
+const handlerNotPass = async () => {
+  reasonVisible.value = true
+  reasonText.value = ''
+}
+
+const handleNotPassSubmit = (reason: string) => {
+  if (reason.trim() === '') {
+    $baseMessage('请填写审核不通过原因', 'error', 'hey')
+    return
+  }
+  try {
+    const deleteVNode = h('div', {}, [
+      h(
+        'p',
+        {
+          style: {
+            color: 'red',
+          },
+        },
+        '确认要点击审核不通过吗？'
+      ),
+    ])
+    $baseConfirm(deleteVNode, '系统提示', async () => {
+      const { data } = await purchaseReviewNoFail({
+        reviewId: Number(props.reviewId),
+        reason: reason,
+      })
+      if (data) {
+        $baseMessage('审批不通过成功！', 'success')
+        reasonVisible.value = false
+      }
+    })
+  } catch (error) {
+    reasonVisible.value = false
+    console.error(error as Error)
+  }
+}
+
 // 当点击通过的时候
 const handleSaveAndContinue = async () => {
   const deleteVNode = h('div', {}, [
