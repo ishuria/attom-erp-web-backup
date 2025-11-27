@@ -474,6 +474,9 @@
                   <el-dropdown-item @click="handleAddOtherSku(row)">
                     <el-link type="primary" underline="never">添加到其他SKU</el-link>
                   </el-dropdown-item>
+                  <el-dropdown-item @click="handleCopy(row)">
+                    <el-link type="primary" underline="never">复制</el-link>
+                  </el-dropdown-item>
                   <el-dropdown-item @click="showPrices(row)">
                     <el-link type="primary" underline="never">历史价格</el-link>
                   </el-dropdown-item>
@@ -740,6 +743,7 @@ import wangEditor from '../newProductDevelopment/newProductProgress/wangEditor.v
 import { getProductSkuDetailHistoryPriceList } from '/@/api/devlocal/commission'
 import {
   addProductComponentOtherSku,
+  copyProductComponent,
   createProductComponent,
   delComponentImage,
   delProductComponent,
@@ -820,6 +824,24 @@ const showPrices = async (row: any) => {
   if (data) {
     historyPriceList.value = data
   }
+}
+const handleCopy = async (row: any) => {
+  $baseConfirm('确定要复制零件信息吗？', '系统提示', async () => {
+    try {
+      const { data } = await copyProductComponent({
+        existingPartsListId: row.existingPartsListId,
+        componentId: row.componentId,
+        skuId: Number(route.query.skuId),
+      })
+      if (data === true) {
+        $baseMessage('复制成功！', 'success', 'hey')
+        fetchComponentData()
+        fetchData()
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  })
 }
 // 获取供应商名称的辅助函数
 const getSupplierName = (row: any) => {
