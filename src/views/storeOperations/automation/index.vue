@@ -300,6 +300,13 @@
               操作日期
             </template>
           </el-table-column>
+          <el-table-column label="操作类型" prop="operationType" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.operationType === 0 ? 'danger' : 'success'">
+                {{ row.operationType === 0 ? '关广告' : '开广告' }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作结果" prop="operationResult" width="100">
             <template #default="{ row }">
               <el-tag :type="row.operationResult === 0 ? 'danger' : 'success'">
