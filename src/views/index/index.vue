@@ -895,14 +895,18 @@ const fetchUserList = async () => {
 }
 const lossUserList = ref<{ id: number; label: string }[]>([])
 const selectLossUserId = ref<number>()
+
 const fetchLossUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 1 })
   lossUserList.value = data
-  if (lossUserList.value.length > 0) {
-    selectLossUserId.value = lossUserList.value.find((item) => item.label === myName)?.id
-  }
-  if (!selectLossUserId.value) {
-    selectLossUserId.value = lossUserList.value[0].id
+
+  if (ableBossViewCard) {
+    lossUserList.value.unshift({ id: -1, label: '全部' })
+    selectLossUserId.value = -1
+  } else {
+    if (lossUserList.value.length > 0) {
+      selectLossUserId.value = lossUserList.value.find((item) => item.label === myName)?.id
+    }
   }
   fetchTop50ProductLoss()
 }
