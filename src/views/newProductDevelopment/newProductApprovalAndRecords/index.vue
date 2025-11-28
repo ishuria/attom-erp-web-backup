@@ -883,7 +883,6 @@ const handleCurrentChange = (value: number) => {
 
 const queryData = () => {
   queryForm.pageNo = 1
-  debugger
   router.push({
     query: {
       ...route.query,
