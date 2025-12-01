@@ -15,27 +15,96 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" border :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
-      <el-table-column label="上新日期" prop="newArrivalDate" />
-      <el-table-column label="产品图片" prop="productManager" />
-      <el-table-column label="SKU" prop="operation" />
-      <el-table-column label="订货主站点" prop="site" />
-      <el-table-column label="产品经理" prop="site" />
-      <el-table-column label="运营" prop="site" />
-      <el-table-column label="Vine数量" prop="site" />
-      <el-table-column label="产品定位" prop="site" />
-      <el-table-column label="1月末Rating" prop="site" />
-      <el-table-column label="2月末Rating" prop="site" />
-      <el-table-column label="3月末Rating" prop="site" />
-      <el-table-column label="4月末Rating" prop="site" />
-      <el-table-column label="5月末Rating" prop="site" />
-      <el-table-column label="6月末Rating" prop="site" />
-      <el-table-column label="状态" prop="site" />
-
-      <el-table-column label="操作">
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      class="noneHoverTable"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+    >
+      <el-table-column label="上新日期" prop="saleDate" width="120" />
+      <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
-          <el-button type="primary" @click="">开启</el-button>
-          <el-button type="danger" @click="">暂停</el-button>
+          <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
+            <template #error><el-icon /></template>
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="SKU"
+        prop="sku"
+        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+      >
+        <template #default="{ row }">
+          {{ row.sku }}
+          <br />
+          {{ row.productDesc }}
+        </template>
+      </el-table-column>
+      <el-table-column label="订货主站点" prop="siteName" width="130" />
+      <el-table-column label="产品经理" prop="productManager" width="100" />
+      <el-table-column label="运营" prop="operationUserName" width="100" />
+      <el-table-column label="Vine数量" prop="vineCount" width="100" />
+      <el-table-column label="产品定位" prop="productPosition" width="120">
+        <template #default="{ row }">
+          <el-tag :type="row.productPosition === '精铺' ? 'primary' : 'warning'">
+            {{ row.productPosition === '精品' ? '精品' : '精铺' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="1月末Rating" prop="janEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.janEndRating) }">{{ row.janEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="2月末Rating" prop="febEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.febEndRating) }">{{ row.febEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="3月末Rating" prop="marEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.marEndRating) }">{{ row.marEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="4月末Rating" prop="aprEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.aprEndRating) }">{{ row.aprEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="5月末Rating" prop="mayEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.mayEndRating) }">{{ row.mayEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="6月末Rating" prop="junEndRating">
+        <template #default="{ row }">
+          <span :style="{ color: getRatingColor(row.junEndRating) }">{{ row.junEndRating }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" prop="ratingStatus">
+        <template #default="{ row }">
+          <el-tag v-if="row.status === 1" type="warning">暂停</el-tag>
+          <el-tag v-else-if="row.ratingStatus === 0" type="info">未上线</el-tag>
+          <el-tag v-else-if="row.ratingStatus === 1" type="primary">评估中</el-tag>
+          <el-tag v-else-if="row.ratingStatus === 2" type="danger">评论未达标-扣分</el-tag>
+          <el-tag v-else-if="row.ratingStatus === 3" type="success">评论达标</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" width="130">
+        <template #default="{ row }">
+          <el-space :size="16">
+            <el-link :disabled="row.status === 0" type="primary" underline="never" @click="handleUpdateKeyProductsStatus(row.id, 0)">
+              开启
+            </el-link>
+            <el-link :disabled="row.status === 1" type="danger" underline="never" @click="handleUpdateKeyProductsStatus(row.id, 1)">
+              暂停
+            </el-link>
+          </el-space>
         </template>
       </el-table-column>
       <template #empty>
@@ -71,6 +140,9 @@
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
+import { CSSProperties } from 'vue'
+import { getKeyProductsList, updateKeyProductsStatus } from '/@/api/devlocal/productPerformance'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'KeyProducts',
@@ -93,6 +165,8 @@ const imagePreviewShow = (url: string) => {
 }
 const queryForm = reactive<any>({
   keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
 })
 
 const listLoading = ref<boolean>(false)
@@ -105,24 +179,68 @@ const showDefaultParams = () => {
 const handleDefaultParams = () => {
   //
 }
-const queryData = () => {
-  listLoading.value = true
-  //
+const handleUpdateKeyProductsStatus = async (id: number, status: number) => {
+  const { data } = await updateKeyProductsStatus({ id, status })
+  if (data) {
+    $baseMessage('更新状态成功！', 'success')
+    fetchData()
+  } else {
+    $baseMessage('更新状态失败！', 'error')
+  }
 }
-
+const getRatingColor = (rating: number | null | undefined): string => {
+  if (rating == null) return '#333'
+  return rating >= 4.3 ? 'var(--el-color-success)' : 'var(--el-color-danger)'
+}
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const label = data.column.label
+  if (label === 'SKU') {
+    return {
+      textAlign: 'left',
+    }
+  }
+  return {
+    textAlign: 'center',
+  }
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
 }
-
 const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
 }
-const fetchData = () => {
-  // listLoading.value = true
-  //
+const fetchData = async () => {
+  listLoading.value = true
+  const { data } = await getKeyProductsList(queryForm)
+  list.value = data.list
+  total.value = data.total
+  listLoading.value = false
 }
+onBeforeMount(() => {
+  fetchData()
+})
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.noneHoverTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoverTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>

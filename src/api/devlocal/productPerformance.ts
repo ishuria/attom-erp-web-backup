@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import { IGetKeyProductsListReq, IGetKeyProductsListRes } from '~/src/type/storeOperation/keyProducts'
 import type {
   IFilterAmazonSKUListReq,
   IFilterWalmartListReq,
@@ -475,5 +476,30 @@ export function updateOperationWalmartOperateTypeList(data: { id: number; typeId
     url: `${BASE_API}/operation/walmart/operateType/update`,
     method: 'post',
     data,
+  })
+}
+
+/**
+ * 店铺运营-获取关键产品列表
+ * @param data 请求参数
+ * @returns 关键产品列表
+ */
+export function getKeyProductsList(data: IGetKeyProductsListReq): Promise<IGetKeyProductsListRes> {
+  return request({
+    url: `${BASE_API}/operation/key/products/list`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 店铺运营-更新关键产品状态
+ * @param params id: number; status: number
+ * @returns boolean
+ */
+export function updateKeyProductsStatus(params: { id: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/key/products/status/update`,
+    method: 'post',
+    params,
   })
 }
