@@ -553,7 +553,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="handleExportInvoiceMatch">导出</el-button>
+        <el-button :loading="exportInvoiceMatchLoading" type="primary" @click="handleExportInvoiceMatch">导出</el-button>
       </template>
     </vab-dialog>
     <!-- 预览pdf -->
@@ -889,25 +889,34 @@ const handleExportATM = async () => {
     exportLoading.value = false
   })
 }
+const exportInvoiceMatchLoading = ref<boolean>(false)
 // 发票匹配导出
 const handleExportInvoiceMatch = async () => {
   invoiceMatchExportFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      const { data } = await checkTaxRefundInvoiceExport({
-        fromDate: invoiceMatchExportForm.time[0],
-        toDate: invoiceMatchExportForm.time[1],
-      })
-      if (data) {
-        const response = await downloadFilePD('/taxRefund/match/invoice/export', {
+      try {
+        exportInvoiceMatchLoading.value = true
+        const { data } = await checkTaxRefundInvoiceExport({
           fromDate: invoiceMatchExportForm.time[0],
           toDate: invoiceMatchExportForm.time[1],
         })
-        // console.log(response)
-        // if (response.type === 'application/json') {
-        //     const text = await response.text(); // 把 blob 转成文本
-        //     const json = JSON.parse(text);      // 解析成 JSON 对象
-        //     $baseMessage(json?.msg, 'error')
-        // }
+        if (data) {
+          const response = await downloadFilePD('/taxRefund/match/invoice/export', {
+            fromDate: invoiceMatchExportForm.time[0],
+            toDate: invoiceMatchExportForm.time[1],
+          })
+          exportInvoiceMatchLoading.value = false
+          // console.log(response)
+          // if (response.type === 'application/json') {
+          //     const text = await response.text(); // 把 blob 转成文本
+          //     const json = JSON.parse(text);      // 解析成 JSON 对象
+          //     $baseMessage(json?.msg, 'error')
+          // }
+        }
+      } catch (error) {
+        exportInvoiceMatchLoading.value = false
+      } finally {
+        exportInvoiceMatchLoading.value = false
       }
     }
   })
