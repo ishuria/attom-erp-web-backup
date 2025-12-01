@@ -337,7 +337,7 @@
 
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
-      <!-- top30新品销售额 -->
+      <!-- top100新品销售额 -->
       <el-col v-if="ableViewTop30ProductSaleCard" :lg="11" :md="24" :sm="24" :xl="11" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList" :loading="top30ProductSaleLoading">
           <!-- <template #select>

@@ -2,7 +2,7 @@
   <vab-card class="top30ProductSaleTable">
     <template #header>
       <vab-icon icon="information-line" />
-      TOP30新品销售额排行（全站点）
+      TOP100新品销售额排行（全站点）
       <div class="right-select">
         <slot name="select"></slot>
       </div>
