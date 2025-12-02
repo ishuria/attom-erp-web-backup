@@ -31,6 +31,8 @@ class PoPermission {
   static readonly PO_AUTO_PAY_ADD_PATH = 'purchase:auto:pay:add:path'
   /**Po自动付款-记录列表查询 */
   static readonly PO_AUTO_PAY_LIST = 'purchase:auto:pay:list'
+  /**Po-汇款校对 */
+  static readonly REMITTANCE_CHECK = 'purchase:remittance:check'
 }
 
 export default PoPermission

@@ -36,6 +36,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -208,6 +209,7 @@
           @current-change="handleCurrentChange"
           @po-detail="handlePoDetail"
           @preview-image="showPreviewImage"
+          @remittan-check="handleremittanceCheck"
           @row-click="handleRowClick"
           @select-all-po-row="handleSelectAllPoRow"
           @selected-po-row="handleSelectedPoRow"
@@ -249,6 +251,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -324,6 +327,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -398,6 +402,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -470,6 +475,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -542,6 +548,7 @@
               @payment-paid="handlePaymentPaid"
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
+              @remittan-check="handleremittanceCheck"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -883,6 +890,7 @@
       :pay-auto-loading="payAutoLoading"
       @submit-auto-pay="handleSubmitAutoPay"
     />
+    <vab-remittance-check v-model="remittanceCheckVisible" />
   </div>
 </template>
 
@@ -925,6 +933,11 @@ import { flexColumnWidth } from '/@/utils/tableColum'
 defineOptions({
   name: 'Po',
 })
+
+const remittanceCheckVisible = ref<boolean>(false)
+const handleremittanceCheck = () => {
+  remittanceCheckVisible.value = true
+}
 
 // 添加自动付款
 const addAutomaticPaymentVisible = ref<boolean>(false)
