@@ -1,4 +1,6 @@
 class StoreOperationPermission {
+  /** 关键产品-查看权限 */
+  static readonly KEY_PRODUCTS_QUERY = 'storeOperation:keyProducts:query'
   /** 关键产品-开启权限 */
   static readonly KEY_PRODUCTS_ENABLE = 'storeOperation:keyProducts:open'
   /** 关键产品-暂停权限 */

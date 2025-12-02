@@ -23,6 +23,7 @@
     </vab-query-form>
     <el-table
       v-loading="listLoading"
+      v-permissions="{ permission: [StoreOperationPermission.KEY_PRODUCTS_QUERY] }"
       border
       :cell-class-name="clearPadding"
       :cell-style="cellStyle"
@@ -130,6 +131,7 @@
       </template>
     </el-table>
     <vab-pagination
+      v-permissions="{ permission: [StoreOperationPermission.KEY_PRODUCTS_QUERY] }"
       :current-page="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :total="total"
