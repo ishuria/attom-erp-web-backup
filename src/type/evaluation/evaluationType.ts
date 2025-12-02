@@ -209,6 +209,11 @@ export interface EstimatedCostAccountingProductRelease {
   ids: string
   evaluationId: string
 }
+export interface EstimatedCostAccountingProductReleaseRes {
+  progressId: number
+  productName: string
+  mainSearchTerms: string
+}
 
 export interface EstimatedCostAccountingSort {
   id: string
