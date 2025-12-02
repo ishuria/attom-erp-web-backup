@@ -2,7 +2,13 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="showDefaultParams">默认参数</el-button>
+        <el-button
+          v-permissions="{ permission: [StoreOperationPermission.KEY_PRODUCTS_DEFAULT_PARAMS] }"
+          type="primary"
+          @click="showDefaultParams"
+        >
+          默认参数
+        </el-button>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -98,10 +104,22 @@
       <el-table-column label="操作" width="130">
         <template #default="{ row }">
           <el-space :size="16">
-            <el-link :disabled="row.status === 0" type="primary" underline="never" @click="handleUpdateKeyProductsStatus(row.id, 0)">
+            <el-link
+              v-permissions="{ permission: [StoreOperationPermission.KEY_PRODUCTS_ENABLE] }"
+              :disabled="row.status === 0"
+              type="primary"
+              underline="never"
+              @click="handleUpdateKeyProductsStatusOpen(row.id, 0)"
+            >
               开启
             </el-link>
-            <el-link :disabled="row.status === 1" type="danger" underline="never" @click="handleUpdateKeyProductsStatus(row.id, 1)">
+            <el-link
+              v-permissions="{ permission: [StoreOperationPermission.KEY_PRODUCTS_PAUSE] }"
+              :disabled="row.status === 1"
+              type="danger"
+              underline="never"
+              @click="handleUpdateKeyProductsStatusPause(row.id, 1)"
+            >
               暂停
             </el-link>
           </el-space>
@@ -122,11 +140,11 @@
     <!-- 默认参数 -->
     <vab-dialog v-model="defaultParamsVisible" title="默认参数" width="20%">
       <el-form :model="defaultParamsForm" style="margin-right: 0; margin-left: 0">
-        <el-form-item label="评分不达标OEM产品考核数加回数：">
-          <el-input v-model="defaultParamsForm.oemCount" />
+        <el-form-item label="OEM产品（评分不达标时考核加回数）：">
+          <el-input v-model.number="defaultParamsForm.oemCount" placeholder="请输入数字" type="number" />
         </el-form-item>
-        <el-form-item label="评分不达标非OEM产品考核数加回数：">
-          <el-input v-model="defaultParamsForm.nonOemCount" />
+        <el-form-item label="非OEM产品（评分不达标时考核加回数）：">
+          <el-input v-model.number="defaultParamsForm.nonOemCount" placeholder="请输入数字" type="number" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -141,7 +159,14 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
-import { getKeyProductsList, updateKeyProductsStatus } from '/@/api/devlocal/productPerformance'
+import {
+  getKeyProductsDefaultParams,
+  getKeyProductsList,
+  updateKeyProductsDefaultParams,
+  updateKeyProductsStatusOpen,
+  updateKeyProductsStatusPause,
+} from '/@/api/devlocal/productPerformance'
+import StoreOperationPermission from '/@/permissions/storeOperation'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -149,7 +174,10 @@ defineOptions({
 })
 
 const defaultParamsVisible = ref<boolean>(false)
-const defaultParamsForm = reactive<any>({
+const defaultParamsForm = reactive<{
+  oemCount: number | string
+  nonOemCount: number | string
+}>({
   oemCount: '',
   nonOemCount: '',
 })
@@ -173,19 +201,73 @@ const listLoading = ref<boolean>(false)
 const list = ref<any>([])
 const total = ref<number>(0)
 
-const showDefaultParams = () => {
+// 显示默认参数对话框并加载数据
+const showDefaultParams = async () => {
   defaultParamsVisible.value = true
+  await loadDefaultParams()
 }
-const handleDefaultParams = () => {
-  //
+
+// 加载默认参数
+const loadDefaultParams = async () => {
+  try {
+    const { data } = await getKeyProductsDefaultParams()
+    if (data) {
+      defaultParamsForm.oemCount = data.oemCount ?? ''
+      defaultParamsForm.nonOemCount = data.nonOemCount ?? ''
+    }
+  } catch (error) {
+    console.error('加载默认参数失败:', error)
+  }
 }
-const handleUpdateKeyProductsStatus = async (id: number, status: number) => {
-  const { data } = await updateKeyProductsStatus({ id, status })
+
+// 保存默认参数
+const handleDefaultParams = async () => {
+  // 验证输入
+  const oemCount = defaultParamsForm.oemCount === '' || defaultParamsForm.oemCount == null ? null : Number(defaultParamsForm.oemCount)
+  const nonOemCount =
+    defaultParamsForm.nonOemCount === '' || defaultParamsForm.nonOemCount == null ? null : Number(defaultParamsForm.nonOemCount)
+
+  if (oemCount == null || nonOemCount == null) {
+    $baseMessage('请填写完整的默认参数', 'warning')
+    return
+  }
+
+  if (isNaN(oemCount) || isNaN(nonOemCount)) {
+    $baseMessage('请输入有效的数字', 'warning')
+    return
+  }
+
+  try {
+    const { data } = await updateKeyProductsDefaultParams({
+      oemCount,
+      nonOemCount,
+    })
+    if (data) {
+      $baseMessage('默认参数保存成功！', 'success')
+      defaultParamsVisible.value = false
+    } else {
+      $baseMessage('默认参数保存失败！', 'error')
+    }
+  } catch (error) {
+    $baseMessage('默认参数保存失败！', 'error')
+  }
+}
+const handleUpdateKeyProductsStatusOpen = async (id: number, status: number) => {
+  const { data } = await updateKeyProductsStatusOpen({ id, status })
   if (data) {
-    $baseMessage('更新状态成功！', 'success')
+    $baseMessage('开启成功！', 'success')
     fetchData()
   } else {
-    $baseMessage('更新状态失败！', 'error')
+    $baseMessage('开启失败！', 'error')
+  }
+}
+const handleUpdateKeyProductsStatusPause = async (id: number, status: number) => {
+  const { data } = await updateKeyProductsStatusPause({ id, status })
+  if (data) {
+    $baseMessage('暂停成功！', 'success')
+    fetchData()
+  } else {
+    $baseMessage('暂停失败！', 'error')
   }
 }
 const getRatingColor = (rating: number | null | undefined): string => {

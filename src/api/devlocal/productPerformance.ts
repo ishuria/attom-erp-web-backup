@@ -492,14 +492,48 @@ export function getKeyProductsList(data: IGetKeyProductsListReq): Promise<IGetKe
   })
 }
 /**
- * 店铺运营-更新关键产品状态
+ * 店铺运营-开启关键产品
  * @param params id: number; status: number
  * @returns boolean
  */
-export function updateKeyProductsStatus(params: { id: number; status: number }): Promise<{ data: boolean }> {
+export function updateKeyProductsStatusOpen(params: { id: number; status: number }): Promise<{ data: boolean }> {
   return request({
-    url: `${BASE_API}/operation/key/products/status/update`,
+    url: `${BASE_API}/operation/key/products/status/open`,
     method: 'post',
     params,
+  })
+}
+/**
+ * 店铺运营-暂停关键产品
+ * @param params id: number; status: number
+ * @returns boolean
+ */
+export function updateKeyProductsStatusPause(params: { id: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/key/products/status/pause`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 店铺运营-获取关键产品默认参数
+ * @returns 默认参数
+ */
+export function getKeyProductsDefaultParams(): Promise<{ data: { oemCount: number; nonOemCount: number } }> {
+  return request({
+    url: `${BASE_API}/operation/key/products/default/params`,
+    method: 'get',
+  })
+}
+/**
+ * 店铺运营-更新关键产品默认参数
+ * @param data oemCount: number; nonOemCount: number
+ * @returns boolean
+ */
+export function updateKeyProductsDefaultParams(data: { oemCount: number; nonOemCount: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/key/products/default/params/update`,
+    method: 'post',
+    data,
   })
 }
