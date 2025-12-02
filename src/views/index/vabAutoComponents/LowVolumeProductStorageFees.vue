@@ -27,10 +27,13 @@
       <el-table-column
         label="SKU"
         prop="sku"
-        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku', 50), flexColumnWidth(list, 'SKU', 'productDesc', 50))"
       >
         <template #default="{ row }">
-          {{ row.sku }}
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+            {{ row.sku }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
           <br />
           <div class="product-desc-container">
             <span class="product-desc">{{ row.productDesc }}</span>
@@ -83,6 +86,7 @@
 
 <script lang="ts" setup>
 import CountryFlag from 'vue-country-flag-next'
+import handleClipboard from '~/src/utils/clipboard'
 import { ILowVolumeProductStorageFee } from '/@/type/index/frontPage'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -189,6 +193,15 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 .japan-flag {
   :deep(.flag) {
     border: 1px solid #ddd;
+  }
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
   }
 }
 </style>
