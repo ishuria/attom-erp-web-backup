@@ -26,12 +26,12 @@
 
       <el-table
         border
+        :cell-class-name="tableCellClassName"
         :cell-style="cellStyle"
         class="noneHoveTable"
         :data="list"
         :header-cell-style="headerCellStyle"
         max-height="800"
-        :row-class-name="tableRowClassName"
         :span-method="objectSpanMethod"
         @cell-click="cellClick"
         @row-click="handleRowClick"
@@ -64,14 +64,14 @@
             <el-button size="small" style="min-width: 20px; min-height: 35px" @click="showPdf(row.invoicePath)">PDF</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
+        <!-- <el-table-column label="发票代码" prop="invoiceCode" :width="flexColumnWidth(list, '发票代码', 'invoiceCode')">
           <template #default="{ row }">
             <div class="none">
               <el-input v-model="row.invoiceCode" @blur="clickCancel($event, row)" @keyup.enter="clickCancel($event, row)" />
             </div>
             <span>{{ row.invoiceCode }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="发票号码" prop="invoiceNumber" :width="flexColumnWidth(list, '发票号码', 'invoiceNumber')">
           <template #default="{ row }">
             <div class="none">
@@ -277,34 +277,38 @@
       <vab-query-form>
         <vab-query-form-left-panel>
           <div class="invoice-info-tags">
-            <el-tag size="large" type="info">
-              <span style="font-weight: 500">供应商：</span>
-              <span>{{ _supplier || '--' }}</span>
-            </el-tag>
-            <el-tag size="large" type="success">
-              <span style="font-weight: 500">开票品名：</span>
-              <span>{{ _invoiceName || '--' }}</span>
-            </el-tag>
-            <el-tag size="large" type="warning">
-              <span style="font-weight: 500">单位：</span>
-              <span>{{ _invoiceUnit || '--' }}</span>
-            </el-tag>
-            <el-tag size="large">
-              <span style="font-weight: 500">数量：</span>
-              <span>
-                <span class="remaining-value">{{ _remainingCount ?? '--' }}</span>
-                <span style="margin: 0 4px">/</span>
-                <span>{{ _invoiceCount || 0 }}</span>
-              </span>
-            </el-tag>
-            <el-tag size="large" type="primary">
-              <span style="font-weight: 500">发票含税金额：</span>
-              <span>
-                <span class="remaining-value">{{ _remainingAmount ?? '--' }}</span>
-                <span style="margin: 0 4px">/</span>
-                <span>{{ _includingTaxPrice || 0 }}</span>
-              </span>
-            </el-tag>
+            <div class="invoice-info-tags-row">
+              <el-tag size="large" type="info">
+                <span style="font-weight: 500">供应商：</span>
+                <span>{{ _supplier || '--' }}</span>
+              </el-tag>
+              <el-tag size="large" type="success">
+                <span style="font-weight: 500">开票品名：</span>
+                <span>{{ _invoiceName || '--' }}</span>
+              </el-tag>
+              <el-tag size="large" type="warning">
+                <span style="font-weight: 500">单位：</span>
+                <span>{{ _invoiceUnit || '--' }}</span>
+              </el-tag>
+            </div>
+            <div class="invoice-info-tags-row">
+              <el-tag size="large">
+                <span style="font-weight: 500">数量：</span>
+                <span>
+                  <span class="remaining-value">{{ _remainingCount ?? '--' }}</span>
+                  <span style="margin: 0 4px">/</span>
+                  <span>{{ _invoiceCount || 0 }}</span>
+                </span>
+              </el-tag>
+              <el-tag size="large" type="primary">
+                <span style="font-weight: 500">发票含税金额：</span>
+                <span>
+                  <span class="remaining-value">{{ _remainingAmount ?? '--' }}</span>
+                  <span style="margin: 0 4px">/</span>
+                  <span>{{ _includingTaxPrice || 0 }}</span>
+                </span>
+              </el-tag>
+            </div>
           </div>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
@@ -337,7 +341,7 @@
       >
         <el-table-column
           label="合同编号"
-          :min-width="flexColumnWidth(pagedData, '合同编号--', 'contractNumber')"
+          :min-width="flexColumnWidth(pagedData, '合同编号排序', 'contractNumber')"
           prop="contractNumber"
           sortable
         />
@@ -365,7 +369,7 @@
         </el-table-column>
         <el-table-column label="匹配" prop="status" width="70">
           <template #default="{ row }">
-            <el-checkbox v-model="row.matchFlag" size="large" @change="handleMatchFlagChange" />
+            <el-checkbox v-model="row.matchFlag" size="large" @change="handleMatchFlagChange" @click.stop />
           </template>
         </el-table-column>
         <template #empty>
@@ -465,17 +469,123 @@ const fileList = ref<any[]>([])
 // 当前选中的行（用于高亮显示）
 const selectedRowId = ref<number | null>(null)
 
-// 表格行类名（用于高亮显示）
-const tableRowClassName = ({ row }: { row: IGetTaxRefundInvoiceList }) => {
-  // 如果该行的 detailId 匹配选中的行，则高亮
-  if (selectedRowId.value !== null && row.detailId === selectedRowId.value) {
-    return 'warning-row'
+// 获取基于 detailId 的合并组的第一行（用于中间合并的列）
+const getFirstRowOfDetailIdMergeGroup = (rowIndex: number): IGetTaxRefundInvoiceList | null => {
+  if (rowIndex < 0 || rowIndex >= list.value.length) {
+    return null
   }
-  return ''
+  const currentRow = list.value[rowIndex]
+  const currentDetailId = currentRow.detailId
+
+  // 向前查找，找到合并组的第一行
+  for (let i = rowIndex; i >= 0; i--) {
+    if (i === 0 || list.value[i - 1].detailId !== currentDetailId) {
+      return list.value[i]
+    }
+  }
+  return null
+}
+
+// 检查当前行是否属于 selectedRowId 所属的 id 合并组（用于左边合并的列）
+const isRowInSelectedIdGroup = (rowIndex: number): boolean => {
+  if (selectedRowId.value === null) {
+    return false
+  }
+
+  // 找到 selectedRowId 对应的行，获取其 id
+  const selectedRow = list.value.find((row) => row.detailId === selectedRowId.value)
+  if (!selectedRow) {
+    return false
+  }
+
+  const selectedId = selectedRow.id
+  const currentRow = list.value[rowIndex]
+  const currentId = currentRow.id
+
+  // 如果当前行的 id 等于选中行的 id，则属于同一个合并组
+  return currentId === selectedId
+}
+
+// 检查单元格是否需要紫色标记（用于排除 hover 样式）
+const shouldHighlightCell = (row: any, label: string): boolean => {
+  const { customsDeclarationCount, customsDeclarationUnit, taxInclusiveCost } = row
+
+  // 只有当报关数量、报关单位、po零件含税价都不为空时才生效
+  const canCompare =
+    customsDeclarationCount !== undefined &&
+    customsDeclarationCount !== null &&
+    customsDeclarationCount !== '' &&
+    customsDeclarationUnit !== undefined &&
+    customsDeclarationUnit !== null &&
+    customsDeclarationUnit !== '' &&
+    taxInclusiveCost !== undefined &&
+    taxInclusiveCost !== null &&
+    taxInclusiveCost !== ''
+
+  if (!canCompare) {
+    return false
+  }
+
+  // 检查是否需要紫色标记
+  if (label === '发票单位' || label === '报关单位') {
+    return String(row.invoiceUnit || '') !== String(row.customsDeclarationUnit || '')
+  }
+  if (label === '已匹配实际报关数') {
+    return row.taxRefundMatchCustomsDeclarationCount !== row.taxRefundCustomsDeclarationCount
+  }
+  if (label === '已匹配PO总报关数') {
+    return row.customsDeclarationMatchCount !== row.customsDeclarationCountTotal
+  }
+  if (label === '已匹配报关金额') {
+    return row.taxRefundMatchInvoicePrice !== row.taxRefundTotalInvoicePrice
+  }
+  if (label === '已匹配PO总报关金额') {
+    return row.poComponentMatchPrice !== row.poComponentTotalPrice
+  }
+
+  return false
+}
+
+// 表格单元格类名（用于部分高亮显示）
+const tableCellClassName = ({
+  row,
+  rowIndex,
+  columnIndex,
+  column,
+}: {
+  row: IGetTaxRefundInvoiceList
+  rowIndex: number
+  columnIndex: number
+  column: any
+}) => {
+  const classes: string[] = []
+
+  // 检查是否需要紫色标记
+  if (column?.label && shouldHighlightCell(row, column.label)) {
+    classes.push('highlight-cell')
+  }
+
+  // 检查是否需要选中高亮
+  if (selectedRowId.value !== null) {
+    // 左边合并的列（columnIndex 0-4）：基于 row.id 合并，如果当前行属于 selectedRowId 所属的 id 合并组，则高亮
+    if (columnIndex >= 0 && columnIndex <= 4) {
+      if (isRowInSelectedIdGroup(rowIndex)) {
+        classes.push('warning-cell')
+      }
+    }
+    // 右边合并的列（columnIndex 5+）：基于 detailId 合并，如果该行detailId 被选中，则高亮
+    else if (columnIndex >= 5) {
+      if (row.detailId !== undefined && row.detailId === selectedRowId.value) {
+        classes.push('warning-cell')
+      }
+    }
+  }
+
+  return classes.join(' ')
 }
 
 const handleRowClick = (row: any, column: any, event: Event) => {
-  selectedRowId.value = row.detailId
+  selectedRowId.value = row.detailId ?? null
 }
 const handleRowClickMatch = (row: any, column: any, event: Event) => {
   row.matchFlag = !row.matchFlag
@@ -734,9 +844,13 @@ const detailIds = ref<number[]>([])
 const handleConfirm = async () => {
   matchInvoiceLoading.value = true
   const taxRefundIdArr: number[] = []
-  matchList.value.forEach((el, idx) => {
+  const selectedItems: IGetTaxRefundInvoiceMatchList[] = []
+
+  // 从 originalMatchList 中查找所有勾选的行（确保包含所有数据，不受过滤影响）
+  originalMatchList.value.forEach((el) => {
     if (el.matchFlag) {
       taxRefundIdArr.push(el.id)
+      selectedItems.push(el)
     }
   })
 
@@ -744,6 +858,22 @@ const handleConfirm = async () => {
     $baseMessage('请选择匹配项', 'warning')
     matchInvoiceLoading.value = false
     return
+  }
+
+  // 校验：勾选多行时，所勾选的匹配发票数之和必须 <= 发票的未匹配数
+  if (selectedItems.length > 1) {
+    // 计算所有勾选行的报关数量之和
+    const totalCustomsDeclarationCount = selectedItems.reduce((sum, item) => {
+      const count = item.customsDeclarationCount ?? 0
+      return sum + (typeof count === 'number' ? count : 0)
+    }, 0)
+
+    // 与发票的未匹配数进行比较
+    if (_remainingCount.value !== null && totalCustomsDeclarationCount > _remainingCount.value) {
+      $baseMessage(`所勾选的匹配发票数之和（${totalCustomsDeclarationCount}）不能大于发票的未匹配数（${_remainingCount.value}）`, 'error')
+      matchInvoiceLoading.value = false
+      return
+    }
   }
   try {
     const { data } = await submitTaxRefundInvoiceMatch({
@@ -829,8 +959,8 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _includingTaxPrice.value = row.includingTaxPrice!
     _remainingCount.value = row.remainingCount!
     // _remainingAmount.value = row.remainingAmount!
-    // 重置排序状态
-    sortState.value = null
+    // 默认按合同号从大到小排序
+    sortState.value = { prop: 'contractNumber', order: 'descending' }
     // 如果传入的 row 有 matchPo，则只显示相同 PO 的记录
     // 先设置 selectedPo 和标志，再赋值 originalMatchList，避免 watch 覆盖
     if (row.matchPo && row.matchPo.trim() !== '') {
@@ -968,55 +1098,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     taxInclusiveCost !== null &&
     taxInclusiveCost !== ''
 
-  // const flag = matchContractNumber == '' && matchPo !== '' && matchPo !== undefined
-  // if (flag) {
-  //   if (label === '已匹配PO总报关数' || label === '剩余发票数量') {
-  //     if (data.row.invoiceCount !== data.row.customsDeclarationCountTotal) {
-  //       return {
-  //         backgroundColor: 'rgba(142, 198, 231, 0.5)',
-  //         textAlign: 'center',
-  //       }
-  //     } else if (label === '已匹配PO总报关数') {
-  //       return {
-  //         textAlign: 'center',
-  //         color: '#999',
-  //       }
-  //     } else {
-  //       return {
-  //         textAlign: 'center',
-  //       }
-  //     }
-  //   }
-  // }
-
   if (canCompare) {
-    // 比较发票数量和报关数量
-    // if (label === '剩余发票数量' || label === '已匹配实际报关数') {
-    //   if (data.row.invoiceCount !== data.row.customsDeclarationCount) {
-    //     if (label === '已匹配实际报关数') {
-    //       return {
-    //         backgroundColor: 'rgba(142, 198, 231, 0.5)',
-    //         textAlign: 'center',
-    //         color: '#999',
-    //       }
-    //     } else {
-    //       return {
-    //         backgroundColor: 'rgba(142, 198, 231, 0.5)',
-    //         textAlign: 'center',
-    //       }
-    //     }
-    //   } else if (label === '已匹配实际报关数') {
-    //     return {
-    //       textAlign: 'center',
-    //       color: '#999',
-    //     }
-    //   } else {
-    //     return {
-    //       textAlign: 'center',
-    //     }
-    //   }
-    // }
-
     // 比较发票单位和报关单位
     if (label === '发票单位' || label === '报关单位') {
       if (data.row.invoiceUnit !== data.row.customsDeclarationUnit) {
@@ -1106,7 +1188,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
   switch (label) {
     case '购方名称':
-    case '发票代码':
     case '发票号码':
     case '供应商': {
       return {
@@ -1185,15 +1266,9 @@ const matchCellStyle = (data: { row: any; column: any; rowIndex: number; columnI
     textAlign: 'center',
   }
 }
-// const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-//   if (data.columnIndex === 10) {
-//     return 'clear-padding'
-//   }
-//   return ''
-// }
 // col合并方法
 const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 5) {
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
     // 获取当前row的零件id
     const id = row.id
     // 默认不跨行
@@ -1214,41 +1289,14 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
       return { rowspan: 0, colspan: 0 }
     }
   }
-
-  if (columnIndex === 7 || columnIndex === 8 || columnIndex === 9 || columnIndex === 10 || columnIndex === 11 || columnIndex === 12) {
-    const id = row.detailId
-    let rowspan = 1
-    for (let i = rowIndex + 1; i < list.value.length; i++) {
-      if (list.value[i].detailId === id) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-    if (rowIndex === 0 || list.value[rowIndex - 1].detailId !== id) {
-      return { rowspan, colspan: 1 }
-    } else {
-      return { rowspan: 0, colspan: 0 }
-    }
-  }
 }
 
 const fetchData = async () => {
   listLoading.value = true
-  // 保存当前选中的 detailId，以便在数据刷新后恢复高亮
-  const currentSelectedDetailId = selectedRowId.value
   const { data } = await getTaxRefundInvoiceList(queryForm)
   total.value = data?.total!
   list.value = data?.list!
-  // 如果之前有选中的行，尝试恢复高亮（如果该行还在列表中）
-  if (currentSelectedDetailId !== null) {
-    const stillExists = list.value.some((item) => item.detailId === currentSelectedDetailId)
-    if (stillExists) {
-      selectedRowId.value = currentSelectedDetailId
-    } else {
-      selectedRowId.value = null
-    }
-  }
+  selectedRowId.value = null
   listLoading.value = false
 }
 const cleanLoading = ref<number | null>(null) // 存储当前 loading 的行 id
@@ -1258,10 +1306,16 @@ const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
 <style lang="scss" scoped>
 .invoice-info-tags {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
   margin: 0 10px calc(var(--el-margin) / 2) 0;
+
+  .invoice-info-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
 
   :deep(.el-tag) {
     font-size: 15px;
@@ -1304,15 +1358,15 @@ const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
       transform: scale(1.3);
       transform-origin: center;
     }
-    // 选中行样式优先级提高
-    .warning-row > td {
+    // 选中单元格高亮样式
+    .warning-cell {
       background-color: #7bddde !important;
     }
 
-    // 普通行hover时保持白色
-    .el-table__body tr:not(.warning-row) {
-      &.hover-row > td,
-      &:hover > td {
+    // 普通行hover时保持白色（排除高亮单元格和选中单元格）
+    .el-table__body tr {
+      &.hover-row > td:not(.warning-cell):not(.highlight-cell),
+      &:hover > td:not(.warning-cell):not(.highlight-cell) {
         background-color: #ffffff !important;
       }
     }
