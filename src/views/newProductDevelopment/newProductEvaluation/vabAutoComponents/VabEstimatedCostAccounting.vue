@@ -323,6 +323,7 @@ import { ArrowDown, Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { ElLink, ElMessageBox } from 'element-plus'
 import { debounce, isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { h } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { siteReflectCurrencyAndExchangeRate } from '../../indexCommon'
@@ -339,7 +340,7 @@ import {
   updateEstimatedCostAccountingSort,
   uploadFileBoBakend,
 } from '/@/api/devlocal/evaluation'
-import type { IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
+import type { EstimatedCostAccountingProductReleaseRes, IEstimatedCostAccounting } from '/@/type/evaluation/evaluationType'
 import { formatDate } from '/@/utils/dateUtils'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { convertString } from '/@/utils/stringUtils'
@@ -712,16 +713,24 @@ const handlerProductProgress = async () => {
   const ids: string = idsArr.map(String).join(',')
   try {
     const { data } = await addEstimatedCostAccountingProductRelease({ ids, evaluationId: props.evaluationId })
-    if (data == true) {
+    if (data) {
       ElMessageBox({
         title: '发布成功',
         confirmButtonText: '关闭',
         showClose: false,
         showCancelButton: false,
         type: 'success',
-        dangerouslyUseHTMLString: true,
-        message: () =>
-          h('div', { style: 'cursor: pointer; color: #409eff;', onClick: handleClick }, { default: () => '点击此链接跳转到新品进度管理' }),
+        message: h(
+          'div',
+          {
+            style: { cursor: 'pointer', color: '#409eff' },
+            onClick: (e: Event) => {
+              e.stopPropagation()
+              handleClick(data)
+            },
+          },
+          '点击此链接跳转到新品进度管理的零件清单界面'
+        ),
       })
     }
   } catch (error) {
@@ -730,10 +739,17 @@ const handlerProductProgress = async () => {
 }
 
 // 处理MessageBox的页面跳转
-const handleClick = () => {
+const handleClick = (data: EstimatedCostAccountingProductReleaseRes) => {
   ElMessageBox.close()
+  handlerCloseDialog()
   router.push({
-    path: '/newProductDevelopment/newProductProgress',
+    path: '/newProductDevelopment/productProgressComponent',
+    query: {
+      title: '零件清单',
+      progressId: data.progressId,
+      product: `${data.productName!} ${data.mainSearchTerms!}`,
+      button: 1,
+    },
   })
 }
 

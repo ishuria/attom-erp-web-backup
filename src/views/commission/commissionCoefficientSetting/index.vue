@@ -151,7 +151,7 @@
           <el-table-column label="角色" prop="roleName" />
           <el-table-column label="产品开发类型">
             <el-table-column label="净利提成模式">
-              <el-table-column label="产品经理净利提成比例" prop="productManagerProportion">
+              <el-table-column label="产品经理净利提成比例" prop="productManagerProportion" width="190">
                 <template #default="{ row }">
                   <div class="none">
                     <el-input
@@ -163,7 +163,7 @@
                   <span>{{ row.productManagerProportion ? row.productManagerProportion + '%' : '' }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="产品设计净利提成比例" prop="productDesignProportion">
+              <el-table-column label="产品设计净利提成比例" prop="productDesignProportion" width="190">
                 <template #default="{ row }">
                   <div class="none">
                     <el-input
@@ -267,6 +267,32 @@
               </template>
             </el-table-column>
           </el-table-column>
+          <el-table-column label="管理分">
+            <el-table-column label="直属主管管理总分" prop="directSupervisorTotalScore">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.directSupervisorTotalScore"
+                    @blur="clickCancel2($event, row)"
+                    @keyup.enter="clickCancel2($event, row)"
+                  />
+                </div>
+                <span>{{ row.directSupervisorTotalScore }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="直属主管管理OEM分" prop="directSupervisorOemScore" width="170">
+              <template #default="{ row }">
+                <div class="none">
+                  <el-input
+                    v-model="row.directSupervisorOemScore"
+                    @blur="clickCancel2($event, row)"
+                    @keyup.enter="clickCancel2($event, row)"
+                  />
+                </div>
+                <span>{{ row.directSupervisorOemScore }}</span>
+              </template>
+            </el-table-column>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -328,6 +354,7 @@ import {
   getCommissionSetting,
   updateCommissionArtType,
   updateCommissionProductType,
+  updateCommissionProductTypeScore,
   updateCommissionSetting1,
   updateCommissionSetting2,
 } from '/@/api/devlocal/commission'
@@ -459,21 +486,53 @@ const clickCancel2 = async (event: any, value: any) => {
   if (event.type === 'blur') {
     // 执行失去焦点处理逻辑
     try {
-      await updateCommissionProductType({
-        id: value.id,
-        productManagerProportion: Number(value.productManagerProportion) / 100,
-        productDesignProportion: Number(value.productDesignProportion) / 100,
-        delivery: Number(value.delivery) / 100,
-        yunzhouCount: value.yunzhouCount,
-        yunzhouNoBgCount: value.yunzhouNoBgCount,
-        aiTuoMCount: value.aiTuoMCount,
-        attomCount: value.attomCount,
-        proportion: Number(value.proportion) / 100,
-        day: value.day,
-        defaultAssessmentNumber: value.defaultAssessmentNumber,
-        defaultOem: value.defaultOem,
-        taxRefundBonusRatio: value.taxRefundBonusRatio / 100,
-      })
+      // 检测是否修改了管理分相关字段
+      const isScoreFieldChanged =
+        copyRow?.directSupervisorTotalScore !== value.directSupervisorTotalScore ||
+        copyRow?.directSupervisorOemScore !== value.directSupervisorOemScore
+
+      // 检测是否修改了其他字段
+      const isOtherFieldChanged =
+        copyRow?.productManagerProportion !== value.productManagerProportion ||
+        copyRow?.productDesignProportion !== value.productDesignProportion ||
+        copyRow?.delivery !== value.delivery ||
+        copyRow?.yunzhouCount !== value.yunzhouCount ||
+        copyRow?.yunzhouNoBgCount !== value.yunzhouNoBgCount ||
+        copyRow?.aiTuoMCount !== value.aiTuoMCount ||
+        copyRow?.attomCount !== value.attomCount ||
+        copyRow?.proportion !== value.proportion ||
+        copyRow?.day !== value.day ||
+        copyRow?.defaultAssessmentNumber !== value.defaultAssessmentNumber ||
+        copyRow?.defaultOem !== value.defaultOem ||
+        copyRow?.taxRefundBonusRatio !== value.taxRefundBonusRatio
+
+      // 如果修改了管理分字段，调用评分更新接口
+      if (isScoreFieldChanged) {
+        await updateCommissionProductTypeScore({
+          userId: value.userId,
+          totalScore: Number(value.directSupervisorTotalScore) || 0,
+          oemScore: Number(value.directSupervisorOemScore) || 0,
+        })
+      }
+
+      // 如果修改了其他字段，调用产品类型更新接口
+      if (isOtherFieldChanged) {
+        await updateCommissionProductType({
+          id: value.id,
+          productManagerProportion: Number(value.productManagerProportion) / 100,
+          productDesignProportion: Number(value.productDesignProportion) / 100,
+          delivery: Number(value.delivery) / 100,
+          yunzhouCount: value.yunzhouCount,
+          yunzhouNoBgCount: value.yunzhouNoBgCount,
+          aiTuoMCount: value.aiTuoMCount,
+          attomCount: value.attomCount,
+          proportion: Number(value.proportion) / 100,
+          day: value.day,
+          defaultAssessmentNumber: value.defaultAssessmentNumber,
+          defaultOem: value.defaultOem,
+          taxRefundBonusRatio: value.taxRefundBonusRatio / 100,
+        })
+      }
     } catch {
       Object.assign(value, copyRow)
     }

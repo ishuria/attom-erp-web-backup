@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   EstimatedCostAccountingProductRelease,
+  EstimatedCostAccountingProductReleaseRes,
   ICostAccounting,
   IEstimatedCostAccountingQueryReq,
   IEvaluationKeyWordTrendReq,
@@ -268,7 +269,9 @@ export function getExchangeRate(params?: any) {
  * @param params
  * @returns Promise
  */
-export function addEstimatedCostAccountingProductRelease(data?: EstimatedCostAccountingProductRelease) {
+export function addEstimatedCostAccountingProductRelease(
+  data?: EstimatedCostAccountingProductRelease
+): Promise<{ data: EstimatedCostAccountingProductReleaseRes }> {
   return request({
     url: `${BASE_API}/product/release`,
     method: 'post',

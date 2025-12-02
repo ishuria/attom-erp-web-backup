@@ -337,7 +337,7 @@
 
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
-      <!-- top30新品销售额 -->
+      <!-- top100新品销售额 -->
       <el-col v-if="ableViewTop30ProductSaleCard" :lg="11" :md="24" :sm="24" :xl="11" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList" :loading="top30ProductSaleLoading">
           <!-- <template #select>
@@ -895,14 +895,18 @@ const fetchUserList = async () => {
 }
 const lossUserList = ref<{ id: number; label: string }[]>([])
 const selectLossUserId = ref<number>()
+
 const fetchLossUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 1 })
   lossUserList.value = data
-  if (lossUserList.value.length > 0) {
-    selectLossUserId.value = lossUserList.value.find((item) => item.label === myName)?.id
-  }
-  if (!selectLossUserId.value) {
-    selectLossUserId.value = lossUserList.value[0].id
+
+  if (ableBossViewCard) {
+    lossUserList.value.unshift({ id: -1, label: '全部' })
+    selectLossUserId.value = -1
+  } else {
+    if (lossUserList.value.length > 0) {
+      selectLossUserId.value = lossUserList.value.find((item) => item.label === myName)?.id
+    }
   }
   fetchTop50ProductLoss()
 }

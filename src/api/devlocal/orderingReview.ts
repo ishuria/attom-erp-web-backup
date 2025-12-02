@@ -229,3 +229,12 @@ export function updateReviewArchived(params: { reviewId: number }): Promise<{ da
     params,
   })
 }
+
+// 新品订货审批-采购审核不通过
+export function purchaseReviewNoFail(data?: { reviewId: number; reason: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/purchase/fail`,
+    method: 'post',
+    data,
+  })
+}

@@ -92,6 +92,14 @@
       >
         自动付款预览
       </el-button>
+      <el-button
+        v-if="showCommonButtons"
+        v-permissions="{ permission: [PoPermission.REMITTANCE_CHECK] }"
+        type="primary"
+        @click="$emit('remittanCheck')"
+      >
+        汇款校对
+      </el-button>
     </div>
 
     <!-- 统计信息 -->
@@ -204,6 +212,7 @@ defineProps<{
   procurementBonusCrossMonth?: string | number
   taxIncludedTotalPrice?: string | number
   currentRoleCode?: string
+  remittanCheck?: boolean
 }>()
 
 defineEmits<{
@@ -220,6 +229,7 @@ defineEmits<{
   refund: []
   addAutomaticPayment: []
   automaticPaymentPreview: []
+  remittanCheck: []
 }>()
 </script>
 

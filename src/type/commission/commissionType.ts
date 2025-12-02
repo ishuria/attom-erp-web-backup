@@ -60,6 +60,10 @@ export interface IGetCommissionProductTypeList {
   defaultOem?: number
   defaultAssessmentNumber?: number
   taxRefundBonusRatio?: number
+  /** 直属主管管理总分 */
+  directSupervisorTotalScore?: number | null
+  /** 直属主管管理OEM分 */
+  directSupervisorOemScore?: number | null
 }
 export interface IUpdateCommissionProductTypeReq {
   id: number

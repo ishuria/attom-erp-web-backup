@@ -817,6 +817,9 @@ const handleArchived = (reviewMainId: number) => {
 }
 
 const fetchData = async () => {
+  if (route.query.reviewId) {
+    queryForm.keyWord = route.query.reviewId as string
+  }
   listLoading.value = true
   const { data } = await getReviewList(queryForm)
   dataList.value = data.list!

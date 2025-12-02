@@ -771,3 +771,15 @@ export function purchaseClearAutoPay(): Promise<{ data: boolean }> {
     method: 'post',
   })
 }
+
+/**
+ * 采购订单-汇款校对
+ * @returns
+ */
+export function purchaseRemittanceCheck(data: { path: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/remittance/check`,
+    method: 'post',
+    data,
+  })
+}
