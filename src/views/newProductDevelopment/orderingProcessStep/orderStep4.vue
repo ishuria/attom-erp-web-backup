@@ -55,11 +55,11 @@
           <span>{{ row.accountNumber }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="联行号" min-width="100" prop="bankRoutingNumber">
+      <el-table-column align="center" label="联行号（没有则留空）" min-width="100" prop="bankRoutingNumber">
         <template #default="{ row }">
           <div class="none">
             <el-input
-              v-model="row.bankRoutingNumber"
+              v-model.trim="row.bankRoutingNumber"
               @blur="supplierClickCancel($event, row)"
               @keydown.enter="supplierClickCancel($event, row)"
             />
@@ -323,6 +323,12 @@ const supplierClickCancel = async (event: any, value: any) => {
     return
   }
   if (event.type === 'blur') {
+    // 判断是否是数字，不是的话 报错
+    if (!/^\d*$/.test(value.bankRoutingNumber)) {
+      $baseMessage('联行号只能输入数字，请重新输入', 'error', 'hey')
+      value.bankRoutingNumber = ''
+      return
+    }
     try {
       await reviewStepNo4UpdateSupplier(value)
       await fetchNewSupplier()
@@ -426,10 +432,10 @@ const checkSupplier = () => {
       $baseMessage(`${item.suppliser}的开户账号不能为空`, 'error', 'hey')
       return false
     }
-    if (!item.bankRoutingNumber) {
-      $baseMessage(`${item.suppliser}的联行号不能为空`, 'error', 'hey')
-      return false
-    }
+    // if (!item.bankRoutingNumber) {
+    //   $baseMessage(`${item.suppliser}的联行号不能为空`, 'error', 'hey')
+    //   return false
+    // }
     if (!item.contactPerson) {
       $baseMessage(`${item.suppliser}的联系人不能为空`, 'error', 'hey')
       return false
