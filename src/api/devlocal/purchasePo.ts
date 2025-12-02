@@ -36,6 +36,9 @@ import type {
   IPoIds,
   IPoSkuComponentId,
   IPoSkuId,
+  IPurchasePoAutoPay,
+  IPurchasePoAutoPayQueryItem,
+  IPurchaseSkuReplace,
   IPurchaseTotalAp,
   ISku,
   IStringResp,
@@ -713,5 +716,58 @@ export function getPoPublisherList(params?: IGetAllNameReq) {
     url: `${BASE_API}/purchase/po/release/user/list`,
     method: 'get',
     params,
+  })
+}
+
+// 采购订单-生成PO合同
+export function purchaseSkuReplace(data: IPurchaseSkuReplace) {
+  return request({
+    url: `${BASE_API}/purchase/sku/replace`,
+    method: 'post',
+    data,
+  })
+}
+
+// 采购订单-po自动付款添加合同路径
+export function purchaseAddAutoPay(data: IPurchasePoAutoPay) {
+  return request({
+    url: `${BASE_API}/auto/pay/add`,
+    method: 'post',
+    data,
+  })
+}
+
+// 采购订单-po自动付款记录额列表查询
+export function purchaseQueryPayList(): Promise<{ data: IPurchasePoAutoPayQueryItem[] }> {
+  return request({
+    url: `${BASE_API}/auto/pay/list`,
+    method: 'post',
+  })
+}
+
+// 采购订单-po自动付款提交
+export function purchaseAutoPaySubmit(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/submit`,
+    method: 'post',
+  })
+}
+
+// 采购订单-po自动付款删除
+export function purchaseDeleteAutoPay(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/record/del`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 采购订单-po自动付款清空
+ * @returns
+ */
+export function purchaseClearAutoPay(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/auto/pay/record/clean`,
+    method: 'post',
   })
 }

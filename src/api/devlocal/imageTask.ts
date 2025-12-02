@@ -8,6 +8,7 @@ import type {
   IClaimArtDesignTaskReq,
   IConfirmOtherSkuArtDesignSellingPointRes,
   IGetArtDesignSelectionReasonsList,
+  IGetArtDesignTaskList,
   IGetArtDesignTaskListReq,
   IGetArtDesignTaskListRes,
   IGetArtDesignTaskMarginRes,
@@ -299,6 +300,18 @@ export function updateProofreadingStatus(params: { id: number; value: number }):
   return request({
     url: `${BASE_API}/artdesign/task/proofreading/update`,
     method: 'post',
+    params,
+  })
+}
+/**
+ * 平面设计任务明细
+ * @param params { userId: number; month: string }
+ * @returns { data: IGetArtDesignTaskList[] }
+ */
+export function getArtDesignTaskDetail(params: { userId: number; month: string }): Promise<{ data: IGetArtDesignTaskList[] }> {
+  return request({
+    url: `${BASE_API}/artDesign/user/monthly/detail`,
+    method: 'get',
     params,
   })
 }

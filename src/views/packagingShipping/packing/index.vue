@@ -120,7 +120,7 @@
         </div>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <!-- 
+            <!--
               筛选条件说明：
               - boxCount5Plus: 筛选箱数大于等于5的记录
               - dimensionsComplete: 筛选毛重、长、宽、高都已录入的记录
@@ -193,6 +193,16 @@
 
         <template v-else-if="item.label === '装箱日期'" #default="{ row }">
           {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+        </template>
+        <template v-else-if="item.label === '冻结箱号'" #default="{ row }">
+          <el-switch
+            v-model="row.freeze"
+            :active-value="1"
+            class="ml-2"
+            :inactive-value="0"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            @change="updateEncasementFreeze(row)"
+          />
         </template>
         <template v-else-if="item.label === '发往站点'" #default="{ row }">
           <el-tag size="default" :style="getSiteTagStyle(row.planSiteName)">{{ row.planSiteName }}</el-tag>
@@ -676,10 +686,12 @@ import { IGetOperationOrderTable } from '~/src/type/storeOperation/productOrderi
 import { printerOption, unitOption } from '../constantOption'
 import { downloadFile, downloadFileN } from '/@/api/devlocal/download'
 import {
+  checkEncasementNo,
   checkEncasementShipment,
   confirmEncasementShipments,
   delEncasement,
   doLockEncasement,
+  encasementFreezeUpdate,
   finishWalmartShipment,
   generateAmazonSendShipmentFile,
   generateTemplateFile1,
@@ -1439,15 +1451,18 @@ const closeBoxNumber = () => {
   boxNumberVisible.value = false
 }
 // 箱号的下一步，展示装箱
-const showPacking = () => {
-  boxNumberFormRef.value?.validate((isValid: boolean) => {
-    if (isValid) {
-      boxNumberVisible.value = false
-      packingVisible.value = true
-      passSite.value = boxNumberForm.site
-      encasementNo.value = boxNumberForm.boxNumber!
-    }
-  })
+const showPacking = async () => {
+  const { data } = await checkEncasementNo({ boxNo: encasementNo.value })
+  if (data) {
+    await boxNumberFormRef.value?.validate((isValid: boolean) => {
+      if (isValid) {
+        boxNumberVisible.value = false
+        packingVisible.value = true
+        passSite.value = boxNumberForm.site
+        encasementNo.value = boxNumberForm.boxNumber!
+      }
+    })
+  }
 }
 // 装箱的关闭
 const handlePackingClose = (value: boolean) => {
@@ -1480,6 +1495,18 @@ const handleBackendCheckboxChange = (row: IEncasementList, checked: boolean | st
   } else {
     // 如果取消选中，从selectRows中移除
     selectRows.value = selectRows.value.filter((item: IEncasementList) => item.id !== row.id)
+  }
+}
+
+// 冻结箱号修改
+const updateEncasementFreeze = async (val: any) => {
+  const { data } = await encasementFreezeUpdate({
+    encasementId: val.id,
+    freeze: val.freeze,
+  })
+
+  if (data) {
+    $baseMessage('冻结箱号修改成功！', 'success')
   }
 }
 
@@ -1527,6 +1554,13 @@ const showShippingAmazon = async () => {
     $baseMessage('选中的装箱记录中包含非亚马逊站点，请仅选择发往亚马逊的记录', 'error')
     return
   }
+  // 判断选中行中是否有已停产的记录
+  const discontinuedRows = selectRows.value.filter((item: any) => item.discontinued === 1)
+  if (discontinuedRows.length > 0) {
+    const discontinuedSkus = discontinuedRows.map((item: any) => item.sku).join(',')
+    $baseMessage(`${discontinuedSkus} 被运营标记停产无法发货。如要发货请联系运营取消停产标记后再发。`, 'error')
+    return
+  }
   // 清空上传列表
   fileList.value = []
   const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
@@ -1553,9 +1587,16 @@ const showShippingWalmart = async () => {
     $baseMessage('选中的装箱记录中包含非沃尔玛站点，请仅选择发往沃尔玛的记录', 'error')
     return
   }
+  // 判断选中行中是否有已停产的记录
+  const discontinuedRows = selectRows.value.filter((item: any) => item.discontinued === 1)
+  if (discontinuedRows.length > 0) {
+    const discontinuedSkus = discontinuedRows.map((item: any) => item.sku).join(',')
+    $baseMessage(`${discontinuedSkus} 被运营标记停产无法发货。如要发货请联系运营取消停产标记后再发。`, 'error')
+    return
+  }
   // 清空上传列表
   fileList.value = []
-  const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
+  const encasementIds = selectRows.value.map((item: any) => item.id).join('，')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
     const { data: res } = await getChannelList()

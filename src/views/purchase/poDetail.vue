@@ -10,8 +10,10 @@
             </span>
             <el-button
               v-if="route.query.from !== 'plannedPoDetail' && route.query.from !== 'plannedPoCreate'"
+              v-permissions="{ permission: [PoPermission.PO_SKU_REPLACE] }"
               style="margin-left: 10px"
               type="primary"
+              @click="repleasePoSku"
             >
               SKU替换
             </el-button>
@@ -692,7 +694,7 @@
                       :loading="skuLoading"
                       placeholder="点击输入和搜索"
                       remote
-                      :remote-method="remotePeopleMethod"
+                      :remote-method="remoteSkuAllMethod"
                       @change="handleCreatePlanPo"
                     >
                       <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -1776,7 +1778,7 @@
             :loading="skuLoading"
             placeholder="点击输入和搜索"
             remote
-            :remote-method="remotePeopleMethod"
+            :remote-method="remoteSkuAllMethod"
           >
             <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
@@ -1824,6 +1826,29 @@
         <el-button v-if="route.query.tab !== 'view'" type="primary" @click="handleConfirmModify">确定</el-button>
       </template>
     </vab-dialog>
+
+    <vab-dialog v-model="repleaseVisiable" title="SKU替换" width="500">
+      <el-form>
+        <el-form-item label="替换的SKU">
+          <el-select
+            v-model.trim="repleaseSku"
+            clearable
+            filterable
+            :loading="skuLoading"
+            placeholder="请输入替换Sku"
+            remote
+            :remote-method="remoteSkuAllMethod"
+            @change="handleRepleaseSku"
+          >
+            <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="cancleRepleaseSkuConfirm">取消</el-button>
+        <el-button type="primary" @click="repleaseSkuConfirm">替换</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
@@ -1854,6 +1879,7 @@ import {
   getPoSkuList,
   getPurchaseComponentCustomInfo,
   getPurchaseSKU,
+  purchaseSkuReplace,
   submitPurchaseComponent,
   submitPurchaseConsumable,
   updateAllComponentPrice,
@@ -1875,6 +1901,7 @@ import {
   updateSkuImg,
   uploadComponentImg,
 } from '/@/api/devlocal/purchasePo'
+import PoPermission from '/@/permissions/po'
 import { useRoutesStore } from '/@/store/modules/routes'
 import { useSkuStore } from '/@/store/modules/sku'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -2081,7 +2108,7 @@ const addSkuFormRef = ref<FormInstance>()
 const skuLoading = ref(false) //搜索SKU-loading
 const skuOptions = ref<any[]>([]) //搜索选项
 const skuList = ref<any[]>([]) //搜索列表
-const remotePeopleMethod = async (query: string) => {
+const remoteSkuAllMethod = async (query: string) => {
   query = query.trim()
   if (query) {
     const { data } = await getPoSkuList({
@@ -3623,6 +3650,41 @@ const fetchSiteData = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
 }
+
+// SKU 替换
+const repleaseVisiable = ref<boolean>(false)
+const repleaseSku = ref<string>('')
+const repleasePoSku = () => {
+  repleaseVisiable.value = true
+}
+const handleRepleaseSku = (value: any) => {
+  repleaseSku.value = value
+}
+const cancleRepleaseSkuConfirm = () => {
+  repleaseSku.value = ''
+  repleaseVisiable.value = false
+}
+const repleaseSkuConfirm = async () => {
+  console.log(poDetailData)
+  if (repleaseSku.value === '') {
+    $baseMessage('请输入需要替换的sku', 'error')
+    return
+  }
+  $baseConfirm('确认需要进行Sku替换吗？', null, async () => {
+    const { data } = await purchaseSkuReplace({
+      replaceSku: repleaseSku.value,
+      poId: poDetailData.value.id,
+      poSkuId: poDetailData.value.poSkuId,
+    })
+    repleaseSku.value = ''
+    repleaseVisiable.value = false
+    if (data) {
+      $baseMessage('Sku替换成功！', 'success')
+      goBack()
+    }
+  })
+}
+
 const listLoading = ref<boolean>(false)
 // 订货套数是否可改
 const orderCount = ref<boolean>(false)

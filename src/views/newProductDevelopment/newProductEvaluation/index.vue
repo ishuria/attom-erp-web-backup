@@ -75,6 +75,17 @@
               </template>
             </el-tooltip>
           </span>
+          <span v-if="item.label === '年市场容量'">
+            <el-tooltip content="" effect="dark" placement="top">
+              <div class="questionIcon">
+                年市场容量
+                <el-icon><info-filled /></el-icon>
+              </div>
+              <template #content>
+                <div class="custom-tooltip">币种和跑分时手动输入的平均售价币种一致</div>
+              </template>
+            </el-tooltip>
+          </span>
         </template>
         <template #default="{ row }">
           <div v-if="item.label === '关键词趋势'">
@@ -123,7 +134,7 @@
                     分数明细
                   </el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleCopyEvaluation(row.idNo)">
                   <el-link type="primary" underline="never">复制</el-link>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -189,7 +200,7 @@
     </vab-dialog>
     <!-- 跑分明细 -->
     <vab-dialog v-model="benchmarkScoreVisible" title="跑分明细" width="560">
-      <el-table border :data="benchmarkScoreList" :header-cell-style="cellScoreStyle" stripe style="width: fit-content">
+      <el-table border :data="benchmarkScoreList" :header-cell-style="cellScoreStyle" stripe>
         <el-table-column align="left" label="描述" prop="desc" width="290" />
         <el-table-column align="right" label="数量" prop="quantity" width="130" />
         <el-table-column align="right" label="分数" prop="score" width="100">
@@ -239,6 +250,7 @@ import { type TableInstance } from 'element-plus'
 import type { ColumnConfig } from './indexColumns'
 import { indexColumns } from './indexColumns'
 import {
+  copyEvaluation,
   getEstimatedCostAccountingList,
   getEvaluationScoreDetail,
   getEvaluationScoreParameter,
@@ -747,7 +759,15 @@ const updateSharedVisibleValue = (newValue: boolean) => {
 const updatecostAccountingeParamVisible = (newValue: boolean) => {
   costAccountingeParamVisible.value = newValue
 }
-
+const handleCopyEvaluation = async (id: number) => {
+  $baseConfirm(`您确定要复制编号为 ${id} 的新款评估吗？`, null, async () => {
+    const { data } = await copyEvaluation({ id })
+    if (data) {
+      $baseMessage(`复制成功！`, 'success', 'hey')
+      fetchData()
+    }
+  })
+}
 const cellScoreStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '描述') {
     return {

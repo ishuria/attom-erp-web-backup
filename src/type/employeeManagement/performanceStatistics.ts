@@ -247,6 +247,8 @@ export interface IGetUserAttendanceList {
   totalBonus?: number
   noAssessment?: number
   procurementBonusCrossMonth?: number
+  taxRefundPrice?: number
+  taxRefundPriceCrossMonth?: number
 }
 
 export interface IAddAdjustDetailReq {
@@ -286,9 +288,7 @@ export interface IGetAdjustDetail {
 export interface ICheckoutReq {
   userIdList: number[]
 
-  startMonth: string
-
-  endMonth: string
+  checkoutMonth: string
 }
 
 export interface IMinimumMonthlyAssessment {

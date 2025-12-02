@@ -23,29 +23,20 @@
           </el-link>
           <div style="margin-top: 6px">{{ productInfo?.sku || '' }}</div>
           <div style="margin-top: 6px">{{ productInfo?.productDesc || '' }}</div>
-        </div>
-
-        <!-- 第二部分：买家之声和评分 -->
-        <div class="product-info-section">
-          <el-link
-            class="custom-link"
-            :href="`https://www.amazon.com/product-reviews/${productInfo?.asin}`"
-            style="margin-right: 10px; font-weight: 600"
-            target="_blank"
-            type="primary"
-          >
-            买家之声
+          <!-- 第二部分：评分 -->
+          <el-link class="product-info-section" @click="handleGoToReview">
+            <!-- 评分部分 -->
+            <div class="rate-wrapper">
+              <span class="rate-value">{{ productInfo?.rating || 0 }}</span>
+              <span><el-rate v-model="displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+              <span class="rate-count">{{ productInfo?.commentsNumbers || 0 }}</span>
+            </div>
           </el-link>
-          <!-- 评分部分 -->
-          <div class="rate-wrapper">
-            <span class="rate-value">{{ productInfo?.rating || 0 }}</span>
-            <span><el-rate v-model="displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
-            <span class="rate-count">{{ productInfo?.commentsNumbers || 0 }}</span>
-          </div>
         </div>
 
         <!-- 第三部分：VOC满意度和缺陷率 -->
         <div class="product-info-section">
+          <el-link class="custom-link" style="margin-right: 10px; font-weight: 600" type="primary">买家之声</el-link>
           <el-tag v-if="productInfo?.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">极差</el-tag>
           <el-tag v-if="productInfo?.vocSatisfaction === '一般'" class="customTag customTag-fair">一般</el-tag>
           <el-tag v-if="productInfo?.vocSatisfaction === '不合格'" class="customTag customTag-poor">不合格</el-tag>
@@ -130,7 +121,9 @@ const handleImageLoad = () => {
     }
   })
 }
-
+const handleGoToReview = () => {
+  window.open(`https://www.amazon.com/product-reviews/${props.productInfo?.asin}`, '_blank')
+}
 // 监听 props 变化，重新计算图片高度
 watch(
   () => props.productInfo,
@@ -146,10 +139,7 @@ watch(
 <style lang="scss" scoped>
 .product-info-section {
   margin-bottom: 10px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  cursor: pointer;
 }
 
 .customTag {

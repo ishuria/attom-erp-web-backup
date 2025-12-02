@@ -178,16 +178,20 @@ const rules = reactive({
   actualTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
-          callback(new Error('请填写实际税点'))
-        } else {
-          callback()
+        // 如果不是无法开票（invoicing !== 2），则必填
+        if (form.invoicing !== 2) {
+          // 如果值为空，则必填（无论是否自动填充，只要为空就必须填写）
+          if (!value || value === '') {
+            callback(new Error('请填写实际税点'))
+            return
+          }
         }
-        if (/\s/.test(value)) {
+        // 检查空格（如果有值的话）
+        if (value && /\s/.test(value)) {
           callback(new Error('输入不能包含空格'))
-        } else {
-          callback()
+          return
         }
+        callback()
       },
       trigger: 'blur',
     },
@@ -195,16 +199,20 @@ const rules = reactive({
   invoicingTaxRate: [
     {
       validator: (rule: any, value: any, callback: any) => {
-        if (form.invoicing !== 2 && (!value || value === '') && !taxDisabled) {
-          callback(new Error('请填写开票税点'))
-        } else {
-          callback()
+        // 如果不是无法开票（invoicing !== 2），则必填
+        if (form.invoicing !== 2) {
+          // 如果值为空，则必填（无论是否自动填充，只要为空就必须填写）
+          if (!value || value === '') {
+            callback(new Error('请填写开票税点'))
+            return
+          }
         }
-        if (/\s/.test(value)) {
+        // 检查空格（如果有值的话）
+        if (value && /\s/.test(value)) {
           callback(new Error('输入不能包含空格'))
-        } else {
-          callback()
+          return
         }
+        callback()
       },
       trigger: 'blur',
     },
@@ -283,25 +291,26 @@ const handleTaxDisabled = async (value: string) => {
 }
 
 const handleSubmit = async () => {
-  formRef.value?.validate(async (valid: any) => {
-    if (valid) {
-      try {
-        const newConsumable = {
-          componentName: mergedPartName.value,
-          unit: form.unit,
-          suppliser: form.suppliser,
-          invoicing: form.invoicing,
-          actualTaxRate: form.actualTaxRate,
-          invoicingTaxRate: form.invoicingTaxRate,
-          status: form.status,
-          purchaseLink: form.purchaseLink,
-        }
-        emit('submit', newConsumable)
-      } catch (error) {
-        console.error(error)
-      }
+  if (!formRef.value) return
+
+  try {
+    await formRef.value.validate()
+    // 验证通过，提交数据
+    const newConsumable = {
+      componentName: mergedPartName.value,
+      unit: form.unit,
+      suppliser: form.suppliser,
+      invoicing: form.invoicing,
+      actualTaxRate: form.actualTaxRate,
+      invoicingTaxRate: form.invoicingTaxRate,
+      status: form.status,
+      purchaseLink: form.purchaseLink,
     }
-  })
+    emit('submit', newConsumable)
+  } catch (error) {
+    // 验证失败，不提交
+    console.error('表单验证失败:', error)
+  }
 }
 const handleCloseDialog = () => {
   visible.value = false

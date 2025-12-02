@@ -2,6 +2,7 @@
   <div class="cost-container">
     <el-row :gutter="10">
       <el-col :span="8">
+        <!-- 支出构成 -->
         <expense-breakdown-card
           v-loading="expenseLoading"
           card-class="card1"
@@ -23,6 +24,7 @@
         />
       </el-col>
       <el-col :span="8">
+        <!-- 库龄 -->
         <storage-age-card
           v-loading="storageAgeLoading"
           :additional-columns="[{ label: '预估下月费用', minWidth: 120 }]"
@@ -35,118 +37,8 @@
         />
       </el-col>
       <el-col :span="8">
-        <vab-card class="card3" style="height: 150px">
-          <el-container v-loading="packagingLoading" style="display: flex; gap: 10px; align-items: center">
-            <el-aside style="width: 2.5em">
-              <el-text style="letter-spacing: 0.3em; writing-mode: vertical-lr">包装信息</el-text>
-            </el-aside>
-            <!-- 内容 -->
-            <el-main style="flex: 1; padding: 0">
-              <div class="grid-container">
-                <div class="grid-item" data-label="amazon">
-                  <el-tooltip
-                    content="自量产品包装尺寸"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">自量产品包装尺寸</div>
-                  </el-tooltip>
-                  <el-tooltip
-                    :content="`${packagingInformation?.length}×${packagingInformation?.width}×${packagingInformation?.height} cm`"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
-                      {{ packagingInformation?.length }}×{{ packagingInformation?.width }}×{{ packagingInformation?.height }} cm
-                    </div>
-                  </el-tooltip>
-                </div>
-                <div class="grid-item">
-                  <el-tooltip
-                    content="亚马逊产品包装尺寸"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">亚马逊产品包装尺寸</div>
-                  </el-tooltip>
-                  <el-tooltip
-                    :content="`${packagingInformation?.amazonLength}×${packagingInformation?.amazonWidth}×${packagingInformation?.amazonHeight} cm`"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
-                      {{ packagingInformation?.amazonLength }}×{{ packagingInformation?.amazonWidth }}×{{
-                        packagingInformation?.amazonHeight
-                      }}
-                      cm
-                    </div>
-                  </el-tooltip>
-                </div>
-
-                <div class="grid-item">
-                  <el-tooltip
-                    content="重量 (自量/亚马逊)"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">重量 (自量/亚马逊)</div>
-                  </el-tooltip>
-                  <el-tooltip
-                    :content="`${packagingInformation?.weight}g / ${packagingInformation?.amazonWeight}g`"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
-                      {{ packagingInformation?.weight }}g / {{ packagingInformation?.amazonWeight }}g
-                    </div>
-                  </el-tooltip>
-                </div>
-                <div class="grid-item" data-label="fba">
-                  <el-tooltip
-                    content="FBA (自量/亚马逊)"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-title" @mouseenter="tooltipIsDisHandler($event)">FBA (自量/亚马逊)</div>
-                  </el-tooltip>
-                  <el-tooltip
-                    :content="`${packagingInformation?.selfAssessmentFba} / ${packagingInformation?.amazonFba}`"
-                    :disabled="isOverflow"
-                    effect="dark"
-                    placement="top"
-                    popper-style="font-size: var(--el-font-size-base)"
-                  >
-                    <div class="grid-value" @mouseenter="tooltipIsDisHandler($event)">
-                      <span class="grid-value-green">${{ packagingInformation?.selfAssessmentFba }}</span>
-                      /
-                      <span>${{ packagingInformation?.amazonFba }}</span>
-                    </div>
-                  </el-tooltip>
-                </div>
-              </div>
-            </el-main>
-            <!-- 右侧图片 -->
-            <el-aside :style="{ maxWidth: imageHeight + 'px', maxHeight: imageHeight + 'px', padding: '0' }">
-              <el-image :src="packagingInformation?.imgUrl" style="display: block; border-radius: 10px">
-                <template #error><el-icon /></template>
-              </el-image>
-            </el-aside>
-          </el-container>
-        </vab-card>
+        <!-- 包装信息 -->
+        <vab-packaging-info-card :loading="packagingLoading" :packaging-info="packagingInformation" :sku="props.sku" />
         <!-- 每日成本图表 -->
         <sku-site-daily-cost-chart-card
           v-model:date-range="card4DateRange"
@@ -450,8 +342,6 @@ const queryForm = reactive<IGetOperationAmazonCostListReq>({
   siteId: 0,
 })
 
-const isOverflow = ref(false)
-
 // 支出构成数据
 const data1 = ref<Array<{ name: string; value: number }>>([])
 const expenseLoading = ref<boolean>(false)
@@ -462,8 +352,6 @@ const storageAgeLoading = ref<boolean>(false)
 // 图表数据格式（直接使用后端字段）
 const data3 = ref<IGetSkuSiteDailyCost[]>([])
 const chart3Loading = ref<boolean>(false)
-
-const imageHeight = ref<number>(0)
 
 const card4DateRange = ref<[string, string]>(getLast7DaysStringTime())
 // 计算总和
@@ -636,19 +524,6 @@ const headerCellStyle = (): CSSProperties => {
     textAlign: 'center',
   }
 }
-// 动态设置图片列高度
-const setImageHeight = () => {
-  const dom1 = document.querySelector('div[data-label="amazon"]')
-  const dom2 = document.querySelector('div[data-label="fba"]')
-
-  if (dom1 && dom2) {
-    const height1 = dom1.getBoundingClientRect()
-    const height2 = dom2.getBoundingClientRect()
-    imageHeight.value = height2.bottom - height1.top
-  }
-  // console.log('imageHeight', imageHeight.value);
-}
-
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (['日期', '外汇币种', '汇率', '下一档位', '头程¥', '毛利率', 'ROI'].includes(label)) {
@@ -678,13 +553,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
 }
 
-const tooltipIsDisHandler = (event: any) => {
-  if (event.target.clientWidth < event.target.scrollWidth) {
-    isOverflow.value = false
-  } else {
-    isOverflow.value = true
-  }
-}
 const channelList = ref<{ id: number; label: string }[]>([])
 const siteList = ref<{ id: number; label: string }[]>([])
 // 新增的站点列表，过滤掉沃尔玛
@@ -815,9 +683,6 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  nextTick(() => {
-    setImageHeight()
-  })
   // console.log(var(--el-font-size-base));
 })
 </script>
@@ -873,17 +738,6 @@ onMounted(() => {
       }
     }
   }
-  .card3 {
-    :deep() {
-      .el-card__body {
-        padding-top: 10px;
-        padding-right: 10px;
-        padding-bottom: 0;
-        padding-left: 15px;
-      }
-    }
-    margin-bottom: 10px;
-  }
   .card4 {
     :deep() {
       .el-card__body {
@@ -898,46 +752,6 @@ onMounted(() => {
     &:hover {
       color: #4e88f3;
       cursor: pointer;
-    }
-  }
-  .grid-container {
-    display: grid;
-    grid-template-rows: repeat(2, 1fr); /* 两行 */
-    grid-template-columns: repeat(2, 1fr); /* 两列 */
-    gap: 10px; /* 单元格间隙 */
-    justify-content: flex-end;
-
-    .grid-item {
-      padding: 10px 5px 5px 10px;
-      overflow: hidden;
-      text-align: left;
-      background-color: #f2f5fa;
-      border: 0;
-      border-radius: 5px;
-
-      .grid-title {
-        padding: 0 0 5px 0;
-        margin-bottom: 3px;
-        overflow: hidden;
-        color: #606266;
-        text-overflow: ellipsis;
-        white-space: nowrap; /* 防止文字换行 */
-      }
-      .grid-value {
-        overflow: hidden;
-        font-size: var(--el-font-size-base);
-        font-weight: 550;
-        color: #4e88f3;
-        text-overflow: ellipsis;
-        white-space: nowrap; /* 防止文字换行 */
-
-        &-green {
-          color: #24ada1;
-        }
-        &-red {
-          color: #d14d4d;
-        }
-      }
     }
   }
 }

@@ -13,7 +13,7 @@
               :max-collapse-tags="1"
               multiple
               placeholder="全部站点"
-              style="width: 220px"
+              style="width: 250px"
               @change="queryData"
             >
               <template #header>
@@ -151,7 +151,7 @@
                 <el-icon><question-filled /></el-icon>
               </div>
               <template #content>
-                <div class="custom-tooltip">总库存+接收中/可售库存</div>
+                <div class="custom-tooltip">总库存(接收中)/可售库存</div>
               </template>
             </el-tooltip>
           </span>
@@ -165,6 +165,11 @@
                 <div class="custom-tooltip">过去30天的结算净利润率</div>
               </template>
             </el-tooltip>
+          </span>
+          <span v-if="item.label === '春节最晚订货日'">
+            春节最晚
+            <br />
+            订货日
           </span>
         </template>
         <template #default="{ row }">
@@ -250,7 +255,7 @@
           <span v-if="item.label === '剩余库存'">
             {{ row.fbaCount }}
             <span style="color: var(--el-color-warning)">
-              {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+              {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `(${row.acceptingCount})` }}
             </span>
             / {{ row.availableInventory }}
           </span>
@@ -406,6 +411,9 @@
       <el-form class="noneHoverTable" style="margin: auto 0">
         <el-form-item label="春节备货">
           <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
+        </el-form-item>
+        <el-form-item label="春节订货截止日期" label-position="top">
+          <el-date-picker v-model="stockUpForm.springFestivalOrderDeadline" clearable type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
         <el-form-item label="节后开工日期" label-position="top">
           <el-date-picker v-model="stockUpForm.startDate" type="date" value-format="YYYY-MM-DD" />
@@ -706,6 +714,8 @@ const handleConfirmSpringFestival = async () => {
     stockUpVisible.value = false
   } else if (data === -1) {
     $baseMessage('有任务执行中', 'warning')
+  } else if (data === null) {
+    $baseMessage('修改成功', 'success')
   }
 }
 // 打开春节备货
@@ -903,11 +913,11 @@ const handleWidth = (item: any) => {
     case '最近入库': {
       return 120
     }
-    case '订货#': {
-      const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
-      const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
-      return Math.max(width1, width2)
-    }
+    // case '订货#': {
+    //   const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
+    //   const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
+    //   return Math.max(width1, width2)
+    // }
     case 'ASIN': {
       return Number(item.minWidth) + 10
     }
@@ -1026,6 +1036,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
+  // // 初始化时全选所有站点
+  // if (data && data.length > 0) {
+  //   site.value = data.map((item) => item.id)
+  //   checkAll.value = true
+  //   indeterminate.value = false
+  // }
 }
 // 获取运营列表
 const fetchOperateUserList = async () => {

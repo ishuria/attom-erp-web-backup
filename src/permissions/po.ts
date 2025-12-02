@@ -25,6 +25,12 @@ class PoPermission {
   static readonly PAY_RECORD = 'purchase:pay:record'
   /** 发布打包任务按钮权限 */
   static readonly PACKAGE_TASK_REPLEASE = 'purchase:packageTask:release'
+  /** PoSku替换按钮 */
+  static readonly PO_SKU_REPLACE = 'purchase:sku:replace'
+  /** Po自动付款-添加合同路径 */
+  static readonly PO_AUTO_PAY_ADD_PATH = 'purchase:auto:pay:add:path'
+  /**Po自动付款-记录列表查询 */
+  static readonly PO_AUTO_PAY_LIST = 'purchase:auto:pay:list'
 }
 
 export default PoPermission

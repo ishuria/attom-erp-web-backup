@@ -170,6 +170,8 @@ export function getOperationLog(data: {
   type: number
   pageNo: number
   pageSize: number
+  startDate: string
+  endDate: string
 }): Promise<IGetOperationLogRes> {
   return request({
     url: `${BASE_API}/product/analysis/operation/log`,

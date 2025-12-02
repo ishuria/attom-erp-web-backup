@@ -399,9 +399,6 @@ const fetchVariantsData = async () => {
   try {
     const { data } = await reviewStepNo3VariantList({ reviewId: parseInt(route.query.reviewId) })
     variantsList.value = data
-    variantsList.value.forEach((item: any) => {
-      item.tariff = (item.tariff * 100).toFixed(0)
-    })
   } catch (error) {
     console.error(error)
   }

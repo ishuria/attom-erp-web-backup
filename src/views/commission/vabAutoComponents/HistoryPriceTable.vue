@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" title="历史价格" width="800px">
+    <vab-dialog v-model="visible" title="历史价格" width="900px">
       <div v-if="beforePrice || afterPrice" class="price-summary">
         <!-- 展示降本申请优化前和优化后价格 -->
         <div class="price-cards">
@@ -42,6 +42,12 @@
         <el-table-column label="出厂单价" min-width="100" prop="unitPrice" />
         <el-table-column label="开票" min-width="100" prop="invoicing" />
         <el-table-column label="采购方" min-width="100" prop="purchase" />
+        <el-table-column label="已付款" min-width="90" prop="payPrice">
+          <template #default="{ row }">
+            <vab-icon v-if="row.payPrice" icon="checkbox-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
+            <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
+          </template>
+        </el-table-column>
         <template #empty>
           <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
         </template>

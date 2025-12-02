@@ -426,6 +426,12 @@ export const trendOverviewColumns = [
     isFixed: 'left',
   },
   {
+    label: '销量(订单)',
+    prop: 'volume',
+    checked: true,
+    minWidth: 100,
+  },
+  {
     label: '销售额(订单)',
     prop: 'amount',
     checked: true,
@@ -435,26 +441,17 @@ export const trendOverviewColumns = [
     },
   },
   {
-    label: '销量(订单)',
-    prop: 'volume',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '广告销量',
-    prop: 'adSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '自然销量',
-    prop: 'organicSales',
-    checked: true,
-    minWidth: 100,
-  },
-  {
     label: '广告销售额',
     prop: 'adSalesAmount',
+    checked: true,
+    minWidth: 110,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
+  },
+  {
+    label: '自然销售额',
+    prop: 'organicSalesAmount',
     checked: true,
     minWidth: 110,
     formatter: (_row: any, _column: any, cellValue: any) => {
@@ -524,24 +521,24 @@ export const trendOverviewColumns = [
     checked: true,
     minWidth: 90,
   },
-  {
-    label: '广告转化率',
-    prop: 'adConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
-  {
-    label: '自然转化率',
-    prop: 'organicConversionRate',
-    checked: true,
-    minWidth: 110,
-    formatter: (_row: any, _column: any, cellValue: any) => {
-      return cellValue != null ? `${cellValue}%` : ''
-    },
-  },
+  // {
+  //   label: '广告转化率',
+  //   prop: 'adConversionRate',
+  //   checked: true,
+  //   minWidth: 110,
+  //   formatter: (_row: any, _column: any, cellValue: any) => {
+  //     return cellValue != null ? `${cellValue}%` : ''
+  //   },
+  // },
+  // {
+  //   label: '自然转化率',
+  //   prop: 'organicConversionRate',
+  //   checked: true,
+  //   minWidth: 110,
+  //   formatter: (_row: any, _column: any, cellValue: any) => {
+  //     return cellValue != null ? `${cellValue}%` : ''
+  //   },
+  // },
   {
     label: '综合转化率',
     prop: 'totalConversionRate',
@@ -709,3 +706,154 @@ export const trendOverviewColumns = [
     minWidth: 130,
   },
 ]
+
+// VabTrendOverview 组件配置
+export const trendOverviewCardConfig = [
+  {
+    title: '销量(订单)',
+    colorType: 'orange' as const,
+  },
+  {
+    title: '销售额(订单)',
+    colorType: 'primary' as const,
+  },
+  {
+    title: '广告花费',
+    colorType: 'green' as const,
+  },
+  {
+    title: 'ACOS',
+    colorType: 'red' as const,
+  },
+  {
+    title: '点击成本',
+    colorType: 'purple' as const,
+  },
+  {
+    title: 'TACOS',
+    colorType: 'yellow' as const,
+  },
+]
+
+export const trendOverviewDropdownItems = [
+  { label: '销量(订单)', disabled: false },
+  { label: '销售额(订单)', disabled: false },
+  { label: '广告花费', disabled: false },
+  { label: '净利润(订单)', disabled: false },
+  { label: '预计下月仓储费', disabled: false },
+  { label: '退款金额', disabled: false },
+  { label: '点击成本', disabled: false },
+  { label: '客单价', disabled: false },
+  { label: 'CPA(获客成本)', disabled: false },
+  { label: '综合转化率', disabled: false },
+  { label: '退货率', disabled: false },
+  { label: '退款率', disabled: false },
+  { label: '净利润率', disabled: false },
+  { label: 'TACOS', disabled: false },
+  { label: 'ACOS', disabled: false },
+  { label: '广告点击率', disabled: false },
+  { label: '总访客', disabled: false },
+  { label: 'PC端访客', disabled: false },
+  { label: '移动端访客', disabled: false },
+  { label: '自然点击', disabled: false },
+  { label: '自然点击占比', disabled: false },
+  { label: '广告点击占比', disabled: false },
+  { label: 'Rating', disabled: false },
+  { label: '库存', disabled: false },
+  { label: '小类排名', disabled: false },
+  { label: '大类排名', disabled: false },
+  { label: '广告点击', disabled: false },
+  { label: '广告展现量', disabled: false },
+  { label: '退货量', disabled: false },
+  { label: '销售额(利润报表)', disabled: false },
+  { label: '净利润(利润报表)', disabled: false },
+]
+
+export const trendOverviewGroups = {
+  price1: ['销售额(订单)', '广告花费', '净利润(订单)', '预计下月仓储费', '退款金额', '销售额(利润报表)', '净利润(利润报表)'],
+  price2: ['点击成本', '客单价', 'CPA(获客成本)'],
+  percent1: ['综合转化率'],
+  percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
+  percent3: ['广告点击率'],
+  int1: ['销量(订单)', '广告销量', '自然销量', '总访客', 'PC端访客', '移动端访客', '自然点击', '广告点击', '自然点击占比', '广告点击占比'],
+  int2: ['Rating'],
+  int3: ['库存'],
+  int4: ['小类排名'],
+  int5: ['大类排名'],
+  int6: ['广告展现量'],
+  int7: ['退货量'],
+}
+
+export const trendOverviewNameMapProp: Record<string, string> = {
+  '销量(订单)': 'volume',
+  '销售额(订单)': 'amount',
+  广告销售额: 'adSalesAmount',
+  自然销售额: 'organicSalesAmount',
+  广告花费: 'spend',
+  '净利润(订单)': 'grossOrderProfit',
+  预计下月仓储费: 'estimatedStorageCostNextMonth',
+  退款金额: 'returnAmount',
+  点击成本: 'clickCost',
+  客单价: 'averageOrderValue',
+  'CPA(获客成本)': 'cpa',
+  综合转化率: 'totalConversionRate',
+  退货率: 'returnRate',
+  退款率: 'refundRate',
+  净利润率: 'netProfitMargin',
+  TACOS: 'tacos',
+  ACOS: 'acos',
+  广告点击率: 'adClickRate',
+  总访客: 'sessionsTotal',
+  PC端访客: 'sessions',
+  移动端访客: 'sessionsMobile',
+  自然点击: 'organicClicks',
+  自然点击占比: 'organicClickShare',
+  广告点击占比: 'adClickShare',
+  Rating: 'lastStar',
+  库存: 'stock',
+  小类排名: 'smallRank',
+  大类排名: 'largeRank',
+  广告点击: 'clicks',
+  广告展现量: 'impressions',
+  退货量: 'returnGoodsCount',
+  '销售额(利润报表)': 'totalSalesAmount',
+  '净利润(利润报表)': 'grossProfit',
+}
+
+// VabTrendOverview 组件类型定义
+export type IDataProp =
+  | 'amount'
+  | 'volume'
+  | 'organicSalesAmount'
+  | 'adSalesAmount'
+  | 'spend'
+  | 'grossOrderProfit'
+  | 'estimatedStorageCostNextMonth'
+  | 'returnAmount'
+  | 'clickCost'
+  | 'averageOrderValue'
+  | 'cpa'
+  | 'adConversionRate'
+  | 'organicConversionRate'
+  | 'totalConversionRate'
+  | 'returnRate'
+  | 'refundRate'
+  | 'netProfitMargin'
+  | 'tacos'
+  | 'acos'
+  | 'adClickRate'
+  | 'sessionsTotal'
+  | 'sessions'
+  | 'sessionsMobile'
+  | 'organicClicks'
+  | 'organicClickShare'
+  | 'adClickShare'
+  | 'lastStar'
+  | 'stock'
+  | 'smallRank'
+  | 'largeRank'
+  | 'clicks'
+  | 'impressions'
+  | 'returnGoodsCount'
+  | 'totalSalesAmount'
+  | 'grossProfit'

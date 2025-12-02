@@ -1,6 +1,7 @@
 export const taskTypeOption = [
   { label: '老品优化', value: '老品优化' },
   { label: '临时任务', value: '临时任务' },
+  { label: '设计任务', value: '设计任务' },
 ]
 export const productClassificationOption = [
   { label: '精品', value: 0 },

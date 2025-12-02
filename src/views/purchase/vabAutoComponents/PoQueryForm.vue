@@ -2,7 +2,7 @@
   <el-form v-permissions="{ permission: [PoPermission.QUERY] }" inline :model="queryForm" @submit.prevent>
     <!-- 报关状态筛选 -->
     <el-form-item label="">
-      <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="width: 150px" @change="$emit('query')">
+      <el-select v-model="queryForm.customsStatus" clearable placeholder="报关状态筛选" style="max-width: 140px" @change="$emit('query')">
         <el-option label="全部报关状态" :value="-1" />
         <el-option label="报关" :value="0" />
         <el-option label="不报关" :value="1" />
@@ -14,7 +14,7 @@
         v-model="queryForm.publisher"
         clearable
         placeholder="发布人筛选"
-        style="width: 150px"
+        style="max-width: 120px"
         value-key="userId"
         @change="$emit('query')"
       >

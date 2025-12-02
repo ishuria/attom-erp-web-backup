@@ -113,10 +113,22 @@ export function updateSharePerson(data?: IEvaluationSharePersonReq) {
  * @param params 参数
  * @returns Promise
  */
-export function checkPlagiarisme(params: { amazonFrontendKeywords: string, amazonBackendKeywords: string}): Promise<{ data: string[] }> {
+export function checkPlagiarisme(params: { amazonFrontendKeywords: string; amazonBackendKeywords: string }): Promise<{ data: string[] }> {
   return request({
     url: `${BASE_API}/evaluation/plagiarism/check`,
     method: 'get',
+    params,
+  })
+}
+/**
+ * 复制新款评估
+ * @param params 参数
+ * @returns
+ */
+export function copyEvaluation(params: { id: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/evaluation/copy`,
+    method: 'post',
     params,
   })
 }

@@ -8,6 +8,8 @@ export interface IReviewQueryReq {
   // 每页大小
   pageSize: number
   status: number
+  orderByField?: string
+  orderDirection?: string
 }
 
 /**
@@ -359,6 +361,7 @@ export interface IReviewStepNo1Req {
    * 变体列表
    */
   variantList: IReviewStepNo1Variant[]
+  reason: string
 }
 
 export interface IReviewStepNo1Variant {

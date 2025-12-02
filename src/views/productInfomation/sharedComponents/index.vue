@@ -59,6 +59,11 @@
           <el-checkbox v-model="row.type" :false-value="0" :true-value="1" @change="handleUpdateComponentType(row)" />
         </template>
       </el-table-column>
+      <el-table-column label="历史SKU" min-width="200" prop="historySku">
+        <template #default="{ row }">
+          <span class="history-sku-text">{{ row.historySku }}</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="{ row }">
           <el-space>
@@ -340,5 +345,9 @@ onBeforeMount(() => {
 }
 .el-checkbox {
   transform: scale(1.3);
+}
+.history-sku-text {
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 </style>

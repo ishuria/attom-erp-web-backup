@@ -960,3 +960,38 @@ export interface IPacakgeTaskReq {
   poId: number
   count: number
 }
+
+export interface IPurchaseSkuReplace {
+  replaceSku: string
+  poId: number
+  poSkuId: number
+}
+
+/** 添加Po自动付款路径 */
+export interface IPurchasePoAutoPay {
+  path: string
+  payProportion?: number
+  balancePayment?: number
+}
+
+/** 自动付款路预览查询 */
+
+export interface IPurchasePoAutoPayQueryItem {
+  addUserName: string
+  componentName: string
+  createTime: string
+  createUserID: number
+  currency: string
+  id: number
+  path: string
+  payPrice: number
+  po: string
+  poComponentID: number
+  proportion: number
+  purchase: string
+  remainingPrice: number
+  sku: string
+  status: string
+  suppliser: string
+  taxIncludedPrice: number
+}

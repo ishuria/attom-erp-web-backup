@@ -75,7 +75,7 @@ steps:
           }
         }
     when:
-      branch: local-dev
+      branch: test
 
       # 部署到测试环境
   - name: deploy-run-test
@@ -91,7 +91,7 @@ steps:
       script:
         - cd ~/app/erp/web && docker compose pull && docker compose up -d
     when:
-      branch: local-dev
+      branch: test
 
   # prod 开始通知
   - name: feishu-notify-prod-start
@@ -184,7 +184,7 @@ steps:
           }
         }
     when:
-      branch: local-dev
+      branch: test
 
   # prod 结束通知
   - name: feishu-notify-prod-end
@@ -227,5 +227,5 @@ volumes:
 # matster分支触发构建
 trigger:
   branch:
-    - local-dev
+    - test
     - prod

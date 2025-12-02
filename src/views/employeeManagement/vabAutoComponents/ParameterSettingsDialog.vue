@@ -1,23 +1,21 @@
 <template>
   <div>
     <vab-dialog v-model="visible" title="参数设定" width="16%">
-      <el-form ref="parameterSettingsFormRef" :model="parameterSettingsForm" :rules="parameterSettingsRules" style="margin-left: 0; margin-right: 0; margin-bottom: 20px;" >
+      <el-form
+        ref="parameterSettingsFormRef"
+        :model="parameterSettingsForm"
+        :rules="parameterSettingsRules"
+        style="margin-left: 0; margin-right: 0; margin-bottom: 20px"
+      >
         <el-form-item label="最大超额完成数" prop="count">
           <el-input v-model="parameterSettingsForm.count" clearable />
         </el-form-item>
       </el-form>
       <el-table border :data="list" @cell-click="cellClick">
         <el-table-column label="姓名" prop="userName" />
-        <el-table-column
-          class-name="editable-column"
-          label="最低每月考核数"
-          prop="minMonthlyAssessment"
-        >
+        <el-table-column class-name="editable-column" label="每月最少需要完成数" prop="minMonthlyAssessment">
           <template #default="{ row }">
-            <div
-              class="editable-cell"
-              :class="{ 'show-border': editRow !== row }"
-            >
+            <div class="editable-cell" :class="{ 'show-border': editRow !== row }">
               <el-input
                 v-if="editRow === row"
                 ref="inputRef"
@@ -40,7 +38,12 @@
 <script lang="ts" setup>
 import { ElInput, FormInstance } from 'element-plus'
 import { isEqual } from 'lodash-es'
-import { getMaximumOverfulfillment, getMinimumMonthlyAssessments, updateMaximumOverfulfillment, updateMinimumMonthlyAssessment } from '/@/api/devlocal/performanceStatistics'
+import {
+  getMaximumOverfulfillment,
+  getMinimumMonthlyAssessments,
+  updateMaximumOverfulfillment,
+  updateMinimumMonthlyAssessment,
+} from '/@/api/devlocal/performanceStatistics'
 import { IMinimumMonthlyAssessment } from '/@/type/employeeManagement/performanceStatistics'
 
 defineOptions({
@@ -57,14 +60,17 @@ const visible = computed({
   },
   set(val) {
     emit('update:modelValue', val)
-  }
+  },
 })
-watch(() => props.modelValue, async (val) => {
-  if (val) {
-    await fetchData()
-    await fetchMinimumMonthlyAssessments()
+watch(
+  () => props.modelValue,
+  async (val) => {
+    if (val) {
+      await fetchData()
+      await fetchMinimumMonthlyAssessments()
+    }
   }
-})
+)
 const parameterSettingsForm = reactive<any>({
   count: undefined,
 })
@@ -88,7 +94,7 @@ const updateParameterSettings = async () => {
         number: parameterSettingsForm.count,
       })
       if (data) {
-        $baseMessage("修改成功！", 'success')
+        $baseMessage('修改成功！', 'success')
       }
     }
   })
@@ -130,7 +136,6 @@ const clickCancel = async (row: IMinimumMonthlyAssessment) => {
     Object.assign(row, copyRow.value)
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -140,7 +145,6 @@ const clickCancel = async (row: IMinimumMonthlyAssessment) => {
   }
 
   :deep(.editable-cell) {
-    
     // 统一高度的边框盒子（仅在非编辑状态下出现）
     &.show-border {
       padding: 4px;
@@ -152,6 +156,4 @@ const clickCancel = async (row: IMinimumMonthlyAssessment) => {
     }
   }
 }
-
-
 </style>

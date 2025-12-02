@@ -221,6 +221,20 @@
     <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
   </span>
 
+  <!-- 半年有货率 -->
+  <span v-else-if="item.label === '半年有货率'">
+    <el-text v-if="row.availableRate != null && row.availableRate >= 0.95" type="success">
+      {{ formatPercentage(row.availableRate, 0) }}
+    </el-text>
+    <el-text v-else-if="row.availableRate != null && row.availableRate >= 0.9" type="warning">
+      {{ formatPercentage(row.availableRate, 0) }}
+    </el-text>
+    <el-text v-else-if="row.availableRate != null && row.availableRate < 0.9" type="danger">
+      {{ formatPercentage(row.availableRate, 0) }}
+    </el-text>
+    <span v-else>{{ formatPercentage(row.availableRate, 0) }}</span>
+  </span>
+
   <!-- 通用百分比字段（0位小数） -->
   <span v-else-if="label4Set.has(item.label)">
     {{ formatPercentage(row[label4Map.get(item.label) as string], 0) }}
@@ -345,7 +359,7 @@
   <span v-else-if="item.label === '剩余库存'">
     {{ row.fbaCount }}
     <span style="color: var(--el-color-warning)">
-      {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `+${row.acceptingCount}` }}
+      {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `(${row.acceptingCount})` }}
     </span>
     / {{ row.availableInventory }}
   </span>
@@ -694,12 +708,12 @@ const goToReview = (asin: string) => {
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  width: 16px !important;
-  height: 16px !important;
+  width: 24px !important;
+  height: 20px !important;
   padding: 0 !important;
   margin: -2px 0 0 0;
   border-radius: 4px !important;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1;
 

@@ -292,6 +292,8 @@ export interface ITrendOverview {
   amount?: number
   /** 销量 */
   volume?: number
+  /** 自然销售额 */
+  organicSalesAmount?: number
   /** 广告销售额 */
   adSalesAmount?: number
   /** 广告花费【组成广告花费项目的总计】 */

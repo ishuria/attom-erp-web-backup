@@ -20,7 +20,14 @@
       </el-row>
       <vab-query-form>
         <vab-query-form-right-panel :span="24">
-          <el-radio-group v-model="radio" size="small" @change="handleSwitchTime">
+          <el-switch
+            v-model="showOperationLogMarkPoint"
+            active-text="显示操作日志"
+            inactive-text="隐藏操作日志"
+            style="margin-right: 20px"
+            @change="handleToggleMarkPoint"
+          />
+          <el-radio-group v-model="radio" size="small" @change="() => handleSwitchTime()">
             <el-radio-button label="日" value="day" />
             <el-radio-button label="周" value="week" />
             <el-radio-button label="月" value="month" />
@@ -84,6 +91,23 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <!-- 操作日志明细对话框 -->
+    <vab-dialog v-model="operationLogDialogVisible" title="操作日志明细" width="45%">
+      <el-table border :data="operationLogDetailList" max-height="700">
+        <el-table-column align="center" label="日期" prop="date" width="190" />
+        <el-table-column align="center" label="类型" prop="type" width="100" />
+        <el-table-column label="内容" min-width="170" prop="content">
+          <template #default="{ row }">
+            <el-link class="content-link" type="primary">
+              <span class="content-text">{{ row.content }}</span>
+            </el-link>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+        </template>
+      </el-table>
+    </vab-dialog>
   </div>
 </template>
 
@@ -91,9 +115,16 @@
 import { Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { trendOverviewColumns } from '../constantOption'
-import { getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
-import { ICardSummary, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
+import {
+  trendOverviewCardConfig,
+  trendOverviewColumns,
+  trendOverviewDropdownItems,
+  trendOverviewGroups,
+  trendOverviewNameMapProp,
+  type IDataProp,
+} from '../constantOption'
+import { getOperationLog, getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
+import { ICardSummary, IGetOperationLog, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString, getWeekOfYear } from '/@/utils/dateUtils'
 
 defineOptions({
@@ -107,6 +138,7 @@ interface Props {
   selectDateRange?: [string, string] // 日期范围
   selectedSku?: string // 选择的SKU（当selectField为0时使用）
   selectedSite?: number | undefined // 选择的站点
+  asin?: string // ASIN，用于获取操作日志
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -115,6 +147,7 @@ const props = withDefaults(defineProps<Props>(), {
   selectDateRange: () => ['', ''],
   selectedSku: '',
   selectedSite: undefined,
+  asin: '',
 })
 
 const tableLoading = ref<boolean>(false) // 表格加载状态
@@ -140,192 +173,38 @@ const checkList1 = computed(() => {
 })
 // 记录点击的是哪个card
 const clickCard = ref<string>('')
-
-// 卡片配置数组
-const cards = ref([
-  {
-    title: '销售额(订单)',
-    value: '',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'primary' as const,
-  },
-  {
-    title: '广告销售额',
-    value: '',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'orange' as const,
-  },
-  {
-    title: '广告花费',
-    value: '',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'green' as const,
-  },
-  {
-    title: 'ACOS',
-    value: '0.00%',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'red' as const,
-  },
-  {
-    title: '点击成本',
-    value: '0.00',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'purple' as const,
-  },
-  {
-    title: 'TACOS',
-    value: '0.00%',
-    previousValue: '',
-    trendPercentage: '',
-    trendType: 'down' as const,
-    active: false,
-    colorType: 'yellow' as const,
-  },
-])
-
-const dropdownItems = reactive<{ label: string; disabled: boolean }[]>([
-  { label: '销量(订单)', disabled: false },
-  { label: '销售额(订单)', disabled: false },
-  { label: '广告销售额', disabled: false },
-  { label: '广告花费', disabled: false },
-  { label: '净利润(订单)', disabled: false },
-  { label: '预计下月仓储费', disabled: false },
-  { label: '退款金额', disabled: false },
-  { label: '点击成本', disabled: false },
-  { label: '客单价', disabled: false },
-  { label: 'CPA(获客成本)', disabled: false },
-  { label: '广告转化率', disabled: false },
-  { label: '自然转化率', disabled: false },
-  { label: '综合转化率', disabled: false },
-  { label: '退货率', disabled: false },
-  { label: '退款率', disabled: false },
-  { label: '净利润率', disabled: false },
-  { label: 'TACOS', disabled: false },
-  { label: 'ACOS', disabled: false },
-  { label: '广告点击率', disabled: false },
-  { label: '总访客', disabled: false },
-  { label: 'PC端访客', disabled: false },
-  { label: '移动端访客', disabled: false },
-  { label: '自然点击', disabled: false },
-  { label: '自然点击占比', disabled: false },
-  { label: '广告点击占比', disabled: false },
-  { label: 'Rating', disabled: false },
-  { label: '库存', disabled: false },
-  { label: '小类排名', disabled: false },
-  { label: '大类排名', disabled: false },
-  { label: '广告点击', disabled: false },
-  { label: '广告展现量', disabled: false },
-  { label: '退货量', disabled: false },
-  { label: '销售额(利润报表)', disabled: false },
-  { label: '净利润(利润报表)', disabled: false },
-])
-
-const groups = {
-  price1: ['销售额(订单)', '广告销售额', '广告花费', '净利润(订单)', '预计下月仓储费', '退款金额', '销售额(利润报表)', '净利润(利润报表)'],
-  price2: ['点击成本', '客单价', 'CPA(获客成本)'],
-  percent1: ['广告转化率', '自然转化率', '综合转化率'],
-  percent2: ['退货率', '退款率', '净利润率', 'TACOS', 'ACOS'],
-  percent3: ['广告点击率'],
-  int1: ['销量(订单)', '广告销量', '自然销量', '总访客', 'PC端访客', '移动端访客', '自然点击', '广告点击', '自然点击占比', '广告点击占比'],
-  int2: ['Rating'],
-  int3: ['库存'],
-  int4: ['小类排名'],
-  int5: ['大类排名'],
-  int6: ['广告展现量'],
-  int7: ['退货量'],
+// 操作日志相关
+const operationLogCountByDate = ref<Record<string, number>>({}) // 按日期统计的操作日志数量
+const operationLogDialogVisible = ref<boolean>(false) // 操作日志明细对话框显示状态
+const operationLogDetailList = ref<Array<{ date: string; type: string; content: string }>>([]) // 操作日志明细列表
+const showOperationLogMarkPoint = ref<boolean>(true) // 控制操作日志泡泡的显示/隐藏
+const typeMap: Record<number, string> = {
+  0: '手动输入',
+  1: '系统抓取',
+  2: 'SP广告',
 }
+
+// 卡片配置数组（基于常量配置初始化）
+const cards = ref(
+  trendOverviewCardConfig.map((config) => ({
+    title: config.title,
+    value: '',
+    previousValue: '',
+    trendPercentage: '',
+    trendType: 'down' as const,
+    active: false,
+    colorType: config.colorType,
+  }))
+)
+
+// 下拉选项（基于常量配置，需要响应式以支持 disabled 状态）
+const dropdownItems = reactive<{ label: string; disabled: boolean }[]>(trendOverviewDropdownItems.map((item) => ({ ...item })))
+
+// 字段分组配置
+const groups = trendOverviewGroups
+
 // name -> prop (根据 ITrendOverview 接口，与 constantOption.ts 中的 trendOverviewColumns 对应)
-const nameMapProp: Record<string, IDataProp> = {
-  '销售额(订单)': 'amount',
-  '销量(订单)': 'volume',
-  广告销量: 'adSales',
-  自然销量: 'organicSales',
-  广告销售额: 'adSalesAmount',
-  广告花费: 'spend',
-  '净利润(订单)': 'grossOrderProfit',
-  预计下月仓储费: 'estimatedStorageCostNextMonth',
-  退款金额: 'returnAmount',
-  点击成本: 'clickCost',
-  客单价: 'averageOrderValue',
-  'CPA(获客成本)': 'cpa',
-  广告转化率: 'adConversionRate',
-  自然转化率: 'organicConversionRate',
-  综合转化率: 'totalConversionRate',
-  退货率: 'returnRate',
-  退款率: 'refundRate',
-  净利润率: 'netProfitMargin',
-  TACOS: 'tacos',
-  ACOS: 'acos',
-  广告点击率: 'adClickRate',
-  总访客: 'sessionsTotal',
-  PC端访客: 'sessions',
-  移动端访客: 'sessionsMobile',
-  自然点击: 'organicClicks',
-  自然点击占比: 'organicClickShare',
-  广告点击占比: 'adClickShare',
-  Rating: 'lastStar',
-  库存: 'stock',
-  小类排名: 'smallRank',
-  大类排名: 'largeRank',
-  广告点击: 'clicks',
-  广告展现量: 'impressions',
-  退货量: 'returnGoodsCount',
-  '销售额(利润报表)': 'totalSalesAmount',
-  '净利润(利润报表)': 'grossProfit',
-}
-type IDataProp =
-  | 'amount'
-  | 'volume'
-  | 'adSales'
-  | 'organicSales'
-  | 'adSalesAmount'
-  | 'spend'
-  | 'grossOrderProfit'
-  | 'estimatedStorageCostNextMonth'
-  | 'returnAmount'
-  | 'clickCost'
-  | 'averageOrderValue'
-  | 'cpa'
-  | 'adConversionRate'
-  | 'organicConversionRate'
-  | 'totalConversionRate'
-  | 'returnRate'
-  | 'refundRate'
-  | 'netProfitMargin'
-  | 'tacos'
-  | 'acos'
-  | 'adClickRate'
-  | 'sessionsTotal'
-  | 'sessions'
-  | 'sessionsMobile'
-  | 'organicClicks'
-  | 'organicClickShare'
-  | 'adClickShare'
-  | 'lastStar'
-  | 'stock'
-  | 'smallRank'
-  | 'largeRank'
-  | 'clicks'
-  | 'impressions'
-  | 'returnGoodsCount'
-  | 'totalSalesAmount'
-  | 'grossProfit'
+const nameMapProp: Record<string, IDataProp> = trendOverviewNameMapProp as Record<string, IDataProp>
 
 const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week' | 'month'): any[] => {
   const groupedData: Record<string, number> = {}
@@ -337,11 +216,13 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
   const totalSalesData: Record<string, number> = {} // ∑总销量
   const sessionsTotalData: Record<string, number> = {} // ∑总访客
   const clicksData: Record<string, number> = {} // ∑广告点击量
-  const adSalesData: Record<string, number> = {} // ∑广告销量
+  const organicSalesAmountData: Record<string, number> = {} // ∑自然销售额
   const adSalesAmountData: Record<string, number> = {} // ∑广告销售额
   const impressionsData: Record<string, number> = {} // ∑广告展现量
   const pageViewsTotalData: Record<string, number> = {} // ∑pageViewsTotal
   const organicClicksData: Record<string, number> = {} // ∑自然点击量
+  // 用于计算平均值的计数对象（预计下月仓储费和库存需要计算平均值）
+  const countData: Record<string, number> = {}
 
   // 根据时间粒度选择分组方式
   const getTimeKey = (date: string): string => {
@@ -438,24 +319,24 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
 
         break
       }
-      case 'organicConversionRate':
-      case 'adConversionRate': {
-        // 处理自然转化率/广告转化率类型，计算 ∑销量 / ∑点击量
-        if (!groupedData[timeKey]) {
-          adSalesData[timeKey] = 0
-          clicksData[timeKey] = 0
-        }
-        if (type === 'organicConversionRate') {
-          adSalesData[timeKey] += item.organicSales ?? 0
-          clicksData[timeKey] += item.organicClicks ?? 0
-        } else {
-          adSalesData[timeKey] += item.adSales ?? 0
-          clicksData[timeKey] += item.clicks ?? 0
-        }
-        groupedData[timeKey] = formatNumber((adSalesData[timeKey] / clicksData[timeKey]) * 100)
+      // case 'organicConversionRate':
+      // case 'adConversionRate': {
+      //   // 处理自然转化率/广告转化率类型，计算 ∑销量 / ∑点击量
+      //   if (!groupedData[timeKey]) {
+      //     adSalesData[timeKey] = 0
+      //     clicksData[timeKey] = 0
+      //   }
+      //   if (type === 'organicConversionRate') {
+      //     adSalesData[timeKey] += item.organicSales ?? 0
+      //     clicksData[timeKey] += item.organicClicks ?? 0
+      //   } else {
+      //     adSalesData[timeKey] += item.adSales ?? 0
+      //     clicksData[timeKey] += item.clicks ?? 0
+      //   }
+      //   groupedData[timeKey] = formatNumber((adSalesData[timeKey] / clicksData[timeKey]) * 100)
 
-        break
-      }
+      //   break
+      // }
       case 'cpa': {
         // CPA(获客成本), ∑广告花费 / ∑总销量
         if (!groupedData[timeKey]) {
@@ -544,17 +425,35 @@ const getGroupedData = (data: ITrendOverview[], type: IDataProp, groupBy: 'week'
           groupedData[timeKey] = 0
         }
         const value = item[type] ?? 0
-        groupedData[timeKey] += value
-        // 保留两位小数
-        groupedData[timeKey] = formatNumber(groupedData[timeKey])
+        // 预计下月仓储费和库存需要计算平均值
+        if (type === 'estimatedStorageCostNextMonth' || type === 'stock') {
+          groupedData[timeKey] += value
+          // 计数
+          if (!countData[timeKey]) {
+            countData[timeKey] = 0
+          }
+          countData[timeKey]++
+        } else {
+          // 其他类型直接累加
+          groupedData[timeKey] += value
+          // 保留两位小数
+          groupedData[timeKey] = formatNumber(groupedData[timeKey])
+        }
       }
     }
   })
 
-  return Object.keys(groupedData).map((timeKey) => ({
-    date: timeKey,
-    [type]: groupedData[timeKey],
-  }))
+  return Object.keys(groupedData).map((timeKey) => {
+    let value = groupedData[timeKey]
+    // 预计下月仓储费和库存需要计算平均值
+    if ((type === 'estimatedStorageCostNextMonth' || type === 'stock') && countData[timeKey] && countData[timeKey] > 0) {
+      value = formatNumber(value / countData[timeKey])
+    }
+    return {
+      date: timeKey,
+      [type]: value,
+    }
+  })
 }
 // 金额保留两位小数
 const formatNumber = (value: number): number => {
@@ -617,7 +516,7 @@ const updateCardsData = () => {
       } else {
         card.trendPercentage = 'null'
       }
-      // 更新趋势类型（使用类型断言，因为 TypeScript 推断为字面量类型）
+      // 更新趋势类型
       if (summary.changeType) {
         ;(card as { trendType: 'up' | 'down' }).trendType = summary.changeType
       }
@@ -646,7 +545,7 @@ const updateDropdownItemsDisabled = () => {
 
 // 统一的处理下拉项切换
 const handleSwitchItem = (index: number, item: { label: string; disabled: boolean }) => {
-  // 如果卡片已激活，切换字段时自动取消激活
+  // 如果卡片已激活，切换字段时需要先移除旧字段
   if (cards.value[index].active) {
     // 从选中项中移除旧字段
     const oldTitle = cards.value[index].title
@@ -654,8 +553,6 @@ const handleSwitchItem = (index: number, item: { label: string; disabled: boolea
     if (oldIndex > -1) {
       selectedItems.splice(oldIndex, 1)
     }
-    // 取消激活状态
-    cards.value[index].active = false
     // 通知图表移除旧字段
     const oldDataGroup = getGroup(oldTitle) as IDataGroup
     handleSelectionChange(false, oldDataGroup, oldTitle)
@@ -666,6 +563,21 @@ const handleSwitchItem = (index: number, item: { label: string; disabled: boolea
   updateDropdownItemsDisabled()
   // 更新卡片数据（因为字段改变了）
   updateCardsData()
+
+  // 选择展示的项后，直接激活并展示对应的折线
+  cards.value[index].active = true
+  selectedItems.push(item.label)
+  const dataGroup = getGroup(item.label) as IDataGroup
+  const moreThan3 = handleSelectionChange(true, dataGroup, item.label)
+  if (moreThan3) {
+    // 如果超过限制，取消激活
+    cards.value[index].active = false
+    selectedItems.pop()
+  } else {
+    clickCard.value = `card${index + 1}`
+  }
+  // 保存状态
+  saveState()
 }
 
 /**
@@ -684,6 +596,89 @@ function getGroup(item: string): string | null {
 // 初始化选中状态
 let selectedItems: string[] = []
 const option = ref<any>({})
+
+// 获取存储 key
+const getStorageKey = () => {
+  return 'VabTrendOverview'
+}
+
+// 保存状态到 localStorage
+const saveState = () => {
+  try {
+    const state = {
+      cards: cards.value.map((card) => ({
+        title: card.title,
+        active: card.active,
+      })),
+      radio: radio.value,
+      selectedItems: [...selectedItems],
+      showOperationLogMarkPoint: showOperationLogMarkPoint.value,
+    }
+    localStorage.setItem(getStorageKey(), JSON.stringify(state))
+  } catch (error) {
+    console.error('保存状态失败:', error)
+  }
+}
+
+// 从 localStorage 恢复状态
+const restoreState = () => {
+  try {
+    const savedState = localStorage.getItem(getStorageKey())
+    if (!savedState) {
+      return false
+    }
+
+    const state = JSON.parse(savedState)
+
+    // 恢复卡片配置
+    if (state.cards && Array.isArray(state.cards)) {
+      state.cards.forEach((savedCard: { title: string; active: boolean }, index: number) => {
+        if (index < cards.value.length) {
+          // 检查保存的 title 是否在下拉项中存在
+          const isValidTitle = dropdownItems.some((item) => item.label === savedCard.title)
+          if (isValidTitle) {
+            cards.value[index].title = savedCard.title
+            cards.value[index].active = savedCard.active || false
+          }
+        }
+      })
+    }
+
+    // 恢复时间视图
+    if (state.radio && ['day', 'week', 'month'].includes(state.radio)) {
+      radio.value = state.radio
+    }
+
+    // 恢复选中的折线项（需要在数据加载后恢复）
+    if (state.selectedItems && Array.isArray(state.selectedItems)) {
+      selectedItems = state.selectedItems.filter((item: string) => dropdownItems.some((dropdownItem) => dropdownItem.label === item))
+    }
+
+    // 恢复操作日志泡泡显示状态
+    if (typeof state.showOperationLogMarkPoint === 'boolean') {
+      showOperationLogMarkPoint.value = state.showOperationLogMarkPoint
+    }
+
+    return true
+  } catch (error) {
+    console.error('恢复状态失败:', error)
+    return false
+  }
+}
+
+// 恢复折线显示（在数据加载完成后调用）
+const restoreChartLines = () => {
+  // 根据恢复的卡片 active 状态，重新激活折线
+  cards.value.forEach((card, index) => {
+    if (card.active) {
+      const dataGroup = getGroup(card.title) as IDataGroup
+      if (dataGroup) {
+        handleSelectionChange(true, dataGroup, card.title)
+        clickCard.value = `card${index + 1}`
+      }
+    }
+  })
+}
 
 // 根据数据点数量动态计算柱状图宽度
 const calculateBarWidth = (dataLength: number) => {
@@ -830,6 +825,26 @@ const calcYAxisRange = (yAxisIndex: number) => {
     return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
   }
 
+  // 根据 yAxisIndex 找到对应的 dataGroup
+  let dataGroup: IDataGroup | undefined
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (index === yAxisIndex) {
+      dataGroup = group
+      break
+    }
+  }
+
+  // 如果是 Rating 组（int2），固定 min=0, max=5, interval=1
+  if (dataGroup === 'int2') {
+    return {
+      min: 0,
+      max: 5,
+      interval: 1,
+      top: 5,
+      bottom: 0,
+    }
+  }
+
   // 原始最大
   let max = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
   max = max < 0 ? 0 : max
@@ -854,7 +869,24 @@ const calculateAlignedYAxisRanges = () => {
     return calcYAxisRange(index)
   })
 
-  // 如果有多个 y 轴，需要对齐
+  // 记录哪些 Y 轴是 Rating 组（int2），需要保护其范围
+  const ratingYAxisIndices = new Set<number>()
+  for (const [group, index] of yAxisMapping.entries()) {
+    if (group === 'int2') {
+      ratingYAxisIndices.add(index)
+    }
+  }
+
+  // 保存 Rating 组的原始值
+  const ratingOriginalRanges = new Map<number, { min: number; max: number; interval: number; top: number; bottom: number }>()
+  ratingYAxisIndices.forEach((index) => {
+    if (ranges[index]) {
+      ratingOriginalRanges.set(index, { ...ranges[index] })
+    }
+  })
+
+  // 如果有多个 y 轴，需要对齐（但保持各自独立的数据范围）
+  // 每个 Y 轴保持自己的数据范围，只确保 0 值对齐
   if (ranges.length > 1) {
     // 从第一个 y 轴开始，依次与后面的 y 轴对齐
     for (let i = 0; i < ranges.length - 1; i++) {
@@ -897,11 +929,125 @@ const calculateAlignedYAxisRanges = () => {
     }
   }
 
+  // 恢复 Rating 组的原始值（确保固定为 min=0, max=5, interval=1）
+  ratingOriginalRanges.forEach((originalRange, index) => {
+    if (ranges[index]) {
+      ranges[index] = originalRange
+    }
+  })
+
   return ranges
 }
+// 根据数据点数量动态计算泡泡大小，与柱状图宽度成比例
+const calculateSymbolSize = (dataLength: number) => {
+  if (dataLength <= 30) {
+    return 50
+  }
+  if (dataLength <= 60) {
+    return 40
+  }
+  if (dataLength <= 90) {
+    return 30
+  }
+  // 数据点很多时，使用较小的固定大小
+  return 25
+}
 
+// 计算并返回 markPoint 数据
+const calculateMarkPointData = () => {
+  if (radio.value !== 'day' || !option.value.series[0]) {
+    return []
+  }
+
+  const markPointData: any[] = []
+  const dataLength = option.value.xAxis.data.length
+  const symbolSize = calculateSymbolSize(dataLength)
+
+  // 获取当前的数据
+  const adSalesData = option.value.series[1]?.data || []
+  const organicSalesData = option.value.series[0]?.data || []
+
+  option.value.xAxis.data.forEach((date: string, index: number) => {
+    const count = operationLogCountByDate.value[date]
+    if (count && count > 0) {
+      // 计算该日期对应的销售额总和，作为 y 轴位置，让泡泡显示在柱状图最高值的顶部
+      const organicAmount = organicSalesData[index] || 0
+      const adAmount = adSalesData[index] || 0
+      // 如果两个都大于0，那么totalAmount是两个的相加；如果其中一个小于0，那么totalAmount是另一个的值
+      let totalAmount: number = 0
+      if (organicAmount > 0 && adAmount > 0) {
+        totalAmount = organicAmount + adAmount
+      } else if (organicAmount < 0 && adAmount > 0) {
+        totalAmount = adAmount
+      } else if (organicAmount > 0 && adAmount < 0) {
+        totalAmount = organicAmount
+      }
+      const yPosition = totalAmount > 0 ? totalAmount : 0
+      markPointData.push({
+        name: `操作日志`,
+        value: count,
+        xAxis: index,
+        yAxis: yPosition,
+        symbolSize: symbolSize,
+        itemStyle: {
+          color: '#FF9800',
+          borderColor: '#fff',
+          borderWidth: 2,
+        },
+        label: {
+          show: true,
+          formatter: `{c}`,
+          color: '#fff',
+          fontWeight: 'bold',
+        },
+      })
+    }
+  })
+
+  return markPointData
+}
+
+// 更新操作日志 markPoint（独立函数，可在任何时候调用）
+const updateOperationLogMarkPoint = () => {
+  // 确保 series[0] 和 xAxis.data 存在
+  if (!option.value.series[0] || !option.value.xAxis?.data) {
+    return
+  }
+
+  // 如果关闭了显示，清空 markPoint 数据
+  if (!showOperationLogMarkPoint.value) {
+    if (option.value.series[0].markPoint) {
+      option.value.series[0].markPoint.data = []
+    }
+    return
+  }
+
+  if (radio.value === 'day') {
+    const markPointData = calculateMarkPointData()
+    // 确保 markPoint 对象始终存在，只更新 data
+    if (!option.value.series[0].markPoint) {
+      option.value.series[0].markPoint = { data: [] }
+    }
+    option.value.series[0].markPoint.data = markPointData
+  } else {
+    // 非日视图时，保持 markPoint 对象但清空 data
+    if (option.value.series[0].markPoint) {
+      option.value.series[0].markPoint.data = []
+    }
+  }
+}
+
+// 切换 markPoint 显示/隐藏
+const handleToggleMarkPoint = () => {
+  updateOperationLogMarkPoint()
+  updateChart()
+}
 // 切换 日，周，月
-const handleSwitchTime = () => {
+const handleSwitchTime = (shouldSave: boolean = true) => {
+  // 保存状态（恢复状态时不保存）
+  if (shouldSave) {
+    saveState()
+  }
   let adSalesData: any[] = []
   let organicSalesData: any[] = []
   // 图表使用完整数据（fullTrendList），表格使用分页数据（trendList）
@@ -913,22 +1059,22 @@ const handleSwitchTime = () => {
       break
     }
     case 'week': {
-      adSalesData = getWeeklyData(fullTrendList.value, 'adSales')
-      organicSalesData = getWeeklyData(fullTrendList.value, 'organicSales')
+      adSalesData = getWeeklyData(fullTrendList.value, 'adSalesAmount')
+      organicSalesData = getWeeklyData(fullTrendList.value, 'organicSalesAmount')
 
       break
     }
     case 'month': {
-      adSalesData = getMonthlyData(fullTrendList.value, 'adSales')
-      organicSalesData = getMonthlyData(fullTrendList.value, 'organicSales')
+      adSalesData = getMonthlyData(fullTrendList.value, 'adSalesAmount')
+      organicSalesData = getMonthlyData(fullTrendList.value, 'organicSalesAmount')
 
       break
     }
     // No default
   }
   option.value.xAxis.data = adSalesData.map((item: any) => item.date)
-  option.value.series[0].data = adSalesData.map((d: any) => d.adSales)
-  option.value.series[1].data = organicSalesData.map((d: any) => d.organicSales)
+  option.value.series[1].data = adSalesData.map((d: any) => d.adSalesAmount)
+  option.value.series[0].data = organicSalesData.map((d: any) => d.organicSalesAmount)
 
   // 根据数据点数量调整柱状图宽度和 x 轴标签
   const dataLength = option.value.xAxis.data.length
@@ -938,6 +1084,7 @@ const handleSwitchTime = () => {
   updateYAxisData(fullTrendList.value)
   // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
   applyAlignedYAxisRanges()
+  // 更新图表（内部会更新 markPoint）
   updateChart()
 }
 // 更新 Y 轴数据随时间切换的函数（使用完整数据）
@@ -1010,7 +1157,7 @@ const initChart = () => {
         let titleHtmlStr = `<div style="font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px;">${params[0].name}</div>`
 
         // 需要聚合的销量系列名称
-        const salesGroupNames = ['自然销量', '广告销量']
+        const salesGroupNames = ['广告销售额', '自然销售额']
         let salesTotal = 0
         let salesGroupItems: any[] = []
         let otherItems: any[] = []
@@ -1029,6 +1176,13 @@ const initChart = () => {
           }
         })
 
+        // 按照 salesGroupNames 的顺序排序，确保"广告销售额"在"自然销售额"之前
+        salesGroupItems.sort((a, b) => {
+          const indexA = salesGroupNames.indexOf(a.seriesName)
+          const indexB = salesGroupNames.indexOf(b.seriesName)
+          return indexA - indexB
+        })
+
         // 销量组 HTML（类似 PerformanceHistory 的样式）
         let salesGroupHtml = ''
         if (salesGroupItems.length > 0) {
@@ -1045,9 +1199,9 @@ const initChart = () => {
                     margin-right: 9px;
                     color: #333;
                   "></span>
-                  <span>销量(订单)</span>
+                  <span>销售额(订单)</span>
                 </div>
-                <span style="font-weight: bold; color: #333;">${salesTotal.toFixed(0)}</span>
+                <span style="font-weight: bold; color: #333;">${currencySymbol.value}${salesTotal.toFixed(2)}</span>
               </div>
               <div style="margin-top: 2px; padding-left: 10px;">
                 ${salesGroupItems
@@ -1055,7 +1209,7 @@ const initChart = () => {
                     (item) => `
                   <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 1px;">
                     <div style="display: flex; align-items: center;">${item.marker}<span style="margin-left: 5px;">${item.seriesName}</span></div>
-                    <span>${item.value}</span>
+                    <span>${currencySymbol.value}${item.value}</span>
                   </div>
                 `
                   )
@@ -1096,7 +1250,7 @@ const initChart = () => {
         })
 
         return `
-          <div style="padding: 0px; border-radius: 20px; width: 160px;">
+          <div style="padding: 0px; border-radius: 20px; width: 180px;">
             ${titleHtmlStr}
             ${otherHtmlArr.join('')}
             ${salesGroupHtml}
@@ -1113,7 +1267,7 @@ const initChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: fullTrendList.value.map((item: any) => item.date),
+      data: [], // 初始化为空数组，数据加载后通过 handleSwitchTime() 更新
       axisTick: {
         alignWithLabel: true,
       },
@@ -1126,7 +1280,7 @@ const initChart = () => {
     yAxis: [
       {
         type: 'value',
-        name: '广告/自然销量',
+        name: '广告/自然销售额',
         position: 'left',
         nameTextStyle: {
           color: '#409EFF',
@@ -1150,25 +1304,29 @@ const initChart = () => {
     ],
     series: [
       {
-        name: '广告销量',
+        name: '自然销售额',
         type: 'bar',
         yAxisIndex: 0,
-        data: fullTrendList.value.map((item: any) => item.adSales),
-        barWidth: calculateBarWidth(fullTrendList.value.length),
+        data: [],
+        barWidth: 0,
         itemStyle: {
-          color: '#409EFF',
+          color: '#67C23A',
         },
         opacity: 0.9,
         stack: 'sales',
+        // 初始化 markPoint 配置，确保它始终存在
+        markPoint: {
+          data: [],
+        },
       },
       {
-        name: '自然销量',
+        name: '广告销售额',
         type: 'bar',
         yAxisIndex: 0,
-        data: fullTrendList.value.map((item: any) => item.organicSales),
-        barWidth: calculateBarWidth(fullTrendList.value.length),
+        data: [],
+        barWidth: 0,
         itemStyle: {
-          color: '#67C23A',
+          color: '#409EFF',
         },
         opacity: 0.9,
         stack: 'sales',
@@ -1204,6 +1362,9 @@ const applyAlignedYAxisRanges = () => {
 
 // 更新图表
 const updateChart = () => {
+  // 在更新图表之前，先更新 markPoint 数据
+  updateOperationLogMarkPoint()
+
   chartInstance?.setOption(option.value, true) // 第二个参数 `true` 表示合并旧的配置
   // chartInstance?.resize()
 }
@@ -1318,7 +1479,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
         // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
         applyAlignedYAxisRanges()
-        // 更新图表
+        // 更新图表（内部会更新 markPoint）
         updateChart()
         return false
       }
@@ -1397,6 +1558,8 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
 
     // 应用对齐后的 y 轴范围，确保所有 y 轴的 0 值对齐
     applyAlignedYAxisRanges()
+    // 更新图表（内部会更新 markPoint）
+    updateChart()
   } else {
     // 取消选中时，移除选中的字段
     // 如果是多类别字段，需要移除所有相关 series
@@ -1464,6 +1627,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     }
   }
   updateYAxisData(fullTrendList.value)
+  // 更新图表（内部会更新 markPoint）
   updateChart()
   return false
 }
@@ -1587,6 +1751,8 @@ const handleCardClick = (index: number) => {
     cards.value[index].active = false
     selectedItems.pop()
   }
+  // 保存状态
+  saveState()
 }
 const handleChecked = (item: any) => {
   item.checked = !item.checked
@@ -1659,6 +1825,51 @@ const fetchTableData = async () => {
   }
 }
 
+// 获取操作日志数据并按日期统计
+const fetchOperationLogCount = async () => {
+  if (!props.asin || props.selectedSite === undefined) {
+    operationLogCountByDate.value = {}
+    return
+  }
+
+  try {
+    const { data } = await getOperationLog({
+      asin: props.asin,
+      siteId: props.selectedSite,
+      type: -1, // -1 表示获取所有类型
+      pageNo: 1,
+      pageSize: 2147483647, // 获取所有数据 (Integer.MAX_VALUE)
+      startDate: props.selectDateRange[0] || '',
+      endDate: props.selectDateRange[1] || '',
+    })
+
+    // 按日期统计操作日志数量
+    const countByDate: Record<string, number> = {}
+    data.list.forEach((item: IGetOperationLog) => {
+      const dateTime = item.date
+      if (dateTime) {
+        // 将 dateTime 转换为日期字符串（YYYY-MM-DD）
+        let dateStr: string
+        if (dateTime.includes(' ')) {
+          // 格式：2024-01-01 10:00:00
+          dateStr = dateTime.split(' ')[0]
+        } else if (dateTime.length >= 10) {
+          // 如果已经是 YYYY-MM-DD 格式，直接使用
+          dateStr = dateTime.substring(0, 10)
+        } else {
+          // 其他格式，尝试转换为 Date 对象
+          dateStr = formatDateToString(new Date(dateTime))
+        }
+        countByDate[dateStr] = (countByDate[dateStr] || 0) + 1
+      }
+    })
+    operationLogCountByDate.value = countByDate
+  } catch (error) {
+    console.error('获取操作日志数据失败:', error)
+    operationLogCountByDate.value = {}
+  }
+}
+
 // 获取图表数据（完整数据）
 const fetchChartData = async () => {
   chartLoading.value = true
@@ -1672,6 +1883,8 @@ const fetchChartData = async () => {
     currencySymbol.value = data.symbol || ''
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
+    // 获取操作日志数据
+    await fetchOperationLogCount()
   } catch (error) {
     console.error('获取图表数据失败:', error)
     fullTrendList.value = []
@@ -1686,6 +1899,26 @@ watch(
   () => fullTrendList.value,
   () => {
     if (chartInstance && fullTrendList.value.length > 0) {
+      // 如果是第一次加载数据，尝试恢复状态
+      const isFirstLoad = !option.value.xAxis?.data || option.value.xAxis.data.length === 0
+      if (isFirstLoad) {
+        const hasRestored = restoreState()
+        if (hasRestored) {
+          // 更新下拉项禁用状态
+          updateDropdownItemsDisabled()
+          // 更新卡片数据
+          updateCardsData()
+          // 先切换时间视图（这会更新图表数据，恢复状态时不保存）
+          handleSwitchTime(false)
+          // 然后恢复折线显示（需要在下一个 tick，确保图表已更新）
+          nextTick(() => {
+            restoreChartLines()
+            // 恢复完成后保存一次状态
+            saveState()
+          })
+          return
+        }
+      }
       handleSwitchTime()
     }
   },
@@ -1694,7 +1927,7 @@ watch(
 
 // 监听 props 变化，重新获取数据
 watch(
-  () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku],
+  () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku, props.asin],
   () => {
     fetchChartData()
   },
@@ -1708,6 +1941,16 @@ watch(
     fetchTableData()
   }
 )
+// 监听操作日志数据变化，更新图表
+watch(
+  () => operationLogCountByDate.value,
+  () => {
+    if (chartInstance && fullTrendList.value.length > 0 && radio.value === 'day') {
+      handleSwitchTime()
+    }
+  },
+  { deep: true }
+)
 watch(
   () => [props.selectField, props.selectDateRange, props.selectedSku],
   () => {
@@ -1715,6 +1958,36 @@ watch(
   },
   { deep: true }
 )
+
+// 处理操作日志 markPoint 点击事件
+const handleOperationLogClick = async (date: string) => {
+  if (!props.asin || props.selectedSite === undefined) {
+    return
+  }
+
+  try {
+    const { data } = await getOperationLog({
+      asin: props.asin,
+      siteId: props.selectedSite,
+      type: -1, // -1 表示获取所有类型
+      pageNo: 1,
+      pageSize: 10000,
+      startDate: date,
+      endDate: date,
+    })
+
+    // 将接口返回的数据映射到组件需要的格式
+    operationLogDetailList.value = data.list.map((item: IGetOperationLog) => ({
+      date: item.date,
+      type: typeMap[item.type] || '未知',
+      content: item.content,
+    }))
+    operationLogDialogVisible.value = true
+  } catch (error) {
+    console.error('获取操作日志明细失败:', error)
+    $baseMessage('获取操作日志明细失败', 'error')
+  }
+}
 
 onMounted(() => {
   if (chartContainer.value) {
@@ -1726,6 +1999,19 @@ onMounted(() => {
     })
     chartObserver.observe(chartContainer.value)
     initChart()
+
+    // 监听图表点击事件
+    chartInstance.on('click', (params: any) => {
+      // 检查是否点击了 markPoint
+      if (params.componentType === 'markPoint' && params.data) {
+        // 从 markPoint 数据中获取 xAxis 索引，然后获取日期
+        const xAxisIndex = params.data.xAxis
+        if (xAxisIndex !== undefined && option.value.xAxis.data[xAxisIndex]) {
+          const date = option.value.xAxis.data[xAxisIndex]
+          handleOperationLogClick(date)
+        }
+      }
+    })
   }
   fetchChartData()
   fetchTableData()
@@ -1757,5 +2043,14 @@ onBeforeUnmount(() => chartObserver.disconnect())
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+.content-link {
+  display: block;
+  width: 100%;
+
+  .content-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 }
 </style>

@@ -27,7 +27,6 @@
         class="noneHoveTable"
         :data="estimatedCostList"
         :header-cell-style="{ textAlign: 'center' }"
-        stripe
         @cell-click="costAccountingChangeInput"
       >
         <el-table-column label="日期" prop="createTime" width="125">
@@ -601,11 +600,12 @@ const clickCancel = async (event: any, value: IProgressEstimatedCostAccounting) 
     if (t1) t1.classList.add('none')
     if (t2) t2.classList.remove('none')
   }
+  // 无论数据是否变化，都要重新启用拖拽功能
+  isDraggingDisabled.value = false
   if (isEqual(copyRow, value)) {
     return
   }
   table3Loading.value = true
-  isDraggingDisabled.value = false
   await costAccountingUpdate({
     ...value,
     tariff: `${parseFloat(value.tariff!) / 100}`,
@@ -688,7 +688,8 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
   if (firstChild.classList.contains('none')) {
     firstChild.classList.remove('none')
     secondChild.classList.add('none')
-
+    // 进入编辑模式时，禁用拖拽功能，避免干扰输入
+    isDraggingDisabled.value = true
     focusAndSelectInput(cell)
   }
 }
@@ -709,17 +710,32 @@ const handlerSiteChange = async (row: IProgressEstimatedCostAccounting) => {
   }
 }
 
+// debounce 函数引用，用于取消之前的调用
+let debouncedOnEnd: ReturnType<typeof debounce> | null = null
+
 // 内容拖拽排序
-const onEnd = debounce(async () => {
-  try {
-    const idList = estimatedCostList.value.map((item: IProgressEstimatedCostAccounting) => {
-      return item.id
-    })
-    await costAccountingUpdateRowSort(idList)
-  } catch (error) {
-    console.error(error as Error)
+const onEnd = () => {
+  // 取消之前的 debounce（如果存在）
+  if (debouncedOnEnd) {
+    debouncedOnEnd.cancel()
   }
-}, 1000)
+
+  // 创建新的 debounce 函数
+  debouncedOnEnd = debounce(async () => {
+    try {
+      const idList = estimatedCostList.value.map((item: IProgressEstimatedCostAccounting) => {
+        return item.id
+      })
+      await costAccountingUpdateRowSort(idList)
+    } catch (error) {
+      console.error(error as Error)
+    }
+    debouncedOnEnd = null
+  }, 300)
+
+  // 执行 debounce 函数
+  debouncedOnEnd()
+}
 
 // 获取成本核算数据列表
 const fetchDataCostAccounting = async () => {

@@ -32,7 +32,7 @@
       <el-table-column label="总利润" min-width="100" prop="totalProfit">
         <template #default="{ row }">${{ row.totalProfit }}</template>
       </el-table-column>
-      <el-table-column label="当月利润分" min-width="110" prop="monthProfitScore" />
+      <el-table-column label="预计本月利润分" min-width="110" prop="monthProfitScore" />
       <el-table-column label="累计利润分" min-width="115" prop="pileProfitScore" />
 
       <template #empty>

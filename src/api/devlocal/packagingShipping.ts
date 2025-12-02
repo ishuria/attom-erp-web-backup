@@ -550,6 +550,14 @@ export function updatePackageTaskSite(data: IUpdatePackageTaskSite): Promise<IBo
     data,
   })
 }
+// 打包任务-删除
+export function deletePackageTask(params: { id: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/task/delete`,
+    method: 'post',
+    params,
+  })
+}
 
 /**
  * @description 零件签收打印
@@ -722,6 +730,13 @@ export function checkingPackagingTimeError(data: ICheckingPackagingTimeErrorReq)
 export function getNewPackageInspection(params: { sku: string }): Promise<IGetNewPackageInspectionRes> {
   return request({
     url: `${BASE_API}/package/inspection/productManager`,
+    method: 'get',
+    params,
+  })
+}
+export function getNewPackageInspectionImages(params: { sku: string }): Promise<IGetNewPackageInspectionRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/package/img`,
     method: 'get',
     params,
   })

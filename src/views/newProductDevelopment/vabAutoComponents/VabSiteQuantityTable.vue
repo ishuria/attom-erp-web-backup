@@ -101,7 +101,30 @@ const tableData = computed(() => {
   return [...siteQuantityList.value, distributionRow]
 })
 
+// 验证订货数量（当站点是亚马逊US时，必须是5的倍数）
+const validateQuantity = (row: any, siteName: string): boolean => {
+  // 检查是否是亚马逊US站点
+  if (siteName === '亚马逊US美国') {
+    const quantity = Number(row[siteName].quantity)
+    if (row[siteName].quantity && quantity !== 0) {
+      if (isNaN(quantity) || quantity <= 0) {
+        $baseMessage(`${siteName} 的订货数量必须是大于0的数字`, 'error')
+        return false
+      }
+      if (quantity % 5 !== 0) {
+        $baseMessage(`${siteName} 的订货数量必须是5的倍数`, 'error')
+        return false
+      }
+    }
+  }
+  return true
+}
+
 const handleUpdateQuantity = async (row: any, siteName: string) => {
+  // 先验证数量
+  if (!validateQuantity(row, siteName)) {
+    return
+  }
   await updateStepNoQuantity({
     id: row[siteName].id,
     quantity: Number(row[siteName].quantity),

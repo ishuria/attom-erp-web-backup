@@ -15,10 +15,10 @@
         </el-form-item>
 
         <el-form-item label="产品主品名" prop="productName">
-          <el-input v-model="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
+          <el-input v-model.trim="form.productName" clearable placeholder="eg:碗架,硅胶吸管,水杯收纳" />
         </el-form-item>
         <el-form-item label="产品短描述" prop="productDesc">
-          <el-input v-model="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
+          <el-input v-model.trim="form.productDesc" clearable placeholder="eg:20管45×31.7CM" />
         </el-form-item>
         <el-form-item label="主订货站点" prop="site">
           <el-select v-model="form.site" placeholder="选择订货站点" style="width: 240px">
@@ -54,7 +54,13 @@
                       <el-input v-model="item.variantName" clearable placeholder="黑色；白色；1大1小；海洋系列等" style="width: 240px" />
                     </div>
                     <div class="list-item-meta-content">
-                      <el-input v-model.trim="item.quantity" clearable style="width: 240px" />
+                      <el-input
+                        v-model.trim="item.quantity"
+                        clearable
+                        placeholder="订货数量"
+                        style="width: 240px"
+                        @blur="validateQuantity(item, index)"
+                      />
                     </div>
                     <div class="list-item-meta-content">
                       <el-button type="danger" @click="handleDelVariants(index)">删除变体</el-button>
@@ -142,8 +148,8 @@ const rules = reactive<any>({
 const handleVariantSkuMap = async () => {
   if (form.variantSku) {
     const { data } = await reviewSkuInfo({ sku: form.variantSku })
-    form.productName = data.productName
-    form.productDesc = data.productDesc
+    form.productName = data.productName?.replace(/[\n\r]/g, '') || ''
+    form.productDesc = data.productDesc?.replace(/[\n\r]/g, '') || ''
   }
 }
 const handleAddVariants = () => {
@@ -194,7 +200,60 @@ const submitAndContinueLoading = ref<boolean>(false)
 // let firstSave = false // 第一次保存
 const router = useRouter()
 // 当点击保存的时候
+// 去除换行符的辅助函数
+const removeNewlines = () => {
+  if (form.productName) {
+    form.productName = form.productName.replace(/[\n\r]/g, '')
+  }
+  if (form.productDesc) {
+    form.productDesc = form.productDesc.replace(/[\n\r]/g, '')
+  }
+}
+
+// 验证订货数量（当站点是美国亚马逊时，必须是5的倍数）
+const validateQuantity = (item: any, index: number) => {
+  if (form.site === 0 && item.quantity) {
+    const quantity = Number(item.quantity)
+    if (isNaN(quantity) || quantity <= 0) {
+      $baseMessage('订货数量必须是大于0的数字', 'error')
+      return false
+    }
+    if (quantity % 5 !== 0) {
+      $baseMessage(`第${index + 1}个变体的订货数量必须是5的倍数`, 'error')
+      return false
+    }
+  }
+  return true
+}
+
+// 验证所有订货数量
+const validateAllQuantities = (): boolean => {
+  if (form.site === 0) {
+    for (let i = 0; i < form.variantList.length; i++) {
+      const item = form.variantList[i]
+      if (item.quantity) {
+        const quantity = Number(item.quantity)
+        if (isNaN(quantity) || quantity <= 0) {
+          $baseMessage(`第${i + 1}个变体的订货数量必须是大于0的数字`, 'error')
+          return false
+        }
+        if (quantity % 5 !== 0) {
+          $baseMessage(`第${i + 1}个变体的订货数量必须是5的倍数`, 'error')
+          return false
+        }
+      }
+    }
+  }
+  return true
+}
+
 const handleSubmit = () => {
+  // 在保存前去除换行符
+  removeNewlines()
+  // 验证订货数量
+  if (!validateAllQuantities()) {
+    return
+  }
   saveLoading.value = true
   formRef.value?.validate((valid: any) => {
     if (valid) {
@@ -238,6 +297,12 @@ const handleSubmit = () => {
 
 let res: number
 const handleSubmitAndContinue = async () => {
+  // 在保存并继续前去除换行符
+  removeNewlines()
+  // 验证订货数量
+  if (!validateAllQuantities()) {
+    return
+  }
   submitAndContinueLoading.value = true
   formRef.value?.validate(async (valid: any) => {
     if (valid) {
@@ -332,7 +397,7 @@ onMounted(async () => {
   text-align: center;
 }
 .list-container {
-  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 178px);
+  max-height: calc(var(--el-container-height) - 92px - 150px - 20px - 238px);
   ul {
     padding: 0;
     margin: 0;

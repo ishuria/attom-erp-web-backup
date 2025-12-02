@@ -766,17 +766,17 @@ const handleSubmitComponent = async (value: any) => {
   const supplierList = componentList.value.map((item: any) => {
     return item.supplier
   })
-  const hasConflict = value.some((item: any) => {
-    if (item.suppliser && supplierList.includes(item.suppliser)) {
-      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
-      return true
-    }
-    return false
-  })
-  if (hasConflict) {
-    createComponentVisible.value = true
-    return
-  }
+  // const hasConflict = value.some((item: any) => {
+  //   if (item.suppliser && supplierList.includes(item.suppliser)) {
+  //     $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'warning')
+  //     return true
+  //   }
+  //   return false
+  // })
+  // if (hasConflict) {
+  //   createComponentVisible.value = true
+  //   return
+  // }
   value.map((item: any): any => {
     if (item.count) {
       list.push({
@@ -1268,13 +1268,13 @@ const remoteMethod = async (query: string) => {
 // 修改供应商判断
 const clickSupplierCancel = async (event: any, value: any) => {
   // 判断新输入的供应商是否和其余的一样
-  componentList.value.forEach((item: any) => {
-    if (item.orderEntryId !== 0 && item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
-      value.supplier = ''
-      $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'error', 'hey')
-      return
-    }
-  })
+  // componentList.value.forEach((item: any) => {
+  //   if (item.orderEntryId !== 0 && item.reviewComponentId !== value.reviewComponentId && item.supplier === value.supplier) {
+  //     value.supplier = ''
+  //     $baseMessage('非耗材类零件的供应商不能重复，如果一个供应商有多个零件，将零件填写到零件明细里！', 'error', 'hey')
+  //     return
+  //   }
+  // })
 
   // // 获取根元素，避免重复调用 getRootElement
   // const rootElement = getRootElement(event.srcElement, '.cell')

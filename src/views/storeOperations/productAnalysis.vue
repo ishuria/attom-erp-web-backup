@@ -19,6 +19,7 @@
             <el-tab-pane label="趋势总览" :name="0">
               <vab-trend-overview
                 v-if="activeName === 0"
+                :asin="asin"
                 :compare-type="compareType"
                 :select-date-range="selectDateRange"
                 :select-field="selectField"
@@ -145,7 +146,7 @@
       <!-- 右侧 -->
       <el-col :span="6">
         <div class="right-sidebar">
-          <product-info-card :product-info="productInfo" />
+          <product-info-card v-loading="productInfoLoading" :product-info="productInfo" />
           <!-- 运营备注 -->
           <div class="operation-remark" style="margin-bottom: 20px">
             <div style="margin-bottom: 10px">
@@ -375,6 +376,7 @@ const handleSiteChange = (siteId: number | undefined) => {
 
 // 产品信息（直接使用后端字段类型）
 const productInfo = ref<IGetProductInfo | null>(null)
+const productInfoLoading = ref<boolean>(false)
 const operationTypeList = ref<OperationTypeList[]>([])
 const operationTypeId = ref<number>(0)
 const operationRemark = ref<string>('')
@@ -383,6 +385,7 @@ const fetchProductInfo = async () => {
   if (!sku.value || selectedSite.value === undefined) {
     return
   }
+  productInfoLoading.value = true
   try {
     const { data } = await getProductInfo({
       sku: sku.value,
@@ -397,6 +400,8 @@ const fetchProductInfo = async () => {
     operationRemark.value = data.operationRemark || ''
   } catch (error) {
     console.error('获取产品信息失败:', error)
+  } finally {
+    productInfoLoading.value = false
   }
 }
 onBeforeMount(() => {
@@ -478,6 +483,17 @@ watch(
     }
   }
 )
+// 监听 selectedSku 和 selectedSite 的变化，重新获取产品信息
+watch(
+  () => [selectedSku.value, selectedSite.value],
+  ([newSku, newSite]) => {
+    // 当 SKU 或站点变化时，更新 sku 变量并重新获取产品信息
+    if (newSku && newSite !== undefined) {
+      sku.value = String(newSku)
+      fetchProductInfo()
+    }
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -495,25 +511,10 @@ watch(
 .right-sidebar {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
+  height: calc(var(--el-container-height) - var(--el-padding) - 52px - 15px) !important;
 
-  :deep(.product-info-card) {
-    flex-shrink: 0;
-  }
-
-  .operation-remark {
-    flex-shrink: 0;
-  }
-
-  :deep(.operation-log-card) {
+  :deep(.el-table) {
     flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
   }
 }
 

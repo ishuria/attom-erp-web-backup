@@ -300,6 +300,13 @@
               操作日期
             </template>
           </el-table-column>
+          <el-table-column label="操作结果" prop="operationResult" width="100">
+            <template #default="{ row }">
+              <el-tag :type="row.operationResult === 0 ? 'danger' : 'success'">
+                {{ row.operationResult === 0 ? '失败' : '成功' }}
+              </el-tag>
+            </template>
+          </el-table-column>
 
           <el-table-column fixed="right" label="操作" width="130">
             <template #default="{ row }">

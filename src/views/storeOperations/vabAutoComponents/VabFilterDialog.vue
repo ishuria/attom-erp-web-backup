@@ -74,6 +74,13 @@
           <el-input-number v-model="filterForm.estimateNextMonthStorageFeeMax" placeholder="最大值" style="flex: 1" />
         </div>
       </el-form-item>
+      <el-form-item label="半年有货率">
+        <div class="flex">
+          <el-input-number v-model="filterForm.availableRateMin" :min="0" placeholder="最小值" style="flex: 1" />
+          <span style="color: #303133; white-space: nowrap">至</span>
+          <el-input-number v-model="filterForm.availableRateMax" :min="0" placeholder="最大值" style="flex: 1" />
+        </div>
+      </el-form-item>
       <el-form-item label="运营分类筛选">
         <el-select v-model="filterForm.operationTypeId" placeholder="请选择运营分类" />
       </el-form-item>
@@ -143,6 +150,8 @@ watch(
         'fbaMax',
         'estimateNextMonthStorageFeeMin',
         'estimateNextMonthStorageFeeMax',
+        'availableRateMin',
+        'availableRateMax',
       ]
 
       numberFields.forEach((field) => {
@@ -189,6 +198,8 @@ const filterForm = reactive<any>({
   operationTypeId: null,
   advStatus: null,
   warehouseAge: [],
+  availableRateMin: null,
+  availableRateMax: null,
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {
@@ -223,6 +234,8 @@ const clearFilterForm = () => {
     operationTypeId: null,
     advStatus: null,
     warehouseAge: [],
+    availableRateMin: null,
+    availableRateMax: null,
   })
 
   emit('updateFilter', filterForm)

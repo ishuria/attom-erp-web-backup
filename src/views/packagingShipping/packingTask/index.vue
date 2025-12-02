@@ -43,194 +43,28 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="allTaskColumns"
           :data="allTaskList"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
+          @quality-check-change="handleShowPackingCount"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="已签收天数" prop="signDay" width="110">
-            <template #default="{ row }">
-              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">{{ row.signDay }}天</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(allTaskList, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="到货状态" prop="status" width="100">
-            <template #default="{ row }">
-              <el-tag :type="row.status === 0 ? 'warning' : 'success'">
-                {{ row.status === 0 ? '未到货' : '已到货' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="allTaskForm.pageNo"
           :page-size="allTaskForm.pageSize"
@@ -285,198 +119,28 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="pendingPackColumns"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
+          @quality-check-change="handleShowPackingCount"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="已签收天数" prop="signDay" width="110">
-            <template #default="{ row }">
-              <span v-if="row.signDay" :style="{ color: row.signDay > 21 ? 'var(--el-color-danger)' : '' }">{{ row.signDay }}天</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -544,193 +208,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="taskingColumns"
           :data="taskingList"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? formatDate(new Date(row.sendDate)) : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(taskingList, (row: any) => row._sku, 90, 50)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="taskingForm.pageNo"
           :page-size="taskingForm.pageSize"
@@ -784,193 +282,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="completedColumns"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -1024,192 +356,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="remainderColumns"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -1263,193 +430,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="afterSaleColumns"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column> -->
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" />
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -1496,192 +497,27 @@
             </el-form>
           </vab-query-form-right-panel>
         </vab-query-form>
-        <el-table
-          ref="tableRef"
-          v-loading="listLoading"
-          border
-          :cell-class-name="cellClassName"
+        <packing-task-table
           :cell-style="cellStyle"
-          class="noneHoveTable custom-table-hover"
+          :columns="notArrivedColumns"
           :data="list"
           :header-cell-style="headerCellStyle"
+          :loading="listLoading"
           :row-class-name="tableRowClassName"
-          stripe
           @cell-click="changeInput"
+          @delete-task="handleDeleteTask"
+          @get-package-code-path="getPackageCodePath"
+          @image-preview="showPreviewImage"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
-        >
-          <el-table-column fixed="left" type="selection" />
-          <el-table-column label="发货日期" prop="sendDate" width="115">
-            <template #default="{ row }">
-              {{ row.sendDate ? row.sendDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="PO" prop="po" width="100" />
-          <el-table-column label="订单总数" prop="totalOrderQuantity" width="100" />
-          <el-table-column label="订货日期" prop="releaseDate" width="120">
-            <template #default="{ row }">
-              {{ row.releaseDate ? row.releaseDate.split(' ')[0] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="站点" prop="sendSite" width="145" />
-          <el-table-column label="产品图片" width="75">
-            <template #header>
-              产品
-              <br />
-              图片
-            </template>
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImageUrl"
-                style="display: block; width: 75px; height: 75px"
-                @click="showPreviewImage(row.skuImageUrl)"
-              >
-                <template #error>
-                  <el-icon />
-                </template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="calculateBrColumnWidth(list, (row: any) => row._sku, 100, 60)">
-            <template #default="{ row }">
-              <span class="copySku" @click="handleClipboard($event, row.sku)">
-                {{ row.sku }}
-                <vab-icon icon="file-copy-2-fill" />
-              </span>
-              <br />
-              {{ row.desc }}
-            </template>
-          </el-table-column>
-          <el-table-column label="优先打包" prop="priorityPackaging" width="100">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.priorityPackaging" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="任务数" prop="packageTaskCount" width="100" />
-          <el-table-column label="推荐数量" prop="recommendCount" width="100" />
-          <el-table-column label="已装箱数" prop="productCount" width="100" />
-          <el-table-column label="需拍照" width="90">
-            <template #default="{ row }">
-              <el-checkbox v-model="row.requirePhoto" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
-            </template>
-          </el-table-column>
-          <el-table-column label="带磁" min-width="70" prop="magnetic">
-            <template #default="{ row }">
-              <vab-icon v-if="row.magnetic === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="木制品" min-width="70" prop="woodenProduct">
-            <template #default="{ row }">
-              <vab-icon v-if="row.woodenProduct === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="玩具" min-width="70" prop="toy">
-            <template #default="{ row }">
-              <vab-icon v-if="row.toy === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <el-table-column label="应季产品" min-width="70" prop="seasonal">
-            <template #default="{ row }">
-              <vab-icon v-if="row.seasonal === 1" icon="checkbox-circle-fill" style="color: var(--el-color-danger); font-size: 20px" />
-              <vab-icon v-else icon="close-circle-fill" style="color: var(--el-color-success); font-size: 20px" />
-            </template>
-          </el-table-column>
-          <!-- <el-table-column label="清点质检" min-width="100" prop="qualityCheckStatus">
-            <template #default="{ row }">
-              <el-switch
-                v-model="row.qualityCheckStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66"
-                @change="handleShowPackingCount(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="实际完成数量" prop="actualCompletionCount" width="130" /> -->
-          <el-table-column label="打包注意事项" min-width="250" prop="packageRemarkList">
-            <template #default="{ row }">
-              <el-tooltip content="" effect="dark" placement="top">
-                <template #content>
-                  <div class="custom-tooltip">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-                </template>
-                <div class="multi-line-ellipsis">{{ removeHtmlTags(row.packageRemarkList) }}</div>
-              </el-tooltip>
-            </template>
-          </el-table-column>
-          <el-table-column label="产品经理" prop="productManager" width="100" />
-          <el-table-column fixed="right" label="操作" width="185">
-            <template #default="{ row }">
-              <el-dropdown>
-                <el-button text type="primary" @click="getPackageCodePath(row)">
-                  条码文件夹
-                  <el-icon class="el-icon--right">
-                    <arrow-down />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_BARCODE_FOLDER] })"
-                      @click="getPackageCodePath(row)"
-                    >
-                      <el-link type="primary" underline="never">条码文件夹</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PART_LIST] })"
-                      @click="handleShowPartsList(row)"
-                    >
-                      <el-link type="primary" underline="never">零件清单</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_PACK_INSPECTION] })"
-                      @click="handleShowQualityInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">打包质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_NEW_INSPECTION] })"
-                      @click="showNewInspectionReport(row)"
-                    >
-                      <el-link type="primary" underline="never">新品质检</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_GENERATE_BARCODE] })"
-                      @click="showBarcode(row)"
-                    >
-                      <el-link type="primary" underline="never">生成条形码</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SPLIT] })"
-                      @click="showSplitTask(row)"
-                    >
-                      <el-link type="primary" underline="never">拆分</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_SITE_UPDATE] })"
-                      @click="handleShowModify(row)"
-                    >
-                      <el-link type="primary" underline="never">站点修改</el-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item
-                      v-if="hasPermission({ permission: [PackingTaskPermission.PACKING_TASK_TASK_NUMBER_UPDATE] })"
-                      @click="handleShowModifyTask(row)"
-                    >
-                      <el-link type="primary" underline="never">任务数修改</el-link>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
+          @show-barcode="showBarcode"
+          @show-modify="handleShowModify"
+          @show-modify-task="handleShowModifyTask"
+          @show-new-inspection-report="showNewInspectionReport"
+          @show-parts-list="handleShowPartsList"
+          @show-quality-inspection-report="handleShowQualityInspectionReport"
+          @show-split-task="showSplitTask"
+        />
         <vab-pagination
           :current-page="queryForm.pageNo"
           :page-size="queryForm.pageSize"
@@ -2124,14 +960,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown, CirclePlus, Search } from '@element-plus/icons-vue'
+import { CirclePlus, Search } from '@element-plus/icons-vue'
 import { ElMessageBox, type FormInstance, type FormRules, type TableInstance, type TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
-import { ref } from 'vue'
-import PackingTaskPermission from '~/src/permissions/packingTask'
-import { formatDate } from '~/src/utils/dateUtils'
-import { hasPermission } from '~/src/utils/permission'
+import { computed, ref } from 'vue'
 import { sizeOption } from '../constantOption'
+import { getColumnsForTab, type PackingTaskColumn } from './packingTaskColumns'
 import {
   addQualityCheck,
   checkGoOffWork,
@@ -2142,6 +976,7 @@ import {
   confirmGoOffWork,
   confirmStartMoreTask,
   confirmStartTask,
+  deletePackageTask,
   generatePackageBarcode,
   getBarCodePath,
   getEndTaskList,
@@ -2162,11 +997,12 @@ import {
   updatePackageTaskSite,
 } from '/@/api/devlocal/packagingShipping'
 import { updateProductQualityInspection } from '/@/api/devlocal/productInformation'
+import PackingTaskPermission from '/@/permissions/packingTask'
 import { useUserStore } from '/@/store/modules/user'
 import type { IGetPackageTaskListQuery, IGetQualityCheck, IPackageTaskSplitOption } from '/@/type/packagingShipping/packagingType'
-import handleClipboard from '/@/utils/clipboard'
+import { formatDate } from '/@/utils/dateUtils'
 import { getDataAttribute, getSpecificChildren } from '/@/utils/nodeUtils'
-import { calculateBrColumnWidth, flexColumnWidth, removeHtmlTags } from '/@/utils/tableColum'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PackingTask',
@@ -2192,6 +1028,15 @@ const skuId = ref<number>(0)
 const taskId = ref<number>(0)
 const newQualityInspectionReportVisible = ref<boolean>(false)
 const activeName = ref<number>(7)
+
+// 获取各个tab的列配置
+const allTaskColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(7))
+const pendingPackColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(1))
+const taskingColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(5))
+const completedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(2))
+const remainderColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(3))
+const afterSaleColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(4))
+const notArrivedColumns = computed<PackingTaskColumn[]>(() => getColumnsForTab(0))
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = []
@@ -2338,7 +1183,7 @@ const modifyTaskRules = reactive<any>({
 })
 // 打包选中的行
 const selectRows = ref<any>([])
-const setSelectRows = (value: string) => {
+const setSelectRows = (value: any[]) => {
   selectRows.value = value
 }
 // 开始任务人员选择选中的行
@@ -2497,6 +1342,18 @@ const handleShowFinishTask = async () => {
 }
 // 质检项目展示与否
 const qualityProjectVisible = ref<boolean>(false)
+// 删除任务
+const handleDeleteTask = (row: any) => {
+  $baseConfirm('确定删除该任务吗？', '系统提示', async () => {
+    const { data } = await deletePackageTask({
+      id: row.id,
+    })
+    if (data) {
+      $baseMessage('删除任务成功', 'success')
+      fetchData()
+    }
+  })
+}
 
 // 人员选择的padding
 const personSelectCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
@@ -3056,6 +1913,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       textAlign: 'center',
     }
   }
+  // 确保总是返回一个对象
+  return {}
 }
 // 明细表格样式
 const detailsCellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
@@ -3064,14 +1923,9 @@ const detailsCellStyle = (data: { row: any; column: any; rowIndex: number; colum
       textAlign: 'center' as const,
     }
   }
+  return {}
 }
-// 图片取消padding
-const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.column.label === '产品图片') {
-    return 'clear-padding'
-  }
-  return ''
-}
+
 // 质检项目去掉padding
 const projectCellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
   if (data.column.label === '图片') {
@@ -3217,14 +2071,7 @@ onBeforeMount(() => {
 
         .el-table {
           flex: 1;
-          .clear-padding {
-            padding-top: 0;
-            padding-bottom: 0;
-            .cell {
-              padding-right: 0;
-              padding-left: 0;
-            }
-          }
+
           .copySku {
             cursor: pointer;
             -webkit-user-select: text;
@@ -3262,14 +2109,7 @@ onBeforeMount(() => {
 // :deep(.el-table .el-table__body .cell) {
 //   min-height: 60px;
 // }
-.el-table :deep(.clear-padding .cell) {
-  padding-right: 0px;
-  padding-left: 0px;
-}
-.el-table :deep(.clear-padding) {
-  padding-top: 0px;
-  padding-bottom: 0px;
-}
+
 .none {
   display: none;
 }

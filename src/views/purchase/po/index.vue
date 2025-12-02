@@ -24,6 +24,8 @@
               :show-package-task-button="true"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -236,6 +238,8 @@
               :show-package-task-button="false"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -309,6 +313,8 @@
               :show-package-task-button="false"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -381,6 +387,8 @@
               :show-package-task-button="false"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -451,6 +459,8 @@
               :show-package-task-button="false"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -521,6 +531,8 @@
               :show-package-task-button="false"
               :show-payment-buttons="true"
               :tax-included-total-price="taxIncludedTotalPrice"
+              @add-automatic-payment="handleAddAutomaticPayment"
+              @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
@@ -863,6 +875,14 @@
     </vab-dialog>
 
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
+    <!-- 添加自动付款 -->
+    <vab-add-automatic-payment v-model="addAutomaticPaymentVisible" />
+    <!-- 自动付款预览 -->
+    <automatic-payment-preview
+      v-model="automaticPaymentPreviewVisible"
+      :pay-auto-loading="payAutoLoading"
+      @submit-auto-pay="handleSubmitAutoPay"
+    />
   </div>
 </template>
 
@@ -871,8 +891,8 @@ import { Delete, Plus, UploadFilled, ZoomIn } from '@element-plus/icons-vue'
 import { type FormInstance, type FormRules, type TabsPaneContext, dayjs } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import { downloadFile } from '/@/api/devlocal/download'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import {
   aggregationContract,
   applyPurchaseReductionCost,
@@ -886,6 +906,7 @@ import {
   getPoPublisherList,
   getPurchaseBonus,
   getPurchaseCostReduction,
+  purchaseAutoPaySubmit,
   purchaseTotalAp,
   releasePackageTask,
   updateComponentAllPay,
@@ -905,6 +926,15 @@ defineOptions({
   name: 'Po',
 })
 
+// 添加自动付款
+const addAutomaticPaymentVisible = ref<boolean>(false)
+const automaticPaymentPreviewVisible = ref<boolean>(false)
+const handleAddAutomaticPayment = () => {
+  addAutomaticPaymentVisible.value = true
+}
+const handleAutomaticPaymentPreview = () => {
+  automaticPaymentPreviewVisible.value = true
+}
 const imageUploadVisible = ref<boolean>(false)
 const disabledDate = (time: Date) => {
   const date = dayjs(time)
@@ -948,6 +978,23 @@ const reductionCostFormRules = reactive<FormRules>({
   beforePrice: [{ required: true, message: '请输入优化前价格！', trigger: 'blur' }],
   afterPrice: [{ required: true, message: '请输入优化后价格！', trigger: 'blur' }],
 })
+const payAutoLoading = ref<boolean>(false)
+const handleSubmitAutoPay = async () => {
+  try {
+    payAutoLoading.value = true
+    const { data } = await purchaseAutoPaySubmit()
+    if (data) {
+      automaticPaymentPreviewVisible.value = false
+      $baseMessage('提交自动付款成功！', 'success')
+      // 提交成功后刷新数据
+      await fetchData()
+    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    payAutoLoading.value = false
+  }
+}
 const closeReductionCost = () => {
   reductionCostFormRef.value?.resetFields()
   reductionCostVisible.value = false
