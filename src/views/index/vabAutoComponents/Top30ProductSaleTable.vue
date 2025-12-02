@@ -2,7 +2,7 @@
   <vab-card class="top30ProductSaleTable">
     <template #header>
       <vab-icon icon="information-line" />
-      TOP30新品销售额排行（全站点）
+      TOP100新品销售额排行（全站点）
       <div class="right-select">
         <slot name="select"></slot>
       </div>
@@ -45,7 +45,7 @@
         <template #default="{ row }">${{ row.monthOrderSales }}</template>
       </el-table-column>
       <el-table-column label="30天销量" min-width="100" prop="monthSalesVolume" />
-      <el-table-column label="上新天数" min-width="95" prop="newArrivalDay">
+      <el-table-column label="上新天数" min-width="110" prop="newArrivalDay" sortable>
         <template #default="{ row }">{{ row.newArrivalDay }}天</template>
       </el-table-column>
       <el-table-column label="产品经理" min-width="95" prop="productManager" />

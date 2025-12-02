@@ -1452,7 +1452,7 @@ const closeBoxNumber = () => {
 }
 // 箱号的下一步，展示装箱
 const showPacking = async () => {
-  const { data } = await checkEncasementNo({ boxNo: encasementNo.value })
+  const { data } = await checkEncasementNo({ boxNo: boxNumberForm.boxNumber! })
   if (data) {
     await boxNumberFormRef.value?.validate((isValid: boolean) => {
       if (isValid) {

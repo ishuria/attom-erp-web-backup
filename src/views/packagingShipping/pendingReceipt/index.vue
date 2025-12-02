@@ -562,7 +562,7 @@
       </el-form>
       <template #footer>
         <el-button @click="closeReceiptExport">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="signExportSubmit">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 签收 -->
@@ -615,6 +615,7 @@ import { CSSProperties, ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import type { siteValue } from '../constantOption'
 import { printerOption, siteMap } from '../constantOption'
+import { downloadFilePD } from '/@/api/devlocal/download'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
 import {
   deleteSign,
@@ -931,6 +932,19 @@ const closeReceiptExport = () => {
   receiptExportFormRef.value?.resetFields()
   receiptExportVisible.value = false
 }
+
+const signExportSubmit = async () => {
+  await downloadFilePD('/sign/export/aiTuom', {
+    startDate: receiptExportForm.date[0],
+    endDate: receiptExportForm.date[1],
+  })
+
+  await downloadFilePD('/sign/export/yunzhou', {
+    startDate: receiptExportForm.date[0],
+    endDate: receiptExportForm.date[1],
+  })
+}
+
 // 批量签收
 const handleAllSigned = async () => {
   if (selectRows.value.length === 0) {

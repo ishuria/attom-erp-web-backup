@@ -2,7 +2,7 @@
   <vab-card class="top30ProductSaleTable">
     <template #header>
       <vab-icon icon="information-line" />
-      TOP50亏损产品排行
+      TOP50亏损产品排行（按父体计）
       <div class="right-select">
         <slot name="select"></slot>
       </div>
@@ -17,9 +17,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="SKU"
+        label="SKU（父体中随机一个SKU）"
         prop="sku"
-        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+        :width="Math.max(flexColumnWidth(list, 'SKU（父体中随机一个SKU）', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
       >
         <template #default="{ row }">
           {{ row.sku }}
@@ -32,9 +32,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="ASIN" min-width="110" prop="asin">
+      <el-table-column label="父体ASIN" min-width="110" prop="parentAsin">
         <template #default="{ row }">
-          <el-link class="always-underline" :href="row.amazonUrl" target="_blank" type="primary" :underline="false">{{ row.asin }}</el-link>
+          <!-- <el-link class="always-underline" :href="row.amazonUrl" target="_blank" type="primary" :underline="false"> -->
+          {{ row.parentAsin }}
+          <!-- </el-link> -->
         </template>
       </el-table-column>
       <el-table-column label="30天销售额" min-width="110" prop="monthOrderSales">
@@ -47,8 +49,16 @@
       <el-table-column label="30天净利润率" min-width="110" prop="monthNetProfitMargin">
         <template #default="{ row }">{{ formatPercentage(row.monthNetProfitMargin, 2) }}</template>
       </el-table-column>
-      <el-table-column label="产品经理" min-width="95" prop="productManager" />
-      <el-table-column label="运营" min-width="95" prop="operationUserName" />
+      <el-table-column label="产品经理" min-width="95" prop="productManager">
+        <template #default="{ row }">
+          <span class="word-break">{{ row.productManager }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="运营" min-width="95" prop="operationUserName">
+        <template #default="{ row }">
+          <span class="word-break">{{ row.operationUserName }}</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
@@ -89,7 +99,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   return ''
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.column.label === 'SKU') {
+  if (data.column.label === 'SKU（父体中随机一个SKU）') {
     return {
       textAlign: 'left',
     }
@@ -172,5 +182,9 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   :deep(.flag) {
     border: 1px solid #ddd;
   }
+}
+.word-break {
+  word-break: break-all;
+  white-space: pre-line;
 }
 </style>

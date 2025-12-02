@@ -8,7 +8,7 @@
       <el-table-column align="center" label="开票电话" min-width="100" prop="telephone" />
       <el-table-column label="开户银行" prop="bank" :width="flexColumnWidth(list, '开户银行', 'bank')" />
       <el-table-column label="开户账号" min-width="120" prop="accountNumber" />
-      <el-table-column label="联行号" min-width="100" prop="bankRoutingNumber" />
+      <el-table-column label="联行号（没有则留空）" min-width="100" prop="bankRoutingNumber" />
       <el-table-column align="center" label="联系人" min-width="100" prop="contactPerson" />
       <el-table-column align="center" label="联系人电话" min-width="100" prop="contactNumber" />
       <el-table-column align="center" label="联系人微信" min-width="100" prop="weChatNumber" />

@@ -71,6 +71,20 @@ export function updateCommissionProductType(data: IUpdateCommissionProductTypeRe
   })
 }
 /**
+ * @description 提成系数设定-产品类型-修改评分
+ */
+export function updateCommissionProductTypeScore(params: {
+  userId: number
+  totalScore: number
+  oemScore: number
+}): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/commission/product/type/update/score`,
+    method: 'post',
+    params,
+  })
+}
+/**
  * @description 提成系数设定-参数设定列表
  */
 export function getCommissionSetting(): Promise<IGetCommissionSettingRes> {

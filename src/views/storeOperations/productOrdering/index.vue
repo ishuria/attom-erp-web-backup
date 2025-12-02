@@ -361,6 +361,13 @@
             <el-input-number v-model="filterForm.maxSign" :min="0" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
+        <el-form-item label="断货天数">
+          <div class="flex">
+            <el-input-number v-model="filterForm.outOfStockMin" :min="0" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="filterForm.outOfStockMax" :min="0" placeholder="最大值" style="flex: 1" />
+          </div>
+        </el-form-item>
         <el-form-item label="最晚补货">
           <div class="flex">
             <el-date-picker
@@ -859,6 +866,8 @@ const handleResetFilter = () => {
   filterForm.maxEsAvailableSaleDayTotal = undefined
   filterForm.minSign = undefined
   filterForm.maxSign = undefined
+  filterForm.outOfStockMin = undefined
+  filterForm.outOfStockMax = undefined
   latestDate.value = []
   filterForm.advStatus = undefined
 }
@@ -1069,6 +1078,7 @@ const fetchColumn = async () => {
         'originalNowSupplement',
         'monthSalesVolume',
         'encasementCount',
+        'outOfStock',
       ].includes(item.prop)
     ) {
       item.sortable = true
