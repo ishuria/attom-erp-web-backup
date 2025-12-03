@@ -331,7 +331,12 @@ defineOptions({
   name: 'VabCostAnalysis',
 })
 
-const props = defineProps<{ sku: string; selectedSite: number | undefined }>()
+const props = defineProps<{
+  sku: string
+  selectedSite: number | undefined
+  startDate?: string
+  endDate?: string
+}>()
 
 const list = ref<IGetOperationAmazonCostList[]>([])
 const total = ref<number>(0)
@@ -610,10 +615,21 @@ const fetchExpenseComposition = async () => {
     expenseSymbol.value = '$'
     return
   }
+  if (!props.startDate || !props.endDate) {
+    data1.value = []
+    totalValue.value = 0
+    expenseSymbol.value = '$'
+    return
+  }
   const siteId = props.selectedSite !== undefined ? props.selectedSite : 0
   expenseLoading.value = true
   try {
-    const { data } = await getExpenseComposition({ sku: props.sku, siteId })
+    const { data } = await getExpenseComposition({
+      sku: props.sku,
+      siteId,
+      startDate: props.startDate,
+      endDate: props.endDate,
+    })
     // 后端返回的数据格式是 { name, value }，直接使用
     data1.value = data.list || []
     totalValue.value = data.totalExpenditure ?? 0
@@ -646,16 +662,12 @@ const fetchStorageAge = async () => {
     storageAgeLoading.value = false
   }
 }
-// 合并监听 sku 和 selectedSite，统一处理数据获取
-// 使用 immediate: false，避免在组件创建时立即触发
-// 初始化时在 onBeforeMount 中手动调用
 watch(
   () => [props.sku, props.selectedSite],
   () => {
     if (props.sku) {
       fetchData()
       fetchPackagingInformation()
-      fetchExpenseComposition()
       fetchStorageAge()
       // 如果日期范围已选择，重新获取图表数据
       if (card4DateRange.value[0] && card4DateRange.value[1]) {
@@ -664,6 +676,14 @@ watch(
     }
   },
   { immediate: false }
+)
+watch(
+  () => [props.sku, props.selectedSite, props.startDate, props.endDate],
+  () => {
+    if (props.startDate && props.endDate) {
+      fetchExpenseComposition()
+    }
+  }
 )
 onBeforeMount(() => {
   fetchCostAccountingChannelData()
