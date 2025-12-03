@@ -30,6 +30,12 @@ import type {
   IUpdateReductionCostTaskReq,
 } from '/@/type/commission/commissionType'
 
+import {
+  ITaxRefundBonusDetailList,
+  ITaxRefundBonusDetailResp,
+  ITaxRefundBonusQuery,
+} from '/@/type/commission/taxRefundBonusDetail.ts'
+
 /**
  * @description 提成系数设定-美工类型
  */
@@ -453,5 +459,36 @@ export function getUserPersonLevelDropdownList(): Promise<{ data: { id: number; 
   return request({
     url: `${BASE_API}/user/person/level/dropdown`,
     method: 'get',
+  })
+}
+
+/**
+ * 获取退税奖金明细-用户列表
+ */
+export function getTaxRefundBonusDetailUserList(): Promise<{ data: { id: number; label: string }[] }> {
+  return request({
+    url: `${BASE_API}/taxRefund/bonus/detail/user/list`,
+    method: 'get',
+  })
+}
+
+/**
+ * 获取退税奖金明细-月份列表
+ */
+export function getTaxRefundBonusDetailMonth(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/taxRefund/bonus/detail/month`,
+    method: 'get',
+  })
+}
+
+/**
+ * 获取退税奖金明细数据
+ */
+export function queryTaxRefundBonusDetailMonthList(data: ITaxRefundBonusQuery): Promise<ITaxRefundBonusDetailResp> {
+  return request({
+    url: `${BASE_API}/taxRefund/detail/list`,
+    method: 'post',
+    data,
   })
 }
