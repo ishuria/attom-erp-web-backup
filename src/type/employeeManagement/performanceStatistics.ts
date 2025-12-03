@@ -249,6 +249,7 @@ export interface IGetUserAttendanceList {
   procurementBonusCrossMonth?: number
   taxRefundPrice?: number
   taxRefundPriceCrossMonth?: number
+  managementBonus?: number
 }
 
 export interface IAddAdjustDetailReq {

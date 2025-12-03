@@ -625,6 +625,60 @@
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="主管" :name="7">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-date-picker
+              v-model="date"
+              style="max-width: 300px"
+              type="monthrange"
+              value-format="YYYY-MM"
+              @change="supervisorQueryData"
+            />
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="supervisorQueryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="supervisorQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="supervisorQueryData"
+                  @keyup.enter="supervisorQueryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="supervisorQueryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="基本信息">
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
+          </el-table-column>
+          <el-table-column label="管理奖金" min-width="100" prop="managementBonus" />
+          <template #empty>
+            <el-empty class="vab-data-empty" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="supervisorQueryForm.pageNo"
+          :page-size="supervisorQueryForm.pageSize"
+          :total="total"
+          @current-change="handleSupervisorCurrentChange"
+          @size-change="handleSupervisorSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
     <!-- 考核数设定 -->
     <vab-dialog v-model="settingVisible" :draggable="false" title="产品经理考核设定和追踪" top="10vh" width="60%">
@@ -764,6 +818,7 @@ import {
   getProductManager,
   getProductManagerAssessmentList,
   getUserAttendanceList,
+  getUserAttendanceListBySupervisor,
   updateProductManagerAssessment,
   updateProductManagerNoAssessment,
 } from '/@/api/devlocal/performanceStatistics'
@@ -875,6 +930,16 @@ const productDesignQueryForm = reactive<IGetAssessmentListReq & { roleIdList?: n
   orderByField: 'month',
   orderDirection: 'desc',
   roleIdList: [],
+})
+// 主管 tab 专用的查询表单
+const supervisorQueryForm = reactive<IGetAssessmentListReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  startDate: '',
+  endDate: '',
+  orderByField: 'month',
+  orderDirection: 'desc',
 })
 const list = ref<IGetUserAttendanceList[]>([])
 /* ============================== 考核数设定变量 ============================== */
@@ -1107,6 +1172,31 @@ const handleProductDesignSizeChange = (value: number) => {
   productDesignQueryForm.pageNo = 1
   productDesignQueryForm.pageSize = value
   fetchProductDesignData()
+}
+// 主管 tab 的查询函数
+const supervisorQueryData = () => {
+  supervisorQueryForm.pageNo = 1
+  supervisorQueryForm.startDate = date.value[0]
+  supervisorQueryForm.endDate = date.value[1]
+  fetchSupervisorData()
+}
+// 主管 tab 的数据获取函数
+const fetchSupervisorData = async () => {
+  listLoading.value = true
+  const { data } = await getUserAttendanceListBySupervisor(supervisorQueryForm)
+  total.value = data.total
+  list.value = data.list
+  listLoading.value = false
+}
+// 主管 tab 的分页处理函数
+const handleSupervisorCurrentChange = (value: number) => {
+  supervisorQueryForm.pageNo = value
+  fetchSupervisorData()
+}
+const handleSupervisorSizeChange = (value: number) => {
+  supervisorQueryForm.pageNo = 1
+  supervisorQueryForm.pageSize = value
+  fetchSupervisorData()
 }
 const handleChangeNoAssessment = async (row: IGetUserAttendanceList) => {
   await updateProductManagerNoAssessment({
@@ -1367,6 +1457,9 @@ const handleTabChange = () => {
   } else if (activeName.value === 5) {
     // 平面设计 tab 使用独立的 artDesignQueryForm
     artDesignQueryData()
+  } else if (activeName.value === 7) {
+    // 主管 tab 使用独立的 supervisorQueryForm
+    supervisorQueryData()
   } else {
     queryForm.status = 0
     queryData()
@@ -1379,6 +1472,8 @@ watch(
       productDesignQueryData()
     } else if (activeName.value === 5) {
       artDesignQueryData()
+    } else if (activeName.value === 7) {
+      supervisorQueryData()
     } else {
       queryData()
     }
