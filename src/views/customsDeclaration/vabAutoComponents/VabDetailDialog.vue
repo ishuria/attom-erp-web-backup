@@ -87,6 +87,11 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
+        <el-table-column label="发票行次" min-width="100" prop="invoiceMatchDate">
+          <template #default="{ row }">
+            <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-number-row">{{ item.no }}</div>
+          </template>
+        </el-table-column>
         <el-table-column label="发票号码" min-width="120" prop="invoiceNumber" sortable="custom">
           <template #default="{ row }">
             <div v-if="Array.isArray(row.matchInvoiceRecord)">
@@ -127,8 +132,8 @@
           </template>
         </el-table-column>
       </el-table>
-    
-      <vab-pagination 
+
+      <vab-pagination
         :current-page="queryForm.pageNo"
         :page-size="queryForm.pageSize"
         :total="total"
@@ -143,7 +148,7 @@
         <vab-pdf :source="source" />
       </div>
     </vab-dialog>
-   
+
   </vab-dialog>
 
 </template>
@@ -164,7 +169,7 @@ const props = defineProps<{
 const dflag = ref<boolean>(false)
 watchEffect(() => {
   dflag.value = props.detailVisible
-  if (dflag.value) {    
+  if (dflag.value) {
     queryForm.id = props.id!
     fetchData()
   }
@@ -239,24 +244,24 @@ const fetchData = async () => {
         const createTime = record.createTime!.split(' ')[0]
         if (percentage < 0) {
           return `
-            <span class="create-time">${createTime}</span>: 
+            <span class="create-time">${createTime}</span>:
             <span class="percentage-red">${percentage}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         } else {
           return `
-            <span class="create-time">${createTime}</span>: 
+            <span class="create-time">${createTime}</span>:
             <span class="percentage">${percentage}%</span>
             <span class="pay-price">(${record.payPrice})</span>`
         }
       })
       .join('<br>')
     }
-   
+
   })
   listLoading.value = false
 }
 const handleSortChange = (data: { column: any, prop: string, order: any }) => {
-  const { column, prop, order } = data 
+  const { column, prop, order } = data
   queryForm.orderByField = prop
   // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
   if (!order) {
@@ -265,7 +270,7 @@ const handleSortChange = (data: { column: any, prop: string, order: any }) => {
     } else if (queryForm.orderDirection === 'desc') {
       column.order = 'ascending'
     }
-  } 
+  }
   queryForm.orderDirection = column.order === "ascending" ? 'asc' : 'desc'
   queryData()
 }

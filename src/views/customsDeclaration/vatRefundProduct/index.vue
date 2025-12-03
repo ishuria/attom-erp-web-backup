@@ -190,6 +190,9 @@
               <span v-if="item.label === '发票代码'">
                 <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
               </span>
+              <span v-if="item.label === '发票行次'">
+                <div v-for="(item, index) in row.formattedInvoiceNo" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
               <span v-if="item.label === '发票号码'">
                 <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
                   <span>{{ item.invoiceNumber }}</span>
@@ -408,6 +411,9 @@
               </span>
               <span v-if="item.label === '发票代码'">
                 <div v-for="(item, index) in row.formattedInvoiceCode" :key="index" class="invoice-number-row">{{ item }}</div>
+              </span>
+              <span v-if="item.label === '发票行次'">
+                <div v-for="(item, index) in row.formattedInvoiceNo" :key="index" class="invoice-number-row">{{ item }}</div>
               </span>
               <span v-if="item.label === '发票号码'">
                 <div v-for="(item, index) in row.formattedInvoiceNumber" :key="index" class="invoice-number-row">
@@ -1220,12 +1226,13 @@ const fetchData = async () => {
         return formatDate(new Date(record.invoiceMatchDate))
       })
       item.formattedInvoiceCode = item.matchInvoiceRecord.map((record) => record.invoiceCode)
+      item.formattedInvoiceNo = item.matchInvoiceRecord.map((record) => record.no)
       item.formattedInvoiceNumber = item.matchInvoiceRecord.map((record) => ({
         invoiceNumber: record.invoiceNumber,
         invoiceFilePath: record.invoiceFilePath,
         invoiceDetailId: record.invoiceDetailId,
         matchId: record.matchId,
-        id: item.id,
+        id: item.id
       }))
     }
     // console.log(item.payRecord)
