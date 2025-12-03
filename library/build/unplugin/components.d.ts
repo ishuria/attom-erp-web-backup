@@ -33,6 +33,7 @@ declare module 'vue' {
     DefaultTableEdit: typeof import('./../../../src/views/vab/table/vabAutoComponents/DefaultTableEdit.vue')['default']
     DestroyValueDetailTable: typeof import('./../../../src/views/index/vabAutoComponents/DestroyValueDetailTable.vue')['default']
     Develop: typeof import('./../../../src/views/index/vabAutoComponents/Develop.vue')['default']
+    DistributeSkus: typeof import('./../../../src/views/newProductTask/vabAutoComponents/distributeSkus.vue')['default']
     DrawerBasicUsage: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerBasicUsage.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

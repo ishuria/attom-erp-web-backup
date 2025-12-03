@@ -220,6 +220,9 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                      <el-link type="primary" underline="never">分配SKU</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_FINISH] })"
                       :disabled="!canFinishTask(row)"
@@ -464,6 +467,9 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                      <el-link type="primary" underline="never">分配SKU</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
@@ -700,6 +706,9 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                      <el-link type="primary" underline="never">分配SKU</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_LONG_TERM] })"
                       @click="handleLongTerm(row)"
@@ -986,7 +995,7 @@
         </el-form-item>
         <el-form-item label="设计类型" prop="artDesignType">
           <el-select v-model="postTaskForm.artDesignType" clearable multiple placeholder="请选择设计类型">
-            <el-option v-for="item in designTypeOption" :key="item.value" :label="item.label" :value="item.value" />
+            <el-option v-for="item in filteredDesignTypeOption" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="美工" prop="artDesign">
@@ -1177,6 +1186,7 @@
         <el-button type="primary" @click="confirmAddReason">确定</el-button>
       </template>
     </vab-dialog>
+    <distribute-skus v-model="distributeSkusVisible" title="分配SKU" @confirm="handleConfirmDistributeSkus" />
   </div>
 </template>
 
@@ -1231,7 +1241,7 @@ defineOptions({
 const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
-
+const distributeSkusVisible = ref<boolean>(false)
 const getTaskTypeColor = (taskType: string) => {
   switch (taskType) {
     case '新品任务':
@@ -1300,6 +1310,8 @@ const columnConfigs: ColumnConfig[] = [
   { label: 'A+', prop: 'aAdd', dataKey: '_aAdd', baseWidth: 90 },
   { label: '视频', prop: 'video', dataKey: '_video', baseWidth: 90 },
   { label: '说明书/包装', prop: 'instructionManual', dataKey: '_instructionManual', baseWidth: 120 },
+  { label: '配色设计', prop: 'colorDesign', dataKey: '_colorDesign', baseWidth: 100 },
+  { label: '产品平面设计', prop: 'productPlaneDesign', dataKey: '_productPlaneDesign', baseWidth: 120 },
   {
     label: '发布人',
     prop: 'publisherPersonName',
@@ -1363,6 +1375,14 @@ const splitUsernames = (usernames: string) => {
 }
 const getHighlightClass = (username: string) => {
   return username === currentUser ? 'highlight' : ''
+}
+const distributionSkusId = ref<number>(-1)
+const handleShowDistributeSkus = (row: IGetArtDesignTaskList) => {
+  distributeSkusVisible.value = true
+  distributionSkusId.value = row.id!
+}
+const handleConfirmDistributeSkus = (data: { transferValue: number[] }) => {
+  console.log(data)
 }
 const handleUpdateProofreadingStatus = async (row: IGetArtDesignTaskList) => {
   const { data } = await updateProofreadingStatus({
@@ -1482,6 +1502,21 @@ const postTaskForm = reactive<any>({
   artDesign: [],
   remark: '',
   linkAddress: '',
+})
+
+// 根据任务类型过滤设计类型选项
+const filteredDesignTypeOption = computed(() => {
+  const taskType = postTaskForm.taskType
+  // 设计任务：只能有：说明书/包装，配色设计，产品平面设计
+  if (taskType === '设计任务') {
+    return designTypeOption.filter((item) => [4, 6, 7].includes(item.value))
+  }
+  // 新品任务、老品优化：只能有：基础图片，A+，视频，建模，渲染
+  if (taskType === '新品任务' || taskType === '老品优化') {
+    return designTypeOption.filter((item) => [0, 1, 2, 3, 5].includes(item.value))
+  }
+  // 临时任务 显示所有选项
+  return designTypeOption
 })
 const postTaskRules = reactive<FormRules<IAddArtDesignTaskReq>>({
   taskType: [{ required: true, message: '请选择任务类型', trigger: 'change' }],
@@ -1922,6 +1957,8 @@ const fetchData = async () => {
     item._aAdd = item.aAdd?.replaceAll(',', '<br />')
     item._video = item.video?.replaceAll(',', '<br />')
     item._instructionManual = item.instructionManual?.replaceAll(',', '<br />')
+    item._colorDesign = item.colorDesign?.replaceAll(',', '<br />')
+    item._productPlaneDesign = item.productPlaneDesign?.replaceAll(',', '<br />')
     item._operation = item.operation?.replaceAll(',', '<br />')
     item._productDesign = item.productDesign?.replaceAll(',', '<br />')
   })

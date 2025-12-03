@@ -1013,8 +1013,9 @@ const fetchBillingMonthList = async () => {
   if (useAclStore().getRole.includes(ROLE_BOSS_CODE)) {
     historyBossMonthList.value = data
   } else {
-    // 对于其他角色,去掉当月的
-    historyBossMonthList.value = data.filter((item) => item !== getCurrentMonth())
+    // 对于其他角色,去掉当月和之后的所有月份
+    const currentMonth = getCurrentMonth()
+    historyBossMonthList.value = data.filter((item) => item < currentMonth)
   }
   selectAchievedMonth.value = historyBossMonthList.value[0]
   selectFinishMonth.value = historyBossMonthList.value[0]
