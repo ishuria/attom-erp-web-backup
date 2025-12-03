@@ -102,7 +102,12 @@
             <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column label="发票数量" min-width="100">
+        <el-table-column label="发票数量" min-width="100" prop="invoiceMatchDate">
+          <template #default="{ row }">
+            <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-number-row">{{ item.invoiceCount }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="发票总数" min-width="100">
           <template #default="{ row }">
             <div v-if="Array.isArray(row.matchInvoiceRecord)">
               <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-item">
