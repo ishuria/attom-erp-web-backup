@@ -127,6 +127,7 @@ export interface IGetTaxRefundBatchDetailList {
 }
 
 export interface PayRecordList {
+  no?: number
   /**
    * 创建时间
    */
