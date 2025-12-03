@@ -151,9 +151,15 @@
           <div class="operation-remark" style="margin-bottom: 20px">
             <div style="margin-bottom: 10px">
               <el-text>运营备注</el-text>
-              <el-select v-model="operationTypeId" style="width: 30%; margin-left: 10px" @change="handleChangeOperationType">
+              <el-select
+                v-model="operationTypeId"
+                style="width: 30%; margin-left: 10px; margin-right: 10px"
+                @change="handleChangeOperationType"
+              >
                 <el-option v-for="item in operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
+              <el-text>运营：</el-text>
+              <el-text>{{ operationUserName }}</el-text>
             </div>
             <el-input
               v-model="operationRemark"
@@ -380,6 +386,7 @@ const productInfoLoading = ref<boolean>(false)
 const operationTypeList = ref<OperationTypeList[]>([])
 const operationTypeId = ref<number>(0)
 const operationRemark = ref<string>('')
+const operationUserName = ref<string>('')
 // 获取产品信息
 const fetchProductInfo = async () => {
   if (!sku.value || selectedSite.value === undefined) {
@@ -398,6 +405,7 @@ const fetchProductInfo = async () => {
     operationTypeList.value = data.operationTypeList || []
     operationTypeId.value = data.operationTypeId || 0
     operationRemark.value = data.operationRemark || ''
+    operationUserName.value = data.operationUserName || ''
   } catch (error) {
     console.error('获取产品信息失败:', error)
   } finally {
