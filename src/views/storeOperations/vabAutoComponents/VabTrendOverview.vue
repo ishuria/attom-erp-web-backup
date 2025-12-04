@@ -1405,13 +1405,14 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
           yAxisMapping.set(dataGroup, yAxisIndex)
 
           // 新增 Y 轴配置
+          const yAxisColor = getYAxisColor(dataName)
           option.value.yAxis.push({
             type: 'value',
             name: dataName,
             position: currentYAxisCount % 2 === 0 ? 'left' : 'right',
             offset: Math.floor(currentYAxisCount / 2) * 60,
             nameTextStyle: {
-              color: getYAxisColor(),
+              color: yAxisColor,
               fontSize: '14px',
               align: currentYAxisCount % 2 === 0 ? 'right' : 'left',
             },
@@ -1424,7 +1425,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
             axisLine: {
               show: true,
               lineStyle: {
-                color: getYAxisColor(),
+                color: yAxisColor,
               },
             },
             splitLine: {
@@ -1438,7 +1439,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         }
 
         // 为每个类别添加一条曲线
-        const baseColor = getYAxisColor()
+        const baseColor = getYAxisColor(dataName)
         multiCategoryData.forEach((catData, index) => {
           // 为不同类别使用不同颜色（基于基础颜色的变体）
           const colorVariants = [
@@ -1502,6 +1503,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       yAxisMapping.set(dataGroup, yAxisIndex)
 
       // 新增 Y 轴配置
+      const yAxisColor = getYAxisColor(dataName)
       option.value.yAxis.push({
         type: 'value',
         name: dataName,
@@ -1509,7 +1511,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         offset: Math.floor(currentYAxisCount / 2) * 60,
         nameTextStyle: {
           // fontWeight: 'bold',
-          color: getYAxisColor(),
+          color: yAxisColor,
           fontSize: '14px',
           align: currentYAxisCount % 2 === 0 ? 'right' : 'left',
         },
@@ -1523,7 +1525,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         axisLine: {
           show: true,
           lineStyle: {
-            color: getYAxisColor(),
+            color: yAxisColor,
           },
         },
         splitLine: {
@@ -1537,6 +1539,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
     }
 
     // 添加新 series
+    const seriesColor = getYAxisColor(dataName)
     option.value.series.push({
       name: dataName,
       type: 'line',
@@ -1546,10 +1549,10 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
       symbol: 'circle',
       symbolSize: 6,
       lineStyle: {
-        color: getYAxisColor(),
+        color: seriesColor,
       },
       itemStyle: {
-        color: getYAxisColor(),
+        color: seriesColor,
       },
       emphasis: {
         focus: 'series',
@@ -1656,7 +1659,23 @@ const getYAxisFormat = (groupName: string) => {
   }
 }
 // 获取对应的颜色
-function getYAxisColor() {
+function getYAxisColor(dataName?: string) {
+  // 如果传入了 dataName，根据 dataName 找到对应的卡片
+  if (dataName) {
+    const cardIndex = cards.value.findIndex((card) => card.title === dataName)
+    if (cardIndex >= 0 && cardIndex < cards.value.length) {
+      const colorMap: Record<string, string> = {
+        primary: '#ff99cc',
+        orange: '#E6A23C',
+        green: '#34a9a9',
+        red: '#e36060',
+        purple: '#8a7ae3',
+        yellow: '#ffd700',
+      }
+      return colorMap[cards.value[cardIndex].colorType] || '#999'
+    }
+  }
+  // 如果没有传入 dataName，使用原来的逻辑（基于 clickCard）
   const cardIndex = parseInt(clickCard.value.replace('card', '')) - 1
   if (cardIndex >= 0 && cardIndex < cards.value.length) {
     const colorMap: Record<string, string> = {
