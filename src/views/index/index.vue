@@ -400,6 +400,12 @@
       </el-col>
     </el-row>
 
+    <el-row class="row-spacing" :gutter="20">
+      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <vine-review-card :user-list="userList" />
+      </el-col>
+    </el-row>
+
     <history-assessment-records
       v-model="historyVisible"
       :list="list"

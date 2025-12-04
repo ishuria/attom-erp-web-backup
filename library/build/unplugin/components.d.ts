@@ -330,6 +330,7 @@ declare module 'vue' {
     VabViewOrderCountTable: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewOrderCountTable.vue')['default']
     VabViewPackingInspectionReport: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabViewPackingInspectionReport.vue')['default']
     VersionInformation: typeof import('./../../../src/views/index/vabAutoComponents/VersionInformation.vue')['default']
+    VineReviewCard: typeof import('./../../../src/views/index/vabAutoComponents/VineReviewCard.vue')['default']
     WangEditorViewer: typeof import('./../../../src/views/index/vabAutoComponents/WangEditorViewer.vue')['default']
     WarehouseCapacity: typeof import('./../../../src/views/index/vabAutoComponents/WarehouseCapacity.vue')['default']
     WorkbenchHeader: typeof import('./../../../src/views/index/vabAutoComponents/WorkbenchHeader.vue')['default']
