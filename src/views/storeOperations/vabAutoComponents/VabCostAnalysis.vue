@@ -302,7 +302,7 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { getLast7DaysStringTime } from '~/src/utils/dateUtils'
+import { getLast90DaysStringTime } from '~/src/utils/dateUtils'
 import { flexColumnWidth } from '~/src/utils/tableColum'
 import { colorList, sizeSourceOption, storageAgeColorList } from '../constantOption'
 import { getCostAccountingChannelList } from '/@/api/devlocal/encasement'
@@ -358,7 +358,7 @@ const storageAgeLoading = ref<boolean>(false)
 const data3 = ref<IGetSkuSiteDailyCost[]>([])
 const chart3Loading = ref<boolean>(false)
 
-const card4DateRange = ref<[string, string]>(getLast7DaysStringTime())
+const card4DateRange = ref<[string, string]>(getLast90DaysStringTime())
 // 计算总和
 const totalValue = ref<number>(0)
 // 计算库龄总和

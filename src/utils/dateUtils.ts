@@ -105,6 +105,19 @@ export function getLast30DaysStringTime(): [string, string] {
   const formattedTodayDate = todayDate.toISOString().split('T')[0]
   return [formattedThirtyDaysAgo, formattedTodayDate]
 }
+// 获取近90天的日期范围
+export const getLast90DaysStringTime = (): [string, string] => {
+  const end = new Date()
+  const start = new Date()
+  start.setDate(start.getDate() - 89)
+  const formatDate = (date: Date): string => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  return [formatDate(start), formatDate(end)]
+}
 /**
  * @description 计算当前日期是该年的第几周,生成字符串
  * @param date
