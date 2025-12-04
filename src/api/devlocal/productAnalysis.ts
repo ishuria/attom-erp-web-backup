@@ -122,7 +122,12 @@ export function getTrendOverviewChart(data: IGetTrendOverviewChartReq): Promise<
  * @param params { sku: string; siteId: number }
  * @returns IGetExpenseCompositionRes
  */
-export function getExpenseComposition(params: { sku: string; siteId: number }): Promise<IGetExpenseCompositionRes> {
+export function getExpenseComposition(params: {
+  sku: string
+  siteId: number
+  startDate: string
+  endDate: string
+}): Promise<IGetExpenseCompositionRes> {
   return request({
     url: `${BASE_API}/product/analysis/expense/breakdown`,
     method: 'get',

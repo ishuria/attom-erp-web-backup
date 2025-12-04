@@ -478,6 +478,8 @@ export interface IGetProductInfo {
   amazonUrl: string
 
   operationTypeList: OperationTypeList[]
+
+  operationUserName: string
 }
 export interface OperationTypeList {
   id: number

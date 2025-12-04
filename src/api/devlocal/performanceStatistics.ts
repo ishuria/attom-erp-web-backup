@@ -76,6 +76,18 @@ export function getUserAttendanceList(data: IGetAssessmentListReq): Promise<IGet
     data,
   })
 }
+/**
+ * 绩效统计-主管考勤统计明细
+ * @param data
+ * @returns
+ */
+export function getUserAttendanceListBySupervisor(data: IGetAssessmentListReq): Promise<IGetUserAttendanceListRes> {
+  return request({
+    url: `${BASE_API}/user/attendance/manager/list`,
+    method: 'post',
+    data,
+  })
+}
 
 /**
  * 调整明细-新增

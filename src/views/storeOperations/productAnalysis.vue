@@ -31,7 +31,13 @@
               <vab-ad-pie-tab v-if="activeName === 1" />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis v-if="activeName === 2" :selected-site="selectedSite" :sku="sku" />
+              <vab-cost-analysis
+                v-if="activeName === 2"
+                :end-date="selectDateRange[1]"
+                :selected-site="selectedSite"
+                :sku="sku"
+                :start-date="selectDateRange[0]"
+              />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
               <vab-comment-reviews v-if="activeName === 3" />
@@ -106,12 +112,15 @@
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-select>
-                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
+                <el-date-picker
+                  v-model="selectDateRange"
+                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
+                  end-placeholder="结束日期"
+                  range-separator="至"
+                  :shortcuts="dateShortcuts"
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 3" inline>
@@ -151,9 +160,15 @@
           <div class="operation-remark" style="margin-bottom: 20px">
             <div style="margin-bottom: 10px">
               <el-text>运营备注</el-text>
-              <el-select v-model="operationTypeId" style="width: 30%; margin-left: 10px" @change="handleChangeOperationType">
+              <el-select
+                v-model="operationTypeId"
+                style="width: 30%; margin-left: 10px; margin-right: 10px"
+                @change="handleChangeOperationType"
+              >
                 <el-option v-for="item in operationTypeList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
+              <el-text>运营：</el-text>
+              <el-text>{{ operationUserName }}</el-text>
             </div>
             <el-input
               v-model="operationRemark"
@@ -185,6 +200,7 @@ import type { TabsPaneContext } from 'element-plus'
 import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } from '~/src/api/devlocal/productPerformance'
 import { OperationTypeList } from '~/src/type/storeOperation/productPerformanceType'
 import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
+import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
 import { adOption, dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
 import { getProductInfo } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
@@ -201,8 +217,15 @@ const route: any = useRoute()
 const router: any = useRouter()
 // 选择的维度 SKU ASIN 父体ASIN
 const selectField = ref<number>(0)
-// 选择的日期范围
-const selectDateRange = ref<[string, string]>(getLast30DaysStringTime())
+// 选择的日期范围 - 从 localStorage 读取或使用默认值
+const getStoredDateRange = (): [string, string] => {
+  const stored = getLocalStorage('productAnalysis:selectDateRange')
+  if (stored && Array.isArray(stored) && stored.length === 2 && stored[0] && stored[1]) {
+    return stored as [string, string]
+  }
+  return getLast30DaysStringTime()
+}
+const selectDateRange = ref<[string, string]>(getStoredDateRange())
 // 同比/环比类型：0=同比，1=环比
 const compareType = ref<number>(0)
 // 选择的SKU（当selectField为0时使用）
@@ -380,6 +403,7 @@ const productInfoLoading = ref<boolean>(false)
 const operationTypeList = ref<OperationTypeList[]>([])
 const operationTypeId = ref<number>(0)
 const operationRemark = ref<string>('')
+const operationUserName = ref<string>('')
 // 获取产品信息
 const fetchProductInfo = async () => {
   if (!sku.value || selectedSite.value === undefined) {
@@ -398,6 +422,7 @@ const fetchProductInfo = async () => {
     operationTypeList.value = data.operationTypeList || []
     operationTypeId.value = data.operationTypeId || 0
     operationRemark.value = data.operationRemark || ''
+    operationUserName.value = data.operationUserName || ''
   } catch (error) {
     console.error('获取产品信息失败:', error)
   } finally {
@@ -448,6 +473,16 @@ watch(
     }
   },
   { immediate: true }
+)
+// 监听日期范围变化，保存到 localStorage
+watch(
+  selectDateRange,
+  (newDateRange) => {
+    if (newDateRange && Array.isArray(newDateRange) && newDateRange.length === 2 && newDateRange[0] && newDateRange[1]) {
+      setLocalStorage('productAnalysis:selectDateRange', newDateRange)
+    }
+  },
+  { deep: true }
 )
 onMounted(() => {
   activeName.value = Number(route.query.activeName)

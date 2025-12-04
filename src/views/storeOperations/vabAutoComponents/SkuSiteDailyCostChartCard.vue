@@ -19,6 +19,7 @@
 
 <script lang="ts" setup>
 import * as echarts from 'echarts'
+import { getLast90DaysStringTime } from '~/src/utils/dateUtils'
 import { storageAgeColorList } from '../constantOption'
 import type { IGetSkuSiteDailyCost } from '/@/type/storeOperation/productAnalysisType'
 
@@ -39,7 +40,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   chartData: () => [],
-  dateRange: () => ['', ''],
+  dateRange: () => getLast90DaysStringTime(),
   height: '240px',
   cardClass: '',
 })
@@ -64,7 +65,7 @@ let chartObserver: ResizeObserver
 // 日期选择器快捷选项
 const dateShortcuts = [
   {
-    text: '前7天',
+    text: '近7天',
     value: () => {
       const end = new Date()
       const start = new Date()
@@ -73,11 +74,20 @@ const dateShortcuts = [
     },
   },
   {
-    text: '前30天',
+    text: '近30天',
     value: () => {
       const end = new Date()
       const start = new Date()
       start.setDate(start.getDate() - 29)
+      return [start, end]
+    },
+  },
+  {
+    text: '近90天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 89)
       return [start, end]
     },
   },
