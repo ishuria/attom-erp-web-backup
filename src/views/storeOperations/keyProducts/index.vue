@@ -64,32 +64,46 @@
       </el-table-column>
       <el-table-column label="1月末Rating" prop="janEndRating">
         <template #default="{ row }">
-          <span :style="{ color: getRatingColor(row.janEndRating) }">{{ row.janEndRating }}</span>
+          <span :style="{ color: getRatingColor(row.janEndRating) }">
+            {{ row.janEndRating }}
+            <br />
+            <span v-show="row.janEndNum">({{ row.janEndNum }})</span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="2月末Rating" prop="febEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.febEndRating) }">{{ row.febEndRating }}</span>
+          <br />
+          <span v-show="row.febEndNum">({{ row.febEndNum }})</span>
         </template>
       </el-table-column>
       <el-table-column label="3月末Rating" prop="marEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.marEndRating) }">{{ row.marEndRating }}</span>
+          <br />
+          <span v-show="row.marEndNum">({{ row.marEndNum }})</span>
         </template>
       </el-table-column>
       <el-table-column label="4月末Rating" prop="aprEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.aprEndRating) }">{{ row.aprEndRating }}</span>
+          <br />
+          <span v-show="row.aprEndNum">({{ row.aprEndNum }})</span>
         </template>
       </el-table-column>
       <el-table-column label="5月末Rating" prop="mayEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.mayEndRating) }">{{ row.mayEndRating }}</span>
+          <br />
+          <span v-show="row.mayEndNum">({{ row.mayEndNum }})</span>
         </template>
       </el-table-column>
       <el-table-column label="6月末Rating" prop="junEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.junEndRating) }">{{ row.junEndRating }}</span>
+          <br />
+          <span v-show="row.junEndNum">({{ row.junEndNum }})</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="ratingStatus">

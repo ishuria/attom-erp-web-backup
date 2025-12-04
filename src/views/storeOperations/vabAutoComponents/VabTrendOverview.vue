@@ -853,9 +853,23 @@ const calcYAxisRange = (yAxisIndex: number) => {
   let min = Math.min(...allValues)
   min = min > 0 ? 0 : min
 
-  return {
-    ...recursion({ min, max }),
+  // 计算 Y 轴范围，确保 0 值对齐
+  const range = recursion({ min, max })
+
+  // 如果计算出的最大值远大于实际最大值，适当调整以让折线更清晰
+  // 但保持 0 值对齐的间隔
+  if (range.max > max * 1.2 && max > 0) {
+    // 如果最大值超出实际值 20% 以上，尝试使用更接近实际值的最大值
+    // 向上取整到最近的 interval
+    const adjustedMax = Math.ceil(max / range.interval) * range.interval
+    if (adjustedMax >= max) {
+      range.max = adjustedMax
+      // 重新计算 top
+      range.top = Math.ceil(Math.abs(range.max) / range.interval)
+    }
   }
+
+  return range
 }
 
 // 计算所有 y 轴的范围，并确保 0 值对齐
@@ -1299,7 +1313,7 @@ const initChart = () => {
             color: '#409EFF',
           },
         },
-        boundaryGap: [0, 0.1], // 为顶部留出空间
+        boundaryGap: [0, 0], // 最大值顶格显示
       },
     ],
     series: [
@@ -1531,7 +1545,7 @@ function handleSelectionChange(selected: boolean, dataGroup: IDataGroup, dataNam
         splitLine: {
           show: false,
         },
-        boundaryGap: [0, 0.1], // 为顶部留出空间
+        boundaryGap: [0, 0], // 最大值顶格显示
       })
 
       currentYAxisCount++
