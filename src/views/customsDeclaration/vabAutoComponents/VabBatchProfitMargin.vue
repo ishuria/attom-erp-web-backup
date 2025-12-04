@@ -33,22 +33,32 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table border :cell-style="cellStyle" :data="pagedData" :header-cell-style="{ textAlign: 'center' }">
-      <el-table-column label="出库日期" min-width="" prop="shipmentDate">
+    <el-table
+      border
+      :cell-style="cellStyle"
+      :data="pagedData"
+      :header-cell-style="{ textAlign: 'center' }"
+      show-summary
+      @sort-change="handleSortChange"
+    >
+      <el-table-column label="出库日期" min-width="" prop="shipmentDate" sortable>
         <template #default="{ row }">
           {{ formatDate(new Date(row.shipmentDate)) }}
         </template>
       </el-table-column>
       <el-table-column label="合同编号" min-width="" prop="contractNumber" />
       <el-table-column label="Shipment ID" min-width="" prop="shipmentId" />
-      <el-table-column label="总CIF售价$" min-width="" prop="totalCif" />
-      <el-table-column label="运费$" min-width="" prop="totalFreightFee" />
+      <el-table-column label="总CIF售价$" min-width="" prop="totalCif" sortable />
+      <el-table-column label="运费$" min-width="" prop="totalFreightFee" sortable />
       <el-table-column label="汇率" min-width="" prop="rate" />
-      <el-table-column label="总人民币售价" min-width="" prop="totalSalePrice" />
-      <el-table-column label="总成本￥" min-width="" prop="totalCost" />
-      <el-table-column label="总利润￥" min-width="" prop="totalProfit" />
-      <el-table-column label="利润率" min-width="" prop="profitMargin" />
-      <el-table-column label="总退税额" min-width="" prop="totalTaxRebate" />
+      <el-table-column label="总人民币售价" min-width="" prop="totalSalePrice" sortable />
+      <el-table-column label="总成本￥" min-width="" prop="totalCost" sortable />
+      <el-table-column label="总利润￥" min-width="" prop="totalProfit" sortable />
+      <el-table-column label="利润率" min-width="" prop="profitMargin" sortable />
+      <el-table-column label="总退税额" min-width="" prop="totalTaxRebate" sortable />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+      </template>
     </el-table>
     <vab-pagination
       :current-page="queryForm.pageNo"
@@ -108,6 +118,34 @@ const fetchData = async () => {
   listLoading.value = false
 }
 
+// 应用排序到当前列表
+const applySort = () => {
+  if (!sortState.value.prop || !sortState.value.order) {
+    return
+  }
+  const { prop, order } = sortState.value
+  list.value.sort((a: any, b: any) => {
+    let aVal = a[prop]
+    let bVal = b[prop]
+
+    // 处理日期类型
+    if (prop === 'shipmentDate') {
+      aVal = new Date(aVal).getTime()
+      bVal = new Date(bVal).getTime()
+    }
+
+    // 处理 null/undefined
+    if (aVal == null) aVal = 0
+    if (bVal == null) bVal = 0
+
+    if (order === 'ascending') {
+      return aVal > bVal ? 1 : aVal < bVal ? -1 : 0
+    } else {
+      return aVal < bVal ? 1 : aVal > bVal ? -1 : 0
+    }
+  })
+}
+
 // 根据关键词过滤数据
 const applyKeywordFilter = () => {
   const keyword = queryForm.keyWord.trim().toLowerCase()
@@ -123,6 +161,8 @@ const applyKeywordFilter = () => {
     list.value = [...originalList.value] // 如果没有关键词，显示所有数据
   }
   total.value = list.value.length
+  // 如果存在排序状态，重新应用排序
+  applySort()
 }
 const emit = defineEmits<{
   updateBatchProfitMarginVisible: [value: boolean]
@@ -158,6 +198,32 @@ const queryData = () => {
     fetchData()
   }
 }
+// 排序状态
+const sortState = ref<{
+  prop: string | null
+  order: 'ascending' | 'descending' | null
+}>({
+  prop: null,
+  order: null,
+})
+
+// 处理排序变化
+const handleSortChange = ({ prop, order }: { prop: string; order: 'ascending' | 'descending' | null }) => {
+  sortState.value = { prop, order }
+  if (order) {
+    // 对整个 list 进行排序
+    applySort()
+  } else {
+    // 取消排序，恢复原始顺序
+    sortState.value = { prop: null, order: null }
+    if (originalList.value.length > 0) {
+      applyKeywordFilter()
+    }
+  }
+  // 排序后重置到第一页
+  queryForm.pageNo = 1
+}
+
 // 计算当前页的数据
 const pagedData = computed(() => {
   const start = (queryForm.pageNo - 1) * queryForm.pageSize
@@ -187,3 +253,14 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
 }
 </script>
+
+<style lang="scss" scoped>
+// 汇总行居中对齐
+:deep(.el-table__footer-wrapper) {
+  .el-table__footer {
+    td {
+      text-align: center !important;
+    }
+  }
+}
+</style>
