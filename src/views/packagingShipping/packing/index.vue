@@ -1596,7 +1596,7 @@ const showShippingWalmart = async () => {
   }
   // 清空上传列表
   fileList.value = []
-  const encasementIds = selectRows.value.map((item: any) => item.id).join('，')
+  const encasementIds = selectRows.value.map((item: any) => item.id).join(',')
   const { data } = await checkEncasementShipment({ encasementIds })
   if (data) {
     const { data: res } = await getChannelList()

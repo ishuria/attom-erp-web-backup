@@ -400,6 +400,12 @@
       </el-col>
     </el-row>
 
+    <el-row class="row-spacing" :gutter="20">
+      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+        <vine-review-card :user-list="userList" />
+      </el-col>
+    </el-row>
+
     <history-assessment-records
       v-model="historyVisible"
       :list="list"
@@ -1013,8 +1019,9 @@ const fetchBillingMonthList = async () => {
   if (useAclStore().getRole.includes(ROLE_BOSS_CODE)) {
     historyBossMonthList.value = data
   } else {
-    // 对于其他角色,去掉当月的
-    historyBossMonthList.value = data.filter((item) => item !== getCurrentMonth())
+    // 对于其他角色,去掉当月和之后的所有月份
+    const currentMonth = getCurrentMonth()
+    historyBossMonthList.value = data.filter((item) => item < currentMonth)
   }
   selectAchievedMonth.value = historyBossMonthList.value[0]
   selectFinishMonth.value = historyBossMonthList.value[0]

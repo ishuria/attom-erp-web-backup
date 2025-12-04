@@ -8,7 +8,7 @@
         </el-image>
       </el-aside>
       <!-- 右侧内容 -->
-      <el-main style="flex: 1; padding: 0; font-weight: 600">
+      <el-main style="flex: 1; padding: 0">
         <!-- 第一部分：产品基本信息 -->
         <div class="product-info-section">
           <el-link
@@ -21,7 +21,15 @@
           >
             {{ productInfo?.asin || '' }}
           </el-link>
-          <div style="margin-top: 6px">{{ productInfo?.sku || '' }}</div>
+          <span class="copySku" style="margin-left: 5px" @click="handleClipboard($event, productInfo?.asin || '')">
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+          <div style="margin-top: 6px">
+            <span class="copySku" @click="handleClipboard($event, productInfo?.sku || '')">
+              {{ productInfo?.sku || '' }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+          </div>
           <div style="margin-top: 6px">{{ productInfo?.productDesc || '' }}</div>
           <!-- 第二部分：评分 -->
           <el-link class="product-info-section" @click="handleGoToReview">
@@ -60,6 +68,7 @@
 <script lang="ts" setup>
 import { Star } from '@element-plus/icons-vue'
 import { computed, nextTick, ref, watch } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
 import { getAmazonStars } from '~/src/utils/rate'
 import type { IGetProductInfo } from '/@/type/storeOperation/productAnalysisType'
 
@@ -206,5 +215,14 @@ watch(
   height: 0;
   content: '';
   border-bottom: 1px solid var(--el-color-primary);
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>

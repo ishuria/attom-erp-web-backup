@@ -2,414 +2,63 @@
   <div class="tabs-table-container no-background-container">
     <el-tabs v-model="activeName" type="border-card">
       <el-tab-pane label="广告库存规则" :name="0">
-        <vab-query-form>
-          <vab-query-form-left-panel>
-            <el-form inline :model="queryForm">
-              <el-form-item>
-                <el-button type="primary" @click="showBatchUpdateOperationAutoRules">批量修改</el-button>
-                <el-button type="primary" @click="queryDefautlParmas">默认参数</el-button>
-              </el-form-item>
-              <el-form-item label="站点">
-                <el-select
-                  v-model="queryForm.sites"
-                  class="multiple-select"
-                  clearable
-                  collapse-tags
-                  collapse-tags-tooltip
-                  :max-collapse-tags="1"
-                  multiple
-                  placeholder="全部站点"
-                  style="width: 220px"
-                  @change="queryData"
-                >
-                  <template #header>
-                    <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">所有</el-checkbox>
-                  </template>
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="运营">
-                <el-select v-model="queryForm.operationUserId" placeholder="请选择运营人员" @change="queryData">
-                  <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-form inline :model="queryForm" @submit.prevent>
-              <el-form-item>
-                <el-input
-                  v-model="queryForm.keyWord"
-                  clearable
-                  placeholder="请输入搜索关键词"
-                  @input="queryData"
-                  @keyup.enter="queryData"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
-              </el-form-item>
-            </el-form>
-          </vab-query-form-right-panel>
-        </vab-query-form>
-
-        <div v-if="listLoading">
-          <el-skeleton animated :loading="listLoading">
-            <template #template>
-              <div style="display: flex; flex-direction: column; height: calc(100vh - 270px)">
-                <div style="display: flex; flex: 1; flex-direction: column; padding: 0">
-                  <el-skeleton-item style="flex: 1; min-height: 300px" variant="p" />
-                  <div style="display: flex; justify-content: center; margin-top: 20px">
-                    <el-skeleton-item style="width: 100%; height: 32px" variant="text" />
-                  </div>
-                </div>
-              </div>
-            </template>
-          </el-skeleton>
-        </div>
-
-        <el-table
-          v-loading="listLoading"
-          border
-          :cell-class-name="clearPadding"
-          :cell-style="cellStyle"
-          :data="operationAutoMationList"
-          :header-cell-style="{ textAlign: 'center' }"
-          stripe
+        <automation-rule-table
+          v-model:check-all="checkAll"
+          v-model:indeterminate="indeterminate"
+          v-model:query-form="queryForm"
+          :list="operationAutoMationList"
+          :list-loading="listLoading"
+          :operate-user-list="operateUserList"
+          :query-total="queryTotal"
+          :site-list="siteList"
+          @batch-update="showBatchUpdateOperationAutoRules"
+          @cell-blur="clickCreateCancel"
           @cell-click="changeCreateInput"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column fixed="left" type="selection" width="38" />
-          <el-table-column class="image-wall" label="图片" width="75">
-            <template #default="{ row }">
-              <el-image
-                fit="fill"
-                :src="row.skuImg"
-                style="display: block; width: 75px; height: 75px"
-                @click="imagePreviewShow(row.skuImg)"
-              >
-                <template #error><el-icon /></template>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(operationAutoMationList, 'SKU', 'sku')" />
-          <el-table-column label="站点" prop="siteName" width="135" />
-          <el-table-column label="运营" prop="operationUser" width="95" />
-          <el-table-column label="规则开关" width="95">
-            <template #default="scope1">
-              <el-switch
-                v-model="scope1.row.roleStatus"
-                :active-value="1"
-                :inactive-value="0"
-                style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                @change="updateRoleStatus(scope1.row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column label="操作对象" width="130">
-            <template #default="scope">
-              <el-select
-                v-model="scope.row.group"
-                placeholder="请选择操作对象"
-                style="min-width: 100%"
-                @change="updateSelectType(scope.row)"
-              >
-                <el-option v-for="item in scope.row.operationTypeList" :key="item.code" :label="item.name" :value="item" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作广告类型" width="130">
-            <template #default="scope">
-              <el-select
-                v-model="scope.row.operationAdvType"
-                multiple
-                placeholder="请选择广告类型"
-                style="min-width: 100%"
-                @change="updateSelectType(scope.row)"
-              >
-                <el-option v-for="item in scope.row.operationAdvTypeList" :key="item.code" :label="item.name" :value="item" />
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="开启广告（满足全部条件）">
-            <el-table-column label="剩余可售天数≥" min-width="125" prop="openDays">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openDays"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openDays }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="可售库存数≥" min-width="110" prop="openStock">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openStock"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openStock }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="断货天数≤" min-width="95" prop="openOutStockDays">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openOutStockDays"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openOutStockDays }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="广告ACOS≤" min-width="120" prop="openAdvAcos">
-              <template #header>
-                <el-tooltip content="" effect="dark" placement="top">
-                  <div class="questionIcon">
-                    广告ACOS≤
-                    <el-icon><info-filled /></el-icon>
-                  </div>
-                  <template #content>
-                    <div class="custom-tooltip">最近30个有广告花费记录日期的整体ACOS</div>
-                  </template>
-                </el-tooltip>
-              </template>
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openAdvAcos"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openAdvAcos }}%</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="Rating≥" min-width="90" prop="openRating">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openRating"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openRating }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="毛利率≥" min-width="110" prop="openGrossProfit">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.openGrossProfit"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.openGrossProfit }}%</span>
-              </template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column label="关闭广告（满足任一条件）">
-            <el-table-column label="断货天数≥" min-width="95" prop="closeOutStockDays">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.closeOutStockDays"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.closeOutStockDays }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="剩余可售天数≤" min-width="125" prop="closeDays">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.closeDays"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.closeDays }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="可售库存数≤" min-width="110" prop="closeStock">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.closeStock"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.closeStock }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="Rating≤" min-width="90" prop="closeRating">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.closeRating"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.closeRating }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column label="毛利率≤" min-width="110" prop="closeGrossProfit">
-              <template #default="{ row, $index }">
-                <div class="none">
-                  <el-input
-                    v-model="row.closeGrossProfit"
-                    type="number"
-                    @blur="clickCreateCancel($event, row, $index)"
-                    @keyup.enter="clickCreateCancel($event, row, $index)"
-                  />
-                </div>
-                <span>{{ row.closeGrossProfit }}%</span>
-              </template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column label="系统最新操作日期" prop="lastUpdateTime" width="110">
-            <template #header>
-              系统最新
-              <br />
-              操作日期
-            </template>
-          </el-table-column>
-          <el-table-column label="操作类型" prop="operationType" width="100">
-            <template #default="{ row }">
-              <el-tag :type="row.operationType === 0 ? 'danger' : 'success'">
-                {{ row.operationType === 0 ? '关广告' : '开广告' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作结果" prop="operationResult" width="100">
-            <template #default="{ row }">
-              <el-tag :type="row.operationResult === 0 ? 'danger' : 'success'">
-                {{ row.operationResult === 0 ? '失败' : '成功' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-
-          <el-table-column fixed="right" label="操作" width="130">
-            <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="openSystemOperationLog(row)">系统操作日志</el-link>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-empty class="vab-data-empty" description="暂无数据" />
-          </template>
-        </el-table>
-        <vab-pagination
-          :page-no="queryForm.pageNo"
-          :page-size="queryForm.pageSize"
-          :total="queryTotal"
+          @check-all="handleCheckAll"
           @current-change="currentChange"
+          @default-params="queryDefautlParmas"
+          @image-preview="imagePreviewShow"
+          @query-data="queryData"
+          @role-status-change="updateRoleStatus"
+          @select-type-change="updateSelectType"
+          @selection-change="handleSelectionChange"
           @size-change="sizeChange"
+          @system-operation-log="openSystemOperationLog"
+        />
+      </el-tab-pane>
+      <el-tab-pane label="调价库存规则" :name="1">
+        <price-adjustment-inventory-rules
+          v-model:query-form="priceAdjustmentInventoryRulesQueryForm"
+          :list="priceAdjustmentInventoryRulesList"
+          :loading="priceAdjustmentInventoryRulesLoading"
+          :operate-user-list="operateUserList"
+          :site-list="siteList"
+          :total="priceAdjustmentInventoryRulesQueryTotal"
+          @current-change="priceAdjustmentInventoryRulesCurrentChange"
+          @query-data="priceAdjustmentInventoryRulesQueryData"
+          @size-change="priceAdjustmentInventoryRulesSizeChange"
         />
       </el-tab-pane>
     </el-tabs>
 
     <!-- 批量修改 -->
-    <vab-dialog v-model="pictureBatchUpdateVisible" :title="dialogTitle" top="7vh" width="23%">
-      <el-form ref="pictureBatchUpdateFormRef" label-position="right" label-width="auto" :model="pictureBatchUpdateForm" style="margin: 0">
-        <el-form-item label="规则开关" prop="roleStatus">
-          <el-select v-model="pictureBatchUpdateForm.roleStatus" :disabled="batchBtnLoading" placeholder="请填入信息">
-            <el-option label="关闭广告" :value="0" />
-            <el-option label="开启广告" :value="1" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="操作对象" prop="requiredCompletionDate">
-          <el-select v-model="pictureBatchUpdateForm.group" :disabled="batchBtnLoading" placeholder="请选择操作对象">
-            <el-option v-for="item in operationTypeList" :key="item.code" :label="item.name" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="操作广告类型" prop="requiredCompletionDate">
-          <el-select v-model="pictureBatchUpdateForm.operationAdvType" :disabled="batchBtnLoading" multiple placeholder="请选择广告类型">
-            <el-option v-for="item in operationAdvTypeList" :key="item.code" :label="item.name" :value="item" />
-          </el-select>
-        </el-form-item>
-
-        <el-card>
-          <template #header><h3>开启广告</h3></template>
-          <el-form-item label="剩余可售天数 ≥ " prop="requiredCompletionDate">
-            <el-input v-model="pictureBatchUpdateForm.openDays" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="可售库存数 ≥ " prop="cooperationCommissionRatio">
-            <el-input v-model="pictureBatchUpdateForm.openStock" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="断货天数 ≤ " prop="individualCommissionRate">
-            <el-input v-model="pictureBatchUpdateForm.openOutStockDays" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="广告ACOS ≤ " prop="cooperationWeight">
-            <el-input v-model="pictureBatchUpdateForm.openAdvAcos" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="Rating ≥ " prop="addition">
-            <el-input v-model="pictureBatchUpdateForm.openRating" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="毛利率 ≥ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.openGrossProfit" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-        </el-card>
-
-        <el-card>
-          <template #header><h3>关闭广告</h3></template>
-          <el-form-item label="断货天数 ≥ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.closeOutStockDays" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="剩余可售天数 ≤ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.closeDays" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="可售库存数 ≤ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.closeStock" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="Rating ≤ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.closeRating" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-          <el-form-item label="毛利率 ≤ " prop="lowRate">
-            <el-input v-model="pictureBatchUpdateForm.closeGrossProfit" :disabled="batchBtnLoading" type="number" />
-          </el-form-item>
-        </el-card>
-      </el-form>
-      <template #footer>
-        <el-button @click="cancleUpdateTask">取消</el-button>
-        <el-button :loading="batchBtnLoading" type="primary" @click="batchUpdateTask">确认</el-button>
-      </template>
-    </vab-dialog>
+    <batch-update-dialog
+      v-model="pictureBatchUpdateVisible"
+      :form="pictureBatchUpdateForm"
+      :loading="batchBtnLoading"
+      :operation-adv-type-list="operationAdvTypeList"
+      :operation-type-list="operationTypeList"
+      :title="dialogTitle"
+      @confirm="batchUpdateTask"
+    />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <automation-system-operation-log :id="logId" v-model="systemOperationLogVisible" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { InfoFilled, Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { isEqual } from 'lodash-es'
-import { CSSProperties } from 'vue'
 import {
   queryDefaultParamsOperationAutoMation,
   queryOperationAutoMationList,
@@ -422,7 +71,7 @@ import { getUserAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IAutoMationItem, IAutoMationQueryReq, IAutoMationUpdateReq, IOperationType } from '/@/type/storeOperation/autoMation'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+
 defineOptions({
   name: 'Automation',
 })
@@ -443,6 +92,13 @@ const activeName = ref(0)
 const operationTypeList = ref<IOperationType[]>([])
 const operationAdvTypeList = ref<IOperationType[]>([])
 const queryForm = reactive<IAutoMationQueryReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 30,
+  sites: [],
+  operationUserId: -1,
+})
+const priceAdjustmentInventoryRulesQueryForm = reactive<IAutoMationQueryReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 30,
@@ -479,10 +135,13 @@ const pictureBatchUpdateForm = reactive<IAutoMationUpdateReq>({
 
 let copyRow: IAutoMationItem
 const listLoading = ref<boolean>(false)
+const priceAdjustmentInventoryRulesLoading = ref<boolean>(false)
 const operationAutoMationList = ref<IAutoMationItem[]>([])
+const priceAdjustmentInventoryRulesList = ref<IAutoMationItem[]>([])
 const siteList = ref<OptionType[]>([])
 const operateUserList = ref<OptionType[]>([])
 const queryTotal = ref<number>(0)
+const priceAdjustmentInventoryRulesQueryTotal = ref<number>(0)
 const disabledDev = ref<boolean>(false)
 const multipleSelection = ref<IAutoMationItem[]>([])
 const logId = ref<number>(-1)
@@ -490,11 +149,6 @@ const logId = ref<number>(-1)
 const openSystemOperationLog = (row: IAutoMationItem) => {
   logId.value = row.id!
   systemOperationLogVisible.value = true
-}
-
-const queryData = () => {
-  queryForm.pageNo = 1
-  fetchData()
 }
 
 // 获取站点列表
@@ -534,11 +188,48 @@ const fetchData = async () => {
     listLoading.value = false
   }
 }
-
+const currentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchData()
+}
 const sizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
   fetchData()
+}
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+const fetchPriceAdjustmentInventoryRulesData = async () => {
+  // try {
+  //   priceAdjustmentInventoryRulesLoading.value = true
+  //   const { data } = await queryPriceAdjustmentInventoryRulesList(priceAdjustmentInventoryRulesQueryForm)
+  //   if (data?.list.length == 0) {
+  //     priceAdjustmentInventoryRulesLoading.value = false
+  //     priceAdjustmentInventoryRulesList.value = []
+  //     priceAdjustmentInventoryRulesQueryTotal.value = 0
+  //     return
+  //   }
+  //   priceAdjustmentInventoryRulesList.value = data?.list!
+  //   priceAdjustmentInventoryRulesQueryTotal.value = data?.total!
+  //   priceAdjustmentInventoryRulesLoading.value = false
+  // } catch (error) {
+  //   priceAdjustmentInventoryRulesLoading.value = false
+  // }
+}
+const priceAdjustmentInventoryRulesCurrentChange = (value: number) => {
+  priceAdjustmentInventoryRulesQueryForm.pageNo = value
+  fetchPriceAdjustmentInventoryRulesData()
+}
+const priceAdjustmentInventoryRulesSizeChange = (value: number) => {
+  priceAdjustmentInventoryRulesQueryForm.pageNo = 1
+  priceAdjustmentInventoryRulesQueryForm.pageSize = value
+  fetchPriceAdjustmentInventoryRulesData()
+}
+const priceAdjustmentInventoryRulesQueryData = () => {
+  priceAdjustmentInventoryRulesQueryForm.pageNo = 1
+  fetchPriceAdjustmentInventoryRulesData()
 }
 
 // 创建blur修改
@@ -585,11 +276,6 @@ const updateCommon = async (value: IAutoMationItem) => {
   if (data) {
     $baseMessage('修改成功！', 'success')
   }
-}
-
-const currentChange = (value: number) => {
-  queryForm.pageNo = value
-  fetchData()
 }
 
 const handleCheckAll = (val: CheckboxValueType) => {
@@ -765,40 +451,12 @@ const resetForm = () => {
   pictureBatchUpdateForm.roleStatus = 0
 }
 
-const cancleUpdateTask = () => {
-  pictureBatchUpdateVisible.value = false
-  batchBtnLoading.value = false
-}
-
 const updateRoleStatus = (value: IAutoMationItem) => {
   updateCommon(value)
 }
 
 const updateSelectType = (value: IAutoMationItem) => {
   updateCommon(value)
-}
-const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.column.label === '图片') {
-    return 'clear-padding'
-  }
-  return ''
-}
-
-const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  const label = data.column.label
-  if (label === 'SKU') {
-    return {
-      textAlign: 'left',
-    }
-  } else if (label !== '站点' && label !== '运营') {
-    return {
-      cursor: 'pointer',
-      textAlign: 'center',
-    }
-  }
-  return {
-    textAlign: 'center',
-  }
 }
 onBeforeMount(() => {
   operationAndDevelopSelect()
@@ -860,18 +518,6 @@ onBeforeMount(() => {
         transform-origin: center; // 确保放大从中心开始
       }
     }
-  }
-}
-.none {
-  display: none;
-}
-.questionIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .el-icon {
-    margin-left: 3px;
   }
 }
 </style>
