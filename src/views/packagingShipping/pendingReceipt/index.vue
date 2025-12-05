@@ -17,6 +17,11 @@
             >
               <el-option v-for="item in printerOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+            <el-space :size="16" style="align-items: center">
+              <el-statistic class="compact-statistic" title="SKU套数" :value="totalSkuNumber" />
+              <el-divider direction="vertical" style="height: 34px" />
+              <el-statistic class="compact-statistic" title="零件数量" :value="totalComponentNumber" />
+            </el-space>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
@@ -647,6 +652,12 @@ defineOptions({
   name: 'PendingReceipt',
 })
 
+const totalSkuNumber = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.purchaseSkuNumber) || 0), 0)
+})
+const totalComponentNumber = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.purchaseCount) || 0), 0)
+})
 const problemReasonOption = [
   { label: '供应商不配合', value: 0 },
   { label: '交期问题', value: 1 },
@@ -1477,5 +1488,17 @@ onBeforeMount(async () => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
+    }
+  }
 }
 </style>

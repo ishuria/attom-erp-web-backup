@@ -77,6 +77,7 @@ export interface IGetMatchPoList {
 
   /** 关联关税单的id */
   tariffId: number | null
+  encasementNumber: number | null
 }
 
 export interface IGetMatchPackageListReq {

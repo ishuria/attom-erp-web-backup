@@ -25,6 +25,9 @@
                 />
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="allTaskForm" @submit.prevent>
@@ -101,6 +104,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -190,6 +196,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="taskingForm" @submit.prevent>
@@ -264,6 +273,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -338,6 +350,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -412,6 +427,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -479,6 +497,9 @@
                 </el-select>
               </el-form-item>
             </el-form>
+            <div class="summary-info">
+              <el-statistic class="compact-statistic" title="任务总数" :value="totalTaskNumber" />
+            </div>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
@@ -1186,6 +1207,10 @@ const selectRows = ref<any>([])
 const setSelectRows = (value: any[]) => {
   selectRows.value = value
 }
+const totalTaskNumber = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.packageTaskCount) || 0), 0)
+})
+
 // 开始任务人员选择选中的行
 const selectPersonRows = ref<any>([])
 const setSelectPersonRows = (value: string) => {
@@ -2163,5 +2188,21 @@ onBeforeMount(() => {
 // 选中后中间的 “✔” 的样式
 :deep(.custom-checkbox .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after) {
   border-color: #fff;
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
+    }
+  }
+}
+/* 统计样式 */
+.summary-info {
+  margin: 0px 10px calc(var(--el-margin) / 2) 15px;
 }
 </style>

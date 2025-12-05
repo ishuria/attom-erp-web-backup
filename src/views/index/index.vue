@@ -1028,7 +1028,9 @@ const fetchBillingMonthList = async () => {
   selectNewProductMonth.value = data[0]
   selectNewProductOneYearMonth.value = data[0]
   selectJobLevelMonth.value = data[0]
-  selectPersonalBonusMonth.value = data[0]
+  // 个人奖金月份默认展示当前月份
+  const currentMonth = getCurrentMonth()
+  selectPersonalBonusMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
 }
 
 // 获取个人奖金数据

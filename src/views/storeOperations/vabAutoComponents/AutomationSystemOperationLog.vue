@@ -1,7 +1,7 @@
 <template>
   <div>
     <vab-dialog v-model="visible" title="系统操作日志" width="95%">
-      <el-table :cell-style="{ textAlign: 'center' }" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="60vh" stripe>
+      <el-table :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" max-height="60vh" stripe>
         <el-table-column label="更新时间" prop="updateTime" width="115" />
         <el-table-column label="操作对象" prop="operationGroupName" width="100" />
         <el-table-column label="操作广告类型" prop="operationTypeName" width="120" />
@@ -108,6 +108,7 @@
 </template>
 
 <script lang="ts" setup>
+import { CSSProperties } from 'vue'
 import { querySystemOperationLogListOperationAutoMation } from '~/src/api/devlocal/operationAutoMation'
 import { IAutomationLogItem } from '/@/type/storeOperation/autoMation'
 
@@ -139,6 +140,82 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
 })
+
+// 表格单元格样式常量
+const CELL_STYLES = {
+  // 危险样式（红色背景+红色文字+居中）
+  danger: {
+    backgroundColor: 'var(--el-color-danger-light-9)',
+    color: 'var(--el-color-danger)',
+    textAlign: 'center',
+  } as CSSProperties,
+  // 成功样式（绿色背景+绿色文字+居中）
+  success: {
+    backgroundColor: 'var(--el-color-success-light-9)',
+    color: 'var(--el-color-success)',
+    textAlign: 'center',
+  } as CSSProperties,
+  // 默认居中样式
+  default: {
+    textAlign: 'center',
+  } as CSSProperties,
+}
+
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
+  const row = data.row
+  const column = data.column
+
+  // 关广告时，只判断关广告条件，只显示红色
+  if (row.operationType === 0) {
+    if (column.label === '剩余可售天数') {
+      if (row.operationDays <= row.closeDays) {
+        return CELL_STYLES.danger
+      }
+    } else if (column.label === '断货天数') {
+      if (row.operationOutStockDays >= row.closeOutStockDays) {
+        return CELL_STYLES.danger
+      }
+    } else if (column.label === '可售库存数') {
+      if (row.operationStock <= row.closeStock) {
+        return CELL_STYLES.danger
+      }
+    } else if (column.label === '毛利率') {
+      if (row.operationGrossProfit <= row.closeGrossProfit) {
+        return CELL_STYLES.danger
+      }
+    } else if (column.label === 'Rating') {
+      if (row.operationRating <= row.closeRating) {
+        return CELL_STYLES.danger
+      }
+    }
+  }
+  // 开广告时，只判断开广告条件，只显示绿色
+  else if (row.operationType === 1) {
+    if (column.label === '剩余可售天数') {
+      if (row.operationDays >= row.openDays) {
+        return CELL_STYLES.success
+      }
+    } else if (column.label === '断货天数') {
+      if (row.operationOutStockDays <= row.openOutStockDays) {
+        return CELL_STYLES.success
+      }
+    } else if (column.label === '可售库存数') {
+      if (row.operationStock >= row.openStock) {
+        return CELL_STYLES.success
+      }
+    } else if (column.label === '毛利率') {
+      if (row.operationGrossProfit >= row.openGrossProfit) {
+        return CELL_STYLES.success
+      }
+    } else if (column.label === 'Rating') {
+      if (row.operationRating >= row.openRating) {
+        return CELL_STYLES.success
+      }
+    }
+  }
+
+  return CELL_STYLES.default
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
