@@ -41,6 +41,15 @@
         </el-button>
         <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件校验上传</el-button>
         <el-button type="primary" @click="uploadPreOrderCheck">预入单校验</el-button>
+        <el-space :size="16" style="align-items: center">
+          <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
+          <el-divider direction="vertical" style="height: 34px" />
+          <el-statistic class="compact-statistic" title="产品总数" :value="totalProductNumber" />
+          <el-divider direction="vertical" style="height: 34px" />
+          <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总重量(kg)" :value="totalWeight" />
+          <el-divider direction="vertical" style="height: 34px" />
+          <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总体积(m³)" :value="totalVolume" />
+        </el-space>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -586,6 +595,7 @@ import { ArrowDown, Search, UploadFilled } from '@element-plus/icons-vue'
 import type { FormInstance, TableInstance, UploadUserFile } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
+import { computed, h } from 'vue'
 import {
   addShipmentCost,
   archiveOutbound,
@@ -1622,6 +1632,20 @@ const handleColorSwitch = (row: any) => {
     return 'checkbox-green'
   }
 }
+// 统计值计算
+const totalBoxes = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.encasementNumber) || 0), 0)
+})
+const totalProductNumber = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.totalNumber) || 0), 0)
+})
+const totalWeight = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.weight) || 0), 0)
+})
+const totalVolume = computed(() => {
+  return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.volume) || 0), 0)
+})
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getMatchPoList(queryForm)
@@ -1663,7 +1687,7 @@ onActivated(() => {
   width: 300px !important;
 }
 
-.el-checkbox {
+:deep(.el-checkbox) {
   transform: scale(1.3);
   transform-origin: center;
 }
@@ -1754,6 +1778,18 @@ onActivated(() => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.compact-statistic {
+  :deep() {
+    .el-statistic__head {
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    .el-statistic__content {
+      margin-top: 2px;
+      font-size: 18px;
+    }
   }
 }
 </style>

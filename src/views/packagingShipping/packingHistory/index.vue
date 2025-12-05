@@ -5,11 +5,11 @@
         <el-space :size="16" style="align-items: center">
           <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
           <el-divider direction="vertical" style="height: 34px" />
+          <el-statistic class="compact-statistic" title="产品总数" :value="totalProductNumber" />
+          <el-divider direction="vertical" style="height: 34px" />
           <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总重量(kg)" :value="totalWeight" />
           <el-divider direction="vertical" style="height: 34px" />
           <el-statistic class="compact-statistic" :formatter="(val: number) => val.toFixed(2)" title="总体积(m³)" :value="totalVolume" />
-          <el-divider direction="vertical" style="height: 34px" />
-          <el-statistic class="compact-statistic" title="产品总数" :value="totalProductNumber" />
         </el-space>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
