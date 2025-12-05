@@ -20,6 +20,7 @@ const props = defineProps<{
   name: string
   myName: string
   showMedal?: boolean // 是否显示奖牌图标
+  showCommission?: boolean // 是否显示提成信息
 }>()
 
 const option = reactive<any>({
@@ -31,7 +32,7 @@ const option = reactive<any>({
   grid: {
     top: '0%',
     left: '2%',
-    right: '20%',
+    right: props.showCommission ? '35%' : '20%',
     bottom: '0%',
     containLabel: true,
   },
@@ -92,7 +93,25 @@ const option = reactive<any>({
       label: {
         show: true,
         position: 'right',
-        fontSize: 12,
+        fontSize: 14,
+        formatter: (params: any) => {
+          const value = params.value
+          if (props.showCommission && params.dataIndex !== undefined) {
+            const item = props.list[params.dataIndex]
+            if (item?.commissionPercent !== undefined && item.commissionPercent !== null) {
+              return `${value} {commission|(提成 ${item.commissionPercent}%)}`
+            }
+          }
+          return value
+        },
+        rich: {
+          commission: {
+            fontSize: 14,
+            color: '#389E0D',
+            padding: [0, 0, 0, 4],
+            fontWeight: 'bold',
+          },
+        },
       },
       itemStyle: {
         borderRadius: 10,

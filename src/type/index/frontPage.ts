@@ -175,6 +175,7 @@ export interface IRankItem {
   value: number
   assessmentNumberFinish?: number
   noAssessment?: number
+  commissionPercent?: number // 提成百分比
 }
 
 export interface IAssessAdjustRes {
