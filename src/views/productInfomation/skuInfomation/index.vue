@@ -213,7 +213,7 @@
                 <el-dropdown-item @click.stop="showPackingTimeDetails(row)">
                   <el-link type="primary" underline="never">打包工时</el-link>
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click.stop="showSkuDeliverTimeDetails(row)">
                   <el-link type="primary" underline="never">交期查看</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -254,6 +254,8 @@
     <vab-packing-time-details v-model="packingTimeDetailsVisible" :sku="sku" />
     <!-- 查看HTS（只读） -->
     <vab-hts-dialog v-model="htsVisible" :readonly="true" :sku="currentSku" />
+    <!-- Sku交期明细  -->
+    <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisibel" :sku="sku"/>
   </div>
 </template>
 
@@ -280,6 +282,12 @@ const sku = ref<string>('')
 const showPackingTimeDetails = (row: any) => {
   selectedRowIndex.value = row.skuId
   packingTimeDetailsVisible.value = true
+  sku.value = row._sku[0]
+}
+const skuDeliveryTimeVisibel = ref<boolean>(false)
+const showSkuDeliverTimeDetails = (row: any) => {
+  selectedRowIndex.value = row.skuId
+  skuDeliveryTimeVisibel.value = true
   sku.value = row._sku[0]
 }
 const htsVisible = ref<boolean>(false)
