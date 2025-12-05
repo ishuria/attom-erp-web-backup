@@ -481,6 +481,9 @@ export const trendOverviewColumns = [
     prop: 'estimatedStorageCostNextMonth',
     checked: true,
     minWidth: 140,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
   },
   {
     label: '退款金额',
@@ -520,6 +523,9 @@ export const trendOverviewColumns = [
     prop: 'cpa',
     checked: true,
     minWidth: 90,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
   },
   // {
   //   label: '广告转化率',
@@ -698,12 +704,18 @@ export const trendOverviewColumns = [
     prop: 'totalSalesAmount',
     checked: true,
     minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
   },
   {
     label: '净利润(利润报表)',
     prop: 'grossProfit',
     checked: true,
     minWidth: 130,
+    formatter: (_row: any, _column: any, cellValue: any) => {
+      return cellValue != null ? `${_row.currencyIcon}${cellValue}` : ''
+    },
   },
 ]
 

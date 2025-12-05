@@ -278,12 +278,14 @@ const tableRef = ref()
 const packingTimeDetailsVisible = ref<boolean>(false)
 const sku = ref<string>('')
 const showPackingTimeDetails = (row: any) => {
+  selectedRowIndex.value = row.skuId
   packingTimeDetailsVisible.value = true
   sku.value = row._sku[0]
 }
 const htsVisible = ref<boolean>(false)
 const currentSku = ref<string>('')
 const handleViewHts = (row: any) => {
+  selectedRowIndex.value = row.skuId
   currentSku.value = row._sku[0] || row.sku
   htsVisible.value = true
 }
@@ -392,12 +394,14 @@ const handleCopySkuConfirm = async () => {
 }
 const skuId = ref<number>(0)
 const handleCopySku = (row: any) => {
+  selectedRowIndex.value = row.skuId
   $baseConfirm('只能复制相同产品，不支持复制后修改成其他产品', null, () => {
     copySkuVisible.value = true
     skuId.value = row.skuId
   })
 }
 const handleSkuDetail = async (row: any) => {
+  selectedRowIndex.value = row.skuId
   const query = { title: `${row.sku.split('<br/>')[0]}`, skuId: row.skuId }
   const matched = handleMatched(allRoutes.value, '/productInfomation/skuDetailView')
   const tab = handleTabs({

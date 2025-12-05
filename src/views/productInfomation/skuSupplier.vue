@@ -415,21 +415,21 @@ const handleSubmit = async () => {
             $baseMessage('新增供应商提交成功', 'success', 'hey')
           }
         } else if (route.query.from === 'allReadyComponents') {
-          // const { data } = await createProductComponentSuppliser({
-          //   skuId: parseInt(route.query.skuId),
-          //   existingPartsListId: parseInt(route.query.componentId),
-          //   unit: form.unit,
-          //   suppliser: form.suppliser,
-          //   invoicing: form.invoicing,
-          //   actualTaxRate: form.actualTaxRate,
-          //   invoicingTaxRate: form.invoicingTaxRate,
-          // })
-          // if (data) {
-          //   list.value.push(newComponent)
-          //   fetchData()
-          //   addSupplierVisible.value = false
-          //   $baseMessage('新增供应商提交成功', 'success', 'hey')
-          // }
+          const { data } = await createProductComponentSuppliser({
+            skuId: parseInt(route.query.skuId),
+            existingPartsListId: parseInt(route.query.componentId),
+            unit: form.unit,
+            suppliser: form.suppliser,
+            invoicing: form.invoicing,
+            actualTaxRate: form.actualTaxRate,
+            invoicingTaxRate: form.invoicingTaxRate,
+          })
+          if (data) {
+            list.value.push(newComponent)
+            fetchData()
+            addSupplierVisible.value = false
+            $baseMessage('新增供应商提交成功', 'success', 'hey')
+          }
         }
       } catch (error) {
         console.error(error)
