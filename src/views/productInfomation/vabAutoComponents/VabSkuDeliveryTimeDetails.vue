@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-model="visible" title="SKU交期" top="5vh" width="1400px">
+    <el-dialog v-model="visible" title="SKU交期" top="5vh" width="70%">
       <div class="dialog-content">
         <!-- 上半部分：折线图 -->
         <div class="chart-section">
@@ -46,22 +46,23 @@
           <el-table
             v-loading="listLoading"
             border
+            :data="list"
             :cell-style="{ textAlign: 'center' }"
             :header-cell-style="{ textAlign: 'center' }"
             max-height="700"
             :span-method="objectSpanMethod"
             stripe
           >
-            <el-table-column label="PO" min-width="100" prop="po" />
-            <el-table-column label="PO发布日期" min-width="100" prop="poReleaseDate" />
-            <el-table-column label="SKU" min-width="110" prop="sku" />
-            <el-table-column label="SKU签收日期" min-width="100" prop="skuSignDate" />
-            <el-table-column label="SKU交期" min-width="110" prop="deliveryTime" />
-            <el-table-column label="零件名" min-width="100" prop="componentName" />
-            <el-table-column label="供应商" min-width="100" prop="suppliser" />
-            <el-table-column label="零件交期" min-width="110" prop="componentDeliveryTime" />
+            <el-table-column label="PO" min-width="75" prop="po" />
+            <el-table-column label="PO发布日期" min-width="75" prop="poReleaseDate" />
+            <el-table-column label="SKU" min-width="100" prop="sku" />
+            <el-table-column label="SKU签收日期" min-width="90" prop="skuSignDate" />
+            <el-table-column label="SKU交期" min-width="45" prop="deliveryTime" />
+            <el-table-column label="零件名" min-width="120" prop="componentName" />
+            <el-table-column label="供应商" min-width="120" prop="suppliser" />
+            <el-table-column label="零件交期" min-width="45" prop="componentDeliveryTime" />
             <el-table-column label="签收日期" min-width="100" prop="componentSignDate" />
-            <el-table-column label="生产完成日期" min-width="110" prop="productionCompletionDate" />
+            <el-table-column label="生产完成日期" min-width="90" prop="productionCompletionDate" />
             <template #empty>
               <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 700px" />
             </template>
@@ -80,8 +81,9 @@
 </template>
 
 <script setup lang="ts">
+import { querySkuDeliveryTime } from "/@/api/devlocal/productInformation.ts";
 import { Search } from '@element-plus/icons-vue'
-import { IGetPackingTimeDetailsReq, ISkuDeliveryTimeDetail } from '/@/type/productInformation/skuCustomsClearance.ts'
+import { IGetPackingTimeDetailsReq, ISkuComponentDeliveryTimeDetail } from '/@/type/productInformation/skuCustomsClearance.ts'
 
 defineOptions({
   name: 'VabSkuDeliveryTimeDetails',
@@ -125,7 +127,7 @@ const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
 }
-const list = ref<ISkuDeliveryTimeDetail[]>([])
+const list = ref<ISkuComponentDeliveryTimeDetail[]>([])
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   const label = column.label
   // 设置需要合并的列
@@ -155,9 +157,21 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 const fetchData = async () => {
   listLoading.value = true
   queryForm.sku = props.sku
-
+  const {data} = await querySkuDeliveryTime(queryForm)
+  list.value = data.list
+  total.value = data.total
   listLoading.value = false
 }
+
+watch(
+  () => props.modelValue,
+  (newVal: boolean) => {
+    if (newVal) {
+      queryData()
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>

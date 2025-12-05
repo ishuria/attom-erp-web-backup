@@ -581,7 +581,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="confirmSign">确认</el-button>
+        <el-button type="primary" :loading="signBntLoading" @click="confirmSign" >确认</el-button>
       </template>
     </vab-dialog>
     <!-- 批量签收 -->
@@ -658,6 +658,8 @@ const totalSkuNumber = computed(() => {
 const totalComponentNumber = computed(() => {
   return selectRows.value.reduce((sum: number, item: any) => sum + (Number(item.purchaseCount) || 0), 0)
 })
+
+const signBntLoading = ref<boolean>(false)
 const problemReasonOption = [
   { label: '供应商不配合', value: 0 },
   { label: '交期问题', value: 1 },
@@ -892,6 +894,7 @@ const closeSignDialog = () => {
 const confirmSign = async () => {
   try {
     signLoading.value = true
+    signBntLoading.value = true
     const { data } = await signComponent({
       signId: copyRow.value.signId,
       signCount: signForm.signCount,
@@ -900,11 +903,13 @@ const confirmSign = async () => {
     if (data) {
       $baseMessage('签收成功', 'success')
       signLoading.value = false
+      signBntLoading.value = false
       closeSignDialog()
       fetchData()
     }
   } catch (error) {
     signLoading.value = false
+    signBntLoading.value = false
   }
 }
 // 修改弹窗是否可见

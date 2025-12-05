@@ -73,11 +73,13 @@ export interface IGetPackingTimeDetailsChartReq {
   /** 结束日期 */
   endTime?: string
 }
+
 export interface IGetPackingTimeDetailsChartResp {
   dates: Date[]
   times: number[]
 }
-export interface ISkuDeliveryTimeDetail {
+
+export interface ISkuComponentDeliveryTimeDetail {
   /** 分组用的唯一标识，表格合并行时依赖该字段 */
   id: number | string
   /** PO 单号 */
@@ -100,4 +102,36 @@ export interface ISkuDeliveryTimeDetail {
   componentSignDate: string
   /** 生产完成日期 */
   productionCompletionDate: string
+}
+
+export interface ISkuDeliveryTime {
+  /** 分组用的唯一标识，表格合并行时依赖该字段 */
+  id: number | string
+  /** PO 单号 */
+  po: string
+  /** PO 发布日期 */
+  poReleaseDate: string
+  /** SKU */
+  sku: string
+  /** SKU 签收日期 */
+  skuSignDate: string
+  /** SKU 交期 */
+  deliveryTime: string
+  /** 零件名 */
+  componentName: string
+  /** 供应商 */
+  suppliser: string
+  /** 零件交期 */
+  componentDeliveryTime: string
+  /** 零件签收日期 */
+  componentSignDate: string
+  /** 生产完成日期 */
+  productionCompletionDate: string
+}
+
+export interface ISkuDeliveryTimeResp {
+  data: {
+    list: ISkuComponentDeliveryTimeDetail[]
+    total: number
+  }
 }

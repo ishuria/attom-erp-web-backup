@@ -255,7 +255,7 @@
     <!-- 查看HTS（只读） -->
     <vab-hts-dialog v-model="htsVisible" :readonly="true" :sku="currentSku" />
     <!-- Sku交期明细  -->
-    <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisibel" :sku="sku"/>
+    <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisible" :sku="sku"/>
   </div>
 </template>
 
@@ -284,10 +284,10 @@ const showPackingTimeDetails = (row: any) => {
   packingTimeDetailsVisible.value = true
   sku.value = row._sku[0]
 }
-const skuDeliveryTimeVisibel = ref<boolean>(false)
+const skuDeliveryTimeVisible = ref<boolean>(false)
 const showSkuDeliverTimeDetails = (row: any) => {
   selectedRowIndex.value = row.skuId
-  skuDeliveryTimeVisibel.value = true
+  skuDeliveryTimeVisible.value = true
   sku.value = row._sku[0]
 }
 const htsVisible = ref<boolean>(false)
