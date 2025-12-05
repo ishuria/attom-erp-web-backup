@@ -401,7 +401,7 @@
     </el-row>
 
     <el-row class="row-spacing" :gutter="20">
-      <el-col v-if="ableProductManagerViewCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
+      <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <vine-review-card :user-list="userList" />
       </el-col>
     </el-row>
@@ -425,7 +425,6 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
-import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import {
@@ -498,6 +497,7 @@ import {
   IRankItem,
   IWarehouseCapacityItem,
 } from '/@/type/index/frontPage'
+import { IGetOperationAmazonSKUList } from '/@/type/storeOperation/productPerformanceType'
 import { getCurrentMonth, getLast30DaysStringTime, getLastMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({

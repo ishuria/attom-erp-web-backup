@@ -25,29 +25,35 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column
-        label="SKU"
-        prop="sku"
-        :width="Math.max(flexColumnWidth(list, 'SKU', 'sku', 50), flexColumnWidth(list, 'SKU', 'productDesc', 50))"
-      >
+      <el-table-column label="SKU" :min-width="flexColumnWidth(list, 'SKU', 'sku', 50)" prop="sku">
         <template #default="{ row }">
           <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
             {{ row.sku }}
             <vab-icon icon="file-copy-2-fill" />
           </span>
           <br />
-          <div class="product-desc-container">
+          <!-- <div class="product-desc-container">
             <span class="product-desc">{{ row.productDesc }}</span>
             <span class="flag-container" :class="{ 'japan-flag': row.flag === 'JP' }">
+              <country-flag :country="row.flag" />
+            </span>
+          </div> -->
+          <div class="rate-wrapper">
+            <span class="rate-value">{{ row.janEndRating }}</span>
+            <span>
+              <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
+            </span>
+            <span class="rate-count">{{ row.janEndNum }}</span>
+            <span :class="{ 'japan-flag': row.flag === 'JP' }" style="margin-top: -2px">
               <country-flag :country="row.flag" />
             </span>
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="上线日期" prop="saleDate" />
-      <el-table-column label="上新天数" prop="newArrivalDay" />
-      <el-table-column label="Vine数量" prop="vineCount" />
-      <el-table-column label="产品经理" prop="productManager" />
+      <el-table-column align="center" label="上线日期" min-width="115" prop="saleDate" />
+      <el-table-column align="center" label="上新天数" min-width="100" prop="newArrivalDay" />
+      <el-table-column align="center" label="Vine数量" min-width="100" prop="vineCount" />
+      <el-table-column align="center" label="产品经理" min-width="100" prop="productManager" />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
@@ -58,8 +64,11 @@
 </template>
 
 <script lang="ts" setup>
+import { Star } from '@element-plus/icons-vue'
 import CountryFlag from 'vue-country-flag-next'
-import handleClipboard from '~/src/utils/clipboard'
+import { getFrontPageVineReviewCard } from '/@/api/devlocal/frontPage'
+import handleClipboard from '/@/utils/clipboard'
+import { getAmazonStars } from '/@/utils/rate'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
@@ -91,7 +100,16 @@ const loading = ref(false)
 
 const fetchData = async () => {
   loading.value = true
+  const { data } = await getFrontPageVineReviewCard({ userId: userId.value })
+  list.value = data
+  for (const item of list.value) {
+    item.displayRating = getAmazonStars(item.janEndRating, item.janEndNum)
+  }
+  loading.value = false
 }
+onMounted(() => {
+  fetchData()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -158,6 +176,40 @@ const fetchData = async () => {
   transition: all 0.3s;
   &:hover {
     color: #000;
+  }
+}
+.rate-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .rate-value {
+    width: 25px; /* 固定宽度，保证分数区域宽度一致 */
+    text-align: left; /* 文本右对齐 */
+  }
+  .custom-rate {
+    --el-rate-icon-size: 20px; /* 调整星星的大小 */
+    --el-rate-fill-color: #f09000; /* 填充星星的颜色 */
+    --el-rate-text-color: #f09000; /* 文本颜色一致 */
+    --el-rate-disabled-void-color: #fff; /* 未填充星星的颜色 */
+    --el-rate-void-color: #fff; /* 空星颜色 */
+
+    :deep() {
+      .el-rate__item {
+        margin-top: -2px;
+        margin-right: 0;
+        margin-left: -9px;
+        .el-icon {
+          stroke: #f09000; /* 星星边框颜色 */
+          stroke-width: 60px; /* 星星边框的粗细 */
+        }
+        cursor: pointer;
+      }
+    }
+  }
+  .rate-count {
+    margin-left: -11px;
+    color: #36788c;
   }
 }
 </style>

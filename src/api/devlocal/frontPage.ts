@@ -2,6 +2,7 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 
+import { IKeyProductsItem } from '~/src/type/storeOperation/keyProducts'
 import { IGetOperationAmazonSKUList } from '~/src/type/storeOperation/productPerformanceType'
 import {
   IAssessAdjustRes,
@@ -421,6 +422,18 @@ export function getFrontPageProfitScore(params: {
 export function getFrontPagePersonalBonus(params: { month: string }): Promise<IGetFrontPagePersonalBonusRes> {
   return request({
     url: `${BASE_API}/front_page/user/bonus`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 首页-Vine回评追踪卡片
+ * @param params { userId: number }
+ * @returns IKeyProductsItem[]
+ */
+export function getFrontPageVineReviewCard(params: { userId: number }): Promise<{ data: IKeyProductsItem[] }> {
+  return request({
+    url: `${BASE_API}/front_page/vine/review/list`,
     method: 'get',
     params,
   })
