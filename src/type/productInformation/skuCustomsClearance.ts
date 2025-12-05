@@ -77,3 +77,27 @@ export interface IGetPackingTimeDetailsChartResp {
   dates: Date[]
   times: number[]
 }
+export interface ISkuDeliveryTimeDetail {
+  /** 分组用的唯一标识，表格合并行时依赖该字段 */
+  id: number | string
+  /** PO 单号 */
+  po: string
+  /** PO 发布日期 */
+  poReleaseDate: string
+  /** SKU */
+  sku: string
+  /** SKU 签收日期 */
+  skuSignDate: string
+  /** SKU 交期 */
+  deliveryTime: string
+  /** 零件名 */
+  componentName: string
+  /** 供应商 */
+  suppliser: string
+  /** 零件交期 */
+  componentDeliveryTime: string
+  /** 零件签收日期 */
+  componentSignDate: string
+  /** 生产完成日期 */
+  productionCompletionDate: string
+}
