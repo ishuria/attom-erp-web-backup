@@ -34,8 +34,13 @@
           :operate-user-list="operateUserList"
           :site-list="siteList"
           :total="priceAdjustmentInventoryRulesQueryTotal"
+          @cell-blur="operationUpdateClickCreateCancel"
+          @cell-click="changeCreateInput"
+          @check-all="operationStockHandleCheckAll"
           @current-change="priceAdjustmentInventoryRulesCurrentChange"
+          @image-preview="imagePreviewShow"
           @query-data="priceAdjustmentInventoryRulesQueryData"
+          @role-status-change="updateOperationStockRoleStatus"
           @size-change="priceAdjustmentInventoryRulesSizeChange"
         />
       </el-tab-pane>
@@ -57,14 +62,17 @@
 </template>
 
 <script lang="ts" setup>
+import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
 import type { CheckboxValueType } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import {
   queryDefaultParamsOperationAutoMation,
   queryOperationAutoMationList,
+  queryPriceAdjustmentInventoryRulesList,
   updateBatchOperationAutoMation,
   updateDefailtParmasOperationAutoMation,
   updateOperationAutoMation,
+  updateOperationStock,
 } from '/@/api/devlocal/operationAutoMation'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { getUserAmazonOperation } from '/@/api/devlocal/productPerformance'
@@ -137,7 +145,7 @@ let copyRow: IAutoMationItem
 const listLoading = ref<boolean>(false)
 const priceAdjustmentInventoryRulesLoading = ref<boolean>(false)
 const operationAutoMationList = ref<IAutoMationItem[]>([])
-const priceAdjustmentInventoryRulesList = ref<IAutoMationItem[]>([])
+const priceAdjustmentInventoryRulesList = ref<IOperationStocksItem[]>([])
 const siteList = ref<OptionType[]>([])
 const operateUserList = ref<OptionType[]>([])
 const queryTotal = ref<number>(0)
@@ -202,21 +210,21 @@ const queryData = () => {
   fetchData()
 }
 const fetchPriceAdjustmentInventoryRulesData = async () => {
-  // try {
-  //   priceAdjustmentInventoryRulesLoading.value = true
-  //   const { data } = await queryPriceAdjustmentInventoryRulesList(priceAdjustmentInventoryRulesQueryForm)
-  //   if (data?.list.length == 0) {
-  //     priceAdjustmentInventoryRulesLoading.value = false
-  //     priceAdjustmentInventoryRulesList.value = []
-  //     priceAdjustmentInventoryRulesQueryTotal.value = 0
-  //     return
-  //   }
-  //   priceAdjustmentInventoryRulesList.value = data?.list!
-  //   priceAdjustmentInventoryRulesQueryTotal.value = data?.total!
-  //   priceAdjustmentInventoryRulesLoading.value = false
-  // } catch (error) {
-  //   priceAdjustmentInventoryRulesLoading.value = false
-  // }
+  try {
+    priceAdjustmentInventoryRulesLoading.value = true
+    const { data } = await queryPriceAdjustmentInventoryRulesList(priceAdjustmentInventoryRulesQueryForm)
+    if (data?.list.length == 0) {
+      priceAdjustmentInventoryRulesLoading.value = false
+      priceAdjustmentInventoryRulesList.value = []
+      priceAdjustmentInventoryRulesQueryTotal.value = 0
+      return
+    }
+    priceAdjustmentInventoryRulesList.value = data?.list!
+    priceAdjustmentInventoryRulesQueryTotal.value = data?.total!
+    priceAdjustmentInventoryRulesLoading.value = false
+  } catch (error) {
+    priceAdjustmentInventoryRulesLoading.value = false
+  }
 }
 const priceAdjustmentInventoryRulesCurrentChange = (value: number) => {
   priceAdjustmentInventoryRulesQueryForm.pageNo = value
@@ -278,6 +286,20 @@ const updateCommon = async (value: IAutoMationItem) => {
   }
 }
 
+/**
+ * 调价库存规则更新
+ * @param value
+ */
+const updateOperationStockCommon = async (value: IOperationStocksItem) => {
+  const { data } = await updateOperationStock({
+    ...value,
+  })
+  if (data) {
+    $baseMessage('修改成功！', 'success')
+    fetchPriceAdjustmentInventoryRulesData()
+  }
+}
+
 const handleCheckAll = (val: CheckboxValueType) => {
   indeterminate.value = false
   if (val) {
@@ -292,6 +314,40 @@ const handleCheckAll = (val: CheckboxValueType) => {
     if (activeName.value === 0) {
       fetchData()
     }
+  }
+}
+
+const operationStockHandleCheckAll = (val: CheckboxValueType) => {
+  if (val) {
+    priceAdjustmentInventoryRulesQueryForm.sites = siteList.value.map((_) => _.id)
+    // 全选的时候获取数据
+    if (activeName.value === 1) {
+      fetchPriceAdjustmentInventoryRulesData()
+    }
+  } else {
+    priceAdjustmentInventoryRulesQueryForm.sites = []
+    // 取消全选获取数据
+    if (activeName.value === 1) {
+      fetchPriceAdjustmentInventoryRulesData()
+    }
+  }
+}
+
+const operationUpdateClickCreateCancel = (event: any, value: IOperationStocksItem, index: number) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  if (isEqual(copyRow, value)) {
+    return
+  }
+  if (event.type === 'blur') {
+    updateOperationStockCommon(value)
   }
 }
 
@@ -321,6 +377,7 @@ const operationAndDevelopSelect = () => {
     case 'ROLE_BOSS': {
       disabledDev.value = false
       queryForm.sites = [0]
+      priceAdjustmentInventoryRulesQueryForm.sites = [0]
       break
     }
     case 'ROLE_ECOMMERCEOPERATIONLEAD': {
@@ -458,9 +515,15 @@ const updateRoleStatus = (value: IAutoMationItem) => {
 const updateSelectType = (value: IAutoMationItem) => {
   updateCommon(value)
 }
+
+const updateOperationStockRoleStatus = (value: IOperationStocksItem) => {
+  updateOperationStockCommon(value)
+}
+
 onBeforeMount(() => {
   operationAndDevelopSelect()
   fetchData()
+  fetchPriceAdjustmentInventoryRulesData()
   fetchSiteList()
   fetchOperateUserList()
   fetchOperationUser()

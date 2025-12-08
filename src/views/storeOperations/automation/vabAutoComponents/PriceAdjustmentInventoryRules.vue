@@ -4,11 +4,21 @@
       <vab-query-form-left-panel>
         <el-form inline :model="queryForm">
           <el-form-item>
-            <el-button type="primary">批量修改</el-button>
-            <el-button type="primary">默认参数</el-button>
+            <el-button type="primary" @click="updateBatch">批量修改</el-button>
+            <el-button type="primary" @click="defaultVisible = true">默认参数</el-button>
           </el-form-item>
           <el-form-item label="站点">
-            <el-select v-model="queryForm.sites" placeholder="请选择站点" @change="handleQueryData">
+            <el-select v-model="queryForm.sites"
+                       clearable
+                       collapse-tags
+                       collapse-tags-tooltip
+                       :max-collapse-tags="1"
+                       multiple
+                       placeholder="请选择站点"
+                       @change="handleQueryData"  >
+              <template #header>
+                <el-checkbox :indeterminate="indeterminate" :model-value="checkAll" @change="handleCheckAll">所有</el-checkbox>
+              </template>
               <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
@@ -36,7 +46,15 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="loading" border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+    <el-table v-loading="loading"
+              border
+              :cell-style="cellStyle"
+              :data="list"
+              :header-cell-style="{ textAlign: 'center' }"
+              stripe
+              @cell-click="handleCellClick"
+              @selection-change="opeationStockSelectionChangeHandler"
+    >
       <el-table-column fixed="left" type="selection" width="38" />
       <el-table-column label="图片" width="75">
         <template #default="{ row }">
@@ -55,38 +73,194 @@
             :active-value="1"
             :inactive-value="0"
             style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            @change="handleRoleStatusChange(row)"
           />
         </template>
       </el-table-column>
-      <el-table-column label="最低价" prop="minPrice" />
-      <el-table-column label="最高价" prop="maxPrice" />
+      <el-table-column label="最低价" prop="minPrice">
+        <template #default="{ row, $index }">
+          <div class="none">
+            <el-input
+              v-model="row.minPrice"
+              type="number"
+              @blur="handleCellBlur($event, row, $index)"
+              @keyup.enter="handleCellBlur($event, row, $index)"
+            />
+          </div>
+          <span>{{row.minPrice}} <br> {{row.minGrossProfitMargin}}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="最高价" prop="maxPrice">
+        <template #default="{ row, $index }">
+          <div class="none">
+            <el-input
+              v-model="row.maxPrice"
+              type="number"
+              @blur="handleCellBlur($event, row, $index)"
+              @keyup.enter="handleCellBlur($event, row, $index)"
+            />
+          </div>
+          <span>{{row.maxPrice}} <br> {{row.maxGrossProfitMargin}}%</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="调价幅度" prop="adjustmentRange">
+        <template #default="scope">
+          {{ scope.row.currencyIcon}} {{scope.row.adjustmentRange}}
+        </template>
+      </el-table-column>
+      <el-table-column label="最小调价间隔（天）" prop="adjustmentDay">
+        <template #default="{ row, $index }">
+          <div class="none">
+            <el-input
+              v-model="row.adjustmentDay"
+              type="number"
+              @blur="handleCellBlur($event, row, $index)"
+              @keyup.enter="handleCellBlur($event, row, $index)"
+            />
+          </div>
+          <span>{{row.adjustmentDay}}</span>
+        </template>
+
+      </el-table-column>
       <el-table-column label="提高价格（满足全部条件）">
-        <el-table-column label="剩余可售天数≤" min-width="125" prop="openDays" />
-        <el-table-column label="可售总库存数≤" min-width="125" prop="openStock" />
-        <el-table-column label="断货天数≥" min-width="95" prop="openOutStockDays" />
-        <el-table-column label="Rating≥" min-width="90" prop="openAdvAcos" />
+        <el-table-column label="剩余可售天数≤" min-width="125" prop="improveDays">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.improveDays"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.improveDays}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="可售总库存数≤" min-width="125" prop="improveStock">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.improveStock"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.improveStock}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="断货天数≥" min-width="95" prop="improveOutStockDays">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.improveOutStockDays"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.improveOutStockDays}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Rating≥" min-width="90" prop="improveRatingHeight">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.improveRatingHeight"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.improveRatingHeight}}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="降低价格条件组1（满足全部条件）">
-        <el-table-column label="断货天数≤" min-width="95" prop="closeOutStockDays" />
-        <el-table-column label="剩余可售天数≥" min-width="125" prop="closeAdvAcos" />
-        <el-table-column label="剩余含在途可售天数≥" min-width="125" prop="closeRating" />
-        <el-table-column label="可售总库存数≥" min-width="125" prop="closeGrossProfit" />
+        <el-table-column label="断货天数≤" min-width="95" prop="reduceOutStockDays">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceOutStockDays"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.reduceOutStockDays}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="剩余可售天数≥" min-width="125" prop="reduceDays">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceDays"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.reduceDays}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="剩余含在途可售天数≥" min-width="125" prop="reduceTransitDays">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceTransitDays"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.reduceTransitDays}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="可售总库存数≥" min-width="125" prop="reduceSalesTotalStock">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceSalesTotalStock"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.reduceSalesTotalStock}}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="降低价格条件组2">
-        <el-table-column label="Rating≤" min-width="110" prop="openAdvAcos" />
+        <el-table-column label="Rating≤" min-width="110" prop="reduceRatingLow">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceRatingLow"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{row.reduceRatingLow}}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="系统最新操作日期" prop="lastUpdateTime" width="110">
+      <el-table-column label="系统最新操作日期" prop="operationDate" width="110">
         <template #header>
           系统最新
           <br />
           操作日期
         </template>
       </el-table-column>
-      <el-table-column label="价格" />
+      <el-table-column label="价格">
+        <template #default="scope">
+          {{scope.row.currencyIcon}}{{scope.row.operationBeforePrice}} -> {{scope.row.currencyIcon}}{{scope.row.operationAfterPrice}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作结果" prop="operationResult" width="100">
         <template #default="{ row }">
-          <el-tag :type="row.operationResult === 0 ? 'danger' : 'success'">
-            {{ row.operationResult === 0 ? '失败' : '成功' }}
+          <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
+            {{ row.operationResult}}
           </el-tag>
         </template>
       </el-table-column>
@@ -106,13 +280,23 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+
+    <!-- 默认参数 -->
+    <vab-dialog-operation-stock-default v-model="defaultVisible"/>
+    <vab-dialog-operation-stock-update  v-model:check-rows="multipleSelection"
+                                        v-model:default-visible="batchUpdateVisible"
+                                        @fetch-query="handleQueryData"
+                                      />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
+import { getRootElement } from '/@/utils/nodeUtils.ts'
 import { Search } from '@element-plus/icons-vue'
+import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
-import { IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
+import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
 
 defineOptions({
   name: 'PriceAdjustmentInventoryRules',
@@ -121,17 +305,24 @@ defineOptions({
 interface Props {
   siteList: Array<{ id: number; label: string }>
   operateUserList: Array<{ id: number; label: string }>
-  list: Array<any>
+  list: Array<IOperationStocksItem>
   loading: boolean
   total: number
 }
 const props = defineProps<Props>()
 const queryForm = defineModel<IAutoMationQueryReq>('queryForm', { required: true })
+const checkAll = defineModel<boolean>('checkAll', { default: false })
+const indeterminate = defineModel<boolean>('indeterminate', { default: false })
+
 const emit = defineEmits<{
   'image-preview': [url: string]
   'query-data': []
   'size-change': [value: number]
   'current-change': [value: number]
+  'check-all': [val: CheckboxValueType]
+  'role-status-change': [row: IOperationStocksItem]
+  'cell-blur': [event: any, row: IOperationStocksItem, index: number]
+  'cell-click': [row: IAutoMationItem, column: any, cell: HTMLTableCellElement]
 }>()
 
 const handleSizeChange = (value: number) => {
@@ -146,6 +337,33 @@ const handleQueryData = () => {
 const handleImagePreview = (url: string) => {
   emit('image-preview', url)
 }
+const handleCheckAll = (val: CheckboxValueType) => {
+  checkAll.value = !!val
+  indeterminate.value = false
+  emit('check-all', val)
+}
+
+const handleRoleStatusChange = (row: IOperationStocksItem) => {
+  emit('role-status-change', row)
+}
+
+const handleCellBlur = (event: any, row: IOperationStocksItem, index: number) => {
+  const rootElement = getRootElement(event.srcElement, '.cell')
+
+  if (rootElement) {
+    const t1 = rootElement.children[0]
+    const t2 = rootElement.children[1]
+
+    if (t1) t1.classList.add('none')
+    if (t2) t2.classList.remove('none')
+  }
+  emit('cell-blur', event, row, index)
+}
+
+const handleCellClick = (row: IAutoMationItem, column: any, cell: HTMLTableCellElement) => {
+  emit('cell-click', row, column, cell)
+}
+
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
   if (label === 'SKU') {
@@ -162,6 +380,25 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     textAlign: 'center',
   }
 }
+
+const defaultVisible = ref<boolean>(false)
+
+const batchUpdateVisible = ref<boolean>(false)
+
+const multipleSelection = ref<IOperationStocksItem[]>([])
+
+const opeationStockSelectionChangeHandler = (val: IOperationStocksItem[]) => {
+  multipleSelection.value = val
+}
+
+const updateBatch = () =>{
+  if (multipleSelection.value.length === 0) {
+    $baseMessage('请选择需要批量修改的数据！', 'warning')
+    return
+  }
+  batchUpdateVisible.value = true
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -172,5 +409,9 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   .el-table {
     flex: 1;
   }
+}
+
+.none {
+  display: none;
 }
 </style>

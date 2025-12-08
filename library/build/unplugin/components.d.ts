@@ -246,6 +246,8 @@ declare module 'vue' {
     VabDeepSeek: typeof import('./../../components/VabDeepSeek/index.vue')['default']
     VabDetailDialog: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/VabDetailDialog.vue')['default']
     VabDialog: typeof import('./../../components/VabDialog/index.vue')['default']
+    VabDialogOperationStockDefault: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockDefault.vue')['default']
+    VabDialogOperationStockUpdate: typeof import('./../../../src/views/storeOperations/automation/vabAutoComponents/VabDialogOperationStockUpdate.vue')['default']
     VabDivider: typeof import('./../../components/VabDivider/index.vue')['default']
     VabDot: typeof import('./../../components/VabDot/index.vue')['default']
     VabEchartsChartBar: typeof import('./../../../src/views/newProductDevelopment/newProductEvaluation/vabAutoComponents/VabEchartsChartBar.vue')['default']

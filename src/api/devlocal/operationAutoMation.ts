@@ -7,6 +7,11 @@ import type {
   IAutoMationRules,
   IAutoMationUpdateReq,
 } from '/@/type/storeOperation/autoMation'
+import {
+  IOperationStockDefaultParams,
+  IOperationStocksItem,
+  IOperationStockUpdateReq,
+} from '/@/type/storeOperation/operationStock.ts'
 import request from '/@/utils/request'
 
 /**
@@ -81,5 +86,71 @@ export function querySystemOperationLogListOperationAutoMation(params: {
     url: `${BASE_API}/operation/auto/rules/log`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * 运营自动化-库存查询
+ * @param data 查询参数
+ * @returns 运营自动化库存规则数据列表
+ */
+export function queryPriceAdjustmentInventoryRulesList(
+  data?: IAutoMationQueryReq
+): Promise<{ data: { list: IOperationStocksItem[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-调价库存修改
+ * @param data  修改参数
+ * @returns true成功 false失败
+ */
+export function updateOperationStock(data?: IOperationStockUpdateReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-获取调价默认参数
+ * @param data  修改参数
+ * @returns true成功 false失败
+ */
+export function queryOperationStock(): Promise<{ data: IOperationStockDefaultParams }> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/default/params`,
+    method: 'get',
+  })
+}
+
+/**
+ * 运营自动化-获取调价默认参数
+ * @param data  修改参数
+ * @returns true成功 false失败
+ */
+export function updateOperationStockDefaultParams(data?: IOperationStockDefaultParams): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/update/default/params`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-调价库存批量
+ * @param data  修改参数
+ * @returns true成功 false失败
+ */
+export function updateBatchOperationStock(data?: IOperationStockUpdateReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/batch/update`,
+    method: 'post',
+    data,
   })
 }
