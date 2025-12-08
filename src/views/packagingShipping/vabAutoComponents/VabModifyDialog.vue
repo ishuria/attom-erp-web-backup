@@ -137,6 +137,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" label="到货状态" min-width="100" prop="taskStatus" />
+        <el-table-column align="center" label="签收数" min-width="100" prop="signCount" />
         <el-table-column align="center" label="任务数" min-width="90" prop="packageTaskCount" />
         <el-table-column align="center" label="站点" min-width="130" prop="siteName" />
         <el-table-column align="center" label="已装箱数" min-width="100" prop="boxNumber" />
