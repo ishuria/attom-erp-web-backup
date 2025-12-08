@@ -185,8 +185,17 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       if (monthNetProfitMargin > 0) return STYLE_CENTER_WARNING
       return STYLE_CENTER_DANGER
     }
+    case 'PASIN毛利率': {
+      const monthNetProfitMargin = data.row.pAsinMonthNetProfitMargin
+      if (monthNetProfitMargin >= 20) return STYLE_CENTER_SUCCESS
+      if (monthNetProfitMargin > 0) return STYLE_CENTER_WARNING
+      return STYLE_CENTER_DANGER
+    }
     case '月净利润': {
       return data.row.monthNetProfit > 0 ? STYLE_CENTER_SUCCESS : STYLE_CENTER_DANGER
+    }
+    case 'PASIN毛利润': {
+      return data.row.pAsinMonthNetProfit > 0 ? STYLE_CENTER_SUCCESS : STYLE_CENTER_DANGER
     }
     case '月ACOS': {
       const monthAcos = data.row.monthAcos * 100

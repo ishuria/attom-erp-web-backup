@@ -89,12 +89,18 @@
           <el-option v-for="item in adStatusOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item label="美工长期">
+        <el-select v-model="filterForm.artLongTermFlag" clearable placeholder="请选择美工长期">
+          <el-option label="是" :value="1" />
+          <el-option label="否" :value="0" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="库龄筛选">
-        <el-checkbox-group v-model="filterForm.warehouseAge">
-          <el-checkbox :value="0">有库龄181+</el-checkbox>
-          <el-checkbox :value="1">有库龄271+</el-checkbox>
-          <el-checkbox :value="2">有库龄361+</el-checkbox>
-        </el-checkbox-group>
+        <el-radio-group v-model="filterForm.warehouseAge">
+          <el-radio :value="0">181-270</el-radio>
+          <el-radio :value="1">271-360</el-radio>
+          <el-radio :value="2">361+</el-radio>
+        </el-radio-group>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -161,13 +167,14 @@ watch(
       })
 
       if (savedData.warehouseAge !== undefined && savedData.warehouseAge !== null) {
+        // 如果是数组，取第一个值；否则直接使用
         if (Array.isArray(savedData.warehouseAge)) {
-          savedData.warehouseAge = [...savedData.warehouseAge]
+          savedData.warehouseAge = savedData.warehouseAge.length > 0 ? savedData.warehouseAge[0] : null
         } else {
-          savedData.warehouseAge = [savedData.warehouseAge]
+          savedData.warehouseAge = savedData.warehouseAge
         }
       } else {
-        savedData.warehouseAge = []
+        savedData.warehouseAge = null
       }
 
       Object.assign(filterForm, savedData)
@@ -197,20 +204,13 @@ const filterForm = reactive<any>({
   estimateNextMonthStorageFeeMax: null,
   operationTypeId: null,
   advStatus: null,
-  warehouseAge: [],
+  artLongTermFlag: null,
+  warehouseAge: null,
   availableRateMin: null,
   availableRateMax: null,
 })
 const filterFormRef = ref<FormInstance>()
 const handleConfirmFilter = () => {
-  // 库龄有0的 只传0 有1的 只传1 有2的 只传2
-  if (filterForm.warehouseAge.includes(0)) {
-    filterForm.warehouseAge = 0
-  } else if (filterForm.warehouseAge.includes(1)) {
-    filterForm.warehouseAge = 1
-  } else if (filterForm.warehouseAge.includes(2)) {
-    filterForm.warehouseAge = 2
-  }
   emit('updateFilter', filterForm)
 }
 const clearFilterForm = () => {
@@ -233,7 +233,8 @@ const clearFilterForm = () => {
     estimateNextMonthStorageFeeMax: null,
     operationTypeId: null,
     advStatus: null,
-    warehouseAge: [],
+    artLongTermFlag: null,
+    warehouseAge: null,
     availableRateMin: null,
     availableRateMax: null,
   })

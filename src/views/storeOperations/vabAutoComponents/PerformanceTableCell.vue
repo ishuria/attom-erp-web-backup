@@ -406,6 +406,8 @@
 
   <!-- PASIN毛利率 -->
   <span v-else-if="item.label === 'PASIN毛利率'">{{ row.pAsinMonthNetProfitMargin }}%</span>
+  <!-- PASIN毛利润 -->
+  <span v-else-if="item.label === 'PASIN毛利润'">{{ row.currencyIcon }}{{ row.pAsinMonthNetProfit }}</span>
 
   <!-- 默认显示：如果以上条件都不匹配，直接显示原始值 -->
   <span v-else>{{ row[item.prop] }}</span>
