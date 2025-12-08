@@ -465,7 +465,7 @@
             <el-input v-model="updateForm.freeCountBill" clearable />
           </el-form-item>
           <el-form-item label="买单每续页个数" prop="countBill">
-            <el-input v-model="updateForm.countBill" clearable />
+            <el-input v-model="updateForm.countBill" :min="1" style="width: 100%" type="number" />
           </el-form-item>
           <el-form-item label="买单每续页费用(RMB)" prop="purchaseOrderCostPerRenewal">
             <el-input v-model="updateForm.purchaseOrderCostPerRenewal" clearable />
@@ -477,7 +477,7 @@
             <el-input v-model="updateForm.taxRefundCustomsFreeCount" clearable />
           </el-form-item>
           <el-form-item label="退税每续页个数" prop="taxRefundCustomsCount">
-            <el-input v-model="updateForm.taxRefundCustomsCount" clearable />
+            <el-input v-model="updateForm.taxRefundCustomsCount" :min="1" style="width: 100%" type="number" />
           </el-form-item>
           <el-form-item label="退税每续页费用(RMB)" prop="taxRefundPerRenewalPageFee">
             <el-input v-model="updateForm.taxRefundPerRenewalPageFee" clearable />
@@ -495,7 +495,7 @@
             <el-input v-model="updateForm.customsClearanceFreeCount" clearable />
           </el-form-item>
           <el-form-item label="清关每续页个数" prop="customsClearancePageCount">
-            <el-input v-model="updateForm.customsClearancePageCount" clearable />
+            <el-input v-model="updateForm.customsClearancePageCount" :min="1" style="width: 100%" type="number" />
           </el-form-item>
           <el-form-item label="清关每续页费用(RMB)" prop="customsClearancePageCost">
             <el-input v-model="updateForm.customsClearancePageCost" clearable />
@@ -790,6 +790,28 @@ const showCopy = (row: any) => {
 
 // 确认修改或复制
 const confirmModifyOrCopy = async () => {
+  // 验证三个字段不能为0，避免除0错误
+  if (Number(updateForm.countBill) === 0 || updateForm.countBill === null || updateForm.countBill === undefined) {
+    $baseMessage('买单每续页个数不能为0', 'error')
+    return
+  }
+  if (
+    Number(updateForm.taxRefundCustomsCount) === 0 ||
+    updateForm.taxRefundCustomsCount === null ||
+    updateForm.taxRefundCustomsCount === undefined
+  ) {
+    $baseMessage('退税每续页个数不能为0', 'error')
+    return
+  }
+  if (
+    Number(updateForm.customsClearancePageCount) === 0 ||
+    updateForm.customsClearancePageCount === null ||
+    updateForm.customsClearancePageCount === undefined
+  ) {
+    $baseMessage('清关每续页个数不能为0', 'error')
+    return
+  }
+
   if (modifyOrCopy.value === 'modify') {
     // 执行修改逻辑
     const { data } = await updateChannelFreightForwarder(updateForm)
