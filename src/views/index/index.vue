@@ -309,6 +309,7 @@
               :key="inventoryProductsTotalValueDateRangeKey"
               v-model="inventoryProductsTotalValueDateRange"
               :clearable="false"
+              :shortcuts="dateShortcuts"
               type="daterange"
               value-format="YYYY-MM-DD"
               @change="handleInventoryProductsTotalValueDateRangeChange"
@@ -325,6 +326,7 @@
               :key="warehouseCapacityDateRangeKey"
               v-model="warehouseCapacityDateRange"
               :clearable="false"
+              :shortcuts="dateShortcuts"
               type="daterange"
               value-format="YYYY-MM-DD"
               @change="handleWarehouseCapacityDateRangeChange"
@@ -1115,6 +1117,72 @@ const updateWarehouseCapacity = async () => {
     fetchWarehouseCapacity()
   }
 }
+// 日期选择器快捷选项
+const dateShortcuts = [
+  {
+    text: '近30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 29)
+      return [start, end]
+    },
+  },
+  {
+    text: '近60天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 59)
+      return [start, end]
+    },
+  },
+  {
+    text: '近90天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 89)
+      return [start, end]
+    },
+  },
+  {
+    text: '近180天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 179)
+      return [start, end]
+    },
+  },
+  {
+    text: '1年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setFullYear(start.getFullYear() - 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '2年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setFullYear(start.getFullYear() - 2)
+      return [start, end]
+    },
+  },
+  {
+    text: '全部',
+    value: () => {
+      const end = new Date()
+      const start = new Date('2025-09-08') // 设置一个较早的起始日期
+      return [start, end]
+    },
+  },
+]
+
 const inventoryProductsTotalValueDateRangeKey = ref<number>(0)
 const warehouseCapacityDateRangeKey = ref<number>(0)
 const handleInventoryProductsTotalValueDateRangeChange = (dateRange: [string, string] | null) => {
