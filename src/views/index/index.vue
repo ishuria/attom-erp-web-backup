@@ -1217,7 +1217,7 @@ const jobLevelCommissionList = ref<IGetFrontPageJobLevelCommission[]>([])
 const selectJobLevelMonth = ref<string>()
 const fetchJobLevelCommission = async () => {
   const { data } = await getFrontPageJobLevelCommission({ month: selectJobLevelMonth.value! })
-  jobLevelCommissionList.value = data
+  jobLevelCommissionList.value = data.filter((item) => !item.monthlyLevel.includes('主管'))
 }
 const lowVolumeProductStorageFeeList = ref<ILowVolumeProductStorageFee[]>([])
 const selectOperationUserId = ref<number>(-1)
