@@ -99,7 +99,11 @@ const option = reactive<any>({
           if (props.showCommission && params.dataIndex !== undefined) {
             const item = props.list[params.dataIndex]
             if (item?.commissionPercent !== undefined && item.commissionPercent !== null) {
-              return `${value} {commission|(提成 ${item.commissionPercent}%)}`
+              // 限制不小于0，最小是 +0%
+              const commissionPercent = Math.max(0, item.commissionPercent)
+              // 正数增加+号
+              const displayPercent = commissionPercent > 0 ? `+${commissionPercent}` : '+0'
+              return `${value} {commission|(提成 ${displayPercent}%)}`
             }
           }
           return value
