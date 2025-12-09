@@ -8,7 +8,7 @@ import type {
   IAutoMationUpdateReq,
 } from '/@/type/storeOperation/autoMation'
 import {
-  IOperationStockDefaultParams,
+  IOperationStockDefaultParams, IOperationStockLogRules,
   IOperationStocksItem,
   IOperationStockUpdateReq,
 } from '/@/type/storeOperation/operationStock.ts'
@@ -150,6 +150,18 @@ export function updateOperationStockDefaultParams(data?: IOperationStockDefaultP
 export function updateBatchOperationStock(data?: IOperationStockUpdateReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/operation/stock/auto/rules/batch/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-调价库存日志查询
+ * @param data
+ */
+export function queryOperationStockLogList(data: { pageNo: number; pageSize: number; id: number }): Promise<IOperationStockLogRules> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/logs`,
     method: 'post',
     data,
   })

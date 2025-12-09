@@ -1,3 +1,5 @@
+import { IAutomationLogItem } from '/@/type/storeOperation/autoMation.ts'
+
 /**
  * 店铺自动化调价库存
  */
@@ -79,7 +81,7 @@ export interface IOperationStocksItem {
   /**
    * 操作时间
    */
-  operationDate: string
+  operation: string
   /**
    * 操作结果
    */
@@ -147,4 +149,60 @@ export interface IOperationStockDefaultParams {
   reduceRatingLow?: number
   minAddPrice?: number
   maxDecodePrice?: number
+}
+
+export interface IOperationStockLogRules {
+  data?: {
+    /** 数据列表 */
+    list: IOperationStockLog[]
+    /** 总页数 */
+    total: number
+  }
+}
+
+export interface IOperationStockLog {
+  /**
+   * 主键id
+   */
+  id?: number
+
+  /**
+   * 库存规则id
+   */
+  stockRuleId?: number
+
+  /**
+   * 操作之前的价格
+   */
+  operationBeforePrice?: number
+
+  /**
+   * 操作之后的价格
+   */
+  operationAfterPrice?: number
+
+  /**
+   * 操作结果
+   */
+  operationResult?: string
+
+  /**
+   * 操作时间
+   */
+  operation?: string
+
+  /**
+   * 操作类型 0调减 1调增
+   */
+  operationType?: string
+
+  /**
+   * 是否为最新记录 0不是 1是
+   */
+  isLatest?: string
+
+  /**
+   * 创建时间
+   */
+  createTime?: string
 }

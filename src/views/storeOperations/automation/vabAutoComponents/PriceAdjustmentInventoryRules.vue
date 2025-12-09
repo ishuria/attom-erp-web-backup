@@ -53,7 +53,7 @@
               :header-cell-style="{ textAlign: 'center' }"
               stripe
               @cell-click="handleCellClick"
-              @selection-change="opeationStockSelectionChangeHandler"
+              @selection-change="operationStockSelectionChangeHandler"
     >
       <el-table-column fixed="left" type="selection" width="38" />
       <el-table-column label="图片" width="75">
@@ -266,7 +266,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template #default="{ row }">
-          <el-link type="primary" underline="never">系统操作日志</el-link>
+          <el-link type="primary" underline="never" @click="handlerSysLog(row)">系统操作日志</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -283,10 +283,14 @@
 
     <!-- 默认参数 -->
     <vab-dialog-operation-stock-default v-model="defaultVisible"/>
+    <!-- 批量修改 -->
     <vab-dialog-operation-stock-update  v-model:check-rows="multipleSelection"
                                         v-model:default-visible="batchUpdateVisible"
                                         @fetch-query="handleQueryData"
                                       />
+    <!-- 查询日志 -->
+    <vab-dialog-operation-stock-log v-model:id="_rowId"
+                                    v-model:operation-stock-visible="operationStockVisible" />
   </div>
 </template>
 
@@ -385,9 +389,18 @@ const defaultVisible = ref<boolean>(false)
 
 const batchUpdateVisible = ref<boolean>(false)
 
-const multipleSelection = ref<IOperationStocksItem[]>([])
+const operationStockVisible = ref<boolean>(false)
 
-const opeationStockSelectionChangeHandler = (val: IOperationStocksItem[]) => {
+const multipleSelection = ref<IOperationStocksItem[]>([])
+const _rowId = ref<number>()
+
+
+const handlerSysLog = (row: IOperationStocksItem) => {
+  _rowId.value = row.id
+  operationStockVisible.value = true
+}
+
+const operationStockSelectionChangeHandler = (val: IOperationStocksItem[]) => {
   multipleSelection.value = val
 }
 
