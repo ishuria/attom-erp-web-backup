@@ -129,7 +129,6 @@ const handleConfirm = async () => {
         ids: ids,
         ...filterForm,
       }
-      console.log(params)
       const { data } = await updateBatchOperationStock(params)
       if (data) {
         $baseMessage('批量修改成功！', 'success')
