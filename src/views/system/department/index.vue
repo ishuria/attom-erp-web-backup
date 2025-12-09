@@ -26,6 +26,7 @@
       border
       :data="list"
       default-expand-all
+      :indent="60"
       :row-class-name="getRowClassName"
       row-key="id"
       :tree-props="{ children: 'children' }"
@@ -229,6 +230,9 @@ const initSortable = () => {
           // console.log('目标位置:', newRow)
 
           try {
+            if (oldRow.userId === newRow.userId) {
+              return false
+            }
             const { data } = await updatePersonLevel({
               userId: oldRow.userId,
               targetUserId: newRow.userId,
