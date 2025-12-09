@@ -124,11 +124,12 @@ const handleConfirm = async () => {
       ids.push(el.id!)
     })
     $baseConfirm('确定要批量修改吗？', null, async () => {
-      const { ...filterForm } = form
+      const { ...filterForm } = form.value
       const params = {
         ids: ids,
         ...filterForm,
       }
+      console.log(params)
       const { data } = await updateBatchOperationStock(params)
       if (data) {
         $baseMessage('批量修改成功！', 'success')
