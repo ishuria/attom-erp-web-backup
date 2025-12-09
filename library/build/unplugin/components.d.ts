@@ -160,6 +160,7 @@ declare module 'vue' {
     RoleManagementEdit: typeof import('./../../../src/views/setting/roleManagement/vabAutoComponents/RoleManagementEdit.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SampleFeeRefundTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/SampleFeeRefundTable.vue')['default']
     SegmentedBlock: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedBlock.vue')['default']
     SegmentedCustomContent: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomContent.vue')['default']
     SegmentedCustomStyle: typeof import('./../../../src/views/vab/segmented/vabAutoComponents/SegmentedCustomStyle.vue')['default']
