@@ -172,6 +172,11 @@
         </template>
       </el-table-column>
       <el-table-column label="添加人员" min-width="100" prop="createUserName" />
+      <el-table-column v-if="list.length > 1" label="操作" width="100">
+        <template #default="{ row }">
+          <el-link type="danger" underline="never" @click="handleDeleteSupplier(row)">删除</el-link>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
@@ -263,6 +268,7 @@ import {
   createConsumablesSupplier,
   createProductComponentSuppliser,
   delComponentImage,
+  deleteProductComponentSuppliser,
   getProductAllSupplier,
   getProductComponentPurchase,
   getProductListSuppliser,
@@ -440,6 +446,16 @@ const handleSubmit = async () => {
 const handleAddSupplier = async () => {
   addSupplierVisible.value = true
   formRef.value?.resetFields()
+}
+const handleDeleteSupplier = async (row: any) => {
+  const { data } = await deleteProductComponentSuppliser({
+    componentId: row.componentId,
+    supplierId: row.suppliserId,
+  })
+  if (data) {
+    $baseMessage('删除供应商成功', 'success', 'hey')
+    fetchData()
+  }
 }
 // 预览图片列表
 const imagePreviewList = ref<string[]>([])

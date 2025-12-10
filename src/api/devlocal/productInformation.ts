@@ -1239,3 +1239,15 @@ export function querySkuDeliveryTime(data: {
     data,
   })
 }
+/**
+ * 删除零件供应商
+ * @param params { componentId: number; supplierId: number }
+ * @returns { data: boolean }
+ */
+export function deleteProductComponentSuppliser(params: { componentId: number; supplierId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/component/supplier/delete`,
+    method: 'post',
+    params,
+  })
+}
