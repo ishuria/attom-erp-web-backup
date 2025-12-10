@@ -340,7 +340,7 @@ const queryForm = reactive<IAiTuoMuInvoiceReq>({
 const listLoading = ref<boolean>(false)
 
 const handleSubmitConfirm = async () => {
-  const invoiceId = list.value.find((item) => (item.detailId = matchStatus.value))?.id
+  const invoiceId = list.value.find((item) => (item.detailId === matchStatus.value))?.id
   if (matchStatus.value) {
     const { data } = await aiTuoMuInvoiceMatch({
       idList: props.idList,
