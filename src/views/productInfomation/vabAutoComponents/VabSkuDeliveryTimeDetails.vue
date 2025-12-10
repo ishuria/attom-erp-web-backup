@@ -195,6 +195,17 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
     }
   }
 }
+
+watch(
+  () => props.modelValue,
+  (newVal: boolean) => {
+    if (newVal) {
+      queryData()
+      handleTimeRangeChange()
+    }
+  },
+  { immediate: true }
+)
 const fetchData = async () => {
   listLoading.value = true
   queryForm.sku = props.sku
