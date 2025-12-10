@@ -104,7 +104,9 @@
       </el-table-column>
       <el-table-column v-if="props.status !== 0" align="center" fixed="right" label="操作" width="100">
         <template #default="{ row }">
-          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">取消退款</el-link>
+          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">
+            {{ props.status === 1 ? '取消退款' : '移动到未退款' }}
+          </el-link>
         </template>
       </el-table-column>
       <template #empty>

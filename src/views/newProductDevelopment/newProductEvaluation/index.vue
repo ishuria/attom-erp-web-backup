@@ -126,7 +126,7 @@
                     关键词趋势
                   </el-link>
                 </el-dropdown-item>
-                <el-dropdown-item v-if="row.userId === currentLoginUserId" @click="sharedEvaluation(row)">
+                <el-dropdown-item @click="sharedEvaluation(row)">
                   <el-link type="primary" underline="never">共享</el-link>
                 </el-dropdown-item>
                 <el-dropdown-item @click="getBenchmarkScoreDetail(row.idNo)">
