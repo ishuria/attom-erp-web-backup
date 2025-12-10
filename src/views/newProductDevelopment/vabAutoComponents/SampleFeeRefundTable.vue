@@ -18,29 +18,93 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="listLoading" border :data="list" stripe>
-      <el-table-column label="图片" prop="imgUrl" width="75">
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-class-name="clearPadding"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @cell-click="handleCellClick"
+    >
+      <el-table-column label="图片" prop="componentImg" width="75">
         <template #default="{ row }">
-          <el-image v-if="row.imgUrl" fit="fill" :src="row.imgUrl" style="width: 75px; height: 75px">
+          <el-image
+            v-if="row.componentImg"
+            fit="fill"
+            :src="row.componentImg"
+            style="width: 75px; height: 75px"
+            @click="handlePreviewImage(row.componentImg)"
+          >
             <template #error>
               <el-icon />
             </template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="产品" min-width="120" prop="productName" />
-      <el-table-column label="零件名" min-width="120" prop="componentName" />
-      <el-table-column label="拿样人" min-width="100" prop="samplePerson" />
-      <el-table-column label="供应商" min-width="120" prop="supplier" />
-      <el-table-column label="1688单号" min-width="120" prop="1688OrderNumber" />
-      <el-table-column label="拿样金额" min-width="100" prop="sampleAmount" />
-      <el-table-column label="可退金额" min-width="100" prop="refundableAmount" />
-      <el-table-column label="拿样备注" min-width="150" prop="sampleRemark" show-overflow-tooltip />
-      <el-table-column label="样品费退还跟进备注" min-width="180" prop="refundFollowupRemark" show-overflow-tooltip />
-      <el-table-column label="退款凭证" min-width="120" prop="refundProof" />
-      <el-table-column v-if="props.status === 0" fixed="right" label="操作" width="100">
+      <el-table-column
+        label="产品"
+        :min-width="Math.max(flexColumnWidth(list, '产品', 'productName'), flexColumnWidth(list, '产品', 'mainSearchTerms'))"
+        prop="productName"
+      >
+        <template #default="{ row }">
+          {{ row.productName }}
+          <br />
+          {{ row.mainSearchTerms }}
+        </template>
+      </el-table-column>
+      <el-table-column label="零件名" :min-width="flexColumnWidth(list, '零件名', 'componentName')" prop="componentName" />
+      <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'supplier')" prop="supplier" />
+      <el-table-column label="1688单号" :min-width="flexColumnWidth(list, '1688单号', 'orderNo1688')" prop="orderNo1688" />
+      <el-table-column align="center" label="拿样人" min-width="100" prop="userName" />
+      <el-table-column align="center" label="拿样金额" min-width="100" prop="price" />
+      <el-table-column align="center" label="可退金额" min-width="100" prop="bulkGoodsReturnable" />
+      <el-table-column label="拿样备注" min-width="200" prop="remark">
+        <template #default="{ row }">
+          <el-tooltip content=" " effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.remark }}</div>
+            </template>
+            <div class="multi-line-ellipsis-1">{{ row.remark }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="样品费退还跟进备注" min-width="200" prop="refundRemark">
+        <template #default="{ row }">
+          <el-tooltip content=" " effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row.refundRemark }}</div>
+            </template>
+            <div class="multi-line-ellipsis-1">{{ row.refundRemark }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="props.status !== 2" label="退款凭证" prop="refundProof" width="90">
+        <template #default="{ row }">
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="row.refundProof" class="image-preview">
+              <img alt="" :src="row.refundProof" />
+              <div class="image-actions">
+                <el-icon @click="handlePreviewImage(row.refundProof)"><zoom-in /></el-icon>
+                <el-icon @click="handleImageRemove(row)"><delete /></el-icon>
+              </div>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="showUploadDialog(row)">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="props.status === 0" align="center" fixed="right" label="操作" width="100">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="handleRefund(row)">退款</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="props.status !== 0" align="center" fixed="right" label="操作" width="100">
+        <template #default="{ row }">
+          <el-link type="primary" underline="never" @click="handleCancelRefund(row)">取消退款</el-link>
         </template>
       </el-table-column>
       <template #empty>
@@ -54,11 +118,28 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
+    <vab-remark-dialog
+      v-model="refundRemarkVisible"
+      :remark="selectedRow.refundRemark"
+      title="样品费退还跟进备注"
+      @update:remark="handleUpdateRemark"
+    />
+    <!-- 退款凭证上传图片 -->
+    <vab-image-upload v-model="refundProofUploadVisible" @image-upload="uploadRefundProof" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue'
+import { Delete, Plus, Search, ZoomIn } from '@element-plus/icons-vue'
+import {
+  deleteSampleFeeRefundProof,
+  getSampleFeeRefundList,
+  updateSampleFeeRefund,
+  updateSampleFeeRefundProof,
+  updateSampleFeeRefundRemark,
+} from '/@/api/devlocal/progressSample'
+import { ISampleFeeRefundItem } from '/@/type/progress/sampleAndComponentType'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'SampleFeeRefundTable',
@@ -70,10 +151,13 @@ interface Props {
    */
   status: number
 }
-
+const emit = defineEmits(['imagePreview'])
+const handlePreviewImage = (url: string) => {
+  emit('imagePreview', url)
+}
 const props = defineProps<Props>()
 
-const list = ref<any[]>([])
+const list = ref<ISampleFeeRefundItem[]>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
 const queryForm = reactive({
@@ -82,22 +166,81 @@ const queryForm = reactive({
   pageSize: 20,
   status: props.status,
 })
+const refundRemarkVisible = ref<boolean>(false)
+const refundProofUploadVisible = ref<boolean>(false)
+const showUploadDialog = (row: any) => {
+  refundProofUploadVisible.value = true
+  selectedRow = row
+}
+const uploadRefundProof = async (file: File) => {
+  try {
+    let uploadImgForm = new FormData() // 每次上传前重置 FormData
+    uploadImgForm.append('file', file)
+    uploadImgForm.append('id', `${selectedRow.sampleId}`)
 
+    const { data } = await updateSampleFeeRefundProof(uploadImgForm)
+    if (data) {
+      selectedRow.refundProof = data
+      $baseMessage('退款凭证上传成功！', 'success')
+      refundProofUploadVisible.value = false
+    } else {
+      $baseMessage('退款凭证上传失败！', 'error')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleImageRemove = async (row: any) => {
+  try {
+    $baseConfirm('确定要删除此退款凭证吗', '系统提示', async () => {
+      const { data } = await deleteSampleFeeRefundProof({
+        id: row.sampleId,
+      })
+      if (data == true) {
+        row.refundProof = ''
+        $baseMessage('退款凭证删除成功!', 'success', 'hey')
+      }
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+const handleUpdateRemark = async (remark: string) => {
+  const { data } = await updateSampleFeeRefundRemark({
+    id: selectedRow.sampleId,
+    refundRemark: remark,
+  })
+  if (data) {
+    $baseMessage('更新成功', 'success')
+    refundRemarkVisible.value = false
+    selectedRow.refundRemark = remark
+  } else {
+    $baseMessage('更新失败', 'error')
+  }
+}
+let selectedRow: ISampleFeeRefundItem = {} as ISampleFeeRefundItem
+const handleCellClick = (row: any, column: any) => {
+  if (column.label === '样品费退还跟进备注') {
+    refundRemarkVisible.value = true
+    selectedRow = row
+  }
+}
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片' || data.column.label === '退款凭证') {
+    return 'clear-padding'
+  }
+  return ''
+}
 // 查询数据
-const queryData = async () => {
+const fetchData = async () => {
   listLoading.value = true
   try {
-    // TODO: 调用实际的 API
-    // const { data } = await getSampleFeeRefundList({
-    //   ...queryForm,
-    //   status: props.status,
-    // })
-    // list.value = data.list || []
-    // total.value = data.total || 0
-
-    // 临时模拟数据
-    list.value = []
-    total.value = 0
+    const { data } = await getSampleFeeRefundList({
+      ...queryForm,
+      status: props.status,
+    })
+    list.value = data.list || []
+    total.value = data.total || 0
   } catch (error) {
     console.error('查询失败:', error)
   } finally {
@@ -105,33 +248,58 @@ const queryData = async () => {
   }
 }
 
+// 暴露方法给父组件
+defineExpose({
+  fetchData,
+})
+const queryData = async () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
 // 分页变化
 const handleCurrentChange = (pageNo: number) => {
   queryForm.pageNo = pageNo
-  queryData()
+  fetchData()
 }
 
 const handleSizeChange = (pageSize: number) => {
   queryForm.pageSize = pageSize
   queryForm.pageNo = 1
-  queryData()
+  fetchData()
 }
 
 // 退款操作
-const handleRefund = (row: any) => {
-  // TODO: 实现退款逻辑
-  console.log('退款:', row)
+const handleRefund = async (row: any) => {
+  const { data } = await updateSampleFeeRefund({
+    id: row.sampleId,
+    refundStatus: 1,
+  })
+  if (data) {
+    $baseMessage('退款成功', 'success')
+    fetchData()
+  } else {
+    $baseMessage('退款失败', 'error')
+  }
+}
+const handleCancelRefund = async (row: any) => {
+  const { data } = await updateSampleFeeRefund({
+    id: row.sampleId,
+    refundStatus: 0,
+  })
+  if (data) {
+    $baseMessage('取消退款成功', 'success')
+    fetchData()
+  } else {
+    $baseMessage('取消退款失败', 'error')
+  }
 }
 
-// 监听状态变化，重新查询
+// 监听状态变化，更新查询表单状态（不自动查询，由父组件控制）
 watch(
   () => props.status,
-  () => {
-    queryForm.status = props.status
-    queryForm.pageNo = 1
-    queryData()
-  },
-  { immediate: true }
+  (newStatus) => {
+    queryForm.status = newStatus
+  }
 )
 </script>
 
@@ -153,5 +321,76 @@ watch(
 .el-table :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+// 图片样式
+.image-cell {
+  width: 100%;
+  height: 75px;
+
+  // 有图片时的样式
+  .image-preview {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      object-fit: fill;
+    }
+
+    .image-actions {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      transition: all 0.3s ease;
+
+      .el-icon {
+        font-size: 20px;
+        color: #fff;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    &:hover .image-actions {
+      background: rgba(0, 0, 0, 0.45); // 悬停时的背景色
+      opacity: 1; // 悬停时完全显示
+    }
+  }
+  // 没图片时的样式
+  .upload-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    border: 1px dashed var(--el-border-color);
+
+    &:hover {
+      border-color: var(--el-color-primary);
+      .el-icon {
+        color: var(--el-color-primary);
+      }
+    }
+
+    .el-icon {
+      font-size: 20px;
+      color: #999;
+    }
+  }
 }
 </style>

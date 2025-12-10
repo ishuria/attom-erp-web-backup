@@ -21,6 +21,8 @@ import type {
   ICostAccountingQueryResp,
   ICostAccountingUpdateResp,
   ICostAccountingUpdateSortResp,
+  IGetSampleFeeRefundListReq,
+  IGetSampleFeeRefundListResp,
   IProgressCostAccountResp,
   IProgressEstimatedCostAccounting,
   IProgressProdcutComponent,
@@ -527,6 +529,65 @@ export function reverseCalculateProgress(params?: { id: number }): Promise<{ dat
 export function reverseCalculateProgressSample(params?: { id: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/progress/sample/reverse/calculation`,
+    method: 'post',
+    params,
+  })
+}
+
+// 样品费退还列表
+export function getSampleFeeRefundList(params: IGetSampleFeeRefundListReq): Promise<IGetSampleFeeRefundListResp> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/list`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 样品费退还-修改状态
+ * @param data { id: number; refundStatus: number }
+ * @returns { data: boolean }
+ */
+export function updateSampleFeeRefund(params: { id: number; refundStatus: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/update`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 样品费退还-修改备注
+ * @param params { id: number; remark: string }
+ * @returns { data: boolean }
+ */
+export function updateSampleFeeRefundRemark(params: { id: number; refundRemark: string }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/update/remark`,
+    method: 'post',
+    params,
+  })
+}
+/**
+ * 样品费退还-上传退款凭证
+ * @param data FormData
+ * @returns { data: string }
+ */
+export function updateSampleFeeRefundProof(data: FormData): Promise<{ data: string }> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/upload/proof`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+
+/**
+ * 样品费退还-删除退款凭证
+ * @param params { id: number }
+ * @returns { data: boolean }
+ */
+export function deleteSampleFeeRefundProof(params: { id: number }): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/sample/fee/refund/delete/proof`,
     method: 'post',
     params,
   })

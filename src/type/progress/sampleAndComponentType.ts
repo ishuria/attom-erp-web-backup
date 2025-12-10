@@ -483,3 +483,75 @@ export interface ISubmitProgressConsumableQuery {
   progressId: number
   list: ISubmitPurchaseConsumable[]
 }
+
+export interface IGetSampleFeeRefundListReq {
+  status: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}
+export interface IGetSampleFeeRefundListResp {
+  data: {
+    list: ISampleFeeRefundItem[]
+    total: number
+  }
+}
+export interface ISampleFeeRefundItem {
+  sampleId: number
+  /**
+   * 样品/零件图片
+   */
+  componentImg: string
+
+  /**
+   * 零件名称
+   */
+  componentName: string
+
+  /**
+   * 产品名
+   */
+  productName: string
+
+  /**
+   * 供应商
+   */
+  supplier: string
+
+  /**
+   * 1688订单
+   */
+  orderNo1688: string
+
+  /**
+   * 金额
+   */
+  price: string
+
+  /**
+   * 大货可退金额
+   */
+  bulkGoodsReturnable: string
+
+  /**
+   * 备注
+   */
+  remark: string
+
+  /**
+   * 主要搜索词
+   */
+  mainSearchTerms: string
+
+  /**
+   * 退款备注
+   */
+  refundRemark: string
+
+  /**
+   * 退款凭证
+   */
+  refundProof: string
+
+  userName: string
+}
