@@ -214,16 +214,6 @@ const fetchData = async () => {
   total.value = data.total
   listLoading.value = false
 }
-
-watch(
-  () => props.modelValue,
-  (newVal: boolean) => {
-    if (newVal) {
-      queryData()
-    }
-  },
-  { immediate: true }
-)
 </script>
 
 <style scoped>
