@@ -15,10 +15,11 @@
               style="max-width: 300px"
               type="daterange"
               unlink-panels
+              @change="handleTimeRangeChange"
             />
           </div>
           <div ref="chartContainer" class="chart-container">
-            <!--            <vab-chart :option="lineChartOption" />-->
+            <vab-chart :option="lineChartOption" />
             <div></div>
           </div>
         </div>
@@ -46,8 +47,8 @@
           <el-table
             v-loading="listLoading"
             border
-            :data="list"
             :cell-style="{ textAlign: 'center' }"
+            :data="list"
             :header-cell-style="{ textAlign: 'center' }"
             max-height="700"
             :span-method="objectSpanMethod"
@@ -81,8 +82,9 @@
 </template>
 
 <script setup lang="ts">
-import { querySkuDeliveryTime } from "/@/api/devlocal/productInformation.ts";
 import { Search } from '@element-plus/icons-vue'
+import { formatDateToString } from '~/src/utils/dateUtils'
+import { getSkuDeliveryTimeChart, querySkuDeliveryTime } from '/@/api/devlocal/productInformation.ts'
 import { IGetPackingTimeDetailsReq, ISkuComponentDeliveryTimeDetail } from '/@/type/productInformation/skuCustomsClearance.ts'
 
 defineOptions({
@@ -112,7 +114,46 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
-
+const lineChartOption = ref<any>({
+  tooltip: {
+    trigger: 'axis',
+    formatter: (params: any) => {
+      const param = params[0]
+      return `${param.name}<br/>SKU交期: ${param.value} 天`
+    },
+  },
+  grid: {
+    top: 30,
+    left: 65,
+    right: 100,
+    bottom: 30,
+  },
+  xAxis: {
+    type: 'category',
+    data: [],
+    name: 'SKU签收日期',
+  },
+  yAxis: {
+    type: 'value',
+    name: 'SKU交期',
+  },
+  series: [
+    {
+      type: 'line',
+      data: [],
+    },
+  ],
+})
+const handleTimeRangeChange = async () => {
+  // 根据选择的时间范围更新图表数据
+  const { data } = await getSkuDeliveryTimeChart({
+    sku: props.sku,
+    startTime: formatDateToString(chartTimeRange.value[0]),
+    endTime: formatDateToString(chartTimeRange.value[1]),
+  })
+  lineChartOption.value.xAxis.data = data.x
+  lineChartOption.value.series[0].data = data.y
+}
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
   fetchData()
@@ -157,7 +198,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 const fetchData = async () => {
   listLoading.value = true
   queryForm.sku = props.sku
-  const {data} = await querySkuDeliveryTime(queryForm)
+  const { data } = await querySkuDeliveryTime(queryForm)
   list.value = data.list
   total.value = data.total
   listLoading.value = false

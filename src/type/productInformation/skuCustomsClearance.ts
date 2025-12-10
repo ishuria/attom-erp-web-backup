@@ -79,6 +79,20 @@ export interface IGetPackingTimeDetailsChartResp {
   times: number[]
 }
 
+export interface IGetSkuDeliveryTimeChartReq {
+  /** sku */
+  sku?: string
+  /** 开始日期 */
+  startTime?: string
+  /** 结束日期 */
+  endTime?: string
+}
+
+export interface IGetSkuDeliveryTimeChartResp {
+  x: string[]
+  y: number[]
+}
+
 export interface ISkuComponentDeliveryTimeDetail {
   /** 分组用的唯一标识，表格合并行时依赖该字段 */
   id: number | string

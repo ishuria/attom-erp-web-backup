@@ -89,6 +89,8 @@ import {
   IGetPackingTimeDetailsChartResp,
   IGetPackingTimeDetailsReq,
   IGetPackingTimeDetailsResp,
+  IGetSkuDeliveryTimeChartReq,
+  IGetSkuDeliveryTimeChartResp,
   ISkuDeliveryTimeResp,
   SkuCustomsClearanceAddReq,
   SkuCustomsClearanceQueryReq,
@@ -1188,6 +1190,20 @@ export function getPackingTimeDetailsChart(data: IGetPackingTimeDetailsChartReq)
 }> {
   return request({
     url: `${BASE_API}/sku/packaging/time/chart`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 获取sku交期趋势图
+ * @param data { sku: string; startTime: string; endTime: string }
+ * @returns { data: IGetSkuDeliveryTimeChartResp }
+ */
+export function getSkuDeliveryTimeChart(data: IGetSkuDeliveryTimeChartReq): Promise<{
+  data: IGetSkuDeliveryTimeChartResp
+}> {
+  return request({
+    url: `${BASE_API}/sku/delivery/time/statistics`,
     method: 'post',
     data,
   })
