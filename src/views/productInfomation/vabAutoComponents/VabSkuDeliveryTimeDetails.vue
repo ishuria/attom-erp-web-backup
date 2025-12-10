@@ -11,6 +11,7 @@
               v-model="chartTimeRange"
               end-placeholder="结束日期"
               range-separator="至"
+              :shortcuts="shortcuts"
               start-placeholder="开始日期"
               style="max-width: 300px"
               type="daterange"
@@ -114,6 +115,38 @@ const visible = computed({
     emit('update:modelValue', val)
   },
 })
+const shortcuts = [
+  {
+    text: '半年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近6个月
+      start.setMonth(start.getMonth() - 6)
+      return [start, end]
+    },
+  },
+  {
+    text: '1年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近12个月
+      start.setFullYear(start.getFullYear() - 1)
+      return [start, end]
+    },
+  },
+  {
+    text: '2年',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      // 最近24个月
+      start.setFullYear(start.getFullYear() - 2)
+      return [start, end]
+    },
+  },
+]
 const lineChartOption = ref<any>({
   tooltip: {
     trigger: 'axis',
