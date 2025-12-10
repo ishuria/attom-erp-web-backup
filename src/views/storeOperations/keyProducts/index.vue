@@ -62,6 +62,10 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="销售额最大月" prop="maxMonth" width="120" />
+      <el-table-column label="月销量" prop="monthSalesVolume" width="100" />
+      <el-table-column label="月销售额" prop="monthSales" width="100" />
+      <el-table-column :formatter="formatProfitMargin" label="月净利率" prop="monthProfitMargin" width="100" />
       <el-table-column label="1月末Rating" prop="janEndRating">
         <template #default="{ row }">
           <span :style="{ color: getRatingColor(row.janEndRating) }">
@@ -285,6 +289,9 @@ const handleUpdateKeyProductsStatusPause = async (id: number, status: number) =>
   } else {
     $baseMessage('暂停失败！', 'error')
   }
+}
+const formatProfitMargin = (row: any): string => {
+  return `${row.monthProfitMargin !== null ? row.monthProfitMargin + '%' : ''}`
 }
 const getRatingColor = (rating: number | null | undefined): string => {
   if (rating == null) return '#333'
