@@ -11,6 +11,7 @@ import {
   IGetFrontPageBonusRes,
   IGetFrontPageDestroyValueDetailRes,
   IGetFrontPageDestroyValueRes,
+  IGetFrontPageFbaCountSaleDayChartRes,
   IGetFrontPageHistoryAssessmentRecordsReq,
   IGetFrontPageHistoryAssessmentRecordsRes,
   IGetFrontPageInventoryProductsTotalValue,
@@ -434,6 +435,21 @@ export function getFrontPagePersonalBonus(params: { month: string }): Promise<IG
 export function getFrontPageVineReviewCard(params: { userId: number }): Promise<{ data: IKeyProductsItem[] }> {
   return request({
     url: `${BASE_API}/front_page/vine/review/list`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 首页-剩余FBA库存数
+ * @param params { userId: number, site: number }
+ * @returns IGetFrontPageFbaCountSaleDayChartRes[]
+ */
+export function getFrontPageFbaCountSaleDayChart(params: {
+  userId: number
+  site: number
+}): Promise<{ data: IGetFrontPageFbaCountSaleDayChartRes[] }> {
+  return request({
+    url: `${BASE_API}/front_page/fba/count/chart`,
     method: 'get',
     params,
   })

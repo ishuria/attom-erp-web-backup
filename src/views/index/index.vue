@@ -406,6 +406,9 @@
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <vine-review-card :user-list="userList" />
       </el-col>
+      <el-col v-if="ableViewTop50ProductLossCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+        <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
+      </el-col>
     </el-row>
 
     <history-assessment-records
@@ -427,6 +430,7 @@
 
 <script lang="ts" setup>
 import { random } from 'lodash-es'
+import { getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
 import {
@@ -903,12 +907,16 @@ const fetchUserList = async () => {
 }
 const lossUserList = ref<{ id: number; label: string }[]>([])
 const selectLossUserId = ref<number>()
-
+const fbaCountUserList = ref<{ id: number; label: string }[]>([])
 const fetchLossUserList = async () => {
   const { data } = await getFrontPageProductManagerSelectOption({ type: 1 })
   lossUserList.value = data
-
+  // 过滤掉已存在的"全部"选项，避免重复
+  fbaCountUserList.value = data.filter((item) => !(item.id === -1 && item.label === '全部'))
+  fbaCountUserList.value.unshift({ id: -1, label: '全部' })
   if (ableBossViewCard) {
+    // 过滤掉已存在的"全部"选项，避免重复
+    lossUserList.value = lossUserList.value.filter((item) => !(item.id === -1 && item.label === '全部'))
     lossUserList.value.unshift({ id: -1, label: '全部' })
     selectLossUserId.value = -1
   } else {
@@ -1352,6 +1360,12 @@ const fetchProfitSharePreview = async () => {
   profitSharePreviewTotal.value = data.total
   profitSharePreviewLoading.value = false
 }
+const siteList = ref<{ id: number; label: string }[]>([])
+const fetchSiteList = async () => {
+  const { data } = await getDistributionSiteList()
+  siteList.value = data
+  siteList.value.unshift({ id: -1, label: '全部' })
+}
 onBeforeMount(async () => {
   await fetchBillingMonthList()
   if (ableViewCommissionCard) {
@@ -1381,6 +1395,7 @@ onBeforeMount(async () => {
     fetchTop30ProductSale()
   }
   if (ableViewTop50ProductLossCard) {
+    fetchSiteList()
     await fetchLossUserList()
     await fetchTop50ProductLoss()
   }

@@ -109,6 +109,7 @@ declare module 'vue' {
     ErrorAllowRangeDialog: typeof import('./../../../src/views/customsDeclaration/vabAutoComponents/ErrorAllowRangeDialog.vue')['default']
     ErrorContainer: typeof import('./../../../src/views/error/vabAutoComponents/ErrorContainer.vue')['default']
     ExpenseBreakdownCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/ExpenseBreakdownCard.vue')['default']
+    FbaCountSaleDayChart: typeof import('./../../../src/views/index/vabAutoComponents/FbaCountSaleDayChart.vue')['default']
     GoodsManagementEdit: typeof import('./../../../src/views/goods/vabAutoComponents/GoodsManagementEdit.vue')['default']
     HistoryAssessmentRecords: typeof import('./../../../src/views/index/vabAutoComponents/HistoryAssessmentRecords.vue')['default']
     HistoryPriceTable: typeof import('./../../../src/views/commission/vabAutoComponents/HistoryPriceTable.vue')['default']

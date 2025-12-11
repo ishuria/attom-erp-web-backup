@@ -313,3 +313,8 @@ export interface IGetFrontPagePersonalBonusItem {
   bonusType: string
   bonus: number
 }
+
+export interface IGetFrontPageFbaCountSaleDayChartRes {
+  saleDayRange: string
+  fbaCount: number
+}
