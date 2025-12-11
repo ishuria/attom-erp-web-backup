@@ -51,6 +51,9 @@
             <template v-if="row['column0'] === 'toy'">
               <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
             </template>
+            <template v-if="row['column0'] === 'seasonal'">
+              <el-checkbox v-model="row[prop]" class="custom-checkbox" disabled :false-value="0" :true-value="1" />
+            </template>
             <template
               v-if="
                 row['column0'] !== 'variantImg' &&
@@ -60,7 +63,8 @@
                 row['column0'] !== 'graphicDesign' &&
                 row['column0'] !== 'magnetic' &&
                 row['column0'] !== 'woodenProduct' &&
-                row['column0'] !== 'toy'
+                row['column0'] !== 'toy' &&
+                row['column0'] !== 'seasonal'
               "
             >
               {{ row[prop] }}
@@ -210,6 +214,7 @@ const labelMap: Record<string, string> = {
   magnetic: '带磁',
   woodenProduct: '木制品',
   toy: '玩具',
+  seasonal: '应季产品',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   sampleRetention: '打包留样<br>(发布订货后系统自动增加数量和质检项)',
@@ -324,6 +329,7 @@ const fetchData = async () => {
       magnetic: item.magnetic || 0,
       woodenProduct: item.woodenProduct || 0,
       toy: item.toy || 0,
+      seasonal: item.seasonal || 0,
       benchmarkAsin: item.benchmarkAsin,
       patent: item.patent,
       sampleRetention: item.sampleRetention,

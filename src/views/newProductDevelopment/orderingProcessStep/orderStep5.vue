@@ -180,6 +180,16 @@
             />
           </template>
 
+          <template v-if="row['column0'] === 'seasonal'">
+            <el-checkbox
+              v-model="row[prop]"
+              class="custom-checkbox"
+              :false-value="0"
+              :true-value="1"
+              @change="handleUpdateMagnetic(row, prop)"
+            />
+          </template>
+
           <template v-if="row['column0'] === 'procurementManager'">
             <!-- <el-select
               v-model="row[prop]"
@@ -341,6 +351,7 @@ const handleInsertSku = async (row: any, prop: string) => {
       exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop] = data.magnetic || 0
       exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop] = data.woodenProduct || 0
       exchangeList.value[FIELD_INDEX_MAP.TOY][prop] = data.toy || 0
+      exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop] = data.SEASONAL || 0
       exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop] = data.benchmarkAsin
 
       await reviewStepNo5SkuInfoPerfect({
@@ -352,6 +363,7 @@ const handleInsertSku = async (row: any, prop: string) => {
         magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop],
         woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop],
         toy: exchangeList.value[FIELD_INDEX_MAP.TOY][prop],
+        seasonal: exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop],
         benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop],
         orderEntryId: exchangeList.value[FIELD_INDEX_MAP.ORDER_ENTRY_ID][prop],
       })
@@ -437,21 +449,22 @@ const FIELD_INDEX_MAP = {
   MAGNETIC: 9,
   WOODEN_PRODUCT: 10,
   TOY: 11,
-  BENCHMARK_ASIN: 12,
-  PATENT: 13,
-  PRODUCT_MANAGER: 14,
-  PRODUCT_DESIGN: 15,
-  PROCUREMENT_MANAGER: 16,
-  SAMPLE_RETENTION: 17,
-  PACKING_GROUP: 18,
-  MANUFACTURER_EN_NAME: 19,
-  CERTIFICATE_UPLOAD: 20,
-  SKU_MERGE: 21,
-  OPERATE: 22,
-  ORDER_ENTRY_ID: 23,
-  PRODUCT_MANAGER_ID: 24,
-  PRODUCT_DESIGN_ID: 25,
-  PROCUREMENT_MANAGER_ID: 26,
+  SEASONAL: 12,
+  BENCHMARK_ASIN: 13,
+  PATENT: 14,
+  PRODUCT_MANAGER: 15,
+  PRODUCT_DESIGN: 16,
+  PROCUREMENT_MANAGER: 17,
+  SAMPLE_RETENTION: 18,
+  PACKING_GROUP: 19,
+  MANUFACTURER_EN_NAME:20,
+  CERTIFICATE_UPLOAD: 21,
+  SKU_MERGE: 22,
+  OPERATE: 23,
+  ORDER_ENTRY_ID: 24,
+  PRODUCT_MANAGER_ID: 25,
+  PRODUCT_DESIGN_ID: 26,
+  PROCUREMENT_MANAGER_ID: 27,
 } as const
 
 const labelMap: Record<string, string> = {
@@ -468,6 +481,7 @@ const labelMap: Record<string, string> = {
   magnetic: '带磁',
   woodenProduct: '木制品',
   toy: '玩具',
+  seasonal: '应季产品',
   benchmarkAsin: '对标竞品ASIN',
   patent: '专利情况<br>(是否排查以及结果)',
   productManager: '产品经理',
@@ -508,6 +522,7 @@ const buildParams = (key: string) => {
     magnetic: exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][key],
     woodenProduct: exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][key],
     toy: exchangeList.value[FIELD_INDEX_MAP.TOY][key],
+    seasonal: exchangeList.value[FIELD_INDEX_MAP.SEASONAL][key],
     benchmarkAsin: exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][key],
     patent: exchangeList.value[FIELD_INDEX_MAP.PATENT][key],
     productManagerId: exchangeList.value[FIELD_INDEX_MAP.PRODUCT_MANAGER_ID][key],
@@ -980,6 +995,7 @@ const fetchVariantList = async () => {
           magnetic: item.magnetic || 0,
           woodenProduct: item.woodenProduct || 0,
           toy: item.toy || 0,
+          seasonal: item.seasonal || 0,
           benchmarkAsin: item.benchmarkAsin,
           patent: item.patent,
           productManager: item.productManager,
