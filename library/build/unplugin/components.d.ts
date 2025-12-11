@@ -133,6 +133,7 @@ declare module 'vue' {
     ParameterSettingsDialog: typeof import('./../../../src/views/employeeManagement/vabAutoComponents/ParameterSettingsDialog.vue')['default']
     Pending2: typeof import('./../../../src/views/index/vabAutoComponents/Pending2.vue')['default']
     PerformanceHistory: typeof import('./../../../src/views/index/vabAutoComponents/PerformanceHistory.vue')['default']
+    PerformanceSummary: typeof import('./../../../src/views/index/vabAutoComponents/PerformanceSummary.vue')['default']
     PerformanceTable: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTable.vue')['default']
     PerformanceTableCell: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTableCell.vue')['default']
     PerformanceTableHeader: typeof import('./../../../src/views/storeOperations/vabAutoComponents/PerformanceTableHeader.vue')['default']
