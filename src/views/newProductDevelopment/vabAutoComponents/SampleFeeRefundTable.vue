@@ -56,6 +56,12 @@
       <el-table-column label="零件名" :min-width="flexColumnWidth(list, '零件名', 'componentName')" prop="componentName" />
       <el-table-column label="供应商" :min-width="flexColumnWidth(list, '供应商', 'supplier')" prop="supplier" />
       <el-table-column label="1688单号" :min-width="flexColumnWidth(list, '1688单号', 'orderNo1688')" prop="orderNo1688" />
+      <el-table-column align="center" label="是否定大货" min-width="110" prop="isBulkGoods">
+        <template #default="{ row }">
+          <el-tag v-if="row.isBulkGoods === 1" type="success">是</el-tag>
+          <el-tag v-else type="danger">否</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="拿样人" min-width="100" prop="userName" />
       <el-table-column align="center" label="拿样金额" min-width="100" prop="price" />
       <el-table-column align="center" label="可退金额" min-width="100" prop="bulkGoodsReturnable" />
@@ -100,6 +106,7 @@
       <el-table-column v-if="props.status === 0" align="center" fixed="right" label="操作" width="100">
         <template #default="{ row }">
           <el-link type="primary" underline="never" @click="handleRefund(row)">退款</el-link>
+          <el-link type="danger" underline="never" @click="handleUnrefund(row)">不可退款</el-link>
         </template>
       </el-table-column>
       <el-table-column v-if="props.status !== 0" align="center" fixed="right" label="操作" width="100">
@@ -281,6 +288,18 @@ const handleRefund = async (row: any) => {
     fetchData()
   } else {
     $baseMessage('退款失败', 'error')
+  }
+}
+const handleUnrefund = async (row: any) => {
+  const { data } = await updateSampleFeeRefund({
+    id: row.sampleId,
+    refundStatus: 2,
+  })
+  if (data) {
+    $baseMessage('不可退款成功', 'success')
+    fetchData()
+  } else {
+    $baseMessage('不可退款失败', 'error')
   }
 }
 const handleCancelRefund = async (row: any) => {
