@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IAddArtDesignTaskReq,
+  IAllocateArtDesignTaskReq,
   IArtDesignTaskMargin,
   IClaimArtDesignTaskReq,
   IConfirmOtherSkuArtDesignSellingPointRes,
@@ -313,5 +314,18 @@ export function getArtDesignTaskDetail(params: { userId: number; month: string }
     url: `${BASE_API}/artDesign/user/monthly/detail`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * 平面设计任务分配
+ * @param data { taskId: number; skus: string[] }
+ * @returns { data: boolean }
+ */
+export function allocateArtDesignTask(data: IAllocateArtDesignTaskReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/design/task/allocate`,
+    method: 'post',
+    data,
   })
 }

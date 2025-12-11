@@ -404,3 +404,8 @@ export interface IQueryArtDesignTaskDistributionRes {
     renderingPersons: number[]
   }
 }
+
+export interface IAllocateArtDesignTaskReq {
+  taskId: number
+  skuIds: number[]
+}

@@ -220,7 +220,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
@@ -467,7 +467,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
@@ -706,7 +706,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
@@ -1200,6 +1200,7 @@ import { designTypeOption, taskTypeOption } from '../constantOption'
 import {
   addArtDesignSelectionReasons,
   addArtDesignTask,
+  allocateArtDesignTask,
   delArtDesignSelectionReasons,
   delArtDesignTask,
   finishArtDesignTask,
@@ -1381,8 +1382,18 @@ const handleShowDistributeSkus = (row: IGetArtDesignTaskList) => {
   distributeSkusVisible.value = true
   distributionSkusId.value = row.id!
 }
-const handleConfirmDistributeSkus = (data: { transferValue: number[] }) => {
-  console.log(data)
+const handleConfirmDistributeSkus = async (data: { transferValue: number[] }) => {
+  const { data: res } = await allocateArtDesignTask({
+    taskId: distributionSkusId.value,
+    skuIds: data.transferValue,
+  })
+  if (res) {
+    $baseMessage('分配成功！', 'success')
+    distributeSkusVisible.value = false
+    fetchData()
+  } else {
+    $baseMessage('分配失败！', 'error')
+  }
 }
 const handleUpdateProofreadingStatus = async (row: IGetArtDesignTaskList) => {
   const { data } = await updateProofreadingStatus({
