@@ -140,6 +140,8 @@ export interface IUpdateArtDesignTaskDistributeReq {
    * 视频人多个用,分割
    */
   videoPerson?: string
+  colorDesignPerson?: string
+  productPlaneDesignPerson?: string
   type: number
 }
 export interface IGetSellingPointRes {
@@ -402,6 +404,8 @@ export interface IQueryArtDesignTaskDistributionRes {
     videoPersons: number[]
     aPlus: number[]
     renderingPersons: number[]
+    colorDesignPersons: number[]
+    productPlaneDesignPersons: number[]
   }
 }
 

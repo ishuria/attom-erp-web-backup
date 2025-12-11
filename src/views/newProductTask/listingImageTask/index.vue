@@ -1040,7 +1040,8 @@
     <!-- 任务分配 -->
     <vab-dialog v-model="assignTaskVisible" title="任务分配" width="26%">
       <el-form label-position="right" label-width="auto" :model="assignTaskForm" style="margin: 0 10px">
-        <el-form-item label="基础图片">
+        <!-- 老品任务相关字段：基础图片、建模、渲染、A+、视频 -->
+        <el-form-item v-if="showOldProductTaskFields" label="基础图片">
           <el-select
             v-model="assignTaskForm.baseImageUrlPerson"
             clearable
@@ -1053,7 +1054,7 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="建模">
+        <el-form-item v-if="showOldProductTaskFields" label="建模">
           <el-select
             v-model="assignTaskForm.moldingPerson"
             clearable
@@ -1066,7 +1067,7 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="渲染">
+        <el-form-item v-if="showOldProductTaskFields" label="渲染">
           <el-select
             v-model="assignTaskForm.renderingPerson"
             clearable
@@ -1079,7 +1080,7 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="A+">
+        <el-form-item v-if="showOldProductTaskFields" label="A+">
           <el-select
             v-model="assignTaskForm.aPlus"
             clearable
@@ -1092,7 +1093,7 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="视频">
+        <el-form-item v-if="showOldProductTaskFields" label="视频">
           <el-select
             v-model="assignTaskForm.videoPerson"
             clearable
@@ -1105,9 +1106,36 @@
             <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="说明书">
+        <!-- 设计任务相关字段：说明书/包装、配色设计、产品平面设计 -->
+        <el-form-item v-if="showDesignTaskFields" label="说明书/包装">
           <el-select
             v-model="assignTaskForm.instructionPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="showDesignTaskFields" label="配色设计">
+          <el-select
+            v-model="assignTaskForm.colorDesignPerson"
+            clearable
+            collapse-tags
+            collapse-tags-tooltip
+            :max-collapse-tags="6"
+            multiple
+            placeholder="请选择人员"
+          >
+            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="showDesignTaskFields" label="产品平面设计">
+          <el-select
+            v-model="assignTaskForm.productPlaneDesignPerson"
             clearable
             collapse-tags
             collapse-tags-tooltip
@@ -1348,11 +1376,31 @@ const assignTaskForm = reactive<any>({
   videoPerson: [],
   instructionPerson: [],
   renderingPerson: [],
+  colorDesignPerson: [],
+  productPlaneDesignPerson: [],
 })
 const selectedRows = ref<IGetArtDesignTaskList[]>([])
 const setSelectedRows = (value: IGetArtDesignTaskList[]) => {
   selectedRows.value = value
 }
+
+// 判断是否显示老品任务相关的表单项（前五个：基础图片、建模、渲染、A+、视频）
+const showOldProductTaskFields = computed(() => {
+  if (selectedRows.value.length === 0) return false
+  return selectedRows.value.some((row) => {
+    const taskType = row.taskType
+    return taskType === '老品优化' || taskType === '新品任务' || taskType === '临时任务'
+  })
+})
+
+// 判断是否显示设计任务相关的表单项（后三个：说明书/包装、配色设计、产品平面设计）
+const showDesignTaskFields = computed(() => {
+  if (selectedRows.value.length === 0) return false
+  return selectedRows.value.some((row) => {
+    const taskType = row.taskType
+    return taskType === '设计任务' || taskType === '临时任务'
+  })
+})
 // const missionClaimVisible = ref<boolean>(false)
 // const missionClaimForm = reactive<{ type: number }>({
 //   type: 0
@@ -1707,6 +1755,8 @@ const handleConfirmAssignTask = async () => {
     aPlus: assignTaskForm.aPlus.join(','),
     videoPerson: assignTaskForm.videoPerson.join(','),
     instructionPerson: assignTaskForm.instructionPerson.join(','),
+    colorDesignPerson: assignTaskForm.colorDesignPerson.join(','),
+    productPlaneDesignPerson: assignTaskForm.productPlaneDesignPerson.join(','),
     renderingPerson: assignTaskForm.renderingPerson.join(','),
     type: activeName.value,
   })
@@ -1812,7 +1862,7 @@ const showAssignTask = async () => {
     $baseMessage('您只能选择一行！', 'warning')
     return
   }
-  if (activeName.value === 1) {
+  if (activeName.value === 1 || activeName.value === 3) {
     // console.log(selectedRows.value)
     const { data } = await queryArtDesignTaskDistribution({ taskId: selectedRows.value[0].id! })
     if (data) {
@@ -1822,6 +1872,8 @@ const showAssignTask = async () => {
       assignTaskForm.videoPerson = data.videoPersons
       assignTaskForm.instructionPerson = data.instructionPersons
       assignTaskForm.renderingPerson = data.renderingPersons
+      assignTaskForm.colorDesignPerson = data.colorDesignPersons
+      assignTaskForm.productPlaneDesignPerson = data.productPlaneDesignPersons
     }
   }
   assignTaskVisible.value = true
