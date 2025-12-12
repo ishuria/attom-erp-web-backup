@@ -39,6 +39,7 @@
       :data="pagedData"
       :header-cell-style="{ textAlign: 'center' }"
       show-summary
+      :summary-method="handleSummaryMethod"
       @sort-change="handleSortChange"
     >
       <el-table-column label="出库日期" min-width="" prop="shipmentDate" sortable>
@@ -251,6 +252,53 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   return {
     textAlign: 'center',
   }
+}
+
+const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] }): any[] => {
+  const sums: string[] = []
+
+  const allData = list.value
+
+  columns.forEach((column, index) => {
+    if (index === 0) {
+      sums[index] = '合计'
+      return
+    }
+
+    const prop = column.property
+
+    if (prop === 'profitMargin') {
+      const totalProfit = allData.reduce((sum: number, row: any) => {
+        const value = Number(row.totalProfit) || 0
+        return sum + value
+      }, 0)
+
+      const totalSalePrice = allData.reduce((sum: number, row: any) => {
+        const value = Number(row.totalSalePrice) || 0
+        return sum + value
+      }, 0)
+
+      if (totalProfit !== 0) {
+        const profitMargin = (totalSalePrice / totalProfit) * 100
+        sums[index] = profitMargin.toFixed(2) + '%'
+      } else {
+        sums[index] = '0.00%'
+      }
+      return
+    }
+
+    if (['totalCif', 'totalFreightFee', 'totalSalePrice', 'totalCost', 'totalProfit', 'totalTaxRebate'].includes(prop)) {
+      const total = allData.reduce((sum: number, row: any) => {
+        const value = Number(row[prop]) || 0
+        return sum + value
+      }, 0)
+      sums[index] = total.toFixed(2)
+    } else {
+      sums[index] = ''
+    }
+  })
+
+  return sums
 }
 </script>
 

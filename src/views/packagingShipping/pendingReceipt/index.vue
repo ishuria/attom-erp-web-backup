@@ -581,7 +581,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" :loading="signBntLoading" @click="confirmSign" >确认</el-button>
+        <el-button :loading="signBntLoading" type="primary" @click="confirmSign">确认</el-button>
       </template>
     </vab-dialog>
     <!-- 批量签收 -->
@@ -835,6 +835,10 @@ const handleChangePrinter = async () => {
   }
 }
 const handleConfirmPrint = async () => {
+  if (Number(printForm.count!) > 50) {
+    $baseMessage('打印数量不能超过50', 'error')
+    return
+  }
   printFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       const { data } = await printSign({

@@ -122,13 +122,13 @@
           <el-form-item>
             <!--
               筛选条件说明：
-              - boxCount5Plus: 筛选箱数大于等于5的记录
-              - dimensionsComplete: 筛选毛重、长、宽、高都已录入的记录
+              - boxCount5Plus: 筛选箱数不含5的记录
+              - dimensionsComplete: 筛选毛重、长、宽、高未录入的记录
             -->
             <div class="filter-group">
               <el-checkbox-group v-model="queryForm.filters" @change="queryData">
-                <el-checkbox value="boxCount5Plus">箱数5+</el-checkbox>
-                <el-checkbox value="dimensionsComplete">尺寸已录</el-checkbox>
+                <el-checkbox value="boxCount5Plus">箱数5-</el-checkbox>
+                <el-checkbox value="dimensionsComplete">尺寸未录</el-checkbox>
               </el-checkbox-group>
             </div>
 
@@ -1112,6 +1112,10 @@ const file2Disabled = ref<boolean>(true)
 const file3Disabled = ref<boolean>(true)
 // 确认打印
 const handleConfirmPrint = async () => {
+  if (Number(printForm.count!) > 50) {
+    $baseMessage('打印数量不能超过50', 'error')
+    return
+  }
   printFormRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
       const { data } = await printEncasement({
