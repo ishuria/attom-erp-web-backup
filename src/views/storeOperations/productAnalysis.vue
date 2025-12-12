@@ -46,6 +46,7 @@
               <vab-return-analysis v-if="activeName === 4" />
             </el-tab-pane>
             <el-tab-pane label="竞品" :name="5" />
+            <el-tab-pane label="搜索词表现" :name="6" />
           </el-tabs>
           <!-- tab右边的选项 -->
           <div style="position: absolute; top: 0px; right: -9px">
