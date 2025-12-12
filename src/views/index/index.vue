@@ -269,6 +269,31 @@
           </template>
         </performance-history>
       </el-col>
+      <!-- 产品经理绩效汇总 -->
+      <el-col v-if="ableBossViewCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
+        <performance-summary :data-map="performanceSummaryDataMap" :selected-metric="selectedPerformanceMetric">
+          <template #select>
+            <el-date-picker
+              v-model="performanceSummaryDateRange"
+              :clearable="false"
+              type="monthrange"
+              value-format="YYYY-MM"
+              @change="fetchPerformanceSummary"
+            />
+
+            <el-select v-model="selectedPerformanceMetric" placeholder="指标" style="max-width: 5em">
+              <el-option label="提成" value="developmentDesign" />
+              <el-option label="新品提成" value="newProductOneYearCommission" />
+              <el-option label="新品平均利润" value="newProductsAverageProfit" />
+              <el-option label="新款采购额" value="purchaseAmount" />
+              <el-option label="精品" value="jingPinCount" />
+              <el-option label="精铺" value="jingPuCount" />
+              <el-option label="精铺vine" value="jingPuVineCount" />
+              <el-option label="铺货" value="puHuoCount" />
+            </el-select>
+          </template>
+        </performance-summary>
+      </el-col>
       <el-col v-if="ableProductManagerViewCard" :lg="9" :md="24" :sm="24" :xl="9" :xs="24">
         <profit-share-preview-card
           :list="profitSharePreviewList"
@@ -429,7 +454,7 @@
 </template>
 
 <script lang="ts" setup>
-import { random } from 'lodash-es'
+import { debounce, random } from 'lodash-es'
 import { getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
@@ -889,6 +914,7 @@ const fetchUpdateDate = async () => {
 }
 const historyList = ref<IGetFrontPagePerformanceHistory[]>([])
 const selectDate = ref<[string, string]>(getLastYearStringMonth())
+const performanceSummaryDateRange = ref<[string, string]>(getLastYearStringMonth())
 const userList = ref<{ id: number; label: string }[]>([])
 const profitSharePreviewUserList = ref<{ id: number; label: string }[]>([])
 const userId = ref<number>()
@@ -934,6 +960,42 @@ const fetchData = async () => {
   })
   historyList.value = data
 }
+
+// 产品经理绩效汇总
+const performanceSummaryDataMap = ref<Record<string, IGetFrontPagePerformanceHistory[]>>({})
+
+const selectedPerformanceMetric = ref<string>('developmentDesign')
+// 实际的数据获取函数
+const _fetchPerformanceSummary = async () => {
+  if (!performanceSummaryDateRange.value || !performanceSummaryDateRange.value[0] || !performanceSummaryDateRange.value[1]) {
+    return
+  }
+
+  // 获取所有产品经理的数据
+  const dataMap: Record<string, IGetFrontPagePerformanceHistory[]> = {}
+
+  // 为每个产品经理获取数据
+  const promises = userList.value.map(async (user) => {
+    try {
+      const { data } = await getFrontPagePerformanceHistory({
+        userId: user.id,
+        startMonth: performanceSummaryDateRange.value[0],
+        endMonth: performanceSummaryDateRange.value[1],
+      })
+      // 保留所有月份的数据，不聚合
+      dataMap[user.label] = data || []
+    } catch (error) {
+      console.error(`获取${user.label}的数据失败:`, error)
+      dataMap[user.label] = []
+    }
+  })
+
+  await Promise.all(promises)
+  performanceSummaryDataMap.value = dataMap
+}
+
+// 使用防抖优化，避免频繁切换日期时发送过多请求
+const fetchPerformanceSummary = debounce(_fetchPerformanceSummary, 300)
 
 const rank1List = ref<IRankItem[]>([])
 const rank2List = ref<IRankItem[]>([])
@@ -1403,6 +1465,7 @@ onBeforeMount(async () => {
     fetchOperateUserList()
     fetchInventoryProductsTotalValue()
     fetchWarehouseCapacity()
+    fetchPerformanceSummary()
   }
   if (ableViewDestroyValueCard) {
     fetchDestroyValue()
