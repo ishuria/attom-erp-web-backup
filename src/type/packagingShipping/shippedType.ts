@@ -886,6 +886,7 @@ export interface IUpdateLostGoodsStatus {
 }
 
 export interface IGetShipmentFbaListReq {
+  siteId: number
   keyWord: string
   pageNo: number
   pageSize: number

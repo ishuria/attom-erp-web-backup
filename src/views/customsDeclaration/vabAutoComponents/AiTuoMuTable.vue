@@ -139,6 +139,13 @@
       </el-table-column>
       <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
       <el-table-column label="发票号码" :min-width="flexColumnWidth(list, '发票号码', 'invoiceNumber')" prop="invoiceNumber" />
+      <el-table-column v-if="showActions" label="开票品名" min-width="100" prop="invoiceName" />
+      <el-table-column
+        v-if="showActions"
+        label="发票供应商"
+        :min-width="flexColumnWidth(list, '发票供应商', 'invoiceSupplier')"
+        prop="invoiceSupplier"
+      />
       <el-table-column label="开票数量" min-width="100" prop="invoiceCount" />
       <el-table-column label="发票单位" min-width="100" prop="invoiceUnit" />
       <el-table-column label="发票金额" min-width="100" prop="includingTaxPrice" />
@@ -203,14 +210,20 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['selection', 'PO', '采购日期', 'PO零件单位', '发票单位', '报关单位'].includes(label)) {
-    return {
-      textAlign: 'center',
-    }
+  const row = data.row
+  const style: CSSProperties = {
+    textAlign: ['selection', 'PO', '采购日期', 'PO零件单位', '发票单位', '报关单位'].includes(label) ? 'center' : 'left',
   }
-  return {
-    textAlign: 'left',
+
+  if (label === '开票品名' && row.invoiceName !== row.customsDeclarationName) {
+    style.color = 'var(--el-color-danger)'
   }
+
+  if (label === '发票供应商' && row.invoiceSupplier !== row.suppliser) {
+    style.color = 'var(--el-color-danger)'
+  }
+
+  return style
 }
 const setSelectRows = (value: IAiTuoMuItem[]) => {
   selectRowsData.value = value

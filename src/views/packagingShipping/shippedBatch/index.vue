@@ -2,7 +2,16 @@
   <div class="comprehensive-table-container auto-height-container">
     <vab-query-form>
       <vab-query-form-left-panel>
-        <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+        <el-form inline>
+          <el-form-item>
+            <el-select v-model="queryForm.siteId" placeholder="请选择站点" @change="queryData">
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+          </el-form-item>
+        </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
@@ -250,6 +259,7 @@
 import { Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
+import { getPackageSiteList } from '~/src/api/devlocal/packagingShipping'
 import {
   filterShipmentFbaList,
   getShipmentFbaDetailList,
@@ -282,6 +292,7 @@ const router = useRouter()
 const route = useRoute()
 const listLoading = ref<boolean>(true)
 const queryForm = reactive<IGetShipmentFbaListReq>({
+  siteId: -1,
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
@@ -528,7 +539,21 @@ const fetchData = async () => {
   total.value = data?.total!
   listLoading.value = false
 }
+// 站点列表类型
+type ISiteList = {
+  id: number
+  label: string
+}
+// 初始化站点列表
+const siteList = ref<ISiteList[]>([])
+// 获取站点列表
+const getSiteList = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+  siteList.value.unshift({ id: -1, label: '所有' })
+}
 onBeforeMount(() => {
+  getSiteList()
   const { pageNo, pageSize } = route.query
   if (pageNo) {
     queryForm.pageNo = Number(pageNo)

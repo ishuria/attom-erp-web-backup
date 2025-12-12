@@ -381,6 +381,19 @@
             />
           </div>
         </el-form-item>
+        <el-form-item label="春节最晚订货日">
+          <div class="flex">
+            <el-date-picker
+              :key="springFestivalOrderDeadlineKey"
+              v-model="springFestivalOrderDeadline"
+              end-placeholder="结束日期"
+              range-separator="至"
+              start-placeholder="开始日期"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+            />
+          </div>
+        </el-form-item>
         <el-form-item label="广告">
           <el-select v-model="filterForm.advStatus" clearable placeholder="请选择广告状态">
             <el-option v-for="item in adStatusOption" :key="item.value" :label="item.label" :value="item.value" />
@@ -527,6 +540,10 @@ const seasonalXData = computed(() => {
 const xAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
 const latestDate = ref<string[]>([])
 const latestDateKey = computed(() => (latestDate.value && latestDate.value.length ? latestDate.value.join('|') : 'empty'))
+const springFestivalOrderDeadline = ref<string[]>([])
+const springFestivalOrderDeadlineKey = computed(() =>
+  springFestivalOrderDeadline.value && springFestivalOrderDeadline.value.length ? springFestivalOrderDeadline.value.join('|') : 'empty'
+)
 const label = ['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%']
 const label3 = ['库存可售', '可售含在途']
 const labelMap = new Map([
@@ -869,6 +886,7 @@ const handleResetFilter = () => {
   filterForm.outOfStockMin = undefined
   filterForm.outOfStockMax = undefined
   latestDate.value = []
+  springFestivalOrderDeadline.value = []
   filterForm.advStatus = undefined
 }
 // 确认筛选
@@ -877,6 +895,9 @@ const handleConfirmFilter = async () => {
   Object.assign(queryForm, filterForm)
   queryForm.startLatestDate = latestDate.value[0] || ''
   queryForm.endLatestDate = latestDate.value[1] || ''
+
+  queryForm.startSpringOrderDate = springFestivalOrderDeadline.value[0] || ''
+  queryForm.endSpringOrderDate = springFestivalOrderDeadline.value[1] || ''
 
   queryForm.pageNo = 1
   queryForm.pageSize = 20
