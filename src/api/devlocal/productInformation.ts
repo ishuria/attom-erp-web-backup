@@ -922,7 +922,7 @@ export function updateCustomsClearanceSkuHts(data: IUpdateCustomsClearanceSkuHts
 /**
  * sku复制
  */
-export function copyProductSku(data: { skuId: number; sku: string }): Promise<{ data: boolean }> {
+export function copyProductSku(data: { skuId: number; sku: string; listingTask: number }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/sku/copy`,
     method: 'post',

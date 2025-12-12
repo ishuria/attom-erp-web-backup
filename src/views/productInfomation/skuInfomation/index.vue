@@ -242,6 +242,12 @@
         <el-form-item label="新SKU" prop="sku">
           <el-input v-model="copySkuForm.sku" clearable placeholder="请输入新SKU" />
         </el-form-item>
+        <el-form-item label="新建图片Listing任务">
+          <el-radio-group v-model="copySkuForm.listingTask">
+            <el-radio size="large" :value="0">否</el-radio>
+            <el-radio size="large" :value="1" >是</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="copySkuClose">取消</el-button>
@@ -372,6 +378,7 @@ const { changeTabsMeta } = tabsStore
 const copySkuVisible = ref<boolean>(false)
 const copySkuForm = reactive({
   sku: '',
+  listingTask:1
 })
 const copySkuFormRef = ref()
 const copySkuClose = () => {
@@ -388,6 +395,7 @@ const handleCopySkuConfirm = async () => {
         const { data } = await copyProductSku({
           skuId: skuId.value,
           sku: copySkuForm.sku,
+          listingTask: copySkuForm.listingTask
         })
         if (data) {
           $baseMessage('复制成功', 'success')
