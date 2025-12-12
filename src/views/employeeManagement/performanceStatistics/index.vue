@@ -735,6 +735,11 @@
         <el-table-column label="原始OEM考核数" min-width="140" prop="originalOem" />
         <el-table-column label="原始总完成数" min-width="120" prop="originalAssessmentNumberFinish" />
         <el-table-column label="原始OEM完成数" min-width="140" prop="originalOemFinish" />
+        <el-table-column label="免考核" min-width="120" prop="noAssessment">
+          <template #default="{ row }">
+            <el-checkbox v-model="row.noAssessment" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
+          </template>
+        </el-table-column>
         <el-table-column label="考核未达标" min-width="120" prop="status">
           <template #default="{ row }">
             <el-checkbox v-model="row.status" :false-value="0" :true-value="1" @change="handleChangeSettingStatus(row)" />
@@ -1098,6 +1103,7 @@ const handleChangeSettingStatus = async (row: IGetProductManagerAssessmentList) 
     status: row.status,
     oem: row.oem,
     totalAssessment: row.assessmentNumber,
+    noAssessment: row.noAssessment,
   })
 }
 /* ============================== 考勤明细数据 ============================== */

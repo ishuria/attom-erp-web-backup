@@ -941,7 +941,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: SpanMethodProp
   }
 }
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.columnIndex === 1) {
+  if (data.column.label === '图片') {
     return 'clear-padding'
   }
   return ''

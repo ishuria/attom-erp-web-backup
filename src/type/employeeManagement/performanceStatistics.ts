@@ -28,6 +28,7 @@ export interface IUpdateProductManagerAssessmentReq {
   oem?: number
   totalAssessment?: number
   status?: number
+  noAssessment?: number
 }
 
 export interface IGetAssessmentListReq {
