@@ -19,14 +19,19 @@
         <el-table-column v-for="(prop, i) in columns" :key="i" align="center" :label="prop" min-width="240" :prop="prop">
           <template #default="{ row }">
             <template v-if="row['column0'] === 'sku'">
-              <el-input
-                v-model.trim="row[prop]"
-                class="center-input"
-                :disabled="editDisabled"
-                placeholder="请输入SKU"
-                @click="inputHandleMouseOver($event)"
-                @keydown.enter="handleEffectiveCountInpute($event)"
-              />
+              <el-tooltip :disabled="!row[prop]" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">{{ row[prop] }}</div>
+                </template>
+                <el-input
+                  v-model.trim="row[prop]"
+                  class="center-input sku-input"
+                  :disabled="editDisabled"
+                  placeholder="请输入SKU"
+                  @click="inputHandleMouseOver($event)"
+                  @keydown.enter="handleEffectiveCountInpute($event)"
+                />
+              </el-tooltip>
             </template>
 
             <template v-if="row['column0'] === 'variantImg'">
@@ -422,6 +427,11 @@ onMounted(async () => {
 }
 :deep(.center-input .el-input__inner) {
   text-align: center;
+}
+:deep(.sku-input .el-input__inner) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 :deep(.center-select) {
   text-align: center;
