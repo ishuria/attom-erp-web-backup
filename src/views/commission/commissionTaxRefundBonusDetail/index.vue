@@ -47,7 +47,7 @@
 
       <el-table-column label="匹配日期" min-width="120" prop="matchDate">
         <template #default="{ row }">
-          {{ row.matchDate ? formatDate(new Date(row.matchDate)) : '' }}
+          {{ row.matchDate ? row.matchDate : '' }}
         </template>
       </el-table-column>
       <el-table-column label="Po" min-width="120" prop="po"/>
