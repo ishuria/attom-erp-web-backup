@@ -3,6 +3,7 @@
     <el-table
       ref="tableRef"
       border
+      class="vab-table-container"
       :data="exchangeList"
       :header-cell-style="{ 'text-align': 'center' }"
       stripe
@@ -224,13 +225,15 @@
       </template>
     </el-table>
 
+    <!-- 上传图片 -->
+    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
+    <vab-site-operation-user-select :distribution-list="distributionList" :operation-user-list="operationUserList" />
+
     <div class="pay-button-group">
       <el-button @click="handleGoback">上一步</el-button>
       <el-button native-type="submit" type="primary" @click="handleSave">保存</el-button>
       <el-button native-type="submit" type="primary" @click="handleSaveAndContinue">保存并继续</el-button>
     </div>
-    <!-- 上传图片 -->
-    <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
   </div>
 </template>
 
@@ -238,6 +241,7 @@
 import { Delete, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import {
+  getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
   reviewGetSkuList,
@@ -250,9 +254,10 @@ import {
   reviewStepNo5VariantImgUpload,
 } from '/@/api/devlocal/orderProcess'
 import { getAllName, getUserProcurementName } from '/@/api/devlocal/user'
-import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import type { IGetSelectVariantsList, IOperationDistributionList } from '/@/type/orderProcess/orderProcessType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { _setStepNo } from '/@/utils/stepNoState'
+import { getDistributionOptionUserList } from '/@/api/devlocal/productDistribution'
 
 defineOptions({
   name: 'OrderStep5',
@@ -351,7 +356,7 @@ const handleInsertSku = async (row: any, prop: string) => {
       exchangeList.value[FIELD_INDEX_MAP.MAGNETIC][prop] = data.magnetic || 0
       exchangeList.value[FIELD_INDEX_MAP.WOODEN_PRODUCT][prop] = data.woodenProduct || 0
       exchangeList.value[FIELD_INDEX_MAP.TOY][prop] = data.toy || 0
-      exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop] = data.SEASONAL || 0
+      exchangeList.value[FIELD_INDEX_MAP.SEASONAL][prop] = data.seasonal || 0
       exchangeList.value[FIELD_INDEX_MAP.BENCHMARK_ASIN][prop] = data.benchmarkAsin
 
       await reviewStepNo5SkuInfoPerfect({
@@ -457,7 +462,7 @@ const FIELD_INDEX_MAP = {
   PROCUREMENT_MANAGER: 17,
   SAMPLE_RETENTION: 18,
   PACKING_GROUP: 19,
-  MANUFACTURER_EN_NAME:20,
+  MANUFACTURER_EN_NAME: 20,
   CERTIFICATE_UPLOAD: 21,
   SKU_MERGE: 22,
   OPERATE: 23,
@@ -1053,11 +1058,30 @@ const fetchProcurementManagerList = async () => {
   })
   procurementManagerList.value = data
 }
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operationUserList.value = data
+}
+const distributionList = ref<IOperationDistributionList[]>([])
+const fetchDistributionList = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await getOperationDistributionList({ reviewId: classReviewId! })
+  distributionList.value = data
+}
 onMounted(() => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchVariantList()
   fetchProcurementManagerList()
+  fetchOperationUserList()
+  fetchDistributionList()
 })
 </script>
 
@@ -1075,7 +1099,7 @@ onMounted(() => {
   transform: scale(1.3); // 放大 20%
   transform-origin: center; // 确保放大从中心开始
 }
-:deep(.el-table__body-wrapper tr:nth-last-child(-n + 4)) {
+:deep(.vab-table-container .el-table__body-wrapper tr:nth-last-child(-n + 4)) {
   display: none;
 }
 :deep(.center-select) {

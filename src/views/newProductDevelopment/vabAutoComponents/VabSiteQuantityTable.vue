@@ -10,8 +10,12 @@
         :prop="item.siteName"
       >
         <template #default="{ row }">
+          <!-- 如果是运营行，显示运营人员姓名 -->
+          <template v-if="row.isOperationUserRow && step === 3">
+            <span>{{ row[item.siteName]?.operationUserName || '-' }}</span>
+          </template>
           <!-- 如果是分货完成行，显示勾选框 -->
-          <template v-if="row.isDistributionRow && step === 3">
+          <template v-else-if="row.isDistributionRow && step === 3">
             <el-checkbox
               v-model="distributionCompleted[item.siteName]"
               :disabled="editDisabled"
@@ -81,6 +85,11 @@ const tableData = computed(() => {
     isDistributionRow: true,
   }
 
+  const operationUserRow: any = {
+    sku: '运营',
+    isOperationUserRow: true,
+  }
+
   // 为每个站点添加分货完成状态，包含必要的 id 和 orderEntryId
   // 优先从 distributionCompletedList 中获取数据
   let distributionList = []
@@ -96,9 +105,14 @@ const tableData = computed(() => {
       id: item.id, // 使用站点的 id
       distributionCompleted: item.distributionCompleted || 0,
     }
+    operationUserRow[item.siteName] = {
+      id: item.id,
+      operationUserName: item.operationUserName,
+    }
   })
 
-  return [...siteQuantityList.value, distributionRow]
+  // 返回数据：原始数据 + 运营行 + 分货完成行
+  return [...siteQuantityList.value, operationUserRow, distributionRow]
 })
 
 // 验证订货数量（当站点是亚马逊US时，必须是5的倍数）

@@ -588,6 +588,10 @@ export interface IreviewStepNo5SkuInfoPerfect {
    * 是否玩具 0 不是 1是
    */
   toy?: number
+  /**
+   * 是否季节性 0 不是 1是
+   */
+  seasonal?: number
 }
 // 新品订货流程- 检查提交审核信息 - 保存
 export interface IreviewStepNo6SaveSix {
@@ -653,6 +657,7 @@ export interface IreviewInsertSkuInfo {
   magnetic?: number
   woodenProduct?: number
   toy?: number
+  seasonal?: number
 }
 
 export interface ISubmitReviewComponentQuery {
@@ -663,4 +668,9 @@ export interface ISubmitReviewComponentQuery {
 export interface ISubmitReviewConsumableQuery {
   reviewId: number
   list: ISubmitPurchaseConsumable[]
+}
+
+export interface IOperationDistributionList {
+  operationUserId: number
+  siteName: string
 }

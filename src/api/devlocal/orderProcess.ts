@@ -3,6 +3,7 @@ import request from '/@/utils/request'
 import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
+  IOperationDistributionList,
   IReviewComponentUpdate,
   ISubmitReviewComponentQuery,
   ISubmitReviewConsumableQuery,
@@ -518,6 +519,29 @@ export function getProductPositionList(): Promise<{ data: { id: number; label: s
 export function updateReviewComponentPurchaseIdAndInvoiceCustomstatus(data?: IReviewComponentUpdate): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/review/stepsNo3/update/purchaseOrInvoice`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 获取运营分货列表
+ * @returns { data: IOperationDistributionList[] }
+ */
+export function getOperationDistributionList(params: { reviewId: number }): Promise<{ data: IOperationDistributionList[] }> {
+  return request({
+    url: `${BASE_API}/review/getSku/operation/distribution`,
+    method: 'get',
+    params,
+  })
+}
+/**
+ * 更新运营分货
+ * @param data { id: number; operationUserId: number }
+ * @returns { data: boolean }
+ */
+export function updateOperationDistribution(data: { id: number; operationUserId: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/review/getSku/operation/update`,
     method: 'post',
     data,
   })

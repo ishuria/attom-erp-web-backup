@@ -318,6 +318,7 @@ declare module 'vue' {
     VabShared: typeof import('./../../../src/plugins/VabShared/index.vue')['default']
     VabShipmentQuantityInspection: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabShipmentQuantityInspection.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
+    VabSiteOperationUserSelect: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteOperationUserSelect.vue')['default']
     VabSiteQuantityTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteQuantityTable.vue')['default']
     VabSkuDeliveryTimeDetails: typeof import('./../../../src/views/productInfomation/vabAutoComponents/VabSkuDeliveryTimeDetails.vue')['default']
     VabStatistics: typeof import('./../../components/VabStatistics/index.vue')['default']
