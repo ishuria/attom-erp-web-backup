@@ -4,7 +4,13 @@
       <el-table-column label="站点" min-width="150" prop="siteName" />
       <el-table-column label="运营人员" min-width="200" prop="operationUserId">
         <template #default="{ row }">
-          <el-select v-model="row.operationUserId" placeholder="请选择运营人员" @change="handleUpdateOperationUserId(row)">
+          <el-select
+            v-model="row.operationUserId"
+            clearable
+            :disabled="props.disabled"
+            placeholder="请选择运营人员"
+            @change="handleUpdateOperationUserId(row)"
+          >
             <el-option v-for="item in props.operationUserList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
         </template>
@@ -24,6 +30,7 @@ defineOptions({
 interface IProps {
   operationUserList: { id: number; label: string }[]
   distributionList: IOperationDistributionList[]
+  disabled: boolean
 }
 const props = withDefaults(defineProps<IProps>(), {})
 

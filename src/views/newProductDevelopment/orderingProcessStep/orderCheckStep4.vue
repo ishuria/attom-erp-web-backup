@@ -87,6 +87,8 @@
         <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
       </template>
     </el-table>
+    <vab-site-operation-user-select :disabled="true" :distribution-list="distributionList" :operation-user-list="operationUserList" />
+
     <div class="pay-button-group">
       <el-button @click="handleGoBack">上一步</el-button>
       <el-button native-type="submit" type="primary" @click="handleSave">下一步</el-button>
@@ -96,14 +98,16 @@
 
 <script lang="ts" setup>
 import type { TableInstance } from 'element-plus'
+import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import {
+  getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
   reviewGetSkuList,
   reviewProductManager,
   reviewStepNo3GetSelectVariantList,
 } from '/@/api/devlocal/orderProcess'
-import type { IGetSelectVariantsList } from '/@/type/orderProcess/orderProcessType'
+import type { IGetSelectVariantsList, IOperationDistributionList } from '/@/type/orderProcess/orderProcessType'
 import { _setStepNo } from '/@/utils/stepNoState'
 
 defineOptions({
@@ -298,10 +302,22 @@ const fetchPackagePositionOption = async () => {
   const { data } = await getReviewVariantPackageSampleList()
   packageSampleOption.value = data
 }
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operationUserList.value = data
+}
+const distributionList = ref<IOperationDistributionList[]>([])
+const fetchDistributionList = async () => {
+  const { data } = await getOperationDistributionList({ reviewId: route.query.reviewId! })
+  distributionList.value = data
+}
 onMounted(async () => {
   fetchProductPositionOption()
   fetchPackagePositionOption()
   fetchVariantList()
+  fetchOperationUserList()
+  fetchDistributionList()
 })
 </script>
 

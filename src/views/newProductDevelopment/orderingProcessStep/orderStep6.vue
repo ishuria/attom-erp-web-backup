@@ -75,6 +75,7 @@
           <el-empty class="vab-data-empty" description="暂无数据" min-width="200px" />
         </template>
       </el-table>
+      <vab-site-operation-user-select :disabled="true" :distribution-list="distributionList" :operation-user-list="operationUserList" />
     </div>
 
     <!--    <div>-->
@@ -133,8 +134,11 @@
 </template>
 
 <script lang="ts" setup>
+import { getDistributionOptionUserList } from '~/src/api/devlocal/productDistribution'
 import { updateBulkGoodsStatusByReviewId } from '~/src/api/devlocal/progress'
+import { IOperationDistributionList } from '~/src/type/orderProcess/orderProcessType'
 import {
+  getOperationDistributionList,
   getProductPositionList,
   getReviewVariantPackageSampleList,
   reviewStepNo6CheckGet,
@@ -371,6 +375,23 @@ const fetchPackagePositionOption = async () => {
   packageSampleOption.value = data
   // console.log(packageSampleOption.value)
 }
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const fetchOperationUserList = async () => {
+  const { data } = await getDistributionOptionUserList()
+  operationUserList.value = data
+}
+const distributionList = ref<IOperationDistributionList[]>([])
+const fetchDistributionList = async () => {
+  let classReviewId: number | undefined
+  if (route.query.progressId) {
+    //说明是订大货进去的,接受上一步传来的reviewId
+    classReviewId = props.step1Data
+  } else {
+    classReviewId = route.query.reviewId
+  }
+  const { data } = await getOperationDistributionList({ reviewId: classReviewId! })
+  distributionList.value = data
+}
 onMounted(() => {
   if (route.query.progressId) {
     //说明是订大货进去的,接受上一步传来的reviewId
@@ -382,6 +403,8 @@ onMounted(() => {
   fetchPackagePositionOption()
   fetchData()
   // fetchMoldData()
+  fetchOperationUserList()
+  fetchDistributionList()
 })
 </script>
 

@@ -227,7 +227,7 @@
 
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
-    <vab-site-operation-user-select :distribution-list="distributionList" :operation-user-list="operationUserList" />
+    <vab-site-operation-user-select :disabled="false" :distribution-list="distributionList" :operation-user-list="operationUserList" />
 
     <div class="pay-button-group">
       <el-button @click="handleGoback">上一步</el-button>
