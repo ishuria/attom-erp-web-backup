@@ -334,6 +334,7 @@
         :cell-style="matchCellStyle"
         class="noneHoveTable"
         :data="pagedData"
+        :default-sort="{ prop: 'notYetInvoice', order: 'ascending' }"
         :header-cell-style="{ textAlign: 'center' }"
         max-height="50vh"
         @row-click="handleRowClickMatch"
@@ -959,8 +960,8 @@ const showMatch = async (row: IGetTaxRefundInvoiceList) => {
     _includingTaxPrice.value = row.includingTaxPrice!
     _remainingCount.value = row.remainingCount!
     // _remainingAmount.value = row.remainingAmount!
-    // 默认按合同号从大到小排序
-    sortState.value = { prop: 'contractNumber', order: 'descending' }
+    // 默认按未匹配发票数从小到大排序
+    sortState.value = { prop: 'notYetInvoice', order: 'ascending' }
     // 如果传入的 row 有 matchPo，则只显示相同 PO 的记录
     // 先设置 selectedPo 和标志，再赋值 originalMatchList，避免 watch 覆盖
     if (row.matchPo && row.matchPo.trim() !== '') {
