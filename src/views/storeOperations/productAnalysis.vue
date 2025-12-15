@@ -46,7 +46,9 @@
               <vab-return-analysis v-if="activeName === 4" />
             </el-tab-pane>
             <el-tab-pane label="竞品" :name="5" />
-            <el-tab-pane label="搜索词表现" :name="6" />
+            <el-tab-pane label="搜索词表现" :name="6">
+              <vab-search-term-performance v-if="activeName === 6" :asin="asin" :site-id="selectedSite" />
+            </el-tab-pane>
           </el-tabs>
           <!-- tab右边的选项 -->
           <div style="position: absolute; top: 0px; right: -9px">
@@ -148,6 +150,19 @@
               </el-form-item>
               <el-form-item>
                 <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
+              </el-form-item>
+            </el-form>
+            <el-form v-if="activeName === 6" inline>
+              <el-form-item>
+                <el-date-picker
+                  v-model="selectDateRange"
+                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
+                  end-placeholder="结束日期"
+                  range-separator="至"
+                  :shortcuts="dateShortcuts"
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
           </div>

@@ -1069,7 +1069,9 @@ const fetchHistoryMonthList = async () => {
   selectAchievedMonth.value = data[0]
   selectFinishMonth.value = data[0]
   selectNewProductMonth.value = newProductMonthList.value[0] || data[0]
-  selectJobLevelMonth.value = newProductMonthList.value[0] || data[0]
+  // 职级提成默认展示当前月，若无则取最新
+  const currentMonth = getCurrentMonth()
+  selectJobLevelMonth.value = newProductMonthList.value.includes(currentMonth) ? currentMonth : newProductMonthList.value[0] || data[0]
 }
 
 const fetchAdjustDetailMonthList = async () => {
@@ -1099,9 +1101,10 @@ const fetchBillingMonthList = async () => {
   selectFinishMonth.value = historyBossMonthList.value[0]
   selectNewProductMonth.value = data[0]
   selectNewProductOneYearMonth.value = data[0]
-  selectJobLevelMonth.value = data[0]
-  // 个人奖金月份默认展示当前月份
+  // 职级提成默认展示当前月，若无则取最新
   const currentMonth = getCurrentMonth()
+  selectJobLevelMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
+  // 个人奖金月份默认展示当前月份
   selectPersonalBonusMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
 }
 
@@ -1287,7 +1290,7 @@ const jobLevelCommissionList = ref<IGetFrontPageJobLevelCommission[]>([])
 const selectJobLevelMonth = ref<string>()
 const fetchJobLevelCommission = async () => {
   const { data } = await getFrontPageJobLevelCommission({ month: selectJobLevelMonth.value! })
-  jobLevelCommissionList.value = data.filter((item) => !item.monthlyLevel.includes('主管'))
+  jobLevelCommissionList.value = data
 }
 const lowVolumeProductStorageFeeList = ref<ILowVolumeProductStorageFee[]>([])
 const selectOperationUserId = ref<number>(-1)

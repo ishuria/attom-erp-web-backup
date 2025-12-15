@@ -8,6 +8,7 @@ import type {
   IGetOperationAmazonPackagingInformationRes,
   IGetOperationLogRes,
   IGetProductInfoRes,
+  IGetSearchTermPerformanceRes,
   IGetSkuSiteDailyCostRes,
   IGetStorageAgeRes,
   IGetTrendOverviewChartReq,
@@ -206,5 +207,24 @@ export function getProductInfo(params: { sku: string; siteId: number }): Promise
     url: `${BASE_API}/product/analysis/info`,
     method: 'get',
     params,
+  })
+}
+
+/**
+ * @description 运营-产品分析-搜索词表现
+ * @param data { asin: string; siteId: number; keyword: string; pageNo: number; pageSize: number }
+ * @returns IGetSearchTermPerformanceRes
+ */
+export function getSearchTermPerformance(data: {
+  asin: string
+  siteId: number
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}): Promise<IGetSearchTermPerformanceRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/search_term/performance`,
+    method: 'post',
+    data,
   })
 }

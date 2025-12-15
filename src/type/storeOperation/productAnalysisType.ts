@@ -485,3 +485,46 @@ export interface OperationTypeList {
   id: number
   label: string
 }
+export interface IGetSearchTermPerformanceRes {
+  data: {
+    list: IGetSearchTermPerformance[]
+    total: number
+  }
+}
+export interface IGetSearchTermPerformance {
+  searchQuery: string
+  searchQueryScore: number
+  searchQueryVolume: number
+  totalQueryImpressionCount: number
+  asinImpressionCount: number
+  asinImpressionShare: number
+  totalClickCount: number
+  asinClickCount: number
+  asinClickShare: number
+  totalMedianClickPrice: number
+  totalMedianClickCurrency: number
+  asinMedianClickPrice: number
+  asinMedianClickCurrency: number
+  totalSameDayShippingClickCount: number
+  totalOneDayShippingClickCount: number
+  totalTwoDayShippingClickCount: number
+  totalCartAddCount: number
+  totalCartAddRate: number
+  asinCartAddCount: number
+  asinCartAddShare: number
+  totalMedianCartAddPrice: number
+  totalMedianCartAddCurrency: number
+  asinMedianCartAddPrice: number
+  asinMedianCartAddCurrency: number
+  totalSameDayShippingCartAddCount: number
+  totalOneDayShippingCartAddCount: number
+  totalTwoDayShippingCartAddCount: number
+  totalPurchaseCount: number
+  totalPurchaseRate: number
+  asinPurchaseCount: number
+  asinPurchaseShare: number
+  totalMedianPurchasePrice: number
+  totalMedianPurchaseCurrency: number
+  asinMedianPurchasePrice: number
+  asinMedianPurchaseCurrency: number
+}

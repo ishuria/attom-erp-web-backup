@@ -315,6 +315,7 @@ declare module 'vue' {
     VabSample: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSample.vue')['default']
     VabSampleTranck: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSampleTranck.vue')['default']
     VabSearch: typeof import('./../../components/VabSearch/index.vue')['default']
+    VabSearchTermPerformance: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabSearchTermPerformance.vue')['default']
     VabShared: typeof import('./../../../src/plugins/VabShared/index.vue')['default']
     VabShipmentQuantityInspection: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabShipmentQuantityInspection.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']

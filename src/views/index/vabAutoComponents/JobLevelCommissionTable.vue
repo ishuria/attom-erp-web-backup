@@ -2,7 +2,7 @@
   <vab-card class="assessmentTable">
     <template #header>
       <vab-icon icon="information-line" />
-      职级提成
+      产品经理职级提成
       <div class="right-select">
         <slot name="select"></slot>
       </div>
