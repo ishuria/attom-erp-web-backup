@@ -845,31 +845,55 @@ const calcYAxisRange = (yAxisIndex: number) => {
     }
   }
 
-  // 原始最大
-  let max = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
-  max = max < 0 ? 0 : max
+  // 原始最大（数据的实际最大值）
+  const dataMax = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
+  // 原始最小（数据的实际最小值）
+  const dataMin = Math.min(...allValues)
 
-  // 原始最小
-  let min = Math.min(...allValues)
-  min = min > 0 ? 0 : min
+  // 确保 0 值在范围内
+  let max = dataMax < 0 ? 0 : dataMax
+  let min = dataMin > 0 ? 0 : dataMin
 
-  // 计算 Y 轴范围，确保 0 值对齐
-  const range = recursion({ min, max })
-
-  // 如果计算出的最大值远大于实际最大值，适当调整以让折线更清晰
-  // 但保持 0 值对齐的间隔
-  if (range.max > max * 1.2 && max > 0) {
-    // 如果最大值超出实际值 20% 以上，尝试使用更接近实际值的最大值
-    // 向上取整到最近的 interval
-    const adjustedMax = Math.ceil(max / range.interval) * range.interval
-    if (adjustedMax >= max) {
-      range.max = adjustedMax
-      // 重新计算 top
-      range.top = Math.ceil(Math.abs(range.max) / range.interval)
-    }
+  // 如果最大值和最小值都是 0，直接返回
+  if (max === 0 && min === 0) {
+    return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
   }
 
-  return range
+  // 使用数据的最大值作为 Y 轴最大值，计算合适的间隔确保 0 值对齐
+  const range = max - min
+  // 计算一个合适的间隔，使得刻度数在合理范围内（约 5-8 个刻度）
+  let interval = range / 7 // 目标约 7 个刻度
+
+  // 将间隔调整为更友好的数字（如 10, 20, 50, 100 等）
+  const magnitude = Math.pow(10, Math.floor(Math.log10(interval || 1)))
+  const normalized = interval / magnitude
+  let friendlyInterval: number
+  if (normalized <= 1) {
+    friendlyInterval = magnitude
+  } else if (normalized <= 2) {
+    friendlyInterval = 2 * magnitude
+  } else if (normalized <= 5) {
+    friendlyInterval = 5 * magnitude
+  } else {
+    friendlyInterval = 10 * magnitude
+  }
+
+  // 使用数据的最大值作为 Y 轴最大值（不扩展）
+  const finalMax = max
+  // 将最小值向下取整到最近的 interval
+  const finalMin = Math.floor(min / friendlyInterval) * friendlyInterval
+
+  // 计算 0 刻度线上下间隔数
+  const top = Math.ceil(Math.abs(finalMax) / friendlyInterval)
+  const bottom = Math.ceil(Math.abs(finalMin) / friendlyInterval)
+
+  return {
+    max: finalMax,
+    min: finalMin,
+    interval: friendlyInterval,
+    top: top,
+    bottom: bottom,
+  }
 }
 
 // 计算所有 y 轴的范围，并确保 0 值对齐
@@ -899,45 +923,61 @@ const calculateAlignedYAxisRanges = () => {
     }
   })
 
-  // 如果有多个 y 轴，需要对齐（但保持各自独立的数据范围）
-  // 每个 Y 轴保持自己的数据范围，只确保 0 值对齐
+  // 如果有多个 y 轴，只对齐 0 值，不改变最大值
+  // 每个 Y 轴保持自己的数据最大值，但调整最小值使 0 值对齐
   if (ranges.length > 1) {
-    // 从第一个 y 轴开始，依次与后面的 y 轴对齐
-    for (let i = 0; i < ranges.length - 1; i++) {
-      for (let j = i + 1; j < ranges.length; j++) {
-        const left = ranges[i]
-        const right = ranges[j]
+    // 以第一个 Y 轴为基准，计算 0 值的位置比例
+    const baseRange = ranges[0]
+    if (baseRange && baseRange.max !== baseRange.min) {
+      // 计算基准 Y 轴中 0 值的位置比例（从最小值到最大值的比例）
+      const baseZeroPosition = (0 - baseRange.min) / (baseRange.max - baseRange.min)
 
-        // 值的比例
-        const leftRange = left.max - left.min
-        const rightRange = right.max - right.min
-        const ratio = leftRange && rightRange ? leftRange / rightRange : 1
+      // 调整其他 Y 轴，使 0 值对齐，但保持最大值不变
+      for (let i = 1; i < ranges.length; i++) {
+        const currentRange = ranges[i]
+        if (!currentRange || currentRange.max === currentRange.min) continue
 
-        if (ratio) {
-          // 对齐最大值
-          if (left.max < right.max * ratio) {
-            // 同比例下，右边的最大值大，左边向右对齐
-            left.max = Math.ceil(right.max * ratio)
-          } else {
-            // 同比例下，左边的最大值大，右边向左对齐
-            right.max = Math.ceil(left.max / ratio)
-          }
+        // 保持最大值不变
+        const max = currentRange.max
 
-          // 对齐最小值
-          if (left.min < right.min * ratio) {
-            // 同比例下，左边最小值更小，右边向左边对齐
-            right.min = Math.floor(left.min / ratio)
-          } else {
-            // 同比例下，右边最小值更小，左边向右边对齐
-            left.min = Math.floor(right.min * ratio)
-          }
+        // 根据基准 0 值位置，计算新的最小值
+        // zeroPosition = (0 - min) / (max - min)
+        // 展开：zeroPosition * (max - min) = 0 - min
+        // 移项：min = -zeroPosition * max / (1 - zeroPosition)
+        // 处理边界情况：如果 baseZeroPosition = 1，说明基准轴的 min = 0，那么其他轴也应该是 min = 0
+        const newMin = baseZeroPosition >= 1 ? 0 : (-baseZeroPosition * max) / (1 - baseZeroPosition)
 
-          // 重新根据指定段数，计算最大最小和间隔
-          const leftRecalculated = recursion({ min: left.min, max: left.max })
-          const rightRecalculated = recursion({ min: right.min, max: right.max })
+        // 重新计算间隔，确保 0 值对齐
+        const range = max - newMin
+        let interval = range / 7 // 目标约 7 个刻度
 
-          ranges[i] = leftRecalculated
-          ranges[j] = rightRecalculated
+        // 将间隔调整为更友好的数字
+        const magnitude = Math.pow(10, Math.floor(Math.log10(interval || 1)))
+        const normalized = interval / magnitude
+        let friendlyInterval: number
+        if (normalized <= 1) {
+          friendlyInterval = magnitude
+        } else if (normalized <= 2) {
+          friendlyInterval = 2 * magnitude
+        } else if (normalized <= 5) {
+          friendlyInterval = 5 * magnitude
+        } else {
+          friendlyInterval = 10 * magnitude
+        }
+
+        // 将最小值向下取整到最近的 interval
+        const finalMin = Math.floor(newMin / friendlyInterval) * friendlyInterval
+
+        // 计算 0 刻度线上下间隔数
+        const top = Math.ceil(Math.abs(max) / friendlyInterval)
+        const bottom = Math.ceil(Math.abs(finalMin) / friendlyInterval)
+
+        ranges[i] = {
+          max: max,
+          min: finalMin,
+          interval: friendlyInterval,
+          top: top,
+          bottom: bottom,
         }
       }
     }
