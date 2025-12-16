@@ -180,6 +180,14 @@
       </el-table-column>
       <el-table-column label="月销量" min-width="100" prop="monthSalesVolume" />
       <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
+      <el-table-column label="管理奖金比例" min-width="100" v-if="managerBonusVisible">
+        <template #default="{ row }">
+          <el-text v-if="row.managerProportion >= 0">
+            {{ row.managerProportion ? row.managerProportion + '%' : '' }}
+          </el-text>
+        </template>
+      </el-table-column>
+      <el-table-column label="管理奖金" min-width="100" prop="managerBonus"  v-if="managerBonusVisible"/>
       <template #empty>
         <el-empty class="vab-data-empty" />
       </template>
@@ -205,7 +213,7 @@
 import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
-import { ROLE_BOSS_CODE } from '~/src/const/role'
+import { ROLE_BOSS_CODE,ROLE_PRODUCTMANNAGERLEAD_CODE,ROLE_GRAPHICDESIGNLEAD_CODE } from '~/src/const/role'
 import { useUserStore } from '~/src/store/modules/user'
 import {
   getCommissionDetailDevelopList,
@@ -232,6 +240,7 @@ const currentRoleCode = useAclStore().getRole[0]
 const option = ref<any>({})
 const pieList = ref<any[]>([])
 const sitePieVisible = ref<boolean>(false)
+const managerBonusVisible = ref<boolean>(false)
 
 const developList = ref<IGetCommissionDetailDevelopList[]>([])
 
@@ -600,6 +609,13 @@ onBeforeMount(async () => {
   fetchDevelopUserList()
   // fetchDevelopRoleList()
   await developQueryData()
+
+  if (currentRoleCode === ROLE_BOSS_CODE
+    || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+    || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
+  ){
+    managerBonusVisible.value = true
+  }
 })
 </script>
 

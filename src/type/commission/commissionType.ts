@@ -702,6 +702,10 @@ export interface IGetCommissionDetailDevelopList {
    * 总提成比例
    */
   totalCommissionProportion?: number
+  /** 管理奖金 */
+  managerBonus?: number
+  /** 管理奖金比例 */
+  managementProportion?: number
   /**
    * 用户名
    */
