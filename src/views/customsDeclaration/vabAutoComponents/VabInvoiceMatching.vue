@@ -5,6 +5,13 @@
         <vab-query-form-left-panel>
           <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>
           <el-button type="primary" @click="showUploadInvoice('repeat')">多页发票导入</el-button>
+          <h3>单价匹配勾选</h3>
+          <el-switch
+            v-model="unitPriceSameFlag"
+            class="ml-2"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949; margin-left: 15px"
+            @change="updateTaxRefundMatchFlag"
+          />
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
           <el-form inline :model="queryForm" @submit.prevent>
@@ -418,6 +425,8 @@ import {
   updateTaxRefundInvoice,
   updateTaxRefundInvoiceDetail,
   uploadTaxRefund,
+  taxRefundInvoiceMatchFlag,
+  updateTaxRefundInvoiceMatchFlag
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import VabPdf from '/@/plugins/VabPdf'
 import type {
@@ -443,6 +452,7 @@ const showPdf = (path: string) => {
   pdfLoading.value = false
 }
 const dflag = ref<boolean>(false)
+const unitPriceSameFlag = ref<boolean>(false)
 const matchInvoiceLoading = ref<boolean>(false)
 const props = defineProps<{
   invoiceMatchingVisible: boolean
@@ -1294,12 +1304,26 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
 
 const fetchData = async () => {
   listLoading.value = true
+  getTaxRefundInvoiceFlag()
   const { data } = await getTaxRefundInvoiceList(queryForm)
   total.value = data?.total!
   list.value = data?.list!
   selectedRowId.value = null
   listLoading.value = false
 }
+
+const getTaxRefundInvoiceFlag = async () => {
+  const { data } = await taxRefundInvoiceMatchFlag()
+  unitPriceSameFlag.value = data
+}
+
+const updateTaxRefundMatchFlag = async () => {
+  const { data } =  await updateTaxRefundInvoiceMatchFlag();
+  if (data){
+    $baseMessage("修改成功！","success")
+  }
+}
+
 const cleanLoading = ref<number | null>(null) // 存储当前 loading 的行 id
 const matchLoading = ref<number | null>(null) // 当前 loading 的匹配行 id
 </script>
