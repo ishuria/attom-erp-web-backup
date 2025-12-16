@@ -1,0 +1,269 @@
+<template>
+  <vab-dialog v-model="visible" title="日志汇总" top="8vh" width="55%">
+    <vab-query-form>
+      <vab-query-form-left-panel>
+        <el-form inline :model="queryForm">
+          <el-form-item label="运营">
+            <el-select v-model="queryForm.userId" clearable placeholder="请选择运营人员" style="width: 200px" @change="queryData">
+              <el-option v-for="item in operationUserList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="站点">
+            <el-select v-model="queryForm.siteId" clearable placeholder="请选择站点" style="width: 200px" @change="queryData">
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="日期范围">
+            <el-date-picker
+              :key="dateRangeKey"
+              v-model="dateRange"
+              end-placeholder="结束日期"
+              format="YYYY-MM-DD"
+              start-placeholder="开始日期"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              @change="dateRangeChange"
+            />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel>
+        <el-form inline :model="queryForm" @submit.prevent>
+          <el-form-item>
+            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入关键词" @input="queryData" @keyup.enter="queryData" />
+          </el-form-item>
+          <el-form-item>
+            <el-button :icon="Search" :loading="loading" type="primary" @click="queryData" />
+          </el-form-item>
+        </el-form>
+      </vab-query-form-right-panel>
+    </vab-query-form>
+
+    <el-table
+      v-loading="loading"
+      border
+      :cell-class-name="clearPadding"
+      :data="logList"
+      :header-cell-style="{ textAlign: 'center' }"
+      max-height="70vh"
+      stripe
+    >
+      <el-table-column align="center" label="日期" min-width="120" prop="date" />
+      <el-table-column align="center" label="图片" width="100">
+        <template #default="{ row }">
+          <el-image
+            v-if="row.skuImgUrl"
+            fit="fill"
+            :src="row.skuImgUrl"
+            style="width: 75px; height: 75px"
+            @click="imagePreviewShow(row.skuImgUrl)"
+          >
+            <template #error><el-icon /></template>
+          </el-image>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="SKU" min-width="200">
+        <template #default="{ row }">
+          <div v-if="row.sku">
+            <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+              {{ row.sku }}
+              <vab-icon icon="file-copy-2-fill" />
+            </span>
+            <br />
+            <div class="product-desc-container">
+              <span class="product-desc">{{ row.productDesc || '-' }}</span>
+              <span v-if="row.flag" class="flag-container" :class="{ 'japan-flag': row.flag === 'JP' }">
+                <country-flag :country="row.flag" />
+              </span>
+            </div>
+          </div>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="类型" min-width="100" prop="type">手动输入</el-table-column>
+      <el-table-column label="内容" min-width="300" prop="content" />
+      <el-table-column align="center" label="运营" min-width="100" prop="operationUserName" />
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" />
+      </template>
+    </el-table>
+
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="[imagePreviewUrl]" @close="imagePreviewClose" />
+  </vab-dialog>
+</template>
+
+<script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue'
+import CountryFlag from 'vue-country-flag-next'
+import { getFrontPageProductManagerSelectOption } from '~/src/api/devlocal/frontPage'
+import { getOperationLogManualList } from '/@/api/devlocal/productAnalysis'
+import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import type { IGetOperationLogManual } from '/@/type/storeOperation/productAnalysisType'
+import handleClipboard from '/@/utils/clipboard'
+
+defineOptions({
+  name: 'OperationLogManualSum',
+})
+
+const visible = defineModel<boolean>('visible', {
+  required: true,
+})
+
+const loading = ref<boolean>(false)
+const logList = ref<IGetOperationLogManual[]>([])
+const total = ref<number>(0)
+const operationUserList = ref<{ id: number; label: string }[]>([])
+const siteList = ref<{ id: number; label: string }[]>([])
+const dateRange = ref<[string, string] | null>(null)
+const dateRangeKey = ref<number>(0)
+const queryForm = reactive({
+  userId: -1,
+  siteId: -1,
+  startDate: '',
+  endDate: '',
+  pageNo: 1,
+  pageSize: 20,
+  keyWord: '',
+})
+
+// 图片预览
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewUrl = ref<string>('')
+
+const imagePreviewShow = (url: string) => {
+  imagePreviewUrl.value = url
+  imagePreviewVisible.value = true
+}
+
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
+
+// 获取运营人员列表
+const fetchOperationUserList = async () => {
+  try {
+    const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
+    operationUserList.value = data
+    operationUserList.value.unshift({ id: -1, label: '全部' })
+  } catch (error) {
+    console.error('获取运营人员列表失败:', error)
+  }
+}
+
+// 获取站点列表
+const fetchSiteList = async () => {
+  try {
+    const { data } = await getDistributionSiteList()
+    siteList.value = data
+    siteList.value.unshift({ id: -1, label: '全部' })
+  } catch (error) {
+    console.error('获取站点列表失败:', error)
+  }
+}
+
+// 获取日志列表
+const fetchData = async () => {
+  loading.value = true
+  try {
+    if (dateRange.value && dateRange.value.length === 2) {
+      queryForm.startDate = dateRange.value[0]
+      queryForm.endDate = dateRange.value[1]
+    }
+    const { data } = await getOperationLogManualList(queryForm)
+    logList.value = data.list || []
+    total.value = data.total || 0
+  } catch (error) {
+    console.error('获取日志列表失败:', error)
+    logList.value = []
+    total.value = 0
+  } finally {
+    loading.value = false
+  }
+}
+
+// 日期范围变化
+const dateRangeChange = () => {
+  dateRangeKey.value++
+  queryData()
+}
+
+// 查询
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchData()
+}
+
+// 分页
+const handleCurrentChange = (page: number) => {
+  queryForm.pageNo = page
+  fetchData()
+}
+
+const handleSizeChange = (size: number) => {
+  queryForm.pageSize = size
+  queryForm.pageNo = 1
+  fetchData()
+}
+
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
+
+// 监听弹窗显示
+watch(visible, (newVal) => {
+  if (newVal) {
+    fetchOperationUserList()
+    fetchSiteList()
+    fetchData()
+  }
+})
+</script>
+
+<style scoped lang="scss">
+.copySku {
+  cursor: pointer;
+  color: var(--el-color-primary);
+}
+
+.product-desc-container {
+  display: flex;
+  align-items: center;
+
+  .product-desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .flag-container {
+    margin-left: 4px;
+    flex-shrink: 0;
+  }
+
+  .japan-flag {
+    margin-top: -2px;
+  }
+}
+
+.el-table :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.el-table :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>

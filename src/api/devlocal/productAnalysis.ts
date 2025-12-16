@@ -6,6 +6,7 @@ import type {
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
   IGetOperationAmazonPackagingInformationRes,
+  IGetOperationLogManualRes,
   IGetOperationLogRes,
   IGetProductInfoRes,
   IGetSearchTermPerformanceRes,
@@ -193,6 +194,26 @@ export function getOperationLog(data: {
 export function addOperationLog(data: { asin: string; siteId: number; content: string }): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/analysis/operation/log/add`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * @description 运营-产品分析-操作日志-手动输入日志汇总
+ * @param data { operationUserId?: number; siteId?: number; startDate?: string; endDate?: string; pageNo: number; pageSize: number; type: number }
+ * @returns IGetOperationLogManualRes
+ */
+export function getOperationLogManualList(data: {
+  userId: number
+  siteId: number
+  startDate: string
+  endDate: string
+  pageNo: number
+  pageSize: number
+  keyWord: string
+}): Promise<IGetOperationLogManualRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/manual/operation/log`,
     method: 'post',
     data,
   })

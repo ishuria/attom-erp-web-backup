@@ -411,6 +411,22 @@ export interface IGetOperationLog {
   type: number
   content: string
 }
+export interface IGetOperationLogManualRes {
+  data: {
+    list: IGetOperationLogManual[]
+    total: number
+  }
+}
+export interface IGetOperationLogManual {
+  date: string
+  type: string
+  content: string
+  sku?: string
+  productDesc?: string
+  skuImgUrl?: string
+  flag?: string
+  operationUserName?: string
+}
 export interface IGetProductInfoRes {
   data: IGetProductInfo
 }
