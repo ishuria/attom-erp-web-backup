@@ -37,6 +37,7 @@ declare module 'vue' {
     Develop: typeof import('./../../../src/views/index/vabAutoComponents/Develop.vue')['default']
     DistributeSkus: typeof import('./../../../src/views/newProductTask/vabAutoComponents/distributeSkus.vue')['default']
     DrawerBasicUsage: typeof import('./../../../src/views/vab/drawer/vabAutoComponents/DrawerBasicUsage.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
