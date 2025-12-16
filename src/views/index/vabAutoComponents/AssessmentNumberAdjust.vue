@@ -5,24 +5,24 @@
         <div class="alert-content">
           <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>
-            <span>每月2号之前完成上月完成数自调</span>
+            <span>每月结束前完成本月完成数自调，每月限提交一次自调</span>
           </div>
           <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>
-            <span>每月3号进行考核数结账</span>
+            <span>每月月底最后一天晚上考核数结账</span>
           </div>
-          <div class="rule-item">
+          <!-- <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>
             <span>4号上午8点最后一次更新上月提成</span>
-          </div>
-          <div class="rule-item">
+          </div> -->
+          <!-- <div class="rule-item">
             <el-icon class="rule-icon"><warning /></el-icon>
             <span>碰到节假日需要提前自调或者远程自调</span>
-          </div>
-          <div class="rule-item">
+          </div> -->
+          <!-- <div class="rule-item">
             <el-icon class="rule-icon"><warning /></el-icon>
             <span>每月限提交一次</span>
-          </div>
+          </div> -->
         </div>
       </vab-alert>
       <div class="slider-demo-block">
@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Clock, Warning } from '@element-plus/icons-vue'
+import { Clock } from '@element-plus/icons-vue'
 import { getMonthlyAndNextMonthAssess, submitAssess } from '/@/api/devlocal/frontPage'
 import { IAssessAdjustRes } from '/@/type/index/frontPage'
 import { getCurrentDate, getMonth, getYear } from '/@/utils/dateUtils'
