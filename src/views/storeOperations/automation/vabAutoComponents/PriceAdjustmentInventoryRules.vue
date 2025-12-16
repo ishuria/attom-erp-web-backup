@@ -8,14 +8,16 @@
             <el-button type="primary" @click="defaultVisible = true">默认参数</el-button>
           </el-form-item>
           <el-form-item label="站点">
-            <el-select v-model="queryForm.sites"
-                       clearable
-                       collapse-tags
-                       collapse-tags-tooltip
-                       :max-collapse-tags="1"
-                       multiple
-                       placeholder="请选择站点"
-                       @change="handleQueryData"  >
+            <el-select
+              v-model="queryForm.sites"
+              clearable
+              collapse-tags
+              collapse-tags-tooltip
+              :max-collapse-tags="1"
+              multiple
+              placeholder="请选择站点"
+              @change="handleQueryData"
+            >
               <template #header>
                 <el-checkbox :indeterminate="indeterminate" :model-value="checkAll" @change="handleCheckAll">所有</el-checkbox>
               </template>
@@ -46,14 +48,16 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="loading"
-              border
-              :cell-style="cellStyle"
-              :data="list"
-              :header-cell-style="{ textAlign: 'center' }"
-              stripe
-              @cell-click="handleCellClick"
-              @selection-change="operationStockSelectionChangeHandler"
+    <el-table
+      v-loading="loading"
+      border
+      :cell-class-name="clearPadding"
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @cell-click="handleCellClick"
+      @selection-change="operationStockSelectionChangeHandler"
     >
       <el-table-column fixed="left" type="selection" width="38" />
       <el-table-column label="图片" width="75">
@@ -87,7 +91,11 @@
               @keyup.enter="handleCellBlur($event, row, $index)"
             />
           </div>
-          <span>{{row.minPrice}} <br> {{row.minGrossProfitMargin}}%</span>
+          <span>
+            {{ row.minPrice }}
+            <br />
+            {{ row.minGrossProfitMargin }}%
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="最高价" prop="maxPrice">
@@ -100,13 +108,15 @@
               @keyup.enter="handleCellBlur($event, row, $index)"
             />
           </div>
-          <span>{{row.maxPrice}} <br> {{row.maxGrossProfitMargin}}%</span>
+          <span>
+            {{ row.maxPrice }}
+            <br />
+            {{ row.maxGrossProfitMargin }}%
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="调价幅度" prop="adjustmentRange">
-        <template #default="scope">
-          {{ scope.row.currencyIcon}} {{scope.row.adjustmentRange}}
-        </template>
+        <template #default="scope">{{ scope.row.currencyIcon }} {{ scope.row.adjustmentRange }}</template>
       </el-table-column>
       <el-table-column label="最小调价间隔（天）" prop="adjustmentDay">
         <template #default="{ row, $index }">
@@ -118,9 +128,8 @@
               @keyup.enter="handleCellBlur($event, row, $index)"
             />
           </div>
-          <span>{{row.adjustmentDay}}</span>
+          <span>{{ row.adjustmentDay }}</span>
         </template>
-
       </el-table-column>
       <el-table-column label="提高价格（满足全部条件）">
         <el-table-column label="剩余可售天数≤" min-width="125" prop="improveDays">
@@ -133,7 +142,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.improveDays}}</span>
+            <span>{{ row.improveDays }}</span>
           </template>
         </el-table-column>
         <el-table-column label="可售总库存数≤" min-width="125" prop="improveStock">
@@ -146,7 +155,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.improveStock}}</span>
+            <span>{{ row.improveStock }}</span>
           </template>
         </el-table-column>
         <el-table-column label="断货天数≥" min-width="95" prop="improveOutStockDays">
@@ -159,7 +168,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.improveOutStockDays}}</span>
+            <span>{{ row.improveOutStockDays }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Rating≥" min-width="90" prop="improveRatingHeight">
@@ -172,7 +181,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.improveRatingHeight}}</span>
+            <span>{{ row.improveRatingHeight }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -187,7 +196,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.reduceOutStockDays}}</span>
+            <span>{{ row.reduceOutStockDays }}</span>
           </template>
         </el-table-column>
         <el-table-column label="剩余可售天数≥" min-width="125" prop="reduceDays">
@@ -200,7 +209,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.reduceDays}}</span>
+            <span>{{ row.reduceDays }}</span>
           </template>
         </el-table-column>
         <el-table-column label="剩余含在途可售天数≥" min-width="125" prop="reduceTransitDays">
@@ -213,7 +222,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.reduceTransitDays}}</span>
+            <span>{{ row.reduceTransitDays }}</span>
           </template>
         </el-table-column>
         <el-table-column label="可售总库存数≥" min-width="125" prop="reduceSalesTotalStock">
@@ -226,7 +235,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.reduceSalesTotalStock}}</span>
+            <span>{{ row.reduceSalesTotalStock }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -241,7 +250,7 @@
                 @keyup.enter="handleCellBlur($event, row, $index)"
               />
             </div>
-            <span>{{row.reduceRatingLow}}</span>
+            <span>{{ row.reduceRatingLow }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -254,13 +263,14 @@
       </el-table-column>
       <el-table-column label="价格">
         <template #default="scope">
-          {{scope.row.currencyIcon}}{{scope.row.operationBeforePrice}} -> {{scope.row.currencyIcon}}{{scope.row.operationAfterPrice}}
+          {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
+          }}{{ scope.row.operationAfterPrice }}
         </template>
       </el-table-column>
       <el-table-column label="操作结果" prop="operationResult" width="100">
         <template #default="{ row }">
           <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
-            {{ row.operationResult}}
+            {{ row.operationResult }}
           </el-tag>
         </template>
       </el-table-column>
@@ -282,25 +292,25 @@
     />
 
     <!-- 默认参数 -->
-    <vab-dialog-operation-stock-default v-model="defaultVisible"/>
+    <vab-dialog-operation-stock-default v-model="defaultVisible" />
     <!-- 批量修改 -->
-    <vab-dialog-operation-stock-update  v-model:check-rows="multipleSelection"
-                                        v-model:default-visible="batchUpdateVisible"
-                                        @fetch-query="handleQueryData"
-                                      />
+    <vab-dialog-operation-stock-update
+      v-model:check-rows="multipleSelection"
+      v-model:default-visible="batchUpdateVisible"
+      @fetch-query="handleQueryData"
+    />
     <!-- 查询日志 -->
-    <vab-dialog-operation-stock-log v-model:id="_rowId"
-                                    v-model:operation-stock-visible="operationStockVisible" />
+    <vab-dialog-operation-stock-log v-model:id="_rowId" v-model:operation-stock-visible="operationStockVisible" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
-import { getRootElement } from '/@/utils/nodeUtils.ts'
 import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
 import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
+import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
+import { getRootElement } from '/@/utils/nodeUtils.ts'
 
 defineOptions({
   name: 'PriceAdjustmentInventoryRules',
@@ -384,7 +394,12 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     textAlign: 'center',
   }
 }
-
+const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
+  if (data.column.label === '图片') {
+    return 'clear-padding'
+  }
+  return ''
+}
 const defaultVisible = ref<boolean>(false)
 
 const batchUpdateVisible = ref<boolean>(false)
@@ -393,7 +408,6 @@ const operationStockVisible = ref<boolean>(false)
 
 const multipleSelection = ref<IOperationStocksItem[]>([])
 const _rowId = ref<number>()
-
 
 const handlerSysLog = (row: IOperationStocksItem) => {
   _rowId.value = row.id
@@ -404,14 +418,13 @@ const operationStockSelectionChangeHandler = (val: IOperationStocksItem[]) => {
   multipleSelection.value = val
 }
 
-const updateBatch = () =>{
+const updateBatch = () => {
   if (multipleSelection.value.length === 0) {
     $baseMessage('请选择需要批量修改的数据！', 'warning')
     return
   }
   batchUpdateVisible.value = true
 }
-
 </script>
 
 <style lang="scss" scoped>

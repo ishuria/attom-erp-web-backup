@@ -1,12 +1,12 @@
 <template>
-  <vab-dialog v-model="defaultVisible" title="调价库存规则默认参数" width="23%">
+  <vab-dialog v-model="defaultVisible" title="调价库存规则默认参数" top="7vh" width="23%">
     <el-form label-position="right" label-width="auto" :model="form">
-      <el-form-item label="最低价毛利率">
+      <!-- <el-form-item label="最低价毛利率">
         <el-input v-model="form.minGrossProfitMargin" type="number" />
-      </el-form-item>
-      <el-form-item label="最高价毛利率">
+      </el-form-item> -->
+      <!-- <el-form-item label="最高价毛利率">
         <el-input v-model="form.maxGrossProfitMargin" type="number" />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="调价幅度">
         <el-input v-model="form.adjustmentRange" type="number" />
       </el-form-item>
@@ -15,21 +15,25 @@
       </el-form-item>
       <el-card>
         <el-form-item>
-          <div>
-            最低价=max(
-            <el-input v-model="form.minPriceGrossProfitMargin" style="display: inline" />
+          <div class="formula-line">
+            最低价 = max(
+            <el-input v-model="form.minPriceGrossProfitMargin" class="formula-input" />
             %毛利 -
-            <el-input v-model="form.maxDecodePrice" style="display: inline" />
-            ，{{ form.minGrossProfitMargin }}%毛利)
+            <el-input v-model="form.maxDecodePrice" class="formula-input" />
+            ，
+            <el-input v-model="form.minGrossProfitMargin" class="formula-input" />
+            %毛利)
           </div>
         </el-form-item>
         <el-form-item>
-          <div>
-            最低价=max(
-            <el-input v-model="form.maxPriceGrossProfitMargin" style="display: inline" />
+          <div class="formula-line">
+            最低价 = max(
+            <el-input v-model="form.maxPriceGrossProfitMargin" class="formula-input" />
             %毛利 -
-            <el-input v-model="form.minAddPrice" style="display: inline" />
-            ，{{ form.maxGrossProfitMargin }}%毛利)
+            <el-input v-model="form.minAddPrice" class="formula-input" />
+            ，
+            <el-input v-model="form.maxGrossProfitMargin" class="formula-input" />
+            %毛利)
           </div>
         </el-form-item>
       </el-card>
@@ -163,4 +167,27 @@ const handleConfirm = async () => {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.formula-line {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 32px;
+  flex-wrap: nowrap;
+  gap: 4px;
+
+  .formula-input {
+    display: inline-block;
+    width: 80px;
+    margin: 0 2px;
+
+    :deep(.el-input__inner) {
+      font-size: 14px;
+      padding: 0 8px;
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+}
+</style>
