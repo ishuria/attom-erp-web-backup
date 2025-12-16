@@ -54,6 +54,12 @@
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
+              <!-- <el-form-item>
+                <el-button type="primary" @click="spFileUploadVisible = true">文件上传</el-button>
+              </el-form-item> -->
+              <el-form-item>
+                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
+              </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[0] }}</el-text>
                 <el-divider direction="vertical" />
@@ -194,6 +200,9 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[1] }}</el-text>
@@ -507,6 +516,9 @@
       @confirm="handleReleaseOrder"
       @image-preview="imagePreviewShow"
     />
+    <!-- 文件上传 -->
+    <sp-file-upload v-model:visible="spFileUploadVisible" :site-list="siteList" />
+    <operation-log-manual-sum v-model:visible="logSummaryVisible" />
   </div>
 </template>
 
@@ -581,6 +593,8 @@ const orderListLoading = ref<boolean>(false)
 const releaseOrderDialogRef = ref()
 const asinId = ref<number | undefined>(undefined)
 let skuRow: any
+const spFileUploadVisible = ref<boolean>(false)
+const logSummaryVisible = ref<boolean>(false)
 // 打开发布订货
 const handleShowReleaseOrder = async (row: any) => {
   // currentRowId.value = row.id

@@ -1086,3 +1086,23 @@ export function uploadPreOrderFormCheckFile(data: FormData) {
     data,
   })
 }
+
+/**
+ * 获取退税产品发票匹配是否进行单价匹配flag
+ */
+export const taxRefundInvoiceMatchFlag = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/flag`,
+    method: 'get',
+  })
+}
+
+/**
+ * 修改退税产品发票匹配是否进行单价匹配flag
+ */
+export const updateTaxRefundInvoiceMatchFlag = (): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/flag/update`,
+    method: 'post',
+  })
+}

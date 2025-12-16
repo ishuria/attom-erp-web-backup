@@ -1,6 +1,7 @@
 <template>
   <div style="margin-top: 20px; margin-bottom: 20px">
-    <el-table border :data="distributionList" :header-cell-style="{ textAlign: 'center' }" stripe>
+    <el-alert :closable="false" show-icon title="只填写主要销售站点的运营，如果不知道主销售站点运营的可以不填。" type="info" />
+    <el-table border :data="distributionList" :header-cell-style="{ textAlign: 'center' }" stripe style="margin-top: 12px">
       <el-table-column label="站点" min-width="150" prop="siteName" />
       <el-table-column label="运营人员" min-width="200" prop="operationUserId">
         <template #default="{ row }">
