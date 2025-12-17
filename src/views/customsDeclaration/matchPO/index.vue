@@ -39,7 +39,7 @@
         >
           关税单上传
         </el-button>
-        <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件校验上传</el-button>
+        <el-button type="primary" @click="uploadTaxRefundFielCheck">报关文件&合同校验上传</el-button>
         <el-button type="primary" @click="uploadPreOrderCheck">预入单校验</el-button>
         <el-space :size="16" style="align-items: center">
           <el-statistic class="compact-statistic" title="总箱数" :value="totalBoxes" />
@@ -543,7 +543,7 @@
     <tariff-bill-upload v-model="tariffBillUploadVisible" :shipmentIdList="shipmentIdList" />
 
     <!-- 报关文件上传 -->
-    <vab-dialog v-model="uploadTaxRefundVisible" title="报关文件校验上传" width="25%">
+    <vab-dialog v-model="uploadTaxRefundVisible" title="报关文件&合同校验上传" width="25%">
       <el-upload v-model:file-list="taxRefundFileList" :auto-upload="false" drag multiple :show-file-list="true">
         <el-icon class="el-icon--upload">
           <upload-filled />
@@ -553,6 +553,11 @@
           <em>点击上传</em>
         </div>
       </el-upload>
+      <el-form :model="contractForm" :rules="contractFormRules" style="margin-right: 20px; margin-left: 20px">
+        <el-form-item label="采购合同路径" prop="path">
+          <el-input v-model.trim="contractForm.path" clearable />
+        </el-form-item>
+      </el-form>
       <template #footer>
         <div style="text-align: center">
           <el-button :loading="taxRefundLoadingVisible" type="success" @click="handleTaxRefundUpload">上传</el-button>
@@ -680,10 +685,15 @@ const uploadTaxRefundFielCheck = () => {
   uploadTaxRefundVisible.value = true
 }
 const handleTaxRefundUpload = async () => {
+  if (taxRefundFileList.value.length == 0){
+    $baseMessage('必须先上传退税报关文件！', 'warning', 'hey')
+    return
+  }
   taxRefundLoadingVisible.value = true
   const formData = new FormData()
   taxRefundFileList.value.forEach((item: any) => {
     formData.append('files', item.raw)
+    formData.append('path', contractForm.path)
   })
   try {
     const { data } = await uploadTaxRefundCheckFile(formData)
@@ -695,6 +705,7 @@ const handleTaxRefundUpload = async () => {
           })
           taxRefundLoadingVisible.value = false
           taxRefundFileList.value = []
+          contractForm.path = ''
         } catch {
           $baseMessage('校验报关文件下载失败！', 'error')
         }
@@ -704,6 +715,7 @@ const handleTaxRefundUpload = async () => {
     $baseMessage('退税报关文件上传失败', 'error')
   } finally {
     taxRefundLoadingVisible.value = false
+    contractForm.path = ''
   }
 }
 
@@ -1669,6 +1681,12 @@ const fetchChannelOption = async () => {
   const { data } = await getChannelList()
   forwarderOption.value = data
 }
+
+const contractForm = reactive<any>({})
+const contractFormRules = reactive<any>({
+  path: [{ required: true, message: '请输入采购合同路径', trigger: 'blur' }],
+})
+
 onBeforeMount(() => {
   const { pageNo, pageSize } = route.query
   queryForm.pageNo = Number(pageNo) || 1
