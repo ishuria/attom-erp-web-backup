@@ -658,14 +658,22 @@
           :cell-style="{ textAlign: 'center' }"
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
+          :span-method="objectSpanMethod"
           stripe
         >
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
-            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="姓名" min-width="100" prop="manageUserName" />
+            <el-table-column label="职级" min-width="100" prop="jobTitle" />
             <el-table-column label="角色" min-width="130" prop="roleName" />
+            <el-table-column label="下属" min-width="130" prop="userName" />
+            <el-table-column label="下属新品提成" min-width="130" prop="newCommissionBonus" />
+            <el-table-column label="新品管理奖金" min-width="130" prop="newBonus" />
+            <el-table-column label="下属总提成" min-width="130" prop="totalCommissionBonus" />
+            <el-table-column label="管理奖金比例" min-width="130" prop="proportion" />
+            <el-table-column label="管理奖金明细" min-width="130" prop="managementBonus" />
+            <el-table-column label="管理奖金" min-width="130" prop="totalManagementBonus" />
           </el-table-column>
-          <el-table-column label="管理奖金" min-width="100" prop="managementBonus" />
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -827,12 +835,12 @@ import {
   updateProductManagerNoAssessment,
 } from '/@/api/devlocal/performanceStatistics'
 import PerformanceStatisticsPermission from '/@/permissions/performanceStatistics'
-import type {
+import {
   IGetAdjustDetail,
   IGetAssessmentList,
   IGetAssessmentListReq,
   IGetProductManagerAssessmentList,
-  IGetUserAttendanceList,
+  IGetUserAttendanceList, IGetUserAttendanceManagementList,
 } from '/@/type/employeeManagement/performanceStatistics'
 import { IGetArtDesignTaskList } from '/@/type/listingTask/imageTaskType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -945,7 +953,7 @@ const supervisorQueryForm = reactive<IGetAssessmentListReq>({
   orderByField: 'month',
   orderDirection: 'desc',
 })
-const list = ref<IGetUserAttendanceList[]>([])
+const list = ref<IGetUserAttendanceManagementList[]>([])
 /* ============================== 考核数设定变量 ============================== */
 const settingVisible = ref<boolean>(false)
 const settingQueryForm = reactive<any>({
@@ -1449,6 +1457,36 @@ const fetchArtDesignRoleList = async () => {
   if (artDesign) productDesignDefaultRoleIds.push(artDesign.id)
   productDesignQueryForm.roleIdList = productDesignDefaultRoleIds.length > 0 ? productDesignDefaultRoleIds : []
 }
+
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
+    let rowspan = 1 // 默认不跨行
+    const label = column.label
+    if (
+      columnIndex === 0 ||
+      label === '姓名' ||
+      label === '职级' ||
+      label === '角色' ||
+      label === '管理奖金'
+    ) {
+      const id = row.managementId
+
+      for (let i = rowIndex + 1; i < list.value.length; i++) {
+        if (list.value[i].managementId === id) {
+          rowspan++
+        } else {
+          break
+        }
+      }
+
+      // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
+      return rowIndex === 0 || list.value[rowIndex - 1].managementId !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
+    }
+
+    // 对于其他列，默认返回不合并
+    return { rowspan: 1, colspan: 1 }
+
+}
+
 // tab切换
 const handleTabChange = () => {
   if (activeName.value === 2) {

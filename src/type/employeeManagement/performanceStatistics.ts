@@ -298,3 +298,18 @@ export interface IMinimumMonthlyAssessment {
   userName: string
   minMonthlyAssessment: number
 }
+
+export interface IGetUserAttendanceManagementList {
+  managementId?: number
+  managementBonus?: number
+  totalManagementBonus?: number
+  newCommissionBonus?: number
+  newBonus?: number
+  totalCommissionBonus?: number
+  proportion?: number
+  manageUserName?: string
+  userName?: string
+  jobTitle?: string
+  roleName?: string
+  month?: string
+}
