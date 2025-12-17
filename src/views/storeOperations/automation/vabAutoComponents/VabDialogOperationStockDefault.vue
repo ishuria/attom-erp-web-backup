@@ -27,9 +27,9 @@
         </el-form-item>
         <el-form-item>
           <div class="formula-line">
-            最低价 = max(
+            最高价 = max(
             <el-input v-model="form.maxPriceGrossProfitMargin" class="formula-input" />
-            %毛利 -
+            %毛利 +
             <el-input v-model="form.minAddPrice" class="formula-input" />
             ，
             <el-input v-model="form.maxGrossProfitMargin" class="formula-input" />

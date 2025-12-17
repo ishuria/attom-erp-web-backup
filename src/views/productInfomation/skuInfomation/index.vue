@@ -378,7 +378,7 @@ const { changeTabsMeta } = tabsStore
 const copySkuVisible = ref<boolean>(false)
 const copySkuForm = reactive({
   sku: '',
-  listingTask:1
+  listingTask:0
 })
 const copySkuFormRef = ref()
 const copySkuClose = () => {
