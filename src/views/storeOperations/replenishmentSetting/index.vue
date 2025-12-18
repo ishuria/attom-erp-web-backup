@@ -8,6 +8,29 @@
             <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
           </el-select>
           <el-button type="primary" @click="handleUpdate">批量修改</el-button>
+          <el-popover placement="bottom-start" trigger="click" :width="300">
+            <template #reference>
+              <el-button :icon="Filter" :type="hasFilter ? 'warning' : 'default'">筛选</el-button>
+            </template>
+            <el-form label-position="top" label-width="120px" :model="filterForm">
+              <el-form-item label="30个可售日销量">
+                <el-input-number v-model="filterForm.available30SalesMin" :min="0" placeholder="最小值" style="width: 100%" />
+                <div style="margin: 8px 0; text-align: center">至</div>
+                <el-input-number v-model="filterForm.available30SalesMax" :min="0" placeholder="最大值" style="width: 100%" />
+              </el-form-item>
+              <el-form-item label="半年有货率(%)">
+                <el-input-number v-model="filterForm.availableRateMin" :max="100" :min="0" placeholder="最小值" style="width: 100%" />
+                <div style="margin: 8px 0; text-align: center">至</div>
+                <el-input-number v-model="filterForm.availableRateMax" :max="100" :min="0" placeholder="最大值" style="width: 100%" />
+              </el-form-item>
+              <el-form-item>
+                <el-button style="width: 100%" type="primary" @click="handleFilter">确定</el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button style="width: 100%" @click="handleResetFilter">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </el-popover>
         </el-space>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
@@ -35,9 +58,11 @@
       :cell-class-name="clearPadding"
       class="noneHoveTable"
       :data="list"
+      :default-sort="{ prop: 'stockPileNumberDays', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
       @selection-change="setSelectRows"
+      @sort-change="handleSortChange"
     >
       <el-table-column align="center" fixed type="selection" width="45" />
       <el-table-column align="center" label="图片" prop="skuUrl" width="75">
@@ -55,13 +80,13 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="产品分类" min-width="200" prop="type1" />
-      <el-table-column align="center" label="维持库存天数" min-width="120" prop="stockPileNumberDays" />
-      <el-table-column align="center" label="最小维持库存数量" min-width="140" prop="minStockPilNumber" />
-      <el-table-column align="center" label="交期安全天数" min-width="120" prop="safetyLeadTime" />
-      <el-table-column align="center" label="平均交期(近10次)" min-width="140" prop="avgLead" />
-      <el-table-column align="center" label="交期平均波动" min-width="120" prop="avgLeadFluctuation" />
-      <el-table-column align="center" label="30个可售日销量" min-width="130" prop="available30Sales" />
-      <el-table-column align="center" label="半年有货率" min-width="110" prop="availableRate">
+      <el-table-column align="center" label="维持库存天数" min-width="120" prop="stockPileNumberDays" sortable="custom" />
+      <el-table-column align="center" label="最小维持库存数量" min-width="140" prop="minStockPilNumber" sortable="custom" />
+      <el-table-column align="center" label="交期安全天数" min-width="120" prop="safetyLeadTime" sortable="custom" />
+      <el-table-column align="center" label="平均交期(近10次)" min-width="140" prop="avgLead" sortable="custom" />
+      <el-table-column align="center" label="交期平均波动" min-width="120" prop="avgLeadFluctuation" sortable="custom" />
+      <el-table-column align="center" label="30个可售日销量" min-width="130" prop="available30Sales" sortable="custom" />
+      <el-table-column align="center" label="半年有货率" min-width="110" prop="availableRate" sortable="custom">
         <template #default="{ row }">{{ row.availableRate }}%</template>
       </el-table-column>
       <template #empty>
@@ -108,7 +133,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Search } from '@element-plus/icons-vue'
+import { Filter, Search } from '@element-plus/icons-vue'
 import type { TableInstance } from 'element-plus'
 import { getProductReplenList, updateProductReplenParams } from '/@/api/devlocal/productInformation'
 import { getSeasonalCoefficientSite, getSeasonalCoefficientSiteList } from '/@/api/devlocal/seasonalCoefficient'
@@ -124,6 +149,30 @@ const queryForm = reactive<any>({
   site: 0,
   pageNo: 1,
   pageSize: 20,
+  orderByField: 'stockPileNumberDays',
+  orderDirection: 'descending',
+  available30SalesMin: undefined,
+  available30SalesMax: undefined,
+  availableRateMin: undefined,
+  availableRateMax: undefined,
+})
+
+// 筛选表单
+const filterForm = reactive({
+  available30SalesMin: undefined as number | undefined,
+  available30SalesMax: undefined as number | undefined,
+  availableRateMin: undefined as number | undefined,
+  availableRateMax: undefined as number | undefined,
+})
+
+// 判断是否有筛选条件
+const hasFilter = computed(() => {
+  return (
+    filterForm.available30SalesMin !== undefined ||
+    filterForm.available30SalesMax !== undefined ||
+    filterForm.availableRateMin !== undefined ||
+    filterForm.availableRateMax !== undefined
+  )
 })
 
 const tableRef = ref<TableInstance>()
@@ -220,6 +269,24 @@ const handleSizeChange = (val: number) => {
   queryForm.pageSize = val
   fetchData()
 }
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  // console.log(prop, order)
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryData()
+}
 const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
   siteList.value = data
@@ -229,6 +296,28 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
     return 'clear-padding'
   }
   return ''
+}
+
+// 处理筛选
+const handleFilter = () => {
+  queryForm.available30SalesMin = filterForm.available30SalesMin
+  queryForm.available30SalesMax = filterForm.available30SalesMax
+  queryForm.availableRateMin = filterForm.availableRateMin
+  queryForm.availableRateMax = filterForm.availableRateMax
+  queryData()
+}
+
+// 重置筛选
+const handleResetFilter = () => {
+  filterForm.available30SalesMin = undefined
+  filterForm.available30SalesMax = undefined
+  filterForm.availableRateMin = undefined
+  filterForm.availableRateMax = undefined
+  queryForm.available30SalesMin = undefined
+  queryForm.available30SalesMax = undefined
+  queryForm.availableRateMin = undefined
+  queryForm.availableRateMax = undefined
+  queryData()
 }
 onActivated(() => {
   tableRef.value?.doLayout()
