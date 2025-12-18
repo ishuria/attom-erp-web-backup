@@ -1,11 +1,11 @@
 import { BASE_API } from '/@/api/devlocal/api'
-import type {
+import {
   IAutoMationDefaultPramsRules,
   IAutomationLogRules,
   IAutoMationQueryReq,
   IAutoMationResult,
   IAutoMationRules,
-  IAutoMationUpdateReq,
+  IAutoMationUpdateReq, IOperationStockRulesSiteParams,
 } from '/@/type/storeOperation/autoMation'
 import {
   IOperationStockDefaultParams, IOperationStockLogRules,
@@ -162,6 +162,29 @@ export function updateBatchOperationStock(data?: IOperationStockUpdateReq): Prom
 export function queryOperationStockLogList(data: { pageNo: number; pageSize: number; id: number }): Promise<IOperationStockLogRules> {
   return request({
     url: `${BASE_API}/operation/stock/auto/rules/logs`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 运营自动化-调价库存站点默认参数
+ * @param data
+ */
+export function querySiteOperations(): Promise<{ data: IOperationStockRulesSiteParams[] }> {
+  return request({
+    url: `${BASE_API}/operation/stock/rules/site/default/params`,
+    method: 'get',
+  })
+}
+
+/**
+ * 运营自动化-调价库存站点默认参数
+ * @param data
+ */
+export function updateOperationStockRulesParams(data: IOperationStockRulesSiteParams): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/operation/stock/rules/site/default/params/update`,
     method: 'post',
     data,
   })

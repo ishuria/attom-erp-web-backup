@@ -256,3 +256,14 @@ export interface IAutomationLogItem {
   operationTypeList: IOperationType[]
   operationAdvTypeList: IOperationType[]
 }
+
+export interface IOperationStockRulesSiteParams {
+  id?: number
+  currency?: string
+  symbol?: string
+  siteName?: string
+  priceAdjustmentRange?: number
+  amplitudeDay?: number
+  lowDeliveryFeeMaxPrice?: number
+  lowDeliveryFee?: number
+}
