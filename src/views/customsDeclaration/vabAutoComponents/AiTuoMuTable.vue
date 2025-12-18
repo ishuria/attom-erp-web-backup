@@ -7,6 +7,20 @@
           <el-button type="primary" @click="$emit('import')">发票导入</el-button>
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
         </template>
+        <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
+            <el-date-picker
+              v-model="queryForm.purchaseDate"
+              :clearable="false"
+              :disabled-date="(time: Date) => time.getTime() > Date.now()"
+              end-placeholder="结束日期"
+              range-separator="至"
+              start-placeholder="开始日期"
+              style="width: 22em"
+              type="daterange"
+              value-format="YYYY-MM-DD"
+              @change="$emit('query')"
+            />
+        </span>
         <div class="summary-info">
           <el-space :size="16" style="align-items: center">
             <el-statistic class="compact-statistic" title="报关数量" :value="totalCustomsDeclarationCount" />
@@ -16,6 +30,13 @@
               :formatter="(val: number) => val.toFixed(2)"
               title="总含税价"
               :value="totalTaxIncludedPrice"
+            />
+            <el-divider direction="vertical" style="height: 34px" />
+            <el-statistic
+              class="compact-statistic"
+              :formatter="(val: number) => val.toFixed(2)"
+              title="采购日期范围总含税价"
+              :value="totalPrice"
             />
           </el-space>
         </div>
@@ -186,12 +207,14 @@ const props = defineProps<{
   showActions: boolean
   queryForm: Record<string, any>
   total: number
+  totalPrice: number
 }>()
 const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 'page-change', 'size-change', 'obtain-id-list'])
 
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const selectRowsData = ref<IAiTuoMuItem[]>([])
+
 
 const imagePreviewShow = (url: string) => {
   imagePreviewVisible.value = true

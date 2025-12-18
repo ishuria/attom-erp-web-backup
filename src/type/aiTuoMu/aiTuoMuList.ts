@@ -2,6 +2,7 @@ export interface IAiTuoMuList {
   data: {
     total: number
     list: IAiTuoMuItem[]
+    totalPrice: number
   }
 }
 
@@ -85,4 +86,9 @@ export interface IAiTuoMuListReq {
    * 出货状态 0未出货 1已出货
    */
   customsDeclarationStatus?: number
+
+  /**
+   * 日期时间
+   */
+  purchaseDate?: string[]
 }

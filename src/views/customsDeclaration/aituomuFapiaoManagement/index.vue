@@ -9,6 +9,7 @@
           :showActions="false"
           :showButtons="true"
           :total="total"
+          :totalPrice="totalPrice"
           @export="atmExportVisible = true"
           @import="importVisible = true"
           @match="checkMatch"
@@ -26,6 +27,7 @@
           :showActions="true"
           :showButtons="false"
           :total="total"
+          :totalPrice="totalPrice"
           @delete-match="deleteMatch"
           @page-change="handleCurrentChange"
           @query="queryData"
@@ -75,16 +77,19 @@ defineOptions({
 
 const date = ref<[string, string]>(getDefaultStringTime())
 const activeName = ref<number>(0)
+
 const queryForm = reactive<IAiTuoMuListReq>({
   keyWord: '',
   status: activeName.value,
   pageNo: 1,
   pageSize: 20,
   customsDeclarationStatus: -1,
+  purchaseDate: getDefaultStringTime()
 })
 const list = ref<IAiTuoMuItem[]>([])
 const listLoading = ref<boolean>(false)
 const total = ref<number>(0)
+const totalPrice = ref<number>(0)
 const importVisible = ref<boolean>(false)
 const matchVisible = ref<boolean>(false)
 const atmExportVisible = ref<boolean>(false)
@@ -152,6 +157,7 @@ const fetchData = async () => {
   const { data } = await getAiTuoMuList(queryForm)
   list.value = data.list
   total.value = data.total
+  totalPrice.value = data.totalPrice
   listLoading.value = false
 }
 

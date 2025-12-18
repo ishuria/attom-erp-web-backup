@@ -5,7 +5,7 @@
         <el-form inline :model="queryForm">
           <el-form-item>
             <el-button type="primary" @click="updateBatch">批量修改</el-button>
-            <el-button type="primary" @click="defaultVisible = true">默认参数</el-button>
+            <el-button type="primary" @click="defaultVisible = true">新品默认参数</el-button>
           </el-form-item>
           <el-form-item label="站点">
             <el-select
