@@ -5,11 +5,11 @@
         <div class="alert-content">
           <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>
-            <span>每月结束前完成本月完成数自调，每月限提交一次自调</span>
+            <span>每月2号之前完成上月完成数自调</span>
           </div>
           <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>
-            <span>每月月底最后一天晚上考核数结账</span>
+            <span>每月3号对上一个月进行考核数结账</span>
           </div>
           <!-- <div class="rule-item">
             <el-icon class="rule-icon"><clock /></el-icon>

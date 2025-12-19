@@ -58,7 +58,6 @@
       :cell-class-name="clearPadding"
       class="noneHoveTable"
       :data="list"
-      :default-sort="{ prop: 'stockPileNumberDays', order: 'descending' }"
       :header-cell-style="{ textAlign: 'center' }"
       stripe
       @selection-change="setSelectRows"
@@ -149,8 +148,8 @@ const queryForm = reactive<any>({
   site: 0,
   pageNo: 1,
   pageSize: 20,
-  orderByField: 'stockPileNumberDays',
-  orderDirection: 'descending',
+  orderByField: '',
+  orderDirection: '',
   available30SalesMin: undefined,
   available30SalesMax: undefined,
   availableRateMin: undefined,
