@@ -540,6 +540,10 @@ export interface IupdateProductSupplier {
    */
   packing?: number
   /**
+   * 生效 0不生效 1生效
+   */
+  status?: number
+  /**
    * 供应商名称
    */
   suppliser?: string
