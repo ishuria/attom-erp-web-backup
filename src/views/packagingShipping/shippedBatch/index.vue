@@ -46,6 +46,7 @@
         prop="fbaShipmentId"
         :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId', 30)"
       />
+      <el-table-column label="合同号" prop="contractNumber" :width="flexColumnWidth(list, '合同号', 'contractNumber', 30)" />
       <el-table-column label="站点" min-width="130" prop="site" />
       <el-table-column label="状态" min-width="100" prop="status" />
       <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')" />

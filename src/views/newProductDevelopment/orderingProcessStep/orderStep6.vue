@@ -350,9 +350,9 @@ const fetchData = async () => {
   columnsChange = columns
   exchangeList.value = initData(checkTableData.value)
   // console.log(exchangeList.value)
-  Object.keys(exchangeList.value[19]).forEach((key, index) => {
-    if (key !== 'column0' && exchangeList.value[19][key]) {
-      exchangeList.value[19][key] = exchangeList.value[19][key].split(',').map(Number)
+  Object.keys(exchangeList.value[20]).forEach((key, index) => {
+    if (key !== 'column0' && exchangeList.value[20][key]) {
+      exchangeList.value[20][key] = exchangeList.value[20][key].split(',').map(Number)
     }
   })
 }

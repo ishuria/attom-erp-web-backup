@@ -263,8 +263,10 @@
       </el-table-column>
       <el-table-column label="价格">
         <template #default="scope">
-          {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
-          }}{{ scope.row.operationAfterPrice }}
+          <el-text :type="getPriceChangeType(scope.row.operationBeforePrice, scope.row.operationAfterPrice)">
+            {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
+            }}{{ scope.row.operationAfterPrice }}
+          </el-text>
         </template>
       </el-table-column>
       <el-table-column label="操作结果" prop="operationResult" width="100">
@@ -399,6 +401,17 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
     return 'clear-padding'
   }
   return ''
+}
+
+// 获取价格变化类型
+const getPriceChangeType = (beforePrice: number, afterPrice: number): 'success' | 'warning' | 'danger' => {
+  if (afterPrice > beforePrice) {
+    return 'success' // 绿色 - 价格升高
+  } else if (afterPrice === beforePrice) {
+    return 'warning' // 黄色 - 价格不变
+  } else {
+    return 'danger' // 红色 - 价格降低
+  }
 }
 const defaultVisible = ref<boolean>(false)
 

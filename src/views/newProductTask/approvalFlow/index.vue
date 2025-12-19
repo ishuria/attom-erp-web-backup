@@ -95,7 +95,14 @@
           <el-tag v-if="row.status == 2" type="primary">审批不通过</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="申请理由" min-width="150" prop="applicationReason" />
+      <el-table-column label="申请理由" min-width="150" prop="applicationReason">
+        <template #default="{ row }">
+          <el-link v-if="row.applicationReason" type="primary" underline="never" @click="handleViewReason(row.applicationReason)">
+            <span v-html="row.applicationReason"></span>
+          </el-link>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
       <el-table-column label="申请修改要求完成时间" min-width="120" prop="latestDate" />
       <el-table-column label="产品是否上线" min-width="120" prop="launch" />
       <el-table-column label="申请提交时间" min-width="120" prop="createTime" />
@@ -120,6 +127,10 @@
       @size-change="handleSizeChange"
     />
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
+    <!-- 申请理由查看弹窗 -->
+    <vab-dialog v-model="reasonDialogVisible" title="申请理由" width="30%">
+      <wang-editor-viewer :content="currentReason" />
+    </vab-dialog>
   </div>
 </template>
 
@@ -154,6 +165,14 @@ const imagePreviewClose = () => {
 const imagePreviewShow = (url: string) => {
   imagePreviewList.value = [url]
   imagePreviewVisible.value = true
+}
+
+// 申请理由查看
+const reasonDialogVisible = ref<boolean>(false)
+const currentReason = ref<string>('')
+const handleViewReason = (reason: string) => {
+  currentReason.value = reason || ''
+  reasonDialogVisible.value = true
 }
 
 const handleApprove = async (id: number) => {
@@ -220,3 +239,14 @@ onBeforeMount(() => {
   fetchData()
 })
 </script>
+
+<style scoped lang="scss">
+.noneHoveTable :deep(.clear-padding) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.noneHoveTable :deep(.clear-padding .cell) {
+  padding-right: 0;
+  padding-left: 0;
+}
+</style>

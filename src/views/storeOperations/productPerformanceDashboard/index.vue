@@ -1930,6 +1930,7 @@ const fetchColumn = async () => {
         'grossProfit',
         'monthOrderSales',
         'availableRate',
+        'estimateNextMonthStorageFee',
       ].includes(item.prop)
     ) {
       item.sortable = true
@@ -1981,6 +1982,7 @@ const fetchAsinColumn = async () => {
         'monthAcos',
         'monthOrderSales',
         'availableRate',
+        'estimateNextMonthStorageFee',
       ].includes(item.prop)
     ) {
       item.sortable = true
@@ -2012,6 +2014,7 @@ const fetchPAsinColumn = async () => {
         'monthReturnGoods',
         'monthAcos',
         'monthOrderSales',
+        'estimateNextMonthStorageFee',
       ].includes(item.prop)
     ) {
       item.sortable = true

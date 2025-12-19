@@ -149,6 +149,7 @@ const handleClose = () => {
   if (editorRef.value) {
     editorRef.value.setHtml('')
   }
+  visible.value = false
 }
 
 // 提交申请
@@ -177,10 +178,6 @@ const handleSubmit = async () => {
       handleClose()
       visible.value = false
     }
-
-    $baseMessage('申请提交成功', 'success')
-    handleClose()
-    visible.value = false
   } catch (error) {
     console.error('提交申请失败:', error)
     $baseMessage('提交申请失败，请稍后重试', 'error')
@@ -201,11 +198,11 @@ onBeforeUnmount(() => {
   border-radius: 4px;
 
   .wang-editor-content {
-    min-height: 300px;
+    min-height: 500px;
   }
 
   :deep(.w-e-text-container) {
-    min-height: 300px;
+    min-height: 500px;
   }
 }
 </style>
