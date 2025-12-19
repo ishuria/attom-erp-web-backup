@@ -46,6 +46,18 @@
           <span>{{ row.suppliser }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="状态" prop="packing" width="100">
+        <template #default="{ row }">
+          <el-switch
+            v-model="row.status"
+            :active-value="1"
+            class="ml-2"
+            :inactive-value="0"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+            @change="updateSuppliserStatus(row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="优先打包" prop="packing" width="100">
         <template #default="{ row }">
           <el-checkbox v-model="row.packing" class="custom-checkbox" :false-value="0" :true-value="1" @change="handlePackingChange(row)" />
@@ -362,6 +374,15 @@ const handlePackingChange = async (row: any) => {
   await updateProductSupplier(row)
   fetchData()
 }
+
+const updateSuppliserStatus = async (val: any) => {
+  const { data } = await updateProductSupplier(val)
+  if (data) {
+    $baseMessage('修改成功！', 'success', 'hey')
+  }
+  fetchData()
+}
+
 const handleTemplateStatus = async (row: any) => {
   if (row.templateStatus === 1 && row.fileList.length === 0) {
     $baseMessage('未上传特定模板，无法勾选。', 'error')
