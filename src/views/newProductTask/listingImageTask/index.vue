@@ -722,6 +722,9 @@
                     >
                       <el-link :disabled="!canFinishTask(row)" type="success" underline="never">完成</el-link>
                     </el-dropdown-item>
+                    <el-dropdown-item @click="handleDeadlineExtensionApplication(row)">
+                      <el-link type="primary" underline="never">超时日期修改申请</el-link>
+                    </el-dropdown-item>
                     <el-dropdown-item
                       v-if="hasPermission({ permission: [ListingPermission.LISTING_TASK_DELETE] })"
                       @click="handleDelArtDesignTask(row)"
@@ -916,6 +919,9 @@
                       @click="handleLongTerm(row)"
                     >
                       <el-link type="primary" underline="never">长期提成</el-link>
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleDeadlineExtensionApplication(row)">
+                      <el-link type="primary" underline="never">超时日期修改申请</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -1215,6 +1221,11 @@
       </template>
     </vab-dialog>
     <distribute-skus v-model="distributeSkusVisible" title="分配SKU" @confirm="handleConfirmDistributeSkus" />
+    <!-- 超时日期修改申请 -->
+    <deadline-extension-application
+      v-model:visible="deadlineExtensionApplicationVisible"
+      :listing-task-id="deadlineExtensionApplicationListingTaskId"
+    />
   </div>
 </template>
 
@@ -1224,7 +1235,7 @@ import * as echarts from 'echarts'
 import { type FormInstance, type FormRules, type TabsPaneContext } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
-import { designTypeOption, taskTypeOption } from '../constantOption'
+import { columnConfigs, designTypeOption, getTaskTypeColor, splitUsernames, taskTypeOption } from '../constantOption'
 import {
   addArtDesignSelectionReasons,
   addArtDesignTask,
@@ -1271,21 +1282,13 @@ const userName = useUserStore().getUsername
 const currentRoleCode = useAclStore().getRole[0]
 const ableCheck = currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE || currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE
 const distributeSkusVisible = ref<boolean>(false)
-const getTaskTypeColor = (taskType: string) => {
-  switch (taskType) {
-    case '新品任务':
-      return 'success' // 绿色
-    case '老品任务':
-      return 'primary' // 蓝色
-    case '临时任务':
-      return 'warning' // 橙色
-    case '设计任务':
-      return 'danger' // 红色
-    default:
-      return 'info' // 灰色
-  }
-}
 
+const deadlineExtensionApplicationVisible = ref<boolean>(false)
+const deadlineExtensionApplicationListingTaskId = ref<number>(-1)
+const handleDeadlineExtensionApplication = (row: IGetArtDesignTaskList) => {
+  deadlineExtensionApplicationVisible.value = true
+  deadlineExtensionApplicationListingTaskId.value = row.id!
+}
 // 检查用户是否有权限完成任务
 const canFinishTask = (row: any) => {
   if (!userName) return false
@@ -1325,31 +1328,7 @@ const canFinishTask = (row: any) => {
 // }
 const router = useRouter()
 const route = useRoute()
-interface ColumnConfig {
-  label: string
-  prop: string
-  dataKey?: string
-  baseWidth?: number
-  isSpecial?: boolean
-}
-const columnConfigs: ColumnConfig[] = [
-  { label: '基础图片', prop: 'basePicture', dataKey: '_basePicture', baseWidth: 100 },
-  { label: '建模', prop: 'modeling', dataKey: '_modeling', baseWidth: 100 },
-  { label: '渲染', prop: 'rendering', dataKey: '_rendering', baseWidth: 100 },
-  { label: 'A+', prop: 'aAdd', dataKey: '_aAdd', baseWidth: 90 },
-  { label: '视频', prop: 'video', dataKey: '_video', baseWidth: 90 },
-  { label: '说明书/包装', prop: 'instructionManual', dataKey: '_instructionManual', baseWidth: 120 },
-  { label: '配色设计', prop: 'colorDesign', dataKey: '_colorDesign', baseWidth: 100 },
-  { label: '产品平面设计', prop: 'productPlaneDesign', dataKey: '_productPlaneDesign', baseWidth: 120 },
-  {
-    label: '发布人',
-    prop: 'publisherPersonName',
-    isSpecial: true,
-  },
-  { label: '产品经理', prop: 'productManager', dataKey: '_productManager', baseWidth: 100 },
-  { label: '产品设计', prop: 'productDesign', dataKey: '_productDesign', baseWidth: 100 },
-  { label: '运营', prop: 'operation', dataKey: '_operation', baseWidth: 100 },
-]
+
 const chartContainer1 = ref<HTMLElement | null>(null)
 const chartContainer2 = ref<HTMLElement | null>(null)
 let chartInstance1: echarts.ECharts | null = null
@@ -1419,9 +1398,7 @@ const addFormRules = reactive<FormRules<{ reason: string }>>({
   reason: [{ required: true, message: '请输入选品理由', trigger: 'blur' }],
 })
 let copyRow: any
-const splitUsernames = (usernames: string) => {
-  return usernames.split(',').map((username) => username.trim())
-}
+
 const getHighlightClass = (username: string) => {
   return username === currentUser ? 'highlight' : ''
 }

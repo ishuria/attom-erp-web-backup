@@ -32,6 +32,7 @@ declare module 'vue' {
     DataScreenBottom: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenBottom.vue')['default']
     DataScreenHeader: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenHeader.vue')['default']
     DataScreenLeft3: typeof import('./../../../src/views/index/vabAutoComponents/DataScreenLeft3.vue')['default']
+    DeadlineExtensionApplication: typeof import('./../../../src/views/newProductTask/vabAutoComponents/DeadlineExtensionApplication.vue')['default']
     DefaultTableEdit: typeof import('./../../../src/views/vab/table/vabAutoComponents/DefaultTableEdit.vue')['default']
     DestroyValueDetailTable: typeof import('./../../../src/views/index/vabAutoComponents/DestroyValueDetailTable.vue')['default']
     Develop: typeof import('./../../../src/views/index/vabAutoComponents/Develop.vue')['default']

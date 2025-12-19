@@ -329,3 +329,45 @@ export function allocateArtDesignTask(data: IAllocateArtDesignTaskReq): Promise<
     data,
   })
 }
+/**
+ * 超时日期修改申请
+ * @param data { listingTaskId: number; latestDate: string; reason: string }
+ * @returns
+ */
+export function applyArtDesignOverdue(data: { listingTaskId: number; latestDate: string; reason: string }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/overdue/apply`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 超时日期修改申请列表
+ * @param params { pageNo: number; pageSize: number }
+ * @returns { data: IGetArtDesignTaskList[] }
+ */
+export function getArtDesignOverdueList(data: {
+  pageNo: number
+  pageSize: number
+  keyWord: string
+}): Promise<{ data: { list: IGetArtDesignTaskList[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/artdesign/overdue/approval/list`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 超时日期修改申请审批
+ * @param data { id: number; status: number }
+ * @returns { data: boolean }
+ */
+export function approveArtDesignOverdue(data: { id: number; status: number }): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/artdesign/overdue/approval`,
+    method: 'post',
+    data,
+  })
+}
