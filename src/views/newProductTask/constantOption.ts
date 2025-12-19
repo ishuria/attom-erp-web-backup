@@ -60,6 +60,22 @@ export const columnConfigs: ColumnConfig[] = [
   { label: '运营', prop: 'operation', dataKey: '_operation', baseWidth: 100 },
 ]
 
+export const approvalFlowColumnConfigs: ColumnConfig[] = [
+  { label: '基础图片', prop: 'basePicture', dataKey: '_basePicture', baseWidth: 100 },
+  { label: '建模', prop: 'modeling', dataKey: '_modeling', baseWidth: 100 },
+  { label: '渲染', prop: 'rendering', dataKey: '_rendering', baseWidth: 100 },
+  { label: 'A+', prop: 'aAdd', dataKey: '_aAdd', baseWidth: 90 },
+  { label: '视频', prop: 'video', dataKey: '_video', baseWidth: 90 },
+  { label: '说明书/包装', prop: 'instructionManual', dataKey: '_instructionManual', baseWidth: 120 },
+  { label: '配色设计', prop: 'colorDesign', dataKey: '_colorDesign', baseWidth: 100 },
+  { label: '产品平面设计', prop: 'productPlaneDesign', dataKey: '_productPlaneDesign', baseWidth: 120 },
+  {
+    label: '发布人',
+    prop: 'publisherPersonName',
+    isSpecial: true,
+  },
+]
+
 export const splitUsernames = (usernames: string) => {
   return usernames.split(',').map((username) => username.trim())
 }

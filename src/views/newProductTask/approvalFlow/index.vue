@@ -57,15 +57,15 @@
           {{ row.actualFinishDate ? formatDate(new Date(row.actualFinishDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="剩余工作日" min-width="110" prop="naturalDay">
+      <el-table-column label="剩余工作日" min-width="110" prop="overdueDay">
         <template #default="{ row }">
-          <el-text v-if="row.naturalDay < 0" type="danger">{{ row.naturalDay }}</el-text>
-          <el-text v-if="row.naturalDay >= 0 && row.naturalDay <= 7" type="warning">{{ row.naturalDay }}</el-text>
-          <el-text v-if="row.naturalDay > 7" type="success">{{ row.naturalDay }}</el-text>
+          <el-text v-if="row.overdueDay < 0" type="danger">{{ row.overdueDay }}</el-text>
+          <el-text v-if="row.overdueDay >= 0 && row.overdueDay <= 7" type="warning">{{ row.overdueDay }}</el-text>
+          <el-text v-if="row.overdueDay > 7" type="success">{{ row.overdueDay }}</el-text>
         </template>
       </el-table-column>
 
-      <template v-for="col in columnConfigs" :key="col.prop">
+      <template v-for="col in approvalFlowColumnConfigs" :key="col.prop">
         <el-table-column
           v-if="!col.isSpecial"
           :label="col.label"
@@ -80,34 +80,29 @@
               :class="getHighlightClass(username)"
             >
               {{ username }}
+              <br />
             </span>
           </template>
         </el-table-column>
         <el-table-column v-else :label="col.label" :prop="col.prop" :width="flexColumnWidth(list, '发布人', 'publisherPersonName')" />
       </template>
-      <el-table-column label="运营校对" min-width="100" prop="proofreadingStatus">
+
+      <el-table-column label="申请人" min-width="100" prop="applicantUser" />
+      <el-table-column label="审批状态" min-width="120" prop="status">
         <template #default="{ row }">
-          <vab-icon
-            v-if="row.proofreadingStatus === 1"
-            icon="checkbox-circle-fill"
-            style="color: var(--el-color-success); font-size: 23px"
-          />
-          {{ '' }}
+          <el-tag v-if="row.status == 0" type="danger">待审批</el-tag>
+          <el-tag v-if="row.status == 1" type="success">审批通过</el-tag>
+          <el-tag v-if="row.status == 2" type="primary">审批不通过</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="备注" min-width="130" prop="remark">
+      <el-table-column label="申请理由" min-width="150" prop="applicationReason" />
+      <el-table-column label="申请修改要求完成时间" min-width="120" prop="latestDate" />
+      <el-table-column label="产品是否上线" min-width="120" prop="launch" />
+      <el-table-column label="申请提交时间" min-width="120" prop="createTime" />
+
+      <el-table-column fixed="right" label="操作" width="150">
         <template #default="{ row }">
-          <el-tooltip effect="dark" placement="top">
-            <template #content>
-              <div class="custom-tooltip">{{ row.remark }}</div>
-            </template>
-            <div class="multi-line-ellipsis">{{ row.remark }}</div>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="110">
-        <template #default="{ row }">
-          <el-space :size="10">
+          <el-space v-if="row.status === 0" :size="10">
             <el-link type="primary" underline="never" @click="handleApprove(row.id)">通过</el-link>
             <el-link type="danger" underline="never" @click="handleReject(row.id)">不通过</el-link>
           </el-space>
@@ -133,7 +128,7 @@ import { Search } from '@element-plus/icons-vue'
 import { CSSProperties } from 'vue'
 import { approveArtDesignOverdue, getArtDesignOverdueList } from '~/src/api/devlocal/imageTask'
 import { IGetArtDesignTaskList } from '~/src/type/listingTask/imageTaskType'
-import { columnConfigs, getTaskTypeColor, splitUsernames } from '../constantOption'
+import { approvalFlowColumnConfigs, getTaskTypeColor, splitUsernames } from '../constantOption'
 import { useUserStore } from '/@/store/modules/user'
 import { formatDate } from '/@/utils/dateUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -171,7 +166,7 @@ const handleApprove = async (id: number) => {
   }
 }
 const handleReject = async (id: number) => {
-  const { data } = await approveArtDesignOverdue({ id, status: 0 })
+  const { data } = await approveArtDesignOverdue({ id, status: 2 })
   if (data) {
     $baseMessage('审批不通过成功', 'success')
     fetchData()
