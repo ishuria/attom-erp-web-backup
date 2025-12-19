@@ -1239,7 +1239,7 @@ const fetchData = async () => {
         invoiceFilePath: record.invoiceFilePath,
         invoiceDetailId: record.invoiceDetailId,
         matchId: record.matchId,
-        id: item.id
+        id: item.id,
       }))
     }
     // console.log(item.payRecord)
@@ -1256,7 +1256,16 @@ const fetchColumn = async () => {
     }
     // 设置排序
     if (
-      ['shipmentDate', 'contractNumber', 'exportDate', 'customsDeclarationName', 'suppliser', 'po', 'invoiceNumber'].includes(item.prop)
+      [
+        'shipmentDate',
+        'contractNumber',
+        'exportDate',
+        'customsDeclarationName',
+        'suppliser',
+        'po',
+        'invoiceNumber',
+        'formattedMatchDate',
+      ].includes(item.prop)
     ) {
       item.sortable = true
     }
