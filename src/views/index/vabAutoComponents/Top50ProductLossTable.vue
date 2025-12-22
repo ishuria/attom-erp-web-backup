@@ -17,9 +17,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="SKU（父体中随机一个SKU）"
+        label="SKU（父体中销量最高SKU）"
         prop="sku"
-        :width="Math.max(flexColumnWidth(list, 'SKU（父体中随机一个SKU）', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
+        :width="Math.max(flexColumnWidth(list, 'SKU（父体中销量最高SKU）', 'sku'), flexColumnWidth(list, 'SKU', 'productDesc'))"
       >
         <template #default="{ row }">
           {{ row.sku }}
@@ -99,7 +99,7 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   return ''
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.column.label === 'SKU（父体中随机一个SKU）') {
+  if (data.column.label === 'SKU（父体中销量最高SKU）') {
     return {
       textAlign: 'left',
     }
