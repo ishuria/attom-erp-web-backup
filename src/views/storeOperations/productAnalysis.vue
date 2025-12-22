@@ -47,7 +47,12 @@
             </el-tab-pane>
             <el-tab-pane label="竞品" :name="5" />
             <el-tab-pane label="搜索词表现" :name="6">
-              <vab-search-term-performance v-if="activeName === 6" :asin="asin" :site-id="selectedSite" />
+              <vab-search-term-performance
+                v-if="activeName === 6"
+                :asin="asin"
+                :select-date-range="selectDateRange"
+                :site-id="selectedSite"
+              />
             </el-tab-pane>
           </el-tabs>
           <!-- tab右边的选项 -->

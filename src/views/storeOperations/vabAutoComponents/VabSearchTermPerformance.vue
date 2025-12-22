@@ -12,16 +12,24 @@
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table v-loading="loading" border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+    <el-table
+      v-loading="loading"
+      border
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @sort-change="handleSortChange"
+    >
       <el-table-column label="搜索关键词" min-width="110" prop="searchQuery" :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')" />
       <el-table-column label="搜索关键词评分" min-width="110" prop="searchQueryScore" />
       <el-table-column label="搜索关键词热度" min-width="110" prop="searchQueryVolume" />
-      <el-table-column label="关键词总曝光量" min-width="100" prop="totalQueryImpressionCount" />
-      <el-table-column label="商品曝光量" min-width="110" prop="asinImpressionCount" />
+      <el-table-column label="关键词总曝光量" min-width="100" prop="totalQueryImpressionCount" sortable="custom" />
+      <el-table-column label="商品曝光量" min-width="130" prop="asinImpressionCount" sortable="custom" />
       <el-table-column label="商品曝光占比（%）" min-width="120" prop="asinImpressionShare" />
-      <el-table-column label="关键词总点击量" min-width="100" prop="totalClickCount" />
+      <el-table-column label="关键词总点击量" min-width="100" prop="totalClickCount" sortable="custom" />
       <el-table-column label="总点击率（%）" min-width="110" prop="totalClickRate" />
-      <el-table-column label="商品点击量" min-width="110" prop="asinClickCount" />
+      <el-table-column label="商品点击量" min-width="130" prop="asinClickCount" sortable="custom" />
       <el-table-column label="商品点击占比（%）" min-width="120" prop="asinClickShare" />
       <el-table-column label="关键词中位点击价（金额）" min-width="140" prop="totalMedianClickPrice" />
       <el-table-column label="商品中位点击价（金额）" min-width="140" prop="asinMedianClickPrice" />
@@ -74,6 +82,7 @@ defineOptions({
 interface IProps {
   asin: string
   siteId?: number
+  selectDateRange?: [string, string]
 }
 
 const props = withDefaults(defineProps<IProps>(), {})
@@ -84,12 +93,36 @@ const queryForm = reactive({
   keyWord: '',
   pageNo: 1,
   pageSize: 50,
+  orderByField: '',
+  orderDirection: '',
 })
 const total = ref<number>(0)
-
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchData()
+}
 const fetchData = async () => {
   // 只有当 asin 和 siteId 存在时才请求
   if (!props.asin || props.siteId === undefined) {
+    list.value = []
+    total.value = 0
+    return
+  }
+  // 检查日期范围是否存在
+  if (!props.selectDateRange || !props.selectDateRange[0] || !props.selectDateRange[1]) {
     list.value = []
     total.value = 0
     return
@@ -102,6 +135,10 @@ const fetchData = async () => {
       keyWord: queryForm.keyWord,
       pageNo: queryForm.pageNo,
       pageSize: queryForm.pageSize,
+      orderByField: queryForm.orderByField,
+      orderDirection: queryForm.orderDirection,
+      startDate: props.selectDateRange[0],
+      endDate: props.selectDateRange[1],
     })
     list.value = data.list || []
     total.value = data.total || 0
@@ -138,12 +175,12 @@ const queryData = () => {
 }
 
 watch(
-  () => [props.asin, props.siteId],
+  () => [props.asin, props.siteId, props.selectDateRange],
   () => {
     queryForm.pageNo = 1
     fetchData()
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 )
 </script>
 

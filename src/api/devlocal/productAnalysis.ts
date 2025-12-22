@@ -242,6 +242,10 @@ export function getSearchTermPerformance(data: {
   keyWord: string
   pageNo: number
   pageSize: number
+  orderByField: string
+  orderDirection: string
+  startDate: string
+  endDate: string
 }): Promise<IGetSearchTermPerformanceRes> {
   return request({
     url: `${BASE_API}/product/analysis/search_term/performance`,
