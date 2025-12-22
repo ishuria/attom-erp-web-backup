@@ -158,14 +158,14 @@ const fromMonthText = computed(() => {
   const now = getCurrentDate()
   const currentDay = now.getDate()
 
-  if (currentDay <= 3) {
-    // 3号之前，显示上个月
+  if (currentDay <= 2) {
+    // 2号之前，显示上个月
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
     const year = getYear(lastMonth)
     const month = getMonth(lastMonth)
     return `${year}-${month.toString().padStart(2, '0')}`
   } else {
-    // 3号之后，显示本月
+    // 2号之后，显示本月
     const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     const year = getYear(currentMonth)
     const month = getMonth(currentMonth)
@@ -178,14 +178,14 @@ const toMonthText = computed(() => {
   const now = getCurrentDate()
   const currentDay = now.getDate()
 
-  if (currentDay <= 3) {
-    // 3号之前，显示本月
+  if (currentDay <= 2) {
+    // 2号之前，显示本月
     const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1)
     const year = getYear(currentMonth)
     const month = getMonth(currentMonth)
     return `${year}-${month.toString().padStart(2, '0')}`
   } else {
-    // 3号之后，显示下个月
+    // 2号之后，显示下个月
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
     const year = getYear(nextMonth)
     const month = getMonth(nextMonth)
