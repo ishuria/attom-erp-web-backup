@@ -957,26 +957,32 @@ const handlerSiteChange = async (row: IreviewStepNo3VariantList) => {
   let htsId = null
   if (row.hts.value) htsId = row.hts.value
   if (row.hts.id) htsId = row.hts.id
-  await reviewStepNo3VariantUpdate({
-    currencyType: row.currencyType,
-    finalSellingPrice: row.finalSellingPrice!,
-    firstMileChannel: row.firstMileChannel,
-    foreignExchange: row.foreignExchange,
-    orderEntryId: row.orderEntryId,
-    packagingHeight: row.packagingHeight!,
-    packagingLength: row.packagingLength!,
-    packagingPrice: row.packagingPrice!,
-    packagingWidth: row.packagingWidth!,
-    site: row.site,
-    tariff: row.tariff! / 100,
-    volumeCoefficient: row.volumeCoefficient!,
-    weight: row.weight!,
-    weightCoefficient: row.weightCoefficient!,
-    actualTotalCost: row.actualTotalCost!,
-    htsId,
-  })
-  await fetchVariantsData()
-  variantLoading.value = false
+  try {
+    const { data } = await reviewStepNo3VariantUpdate({
+      currencyType: row.currencyType,
+      finalSellingPrice: row.finalSellingPrice!,
+      firstMileChannel: row.firstMileChannel,
+      foreignExchange: row.foreignExchange,
+      orderEntryId: row.orderEntryId,
+      packagingHeight: row.packagingHeight!,
+      packagingLength: row.packagingLength!,
+      packagingPrice: row.packagingPrice!,
+      packagingWidth: row.packagingWidth!,
+      site: row.site,
+      tariff: row.tariff! / 100,
+      volumeCoefficient: row.volumeCoefficient!,
+      weight: row.weight!,
+      weightCoefficient: row.weightCoefficient!,
+      actualTotalCost: row.actualTotalCost!,
+      htsId,
+    })
+    if (data) {
+      await fetchVariantsData()
+    }
+  } catch (error) {
+  } finally {
+    variantLoading.value = false
+  }
 }
 const handleVariantChange = async (row: any) => {
   let _variant: any = {}

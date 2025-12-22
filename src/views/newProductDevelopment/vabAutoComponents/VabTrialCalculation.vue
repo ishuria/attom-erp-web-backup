@@ -370,13 +370,20 @@ const sampleList = ref<IProgressSample[]>([])
 // 修改站点和渠道
 const handleUpdateChannel = async (row: any) => {
   table2Loading.value = true
-  await updateTrialCalculation({
-    ...row,
-    tariff: `${Number(row.tariff!) / 100}`,
-    grossMarginRate: `${Number(row.grossMarginRate) / 100}`,
-    roi: `${Number(row.roi) / 100}`,
-  })
-  fetchData()
+  try {
+    const { data } = await updateTrialCalculation({
+      ...row,
+      tariff: `${Number(row.tariff!) / 100}`,
+      grossMarginRate: `${Number(row.grossMarginRate) / 100}`,
+      roi: `${Number(row.roi) / 100}`,
+    })
+    if (data) {
+      fetchData()
+    }
+  } catch (error) {
+  } finally {
+    table2Loading.value = false
+  }
 }
 // 鼠标enter事件
 const effectiveCountInputHandle = (event: Event) => {

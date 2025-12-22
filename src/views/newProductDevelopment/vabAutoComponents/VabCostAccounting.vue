@@ -698,13 +698,20 @@ const costAccountingChangeInput = async (row: any, column: any, cell: HTMLTableC
 const handlerSiteChange = async (row: IProgressEstimatedCostAccounting) => {
   try {
     table3Loading.value = true
-    await costAccountingUpdate({
-      ...row,
-      tariff: `${parseFloat(row.tariff!) / 100}`,
-      grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`,
-      roi: `${parseFloat(row.roi!) / 100}`,
-    })
-    fetchDataCostAccounting()
+    try {
+      const { data } = await costAccountingUpdate({
+        ...row,
+        tariff: `${parseFloat(row.tariff!) / 100}`,
+        grossMarginRate: `${parseFloat(row.grossMarginRate!) / 100}`,
+        roi: `${parseFloat(row.roi!) / 100}`,
+      })
+      if (data) {
+        fetchDataCostAccounting()
+      }
+    } catch (error) {
+    } finally {
+      table3Loading.value = false
+    }
   } catch {
     row.site = _site.value
   }
