@@ -805,20 +805,67 @@ const calcYAxisRange = (yAxisIndex: number) => {
   // 收集该 y 轴对应的所有 series 的数据值
   const allValues: number[] = []
 
-  if (option.value.series && Array.isArray(option.value.series)) {
-    option.value.series.forEach((series: any) => {
-      // 只收集属于当前 y 轴的 series 数据
-      if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
-        series.data.forEach((value: any) => {
-          if (value !== null && value !== undefined && value !== '') {
-            const numValue = Number(value)
-            if (!isNaN(numValue)) {
-              allValues.push(numValue)
+  // 特殊处理第一个 Y 轴（堆叠柱状图）
+  if (yAxisIndex === 0) {
+    // 找到堆叠柱状图的 series（stack: 'sales'）
+    const stackedSeries = option.value.series?.filter((s: any) => s.yAxisIndex === 0 && s.stack === 'sales') || []
+    if (stackedSeries.length > 0) {
+      // 获取第一个 series 的数据长度作为基准
+      const firstSeries = stackedSeries[0]
+      if (firstSeries.data && Array.isArray(firstSeries.data)) {
+        // 计算每个数据点的堆叠总和和负值部分
+        for (let i = 0; i < firstSeries.data.length; i++) {
+          let sum = 0
+          let cumulativeSum = 0 // 累积堆叠值（用于计算负值部分）
+          stackedSeries.forEach((series: any) => {
+            if (series.data && series.data[i] !== null && series.data[i] !== undefined && series.data[i] !== '') {
+              const numValue = Number(series.data[i])
+              if (!isNaN(numValue)) {
+                sum += numValue
+                cumulativeSum += numValue
+                // 将累积值也加入 allValues，这样可以捕获负值部分
+                allValues.push(cumulativeSum)
+              }
             }
+          })
+          // 堆叠总和用于确定 Y 轴最大值
+          allValues.push(sum)
+        }
+      }
+    } else {
+      // 如果没有堆叠柱状图，使用原来的逻辑
+      if (option.value.series && Array.isArray(option.value.series)) {
+        option.value.series.forEach((series: any) => {
+          if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
+            series.data.forEach((value: any) => {
+              if (value !== null && value !== undefined && value !== '') {
+                const numValue = Number(value)
+                if (!isNaN(numValue)) {
+                  allValues.push(numValue)
+                }
+              }
+            })
           }
         })
       }
-    })
+    }
+  } else {
+    // 其他 Y 轴使用原来的逻辑
+    if (option.value.series && Array.isArray(option.value.series)) {
+      option.value.series.forEach((series: any) => {
+        // 只收集属于当前 y 轴的 series 数据
+        if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
+          series.data.forEach((value: any) => {
+            if (value !== null && value !== undefined && value !== '') {
+              const numValue = Number(value)
+              if (!isNaN(numValue)) {
+                allValues.push(numValue)
+              }
+            }
+          })
+        }
+      })
+    }
   }
 
   if (allValues.length === 0) {

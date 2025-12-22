@@ -840,7 +840,8 @@ import {
   IGetAssessmentList,
   IGetAssessmentListReq,
   IGetProductManagerAssessmentList,
-  IGetUserAttendanceList, IGetUserAttendanceManagementList,
+  IGetUserAttendanceList,
+  IGetUserAttendanceManagementList,
 } from '/@/type/employeeManagement/performanceStatistics'
 import { IGetArtDesignTaskList } from '/@/type/listingTask/imageTaskType'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
@@ -1459,32 +1460,25 @@ const fetchArtDesignRoleList = async () => {
 }
 
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
-    let rowspan = 1 // 默认不跨行
-    const label = column.label
-    if (
-      columnIndex === 0 ||
-      label === '姓名' ||
-      label === '职级' ||
-      label === '角色' ||
-      label === '管理奖金'
-    ) {
-      const id = row.managementId
+  let rowspan = 1 // 默认不跨行
+  const label = column.label
+  if (columnIndex === 0 || label === '姓名' || label === '职级' || label === '角色' || label === '管理奖金') {
+    const id = row.managementId
 
-      for (let i = rowIndex + 1; i < list.value.length; i++) {
-        if (list.value[i].managementId === id) {
-          rowspan++
-        } else {
-          break
-        }
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      if (list.value[i].managementId === id) {
+        rowspan++
+      } else {
+        break
       }
-
-      // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
-      return rowIndex === 0 || list.value[rowIndex - 1].managementId !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
     }
 
-    // 对于其他列，默认返回不合并
-    return { rowspan: 1, colspan: 1 }
+    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
+    return rowIndex === 0 || list.value[rowIndex - 1].managementId !== id ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
+  }
 
+  // 对于其他列，默认返回不合并
+  return { rowspan: 1, colspan: 1 }
 }
 
 // tab切换

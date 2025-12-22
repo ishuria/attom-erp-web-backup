@@ -87,7 +87,7 @@
           :default-sort="{ prop: 'sellableDay', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
-          stripe
+          :span-method="objectSpanMethod"
           @cell-click="changeInput"
           @row-click="handleRowClick"
           @selection-change="setSelectRows"
@@ -325,6 +325,7 @@
           :default-sort="{ prop: 'signDate', order: 'descending' }"
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
+          :span-method="objectSpanMethod"
           stripe
           @cell-click="changeInput"
           @row-click="handleRowClick"
@@ -1353,6 +1354,33 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
+
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
+  let rowspan = 1 // 默认不跨行
+  const label = column.label
+  if (label === 'SKU图片' || label === 'SKU套数' || label === '站点') {
+    const po = row.po
+    const purchaseSkuNumber = (row as any).purchaseSkuNumber
+
+    // 只有当 po 和 purchaseSkuNumber 都一致时才合并
+    for (let i = rowIndex + 1; i < list.value.length; i++) {
+      const nextRow = list.value[i] as any
+      if (nextRow.po === po && nextRow.purchaseSkuNumber === purchaseSkuNumber) {
+        rowspan++
+      } else {
+        break
+      }
+    }
+
+    // 如果是第一次出现的行，则返回 rowspan，否则隐藏行
+    const prevRow = rowIndex > 0 ? (list.value[rowIndex - 1] as any) : null
+    const isFirstRow = rowIndex === 0 || !prevRow || prevRow.po !== po || prevRow.purchaseSkuNumber !== purchaseSkuNumber
+    return isFirstRow ? { rowspan, colspan: 1 } : { rowspan: 0, colspan: 0 }
+  }
+
+  // 对于其他列，默认返回不合并
+  return { rowspan: 1, colspan: 1 }
+}
 onBeforeMount(async () => {
   fetchUserList()
   fetchSignDateList()
@@ -1511,6 +1539,28 @@ onBeforeMount(async () => {
       margin-top: 2px;
       font-size: 18px;
     }
+  }
+}
+
+// 斑马纹样式
+:deep(.custom-table-hover) {
+  .el-table__body tr.el-table__row--striped > td.el-table__cell {
+    background-color: #fafafa !important;
+  }
+
+  // 条纹行hover时保持条纹颜色
+  .el-table__body tr.el-table__row--striped.hover-row > td.el-table__cell {
+    background-color: #fafafa !important;
+  }
+
+  // 选中行保持蓝色背景 - 优先级最高
+  .el-table__body tr.select-row > td.el-table__cell {
+    background-color: #7bddde !important;
+  }
+
+  // 选中行悬浮时也保持蓝色背景
+  .el-table__body tr.select-row.hover-row > td.el-table__cell {
+    background-color: #7bddde !important;
   }
 }
 </style>
