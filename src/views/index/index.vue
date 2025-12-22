@@ -1068,9 +1068,11 @@ const fetchHistoryMonthList = async () => {
 
   selectAchievedMonth.value = data[0]
   selectFinishMonth.value = data[0]
-  selectNewProductMonth.value = newProductMonthList.value[0] || data[0]
-  // 职级提成默认展示当前月，若无则取最新
+  // 新品提成相关卡片默认展示当前月，若无则取最新
   const currentMonth = getCurrentMonth()
+  selectNewProductMonth.value = data.includes(currentMonth) ? currentMonth : newProductMonthList.value[0] || data[0]
+  selectNewProductOneYearMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
+  // 职级提成默认展示当前月，若无则取最新
   selectJobLevelMonth.value = newProductMonthList.value.includes(currentMonth) ? currentMonth : newProductMonthList.value[0] || data[0]
 }
 
@@ -1089,20 +1091,25 @@ const fetchAdjustDetailMonthList = async () => {
 const fetchBillingMonthList = async () => {
   const { data } = await getFrontPageBillingMonth()
   historyMonthList.value = data
+  const currentMonth = getCurrentMonth()
   // 对于Boss角色
   if (useAclStore().getRole.includes(ROLE_BOSS_CODE)) {
     historyBossMonthList.value = data
+    // Boss角色：四个卡片默认展示当前月，若无则取最新
+    selectAchievedMonth.value = historyBossMonthList.value.includes(currentMonth) ? currentMonth : historyBossMonthList.value[0]
+    selectFinishMonth.value = historyBossMonthList.value.includes(currentMonth) ? currentMonth : historyBossMonthList.value[0]
+    selectNewProductMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
+    selectNewProductOneYearMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
   } else {
     // 对于其他角色,去掉当月和之后的所有月份
-    const currentMonth = getCurrentMonth()
     historyBossMonthList.value = data.filter((item) => item < currentMonth)
+    selectAchievedMonth.value = historyBossMonthList.value[0]
+    selectFinishMonth.value = historyBossMonthList.value[0]
+    // 新品提成相关卡片默认展示当前月，若无则取最新
+    selectNewProductMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
+    selectNewProductOneYearMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
   }
-  selectAchievedMonth.value = historyBossMonthList.value[0]
-  selectFinishMonth.value = historyBossMonthList.value[0]
-  selectNewProductMonth.value = data[0]
-  selectNewProductOneYearMonth.value = data[0]
   // 职级提成默认展示当前月，若无则取最新
-  const currentMonth = getCurrentMonth()
   selectJobLevelMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
   // 个人奖金月份默认展示当前月份
   selectPersonalBonusMonth.value = data.includes(currentMonth) ? currentMonth : data[0]
