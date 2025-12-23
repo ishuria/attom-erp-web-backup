@@ -279,7 +279,7 @@ const handleSummaryMethod = ({ columns, data }: { columns: any[]; data: any[] })
       }, 0)
 
       if (totalProfit !== 0) {
-        const profitMargin = (totalSalePrice / totalProfit) * 100
+        const profitMargin = (totalProfit / totalSalePrice) * 100
         sums[index] = profitMargin.toFixed(2) + '%'
       } else {
         sums[index] = '0.00%'

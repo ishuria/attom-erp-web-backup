@@ -238,6 +238,19 @@
             <span>{{ row.reduceSalesTotalStock }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="可售库存≥" min-width="125" prop="reduceAvailableInventory">
+          <template #default="{ row, $index }">
+            <div class="none">
+              <el-input
+                v-model="row.reduceAvailableInventory"
+                type="number"
+                @blur="handleCellBlur($event, row, $index)"
+                @keyup.enter="handleCellBlur($event, row, $index)"
+              />
+            </div>
+            <span>{{ row.reduceAvailableInventory }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
       <el-table-column label="降低价格条件组2">
         <el-table-column label="Rating≤" min-width="110" prop="reduceRatingLow">

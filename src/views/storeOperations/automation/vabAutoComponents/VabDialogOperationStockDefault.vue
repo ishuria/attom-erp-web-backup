@@ -73,6 +73,13 @@
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
         </el-table>
+        <el-alert
+          :closable="false"
+          show-icon
+          style="margin-top: 20px"
+          title="降价时如果降价后的价格 - '低价配送费节点' < '调价幅度'，则降价价格会调整为'享受低价配送的最高价格'。但是最终价格不会超出预设的最小和最大值。"
+          type="info"
+        />
       </el-col>
       <el-col :span="10">
         <el-form label-position="right" label-width="auto" :model="form">
@@ -143,6 +150,9 @@
             <el-form-item label="可售总库存数 ≥ ">
               <el-input v-model="form.reduceSalesTotalStock" :disabled="loading" type="number" />
             </el-form-item>
+            <el-form-item label="可售库存 ≥ ">
+              <el-input v-model="form.reduceAvailableInventory" :disabled="loading" type="number" />
+            </el-form-item>
           </el-card>
 
           <el-card>
@@ -162,6 +172,7 @@
 </template>
 
 <script setup lang="ts">
+import { isEqual } from 'lodash-es'
 import {
   queryOperationStock,
   querySiteOperations,
@@ -171,7 +182,6 @@ import {
 import { IOperationStockRulesSiteParams } from '/@/type/storeOperation/autoMation.ts'
 import { IOperationStockDefaultParams } from '/@/type/storeOperation/operationStock.ts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils.ts'
-import { isEqual } from 'lodash-es'
 
 defineComponent({
   name: 'VabDialogOperationStockDefault',
@@ -278,8 +288,6 @@ const changeCreateInput = async (row: IOperationStockRulesSiteParams, column: an
     focusAndSelectInput(cell)
   }
 }
-
-
 
 /**
  * 调价库存规则更新
