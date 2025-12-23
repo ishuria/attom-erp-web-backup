@@ -1,5 +1,3 @@
-import { IAutomationLogItem } from '/@/type/storeOperation/autoMation.ts'
-
 /**
  * 店铺自动化调价库存
  */
@@ -149,6 +147,7 @@ export interface IOperationStockDefaultParams {
   reduceRatingLow?: number
   minAddPrice?: number
   maxDecodePrice?: number
+  reduceAvailableInventory?: number
 }
 
 export interface IOperationStockLogRules {

@@ -70,7 +70,14 @@
               <vab-icon icon="settings-line" />
             </el-button>
           </template>
-          <vab-draggable v-model="columns" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+          <vab-draggable
+            v-model="columns"
+            :animation="600"
+            filter=".non-draggable"
+            handle=".handle"
+            :on-end="handleEnd"
+            :on-move="handleMove"
+          >
             <div
               v-for="item in columns"
               :key="item.label"
@@ -79,7 +86,7 @@
             >
               <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
               <span style="flex: 1">{{ item.label }}</span>
-              <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
+              <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
                 <vab-icon icon="eye-line" />
               </span>
               <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
@@ -342,14 +349,17 @@ import {
   filterWalmartList,
   getCurrencyWalmartOperation,
   getDevelopUserList,
+  getOperationColumnList,
   getOperationWalmartList,
   getUserAmazonOperation,
   getWalmartCurrencyList,
   getWalmartSiteList,
+  hideOrShowOperationColumn,
   updateCurrencyWalmartOperation,
   updateOperationSKUDisContinuedStatus,
   updateOperationWalmartOperateTypeList,
   updateRemarkWalmartOperation,
+  updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import handleClipboard from '/@/utils/clipboard'
 import { getAmazonStars } from '/@/utils/rate'
@@ -522,229 +532,33 @@ const label3Map = new Map([
   ['可售含在途', 'esAvailableSaleDayTotal'],
   ['断货', 'outOfStock'],
 ])
-const columns = ref<any>([
-  {
-    label: '图片',
-    prop: 'componentImage',
-    disableCheck: true,
-    checked: true,
-    width: 75,
-    isFixed: 'left',
-  },
-  {
-    label: 'SKU',
-    prop: 'sku',
-    disableCheck: true,
-    checked: true,
-    minWidth: 100,
-    isFixed: 'left',
-  },
-  // {
-  //   label: '站点',
-  //   prop: 'siteName',
-  //   checked: true,
-  //   minWidth: 100,
-  // },
-  {
-    label: '销量趋势(点击看明细)',
-    prop: 'trend',
-    checked: true,
-    minWidth: 180,
-  },
-  {
-    label: '今销量',
-    prop: 'currentSalesNumber',
-    checked: true,
-    minWidth: 100,
-    sortable: true,
-  },
-  {
-    label: '今单量',
-    prop: 'currentSalesOrder',
-    checked: true,
-    minWidth: 100,
-    sortable: true,
-  },
-  {
-    label: '季节趋势',
-    prop: 'seasonalCoefficient',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营分类',
-    prop: 'classify',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '停产',
-    prop: 'stopProductStatus',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '运营备注',
-    prop: 'remark',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '当前售价',
-    prop: 'sellingPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '试算毛利',
-    prop: 'grossProfit',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '月销量',
-    prop: 'monthSalesVolume',
-    checked: true,
-    minWidth: 100,
-    sortable: true,
-  },
-  {
-    label: '月销售额',
-    prop: 'monthSalesPrice',
-    checked: true,
-    minWidth: 150,
-    sortable: true,
-  },
-  {
-    label: '月退货%',
-    prop: 'monthReturnGoods',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '月退款%',
-    prop: 'monthRefund',
-    checked: true,
-    minWidth: 120,
-  },
-  {
-    label: '上新',
-    prop: 'newArrivalDay',
-    checked: true,
-    minWidth: 90,
-    sortable: true,
-  },
-  {
-    label: '库龄',
-    prop: 'storageAge',
-    checked: true,
-    minWidth: 160,
-  },
-  {
-    label: '剩余库存',
-    prop: 'remainingStock',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '接收中',
-    prop: 'acceptingCount',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '最近入库',
-    prop: 'recentlyInboundStorage',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '总入库',
-    prop: 'inboundStorageTotal',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '库存可售',
-    prop: 'esAvailableSaleDay',
-    checked: true,
-    minWidth: 120,
-    sortable: true,
-  },
-  {
-    label: '可售含在途',
-    prop: 'esAvailableSaleDayTotal',
-    checked: true,
-    minWidth: 130,
-    sortable: true,
-  },
-  {
-    label: '断货',
-    prop: 'outOfStock',
-    checked: true,
-    minWidth: 90,
-  },
-  {
-    label: '订货#',
-    prop: 'orderCount',
-    checked: true,
-    minWidth: 70,
-  },
-  {
-    label: '计划#',
-    prop: 'planPoPurchaseSkuNumber',
-    checked: true,
-    minWidth: 70,
-  },
-  {
-    label: '签收',
-    prop: 'quantityReceived',
-    checked: true,
-    minWidth: 60,
-  },
-  {
-    label: '盈亏售价',
-    prop: 'profitLossSellingPrice',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '30毛利售价',
-    prop: 'grossSellingPrice',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '操作建议',
-    prop: 'operateSuggestion',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '状态',
-    prop: 'status',
-    checked: true,
-    minWidth: 130,
-  },
-  {
-    label: '开发人员',
-    prop: 'developName',
-    checked: true,
-    minWidth: 100,
-  },
-  {
-    label: '运营负责人',
-    prop: 'operationUserName',
-    checked: true,
-    minWidth: 110,
-  },
-  {
-    label: '产品描述',
-    prop: 'productDesc',
-    checked: true,
-    minWidth: 100,
-  },
-])
+const columns = ref<any>([])
+
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 16 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 设置 最小宽度
+    if (item.prop !== 'componentImage') {
+      delete item.width
+    }
+    // 设置排序
+    if (
+      [
+        'currentSalesNumber',
+        'currentSalesOrder',
+        'monthSalesVolume',
+        'monthSalesPrice',
+        'newArrivalDay',
+        'esAvailableSaleDay',
+        'esAvailableSaleDayTotal',
+      ].includes(item.prop)
+    ) {
+      item.sortable = true
+    }
+  })
+}
 
 const handleCheckAll = (val: CheckboxValueType) => {
   indeterminate.value = false
@@ -902,9 +716,6 @@ const showOpeClassify = () => {
 const closeOpeClassify = () => {
   opeClassifyVisible.value = false
 }
-const handleChecked = (item: any) => {
-  item.checked = !item.checked
-}
 const handleMove = (event: any) => {
   const { related } = event
   const targetIndex = Array.from(related.parentNode.children).indexOf(related)
@@ -914,6 +725,26 @@ const handleMove = (event: any) => {
   }
 
   return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+    }
+  })
+  await updateSortOperationColumn(req)
+}
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
+  item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
 }
 // 处理自适应宽度
 const handleWidth = (item: any) => {
@@ -1091,6 +922,8 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
     }
 }
 onBeforeMount(async () => {
+  // 获取列配置
+  await fetchColumn()
   // 获取站点列表
   await fetchSiteList()
   // 获取币种列表
@@ -1188,6 +1021,9 @@ onBeforeMount(async () => {
 }
 .disabled-handle {
   cursor: not-allowed;
+}
+.icon-dis {
+  padding: 6px;
 }
 .custom-bar {
   width: 100%;
