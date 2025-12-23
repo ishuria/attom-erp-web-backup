@@ -9,7 +9,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="filterVisible = true">筛选</el-button>
+            <el-button :icon="Filter" :type="hasFilter ? 'warning' : 'default'" @click="filterVisible = true">筛选</el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -52,12 +52,12 @@
       <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')" />
       <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
         <template #default="{ row }">
-          {{ formatDate(new Date(row.shipmentDate)) }}
+          {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
         </template>
       </el-table-column>
       <el-table-column label="原始预计入库" min-width="130" prop="initialArrivalDate">
         <template #default="{ row }">
-          {{ formatDate(new Date(row.initialArrivalDate)) }}
+          {{ row.initialArrivalDate ? formatDate(new Date(row.initialArrivalDate)) : '' }}
         </template>
       </el-table-column>
       <el-table-column label="最新预计入库" min-width="130" prop="latestArrivalDate">
@@ -205,59 +205,57 @@
         <el-button type="primary" @click="confirmUpdateStorageTime">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 备注 -->
+    <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
     <!-- 筛选 -->
     <vab-dialog v-model="filterVisible" title="筛选" width="26%" @close="closeFilter">
-      <el-form
-        ref="filterFormRef"
-        label-position="right"
-        label-width="auto"
-        :model="filterForm"
-        style="margin-right: 10px; margin-left: 10px"
-      >
+      <el-form label-position="top" label-width="120px" :model="filterForm" style="margin-right: 10px; margin-left: 10px">
         <el-form-item label="缺数">
-          <div class="flex">
-            <el-input-number v-model="filterForm.number1" :min="0" placeholder="最小值" style="width: 45%" />
-            <span style="margin: 0 20px; color: #303133">至</span>
-            <el-input-number v-model="filterForm.number2" :min="0" placeholder="最大值" style="width: 45%" />
+          <div style="display: flex; align-items: center; gap: 10px; width: 100%">
+            <el-input-number v-model="filterForm.number1" placeholder="最小值" style="flex: 1" />
+            <span style="color: #303133; white-space: nowrap">至</span>
+            <el-input-number v-model="filterForm.number2" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
-        <el-form-item label="发货日期" prop="date1">
+        <el-form-item label="发货日期">
           <el-date-picker
             v-model="filterForm.date1"
+            clearable
             :editable="false"
             end-placeholder="结束日期"
             format="YYYY-MM-DD"
             range-separator="至"
             start-placeholder="开始日期"
+            style="width: 100%"
             type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
-        <el-form-item label="上架日期" prop="date2">
+        <el-form-item label="上架日期">
           <el-date-picker
             v-model="filterForm.date2"
+            clearable
             :editable="false"
             end-placeholder="结束日期"
             format="YYYY-MM-DD"
             range-separator="至"
             start-placeholder="开始日期"
+            style="width: 100%"
             type="daterange"
             value-format="YYYY-MM-DD"
           />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="closeFilter">取消</el-button>
-        <el-button type="primary" @click="confirmFilter">确认</el-button>
+        <el-button @click="handleResetFilter">重置</el-button>
+        <el-button type="primary" @click="handleFilter">确定</el-button>
       </template>
     </vab-dialog>
-    <!-- 备注 -->
-    <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Search } from '@element-plus/icons-vue'
+import { Filter, Search } from '@element-plus/icons-vue'
 import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { getPackageSiteList } from '~/src/api/devlocal/packagingShipping'
@@ -336,8 +334,19 @@ const storageTimeRule = reactive<any>({
   date: [{ required: true, message: '请选择预计入库时间', trigger: 'change' }],
 })
 // 筛选表单
-const filterForm = reactive<any>({})
+const filterForm = reactive<any>({
+  number1: undefined as number | undefined,
+  number2: undefined as number | undefined,
+  date1: undefined as [string, string] | undefined,
+  date2: undefined as [string, string] | undefined,
+})
 const filterFormRef = ref<FormInstance>()
+// 判断是否有筛选条件
+const hasFilter = computed(() => {
+  return (
+    filterForm.number1 !== undefined || filterForm.number2 !== undefined || filterForm.date1 !== undefined || filterForm.date2 !== undefined
+  )
+})
 const storageTimeFormRef = ref<FormInstance>()
 // 传给明细的id
 const _id = ref<number | undefined>(0)
@@ -415,14 +424,13 @@ const confirmUpdateStorageTime = async () => {
 }
 // 关闭筛选对话框
 const closeFilter = () => {
-  filterForm.number1 = undefined
-  filterForm.number2 = undefined
   filterFormRef.value?.resetFields()
   filterVisible.value = false
 }
-// 确认筛选
-const confirmFilter = async () => {
-  if (filterForm.number1 > filterForm.number2) {
+
+// 处理筛选
+const handleFilter = async () => {
+  if (filterForm.number1 !== undefined && filterForm.number2 !== undefined && filterForm.number1 > filterForm.number2) {
     $baseMessage('最小值不能大于最大值，请重新填写', 'error')
     return
   }
@@ -430,19 +438,12 @@ const confirmFilter = async () => {
   let shipmentDateEnd = ''
   let arrivalDateStart = ''
   let arrivalDateEnd = ''
-  // console.log(filterForm);
 
-  if (!filterForm.date1 || filterForm.date1 === '') {
-    shipmentDateStart = ''
-    shipmentDateEnd = ''
-  } else {
+  if (filterForm.date1 && filterForm.date1.length === 2) {
     shipmentDateStart = filterForm.date1[0]
     shipmentDateEnd = filterForm.date1[1]
   }
-  if (!filterForm.date2 || filterForm.date2 === '') {
-    arrivalDateStart = ''
-    arrivalDateEnd = ''
-  } else {
+  if (filterForm.date2 && filterForm.date2.length === 2) {
     arrivalDateStart = filterForm.date2[0]
     arrivalDateEnd = filterForm.date2[1]
   }
@@ -462,6 +463,17 @@ const confirmFilter = async () => {
     list.value = data.list!
     total.value = data.total!
   }
+}
+
+// 重置筛选
+const handleResetFilter = () => {
+  filterForm.number1 = undefined
+  filterForm.number2 = undefined
+  filterForm.date1 = undefined
+  filterForm.date2 = undefined
+  filterFormRef.value?.resetFields()
+  fetchData()
+  closeFilter()
 }
 const queryData = () => {
   queryForm.pageNo = 1
