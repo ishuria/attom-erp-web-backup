@@ -140,6 +140,18 @@ export const insertAllMatchComponent = (data: IInsertAllMatchComponent): Promise
     data,
   })
 }
+
+/**
+ * @description 匹配PO、报关资料详情列表匹配插入实际数量
+ */
+export const insertAcutalCountMatchComponent = (data: IInsertAllMatchComponent): Promise<IBooleanRes> => {
+  return request({
+    url: `${BASE_API}/shipment/match/component/fill/actual`,
+    method: 'post',
+    data,
+  })
+}
+
 /**
  * @description 匹配PO、报关资料详情列表匹配清空
  */

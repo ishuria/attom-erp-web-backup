@@ -332,10 +332,11 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="330">
+          <el-table-column fixed="right" label="操作" width="430">
             <template #default="{ row }">
               <el-space alignment="center" :size="10">
                 <!-- <el-link type="primary" underline="never" @click="handleInsertAll(row)">填入全部</el-link> -->
+                <el-link type="info" underline="never" @click="handleInsertActualBg(row)">填入(实际)</el-link>
                 <el-link :loading="row.loadingEdit" underline="never" @click="handleInsertAllBg(row)">填入(报关)</el-link>
                 <el-link type="warning" underline="never" @click="handleInsertAllNotBg(row)">填入(不报关)</el-link>
                 <el-link type="primary" underline="never" @click="handleShowPackingCount(row)">修正质检</el-link>
@@ -477,6 +478,7 @@ import {
   getCheckMatchList,
   getMatchPackageList,
   getPurchaseComponentHsInfo,
+  insertAcutalCountMatchComponent,
   insertAllMatchComponent,
   lockMatchShipment,
   submitMatchShipment,
@@ -1281,6 +1283,31 @@ const handleInsertAllBg = async (row: IGetMatchPackageList) => {
     })
     if (data) {
       $baseMessage('填入(报关)成功', 'success')
+      await fetchMatchData()
+    }
+    match2ListLoading.value = false
+  } catch (error) {
+    match2ListLoading.value = false
+    console.error(error)
+  }
+}
+
+// 填入(实际)
+const handleInsertActualBg = async (row: IGetMatchPackageList) => {
+  try {
+    if (!row.goodCount) {
+      $baseMessage('打包任务数没有好的数量，不能进行匹配！', 'error')
+      return
+    }
+    match2ListLoading.value = true
+    const { data } = await insertAcutalCountMatchComponent({
+      id: _id.value,
+      poId: row.poId,
+      sku: row.sku,
+      mId: row.mId,
+    })
+    if (data) {
+      $baseMessage('填入(实际)成功', 'success')
       await fetchMatchData()
     }
     match2ListLoading.value = false

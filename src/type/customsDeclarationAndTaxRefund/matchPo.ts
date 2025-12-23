@@ -284,7 +284,7 @@ export interface IInsertAllMatchComponent {
   poId: number
   sku: string
   mId: number
-  type: number
+  type?: number
 }
 
 export interface IClearMatchComponent {
