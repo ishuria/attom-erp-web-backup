@@ -196,7 +196,11 @@
         <el-table-column align="center" label="数量" min-width="90" prop="quantity" />
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(checkList, 'Shipment ID', 'shipmentId')" />
         <el-table-column label="合同编号" min-width="140" prop="contractNumber" />
-        <el-table-column label="错误类型" min-width="130" prop="remark" />
+        <el-table-column label="错误类型" min-width="150" prop="remark">
+          <template #default="{ row }">
+            <div v-html="row.remark"></div>
+          </template>
+        </el-table-column>
       </el-table>
       <vab-pagination
         :current-page="whVerifyForm.pageNo"
