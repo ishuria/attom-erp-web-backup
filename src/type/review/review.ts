@@ -380,6 +380,7 @@ export interface IReviewStepNo1Variant {
   magnetic?: number
   woodenProduct?: number
   toy?: number
+  seasonal?: number
 }
 
 export interface IReviewStepResp {
