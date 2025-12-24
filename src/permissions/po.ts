@@ -5,6 +5,8 @@ class PoPermission {
   static readonly PAY_BATCH = 'purchase:pay:batch'
   /** 退款权限 */
   static readonly PAY_REFUND = 'purchase:pay:refund'
+  /** 批量退全款权限 */
+  static readonly PAY_REFUND_BATCH = 'purchase:pay:refund:batch'
   /** 总价分摊权限 */
   static readonly TOTAL_PRICE_ALLOCATION = 'purchase:total:price:allocation'
   /** 生成合同权限 */

@@ -487,6 +487,15 @@ export function updateComponentRefund(data?: FormData): Promise<IBooleanResp> {
     data,
   })
 }
+// 采购订单-批量退全款
+export function batchComponentRefund(data?: FormData): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/component/batch/refund`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
 // 采购订单-总价分摊
 export function purchaseTotalAp(data?: IPurchaseTotalAp): Promise<IBooleanResp> {
   return request({

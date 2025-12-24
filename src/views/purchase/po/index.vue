@@ -6,6 +6,7 @@
           <vab-query-form-left-panel :span="16">
             <!-- 使用按钮组件 -->
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -27,6 +28,7 @@
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -223,6 +225,7 @@
           <vab-query-form-left-panel :span="16">
             <!-- 使用按钮组件 -->
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -299,6 +302,7 @@
           <vab-query-form-left-panel :span="16">
             <!-- 使用按钮组件 -->
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -374,6 +378,7 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -447,6 +452,7 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -520,6 +526,7 @@
         <vab-query-form>
           <vab-query-form-left-panel :span="16">
             <po-action-buttons
+              :batch-refund-full-loading="batchRefundFullLoading"
               :current-role-code="currentRoleCode"
               :del-loading="delLoading"
               :full-payment-loading="fullPaymentLoading"
@@ -740,6 +747,52 @@
         <el-button :loading="refundLoading" type="primary" @click="handleConfirmRefund">确认</el-button>
       </template>
     </vab-dialog>
+    <!-- 批量退全款 -->
+    <vab-dialog
+      v-model="batchRefundFullVisible"
+      :before-close="handleCloseBatchRefundFullDialog"
+      class="moldDialog"
+      title="批量退全款"
+      width="25%"
+    >
+      <el-form
+        ref="batchRefundFullRef"
+        class="form-center"
+        label-position="top"
+        label-width="auto"
+        :model="batchRefundForm"
+        :rules="batchRefundFullRules"
+      >
+        <el-form-item>
+          <el-statistic
+            class="compact-statistic"
+            :formatter="(val: number) => Number(val || 0).toFixed(2)"
+            title="已付总金额"
+            :value="Number(batchRefundForm.totalPayPrice) || 0"
+          />
+        </el-form-item>
+        <el-form-item label="凭证上传" prop="refundVoucher">
+          <div class="image-cell">
+            <!-- 有图片时显示 -->
+            <div v-if="batchRefundForm.refundVoucher" class="image-preview">
+              <img alt="" :src="batchRefundForm.refundVoucher" />
+              <div class="image-actions">
+                <el-icon @click="handlePreview(batchRefundForm.refundVoucher)"><zoom-in /></el-icon>
+                <el-icon @click="handleBatchRefundVoucherRemove"><delete /></el-icon>
+              </div>
+            </div>
+            <!-- 无图片时显示 -->
+            <div v-else class="upload-placeholder" @click="imageUploadVisible = true">
+              <el-icon><plus /></el-icon>
+            </div>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleCloseBatchRefundFullDialog">关闭</el-button>
+        <el-button :loading="batchRefundFullLoading" type="primary" @click="handleConfirmBatchRefundFull">确认</el-button>
+      </template>
+    </vab-dialog>
     <!-- 总价分摊 -->
     <vab-dialog
       v-model="totalPriceSharingVisible"
@@ -920,6 +973,7 @@ import {
   updateComponentAllPay,
   updateComponentPayPart,
   updateComponentRefund,
+  batchComponentRefund,
   updatePayRecord,
 } from '/@/api/devlocal/purchasePo'
 import PoPermission from '/@/permissions/po'
@@ -1103,6 +1157,21 @@ const refundRules = reactive<any>({
 })
 // 退款ref
 const refundRef = ref<FormInstance>()
+// 批量退全款规则
+const batchRefundFullRules = reactive<any>({
+  refundVoucher: [{ required: 'true', message: '请上传退款凭证', trigger: 'change' }],
+})
+// 批量退全款显示与否
+const batchRefundFullVisible = ref<boolean>(false)
+// 批量退全款表单
+const batchRefundForm = reactive<any>({
+  componentCount: 0,
+  totalPayPrice: 0,
+  refundVoucher: null,
+  refundVoucherFile: null,
+})
+// 批量退全款表单ref
+const batchRefundFullRef = ref<FormInstance>()
 // 总价分摊显示与否
 const totalPriceSharingVisible = ref<boolean>(false)
 // 总价分摊表单数据
@@ -1418,11 +1487,16 @@ const handleComputeRefundPercent = (value: string) => {
 async function uploadImage(file: File) {
   const fileUrl = URL.createObjectURL(file)
 
-  // 保存文件对象用于后续上传
-  refundForm.refundVoucher = fileUrl
-
-  // 如果需要保存原始文件对象用于后续处理，可以添加一个新属性
-  refundForm.refundVoucherFile = file
+  // 如果批量退全款弹窗是打开的，保存到批量退全款表单
+  if (batchRefundFullVisible.value) {
+    batchRefundForm.refundVoucher = fileUrl
+    batchRefundForm.refundVoucherFile = file
+  } else {
+    // 保存文件对象用于后续上传
+    refundForm.refundVoucher = fileUrl
+    // 如果需要保存原始文件对象用于后续处理，可以添加一个新属性
+    refundForm.refundVoucherFile = file
+  }
   imageUploadVisible.value = false
 }
 // 退款凭证图片预览事件
@@ -1441,6 +1515,61 @@ const handleCloseRefundDialog = () => {
   refundVisible.value = false
 }
 const refundLoading = ref<boolean>(false)
+const batchRefundFullLoading = ref<boolean>(false)
+// 展示批量退全款弹窗
+const handleBatchRefundFull = () => {
+  // 判断是否选中零件操作
+  if (selectedCompArray.value.length === 0) {
+    $baseMessage('您未选中零件操作列的任何行', 'warning')
+    return
+  }
+  // 计算选中行的已付金额总和和数量
+  const totalPayPrice = selectedCompArray.value.reduce((sum: number, item: any) => {
+    return sum + Number(item.payPrice || 0)
+  }, 0)
+  batchRefundForm.componentCount = selectedCompArray.value.length
+  batchRefundForm.totalPayPrice = totalPayPrice.toFixed(2)
+  batchRefundForm.refundVoucher = null
+  batchRefundForm.refundVoucherFile = null
+  batchRefundFullVisible.value = true
+}
+// 删除批量退全款凭证
+const handleBatchRefundVoucherRemove = () => {
+  batchRefundForm.refundVoucher = null
+  batchRefundForm.refundVoucherFile = null
+}
+// 关闭批量退全款弹窗
+const handleCloseBatchRefundFullDialog = () => {
+  batchRefundFullRef.value?.resetFields()
+  batchRefundFullVisible.value = false
+}
+// 确认批量退全款
+const handleConfirmBatchRefundFull = async () => {
+  batchRefundFullRef.value?.validate(async (valid: any) => {
+    if (valid) {
+      try {
+        batchRefundFullLoading.value = true
+
+        let formData = new FormData()
+        formData.append('componentIds', selectedComponentIds.value)
+        formData.append('poIds', selectedPoIds.value)
+        formData.append('file', batchRefundForm.refundVoucherFile)
+
+        const { data } = await batchComponentRefund(formData)
+        if (data === true) {
+          $baseMessage('批量退全款成功', 'success', 'hey')
+          handleCloseBatchRefundFullDialog()
+          fetchData()
+          clearTableSelect()
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        batchRefundFullLoading.value = false
+      }
+    }
+  })
+}
 // 确认退款
 const handleConfirmRefund = async () => {
   refundRef.value?.validate(async (valid: any) => {

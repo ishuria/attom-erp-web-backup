@@ -185,6 +185,15 @@
       >
         退款
       </el-button>
+      <el-button
+        v-if="showPaymentButtons"
+        v-permissions="{ permission: [PoPermission.PAY_REFUND_BATCH] }"
+        :loading="batchRefundFullLoading"
+        type="danger"
+        @click="$emit('batchRefundFull')"
+      >
+        批量退全款
+      </el-button>
     </div>
   </div>
 </template>
@@ -207,6 +216,7 @@ defineProps<{
   fullPaymentLoading?: boolean
   installmentLoading?: boolean
   refundLoading?: boolean
+  batchRefundFullLoading?: boolean
   packageTaskLoading?: boolean
   procurementBonus?: string | number
   procurementBonusCrossMonth?: string | number
@@ -227,6 +237,7 @@ defineEmits<{
   paymentPaid: []
   installment: []
   refund: []
+  batchRefundFull: []
   addAutomaticPayment: []
   automaticPaymentPreview: []
   remittanCheck: []
