@@ -179,6 +179,10 @@
               {{ row.description }}
             </template>
           </el-table-column>
+          <el-table-column label="站点" min-width="125" prop="site" />
+          <el-table-column label="Shipment ID" min-width="120" prop="shipmentId" />
+          <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" />
+          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName', 30)" />
           <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
           <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
           <el-table-column label="缺数" min-width="80" prop="lackCount" />
@@ -258,11 +262,14 @@
               {{ row.description }}
             </template>
           </el-table-column>
+          <el-table-column label="站点" min-width="125" prop="site" />
+          <el-table-column label="Shipment ID" min-width="120" prop="shipmentId" />
+          <el-table-column label="货代单号" min-width="120" prop="freightForwardingNumber" />
+          <el-table-column label="头程渠道" prop="channelName" :width="flexColumnWidth(list, '头程渠道', 'channelName', 30)" />
           <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
           <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
           <el-table-column label="缺数" min-width="80" prop="lackCount" />
           <el-table-column label="已接收" min-width="90" prop="acceptDays" />
-          <el-table-column label="Shipment ID" min-width="100" prop="shipmentId" />
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="发货数" min-width="100" prop="actualCount" />
           <template #empty>
@@ -494,9 +501,9 @@ const cellClassName2 = (data: { row: any; column: any; rowIndex: number; columnI
 }
 
 // 未到货col合并方法
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 12 && columnIndex !== 13) {
+  if (column.label !== 'PO' && column.label !== '发货数') {
     const id = row.id
     // 默认不跨行
     let rowspan = 1
@@ -518,9 +525,9 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
   }
 }
 // 已发货（接收中）col合并方法
-const objectSpanMethod2 = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod2 = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 7 && columnIndex !== 6) {
+  if (column.label !== 'PO' && column.label !== '发货数') {
     const id = row.id
     // 默认不跨行
     let rowspan = 1
@@ -543,9 +550,9 @@ const objectSpanMethod2 = ({ row, rowIndex, columnIndex }: any) => {
 }
 
 // 已发货（接收完毕）col合并方法
-const objectSpanMethod3 = ({ row, rowIndex, columnIndex }: any) => {
+const objectSpanMethod3 = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (columnIndex !== 7 && columnIndex !== 8) {
+  if (column.label !== 'PO' && column.label !== '发货数') {
     const id = row.id
     // 默认不跨行
     let rowspan = 1
