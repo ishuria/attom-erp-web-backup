@@ -105,6 +105,8 @@ type InsertImageFnType = (url: string, alt?: string, href?: string) => void
 
 const editorConfig = reactive<any>({
   placeholder: '请输入内容...',
+  // 确保图片能正常显示，不忽略图片
+  readOnly: false,
   MENU_CONF: {
     uploadImage: {
       // 基本配置
@@ -193,12 +195,20 @@ const toolbarConfig: Partial<IToolbarConfig> = {
 }
 
 // 检查HTML内容是否为空 - 使用 WangEditor 官方 API
+// 注意：只有图片没有文字的内容不应该被判断为空
 const isEmptyHtml = (html: string): boolean => {
   if (!html) return true
 
-  // 创建临时编辑器实例
+  // 创建临时 DOM 元素检查内容
   const tempDiv = document.createElement('div')
   tempDiv.innerHTML = html
+
+  // 检查是否有图片标签
+  const hasImage = tempDiv.querySelector('img') !== null
+  if (hasImage) {
+    // 如果有图片，即使没有文字也不算空
+    return false
+  }
 
   // 判断是否为空
   if (editorRef.value) {
