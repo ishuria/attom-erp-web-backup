@@ -106,7 +106,7 @@
       </el-table-column>
       <el-table-column label="丢货标记" min-width="100" prop="lostGoodsStatus">
         <template #default="{ row }">
-          <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdate(row)" />
+          <el-checkbox v-model="row.lostGoodsStatus" :false-value="0" :true-value="1" @change="handleUpdateLostGoodsStatus(row)" />
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="260">
@@ -265,6 +265,7 @@ import {
   getShipmentFbaList,
   updateShipmentFBA,
   updateShipmentFbaDate,
+  updateShipmentFBALostGoodsStatus,
 } from '/@/api/devlocal/encasement'
 import type { IGetShipmentFbaList, IGetShipmentFbaListReq } from '/@/type/packagingShipping/shippedType'
 import { formatDate } from '/@/utils/dateUtils'
@@ -376,6 +377,11 @@ const handleUpdate = async (row: IGetShipmentFbaList) => {
   await updateShipmentFBA({
     id: row.id,
     timelinessStatus: row.timelinessStatus,
+  })
+}
+const handleUpdateLostGoodsStatus = async (row: IGetShipmentFbaList) => {
+  await updateShipmentFBALostGoodsStatus({
+    id: row.id,
     lostGoodsStatus: row.lostGoodsStatus,
   })
 }

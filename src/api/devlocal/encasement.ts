@@ -562,6 +562,18 @@ export const updateShipmentFBA = (data: IUpdateShipmentFBA): Promise<{ data: boo
   })
 }
 /**
+ * 已发批次 修改丢货状态
+ * @param data
+ * @returns
+ */
+export const updateShipmentFBALostGoodsStatus = (data: IUpdateShipmentFBA): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/shipment/fba/update/lostGoodsStatus`,
+    method: 'post',
+    data,
+  })
+}
+/**
  * @description FBA货件-修改最新预计入库时间
  */
 export const updateShipmentFbaDate = (params: IUpdateShipmentFbaDate): Promise<IBooleanRes> => {
