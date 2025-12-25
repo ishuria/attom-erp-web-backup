@@ -253,3 +253,29 @@ export function getSearchTermPerformance(data: {
     data,
   })
 }
+
+/**
+ * @description 上传SP文件
+ * @param data { file: File; siteId: number }
+ * @returns { data: boolean }
+ */
+export function uploadSpFile(data: FormData): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/upload/sp/file`,
+    method: 'post',
+    headers: { 'content-type': 'multipart/form-data' },
+    data,
+  })
+}
+/**
+ * @description 运营-产品分析-SP-ST-Share-广告组名称列表
+ * @param params { siteId: number; field: string; type: number }
+ * @returns { data: string[] }
+ */
+export function getSPCampaignNameList(params: { siteId: number; field: string; type: number }): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/product/analysis/campaign_name/list`,
+    method: 'get',
+    params,
+  })
+}

@@ -93,21 +93,24 @@
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 1" inline>
-              <el-form-item>
-                <el-select>
-                  <el-option v-for="item in adOption" :key="item.value" :label="item.label" :value="item.value" />
+              <el-form-item label="">
+                <el-select v-model="selectedCampaignName" clearable placeholder="请选择广告活动名" style="width: 200px">
+                  <el-option v-for="item in campaignNameList" :key="item" :label="item" :value="item" />
                 </el-select>
               </el-form-item>
               <el-form-item>
-                <el-checkbox>跳过无数据</el-checkbox>
+                <el-checkbox v-model="skipNoData" :false-value="0" :true-value="1">跳过无数据</el-checkbox>
               </el-form-item>
               <el-form-item>
-                <el-select>
-                  <el-option v-for="item in dayOption" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
+                <el-date-picker
+                  v-model="adPieDateRange"
+                  :disabled-date="(time: Date) => time.getTime() > Date.now()"
+                  end-placeholder="结束日期"
+                  range-separator="至"
+                  :shortcuts="adPieDateShortcuts"
+                  start-placeholder="开始日期"
+                  type="daterange"
+                />
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 2" inline>
@@ -222,8 +225,8 @@ import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } fro
 import { OperationTypeList } from '~/src/type/storeOperation/productPerformanceType'
 import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
 import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
-import { adOption, dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
-import { getProductInfo } from '/@/api/devlocal/productAnalysis'
+import { dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
+import { getProductInfo, getSPCampaignNameList } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 import { useTabsStore } from '/@/store/modules/tabs'
@@ -251,6 +254,51 @@ const selectDateRange = ref<[string, string]>(getStoredDateRange())
 const compareType = ref<number>(0)
 // 选择的SKU（当selectField为0时使用）
 const selectedSku = ref<string>('')
+// 广告活动名相关
+const campaignNameList = ref<string[]>([])
+const selectedCampaignName = ref<string>('')
+// SP广告饼图日期范围
+const adPieDateRange = ref<[Date, Date] | null>(null)
+const skipNoData = ref<number>(1)
+// SP广告饼图日期快捷选项（基于 dayOption）
+const adPieDateShortcuts = [
+  {
+    text: '7天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 6)
+      return [start, end]
+    },
+  },
+  {
+    text: '15天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 14)
+      return [start, end]
+    },
+  },
+  {
+    text: '30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 29)
+      return [start, end]
+    },
+  },
+  {
+    text: '60天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 59)
+      return [start, end]
+    },
+  },
+]
 
 // 日期选择器快捷选项
 const dateShortcuts = [
@@ -416,6 +464,54 @@ const handleSiteChange = (siteId: number | undefined) => {
   if (sku.value && selectedSite.value !== undefined) {
     fetchProductInfo()
   }
+  // 站点变化时重新获取广告活动名列表
+  fetchCampaignNameList()
+}
+
+// 获取广告活动名列表
+const fetchCampaignNameList = async () => {
+  // 需要站点ID、field值和type
+  if (selectedSite.value === undefined) {
+    campaignNameList.value = []
+    return
+  }
+
+  // 根据 selectField 决定传递的 field 和 type
+  let field = ''
+  let type = 0
+
+  if (selectField.value === 0) {
+    // SKU tab
+    field = selectedSku.value || sku.value || ''
+    type = 0
+  } else if (selectField.value === 1) {
+    // ASIN tab
+    field = asin.value
+    type = 1
+  } else {
+    // 其他情况，不获取
+    campaignNameList.value = []
+    return
+  }
+
+  // 如果没有 field 值，不获取
+  if (!field) {
+    campaignNameList.value = []
+    return
+  }
+
+  try {
+    const { data } = await getSPCampaignNameList({
+      siteId: selectedSite.value,
+      field: field,
+      type: type,
+    })
+    campaignNameList.value = data || []
+    campaignNameList.value.unshift('所有广告组之和')
+  } catch (error) {
+    console.error('获取广告活动名列表失败:', error)
+    campaignNameList.value = []
+  }
 }
 
 // 产品信息（直接使用后端字段类型）
@@ -510,6 +606,8 @@ onMounted(() => {
   selectField.value = Number(route.query.field)
   // 获取站点列表
   fetchSiteList()
+  // 初始化时获取广告活动名列表
+  fetchCampaignNameList()
 })
 watch(
   () => route.query.field,
@@ -548,6 +646,16 @@ watch(
       sku.value = String(newSku)
       fetchProductInfo()
     }
+    // 重新获取广告活动名列表
+    fetchCampaignNameList()
+  }
+)
+
+// 监听 selectField 和 asin 的变化，重新获取广告活动名列表
+watch(
+  () => [selectField.value, asin.value, selectedSite.value],
+  () => {
+    fetchCampaignNameList()
   }
 )
 </script>
