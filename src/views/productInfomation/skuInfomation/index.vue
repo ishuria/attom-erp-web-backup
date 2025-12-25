@@ -240,12 +240,12 @@
     <vab-dialog v-model="copySkuVisible" title="复制SKU" top="35vh" width="20%" @close="copySkuClose">
       <el-form ref="copySkuFormRef" label-position="top" :model="copySkuForm" :rules="copySkuFormRules">
         <el-form-item label="新SKU" prop="sku">
-          <el-input v-model="copySkuForm.sku" clearable placeholder="请输入新SKU" />
+          <el-input v-model.trim="copySkuForm.sku" clearable placeholder="请输入新SKU" />
         </el-form-item>
         <el-form-item label="新建图片Listing任务">
           <el-radio-group v-model="copySkuForm.listingTask">
             <el-radio size="large" :value="0">否</el-radio>
-            <el-radio size="large" :value="1" >是</el-radio>
+            <el-radio size="large" :value="1">是</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -261,7 +261,7 @@
     <!-- 查看HTS（只读） -->
     <vab-hts-dialog v-model="htsVisible" :readonly="true" :sku="currentSku" />
     <!-- Sku交期明细  -->
-    <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisible" :sku="sku"/>
+    <vab-sku-delivery-time-details v-model="skuDeliveryTimeVisible" :sku="sku" />
   </div>
 </template>
 
@@ -378,7 +378,7 @@ const { changeTabsMeta } = tabsStore
 const copySkuVisible = ref<boolean>(false)
 const copySkuForm = reactive({
   sku: '',
-  listingTask:0
+  listingTask: 0,
 })
 const copySkuFormRef = ref()
 const copySkuClose = () => {
@@ -395,7 +395,7 @@ const handleCopySkuConfirm = async () => {
         const { data } = await copyProductSku({
           skuId: skuId.value,
           sku: copySkuForm.sku,
-          listingTask: copySkuForm.listingTask
+          listingTask: copySkuForm.listingTask,
         })
         if (data) {
           $baseMessage('复制成功', 'success')
