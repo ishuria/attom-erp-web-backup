@@ -186,9 +186,10 @@
           <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
           <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
           <el-table-column label="缺数" min-width="80" prop="lackCount" />
-          <el-table-column label="已接收" min-width="90" prop="acceptDays" />
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="发货数" min-width="100" prop="actualCount" />
+          <el-table-column label="已接收" min-width="90" prop="receptionCount" />
+          <el-table-column label="缺数" min-width="90" prop="missingNumber" />
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -238,7 +239,7 @@
           :data="list"
           :header-cell-style="{ textAlign: 'center' }"
           :row-class-name="stripedRowClass"
-          :span-method="objectSpanMethod3"
+          :span-method="objectSpanMethod2"
           @row-click="handleRowClick"
         >
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
@@ -269,9 +270,10 @@
           <el-table-column label="发货总数" min-width="100" prop="shipmentTotalCount" />
           <el-table-column label="已接收数" min-width="110" prop="receiptsCount" />
           <el-table-column label="缺数" min-width="80" prop="lackCount" />
-          <el-table-column label="已接收" min-width="90" prop="acceptDays" />
           <el-table-column label="PO" min-width="100" prop="po" />
           <el-table-column label="发货数" min-width="100" prop="actualCount" />
+          <el-table-column label="已接收" min-width="90" prop="receptionCount" />
+          <el-table-column label="缺数" min-width="90" prop="missingNumber" />
           <template #empty>
             <el-empty class="vab-data-empty" description="暂无数据" />
           </template>
@@ -644,7 +646,7 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 // 已发货（接收中）col合并方法
 const objectSpanMethod2 = ({ row, column, rowIndex, columnIndex }: any) => {
   // 设置需要合并的列
-  if (column.label !== 'PO' && column.label !== '发货数') {
+  if (column.label !== 'PO' && column.label !== '发货数' && column.label !== '已接收' && column.label !== '缺数') {
     const id = row.id
     // 默认不跨行
     let rowspan = 1
@@ -666,30 +668,6 @@ const objectSpanMethod2 = ({ row, column, rowIndex, columnIndex }: any) => {
   }
 }
 
-// 已发货（接收完毕）col合并方法
-const objectSpanMethod3 = ({ row, column, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
-  if (column.label !== 'PO' && column.label !== '发货数') {
-    const id = row.id
-    // 默认不跨行
-    let rowspan = 1
-    // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < list.value.length; i++) {
-      // 如果零件id一样需要合并
-      if (list.value[i].id === id) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || list.value[rowIndex - 1].id !== id) {
-      return { rowspan, colspan: 1 }
-    } else {
-      return { rowspan: 0, colspan: 0 }
-    }
-  }
-}
 // 站点列表类型
 type ISiteList = {
   id: number
