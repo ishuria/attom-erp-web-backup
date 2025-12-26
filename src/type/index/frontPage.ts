@@ -169,6 +169,16 @@ export interface IGetFrontPagePerformanceHistory {
   purchaseAmount: number
   newProductOneYearCommission: number
   newProductsAverageProfit: number
+  runsNumbers?: number
+  progressNumbers?: number
+  samplingFrequency?: number
+}
+
+// 绩效指标配置
+export interface IPerformanceMetric {
+  value: string // 指标值，如 'developmentDesign'
+  label: string // 指标名称，如 '提成'
+  key: keyof IGetFrontPagePerformanceHistory // 对应的数据字段
 }
 export interface IRankItem {
   name: string

@@ -32,6 +32,9 @@ const metricConfig: Record<string, { name: string; key: keyof IGetFrontPagePerfo
   jingPuCount: { name: '精铺', key: 'jingPuCount', color: '#FFD93D' },
   jingPuVineCount: { name: '精铺vine', key: 'jingPuVineCount', color: '#6BCB77' },
   puHuoCount: { name: '铺货', key: 'puHuoCount', color: '#FF6B6B' },
+  runsNumbers: { name: '新款评估跑分次数', key: 'runsNumbers', color: '#F38181' },
+  progressNumbers: { name: '新品进度记录数', key: 'progressNumbers', color: '#AA96DA' },
+  samplingFrequency: { name: '拿样次数', key: 'samplingFrequency', color: '#FCBAD3' },
 }
 
 const option = reactive<any>({

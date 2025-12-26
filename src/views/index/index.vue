@@ -270,7 +270,7 @@
         </performance-history>
       </el-col>
       <!-- 产品经理绩效汇总 -->
-      <el-col v-if="ableBossViewCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
+      <el-col v-if="ableViewPerformanceSummaryCard" :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <performance-summary :data-map="performanceSummaryDataMap" :selected-metric="selectedPerformanceMetric">
           <template #select>
             <el-date-picker
@@ -280,16 +280,8 @@
               value-format="YYYY-MM"
               @change="fetchPerformanceSummary"
             />
-
             <el-select v-model="selectedPerformanceMetric" placeholder="指标" style="max-width: 5em">
-              <el-option label="提成" value="developmentDesign" />
-              <el-option label="新品提成" value="newProductOneYearCommission" />
-              <el-option label="新品平均利润" value="newProductsAverageProfit" />
-              <el-option label="新款采购额" value="purchaseAmount" />
-              <el-option label="精品" value="jingPinCount" />
-              <el-option label="精铺" value="jingPuCount" />
-              <el-option label="精铺vine" value="jingPuVineCount" />
-              <el-option label="铺货" value="puHuoCount" />
+              <el-option v-for="metric in availableMetrics" :key="metric.value" :label="metric.label" :value="metric.value" />
             </el-select>
           </template>
         </performance-summary>
@@ -454,7 +446,7 @@
 </template>
 
 <script lang="ts" setup>
-import { debounce, random } from 'lodash-es'
+import { random } from 'lodash-es'
 import { getDistributionSiteList } from '~/src/api/devlocal/productDistribution'
 import { redColorList } from '../commission/constantOption'
 import { colorList } from '../storeOperations/constantOption'
@@ -473,6 +465,7 @@ import {
   getFrontPageJobLevelCommission,
   getFrontPageLeadDestroyValue,
   getFrontPagePerformanceHistory,
+  getFrontPagePerformanceHistorySummary,
   getFrontPagePersonalBonus,
   getFrontPageProductManagerSelectOption,
   getFrontPageProfitScore,
@@ -524,6 +517,7 @@ import {
   IGetFrontPageProfitScoreItem,
   IGetFrontPageProgressProjectsItem,
   ILowVolumeProductStorageFee,
+  IPerformanceMetric,
   IPieItem,
   IRankItem,
   IWarehouseCapacityItem,
@@ -577,6 +571,7 @@ const ableViewLowVolumeProductStorageFeeCard =
   currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
   currentRoleCode === ROLE_ECOMMERCEOPERATIONLEAD_CODE
 const ableViewAttendanceOverviewCard = currentRoleCode !== ROLE_PACKAGER_CODE && currentRoleCode !== ROLE_WAREHOUSEMANNAGERlEAD_CODE
+const ableViewPerformanceSummaryCard = currentRoleCode === ROLE_BOSS_CODE || currentRoleCode === ROLE_PRODUCTMANNAGERLEAD_CODE
 
 const type = ref<number>(0)
 const selectOption = [
@@ -963,39 +958,41 @@ const fetchData = async () => {
 
 // 产品经理绩效汇总
 const performanceSummaryDataMap = ref<Record<string, IGetFrontPagePerformanceHistory[]>>({})
-
 const selectedPerformanceMetric = ref<string>('developmentDesign')
+// 绩效汇总指标配置
+const availableMetrics = ref<IPerformanceMetric[]>([
+  { value: 'developmentDesign', label: '提成', key: 'developmentDesign' },
+  { value: 'newProductOneYearCommission', label: '新品提成', key: 'newProductOneYearCommission' },
+  { value: 'newProductsAverageProfit', label: '新品平均利润', key: 'newProductsAverageProfit' },
+  { value: 'purchaseAmount', label: '新款采购额', key: 'purchaseAmount' },
+  { value: 'jingPinCount', label: '精品', key: 'jingPinCount' },
+  { value: 'jingPuCount', label: '精铺', key: 'jingPuCount' },
+  { value: 'jingPuVineCount', label: '精铺vine', key: 'jingPuVineCount' },
+  { value: 'puHuoCount', label: '铺货', key: 'puHuoCount' },
+  { value: 'runsNumbers', label: '新款评估跑分次数', key: 'runsNumbers' },
+  { value: 'progressNumbers', label: '新品进度记录数', key: 'progressNumbers' },
+  { value: 'samplingFrequency', label: '拿样次数', key: 'samplingFrequency' },
+])
+
 // 实际的数据获取函数
-const _fetchPerformanceSummary = async () => {
+const fetchPerformanceSummary = async () => {
   if (!performanceSummaryDateRange.value || !performanceSummaryDateRange.value[0] || !performanceSummaryDateRange.value[1]) {
     return
   }
 
-  // 获取所有产品经理的数据
-  const dataMap: Record<string, IGetFrontPagePerformanceHistory[]> = {}
+  try {
+    const { data } = await getFrontPagePerformanceHistorySummary({
+      startMonth: performanceSummaryDateRange.value[0],
+      endMonth: performanceSummaryDateRange.value[1],
+    })
 
-  // 为每个产品经理获取数据
-  const promises = userList.value.map(async (user) => {
-    try {
-      const { data } = await getFrontPagePerformanceHistory({
-        userId: user.id,
-        startMonth: performanceSummaryDateRange.value[0],
-        endMonth: performanceSummaryDateRange.value[1],
-      })
-      // 保留所有月份的数据，不聚合
-      dataMap[user.label] = data || []
-    } catch (error) {
-      console.error(`获取${user.label}的数据失败:`, error)
-      dataMap[user.label] = []
-    }
-  })
-
-  await Promise.all(promises)
-  performanceSummaryDataMap.value = dataMap
+    // 更新数据
+    performanceSummaryDataMap.value = data || {}
+  } catch (error) {
+    console.error('获取绩效汇总数据失败:', error)
+    performanceSummaryDataMap.value = {}
+  }
 }
-
-// 使用防抖优化，避免频繁切换日期时发送过多请求
-const fetchPerformanceSummary = debounce(_fetchPerformanceSummary, 300)
 
 const rank1List = ref<IRankItem[]>([])
 const rank2List = ref<IRankItem[]>([])
@@ -1439,6 +1436,9 @@ const fetchSiteList = async () => {
   siteList.value.unshift({ id: -1, label: '全部' })
 }
 onBeforeMount(async () => {
+  if (ableViewPerformanceSummaryCard) {
+    fetchPerformanceSummary()
+  }
   await fetchBillingMonthList()
   if (ableViewCommissionCard) {
     fetchTotalBonus()
@@ -1475,7 +1475,6 @@ onBeforeMount(async () => {
     fetchOperateUserList()
     fetchInventoryProductsTotalValue()
     fetchWarehouseCapacity()
-    fetchPerformanceSummary()
   }
   if (ableViewDestroyValueCard) {
     fetchDestroyValue()

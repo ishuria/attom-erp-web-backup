@@ -129,6 +129,20 @@ export function getFrontPagePerformanceHistory(
   })
 }
 /**
+ * 首页-绩效历史-汇总
+ * @param params { startMonth: string, endMonth: string }
+ * @returns { data: Record<string, IGetFrontPagePerformanceHistory[]> }
+ */
+export function getFrontPagePerformanceHistorySummary(params: { startMonth: string; endMonth: string }): Promise<{
+  data: Record<string, IGetFrontPagePerformanceHistory[]>
+}> {
+  return request({
+    url: `${BASE_API}/front_page/performance/history/summary`,
+    method: 'get',
+    params,
+  })
+}
+/**
  * 首页-绩效历史-人员列表
  * @returns
  */
