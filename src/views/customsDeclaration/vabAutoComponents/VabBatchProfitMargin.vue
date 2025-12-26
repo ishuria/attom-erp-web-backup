@@ -57,6 +57,7 @@
       <el-table-column label="总利润￥" min-width="" prop="totalProfit" sortable />
       <el-table-column label="利润率" min-width="" prop="profitMargin" sortable />
       <el-table-column label="总退税额" min-width="" prop="totalTaxRebate" sortable />
+      <el-table-column label="换汇成本" min-width="" prop="totalExchangeCost" sortable />
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
       </template>
