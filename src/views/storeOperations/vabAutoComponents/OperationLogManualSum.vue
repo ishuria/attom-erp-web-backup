@@ -1,7 +1,7 @@
 <template>
-  <vab-dialog v-model="visible" title="日志汇总" top="8vh" width="55%">
+  <vab-dialog v-model="visible" title="日志汇总" top="8vh" width="60%">
     <vab-query-form>
-      <vab-query-form-left-panel>
+      <vab-query-form-left-panel :span="18">
         <el-form inline :model="queryForm">
           <el-form-item label="运营">
             <el-select v-model="queryForm.userId" clearable placeholder="请选择运营人员" style="width: 200px" @change="queryData">
@@ -27,10 +27,16 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      <vab-query-form-right-panel :span="6">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
-            <el-input v-model.trim="queryForm.keyWord" clearable placeholder="请输入关键词" @input="queryData" @keyup.enter="queryData" />
+            <el-input
+              v-model.trim="queryForm.keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="queryData"
+              @keyup.enter="queryData"
+            />
           </el-form-item>
           <el-form-item>
             <el-button :icon="Search" :loading="loading" type="primary" @click="queryData" />

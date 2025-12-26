@@ -258,6 +258,8 @@ export interface IGetFrontPageJobLevelCommission {
   monthlyLevel: string
   newProductCommission: number
   commissionRatio: number
+  managementRelief: number
+  discountFactor: number
 }
 
 export interface ILowVolumeProductStorageFee {

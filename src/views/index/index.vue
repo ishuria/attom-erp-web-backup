@@ -315,7 +315,7 @@
         </profit-share-preview-card>
       </el-col>
       <!-- 职级提成 -->
-      <el-col v-if="ableProductManagerLeadViewCard" :lg="6" :md="24" :sm="24" :xl="6" :xs="24">
+      <el-col v-if="ableProductManagerLeadViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <job-level-commission-table :list="jobLevelCommissionList">
           <template #select>
             <el-select v-model="selectJobLevelMonth" placeholder="月份" style="max-width: 5em" @change="fetchJobLevelCommission">
@@ -431,7 +431,7 @@
       <el-col v-if="ableProductManagerViewCard" :lg="8" :md="24" :sm="24" :xl="8" :xs="24">
         <vine-review-card :user-list="userList" />
       </el-col>
-      <el-col v-if="ableViewTop50ProductLossCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
+      <el-col v-if="ableViewLowVolumeProductStorageFeeCard" :lg="10" :md="24" :sm="24" :xl="10" :xs="24">
         <fba-count-sale-day-chart :site-list="siteList" :user-list="fbaCountUserList" />
       </el-col>
     </el-row>

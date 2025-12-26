@@ -83,7 +83,9 @@
       <el-table-column label="已接收数" min-width="100" prop="receiptsCount" />
       <el-table-column label="缺数" min-width="80" prop="lackCount">
         <template #default="{ row }">
-          <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.lackCount }}</span>
+          <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
+            {{ row.lackCount > 0 ? '-' + row.lackCount : '+' + Math.abs(row.lackCount) }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="箱数" min-width="80" prop="totalEncasementCount" />

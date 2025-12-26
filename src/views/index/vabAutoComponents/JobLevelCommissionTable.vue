@@ -11,6 +11,8 @@
       <el-table-column label="姓名" min-width="95" prop="userName" />
       <el-table-column label="当月职级" min-width="130" prop="monthlyLevel" />
       <el-table-column label="6个月平均新品提成" min-width="140" prop="newProductCommission" />
+      <el-table-column label="近12月管理减免" min-width="125" prop="managementRelief" />
+      <el-table-column label="折扣系数" min-width="100" prop="discountFactor" />
       <el-table-column label="提成比例" min-width="100" prop="commissionRatio" />
     </el-table>
   </vab-card>
