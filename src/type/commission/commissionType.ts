@@ -335,6 +335,11 @@ export interface IUpdateDevelopDesignTaskReq {
   rewardProportion: number
   notPlieScore: number
 }
+export interface IBatchUpdateDevelopDesignTaskReq {
+  ids: number[]
+  baseProportion?: number
+  notPlieScore?: number
+}
 export interface IGetReductionCostListRes {
   data?: {
     list: IGetReductionCostList[]

@@ -305,6 +305,16 @@
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
+              <el-form-item>
+                <el-button
+                  v-if="hasPermission({ permission: [CommissionPermission.COMMISSION_TASK_DEVELOP_UPDATE] })"
+                  plain
+                  type="info"
+                  @click="showBatchUpdateDevelop"
+                >
+                  批量修改
+                </el-button>
+              </el-form-item>
             </el-form>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -332,7 +342,9 @@
           :data="developList"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
+          @selection-change="handleSelectionDevelopTaskChange"
         >
+          <el-table-column type="selection" width="55" />
           <el-table-column label="采购计划发布日期" min-width="50" prop="releaseData">
             <template #default="{ row }">
               {{ row.releaseData ? formatDate(new Date(row.releaseData)) : '' }}
@@ -696,6 +708,26 @@
         <el-button type="primary" @click="handleConfirmDevelopUpdate">确定</el-button>
       </template>
     </vab-dialog>
+    <!-- 产品开发设计批量修改 -->
+    <vab-dialog v-model="developBatchUpdateVisible" title="产品开发设计批量修改" width="20%">
+      <el-form ref="developBatchUpdateFormRef" label-position="right" label-width="auto" :model="developBatchUpdateForm" style="margin: 0">
+        <el-form-item label="净利提成基础比例" prop="baseProportion">
+          <el-input v-model="developBatchUpdateForm.baseProportion" :disabled="batchBtnLoading" placeholder="留空则不修改" type="number">
+            <template #suffix>%</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="不计利润分">
+          <el-select v-model="developBatchUpdateForm.notPlieScore" clearable :disabled="batchBtnLoading" placeholder="留空则不修改">
+            <el-option label="计入利润分" value="0" />
+            <el-option label="不计利润分" value="1" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="cancleDevelopBatchUpdate">取消</el-button>
+        <el-button :loading="batchBtnLoading" type="primary" @click="batchUpdateDevelopTask">确认</el-button>
+      </template>
+    </vab-dialog>
     <!-- 采购降本修改 -->
     <vab-dialog v-model="costUpdateVisible" title="采购降本修改" width="20%">
       <el-form ref="costFormRef" label-position="right" label-width="auto" :model="costForm" :rules="costFormRules" style="margin: 0">
@@ -741,6 +773,7 @@ import { designTypeOption } from '../../newProductTask/constantOption'
 import {
   batchCancleCommissionTaskPicture,
   batchUpdateCommissionTaskPicture,
+  batchUpdateDevelopDesignTask,
   continueCommissionTaskPicture,
   continueDevelopDesignTask,
   continueLongCommissionTask,
@@ -887,6 +920,10 @@ const longFormRules = reactive<FormRules>({
 })
 const developUpdateVisible = ref<boolean>(false)
 const developForm = reactive<any>({})
+const developBatchUpdateVisible = ref<boolean>(false)
+const developBatchUpdateForm = reactive<any>({})
+const developBatchUpdateFormRef = ref<FormInstance>()
+const selectDevelopList = ref<IGetDevelopDesignTaskList[]>([])
 // const developFormRef = ref<FormInstance>()
 // const developFormRules = reactive<FormRules>({
 //   baseProportion: [{ required: true, message: '请填写基础比例', trigger: 'blur' }],
@@ -1087,6 +1124,82 @@ const showDevelopUpdate = (row: IGetDevelopDesignTaskList) => {
   developForm.baseProportion = row.baseProportion
   developForm.rewardProportion = row.rewardProportion
   developForm.notPlieScore = row.notPlieScore + ''
+}
+
+// 产品开发设计批量选择
+const handleSelectionDevelopTaskChange = (val: IGetDevelopDesignTaskList[]) => {
+  selectDevelopList.value = val
+}
+
+// 批量修改按钮
+const showBatchUpdateDevelop = async () => {
+  if (selectDevelopList.value.length === 0) {
+    $baseMessage('请选择需要批量修改的产品开发设计任务！', 'warning')
+    return
+  }
+  developBatchUpdateVisible.value = true
+  // 重置表单
+  developBatchUpdateForm.baseProportion = undefined
+  developBatchUpdateForm.notPlieScore = undefined
+}
+
+// 取消批量修改
+const cancleDevelopBatchUpdate = () => {
+  developBatchUpdateVisible.value = false
+  developBatchUpdateForm.baseProportion = undefined
+  developBatchUpdateForm.notPlieScore = undefined
+}
+
+// 批量修改产品开发设计任务
+const batchUpdateDevelopTask = async () => {
+  try {
+    batchBtnLoading.value = true
+    let ids: number[] = []
+    selectDevelopList.value.forEach((el) => {
+      ids.push(el.id!)
+    })
+
+    const updateData: any = {
+      ids: ids,
+    }
+    // 只传递有值的字段
+    if (
+      developBatchUpdateForm.baseProportion !== undefined &&
+      developBatchUpdateForm.baseProportion !== null &&
+      developBatchUpdateForm.baseProportion !== ''
+    ) {
+      updateData.baseProportion = Number(developBatchUpdateForm.baseProportion) / 100
+    }
+    if (
+      developBatchUpdateForm.notPlieScore !== undefined &&
+      developBatchUpdateForm.notPlieScore !== null &&
+      developBatchUpdateForm.notPlieScore !== ''
+    ) {
+      updateData.notPlieScore = Number(developBatchUpdateForm.notPlieScore)
+    }
+
+    // 如果两个字段都为空，直接关闭对话框，不发请求
+    if (Object.keys(updateData).length === 1) {
+      // 只有 ids 字段，说明没有要修改的字段
+      batchBtnLoading.value = false
+      developBatchUpdateVisible.value = false
+      $baseMessage('请至少填写一个要修改的字段！', 'warning')
+      return
+    }
+
+    $baseConfirm('确定要批量修改产品开发设计任务吗？', null, async () => {
+      const { data } = await batchUpdateDevelopDesignTask(updateData)
+      if (data) {
+        $baseMessage('批量修改产品开发设计任务成功！', 'success')
+        batchBtnLoading.value = false
+        developBatchUpdateVisible.value = false
+        developQueryData()
+      }
+    })
+  } catch (error) {
+    batchBtnLoading.value = false
+    developBatchUpdateVisible.value = false
+  }
 }
 const showLongUpdate = (row: IGetLongCommissionTaskList) => {
   longUpdateVisible.value = true
@@ -1448,20 +1561,6 @@ onBeforeMount(async () => {
         display: flex;
         flex-direction: column;
         height: calc(var(--el-container-height) - var(--el-padding) - 52px) !important;
-
-        .vab-query-form {
-          .el-form {
-            .el-form-item:first-child {
-              // margin: 0 !important;
-
-              // .el-check-tag,
-              // .el-form-item__label {
-              //   margin: 0 10px 5px 0;
-              //   border-radius: 99px;
-              // }
-            }
-          }
-        }
 
         .el-table {
           flex: 1;

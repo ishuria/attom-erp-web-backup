@@ -4,6 +4,7 @@ import { BASE_API } from '/@/api/devlocal/api'
 
 import type {
   IBatchUpdateCommissionTaskPictureReq,
+  IBatchUpdateDevelopDesignTaskReq,
   IGetCommissionArtTypeListRes,
   IGetCommissionDetailDevelopListReq,
   IGetCommissionDetailDevelopListRes,
@@ -30,11 +31,7 @@ import type {
   IUpdateReductionCostTaskReq,
 } from '/@/type/commission/commissionType'
 
-import {
-  ITaxRefundBonusDetailList,
-  ITaxRefundBonusDetailResp,
-  ITaxRefundBonusQuery,
-} from '/@/type/commission/taxRefundBonusDetail.ts'
+import { ITaxRefundBonusDetailResp, ITaxRefundBonusQuery } from '/@/type/commission/taxRefundBonusDetail.ts'
 
 /**
  * @description 提成系数设定-美工类型
@@ -258,6 +255,16 @@ export function pauseDevelopDesignTask(params: { id: number }): Promise<{ data: 
 export function updateDevelopDesignTask(data: IUpdateDevelopDesignTaskReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/develop/design/task/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * @description 产品开发设计提成任务-批量修改
+ */
+export function batchUpdateDevelopDesignTask(data: IBatchUpdateDevelopDesignTaskReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/develop/design/task/batch/update`,
     method: 'post',
     data,
   })
