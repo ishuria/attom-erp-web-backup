@@ -248,6 +248,12 @@
             <el-radio size="large" :value="1">是</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="是否需要新品质检">
+          <el-radio-group v-model="copySkuForm.needQualityInspection">
+            <el-radio size="large" :value="0">否</el-radio>
+            <el-radio size="large" :value="1">是</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="copySkuClose">取消</el-button>
@@ -379,6 +385,7 @@ const copySkuVisible = ref<boolean>(false)
 const copySkuForm = reactive({
   sku: '',
   listingTask: 0,
+  needQualityInspection: 0,
 })
 const copySkuFormRef = ref()
 const copySkuClose = () => {
@@ -396,6 +403,7 @@ const handleCopySkuConfirm = async () => {
           skuId: skuId.value,
           sku: copySkuForm.sku,
           listingTask: copySkuForm.listingTask,
+          needQualityInspection: copySkuForm.needQualityInspection,
         })
         if (data) {
           $baseMessage('复制成功', 'success')
