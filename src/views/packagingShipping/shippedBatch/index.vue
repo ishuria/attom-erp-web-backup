@@ -211,17 +211,17 @@
     <vab-remark-dialog v-model="remarkVisible" :remark="remark" title="修改备注" @update:remark="handleUpdateRemark" />
     <!-- 筛选 -->
     <vab-dialog v-model="filterVisible" title="筛选" width="26%" @close="closeFilter">
-      <el-form label-position="top" label-width="120px" :model="filterForm" style="margin-right: 10px; margin-left: 10px">
+      <el-form label-position="top" label-width="120px" :model="queryForm" style="margin-right: 10px; margin-left: 10px">
         <el-form-item label="缺数">
           <div style="display: flex; align-items: center; gap: 10px; width: 100%">
-            <el-input-number v-model="filterForm.number1" placeholder="最小值" style="flex: 1" />
+            <el-input-number v-model="queryForm.lackCountStart" placeholder="最小值" style="flex: 1" />
             <span style="color: #303133; white-space: nowrap">至</span>
-            <el-input-number v-model="filterForm.number2" placeholder="最大值" style="flex: 1" />
+            <el-input-number v-model="queryForm.lackCountEnd" placeholder="最大值" style="flex: 1" />
           </div>
         </el-form-item>
         <el-form-item label="发货日期">
           <el-date-picker
-            v-model="filterForm.date1"
+            v-model="date1"
             clearable
             :editable="false"
             end-placeholder="结束日期"
@@ -235,7 +235,7 @@
         </el-form-item>
         <el-form-item label="上架日期">
           <el-date-picker
-            v-model="filterForm.date2"
+            v-model="date2"
             clearable
             :editable="false"
             end-placeholder="结束日期"
@@ -262,7 +262,6 @@ import type { FormInstance } from 'element-plus'
 import type { CSSProperties } from 'vue'
 import { getPackageSiteList } from '~/src/api/devlocal/packagingShipping'
 import {
-  filterShipmentFbaList,
   getShipmentFbaDetailList,
   getShipmentFbaList,
   updateShipmentFBA,
@@ -277,6 +276,8 @@ defineOptions({
   name: 'ShippedBatch',
 })
 
+const date1 = ref<[string, string] | null>(null)
+const date2 = ref<[string, string] | null>(null)
 const selectedRowIndex = ref<number>(-1)
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.id
@@ -298,6 +299,12 @@ const queryForm = reactive<IGetShipmentFbaListReq>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  lackCountStart: undefined,
+  lackCountEnd: undefined,
+  shipmentDateStart: undefined,
+  shipmentDateEnd: undefined,
+  arrivalDateStart: undefined,
+  arrivalDateEnd: undefined,
 })
 const list = ref<IGetShipmentFbaList[]>([])
 const total = ref<number>(0)
@@ -336,18 +343,15 @@ const storageTimeForm = reactive<any>({
 const storageTimeRule = reactive<any>({
   date: [{ required: true, message: '请选择预计入库时间', trigger: 'change' }],
 })
-// 筛选表单
-const filterForm = reactive<any>({
-  number1: undefined as number | undefined,
-  number2: undefined as number | undefined,
-  date1: undefined as [string, string] | undefined,
-  date2: undefined as [string, string] | undefined,
-})
-const filterFormRef = ref<FormInstance>()
 // 判断是否有筛选条件
 const hasFilter = computed(() => {
   return (
-    filterForm.number1 !== undefined || filterForm.number2 !== undefined || filterForm.date1 !== undefined || filterForm.date2 !== undefined
+    queryForm.lackCountStart !== undefined ||
+    queryForm.lackCountEnd !== undefined ||
+    queryForm.shipmentDateStart !== undefined ||
+    queryForm.shipmentDateEnd !== undefined ||
+    queryForm.arrivalDateStart !== undefined ||
+    queryForm.arrivalDateEnd !== undefined
   )
 })
 const storageTimeFormRef = ref<FormInstance>()
@@ -432,89 +436,69 @@ const confirmUpdateStorageTime = async () => {
 }
 // 关闭筛选对话框
 const closeFilter = () => {
-  filterFormRef.value?.resetFields()
   filterVisible.value = false
 }
 
 // 处理筛选
 const handleFilter = async () => {
-  if (filterForm.number1 !== undefined && filterForm.number2 !== undefined && filterForm.number1 > filterForm.number2) {
+  if (queryForm.lackCountStart !== undefined && queryForm.lackCountEnd !== undefined && queryForm.lackCountStart > queryForm.lackCountEnd) {
     $baseMessage('最小值不能大于最大值，请重新填写', 'error')
     return
   }
-  let shipmentDateStart = ''
-  let shipmentDateEnd = ''
-  let arrivalDateStart = ''
-  let arrivalDateEnd = ''
 
-  if (filterForm.date1 && filterForm.date1.length === 2) {
-    shipmentDateStart = filterForm.date1[0]
-    shipmentDateEnd = filterForm.date1[1]
+  // 将日期范围转换为独立的开始和结束日期
+  if (date1.value && date1.value.length === 2 && date1.value[0] && date1.value[1]) {
+    queryForm.shipmentDateStart = date1.value[0]
+    queryForm.shipmentDateEnd = date1.value[1]
+  } else {
+    queryForm.shipmentDateStart = undefined
+    queryForm.shipmentDateEnd = undefined
   }
-  if (filterForm.date2 && filterForm.date2.length === 2) {
-    arrivalDateStart = filterForm.date2[0]
-    arrivalDateEnd = filterForm.date2[1]
+
+  if (date2.value && date2.value.length === 2 && date2.value[0] && date2.value[1]) {
+    queryForm.arrivalDateStart = date2.value[0]
+    queryForm.arrivalDateEnd = date2.value[1]
+  } else {
+    queryForm.arrivalDateStart = undefined
+    queryForm.arrivalDateEnd = undefined
   }
-  const { data } = await filterShipmentFbaList({
-    pageNo: queryForm.pageNo,
-    pageSize: queryForm.pageSize,
-    lackCountStart: filterForm.number1,
-    lackCountEnd: filterForm.number2,
-    shipmentDateStart,
-    shipmentDateEnd,
-    arrivalDateStart,
-    arrivalDateEnd,
-  })
-  if (data) {
-    $baseMessage('筛选成功!', 'success')
-    filterVisible.value = false
-    list.value = data.list!
-    total.value = data.total!
-  }
+
+  // 重置页码为第一页
+  queryForm.pageNo = 1
+
+  filterVisible.value = false
+  fetchData()
 }
 
 // 重置筛选
 const handleResetFilter = () => {
-  filterForm.number1 = undefined
-  filterForm.number2 = undefined
-  filterForm.date1 = undefined
-  filterForm.date2 = undefined
-  filterFormRef.value?.resetFields()
+  // 清除 queryForm 中的筛选条件
+  queryForm.lackCountStart = undefined
+  queryForm.lackCountEnd = undefined
+  queryForm.shipmentDateStart = undefined
+  queryForm.shipmentDateEnd = undefined
+  queryForm.arrivalDateStart = undefined
+  queryForm.arrivalDateEnd = undefined
+  date1.value = null
+  date2.value = null
+
+  // 重置页码为第一页
+  queryForm.pageNo = 1
+
   fetchData()
   closeFilter()
 }
 const queryData = () => {
   queryForm.pageNo = 1
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    },
-  })
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    },
-  })
   fetchData()
 }
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: queryForm.pageNo,
-      pageSize: queryForm.pageSize,
-    },
-  })
   fetchData()
 }
 const detailQueryData = () => {
@@ -538,7 +522,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       cursor: 'pointer',
     }
   }
-  if (data.columnIndex !== 0 && data.columnIndex !== 3 && data.columnIndex !== 19) {
+  if (data.column.label !== 'FBA SHIPMENT ID' && data.column.label !== '运输渠道') {
     return {
       textAlign: 'center',
     }
@@ -575,13 +559,6 @@ const getSiteList = async () => {
 }
 onBeforeMount(() => {
   getSiteList()
-  const { pageNo, pageSize } = route.query
-  if (pageNo) {
-    queryForm.pageNo = Number(pageNo)
-  }
-  if (pageSize) {
-    queryForm.pageSize = Number(pageSize)
-  }
   fetchData()
 })
 </script>

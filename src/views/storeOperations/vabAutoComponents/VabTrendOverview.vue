@@ -851,20 +851,20 @@ const calcYAxisRange = (yAxisIndex: number) => {
     }
   } else {
     // 其他 Y 轴使用原来的逻辑
-    if (option.value.series && Array.isArray(option.value.series)) {
-      option.value.series.forEach((series: any) => {
-        // 只收集属于当前 y 轴的 series 数据
-        if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
-          series.data.forEach((value: any) => {
-            if (value !== null && value !== undefined && value !== '') {
-              const numValue = Number(value)
-              if (!isNaN(numValue)) {
-                allValues.push(numValue)
-              }
+  if (option.value.series && Array.isArray(option.value.series)) {
+    option.value.series.forEach((series: any) => {
+      // 只收集属于当前 y 轴的 series 数据
+      if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
+        series.data.forEach((value: any) => {
+          if (value !== null && value !== undefined && value !== '') {
+            const numValue = Number(value)
+            if (!isNaN(numValue)) {
+              allValues.push(numValue)
             }
-          })
-        }
-      })
+          }
+        })
+      }
+    })
     }
   }
 

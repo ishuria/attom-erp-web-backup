@@ -892,6 +892,12 @@ export interface IGetShipmentFbaListReq {
   keyWord: string
   pageNo: number
   pageSize: number
+  lackCountStart?: number
+  lackCountEnd?: number
+  shipmentDateStart?: string
+  shipmentDateEnd?: string
+  arrivalDateStart?: string
+  arrivalDateEnd?: string
 }
 
 export interface IGetShipmentFbaListRes {
@@ -926,6 +932,10 @@ export interface IGetShipmentFbaList {
    * 运输渠道
    */
   channelName?: string
+  /**
+   * 合同号
+   */
+  contractNumber?: string
   /**
    * 已延误
    */
@@ -974,15 +984,25 @@ export interface IGetShipmentFbaList {
    * 时效 0计入时效 1不计入
    */
   timelinessStatus?: number
-  // 发货日期
+  /**
+   * 发货日期
+   */
   shipmentDate?: string
-  // 箱数
+  /**
+   * 箱数
+   */
   totalEncasementCount?: number
-  // 发货总数
+  /**
+   * 发货总数
+   */
   totalCount?: number
-  // 重量
+  /**
+   * 重量
+   */
   weight?: number
-  // 体积
+  /**
+   * 体积
+   */
   volume?: number
 }
 export interface IUpdateShipmentFBA {
