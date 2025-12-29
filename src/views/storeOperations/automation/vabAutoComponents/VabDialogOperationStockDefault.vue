@@ -221,6 +221,7 @@ const form = ref<IOperationStockDefaultParams>({
   reduceRatingLow: undefined,
   minAddPrice: undefined,
   maxDecodePrice: undefined,
+  reduceAvailableInventory: undefined,
 })
 
 watch(defaultVisible, async () => {
@@ -243,7 +244,7 @@ watch(defaultVisible, async () => {
     form.value.reduceRatingLow = data.reduceRatingLow
     form.value.minAddPrice = data.minAddPrice
     form.value.maxDecodePrice = data.maxDecodePrice
-
+    form.value.reduceAvailableInventory = data.reduceAvailableInventory
     queryOperationStockSite()
   }
 })

@@ -266,8 +266,19 @@
 
   <!-- 广告 -->
   <span v-else-if="item.label === '广告'">
-    <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
-    <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
+    <el-tooltip placement="top">
+      <template #content>
+        <div class="custom-tooltip">
+          <div>SP {{ row.advertisementStatusSp === 1 ? '开' : '关' }}</div>
+          <div>SD {{ row.advertisementStatusSd === 1 ? '开' : '关' }}</div>
+          <div>SB {{ row.advertisementStatusSb === 1 ? '开' : '关' }}</div>
+        </div>
+      </template>
+      <span style="display: inline-block">
+        <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
+        <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
+      </span>
+    </el-tooltip>
   </span>
 
   <!-- 运营备注 -->

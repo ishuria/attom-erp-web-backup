@@ -89,7 +89,7 @@
           </template>
         </el-table-column>
         <el-table-column label="PO" min-width="100" prop="po" />
-        <el-table-column label="发票匹配日期" min-width="100" prop="invoiceMatchDate">
+        <el-table-column label="发票匹配日期" min-width="100" prop="matchDate" sortable="custom">
           <template #default="{ row }">
             <div v-for="(item, index) in row.matchInvoiceRecord" :key="index" class="invoice-number-row">{{ item.invoiceMatchDate }}</div>
           </template>
@@ -330,15 +330,21 @@ const fetchData = async () => {
 }
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
-  queryForm.orderByField = prop
-  // queryForm.orderDirection = order === 'ascending' ? 'asc' : 'desc'
-  if (!order) {
-    if (queryForm.orderDirection === 'asc') {
-      column.order = 'descending'
-    } else if (queryForm.orderDirection === 'desc') {
-      column.order = 'ascending'
+  if (queryForm.orderByField === prop) {
+    // 如果点击的是当前排序列
+    if (!order) {
+      // 取消排序时，切换排序方向
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
     }
+  } else {
+    // 如果点击的是不同的列，默认设置为降序
+    column.order = 'descending'
   }
+  queryForm.orderByField = prop
   queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
   queryData()
 }
