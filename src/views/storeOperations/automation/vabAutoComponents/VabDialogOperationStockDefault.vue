@@ -122,10 +122,10 @@
 
           <el-card>
             <template #header><h3>提高价格</h3></template>
-            <el-form-item label="剩余可售天数 ≥ ">
+            <el-form-item label="剩余可售天数 ≤ ">
               <el-input v-model="form.improveDays" :disabled="loading" type="number" />
             </el-form-item>
-            <el-form-item label="可售总库存数 ≥ ">
+            <el-form-item label="可售总库存数 ≤ ">
               <el-input v-model="form.improveStock" :disabled="loading" type="number" />
             </el-form-item>
             <el-form-item label="断货天数 ≥ ">

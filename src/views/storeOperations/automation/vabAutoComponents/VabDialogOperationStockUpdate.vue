@@ -15,7 +15,7 @@
       </el-form-item>
 
       <el-form-item label="规则开关">
-        <el-select v-model="form.ruleStatus" :disabled="loading" placeholder="请填入信息">
+        <el-select v-model="form.ruleStatus" :disabled="loading" placeholder="请选择">
           <el-option label="关闭广告" :value="0" />
           <el-option label="开启广告" :value="1" />
         </el-select>
@@ -23,10 +23,10 @@
 
       <el-card>
         <template #header><h3>提高价格</h3></template>
-        <el-form-item label="剩余可售天数 ≥ ">
+        <el-form-item label="剩余可售天数 ≤ ">
           <el-input v-model="form.improveDays" :disabled="loading" type="number" />
         </el-form-item>
-        <el-form-item label="可售总库存数 ≥ ">
+        <el-form-item label="可售总库存数 ≤ ">
           <el-input v-model="form.improveStock" :disabled="loading" type="number" />
         </el-form-item>
         <el-form-item label="断货天数 ≥ ">
@@ -71,7 +71,6 @@
 import { updateBatchOperationStock } from '/@/api/devlocal/operationAutoMation.ts'
 import { IOperationStockUpdateReq } from '/@/type/storeOperation/operationStock.ts'
 
-
 defineComponent({
   name: 'VabDialogOperationStockUpdate',
 })
@@ -110,7 +109,7 @@ const form = ref<IOperationStockUpdateReq>({
   reduceSalesTotalStock: null,
   /** * 降低价格-ratings小于等于 */
   reduceRatingLow: null,
-  ruleStatus: 0,
+  ruleStatus: null,
 })
 
 const handleCancel = () => {
@@ -148,7 +147,7 @@ const handleConfirm = async () => {
         form.value.reduceRatingLow = undefined
         form.value.ruleStatus = 0
 
-        emit("fetch-query")
+        emit('fetch-query')
       }
     })
 
