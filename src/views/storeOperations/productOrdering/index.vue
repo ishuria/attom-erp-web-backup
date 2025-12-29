@@ -1100,6 +1100,7 @@ const fetchColumn = async () => {
         'monthSalesVolume',
         'encasementCount',
         'outOfStock',
+        'orderCount',
       ].includes(item.prop)
     ) {
       item.sortable = true
