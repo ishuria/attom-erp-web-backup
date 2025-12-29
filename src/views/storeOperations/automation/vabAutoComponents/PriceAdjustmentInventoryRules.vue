@@ -67,8 +67,15 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="SKU" prop="sku" />
-      <el-table-column label="站点" prop="siteName" width="135" />
+      <el-table-column label="SKU" prop="sku" :width="flexColumnWidth(list, 'SKU', 'sku')">
+        <template #default="{ row }">
+          <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.sku)">
+            {{ row.sku }}
+            <vab-icon icon="file-copy-2-fill" />
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="站点" prop="siteName" :width="flexColumnWidth(list, '站点', 'siteName')" />
       <el-table-column label="运营" prop="operationUser" width="95" />
       <el-table-column label="规则开关" prop="ruleStatus" width="95">
         <template #default="{ row }">
@@ -81,7 +88,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="最低价" prop="minPrice">
+      <el-table-column label="最低价" min-width="100" prop="minPrice">
         <template #default="{ row, $index }">
           <div class="none">
             <el-input
@@ -98,7 +105,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="最高价" prop="maxPrice">
+      <el-table-column label="最高价" min-width="100" prop="maxPrice">
         <template #default="{ row, $index }">
           <div class="none">
             <el-input
@@ -115,10 +122,10 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="调价幅度" prop="adjustmentRange">
+      <el-table-column label="调价幅度" min-width="100" prop="adjustmentRange">
         <template #default="scope">{{ scope.row.currencyIcon }} {{ scope.row.adjustmentRange }}</template>
       </el-table-column>
-      <el-table-column label="最小调价间隔（天）" prop="adjustmentDay">
+      <el-table-column label="最小调价间隔（天）" min-width="110" prop="adjustmentDay">
         <template #default="{ row, $index }">
           <div class="none">
             <el-input
@@ -132,7 +139,7 @@
         </template>
       </el-table-column>
       <el-table-column label="提高价格（满足全部条件）">
-        <el-table-column label="剩余可售天数≤" min-width="125" prop="improveDays">
+        <el-table-column label="剩余可售天数≤" min-width="130" prop="improveDays">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -145,7 +152,7 @@
             <span>{{ row.improveDays }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可售总库存数≤" min-width="125" prop="improveStock">
+        <el-table-column label="可售总库存数≤" min-width="130" prop="improveStock">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -158,7 +165,7 @@
             <span>{{ row.improveStock }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="断货天数≥" min-width="95" prop="improveOutStockDays">
+        <el-table-column label="断货天数≥" min-width="100" prop="improveOutStockDays">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -186,7 +193,7 @@
         </el-table-column>
       </el-table-column>
       <el-table-column label="降低价格条件组1（满足全部条件）">
-        <el-table-column label="断货天数≤" min-width="95" prop="reduceOutStockDays">
+        <el-table-column label="断货天数≤" min-width="100" prop="reduceOutStockDays">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -199,7 +206,7 @@
             <span>{{ row.reduceOutStockDays }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="剩余可售天数≥" min-width="125" prop="reduceDays">
+        <el-table-column label="剩余可售天数≥" min-width="130" prop="reduceDays">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -212,7 +219,7 @@
             <span>{{ row.reduceDays }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="剩余含在途可售天数≥" min-width="125" prop="reduceTransitDays">
+        <el-table-column label="剩余含在途可售天数≥" min-width="130" prop="reduceTransitDays">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -225,7 +232,7 @@
             <span>{{ row.reduceTransitDays }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可售总库存数≥" min-width="125" prop="reduceSalesTotalStock">
+        <el-table-column label="可售总库存数≥" min-width="130" prop="reduceSalesTotalStock">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -267,14 +274,14 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="系统最新操作日期" prop="operationDate" width="110">
+      <el-table-column label="系统最新操作日期" prop="operationDate" width="115">
         <template #header>
           系统最新
           <br />
           操作日期
         </template>
       </el-table-column>
-      <el-table-column label="价格">
+      <el-table-column label="价格" min-width="100">
         <template #default="scope">
           <el-text :type="getPriceChangeType(scope.row.operationBeforePrice, scope.row.operationAfterPrice)">
             {{ scope.row.currencyIcon }}{{ scope.row.operationBeforePrice }} -> {{ scope.row.currencyIcon
@@ -323,6 +330,8 @@
 import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
+import handleClipboard from '~/src/utils/clipboard'
+import { flexColumnWidth } from '~/src/utils/tableColum'
 import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
 import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
 import { getRootElement } from '/@/utils/nodeUtils.ts'
@@ -465,5 +474,14 @@ const updateBatch = () => {
 
 .none {
   display: none;
+}
+.copySku {
+  cursor: pointer;
+  -webkit-user-select: text;
+  user-select: text;
+  transition: all 0.3s;
+  &:hover {
+    color: #000;
+  }
 }
 </style>
