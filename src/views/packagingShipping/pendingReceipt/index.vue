@@ -1108,10 +1108,13 @@ const changeProductDate = async (row: any) => {
   // 由于 el-date-picker 已设置 value-format="YYYY-MM-DD"，值已经是字符串格式
   // 如果删除日期，produceCompletionDate 会是 null，需要处理
   const date = row.produceCompletionDate || ''
-  await updateProductDate({
+  const { data } = await updateProductDate({
     signId: row.signId,
     date: date,
   })
+  if (data) {
+    fetchData()
+  }
   // console.log(row.produceCompletionDate);
 }
 const changeProblemReason = async (row: any) => {

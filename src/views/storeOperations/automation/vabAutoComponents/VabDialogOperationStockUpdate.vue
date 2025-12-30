@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="defaultVisible" title="调价库存规则批量修改" width="23%">
+  <vab-dialog v-model="defaultVisible" title="调价库存规则批量修改" top="7vh" width="23%">
     <el-form label-position="right" label-width="auto" :model="form">
       <el-form-item label="最低价">
         <el-input v-model="form.minPrice" type="number" />
@@ -16,8 +16,8 @@
 
       <el-form-item label="规则开关">
         <el-select v-model="form.ruleStatus" :disabled="loading" placeholder="请选择">
-          <el-option label="关闭广告" :value="0" />
-          <el-option label="开启广告" :value="1" />
+          <el-option label="关闭规则" :value="0" />
+          <el-option label="开启规则" :value="1" />
         </el-select>
       </el-form-item>
 
