@@ -152,7 +152,7 @@
             <span>{{ row.improveDays }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可售总库存数≤" min-width="130" prop="improveStock">
+        <!-- <el-table-column label="可售总库存数≤" min-width="130" prop="improveStock">
           <template #default="{ row, $index }">
             <div class="none">
               <el-input
@@ -164,7 +164,7 @@
             </div>
             <span>{{ row.improveStock }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="断货天数≥" min-width="100" prop="improveOutStockDays">
           <template #default="{ row, $index }">
             <div class="none">
