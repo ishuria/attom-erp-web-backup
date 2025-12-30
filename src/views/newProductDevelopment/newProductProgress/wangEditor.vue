@@ -1,5 +1,12 @@
 <template>
-  <el-dialog v-model="dflag" :before-close="handlerCloseDialog" class="wangEditorDialog" :title="props.title" width="60%">
+  <el-dialog
+    v-model="dflag"
+    :before-close="handlerCloseDialog"
+    class="wangEditorDialog"
+    :close-on-click-modal="false"
+    :title="props.title"
+    width="60%"
+  >
     <div v-if="dflag" class="wang-editor-container">
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
       <editor
