@@ -54,9 +54,9 @@
               <el-form-item>
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
-              <!-- <el-form-item>
+              <el-form-item>
                 <el-button type="primary" @click="spFileUploadVisible = true">文件上传</el-button>
-              </el-form-item> -->
+              </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
               </el-form-item>
@@ -517,7 +517,7 @@
       @image-preview="imagePreviewShow"
     />
     <!-- 文件上传 -->
-    <sp-file-upload v-model:visible="spFileUploadVisible" :site-list="siteList" />
+    <sp-file-upload v-model:visible="spFileUploadVisible" :site-list="filteredSiteList" />
     <operation-log-manual-sum v-model:visible="logSummaryVisible" />
   </div>
 </template>
@@ -787,6 +787,10 @@ const currencyAsin = ref<number | undefined>(0)
 const currencyPAsin = ref<number | undefined>(0)
 const developUserList = ref<optionType[]>([])
 const siteList = ref<optionType[]>([])
+// 过滤掉 Tiktok美国 的站点列表（用于文件上传组件）
+const filteredSiteList = computed(() => {
+  return siteList.value.filter((site) => site.label !== 'Tiktok美国')
+})
 const operateUserList = ref<optionType[]>([])
 const checkAll = ref<boolean>(false)
 const indeterminate = ref<boolean>(false)

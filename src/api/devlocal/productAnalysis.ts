@@ -279,3 +279,38 @@ export function getSPCampaignNameList(params: { siteId: number; field: string; t
     params,
   })
 }
+
+/**
+ * @description 运营-产品分析-SP-ST-Share-广告组计算
+ * @returns { data: boolean }
+ */
+export function calculateSpAds(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/analysis/sp/ads/calculate`,
+    method: 'post',
+  })
+}
+
+/**
+ * @description 查询初始ACOS配置值
+ * @returns { data: number } 初始ACOS值
+ */
+export function queryInitialAcos(): Promise<{ data: number }> {
+  return request({
+    url: `${BASE_API}/product/analysis/initial/acos`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 更新初始ACOS配置值
+ * @param initialAcos 初始ACOS值
+ * @returns { data: boolean }
+ */
+export function updateInitialAcos(initialAcos: number): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/analysis/initial/acos/update`,
+    method: 'post',
+    params: { initialAcos },
+  })
+}
