@@ -21,7 +21,8 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { reactive, ref, watch } from 'vue'
-import { updateCustomsClearanceSku } from '/@/api/devlocal/productInformation'
+import { updateSkuFnSku } from '/@/api/devlocal/productInformation'
+import { $baseMessage } from '/@/hooks'
 
 defineOptions({
   name: 'FnSkuDialog',
@@ -30,7 +31,7 @@ defineOptions({
 const props = defineProps<{
   modelValue: boolean
   rowData?: {
-    id?: number
+    sku?: string
     northAmericaFnSku?: string
     europeFnSku?: string
     jpFnSku?: string
@@ -46,12 +47,12 @@ const dialogVisible = ref<boolean>(false)
 const saveLoading = ref<boolean>(false)
 const formRef = ref<FormInstance>()
 const form = reactive<{
-  id?: number
+  sku?: string
   northAmericaFnSku?: string
   europeFnSku?: string
   jpFnSku?: string
 }>({
-  id: undefined,
+  sku: '',
   northAmericaFnSku: '',
   europeFnSku: '',
   jpFnSku: '',
@@ -64,7 +65,7 @@ watch(
   (val) => {
     dialogVisible.value = val
     if (val && props.rowData) {
-      form.id = props.rowData.id
+      form.sku = props.rowData.sku || ''
       form.northAmericaFnSku = props.rowData.northAmericaFnSku || ''
       form.europeFnSku = props.rowData.europeFnSku || ''
       form.jpFnSku = props.rowData.jpFnSku || ''
@@ -81,18 +82,18 @@ watch(dialogVisible, (val) => {
 const handleClose = () => {
   dialogVisible.value = false
   formRef.value?.resetFields()
-  form.id = undefined
+  form.sku = ''
   form.northAmericaFnSku = ''
   form.europeFnSku = ''
   form.jpFnSku = ''
 }
 
 const handleConfirm = async () => {
-  if (!form.id) return
+  if (!form.sku) return
   try {
     saveLoading.value = true
-    const { data } = await updateCustomsClearanceSku({
-      id: form.id,
+    const { data } = await updateSkuFnSku({
+      sku: form.sku,
       northAmericaFnSku: form.northAmericaFnSku,
       europeFnSku: form.europeFnSku,
       jpFnSku: form.jpFnSku,

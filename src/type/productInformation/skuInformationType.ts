@@ -1268,6 +1268,14 @@ export interface IUpdateCustomsClearanceSku {
   /** FDA申报费 */
   fdaFlag?: boolean
 }
+
+export interface IUpdateSkuFnSku {
+  sku: string
+  northAmericaFnSku?: string
+  europeFnSku?: string
+  jpFnSku?: string
+}
+
 export interface IGetCustomsClearanceRatioRes {
   data?: {
     // 清关系数

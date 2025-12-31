@@ -272,13 +272,14 @@
           <span>{{ row.usageEn }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column align="center" fixed="right" label="操作" width="330">
+      <el-table-column align="center" fixed="right" label="操作" width="360">
         <template #default="{ row }">
-          <el-link type="primary" underline="never" @click="showSkuCustomsClearance(row)">导入清关信息</el-link>
-          <span style="margin: 0 5px"></span>
-          <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
-          <span style="margin: 0 5px"></span>
-          <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
+          <el-space>
+            <el-link type="primary" underline="never" @click="showSkuCustomsClearance(row)">导入清关信息</el-link>
+            <el-link type="primary" underline="never" @click="showFnSkuDialog(row)">FNSKU</el-link>
+            <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
+            <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
+          </el-space>
         </template>
       </el-table-column>
       <template #empty>
@@ -495,6 +496,8 @@
 
     <!-- 导入sku清关信息 -->
     <sku-customs-clearance-component v-model="skuCustomsClearanceVisible" :targetCustomClearnId="targetId" />
+    <!-- FNSKU修改弹窗 -->
+    <fn-sku-dialog v-model="fnSkuDialogVisible" :row-data="currentFnSkuRow" @success="fetchData" />
   </div>
 </template>
 
@@ -595,6 +598,27 @@ const targetId = ref<number>(0)
 const showSkuCustomsClearance = (val: any) => {
   skuCustomsClearanceVisible.value = true
   targetId.value = val.id
+}
+
+// FNSKU修改弹窗
+const fnSkuDialogVisible = ref<boolean>(false)
+const currentFnSkuRow = ref<
+  | {
+      sku?: string
+      northAmericaFnSku?: string
+      europeFnSku?: string
+      jpFnSku?: string
+    }
+  | undefined
+>(undefined)
+const showFnSkuDialog = (row: any) => {
+  currentFnSkuRow.value = {
+    sku: row.sku,
+    northAmericaFnSku: row.northAmericaFnSku || '',
+    europeFnSku: row.europeFnSku || '',
+    jpFnSku: row.jpFnSku || '',
+  }
+  fnSkuDialogVisible.value = true
 }
 
 const closeAddClearance = () => {

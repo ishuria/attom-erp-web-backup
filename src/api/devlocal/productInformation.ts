@@ -45,6 +45,7 @@ import type {
   IUpdateProductCustomsClearanceStatus,
   IUpdateProductCustomsClearanceSuppliserInfoReq,
   IUpdateSkuComponent,
+  IUpdateSkuFnSku,
   IaddConsumablesOtherSku,
   IaddProductComponentOtherSku,
   IaddProductQualityInspection,
@@ -702,6 +703,18 @@ export function getCustomsClearanceSkuList(data: IGetCustomsClearanceSkuListReq)
 export function updateCustomsClearanceSku(data: IUpdateCustomsClearanceSku): Promise<IBooleanResp> {
   return request({
     url: `${BASE_API}/customs/clearance/sku/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * @description 修改SKU FNSKU
+ * @param data: IUpdateSkuFnSku
+ * @returns IBooleanResp
+ */
+export function updateSkuFnSku(data: IUpdateSkuFnSku): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/product/update/sku/fnsku`,
     method: 'post',
     data,
   })
