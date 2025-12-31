@@ -177,16 +177,26 @@
                   </template>
                 </el-image>
               </div>
-              <div v-if="item.label === 'SKU'">
-                <span class="copySku" @click="handleClipboard($event, row.sku)">
-                  {{ row.sku }}
-                  <vab-icon icon="file-copy-2-fill" />
+              <div v-if="item.label === 'SKU套数'">
+                <div>
+                  <span class="copySku" @click="handleClipboard($event, row.sku)">
+                    {{ row.sku }}
+                    <vab-icon icon="file-copy-2-fill" />
+                  </span>
                   <br />
                   {{ row.componentName }}
-                </span>
+                </div>
+                <div style="margin-top: 4px">
+                  <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
+                    {{ siteMap[row.site as siteValue] }}
+                  </el-tag>
+                  <span style="margin-left: 4px">{{ row.purchaseSkuNumber }}套</span>
+                </div>
               </div>
               <div v-if="item.label === '站点'">
-                {{ siteMap[row.site as siteValue] }}
+                <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
+                  {{ siteMap[row.site as siteValue] }}
+                </el-tag>
               </div>
               <div v-if="item.label === '生产完成日期'">
                 <el-date-picker
@@ -425,8 +435,26 @@
                   {{ row.componentName }}
                 </span>
               </div>
+              <div v-if="item.label === 'SKU套数'">
+                <div>
+                  <span class="copySku" @click="handleClipboard($event, row.sku)">
+                    {{ row.sku }}
+                    <vab-icon icon="file-copy-2-fill" />
+                  </span>
+                  <br />
+                  {{ row.componentName }}
+                </div>
+                <div style="margin-top: 4px">
+                  <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
+                    {{ siteMap[row.site as siteValue] }}
+                  </el-tag>
+                  <span style="margin-left: 4px">{{ row.purchaseSkuNumber }}套</span>
+                </div>
+              </div>
               <div v-if="item.label === '站点'">
-                {{ siteMap[row.site as siteValue] }}
+                <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
+                  {{ siteMap[row.site as siteValue] }}
+                </el-tag>
               </div>
               <div v-if="item.label === '生产完成日期'">
                 <el-date-picker
@@ -713,6 +741,9 @@ const fetchColumn2 = async () => {
 }
 const handleWidth = (item: any) => {
   switch (item.label) {
+    case 'SKU套数': {
+      return flexColumnWidth(list.value, 'SKU套数', 'sku', 60)
+    }
     case 'SKU': {
       return flexColumnWidth(list.value, 'SKU', 'sku', 60)
     }
@@ -1166,7 +1197,7 @@ const handleTabClick = async (tab: TabsPaneContext) => {
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): any => {
   const label = data.column.label
-  if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
+  if (['零件名', '收货仓库', '签收物流单号', 'SKU', 'SKU套数', '供应商', '跟单日志'].includes(label)) {
     return {
       textAlign: 'left',
     }
@@ -1177,7 +1208,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 }
 const cellStyle2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   const label = data.column.label
-  if (['零件名', '收货仓库', '签收物流单号', 'SKU', '供应商', '跟单日志'].includes(label)) {
+  if (['零件名', '收货仓库', '签收物流单号', 'SKU', 'SKU套数', '供应商', '跟单日志'].includes(label)) {
     return {
       textAlign: 'left',
     }
@@ -1383,6 +1414,40 @@ const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
 
   // 对于其他列，默认返回不合并
   return { rowspan: 1, colspan: 1 }
+}
+// 站点 -> 自定义颜色映射
+const getSiteBaseColor = (siteName: string) => {
+  if (!siteName) return '#909399'
+  const colorMap: Record<string, string> = {
+    亚马逊US美国: '#67C23A', // 绿色
+    亚马逊UK英国: '#409EFF', // 蓝色
+    亚马逊DE德国: '#8E44AD', // 紫色（由红色改为紫色）
+    亚马逊CA加拿大: '#2AC3A2', // 青绿
+    沃尔玛US美国: '#E6A23C', // 橙色
+    亚马逊JP日本: '#5C6BC0', // 靛蓝
+    Tiktok美国: '#34495E', // 深石板色
+    '美国-海外仓': '#909399', // 灰色
+  }
+  return colorMap[siteName] ?? '#909399'
+}
+// 返回协调的tag样式：浅色背景 + 同色文字
+const getSiteTagStyle = (siteName: string) => {
+  const base = getSiteBaseColor(siteName)
+  // 将16进制转换为rgba，背景使用较低透明度
+  const hexToRgba = (hex: string, alpha = 0.15) => {
+    const h = hex.replace('#', '')
+    const bigint = parseInt(h, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+  return {
+    backgroundColor: hexToRgba(base, 0.15),
+    color: base,
+    border: '1px solid ' + hexToRgba(base, 0.35),
+    fontSize: '14px',
+  }
 }
 onBeforeMount(async () => {
   fetchUserList()
