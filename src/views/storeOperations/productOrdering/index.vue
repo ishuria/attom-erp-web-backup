@@ -432,6 +432,9 @@
         <el-form-item label="春节备货">
           <el-checkbox v-model="stockUpForm.springFestivalStock" :false-value="0" :true-value="1" />
         </el-form-item>
+        <el-form-item label="发货多发天数">
+          <el-input v-model="stockUpForm.shipmentOverDays" :min="0" style="flex: 1" type="number" />
+        </el-form-item>
         <el-form-item label="春节订货截止日期" label-position="top">
           <el-date-picker v-model="stockUpForm.springFestivalOrderDeadline" clearable type="date" value-format="YYYY-MM-DD" />
         </el-form-item>
