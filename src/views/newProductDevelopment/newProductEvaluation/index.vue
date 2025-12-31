@@ -3,7 +3,7 @@
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-button v-permissions="{ permission: [EvaluationPermission.ADD] }" type="primary" @click="startEvaluation">开始评估</el-button>
-        <el-button v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" @click="keyWordTrendVisible = true">
+        <el-button v-permissions="{ permission: [EvaluationPermission.KEYWORD_TREND] }" type="primary" @click="openKeyWordTrend">
           关键词趋势
         </el-button>
         <el-button v-permissions="{ permission: [EvaluationPermission.DEFAULT_PARAMS] }" type="primary" @click="getScoreParams">
@@ -155,23 +155,14 @@
       @size-change="handleSizeChange"
     />
 
-    <vab-dialog v-model="keyWordTrendVisible" title="关键词趋势" width="500">
-      <el-form style="margin-right: 3px; margin-left: 3px">
-        <el-form-item label="关键词">
-          <el-input v-model="inputKeyWord" autocomplete="off" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button type="primary" @click="searchKeyWordTrend">查询</el-button>
-      </template>
-    </vab-dialog>
-
     <!-- 关键词趋势图表 -->
     <vab-trend
       :key-word="inputKeyWord"
       :loading="chartLoading"
+      :show-input="true"
       :trend-data="trendEcharts"
       :trend-echarts-visible="keyWordTrendEchartsVisible"
+      @search="handleKeyWordSearch"
       @update:clear-input-key-word="cleanKeyWordTrendData"
       @update:trend-echarts-list="updateTrendEchartsData"
       @update:visible-value="updateTrendVisibleValue"
@@ -432,8 +423,6 @@ const isFullscreen = ref<boolean>(false)
 const listLoading = ref<boolean>(true)
 // 成本核算默认参数
 const costAccountingeParamVisible = ref<boolean>(false)
-// 关键词
-const keyWordTrendVisible = ref<boolean>(false)
 // 关键词趋势
 const keyWordTrendEchartsVisible = ref<boolean>(false)
 // 共享
@@ -596,15 +585,34 @@ const searchKeyWordTrend = async () => {
   }
 }
 
+// 打开关键词趋势弹窗
+const openKeyWordTrend = () => {
+  inputKeyWord.value = ''
+  keyWordTrendEchartsVisible.value = true
+}
+
+// 处理关键词搜索（从vab-trend组件触发）
+const handleKeyWordSearch = async (keyword: string) => {
+  inputKeyWord.value = keyword
+  chartLoading.value = true
+  try {
+    await keyWordTrend(keyword)
+  } finally {
+    chartLoading.value = false
+  }
+}
+
 const cliekFontSearchKeyWord = async (row: any) => {
   inputKeyWord.value = row.amazonFrontendKeywords
-  keyWordTrend(row.amazonFrontendKeywords)
+  keyWordTrendEchartsVisible.value = true
+  await keyWordTrend(row.amazonFrontendKeywords)
 }
 
 const keyWordTrendCellClick = async (row: any, column: any) => {
   if (column.label === '关键词趋势') {
     inputKeyWord.value = row.amazonFrontendKeywords
-    keyWordTrend(row.amazonFrontendKeywords)
+    keyWordTrendEchartsVisible.value = true
+    await keyWordTrend(row.amazonFrontendKeywords)
   }
 }
 
@@ -612,8 +620,6 @@ const keyWordTrend = async (str: string) => {
   const { data } = await getEvaluationTrendList({ keyWord: str, type: 0 })
   trendEcharts.value.xAxis = data.xAxis
   trendEcharts.value.yAxis = data.yAxis
-  keyWordTrendVisible.value = false
-  keyWordTrendEchartsVisible.value = true
 }
 
 /**
@@ -665,7 +671,6 @@ const cleanKeyWordTrendData = (newValue: string) => {
   trendEcharts.value.xAxis = []
   trendEcharts.value.yAxis = []
   keyWordTrendEchartsVisible.value = false
-  keyWordTrendVisible.value = false
 }
 
 // 获取评分参数列表
