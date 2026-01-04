@@ -13,7 +13,11 @@
       <el-table-column label="6个月平均新品提成" min-width="140" prop="newProductCommission" />
       <el-table-column label="近12月管理减免" min-width="125" prop="managementRelief" />
       <el-table-column label="折扣系数" min-width="100" prop="discountFactor" />
-      <el-table-column label="提成比例" min-width="100" prop="commissionRatio" />
+      <el-table-column label="提成比例" min-width="100" prop="commissionRatio">
+        <template #default="{ row }">
+          {{ row.commissionRatio ? row.commissionRatio + '%' : '' }}
+        </template>
+      </el-table-column>
     </el-table>
   </vab-card>
 </template>
