@@ -240,7 +240,7 @@
         >
           <el-table-column label="PO发布日期" min-width="115" prop="releaseDate">
             <template #default="{ row }">
-              <span>{{ formatDate(new Date(row.releaseDate)) }}</span>
+              <span>{{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column label="提交日期" min-width="115" prop="createTime">
