@@ -243,6 +243,11 @@
               <span>{{ row.releaseDate ? formatDate(new Date(row.releaseDate)) : '' }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="planPo发布日期" min-width="115" prop="poCreateTime">
+            <template #default="{ row }">
+              <span>{{ row.poCreateTime ? formatDate(new Date(row.poCreateTime)) : '' }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="提交日期" min-width="115" prop="createTime">
             <template #default="{ row }">
               <span>{{ formatDate(new Date(row.createTime)) }}</span>
