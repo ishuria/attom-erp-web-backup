@@ -216,7 +216,7 @@
               <span v-html="row._sku"></span>
             </el-tooltip>
           </span>
-          <span v-if="item.label === '销量趋势'">
+          <span v-if="item.label === '销量趋势(点击看明细)'">
             <div style="width: 100%; height: 59px">
               <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
             </div>
@@ -494,11 +494,13 @@ import {
   updateOperationASINOperateTypeList,
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
+import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IGetOperationOrderList, IGetOperationOrderTable } from '/@/type/storeOperation/productOrdering'
 import { IGetOperationColumnList } from '/@/type/storeOperation/productPerformanceType'
 import { handleClip } from '/@/utils/clipboard'
 import { formatPercentage, getAmazonStars, handleImgUrl } from '/@/utils/rate'
+import { _addData } from '/@/utils/skuOptions'
 import { calculateBrColumnWidth, flexColumnWidth, processField } from '/@/utils/tableColum'
 
 defineOptions({
@@ -572,7 +574,14 @@ const asinId = ref<number>(-1)
 const smoothForm = reactive<any>({})
 const orderListLoading = ref<boolean>(false)
 
-const aclStore = useAclStore()
+const currentRoleCode = useAclStore().getRole[0]
+const canViewSalesTrendDetail = computed(() => {
+  return (
+    currentRoleCode === ROLE_BOSS_CODE ||
+    currentRoleCode === ROLE_ECOMMERCEOPERATOR_CODE ||
+    currentRoleCode == ROLE_ECOMMERCEOPERATIONLEAD_CODE
+  )
+})
 // 添加选中行的 ID
 const currentRowId = ref<number | undefined>(undefined)
 
@@ -634,6 +643,24 @@ const option1 = ref<any>({})
 const cellClick = async (row: any, column: any) => {
   const label = column.label
   switch (label) {
+    case '销量趋势(点击看明细)': {
+      if (!canViewSalesTrendDetail.value) {
+        $baseMessage('仅运营角色和BOSS可以查看明细', 'warning')
+        return
+      }
+      router.push({
+        path: '/storeOperations/productAnalysis',
+        query: {
+          activeName: 0,
+          field: 1,
+          sku: row.sku,
+          asin: row.asin,
+          site: row.site,
+        },
+      })
+      _addData(row)
+      break
+    }
     case '季节趋势': {
       seasonalVisible.value = true
       _seasonalCoefficient = row.seasonalCoefficient
@@ -722,7 +749,7 @@ const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) =>
   return ''
 }
 const operationSelect = () => {
-  const role = aclStore.getRole[0]
+  const role = currentRoleCode
   switch (role) {
     // 老板和运营主管
     case 'ROLE_BOSS':
