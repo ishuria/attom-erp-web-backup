@@ -888,6 +888,8 @@ export interface IUpdateLostGoodsStatus {
 }
 
 export interface IGetShipmentFbaListReq {
+  orderByField: string
+  orderDirection: string
   siteId: number
   keyWord: string
   pageNo: number

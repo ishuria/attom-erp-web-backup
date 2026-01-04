@@ -40,48 +40,54 @@
       stripe
       @cell-click="cellClick"
       @row-click="handleRowClick"
+      @sort-change="handleSortChange"
     >
       <el-table-column
         label="FBA SHIPMENT ID"
         prop="fbaShipmentId"
         :width="flexColumnWidth(list, 'FBA SHIPMENT ID', 'fbaShipmentId', 30)"
       />
-      <el-table-column label="合同号" prop="contractNumber" :width="flexColumnWidth(list, '合同号', 'contractNumber', 30)" />
+      <el-table-column
+        label="合同号"
+        prop="contractNumber"
+        sortable="custom"
+        :width="flexColumnWidth(list, '合同号--', 'contractNumber', 30)"
+      />
       <el-table-column label="站点" min-width="130" prop="site" />
       <el-table-column label="状态" min-width="100" prop="status" />
       <el-table-column label="运输渠道" prop="channelName" :width="flexColumnWidth(list, '运输渠道', 'channelName')" />
-      <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
+      <el-table-column label="发货日期" min-width="115" prop="shipmentDate" sortable="custom">
         <template #default="{ row }">
           {{ row.shipmentDate ? formatDate(new Date(row.shipmentDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="原始预计入库" min-width="130" prop="initialArrivalDate">
+      <el-table-column label="原始预计入库" min-width="150" prop="initialArrivalDate" sortable="custom">
         <template #default="{ row }">
           {{ row.initialArrivalDate ? formatDate(new Date(row.initialArrivalDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="最新预计入库" min-width="130" prop="latestArrivalDate">
+      <el-table-column label="最新预计入库" min-width="150" prop="latestArrivalDate" sortable="custom">
         <template #default="{ row }">
           {{ row.latestArrivalDate ? formatDate(new Date(row.latestArrivalDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="上架日期" min-width="115" prop="actualArrivalDate">
+      <el-table-column label="上架日期" min-width="115" prop="actualArrivalDate" sortable="custom">
         <template #default="{ row }">
           {{ row.actualArrivalDate ? formatDate(new Date(row.actualArrivalDate)) : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="实际时效" min-width="100" prop="actualTimeliness" />
-      <el-table-column label="已延误" min-width="100" prop="delayed" />
-      <el-table-column label="实际延误" min-width="130" prop="actualDelay">
+      <el-table-column label="实际时效" min-width="115" prop="actualTimeliness" sortable="custom" />
+      <el-table-column label="已延误" min-width="100" prop="delayed" sortable="custom" />
+      <el-table-column label="实际延误" min-width="130" prop="actualDelay" sortable="custom">
         <template #default="{ row }">
           <span :style="{ color: row.actualDelay <= 0 ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">{{ row.actualDelay }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已接收天数" min-width="130" prop="acceptDays" />
       <el-table-column label="接收完成天数" min-width="130" prop="acceptFinishDays" />
-      <el-table-column label="发货总数" min-width="100" prop="totalCount" />
-      <el-table-column label="已接收数" min-width="100" prop="receiptsCount" />
-      <el-table-column label="缺数" min-width="80" prop="lackCount">
+      <el-table-column label="发货总数" min-width="115" prop="totalCount" sortable="custom" />
+      <el-table-column label="已接收数" min-width="115" prop="receiptsCount" sortable="custom" />
+      <el-table-column label="缺数" min-width="90" prop="lackCount" sortable="custom">
         <template #default="{ row }">
           <span :style="{ color: row.lackCount > 0 ? 'var(--el-color-danger)' : 'var(--el-color-success)' }">
             {{ row.lackCount > 0 ? '-' + row.lackCount : '+' + Math.abs(row.lackCount) }}
@@ -305,6 +311,8 @@ const queryForm = reactive<IGetShipmentFbaListReq>({
   shipmentDateEnd: undefined,
   arrivalDateStart: undefined,
   arrivalDateEnd: undefined,
+  orderByField: 'shipmentDate',
+  orderDirection: 'descending',
 })
 const list = ref<IGetShipmentFbaList[]>([])
 const total = ref<number>(0)
@@ -543,6 +551,23 @@ const fetchData = async () => {
   list.value = data?.list!
   total.value = data?.total!
   listLoading.value = false
+}
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (queryForm.orderByField === prop) {
+    if (!order) {
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchData()
 }
 // 站点列表类型
 type ISiteList = {
