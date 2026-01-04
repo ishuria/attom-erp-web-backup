@@ -246,6 +246,9 @@
           <span v-if="item.label === '月净利率'">
             {{ row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : '' }}
           </span>
+          <span v-if="item.label === 'PASIN毛利率'">
+            {{ row.pAsinMonthNetProfitMargin !== null ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : '' }}
+          </span>
           <span v-if="item.label === '半年有货率'">
             {{ row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : '' }}
           </span>
@@ -1056,6 +1059,24 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       return {
         textAlign: 'center',
 
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === 'PASIN毛利率') {
+    const pAsinMonthNetProfitMargin = data.row.pAsinMonthNetProfitMargin * 100
+    if (pAsinMonthNetProfitMargin >= 20) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else if (pAsinMonthNetProfitMargin < 20 && pAsinMonthNetProfitMargin > 0) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-warning)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
         color: 'var(--el-color-danger)',
       }
     }
