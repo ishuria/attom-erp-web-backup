@@ -28,7 +28,16 @@
               />
             </el-tab-pane>
             <el-tab-pane label="SP广告饼图" :name="1">
-              <vab-ad-pie-tab v-if="activeName === 1" />
+              <vab-ad-pie-tab
+                v-if="activeName === 1"
+                :asin="asin"
+                :campaign-name="selectedCampaignName"
+                :select-date-range="adPieDateRange"
+                :site-id="selectedSite"
+                :skip-no-data="skipNoData"
+                :sku="sku"
+                :type="selectField"
+              />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
               <vab-cost-analysis
@@ -107,7 +116,7 @@
                   :disabled-date="(time: Date) => time.getTime() > Date.now()"
                   end-placeholder="结束日期"
                   range-separator="至"
-                  :shortcuts="adPieDateShortcuts"
+                  :shortcuts="dateShortcuts"
                   start-placeholder="开始日期"
                   type="daterange"
                 />
@@ -256,49 +265,10 @@ const compareType = ref<number>(0)
 const selectedSku = ref<string>('')
 // 广告活动名相关
 const campaignNameList = ref<string[]>([])
-const selectedCampaignName = ref<string>('')
+const selectedCampaignName = ref<string>('所有广告组之和')
 // SP广告饼图日期范围
-const adPieDateRange = ref<[Date, Date] | null>(null)
+const adPieDateRange = ref<[string, string]>(getStoredDateRange())
 const skipNoData = ref<number>(1)
-// SP广告饼图日期快捷选项（基于 dayOption）
-const adPieDateShortcuts = [
-  {
-    text: '7天',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setDate(start.getDate() - 6)
-      return [start, end]
-    },
-  },
-  {
-    text: '15天',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setDate(start.getDate() - 14)
-      return [start, end]
-    },
-  },
-  {
-    text: '30天',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setDate(start.getDate() - 29)
-      return [start, end]
-    },
-  },
-  {
-    text: '60天',
-    value: () => {
-      const end = new Date()
-      const start = new Date()
-      start.setDate(start.getDate() - 59)
-      return [start, end]
-    },
-  },
-]
 
 // 日期选择器快捷选项
 const dateShortcuts = [

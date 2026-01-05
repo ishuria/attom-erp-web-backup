@@ -1,35 +1,46 @@
 <template>
   <div class="pie-container">
-    <vab-card style="height: 400px;">
+    <vab-card style="height: 400px">
       <div style="display: flex; width: 100%; height: 100%">
         <div style="width: 43%">
-          <div style="text-align: left;">
+          <div style="text-align: left">
             <el-form inline>
               <el-form-item label="目标ACOS">
-                <el-input />
+                <el-input
+                  v-model="adSettingForm.targetAcos"
+                  :disabled="adSettingDisabled"
+                  placeholder="请输入"
+                  type="number"
+                  @change="handleAdSettingUpdate"
+                >
+                  <template #append>%</template>
+                </el-input>
               </el-form-item>
               <el-form-item label="目标转化率">
-                <el-input />
+                <el-input
+                  v-model="adSettingForm.targetChange"
+                  :disabled="adSettingDisabled"
+                  placeholder="请输入"
+                  type="number"
+                  @change="handleAdSettingUpdate"
+                >
+                  <template #append>%</template>
+                </el-input>
               </el-form-item>
             </el-form>
           </div>
-          <div ref="chartContainer1" style="width: 100%; height: 350px;"></div>
+          <div ref="chartContainer1" style="width: 100%; height: 350px"></div>
         </div>
-        <el-divider direction="vertical" style="height: 360px"/>
+        <el-divider direction="vertical" style="height: 360px" />
         <div style="flex: 1">
-          <el-row >
+          <el-row>
             <el-col :span="4">
-              <el-select v-model="pieSelect" style="max-width: 5em; margin-left: 10px;" @change="handleChangeSelect">
-                <el-option 
-                  v-for="item in pieSelectOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
+              <el-select v-model="pieSelect" style="max-width: 5em; margin-left: 10px" @change="handleChangeSelect">
+                <el-option v-for="item in pieSelectOption" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-col>
             <el-col :span="20">
-              <div ref="chartContainer2" style="width: 100%; height: 400px;"></div>
+              <div ref="chartContainer2" style="width: 100%; height: 400px"></div>
             </el-col>
           </el-row>
         </div>
@@ -44,35 +55,50 @@
           <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
         </el-form-item>
         <el-form-item>
-          <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData"/>
+          <el-button :icon="Search" :loading="listLoading" type="primary" @click="queryData" />
         </el-form-item>
       </el-form>
     </div>
-    <el-table border :cell-style="cellStyle" :data="data2" :header-cell-style="{textAlign: 'center'}" stripe>
-      <el-table-column fixed="left" label="客户搜索词" min-width="120" prop="name">
+    <el-table v-loading="listLoading" border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+      <el-table-column
+        fixed="left"
+        label="客户搜索词"
+        prop="customerSearchTerm"
+        :width="flexColumnWidth(list, '客户搜索词', 'customerSearchTerm')"
+      >
         <template #default="{ row }">
-          <el-link type="primary">{{ row.name }}</el-link>
+          <el-link type="primary">{{ row.customerSearchTerm }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="展示量" min-width="90" prop="impressions"/>
-      <el-table-column label="点击量" min-width="90" prop="clicks"/>
-      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate"/>
-      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate"/>
-      <el-table-column label="花费" min-width="80" prop="spend"/>
-      <el-table-column label="订单数" min-width="90" prop="orders"/>
-      <el-table-column label="ACOS" min-width="90" prop="acos"/>
-      <el-table-column label="CPC" min-width="80" prop="cpc"/>
-      <el-table-column label="建议竞价" min-width="100" prop="suggestedBid"/>
-      <el-table-column label="广告日总展示" min-width="130" prop="dailyImpressions"/>
-      <el-table-column label="估算广告日总点击" min-width="170" prop="estimatedDailyClicks"/>
-      <el-table-column label="曝光量排名" min-width="120" prop="impressionRank"/>
-      <el-table-column label="品牌占有率" min-width="120" prop="brandShare"/>
-      <el-table-column fixed="right" label="分类" min-width="130" prop="category">
+      <el-table-column label="展示量" min-width="90" prop="impressions" />
+      <el-table-column label="点击量" min-width="90" prop="clicks" />
+      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate" />
+      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate" />
+      <el-table-column label="花费" min-width="80" prop="spend" />
+      <el-table-column label="订单数" min-width="90" prop="orders7d" />
+      <el-table-column label="ACOS" min-width="90" prop="acos" />
+      <el-table-column label="CPC" min-width="80" prop="cpc" />
+      <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
+      <el-table-column label="广告日总展示" min-width="130" prop="dailyImpressions" />
+      <el-table-column label="估算广告日总点击" min-width="170" prop="estimateTotalClick" />
+      <el-table-column label="曝光量排名" min-width="120" prop="impressionRank" />
+      <el-table-column label="品牌占有率" min-width="120" prop="brandShareRate" />
+      <el-table-column fixed="right" label="分类" min-width="130" prop="type">
         <template #default="{ row }">
-          <span :style="{ color: `${getCategoryColor(row.category)}` }">{{ highLowMap[row.category] }}</span>
+          <span :style="{ color: `${getCategoryColor(row.type)}` }">{{ highLowMap[row.type] }}</span>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
+      </template>
     </el-table>
+    <vab-pagination
+      :current-page="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
   </div>
 </template>
 
@@ -81,14 +107,42 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
 import { highLowMap, pieSelectLabelMap, pieSelectMap, pieSelectOption } from '../constantOption'
+import { queryProductAdvertisementSetting, querySPAdsTable, upsertProductAdvertisementSetting } from '/@/api/devlocal/productAnalysis'
+import { $baseMessage } from '/@/hooks'
+import type { IProductAdvertisementSettingResp, ISPAdsTableItem } from '/@/type/storeOperation/productAnalysisType'
+import { formatDateToString } from '/@/utils/dateUtils'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
-  name: 'VabAdPieTab'
+  name: 'VabAdPieTab',
+})
+
+interface IProps {
+  siteId?: number
+  selectDateRange: [string, string]
+  skipNoData: number
+  campaignName: string
+  sku: string
+  asin: string
+  type: number // 0=sku, 1=asin
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  siteId: undefined,
+  selectDateRange: undefined,
+  skipNoData: 1,
+  campaignName: '',
+  sku: '',
+  asin: '',
+  type: 0,
 })
 
 const listLoading = ref<boolean>(false)
+const total = ref<number>(0)
 const queryForm = reactive<any>({
-  keyWord: ''
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
 })
 
 const pieSelect = ref<number>(0)
@@ -106,284 +160,165 @@ const data1 = ref<any[]>([
   { value: 21.5, sales: 0, name: '高点击不出单' },
   { value: 83.31, sales: 0, name: '低点击不出单' },
 ])
-const data2 = ref<any[]>([
-  {
-    "name": "b01016el5c",
-    "impressions": 12345,
-    "clicks": 678,
-    "clickThroughRate": "5.49% / 4.87%",
-    "conversionRate": "3.25% / 2.91%",
-    "spend": 567.89,
-    "orders": 22,
-    "acos": "25%",
-    "cpc": 2.5,
-    "suggestedBid": 2.8,
-    "dailyImpressions": 15000,
-    "estimatedDailyClicks": 720,
-    "impressionRank": 1,
-    "brandShare": "15%",
-    "category": 0,
-    "sales": 549
-  },
-  {
-    "name": "a10471qr9k",
-    "impressions": 23456,
-    "clicks": 987,
-    "clickThroughRate": "4.21% / 3.87%",
-    "conversionRate": "2.89% / 2.56%",
-    "spend": 678.45,
-    "orders": 28,
-    "acos": "30%",
-    "cpc": 2.3,
-    "suggestedBid": 2.5,
-    "dailyImpressions": 20000,
-    "estimatedDailyClicks": 850,
-    "impressionRank": 2,
-    "brandShare": "18%",
-    "category": 1,
-    "sales": 421
-  },
-  {
-    "name": "z00013xy8p",
-    "impressions": 34567,
-    "clicks": 1234,
-    "clickThroughRate": "3.57% / 3.01%",
-    "conversionRate": "1.95% / 1.87%",
-    "spend": 789.23,
-    "orders": 35,
-    "acos": "27%",
-    "cpc": 2.8,
-    "suggestedBid": 3.1,
-    "dailyImpressions": 25000,
-    "estimatedDailyClicks": 960,
-    "impressionRank": 3,
-    "brandShare": "20%",
-    "category": 2,
-    "sales": 357
-  },
-  {
-    "name": "b20116mn7d",
-    "impressions": 17890,
-    "clicks": 765,
-    "clickThroughRate": "4.27% / 3.98%",
-    "conversionRate": "3.12% / 2.85%",
-    "spend": 689.45,
-    "orders": 25,
-    "acos": "28%",
-    "cpc": 2.7,
-    "suggestedBid": 3,
-    "dailyImpressions": 18000,
-    "estimatedDailyClicks": 820,
-    "impressionRank": 4,
-    "brandShare": "17%",
-    "category": 3,
-    "sales": 427
-  },
-  {
-    "name": "a10517op8e",
-    "impressions": 24567,
-    "clicks": 1123,
-    "clickThroughRate": "4.57% / 4.01%",
-    "conversionRate": "2.76% / 2.48%",
-    "spend": 745.34,
-    "orders": 30,
-    "acos": "26%",
-    "cpc": 2.6,
-    "suggestedBid": 2.9,
-    "dailyImpressions": 22000,
-    "estimatedDailyClicks": 950,
-    "impressionRank": 5,
-    "brandShare": "20%",
-    "category": 0,
-    "sales": 457
-  },
-  {
-    "name": "z00018uv9p",
-    "impressions": 28934,
-    "clicks": 1345,
-    "clickThroughRate": "4.65% / 4.12%",
-    "conversionRate": "3.01% / 2.85%",
-    "spend": 892.67,
-    "orders": 33,
-    "acos": "29%",
-    "cpc": 2.8,
-    "suggestedBid": 3.2,
-    "dailyImpressions": 27000,
-    "estimatedDailyClicks": 1050,
-    "impressionRank": 6,
-    "brandShare": "23%",
-    "category": 1,
-    "sales": 465
-  },
-  {
-    "name": "q01519xy7r",
-    "impressions": 33012,
-    "clicks": 1456,
-    "clickThroughRate": "4.41% / 4.03%",
-    "conversionRate": "2.89% / 2.63%",
-    "spend": 998.45,
-    "orders": 40,
-    "acos": "25%",
-    "cpc": 3,
-    "suggestedBid": 3.3,
-    "dailyImpressions": 29000,
-    "estimatedDailyClicks": 1200,
-    "impressionRank": 7,
-    "brandShare": "25%",
-    "category": 2,
-    "sales": 441
-  },
-  {
-    "name": "m02731ij4z",
-    "impressions": 18234,
-    "clicks": 785,
-    "clickThroughRate": "4.30% / 3.90%",
-    "conversionRate": "3.21% / 2.91%",
-    "spend": 623.78,
-    "orders": 27,
-    "acos": "24%",
-    "cpc": 2.5,
-    "suggestedBid": 2.8,
-    "dailyImpressions": 20000,
-    "estimatedDailyClicks": 860,
-    "impressionRank": 8,
-    "brandShare": "18%",
-    "category": 3,
-    "sales": 430
-  },
-  {
-    "name": "h00345lp6y",
-    "impressions": 24321,
-    "clicks": 1098,
-    "clickThroughRate": "4.51% / 4.02%",
-    "conversionRate": "2.96% / 2.71%",
-    "spend": 711.65,
-    "orders": 29,
-    "acos": "27%",
-    "cpc": 2.7,
-    "suggestedBid": 3.1,
-    "dailyImpressions": 25000,
-    "estimatedDailyClicks": 900,
-    "impressionRank": 9,
-    "brandShare": "19%",
-    "category": 0,
-    "sales": 451
-  },
-  {
-    "name": "g01458mn3q",
-    "impressions": 31245,
-    "clicks": 1567,
-    "clickThroughRate": "5.01% / 4.33%",
-    "conversionRate": "3.18% / 2.97%",
-    "spend": 845.32,
-    "orders": 37,
-    "acos": "28%",
-    "cpc": 2.9,
-    "suggestedBid": 3.4,
-    "dailyImpressions": 30000,
-    "estimatedDailyClicks": 1100,
-    "impressionRank": 10,
-    "brandShare": "22%",
-    "category": 1,
-    "sales": 501
-  },
-  {
-    "name": "d02371no7x",
-    "impressions": 26789,
-    "clicks": 1342,
-    "clickThroughRate": "5.01% / 4.40%",
-    "conversionRate": "2.89% / 2.65%",
-    "spend": 765.23,
-    "orders": 32,
-    "acos": "26%",
-    "cpc": 2.8,
-    "suggestedBid": 3.2,
-    "dailyImpressions": 28000,
-    "estimatedDailyClicks": 980,
-    "impressionRank": 11,
-    "brandShare": "21%",
-    "category": 2,
-    "sales": 501
-  },
-  {
-    "name": "f00213jk4z",
-    "impressions": 19876,
-    "clicks": 865,
-    "clickThroughRate": "4.35% / 4.01%",
-    "conversionRate": "3.31% / 3.12%",
-    "spend": 645.67,
-    "orders": 28,
-    "acos": "23%",
-    "cpc": 2.4,
-    "suggestedBid": 2.7,
-    "dailyImpressions": 21000,
-    "estimatedDailyClicks": 880,
-    "impressionRank": 12,
-    "brandShare": "16%",
-    "category": 3,
-    "sales": 435
-  },
-  {
-    "name": "v01824ut8y",
-    "impressions": 21987,
-    "clicks": 945,
-    "clickThroughRate": "4.29% / 4.05%",
-    "conversionRate": "3.02% / 2.89%",
-    "spend": 723.12,
-    "orders": 31,
-    "acos": "27%",
-    "cpc": 2.6,
-    "suggestedBid": 3,
-    "dailyImpressions": 23000,
-    "estimatedDailyClicks": 940,
-    "impressionRank": 13,
-    "brandShare": "20%",
-    "category": 0,
-    "sales": 429
-  },
-  {
-    "name": "y00437pl6m",
-    "impressions": 25678,
-    "clicks": 1210,
-    "clickThroughRate": "4.71% / 4.21%",
-    "conversionRate": "2.97% / 2.63%",
-    "spend": 800.45,
-    "orders": 35,
-    "acos": "29%",
-    "cpc": 2.8,
-    "suggestedBid": 3.1,
-    "dailyImpressions": 26000,
-    "estimatedDailyClicks": 1010,
-    "impressionRank": 14,
-    "brandShare": "23%",
-    "category": 1,
-    "sales": 471
-  },
-  {
-    "name": "t03019lo8n",
-    "impressions": 28945,
-    "clicks": 1456,
-    "clickThroughRate": "5.03% / 4.67%",
-    "conversionRate": "3.15% / 3.01%",
-    "spend": 965.78,
-    "orders": 38,
-    "acos": "26%",
-    "cpc": 3,
-    "suggestedBid": 3.5,
-    "dailyImpressions": 31000,
-    "estimatedDailyClicks": 1150,
-    "impressionRank": 15,
-    "brandShare": "24%",
-    "category": 2,
-    "sales": 503
+const list = ref<ISPAdsTableItem[]>([])
+
+const adSettingLoading = ref<boolean>(false)
+const adSettingSaving = ref<boolean>(false)
+const adSettingForm = reactive<Pick<IProductAdvertisementSettingResp, 'targetAcos' | 'targetChange'>>({
+  targetAcos: undefined,
+  targetChange: undefined,
+})
+
+const adSettingDisabled = computed(() => {
+  return adSettingLoading.value || adSettingSaving.value || !props.asin || props.siteId == null
+})
+
+const fetchAdSetting = async () => {
+  if (!props.asin || props.siteId == null) return
+  adSettingLoading.value = true
+  try {
+    const { data } = await queryProductAdvertisementSetting({ asin: props.asin, siteId: props.siteId })
+    adSettingForm.targetAcos = data?.targetAcos
+    adSettingForm.targetChange = data?.targetChange
+  } catch (error) {
+    console.error('Failed to query advertisement setting:', error)
+    adSettingForm.targetAcos = undefined
+    adSettingForm.targetChange = undefined
+  } finally {
+    adSettingLoading.value = false
   }
-])
+}
+
+const handleAdSettingUpdate = async () => {
+  if (!props.asin || props.siteId == null) {
+    $baseMessage('请先选择站点和ASIN', 'warning')
+    return
+  }
+  try {
+    adSettingSaving.value = true
+    const { data } = await upsertProductAdvertisementSetting({
+      asin: props.asin,
+      siteId: props.siteId,
+      targetAcos: adSettingForm.targetAcos,
+      targetChange: adSettingForm.targetChange,
+    })
+    if (data) {
+      $baseMessage('更新成功', 'success')
+    }
+  } catch (error) {
+    console.error('Failed to update advertisement setting:', error)
+    $baseMessage('更新失败，请重试', 'error')
+  } finally {
+    adSettingSaving.value = false
+  }
+}
+
+// 将后端数据映射为前端显示格式
+const mapTableData = (items: ISPAdsTableItem[]): any[] => {
+  const formatPctOrDash = (val: number | null | undefined) => {
+    return val != null && val !== undefined ? `${val}%` : '-'
+  }
+  return items.map((item) => ({
+    ...item,
+    // 点击率：我们/大盘
+    clickThroughRate: `${formatPctOrDash(item.clickThruRate)} / ${formatPctOrDash(item.marketClickThruRate)}`,
+    // 转化率：我们/大盘
+    conversionRate: `${formatPctOrDash(item.conversionRate)} / ${formatPctOrDash(item.marketConversionRate)}`,
+    // ACOS
+    acos: item.acos != null ? `${item.acos}%` : '-',
+    // 品牌占有率
+    brandShareRate: item.brandShareRate != null ? `${item.brandShareRate}%` : '-',
+    // 广告日总展示（使用impressions）
+    dailyImpressions: item.impressions,
+    suggestedBid: item.suggestedBid != null ? item.suggestedBid : '-',
+    estimateTotalClick: item.estimateTotalClick != null ? item.estimateTotalClick : '-',
+  }))
+}
+
+// 获取表格数据
+const fetchTableData = async () => {
+  listLoading.value = true
+  try {
+    const { data } = await querySPAdsTable({
+      startDate: formatDateToString(new Date(props.selectDateRange?.[0]!)),
+      endDate: formatDateToString(new Date(props.selectDateRange?.[1]!)),
+      skipNoData: props.skipNoData || 0,
+      campaignName: props.campaignName || undefined,
+      keyWord: queryForm.keyWord || undefined,
+      pageNo: queryForm.pageNo,
+      pageSize: queryForm.pageSize,
+      sku: props.sku,
+      asin: props.asin,
+      type: props.type || 0,
+      siteId: props.siteId ?? 0,
+    })
+
+    if (data && data.list) {
+      list.value = mapTableData(data.list)
+      total.value = data.total || 0
+    }
+  } catch (error) {
+    console.error('获取SP广告饼图表格数据失败:', error)
+    list.value = []
+    total.value = 0
+  } finally {
+    listLoading.value = false
+  }
+}
+
+// 分页处理
+const handleCurrentChange = (value: number) => {
+  queryForm.pageNo = value
+  fetchTableData()
+}
+
+const handleSizeChange = (value: number) => {
+  queryForm.pageNo = 1
+  queryForm.pageSize = value
+  fetchTableData()
+}
+
+// 监听props变化，重新获取数据
+watch(
+  [
+    () => props.siteId,
+    () => props.selectDateRange,
+    () => props.skipNoData,
+    () => props.campaignName,
+    () => props.sku,
+    () => props.asin,
+    () => props.type,
+  ],
+  () => {
+    fetchTableData()
+  },
+  { immediate: false, deep: false }
+)
+
+watch(
+  [() => props.asin, () => props.siteId],
+  () => {
+    fetchAdSetting()
+  },
+  { immediate: true, deep: false }
+)
+
+// 查询数据
+const queryData = () => {
+  queryForm.pageNo = 1
+  fetchTableData()
+}
+
+// 初始化时获取数据
+onMounted(() => {
+  fetchTableData()
+})
+
 const processedData = ref<any[]>([])
 // 计算销售额总和
 const totalSales = data1.value.reduce((sum, item) => sum + item.sales, 0)
 
 const initChart1 = () => {
- 
   // 配置项
   option1.value = {
     tooltip: {
@@ -396,9 +331,9 @@ const initChart1 = () => {
         let itemHtmlStrArr = ''
         if (params.data.sales > 0) {
           // 计算销售额的百分比
-          const salesPercent = `${((params.data.sales / totalSales) * 100).toFixed(2)  }%`
-          
-          itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
+          const salesPercent = `${((params.data.sales / totalSales) * 100).toFixed(2)}%`
+
+          itemHtmlStrArr = `<div style="display: flex;align-items:center;">
             ${params.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
             <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
@@ -409,20 +344,20 @@ const initChart1 = () => {
             <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.sales} | ${salesPercent}</span>
           </div>`
         } else {
-          itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
+          itemHtmlStrArr = `<div style="display: flex;align-items:center;">
             ${params.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
             <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
           </div>`
-        }  
-        
+        }
+
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
           ${itemHtmlStrArr}
         </div>`
         // 最终html字符串
         const resHtmlStr = titleHtmlStr + contentHtmlStr
         return resHtmlStr
-      }
+      },
     },
     series: [
       {
@@ -437,7 +372,7 @@ const initChart1 = () => {
         startAngle: 90, //起始角度
         labelLine: {
           lineStyle: {
-            width: 2
+            width: 2,
           },
           length: 20, // 连接线长度
           length2: 30, // 连接线的第二段长度
@@ -448,18 +383,12 @@ const initChart1 = () => {
             const { data, percent } = params
 
             // 计算销售额的百分比
-            const salesPercent =
-              totalSales > 0 && data.sales > 0
-                ? `${((data.sales / totalSales) * 100).toFixed(2)  }%`
-                : ''
+            const salesPercent = totalSales > 0 && data.sales > 0 ? `${((data.sales / totalSales) * 100).toFixed(2)}%` : ''
 
             // 销售额信息
-            const salesInfo =
-              data.sales > 0
-                ? `{b|销售额：}{x|€${data.sales} | ${salesPercent}}`
-                : ''
+            const salesInfo = data.sales > 0 ? `{b|销售额：}{x|€${data.sales} | ${salesPercent}}` : ''
 
-            return `{a|${data.name}}\n{b|花费：}{x|€${data.value} | ${percent}% }\n${  salesInfo}`
+            return `{a|${data.name}}\n{b|花费：}{x|€${data.value} | ${percent}% }\n${salesInfo}`
           },
 
           rich: {
@@ -467,13 +396,13 @@ const initChart1 = () => {
               color: '#000',
               fontSize: 17,
               fontWeight: 550,
-              lineHeight: 28
+              lineHeight: 28,
             },
             b: {
               color: '#7d7f84',
               fontSize: 16,
               lineHeight: 20,
-              align: 'left'
+              align: 'left',
             },
             x: {
               color: '#999',
@@ -503,7 +432,7 @@ const initChart2 = () => {
         // if (params.data.sales > 0) {
         //   // 计算销售额的百分比
         //   const salesPercent = ((params.data.sales / totalSales) * 100).toFixed(2) + '%'
-          
+
         //   itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
         //     ${params.marker}
         //     <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
@@ -515,8 +444,8 @@ const initChart2 = () => {
         //     <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.sales} | ${salesPercent}</span>
         //   </div>`
         // } else
-        
-        itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
+
+        itemHtmlStrArr = `<div style="display: flex;align-items:center;">
           ${params.marker}
           <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">${pieSelectLabelMap[pieSelect.value]}: </div>
           <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
@@ -528,7 +457,7 @@ const initChart2 = () => {
         // 最终html字符串
         const resHtmlStr = titleHtmlStr + contentHtmlStr
         return resHtmlStr
-      }
+      },
     },
     series: [
       {
@@ -544,7 +473,7 @@ const initChart2 = () => {
         startAngle: 90, //起始角度
         labelLine: {
           lineStyle: {
-            width: 2
+            width: 2,
           },
           // length: 30, // 连接线长度
           // length2: 40, // 连接线的第二段长度
@@ -561,7 +490,7 @@ const initChart2 = () => {
             //   .sort((a: any, b: any) => b.value - a.value) // 排序
             //   .slice(0, 3); // 获取前 3 项
 
-            return `{a|${data.name}}\n{b|${pieSelectLabelMap[pieSelect.value]}：}{x|€${data.value} | ${percent}% }` 
+            return `{a|${data.name}}\n{b|${pieSelectLabelMap[pieSelect.value]}：}{x|€${data.value} | ${percent}% }`
           },
 
           rich: {
@@ -569,26 +498,26 @@ const initChart2 = () => {
               color: '#000',
               fontSize: 17,
               fontWeight: 550,
-              padding: [0, 0, 5, 0], 
+              padding: [0, 0, 5, 0],
             },
             b: {
               color: '#7d7f84',
               fontSize: 16,
               lineHeight: 20,
               align: 'left',
-              padding: [0, 0, 10, 0],  
+              padding: [0, 0, 10, 0],
             },
             x: {
               color: '#999',
               fontSize: 16,
               lineHeight: 20,
-              padding: [0, 0, 10, 0],  
+              padding: [0, 0, 10, 0],
             },
           },
         },
         data: processedData.value,
         color: [
-          // "#FFFFCC", 
+          // "#FFFFCC",
           // "#CCFFFF",
           // "#FFCCCC",
           // "#FFE5CC",
@@ -603,7 +532,7 @@ const initChart2 = () => {
           // "#CCFFCC",
           // "#FFE5CC",
           // "#FFCCCC",
-          // "#666666" 
+          // "#666666"
           '#ffdc4c', // 金黄色
           '#62d9ad', // 青绿色
           '#e65a56', // 珊瑚红
@@ -619,7 +548,7 @@ const initChart2 = () => {
           '#ffc107', // 柠檬黄
           '#3cb371', // 春绿色
           '#dc3545', // 枸杞红
-          '#5bc0de'  // 宝石蓝
+          '#5bc0de', // 宝石蓝
         ],
       },
     ],
@@ -628,16 +557,16 @@ const initChart2 = () => {
 }
 // 更新图表
 // const updateChart1 = () => {
-//   chartInstance1?.setOption(option1.value, true) 
+//   chartInstance1?.setOption(option1.value, true)
 // }
 const updateChart2 = () => {
-  chartInstance2?.setOption(option2.value, true) 
+  chartInstance2?.setOption(option2.value, true)
 }
 const handleChangeSelect = () => {
-  processedData.value = data2.value.map((item) => {
+  processedData.value = list.value.map((item: any) => {
     return {
-      name: item.name,
-      value: item[pieSelectMap[pieSelect.value]],
+      name: item.customerSearchTerm,
+      value: item[pieSelectMap[pieSelect.value] as keyof typeof item] || 0,
     }
   })
   processedData.value.push({
@@ -649,10 +578,10 @@ const handleChangeSelect = () => {
 }
 onBeforeMount(() => {
   data1.value.sort((a, b) => b.value - a.value)
-  processedData.value = data2.value.map((item) => {
+  processedData.value = list.value.map((item: any) => {
     return {
-      name: item.name,
-      value: item[pieSelectMap[pieSelect.value]],
+      name: item.customerSearchTerm,
+      value: item[pieSelectMap[pieSelect.value] as keyof typeof item] || 0,
     }
   })
   processedData.value.push({
@@ -698,32 +627,29 @@ onBeforeUnmount(() => {
 })
 const getCategoryColor = (value: any) => {
   switch (value) {
-  case 0: {
-    return '#00aeef'
-  }
-  case 1: {
-    return '#e65a56'
-  }
-  case 2: {
-    return '#62d9ad'
-  }
-  default: {
-    return '#ffdc4c'
-  }
+    case 0: {
+      return '#00aeef'
+    }
+    case 1: {
+      return '#e65a56'
+    }
+    case 2: {
+      return '#62d9ad'
+    }
+    default: {
+      return '#ffdc4c'
+    }
   }
 }
-const cellStyle = (data: { row: any, column: any, rowIndex: number, columnIndex: number }): CSSProperties => {
+const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.columnIndex === 0 || data.columnIndex === 14) {
     return {
-      textAlign: 'left'
+      textAlign: 'left',
     }
   }
   return {
-    textAlign: 'center'
+    textAlign: 'center',
   }
-}
-const queryData = () => {
-  // fetchData()
 }
 </script>
 
@@ -736,6 +662,5 @@ const queryData = () => {
   .el-table {
     flex: 1;
   }
-  
 }
 </style>

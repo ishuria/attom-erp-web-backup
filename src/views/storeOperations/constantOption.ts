@@ -120,10 +120,10 @@ export const pieSelectOption = [
 ]
 
 export const highLowMap: Record<number, string> = {
-  0: '低点击不出单',
-  1: '高点击不出单',
+  4: '低点击不出单',
+  3: '高点击不出单',
   2: '低ACOS',
-  3: '高ACOS',
+  1: '高ACOS',
 }
 
 export const pieSelectMap: Record<number, string> = {

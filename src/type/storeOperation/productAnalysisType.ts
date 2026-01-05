@@ -544,3 +544,76 @@ export interface IGetSearchTermPerformance {
   asinMedianPurchasePrice: number
   asinMedianPurchaseCurrency: number
 }
+
+/**
+ * SP广告饼图表格请求参数
+ */
+export interface ISPAdsTableReq {
+  startDate: string
+  endDate: string
+  skipNoData: number // 0=不跳过, 1=跳过
+  campaignName?: string
+  keyWord?: string
+  pageNo: number
+  pageSize: number
+  sku?: string
+  asin?: string
+  type: number // 0=sku, 1=asin
+  siteId: number
+}
+
+/**
+ * SP广告饼图表格响应
+ */
+export interface ISPAdsTableRes {
+  data: {
+    list: ISPAdsTableItem[]
+    total: number
+  }
+}
+
+/**
+ * SP广告饼图表格项
+ */
+export interface ISPAdsTableItem {
+  customerSearchTerm: string // 客户搜索词
+  cpc: number // CPC
+  acos: number // ACOS
+  brandShareRate: number // 品牌占有率
+  clicks: number // 点击量
+  clickThruRate: number // 点击率
+  conversionRate: number // 转化率
+  estimateTotalClick: number // 估算广告日总点击
+  getCal?: number // 获取计算值
+  spend: number // 花费
+  impressionRank: number // 曝光量排名
+  sales7d: number // 7天销售额
+  orders7d: number // 7天订单数
+  marketClickThruRate: number // 大盘点击率
+  marketConversionRate: number // 大盘转化率
+  suggestedBid: number // 建议竞价
+  impressions: number // 展示量
+  type: number // 分类类型
+}
+
+/**
+ * Product advertisement setting query response
+ */
+export interface IProductAdvertisementSettingResp {
+  asin: string
+  siteId: number
+  targetAcos?: number
+  targetChange?: number
+  click?: number
+  isUpdate?: number | boolean
+}
+
+/**
+ * Product advertisement setting update request
+ */
+export interface IProductAdvertisementSettingUpdateReq {
+  asin: string
+  siteId: number
+  targetAcos?: number
+  targetChange?: number
+}

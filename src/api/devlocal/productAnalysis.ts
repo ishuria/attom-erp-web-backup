@@ -16,6 +16,10 @@ import type {
   IGetTrendOverviewChartRes,
   IGetTrendOverviewTableReq,
   IGetTrendOverviewTableRes,
+  IProductAdvertisementSettingResp,
+  IProductAdvertisementSettingUpdateReq,
+  ISPAdsTableReq,
+  ISPAdsTableRes,
   IUpdateOperationAmazonCostReq,
 } from '/@/type/storeOperation/productAnalysisType'
 
@@ -312,5 +316,47 @@ export function updateInitialAcos(initialAcos: number): Promise<{ data: boolean 
     url: `${BASE_API}/product/analysis/initial/acos/update`,
     method: 'post',
     params: { initialAcos },
+  })
+}
+
+/**
+ * @description 商品分析-SP广告饼图-表格
+ * @param data ISPAdsTableReq
+ * @returns ISPAdsTableRes
+ */
+export function querySPAdsTable(data: ISPAdsTableReq): Promise<ISPAdsTableRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/sp/ads/table`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 商品分析-广告设置-查询
+ * @param params { asin: string; siteId: number }
+ * @returns { data: IProductAdvertisementSettingResp }
+ */
+export function queryProductAdvertisementSetting(params: {
+  asin: string
+  siteId: number
+}): Promise<{ data: IProductAdvertisementSettingResp }> {
+  return request({
+    url: `${BASE_API}/product/analysis/advertisement/setting`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description 商品分析-广告设置-新增/更新
+ * @param data IProductAdvertisementSettingUpdateReq
+ * @returns { data: boolean }
+ */
+export function upsertProductAdvertisementSetting(data: IProductAdvertisementSettingUpdateReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/product/analysis/advertisement/setting/update`,
+    method: 'post',
+    data,
   })
 }
