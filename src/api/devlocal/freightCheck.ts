@@ -87,6 +87,16 @@ export function updateFreightCheckPaid(data: { ids: number[] }): Promise<{ data:
   })
 }
 /**
+ * 更新为已付款（全部）
+ * @returns
+ */
+export function updateFreightCheckAllPaid(): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/freight/check/update/all/paid`,
+    method: 'post',
+  })
+}
+/**
  * 运费核对-付款统计
  * @returns
  */

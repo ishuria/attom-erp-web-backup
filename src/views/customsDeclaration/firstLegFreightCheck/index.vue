@@ -43,7 +43,8 @@
       <el-tab-pane label="待付款" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleUpdatePaid">已付款</el-button>
+            <el-button type="primary" @click="handleUpdatePaid">标记已付</el-button>
+            <el-button type="success" @click="handleUpdateAllPaid">已付全部</el-button>
             <el-button type="primary" @click="showStatistics(1)">付款统计</el-button>
           </vab-query-form-left-panel>
           <vab-query-form-right-panel>
@@ -138,6 +139,7 @@ import {
   getFreightCheckList,
   getFreightCheckPaymentStatisticsList,
   sendFreightCheckEmail,
+  updateFreightCheckAllPaid,
   updateFreightCheckPaid,
   uploadFreightCheckFile,
 } from '/@/api/devlocal/freightCheck'
@@ -197,6 +199,17 @@ const handleUpdatePaid = async () => {
     $baseMessage('头程运费已付款成功！', 'success')
     fetchData()
   }
+}
+const handleUpdateAllPaid = async () => {
+  $baseConfirm('确定要付款全部吗？', null, async () => {
+    const { data } = await updateFreightCheckAllPaid()
+    if (data) {
+      $baseMessage('头程运费已付全部成功！', 'success')
+      fetchData()
+    } else {
+      $baseMessage('头程运费已付全部失败！', 'error')
+    }
+  })
 }
 // 审批通过
 const handleApproved = async () => {

@@ -196,7 +196,12 @@
         <el-table-column align="center" label="数量" min-width="90" prop="quantity" />
         <el-table-column label="Shipment ID" prop="shipmentId" :width="flexColumnWidth(checkList, 'Shipment ID', 'shipmentId')" />
         <el-table-column label="合同编号" min-width="140" prop="contractNumber" />
-        <el-table-column label="错误类型" min-width="150" prop="remark">
+        <el-table-column
+          label="错误类型"
+          min-width="150"
+          prop="remark"
+          :width="calculateBrColumnWidth(checkList, (row: any) => row.remark, 100)"
+        >
           <template #default="{ row }">
             <div v-html="row.remark"></div>
           </template>
@@ -220,7 +225,7 @@ import { downloadFilePD } from '/@/api/devlocal/download'
 import { checkOutboundNotMatchInvoiceExport, getOutBoundList, getOutboundInventoryCheck } from '/@/api/devlocal/finance'
 import type { IGetOutBoundList, IGetOutboundInventoryCheckList } from '/@/type/finance/financeType'
 import { formatDate, getDefaultStringTime } from '/@/utils/dateUtils'
-import { flexColumnWidth } from '/@/utils/tableColum'
+import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'Outbound',

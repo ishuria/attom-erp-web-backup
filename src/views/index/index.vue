@@ -523,7 +523,7 @@ import {
   IWarehouseCapacityItem,
 } from '/@/type/index/frontPage'
 import { IGetOperationAmazonSKUList } from '/@/type/storeOperation/productPerformanceType'
-import { getCurrentMonth, getLast30DaysStringTime, getLastMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
+import { getCurrentMonth, getLast90DaysStringTime, getLastMonth, getLastYearStringMonth } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'Index',
@@ -1151,7 +1151,7 @@ const fetchTop50ProductLoss = async () => {
   top50ProductLossList.value = data
 }
 const inventoryProductsTotalValueList = ref<IGetFrontPageInventoryProductsTotalValue[]>([])
-const inventoryProductsTotalValueDateRange = ref<[string, string]>(getLast30DaysStringTime())
+const inventoryProductsTotalValueDateRange = ref<[string, string]>(getLast90DaysStringTime())
 const inventoryProductsTotalValueQueryForm = reactive({
   startDate: inventoryProductsTotalValueDateRange.value[0],
   endDate: inventoryProductsTotalValueDateRange.value[1],
@@ -1159,7 +1159,7 @@ const inventoryProductsTotalValueQueryForm = reactive({
 
 // 仓库容量相关
 const warehouseCapacityList = ref<IWarehouseCapacityItem[]>([])
-const warehouseCapacityDateRange = ref<[string, string]>(getLast30DaysStringTime())
+const warehouseCapacityDateRange = ref<[string, string]>(getLast90DaysStringTime())
 const warehouseCapacityQueryForm = reactive({
   startDate: warehouseCapacityDateRange.value[0],
   endDate: warehouseCapacityDateRange.value[1],
@@ -1269,7 +1269,7 @@ const handleInventoryProductsTotalValueDateRangeChange = (dateRange: [string, st
     inventoryProductsTotalValueQueryForm.endDate = dateRange[1]
     fetchInventoryProductsTotalValue()
   } else {
-    inventoryProductsTotalValueDateRange.value = getLast30DaysStringTime()
+    inventoryProductsTotalValueDateRange.value = getLast90DaysStringTime()
     inventoryProductsTotalValueQueryForm.startDate = inventoryProductsTotalValueDateRange.value[0]
     inventoryProductsTotalValueQueryForm.endDate = inventoryProductsTotalValueDateRange.value[1]
     fetchInventoryProductsTotalValue()
@@ -1283,7 +1283,7 @@ const handleWarehouseCapacityDateRangeChange = (dateRange: [string, string] | nu
     warehouseCapacityQueryForm.endDate = dateRange[1]
     fetchWarehouseCapacity()
   } else {
-    warehouseCapacityDateRange.value = getLast30DaysStringTime()
+    warehouseCapacityDateRange.value = getLast90DaysStringTime()
     warehouseCapacityQueryForm.startDate = warehouseCapacityDateRange.value[0]
     warehouseCapacityQueryForm.endDate = warehouseCapacityDateRange.value[1]
     fetchWarehouseCapacity()
