@@ -867,39 +867,16 @@ const handleOrderProcess = (row: IReviewQueryItem) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: '1',
-      pageSize: value,
-      status: queryForm.status,
-    },
-  })
   fetchData()
 }
 
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: value,
-      pageSize: queryForm.pageSize,
-      status: queryForm.status,
-    },
-  })
   fetchData()
 }
 
 const queryData = () => {
   queryForm.pageNo = 1
-  router.push({
-    query: {
-      ...route.query,
-      pageNo: '1',
-      status: queryForm.status,
-    },
-  })
   fetchData()
 }
 
@@ -984,16 +961,6 @@ onActivated(() => {
 })
 
 onBeforeMount(() => {
-  const { pageNo, pageSize, status } = route.query
-  if (pageNo) {
-    queryForm.pageNo = Number(pageNo)
-  }
-  if (pageSize) {
-    queryForm.pageSize = Number(pageSize)
-  }
-  if (status) {
-    queryForm.status = Number(status)
-  }
   fetchData()
 })
 </script>
