@@ -69,13 +69,12 @@ import { TabsPaneContext } from 'element-plus'
 import { aiTuoMuInvoiceMatchDelete, getAiTuoMuList } from '/@/api/devlocal/aiTuoMu'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { IAiTuoMuItem, IAiTuoMuListReq } from '/@/type/aiTuoMu/aiTuoMuList'
-import { getDefaultStringTime } from '/@/utils/dateUtils'
 
 defineOptions({
   name: 'AituomuFapiaoManagement',
 })
 
-const date = ref<[string, string]>(getDefaultStringTime())
+const date = ref<[string, string]>()
 const activeName = ref<number>(0)
 
 const queryForm = reactive<IAiTuoMuListReq>({
@@ -84,7 +83,7 @@ const queryForm = reactive<IAiTuoMuListReq>({
   pageNo: 1,
   pageSize: 20,
   customsDeclarationStatus: -1,
-  purchaseDate: getDefaultStringTime()
+  purchaseDate: undefined,
 })
 const list = ref<IAiTuoMuItem[]>([])
 const listLoading = ref<boolean>(false)
@@ -117,12 +116,16 @@ const deleteMatch = (row: any) => {
 // 埃托姆发票导出
 const handleExportATM = async () => {
   exportLoading.value = true
-  await downloadFilePD('/taxRefund/invoice/export', {
-    fromDate: date.value[0],
-    toDate: date.value[1],
-  }).then(() => {
-    exportLoading.value = false
-  })
+  if (date.value && date.value.length > 0) {
+    await downloadFilePD('/taxRefund/invoice/export', {
+      fromDate: date.value[0],
+      toDate: date.value[1],
+    }).then(() => {
+      exportLoading.value = false
+    })
+  } else {
+    $baseMessage('请选择日期', 'error')
+  }
 }
 
 const checkMatch = () => {
