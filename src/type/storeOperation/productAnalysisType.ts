@@ -560,8 +560,18 @@ export interface ISPAdsTableReq {
   asin?: string
   type: number // 0=sku, 1=asin
   siteId: number
+  exactSearch?: number
 }
-
+export interface ISPAdsPieReq {
+  startDate: string
+  endDate: string
+  skipNoData: number // 0=不跳过, 1=跳过
+  campaignName?: string
+  sku?: string
+  asin?: string
+  type: number // 0=sku, 1=asin
+  siteId: number
+}
 /**
  * SP广告饼图表格响应
  */
@@ -616,4 +626,38 @@ export interface IProductAdvertisementSettingUpdateReq {
   siteId: number
   targetAcos?: number
   targetChange?: number
+}
+
+/**
+ * SP广告饼图数据项
+ */
+export interface IProductAdvertisementPieItem {
+  name: string // 分类名称
+  spend: number // 花费金额
+  sales: number // 销售额金额
+}
+
+/**
+ * SP广告饼图响应
+ */
+export interface IProductAdvertisementPieResp {
+  data: IProductAdvertisementPieItem[]
+}
+
+/**
+ * SP广告饼图图表2单个维度数据项
+ */
+export interface IProductAdvertisementPieChartDimensionItem {
+  name: string // 搜索词
+  value: number // 对应维度的值
+}
+
+/**
+ * SP广告饼图图表2响应
+ */
+export interface IProductAdvertisementPieChartResp {
+  spend: IProductAdvertisementPieChartDimensionItem[] // 花费维度数据（已排序）
+  impressions: IProductAdvertisementPieChartDimensionItem[] // 展示量维度数据（已排序）
+  clicks: IProductAdvertisementPieChartDimensionItem[] // 点击量维度数据（已排序）
+  orders: IProductAdvertisementPieChartDimensionItem[] // 订单数维度数据（已排序）
 }

@@ -332,14 +332,14 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   const { column, prop, order } = data
   if (queryForm.orderByField === prop) {
     // 如果点击的是当前排序列
-    if (!order) {
+  if (!order) {
       // 取消排序时，切换排序方向
-      if (queryForm.orderDirection === 'asc') {
-        column.order = 'descending'
-      } else if (queryForm.orderDirection === 'desc') {
-        column.order = 'ascending'
-      }
+    if (queryForm.orderDirection === 'asc') {
+      column.order = 'descending'
+    } else if (queryForm.orderDirection === 'desc') {
+      column.order = 'ascending'
     }
+  }
   } else {
     // 如果点击的是不同的列，默认设置为降序
     column.order = 'descending'

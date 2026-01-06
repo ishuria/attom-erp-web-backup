@@ -275,10 +275,10 @@
       <el-table-column align="center" fixed="right" label="操作" width="360">
         <template #default="{ row }">
           <el-space>
-            <el-link type="primary" underline="never" @click="showSkuCustomsClearance(row)">导入清关信息</el-link>
+          <el-link type="primary" underline="never" @click="showSkuCustomsClearance(row)">导入清关信息</el-link>
             <el-link type="primary" underline="never" @click="showFnSkuDialog(row)">FNSKU</el-link>
-            <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
-            <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
+          <el-link type="primary" underline="never" @click="showHts(row)">查看HTS</el-link>
+          <el-link type="primary" underline="never" @click="showClearance(row)">查看清关信息</el-link>
           </el-space>
         </template>
       </el-table-column>

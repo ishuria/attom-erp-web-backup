@@ -49,7 +49,7 @@
     <div style="text-align: right">
       <el-form inline :model="queryForm" @submit.prevent>
         <el-form-item>
-          <el-checkbox>精准搜索</el-checkbox>
+          <el-checkbox v-model="queryForm.exactSearch" :false-value="0" :true-value="1">精准搜索</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-input v-model="queryForm.keyWord" clearable placeholder="请输入搜索关键词" @input="queryData" @keyup.enter="queryData" />
@@ -107,9 +107,22 @@ import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CSSProperties } from 'vue'
 import { highLowMap, pieSelectLabelMap, pieSelectMap, pieSelectOption } from '../constantOption'
-import { queryProductAdvertisementSetting, querySPAdsTable, upsertProductAdvertisementSetting } from '/@/api/devlocal/productAnalysis'
+import {
+  queryCurrencySymbolBySite,
+  queryProductAdvertisementPie,
+  queryProductAdvertisementPieChart,
+  queryProductAdvertisementSetting,
+  querySPAdsTable,
+  upsertProductAdvertisementSetting,
+} from '/@/api/devlocal/productAnalysis'
 import { $baseMessage } from '/@/hooks'
-import type { IProductAdvertisementSettingResp, ISPAdsTableItem } from '/@/type/storeOperation/productAnalysisType'
+import type {
+  IProductAdvertisementPieChartDimensionItem,
+  IProductAdvertisementPieChartResp,
+  IProductAdvertisementPieItem,
+  IProductAdvertisementSettingResp,
+  ISPAdsTableItem,
+} from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString } from '/@/utils/dateUtils'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -143,6 +156,7 @@ const queryForm = reactive<any>({
   keyWord: '',
   pageNo: 1,
   pageSize: 20,
+  exactSearch: 0,
 })
 
 const pieSelect = ref<number>(0)
@@ -154,13 +168,10 @@ let chartObserver1: ResizeObserver
 let chartObserver2: ResizeObserver
 const option1 = ref<any>({})
 const option2 = ref<any>({})
-const data1 = ref<any[]>([
-  { value: 211.02, sales: 361.53, name: '高ACOS' },
-  { value: 453.57, sales: 1966.56, name: '低ACOS' },
-  { value: 21.5, sales: 0, name: '高点击不出单' },
-  { value: 83.31, sales: 0, name: '低点击不出单' },
-])
+const data1 = ref<any[]>([])
+const currencySymbol = ref<string>('$') // 默认美元
 const list = ref<ISPAdsTableItem[]>([])
+const pieChartData = ref<IProductAdvertisementPieChartResp | null>(null) // 饼图2的完整数据
 
 const adSettingLoading = ref<boolean>(false)
 const adSettingSaving = ref<boolean>(false)
@@ -230,9 +241,82 @@ const mapTableData = (items: ISPAdsTableItem[]): any[] => {
     brandShareRate: item.brandShareRate != null ? `${item.brandShareRate}%` : '-',
     // 广告日总展示（使用impressions）
     dailyImpressions: item.impressions,
-    suggestedBid: item.suggestedBid != null ? item.suggestedBid : '-',
+    suggestedBid: item.suggestedBid != null ? currencySymbol.value + item.suggestedBid : '-',
     estimateTotalClick: item.estimateTotalClick != null ? item.estimateTotalClick : '-',
+    cpc: item.cpc != null ? currencySymbol.value + item.cpc : '-',
+    spend: item.spend != null ? currencySymbol.value + item.spend : '-',
   }))
+}
+
+// 获取饼图数据
+const fetchPieData = async () => {
+  try {
+    const { data } = await queryProductAdvertisementPie({
+      startDate: formatDateToString(new Date(props.selectDateRange[0])),
+      endDate: formatDateToString(new Date(props.selectDateRange[1])),
+      skipNoData: props.skipNoData,
+      campaignName: props.campaignName,
+      sku: props.sku,
+      asin: props.asin,
+      type: props.type,
+      siteId: props.siteId ?? 0,
+    })
+
+    if (data && Array.isArray(data)) {
+      // 转换数据格式：spend -> value, sales -> sales, name -> name
+      data1.value = data.map((item: IProductAdvertisementPieItem) => ({
+        value: item.spend,
+        sales: item.sales,
+        name: item.name,
+      }))
+
+      // 重新初始化图表
+      initChart1()
+    }
+  } catch (error) {
+    console.error('获取SP广告饼图数据失败:', error)
+    data1.value = []
+  }
+}
+
+// 获取饼图2的完整数据
+const fetchPieChartData = async () => {
+  try {
+    const { data } = await queryProductAdvertisementPieChart({
+      startDate: formatDateToString(new Date(props.selectDateRange[0])),
+      endDate: formatDateToString(new Date(props.selectDateRange[1])),
+      skipNoData: props.skipNoData,
+      campaignName: props.campaignName,
+      sku: props.sku,
+      asin: props.asin,
+      type: props.type,
+      siteId: props.siteId ?? 0,
+    })
+
+    if (data && typeof data === 'object') {
+      pieChartData.value = data
+      // 初始更新图表2数据
+      updatePieChartDisplay()
+    }
+  } catch (error) {
+    console.error('获取SP广告饼图2数据失败:', error)
+    pieChartData.value = null
+  }
+}
+
+// 获取货币符号
+const fetchCurrencySymbol = async () => {
+  if (!props.siteId) {
+    currencySymbol.value = '$'
+    return
+  }
+  try {
+    const { data } = await queryCurrencySymbolBySite(props.siteId)
+    currencySymbol.value = data || '$'
+  } catch (error) {
+    console.error('获取货币符号失败:', error)
+    currencySymbol.value = '$'
+  }
 }
 
 // 获取表格数据
@@ -251,6 +335,7 @@ const fetchTableData = async () => {
       asin: props.asin,
       type: props.type || 0,
       siteId: props.siteId ?? 0,
+      exactSearch: queryForm.exactSearch || 0,
     })
 
     if (data && data.list) {
@@ -289,8 +374,11 @@ watch(
     () => props.asin,
     () => props.type,
   ],
-  () => {
+  async () => {
+    await fetchCurrencySymbol()
     fetchTableData()
+    fetchPieData()
+    fetchPieChartData()
   },
   { immediate: false, deep: false }
 )
@@ -302,7 +390,13 @@ watch(
   },
   { immediate: true, deep: false }
 )
-
+watch(
+  () => props.siteId,
+  () => {
+    fetchCurrencySymbol()
+  },
+  { immediate: true, deep: false }
+)
 // 查询数据
 const queryData = () => {
   queryForm.pageNo = 1
@@ -310,13 +404,45 @@ const queryData = () => {
 }
 
 // 初始化时获取数据
-onMounted(() => {
+onMounted(async () => {
+  await fetchCurrencySymbol()
   fetchTableData()
+  fetchPieData()
+  fetchPieChartData()
 })
 
 const processedData = ref<any[]>([])
 // 计算销售额总和
-const totalSales = data1.value.reduce((sum, item) => sum + item.sales, 0)
+const totalSales = computed(() => data1.value.reduce((sum, item) => sum + item.sales, 0))
+
+// 更新饼图2的显示数据
+const updatePieChartDisplay = () => {
+  if (!pieChartData.value) {
+    processedData.value = []
+    return
+  }
+
+  // 根据选择的指标获取对应的数据数组
+  const selectedData = pieChartData.value[
+    pieSelectMap[pieSelect.value] as keyof IProductAdvertisementPieChartResp
+  ] as IProductAdvertisementPieChartDimensionItem[]
+
+  if (selectedData && Array.isArray(selectedData)) {
+    processedData.value = [...selectedData] // 后端已经排序，直接使用
+
+    // 添加"其他"项（如果需要的话）
+    processedData.value.push({
+      name: '其他',
+      value: 100,
+    })
+  } else {
+    processedData.value = []
+  }
+
+  // 更新图表
+  option2.value.series[0].data = processedData.value
+  updateChart2()
+}
 
 const initChart1 = () => {
   // 配置项
@@ -331,23 +457,23 @@ const initChart1 = () => {
         let itemHtmlStrArr = ''
         if (params.data.sales > 0) {
           // 计算销售额的百分比
-          const salesPercent = `${((params.data.sales / totalSales) * 100).toFixed(2)}%`
+          const salesPercent = totalSales.value > 0 ? `${((params.data.sales / totalSales.value) * 100).toFixed(2)}%` : '-'
 
           itemHtmlStrArr = `<div style="display: flex;align-items:center;">
             ${params.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
-            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${currencySymbol.value}${params.data.value} | ${params.percent}%</span>
           </div>
           <div style="display: flex;align-items:center;">
             ${params.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">销售额: </div>
-            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.sales} | ${salesPercent}</span>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${currencySymbol.value}${params.data.sales} | ${salesPercent}</span>
           </div>`
         } else {
           itemHtmlStrArr = `<div style="display: flex;align-items:center;">
             ${params.marker}
             <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
-            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
+            <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${currencySymbol.value}${params.data.value} | ${params.percent}%</span>
           </div>`
         }
 
@@ -383,12 +509,12 @@ const initChart1 = () => {
             const { data, percent } = params
 
             // 计算销售额的百分比
-            const salesPercent = totalSales > 0 && data.sales > 0 ? `${((data.sales / totalSales) * 100).toFixed(2)}%` : ''
+            const salesPercent = totalSales.value > 0 && data.sales > 0 ? `${((data.sales / totalSales.value) * 100).toFixed(2)}%` : '-'
 
             // 销售额信息
-            const salesInfo = data.sales > 0 ? `{b|销售额：}{x|€${data.sales} | ${salesPercent}}` : ''
+            const salesInfo = data.sales > 0 ? `{b|销售额：}{x|${currencySymbol.value}${data.sales} | ${salesPercent}}` : ''
 
-            return `{a|${data.name}}\n{b|花费：}{x|€${data.value} | ${percent}% }\n${salesInfo}`
+            return `{a|${data.name}}\n{b|花费：}{x|${currencySymbol.value}${data.value} | ${percent}% }\n${salesInfo}`
           },
 
           rich: {
@@ -429,26 +555,14 @@ const initChart2 = () => {
 
         // tooltip详情内容
         let itemHtmlStrArr = ''
-        // if (params.data.sales > 0) {
-        //   // 计算销售额的百分比
-        //   const salesPercent = ((params.data.sales / totalSales) * 100).toFixed(2) + '%'
 
-        //   itemHtmlStrArr =  `<div style="display: flex;align-items:center;">
-        //     ${params.marker}
-        //     <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">花费: </div>
-        //     <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
-        //   </div>
-        //   <div style="display: flex;align-items:center;">
-        //     ${params.marker}
-        //     <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">销售额: </div>
-        //     <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.sales} | ${salesPercent}</span>
-        //   </div>`
-        // } else
+        const isSpendDimension = pieSelectMap[pieSelect.value] === 'spend'
+        const valueDisplay = isSpendDimension ? `${currencySymbol.value}${params.data.value}` : params.data.value
 
         itemHtmlStrArr = `<div style="display: flex;align-items:center;">
           ${params.marker}
           <div style="font-size: var(--el-font-size-base);color: #666;margin: 0 20px 0 2px;">${pieSelectLabelMap[pieSelect.value]}: </div>
-          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">€${params.data.value} | ${params.percent}%</span>
+          <span style="margin-left: auto;text-align: right;font-size: var(--el-font-size-base);font-weight: 900;">${valueDisplay} | ${params.percent}%</span>
         </div>`
 
         const contentHtmlStr = `<div style="display: flex;flex-direction: column;margin-top: 10px;">
@@ -486,11 +600,11 @@ const initChart2 = () => {
           // alignTo: 'labelLine',
           formatter: (params: any) => {
             const { data, percent } = params
-            // const sortedData = params.seriesData
-            //   .sort((a: any, b: any) => b.value - a.value) // 排序
-            //   .slice(0, 3); // 获取前 3 项
 
-            return `{a|${data.name}}\n{b|${pieSelectLabelMap[pieSelect.value]}：}{x|€${data.value} | ${percent}% }`
+            const isSpendDimension = pieSelectMap[pieSelect.value] === 'spend'
+            const valueDisplay = isSpendDimension ? `${currencySymbol.value}${data.value}` : data.value
+
+            return `{a|${data.name}}\n{b|${pieSelectLabelMap[pieSelect.value]}：}{x|${valueDisplay} | ${percent}% }`
           },
 
           rich: {
@@ -517,37 +631,16 @@ const initChart2 = () => {
         },
         data: processedData.value,
         color: [
-          // "#FFFFCC",
-          // "#CCFFFF",
-          // "#FFCCCC",
-          // "#FFE5CC",
-          // "#FFFFCC",
-          // "#F2CCFF",
-          // "#CCFFCC",
-          // "#FFCC99",
-          // "#CCFFFF",
-          // "#FFCCCC",
-          // "#CCFFFF",
-          // "#F2CCFF",
-          // "#CCFFCC",
-          // "#FFE5CC",
-          // "#FFCCCC",
-          // "#666666"
           '#ffdc4c', // 金黄色
           '#62d9ad', // 青绿色
           '#e65a56', // 珊瑚红
           '#00aeef', // 天蓝色
           '#ffa500', // 橙色
           '#20c997', // 翠绿色
-          '#f94d50', // 鲜红色
           '#0088cc', // 深天蓝色
           '#ffcc33', // 明黄色
           '#66cdaa', // 中青绿色
-          '#d9534f', // 番茄红
           '#33b5e5', // 浅蓝色
-          '#ffc107', // 柠檬黄
-          '#3cb371', // 春绿色
-          '#dc3545', // 枸杞红
           '#5bc0de', // 宝石蓝
         ],
       },
@@ -563,33 +656,9 @@ const updateChart2 = () => {
   chartInstance2?.setOption(option2.value, true)
 }
 const handleChangeSelect = () => {
-  processedData.value = list.value.map((item: any) => {
-    return {
-      name: item.customerSearchTerm,
-      value: item[pieSelectMap[pieSelect.value] as keyof typeof item] || 0,
-    }
-  })
-  processedData.value.push({
-    name: '其他',
-    value: 100,
-  })
-  option2.value.series[0].data = processedData.value
-  updateChart2()
+  updatePieChartDisplay()
 }
-onBeforeMount(() => {
-  data1.value.sort((a, b) => b.value - a.value)
-  processedData.value = list.value.map((item: any) => {
-    return {
-      name: item.customerSearchTerm,
-      value: item[pieSelectMap[pieSelect.value] as keyof typeof item] || 0,
-    }
-  })
-  processedData.value.push({
-    name: '其他',
-    value: 100,
-  })
-  processedData.value.sort((a, b) => b.value - a.value)
-})
+// onBeforeMount 中不再需要处理数据，现在在获取数据后通过 updatePieChartDisplay 处理
 // 初始化图表
 onMounted(() => {
   if (chartContainer1.value) {

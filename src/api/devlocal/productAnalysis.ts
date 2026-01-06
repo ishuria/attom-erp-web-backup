@@ -16,8 +16,11 @@ import type {
   IGetTrendOverviewChartRes,
   IGetTrendOverviewTableReq,
   IGetTrendOverviewTableRes,
+  IProductAdvertisementPieChartResp,
+  IProductAdvertisementPieResp,
   IProductAdvertisementSettingResp,
   IProductAdvertisementSettingUpdateReq,
+  ISPAdsPieReq,
   ISPAdsTableReq,
   ISPAdsTableRes,
   IUpdateOperationAmazonCostReq,
@@ -329,6 +332,45 @@ export function querySPAdsTable(data: ISPAdsTableReq): Promise<ISPAdsTableRes> {
     url: `${BASE_API}/product/analysis/sp/ads/table`,
     method: 'post',
     data,
+  })
+}
+
+/**
+ * @description SP广告饼图
+ * @param data ISPAdsPieReq
+ * @returns IProductAdvertisementPieResp
+ */
+export function queryProductAdvertisementPie(data: ISPAdsPieReq): Promise<IProductAdvertisementPieResp> {
+  return request({
+    url: `${BASE_API}/product/analysis/advertisement/pie`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description SP广告饼图-图表2数据（完整数据）
+ * @param data ISPAdsPieReq
+ * @returns { data: IProductAdvertisementPieChartResp }
+ */
+export function queryProductAdvertisementPieChart(data: ISPAdsPieReq): Promise<{ data: IProductAdvertisementPieChartResp }> {
+  return request({
+    url: `${BASE_API}/product/analysis/advertisement/pie/chart`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * @description 根据站点查询币种符号
+ * @param siteId 站点ID
+ * @returns { data: string } 货币符号
+ */
+export function queryCurrencySymbolBySite(siteId: number): Promise<{ data: string }> {
+  return request({
+    url: `${BASE_API}/site/currency/symbol`,
+    method: 'get',
+    params: { siteId },
   })
 }
 
