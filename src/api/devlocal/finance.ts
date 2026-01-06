@@ -57,3 +57,18 @@ export function queryInboundSummaryComponentList(data: IGetOutBoundListReq): Pro
     data,
   })
 }
+
+export function fbaPolling(): Promise<{ data: string[] }> {
+  return request({
+    url: `${BASE_API}/miscellaneous/fba/polling`,
+    method: 'get',
+  })
+}
+
+export function fbaDownShipmentCheck(params: { date: string }): Promise<IBooleanRes> {
+  return request({
+    url: `${BASE_API}/miscellaneous/fba/down/shipment`,
+    method: 'post',
+    params,
+  })
+}

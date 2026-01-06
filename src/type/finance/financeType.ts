@@ -151,7 +151,6 @@ export interface IGetInboundSummaryRes {
     list?: IGetInboundSummaryItem[]
     total?: number
   }
-
 }
 
 export interface IGetInboundSummaryItem {
@@ -167,7 +166,6 @@ export interface IGetInboundSummaryItem {
   /** 差额 */
   diffPrice?: string
 }
-
 
 export interface IGetInboundSummaryComponentRes {
   data?: {
@@ -200,5 +198,5 @@ export interface IGetInboundSummaryComponentItem {
   /** 单位 */
   unit?: string
   /** 状态 */
-  status?:boolean
+  status?: boolean
 }
