@@ -81,7 +81,7 @@
               class="search-input"
               clearable
               placeholder="请输入搜索关键词"
-              @input="queryData"
+              @input="debouncedQueryData"
               @keyup.enter="queryData"
             />
           </el-form-item>
@@ -176,6 +176,7 @@
           <span v-if="item.label === '图片'">
             <el-image
               fit="fill"
+              lazy
               :src="row.asinImgUrl"
               style="display: block; width: 75px; height: 75px"
               @click="imagePreviewShow(row.asinImgUrl)"
@@ -474,6 +475,7 @@
 import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
+import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
 import { adStatusOption, months } from '../constantOption'
@@ -808,7 +810,6 @@ const handleReleaseOrder = async (formData: any) => {
   try {
     // 先关闭弹窗,提升体验
     releaseOrderVisible.value = false
-    orderListLoading.value = true
 
     const { data } = await releaseOperationPlanPo({
       asinId: asinId.value,
@@ -820,18 +821,19 @@ const handleReleaseOrder = async (formData: any) => {
 
     if (data) {
       $baseMessage('发布订货成功！', 'success')
-      // fetchData()
-      copyRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
-      copyRow.nowSupplementCalcu = data.nowSupplementCalcu
-      copyRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
+
+      // 延迟一小段时间后再更新数据，给UI足够的时间响应
+      setTimeout(() => {
+        copyRow.nowSupplementAdvCalcu = data.nowSupplementAdvCalcu
+        copyRow.nowSupplementCalcu = data.nowSupplementCalcu
+        copyRow.planPoPurchaseSkuNumber = data.planPoPurchaseSkuNumber
+      }, 100)
     }
   } catch (error) {
     console.error('发布订货失败:', error)
     $baseMessage('发布订货失败，请重试', 'error')
     // 失败时重新打开弹窗
     releaseOrderVisible.value = true
-  } finally {
-    orderListLoading.value = false
   }
 }
 let copyRow: IGetOperationOrderList
@@ -852,48 +854,63 @@ const handleSwitchSku = async (sku: string) => {
 const handleShowReleaseOrder = async (row: IGetOperationOrderList) => {
   currentRowId.value = row.id
   copyRow = row
+
+  // 先显示弹窗和loading状态，提升用户体验
   releaseOrderVisible.value = true
+  orderListLoading.value = true
 
-  if (row.sku) {
-    orderListLoading.value = true
+  try {
+    if (row.sku) {
+      // 确保skuArray 是一个没有空值的数组
+      const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
 
-    // 确保skuArray 是一个没有空值的数组
-    const skuArray = row.sku?.trim().split(',').filter(Boolean) || []
-
-    skuList.value = skuArray.map((item) => {
-      return {
-        label: item,
-        value: item,
-      }
-    })
-
-    // 修复：检查SKU是否包含搜索关键词
-    const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
-
-    if (matchSkus.length > 0) {
-      // 如果有多个匹配，可以选择最匹配的或者第一个
-      const selectedSku = matchSkus[0].value
-
-      const { data } = await getOperationOrderSku({
-        id: row.id!,
-        sku: selectedSku,
+      skuList.value = skuArray.map((item) => {
+        return {
+          label: item,
+          value: item,
+        }
       })
 
-      // 通过组件实例设置表单数据
-      if (releaseOrderDialogRef.value) {
-        releaseOrderDialogRef.value.setFormData(data)
+      // 修复：检查SKU是否包含搜索关键词
+      const matchSkus = skuList.value.filter((item) => item.value.toLowerCase().includes(queryForm.keyWord.toLowerCase()))
+
+      if (matchSkus.length > 0) {
+        // 如果有多个匹配，可以选择最匹配的或者第一个
+        const selectedSku = matchSkus[0].value
+
+        const { data } = await getOperationOrderSku({
+          id: row.id!,
+          sku: selectedSku,
+        })
+
+        // 通过组件实例设置表单数据
+        if (releaseOrderDialogRef.value) {
+          releaseOrderDialogRef.value.setFormData(data)
+        }
+
+        asinId.value = row.id!
+      } else {
+        // 如果没有匹配的SKU，重置表单
+        if (releaseOrderDialogRef.value) {
+          releaseOrderDialogRef.value.resetForm()
+        }
       }
-
-      asinId.value = row.id!
+    } else {
+      skuList.value = []
+      // 重置组件表单数据
+      if (releaseOrderDialogRef.value) {
+        releaseOrderDialogRef.value.resetForm()
+      }
     }
-
-    orderListLoading.value = false
-  } else {
-    skuList.value = []
-    // 重置组件表单数据
+  } catch (error) {
+    console.error('获取SKU数据失败:', error)
+    $baseMessage('获取SKU数据失败，请重试', 'error')
+    // 出错时重置表单
     if (releaseOrderDialogRef.value) {
       releaseOrderDialogRef.value.resetForm()
     }
+  } finally {
+    orderListLoading.value = false
   }
 }
 // 修改运营分类
@@ -1027,6 +1044,12 @@ const imagePreviewShow = (url: string) => {
   imagePreviewList.value = []
   imagePreviewList.value.push(url)
 }
+// 防抖搜索函数
+const debouncedQueryData = debounce(() => {
+  queryForm.pageNo = 1
+  fetchData()
+}, 300)
+
 const queryData = () => {
   queryForm.pageNo = 1
   fetchData()
