@@ -150,9 +150,10 @@ const handleUploadConfirm = async () => {
     })
 
     const { data } = await uploadSpFile(formData)
+    // 先关闭弹窗，提升用户体验
+    closeUploadDialog()
     if (data) {
       $baseMessage('上传成功', 'success')
-      closeUploadDialog()
     }
   } catch (error) {
     console.error('上传失败:', error)
