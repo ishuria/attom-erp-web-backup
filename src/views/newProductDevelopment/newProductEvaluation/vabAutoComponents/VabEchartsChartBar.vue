@@ -1,16 +1,14 @@
 <template>
-  <vab-chart
-    :option="option"
-  />
+  <vab-chart :option="option" />
 </template>
-  
+
 <script lang="ts" setup>
 import { useSettingsStore } from '/@/store/modules/settings'
 
 defineOptions({
   name: 'VabEchartsChartBar',
 })
-  
+
 const props = defineProps({
   xAxisData: {
     type: Array,
@@ -19,10 +17,10 @@ const props = defineProps({
     type: Array,
   },
 })
-  
+
 const settingsStore = useSettingsStore()
 const { theme } = storeToRefs(settingsStore)
-  
+
 const option = reactive<any>({
   tooltip: {
     trigger: 'axis',
@@ -33,53 +31,53 @@ const option = reactive<any>({
       fontSize: 14, // 设置字体大小
     },
     padding: [0, 5], // 设置内边距，调整提示框的宽高
-    borderColor: '#4e88f3'
+    borderColor: '#4e88f3',
   },
   grid: {
-    top:1,
+    top: 1,
     left: 1,
     right: 1,
-    bottom: 1
+    bottom: 1,
   },
   xAxis: [
-    {   
-      show:false,
+    {
+      show: false,
       type: 'category',
       data: props.xAxisData,
       axisTick: {
-        alignWithLabel: false
+        alignWithLabel: false,
       },
-      axisLabel:{
-        show: false
-      }
-    }
+      axisLabel: {
+        show: false,
+      },
+    },
   ],
   yAxis: [
     {
-      show:false,
-      type: 'value'
-    }
+      show: false,
+      type: 'value',
+    },
   ],
   series: [
     {
       name: '',
       type: 'bar',
       data: props.yAxisData,
-      barGap:'10',
+      barGap: '10',
       barCategoryGap: '1',
       barMinHeight: 1.5,
       emphasis: {
         itemStyle: {
-          opacity: 0.5
-        }
-      }
-    }
-  ]
+          opacity: 0.5,
+        },
+      },
+    },
+  ],
 })
 
 watchEffect(() => {
   // 当 props.yAxisData 变化时，更新 option.series[0].data
-  option.series[0].data = props.yAxisData;
+  option.series[0].data = props.yAxisData
 })
 
 watch(
@@ -91,4 +89,3 @@ watch(
   { immediate: true }
 )
 </script>
-

@@ -62,7 +62,6 @@
 </template>
 
 <script lang="ts" setup>
-import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
 import type { CheckboxValueType } from 'element-plus'
 import { isEqual } from 'lodash-es'
 import {
@@ -78,6 +77,7 @@ import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/d
 import { getUserAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { useAclStore } from '/@/store/modules/acl'
 import type { IAutoMationItem, IAutoMationQueryReq, IAutoMationUpdateReq, IOperationType } from '/@/type/storeOperation/autoMation'
+import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 
 defineOptions({

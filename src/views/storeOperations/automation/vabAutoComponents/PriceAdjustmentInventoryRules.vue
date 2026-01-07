@@ -289,6 +289,13 @@
           </el-text>
         </template>
       </el-table-column>
+      <el-table-column label="销量趋势" width="120">
+        <template #default="{ row }">
+          <div class="custom-bar">
+            <vab-echarts-chart-bar-with-line :line-data="row.unitPriceList || []" :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作结果" prop="operationResult" width="100">
         <template #default="{ row }">
           <el-tag :type="row.operationResult === '失败' ? 'danger' : 'success'">
@@ -323,6 +330,9 @@
     />
     <!-- 查询日志 -->
     <vab-dialog-operation-stock-log v-model:id="_rowId" v-model:operation-stock-visible="operationStockVisible" />
+
+    <!-- 销量趋势弹窗 -->
+    <sale-trend-dialog v-model:visible="saleTrendVisible" :site="currentRowData?.site" :sku="currentRowData?.sku" />
   </div>
 </template>
 
@@ -330,11 +340,11 @@
 import { Search } from '@element-plus/icons-vue'
 import type { CheckboxValueType } from 'element-plus'
 import { CSSProperties } from 'vue'
-import handleClipboard from '~/src/utils/clipboard'
-import { flexColumnWidth } from '~/src/utils/tableColum'
 import { type IAutoMationItem, IAutoMationQueryReq } from '/@/type/storeOperation/autoMation'
 import { IOperationStocksItem } from '/@/type/storeOperation/operationStock.ts'
+import handleClipboard from '/@/utils/clipboard'
 import { getRootElement } from '/@/utils/nodeUtils.ts'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'PriceAdjustmentInventoryRules',
@@ -351,7 +361,10 @@ const props = defineProps<Props>()
 const queryForm = defineModel<IAutoMationQueryReq>('queryForm', { required: true })
 const checkAll = defineModel<boolean>('checkAll', { default: false })
 const indeterminate = defineModel<boolean>('indeterminate', { default: false })
-
+const xAxis = ref<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
+const saleTrendVisible = ref<boolean>(false)
+// 当前行数据（用于销量趋势弹窗）
+const currentRowData = ref<any>(null)
 const emit = defineEmits<{
   'image-preview': [url: string]
   'query-data': []
@@ -399,7 +412,14 @@ const handleCellBlur = (event: any, row: IOperationStocksItem, index: number) =>
 }
 
 const handleCellClick = (row: IAutoMationItem, column: any, cell: HTMLTableCellElement) => {
-  emit('cell-click', row, column, cell)
+  if (column.label === '销量趋势') {
+    // 保存当前行数据用于弹窗显示
+    currentRowData.value = row
+    // 打开销量趋势具体的弹窗
+    saleTrendVisible.value = true
+  } else {
+    emit('cell-click', row, column, cell)
+  }
 }
 
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -483,5 +503,9 @@ const updateBatch = () => {
   &:hover {
     color: #000;
   }
+}
+.custom-bar {
+  width: 100%;
+  height: 50px;
 }
 </style>

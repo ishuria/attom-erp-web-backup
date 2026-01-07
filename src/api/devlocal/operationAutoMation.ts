@@ -1,14 +1,18 @@
 import { BASE_API } from '/@/api/devlocal/api'
 import {
+  GetSaleTrendParams,
+  GetSaleTrendResponse,
   IAutoMationDefaultPramsRules,
   IAutomationLogRules,
   IAutoMationQueryReq,
   IAutoMationResult,
   IAutoMationRules,
-  IAutoMationUpdateReq, IOperationStockRulesSiteParams,
+  IAutoMationUpdateReq,
+  IOperationStockRulesSiteParams,
 } from '/@/type/storeOperation/autoMation'
 import {
-  IOperationStockDefaultParams, IOperationStockLogRules,
+  IOperationStockDefaultParams,
+  IOperationStockLogRules,
   IOperationStocksItem,
   IOperationStockUpdateReq,
 } from '/@/type/storeOperation/operationStock.ts'
@@ -187,5 +191,18 @@ export function updateOperationStockRulesParams(data: IOperationStockRulesSitePa
     url: `${BASE_API}/operation/stock/rules/site/default/params/update`,
     method: 'post',
     data,
+  })
+}
+
+/**
+ * @description 获取销量趋势数据
+ * @param params 请求参数
+ * @returns Promise<GetSaleTrendResponse>
+ */
+export function getSaleTrend(params: GetSaleTrendParams): Promise<GetSaleTrendResponse> {
+  return request({
+    url: `${BASE_API}/operation/stock/auto/rules/sale/trend`,
+    method: 'get',
+    params,
   })
 }

@@ -267,3 +267,23 @@ export interface IOperationStockRulesSiteParams {
   lowDeliveryFeeMaxPrice?: number
   lowDeliveryFee?: number
 }
+
+// 销量趋势数据项
+export interface SaleTrendDataItem {
+  date: string // 日期，如 '2024-01-01'
+  salesVolume: number // 销量
+  unitPrice: number // 客单价
+}
+
+// 获取销量趋势请求参数
+export interface GetSaleTrendParams {
+  sku: string // SKU
+  site: number // 站点
+  startDate: string // 开始日期，格式：YYYY-MM-DD
+  endDate: string // 结束日期，格式：YYYY-MM-DD
+}
+
+// 获取销量趋势响应
+export interface GetSaleTrendResponse {
+  data: SaleTrendDataItem[]
+}
