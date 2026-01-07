@@ -1,13 +1,6 @@
 <template>
   <div>
     <vab-dialog v-model="visible" title="SP-ST-Share 文件上传" top="7vh" width="20%">
-      <el-form style="margin-bottom: 20px">
-        <el-form-item label="目标ACOS">
-          <el-input v-model="initialAcos" placeholder="请输入目标ACOS" style="width: 100%" type="number" @change="handleAcosChange">
-            <template #append>%</template>
-          </el-input>
-        </el-form-item>
-      </el-form>
       <el-table border :data="siteList" :header-cell-style="{ textAlign: 'center' }" stripe>
         <el-table-column align="center" label="站点" prop="label" width="150" />
         <el-table-column align="center" label="SP-ST-Share">
@@ -16,12 +9,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <template #footer>
-        <div style="text-align: center">
-          <el-button @click="handleCancel">关闭</el-button>
-          <el-button :loading="uploadLoading" type="primary" @click="handleCalculate">确定</el-button>
-        </div>
-      </template>
     </vab-dialog>
 
     <!-- 上传文件弹窗 -->
@@ -47,7 +34,7 @@
 <script lang="ts" setup>
 import { UploadFilled } from '@element-plus/icons-vue'
 import type { UploadFiles } from 'element-plus'
-import { calculateSpAds, queryInitialAcos, updateInitialAcos, uploadSpFile } from '/@/api/devlocal/productAnalysis'
+import { queryInitialAcos, uploadSpFile } from '/@/api/devlocal/productAnalysis'
 defineOptions({
   name: 'SpFileUpload',
 })
@@ -96,25 +83,6 @@ const fetchInitialAcos = async () => {
   }
 }
 
-// 处理ACOS输入框变化
-const handleAcosChange = async (value: string) => {
-  if (!value || value.trim() === '') {
-    return
-  }
-  const acosValue = parseFloat(value)
-  if (!isNaN(acosValue)) {
-    try {
-      const { data } = await updateInitialAcos(acosValue)
-      if (data) {
-        $baseMessage('更新目标ACOS成功', 'success')
-      }
-    } catch (error) {
-      console.error('更新目标ACOS失败:', error)
-      $baseMessage('更新目标ACOS失败，请重试', 'error')
-    }
-  }
-}
-
 // 打开上传弹窗
 const openUploadDialog = (row: { label: string; id: number }) => {
   currentSite.value = row
@@ -126,11 +94,6 @@ const closeUploadDialog = () => {
   uploadDialogVisible.value = false
   currentSite.value = null
   currentFileList.value = []
-}
-
-// 取消主弹窗
-const handleCancel = () => {
-  visible.value = false
 }
 
 // 确定上传（上传弹窗中的确定按钮）
@@ -158,21 +121,6 @@ const handleUploadConfirm = async () => {
   } catch (error) {
     console.error('上传失败:', error)
     $baseMessage('上传失败，请重试', 'error')
-  } finally {
-    uploadLoading.value = false
-  }
-}
-const handleCalculate = async () => {
-  try {
-    uploadLoading.value = true
-    const { data } = await calculateSpAds()
-    if (data) {
-      $baseMessage('计算成功', 'success')
-      visible.value = false
-    }
-  } catch (error) {
-    console.error('计算失败:', error)
-    $baseMessage('计算失败，请重试', 'error')
   } finally {
     uploadLoading.value = false
   }

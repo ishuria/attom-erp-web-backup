@@ -75,12 +75,12 @@
       <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate" />
       <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate" />
       <el-table-column label="花费" min-width="80" prop="spend" />
-      <el-table-column label="订单数" min-width="90" prop="orders7d" />
+      <el-table-column label="7天订单数" min-width="90" prop="orders7d" />
       <el-table-column label="ACOS" min-width="90" prop="acos" />
       <el-table-column label="CPC" min-width="80" prop="cpc" />
       <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
-      <el-table-column label="广告日总展示" min-width="130" prop="dailyImpressions" />
-      <el-table-column label="估算广告日总点击" min-width="170" prop="estimateTotalClick" />
+      <el-table-column label="大盘日总展示" min-width="130" prop="dailyImpressions" />
+      <el-table-column label="预估大盘总点击" min-width="170" prop="estimateTotalClick" />
       <el-table-column label="曝光量排名" min-width="120" prop="impressionRank" />
       <el-table-column label="品牌占有率" min-width="120" prop="brandShareRate" />
       <el-table-column fixed="right" label="分类" min-width="130" prop="type">
@@ -215,6 +215,9 @@ const handleAdSettingUpdate = async () => {
     })
     if (data) {
       $baseMessage('更新成功', 'success')
+      fetchTableData()
+      fetchPieData()
+      fetchPieChartData()
     }
   } catch (error) {
     console.error('Failed to update advertisement setting:', error)
@@ -429,12 +432,6 @@ const updatePieChartDisplay = () => {
 
   if (selectedData && Array.isArray(selectedData)) {
     processedData.value = [...selectedData] // 后端已经排序，直接使用
-
-    // 添加"其他"项（如果需要的话）
-    processedData.value.push({
-      name: '其他',
-      value: 100,
-    })
   } else {
     processedData.value = []
   }
