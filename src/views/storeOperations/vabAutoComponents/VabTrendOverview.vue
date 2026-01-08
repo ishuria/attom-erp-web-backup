@@ -37,27 +37,34 @@
       <div ref="chartContainer" v-loading="chartLoading" style="width: 100%; height: 350px"></div>
     </vab-card>
     <div style="margin-bottom: 10px; text-align: right">
-      <el-popover popper-style="max-height: 550px; overflow: auto;" :width="240">
+      <el-popover popper-style="max-height: 560px; overflow: auto;" :width="240">
         <template #reference>
           <el-button>
             <vab-icon icon="settings-line" />
           </el-button>
         </template>
-        <vab-draggable v-model="checkList1" :animation="600" filter=".non-draggable" handle=".handle" :on-move="handleMove">
+        <vab-draggable
+          v-model="columns"
+          :animation="600"
+          filter=".non-draggable"
+          handle=".handle"
+          :on-end="handleEnd"
+          :on-move="handleMove"
+        >
           <div
-            v-for="item in checkList1"
+            v-for="item in columns"
             :key="item.label"
             :class="{ 'non-draggable': item.disableCheck }"
             style="display: flex; align-items: center; font-size: var(--el-font-size-base)"
           >
             <vab-icon class="handle" :class="{ 'disabled-handle': item.disableCheck }" icon="draggable" style="margin-right: 5px" />
             <span style="flex: 1">{{ item.label }}</span>
-            <span v-if="item.disableCheck" class="icon-hover" style="display: flex; align-items: center">
-              <el-icon><view /></el-icon>
+            <span v-if="item.disableCheck" class="icon-dis" style="display: flex; align-items: center">
+              <vab-icon icon="eye-line" />
             </span>
             <span v-else class="icon-hover" style="display: flex; align-items: center; cursor: pointer" @click="handleChecked(item)">
-              <el-icon v-show="!item.checked"><hide /></el-icon>
-              <el-icon v-show="item.checked"><view /></el-icon>
+              <vab-icon v-show="!item.checked" icon="eye-off-line" />
+              <vab-icon v-show="item.checked" icon="eye-line" />
             </span>
           </div>
         </vab-draggable>
@@ -112,12 +119,11 @@
 </template>
 
 <script lang="ts" setup>
-import { Hide } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '~/src/api/devlocal/productPerformance'
 import {
   trendOverviewCardConfig,
-  trendOverviewColumns,
   trendOverviewDropdownItems,
   trendOverviewGroups,
   trendOverviewNameMapProp,
@@ -126,6 +132,7 @@ import {
 import { getOperationLog, getTrendOverviewChart, getTrendOverviewTable } from '/@/api/devlocal/productAnalysis'
 import { ICardSummary, IGetOperationLog, ITrendOverview } from '/@/type/storeOperation/productAnalysisType'
 import { formatDateToString, getWeekOfYear } from '/@/utils/dateUtils'
+import { trendOverviewColumns } from '/@/views/storeOperations/constantOption'
 
 defineOptions({
   name: 'VabTrendOverview',
@@ -168,8 +175,28 @@ const total = ref<number>(0)
 const route = useRoute()
 // 获取币种符号，从路由参数获取，默认为美元符号
 const currencySymbol = ref<string>('')
+const columns = ref<any>([])
+
+const formatterMap = new Map<string, Function>()
+trendOverviewColumns.forEach((col) => {
+  if (col.formatter) {
+    formatterMap.set(col.prop!, col.formatter)
+  }
+})
+
+const fetchColumn = async () => {
+  const { data } = await getOperationColumnList({ type: 17 })
+  columns.value = data
+  columns.value.forEach((item: any) => {
+    item.minWidth = item.width
+    // 应用 formatter
+    if (formatterMap.has(item.prop)) {
+      item.formatter = formatterMap.get(item.prop)
+    }
+  })
+}
 const checkList1 = computed(() => {
-  return trendOverviewColumns.filter((item) => item.checked)
+  return columns.value.filter((item: any) => item.checked)
 })
 // 记录点击的是哪个card
 const clickCard = ref<string>('')
@@ -851,20 +878,20 @@ const calcYAxisRange = (yAxisIndex: number) => {
     }
   } else {
     // 其他 Y 轴使用原来的逻辑
-  if (option.value.series && Array.isArray(option.value.series)) {
-    option.value.series.forEach((series: any) => {
-      // 只收集属于当前 y 轴的 series 数据
-      if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
-        series.data.forEach((value: any) => {
-          if (value !== null && value !== undefined && value !== '') {
-            const numValue = Number(value)
-            if (!isNaN(numValue)) {
-              allValues.push(numValue)
+    if (option.value.series && Array.isArray(option.value.series)) {
+      option.value.series.forEach((series: any) => {
+        // 只收集属于当前 y 轴的 series 数据
+        if (series.yAxisIndex === yAxisIndex && series.data && Array.isArray(series.data)) {
+          series.data.forEach((value: any) => {
+            if (value !== null && value !== undefined && value !== '') {
+              const numValue = Number(value)
+              if (!isNaN(numValue)) {
+                allValues.push(numValue)
+              }
             }
-          }
-        })
-      }
-    })
+          })
+        }
+      })
     }
   }
 
@@ -1874,8 +1901,15 @@ const handleCardClick = (index: number) => {
   // 保存状态
   saveState()
 }
-const handleChecked = (item: any) => {
+// 处理列是否隐藏
+const handleChecked = async (item: any) => {
   item.checked = !item.checked
+  const status = item.checked === true ? 1 : 0
+  await hideOrShowOperationColumn({
+    userId: item.userId,
+    columnId: item.columnId,
+    status,
+  })
 }
 const handleMove = (event: any) => {
   const { related } = event
@@ -1886,6 +1920,16 @@ const handleMove = (event: any) => {
   }
 
   return true // 允许其他操作
+}
+const handleEnd = async () => {
+  const req = columns.value.map((item: any, index: number) => {
+    return {
+      userId: item.userId,
+      columnId: item.columnId,
+      sort: index,
+    }
+  })
+  await updateSortOperationColumn(req)
 }
 
 const handleCurrentChange = (value: number) => {
@@ -2110,6 +2154,7 @@ const handleOperationLogClick = async (date: string) => {
 }
 
 onMounted(() => {
+  fetchColumn()
   if (chartContainer.value) {
     chartInstance = echarts.init(chartContainer.value)
     chartObserver = new ResizeObserver(() => {
