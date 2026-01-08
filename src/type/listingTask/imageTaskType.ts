@@ -3,6 +3,7 @@ export interface IGetArtDesignTaskListReq {
   status: number
   pageNo: number
   pageSize: number
+  taskType?: string
 }
 export interface IGetArtDesignTaskListRes {
   data: {

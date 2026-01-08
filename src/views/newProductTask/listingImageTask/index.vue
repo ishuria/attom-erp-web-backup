@@ -750,7 +750,16 @@
       </el-tab-pane>
       <el-tab-pane label="已完成" :name="2">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel>
+            <el-form-item label="任务类型">
+              <el-select v-model="queryForm.taskType" clearable placeholder="请选择任务类型" @change="queryData">
+                <el-option v-for="item in taskTypeOption" :key="item.value" :label="item.label" :value="item.value">
+                  <el-text :style="{ color: getTaskTypeBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
             <el-form inline :model="queryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -1429,7 +1438,17 @@ const handleUpdateProofreadingStatus = async (row: IGetArtDesignTaskList) => {
     fetchData()
   }
 }
-
+// 任务类型 -> 自定义颜色映射
+const getTaskTypeBaseColor = (taskTypeName: string) => {
+  if (!taskTypeName) return '#909399'
+  const colorMap: Record<string, string> = {
+    新品任务: '#67C23A', // 绿色
+    老品任务: '#409EFF', // 蓝色
+    临时任务: '#E6A23C', // 橙色
+    设计任务: '#F56C6C', // 红色
+  }
+  return colorMap[taskTypeName] ?? '#909399'
+}
 // table blur事件
 const clickCancel = async (event: any, value: any) => {
   const rootElement = getRootElement(event.srcElement, '.cell')
@@ -1570,6 +1589,7 @@ const queryForm = reactive<IGetArtDesignTaskListReq>({
   pageNo: 1,
   pageSize: 20,
   status: 3,
+  taskType: '',
 })
 const total = ref<number>(0)
 const listLoading = ref<boolean>(false)
@@ -1781,6 +1801,9 @@ const cellClick = (row: any, column: any, cell: HTMLTableCellElement) => {
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     queryForm.status = Number(tab.props.name)
+    if (queryForm.status !== 2) {
+      queryForm.taskType = ''
+    }
     router.push({
       query: {
         ...route.query,
