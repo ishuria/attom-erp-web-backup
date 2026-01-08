@@ -561,6 +561,8 @@ export interface ISPAdsTableReq {
   type: number // 0=sku, 1=asin
   siteId: number
   exactSearch?: number
+  orderByField?: string
+  orderDirection?: string
 }
 export interface ISPAdsPieReq {
   startDate: string

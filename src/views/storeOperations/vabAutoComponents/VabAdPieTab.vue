@@ -59,7 +59,15 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table v-loading="listLoading" border :cell-style="cellStyle" :data="list" :header-cell-style="{ textAlign: 'center' }" stripe>
+    <el-table
+      v-loading="listLoading"
+      border
+      :cell-style="cellStyle"
+      :data="list"
+      :header-cell-style="{ textAlign: 'center' }"
+      stripe
+      @sort-change="handleSortChange"
+    >
       <el-table-column
         fixed="left"
         label="客户搜索词"
@@ -70,16 +78,17 @@
           <el-link type="primary">{{ row.customerSearchTerm }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="展示量" min-width="90" prop="impressions" />
-      <el-table-column label="点击量" min-width="90" prop="clicks" />
+      <el-table-column label="展示量" min-width="100" prop="impressions" sortable="custom" />
+      <el-table-column label="点击量" min-width="100" prop="clicks" sortable="custom" />
       <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate" />
       <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate" />
-      <el-table-column label="花费" min-width="80" prop="spend" />
-      <el-table-column label="7天订单数" min-width="90" prop="orders7d" />
-      <el-table-column label="ACOS" min-width="90" prop="acos" />
-      <el-table-column label="CPC" min-width="80" prop="cpc" />
+      <el-table-column label="花费" min-width="100" prop="spend" sortable="custom" />
+      <el-table-column label="7天销售额" min-width="130" prop="sales7d" sortable="custom" />
+      <el-table-column label="7天订单数" min-width="130" prop="orders7d" sortable="custom" />
+      <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom" />
+      <el-table-column label="CPC" min-width="90" prop="cpc" sortable="custom" />
       <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
-      <el-table-column label="大盘日总展示" min-width="130" prop="dailyImpressions" />
+      <el-table-column label="大盘日总展示" min-width="145" prop="getCal" sortable="custom" />
       <el-table-column label="预估大盘总点击" min-width="170" prop="estimateTotalClick" />
       <el-table-column label="曝光量排名" min-width="120" prop="impressionRank" />
       <el-table-column label="品牌占有率" min-width="120" prop="brandShareRate" />
@@ -157,6 +166,8 @@ const queryForm = reactive<any>({
   pageNo: 1,
   pageSize: 20,
   exactSearch: 0,
+  orderByField: 'impressions',
+  orderDirection: 'desc',
 })
 
 const pieSelect = ref<number>(0)
@@ -242,12 +253,11 @@ const mapTableData = (items: ISPAdsTableItem[]): any[] => {
     acos: item.acos != null ? `${item.acos}%` : '-',
     // 品牌占有率
     brandShareRate: item.brandShareRate != null ? `${item.brandShareRate}%` : '-',
-    // 广告日总展示（使用impressions）
-    dailyImpressions: item.impressions,
     suggestedBid: item.suggestedBid != null ? currencySymbol.value + item.suggestedBid : '-',
     estimateTotalClick: item.estimateTotalClick != null ? item.estimateTotalClick : '-',
     cpc: item.cpc != null ? currencySymbol.value + item.cpc : '-',
     spend: item.spend != null ? currencySymbol.value + item.spend : '-',
+    sales7d: item.sales7d != null ? currencySymbol.value + item.sales7d : '-',
   }))
 }
 
@@ -339,6 +349,8 @@ const fetchTableData = async () => {
       type: props.type || 0,
       siteId: props.siteId ?? 0,
       exactSearch: queryForm.exactSearch || 0,
+      orderByField: queryForm.orderByField,
+      orderDirection: queryForm.orderDirection,
     })
 
     if (data && data.list) {
@@ -353,7 +365,26 @@ const fetchTableData = async () => {
     listLoading.value = false
   }
 }
-
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (queryForm.orderByField === prop) {
+    // 如果点击的是当前排序列
+    if (!order) {
+      // 取消排序时，切换排序方向
+      if (queryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    // 如果点击的是不同的列，默认设置为降序
+    column.order = 'descending'
+  }
+  queryForm.orderByField = prop
+  queryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchTableData()
+}
 // 分页处理
 const handleCurrentChange = (value: number) => {
   queryForm.pageNo = value
@@ -535,7 +566,7 @@ const initChart1 = () => {
           },
         },
         data: data1.value,
-        color: ['#ffdc4c', '#62d9ad', '#e65a56', '#00aeef'],
+        color: ['#e65a56', '#62d9ad', '#f5a623', '#409eff'],
       },
     ],
   }
@@ -579,22 +610,20 @@ const initChart2 = () => {
         left: 0,
         right: 0,
         top: 0,
-        bottom: 20,
+        bottom: 40,
         // clockwise: false,
         startAngle: 90, //起始角度
         labelLine: {
+          length: 10, // 缩短连接线长度
+          length2: 5, // 缩短连接线第二段长度
           lineStyle: {
-            width: 2,
+            width: 1, // 细化连接线
           },
-          // length: 30, // 连接线长度
-          // length2: 40, // 连接线的第二段长度
         },
         label: {
-          // position: 'outside', // 标签在外部
           position: 'outer',
           alignTo: 'edge',
-          edgeDistance: 10,
-          // alignTo: 'labelLine',
+          edgeDistance: 5, // 减小标签与边缘的距离
           formatter: (params: any) => {
             const { data, percent } = params
 
@@ -609,20 +638,20 @@ const initChart2 = () => {
               color: '#000',
               fontSize: 17,
               fontWeight: 550,
-              padding: [0, 0, 5, 0],
+              padding: [0, 0, 2, 0], // 减少底部内边距
             },
             b: {
               color: '#7d7f84',
               fontSize: 16,
               lineHeight: 20,
               align: 'left',
-              padding: [0, 0, 10, 0],
+              padding: [0, 0, 2, 0], // 减少底部内边距
             },
             x: {
               color: '#999',
               fontSize: 16,
               lineHeight: 20,
-              padding: [0, 0, 10, 0],
+              padding: [0, 0, 2, 0], // 减少底部内边距
             },
           },
         },
@@ -693,22 +722,22 @@ onBeforeUnmount(() => {
 })
 const getCategoryColor = (value: any) => {
   switch (value) {
-    case 0: {
-      return '#00aeef'
-    }
     case 1: {
-      return '#e65a56'
+      return '#e65a56' // 高ACOS - 红色（问题/警告）
     }
     case 2: {
-      return '#62d9ad'
+      return '#62d9ad' // 低ACOS - 绿色（良好）
+    }
+    case 3: {
+      return '#f5a623' // 高点击不出单 - 橙色（中等警告）
     }
     default: {
-      return '#ffdc4c'
+      return '#409eff' // 低点击不出单 - 蓝色
     }
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0 || data.columnIndex === 14) {
+  if (data.columnIndex === 0) {
     return {
       textAlign: 'left',
     }

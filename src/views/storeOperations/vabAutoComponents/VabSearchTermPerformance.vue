@@ -23,10 +23,10 @@
     >
       <el-table-column label="搜索关键词" min-width="110" prop="searchQuery" :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')" />
       <el-table-column label="搜索关键词评分" min-width="110" prop="searchQueryScore" />
-      <el-table-column label="搜索关键词热度" min-width="110" prop="searchQueryVolume" />
+      <el-table-column label="关键词搜索量" min-width="130" prop="searchQueryVolume" sortable="custom" />
       <el-table-column label="关键词总曝光量" min-width="100" prop="totalQueryImpressionCount" sortable="custom" />
       <el-table-column label="商品曝光量" min-width="130" prop="asinImpressionCount" sortable="custom" />
-      <el-table-column label="商品曝光占比（%）" min-width="120" prop="asinImpressionShare" />
+      <el-table-column label="商品曝光占比（%）" min-width="130" prop="asinImpressionShare" sortable="custom" />
       <el-table-column label="关键词总点击量" min-width="100" prop="totalClickCount" sortable="custom" />
       <el-table-column label="总点击率（%）" min-width="110" prop="totalClickRate" />
       <el-table-column label="商品点击量" min-width="130" prop="asinClickCount" sortable="custom" />

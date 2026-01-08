@@ -220,7 +220,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
@@ -467,7 +467,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
@@ -706,7 +706,7 @@
                     >
                       <el-link type="primary" underline="never">文案</el-link>
                     </el-dropdown-item> -->
-                    <el-dropdown-item v-if="row.taskType === '设计任务' && !row.sku" @click="handleShowDistributeSkus(row)">
+                    <el-dropdown-item v-if="row.taskType === '设计任务'" @click="handleShowDistributeSkus(row)">
                       <el-link type="primary" underline="never">分配SKU</el-link>
                     </el-dropdown-item>
                     <el-dropdown-item
