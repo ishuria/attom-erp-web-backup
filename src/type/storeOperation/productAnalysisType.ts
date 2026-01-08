@@ -382,6 +382,7 @@ export interface IGetStorageAgeRes {
 export interface IGetStorageAge {
   name: string
   value: number
+  cost: number
 }
 
 export interface IGetSkuSiteDailyCostRes {

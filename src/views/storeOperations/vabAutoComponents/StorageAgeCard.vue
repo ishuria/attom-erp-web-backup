@@ -41,9 +41,11 @@
             :align="column.align || 'right'"
             :label="column.label"
             :min-width="column.minWidth"
-            :prop="column.prop"
+            :prop="getAdditionalColumnProp(column)"
           >
-            <template v-if="column.formatter" #default="{ row }">{{ column.formatter(row) }}</template>
+            <template #default="{ row }">
+              {{ getAdditionalColumnFormatter(column, row) }}
+            </template>
           </el-table-column>
         </el-table>
       </el-col>
@@ -133,6 +135,30 @@ const headerCellStyle = (): CSSProperties => {
 const totalValue = computed(() => {
   return props.chartData.reduce((sum, item) => sum + item.value, 0)
 })
+
+// 获取附加列的 prop
+const getAdditionalColumnProp = (column: AdditionalColumn) => {
+  // 如果是费用列且在占比模式，返回 costPercentage，否则返回原始 prop
+  if (column.label === '预估下月费用' && currentMode.value === 1) {
+    return 'costPercentage'
+  }
+  return column.prop
+}
+
+// 获取附加列的格式化值
+const getAdditionalColumnFormatter = (column: AdditionalColumn, row: any) => {
+  if (column.label === '预估下月费用') {
+    if (currentMode.value === 0) {
+      // 数量模式：显示货币符号 + 绝对值
+      return `${props.symbol}${row.cost != null ? row.cost : ''}`
+    } else {
+      // 占比模式：直接显示百分比
+      return `${row.costPercentage || '0.00'}%`
+    }
+  }
+  // 其他列使用原有 formatter
+  return column.formatter ? column.formatter(row) : row[column.prop || '']
+}
 
 // 初始化图表
 const initChart = () => {

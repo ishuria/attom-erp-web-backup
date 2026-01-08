@@ -27,7 +27,13 @@
         <!-- 库龄 -->
         <storage-age-card
           v-loading="storageAgeLoading"
-          :additional-columns="[{ label: '预估下月费用', minWidth: 120 }]"
+          :additional-columns="[
+            {
+              label: '预估下月费用',
+              prop: 'cost',
+              minWidth: 120,
+            },
+          ]"
           card-class="card2"
           :chart-data="data2"
           :colors="storageAgeColorList"
@@ -352,7 +358,7 @@ const data1 = ref<Array<{ name: string; value: number }>>([])
 const expenseLoading = ref<boolean>(false)
 const expenseSymbol = ref<string>('$')
 // 库龄数据
-const data2 = ref<Array<{ name: string; value: number }>>([])
+const data2 = ref<Array<{ name: string; value: number; cost: number }>>([])
 const storageAgeLoading = ref<boolean>(false)
 // 图表数据格式（直接使用后端字段）
 const data3 = ref<IGetSkuSiteDailyCost[]>([])
@@ -365,10 +371,13 @@ const totalValue = ref<number>(0)
 const totalAgeValue = computed(() => {
   return data2.value.reduce((sum, item) => sum + item.value, 0)
 })
-
+const totalCostValue = computed(() => {
+  return data2.value.reduce((sum, item) => sum + item.cost, 0)
+})
 // 计算占比
 const percentageData = computed(() => {
   const total = totalValue.value
+
   if (total === 0) {
     return data1.value.map((item) => ({
       ...item,
@@ -383,16 +392,24 @@ const percentageData = computed(() => {
 // 计算库龄占比数据
 const percentageAgeData = computed(() => {
   const total = totalAgeValue.value
+  const totalCost = totalCostValue.value
   if (total === 0) {
     return data2.value.map((item) => ({
       ...item,
       percentage: '0.00',
+      costPercentage: '0.00', // 确保这里也是字符串
     }))
   }
-  return data2.value.map((item) => ({
-    ...item,
-    percentage: ((item.value / total) * 100).toFixed(2),
-  }))
+  return data2.value.map((item) => {
+    const itemCost = Number(item.cost)
+    const calculatedCostPercentage = totalCost === 0 ? 0 : (itemCost / totalCost) * 100
+
+    return {
+      ...item,
+      percentage: ((item.value / total) * 100).toFixed(2), // 确保 percentage 是字符串
+      costPercentage: calculatedCostPercentage.toFixed(2), // 确保这里也是百分比字符串
+    }
+  })
 })
 let copyRow: any
 
