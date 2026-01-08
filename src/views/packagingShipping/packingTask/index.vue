@@ -1414,7 +1414,7 @@ const handleCloseGetOffWork = async () => {
   getOffWorkVisible.value = false
 }
 // 下班人员的确定
-const handleConfirmGetOffWork = async () => {
+const handleConfirmGetOffWork = debounce(async () => {
   if (selectGetOffRows.value.length === 0) {
     $baseMessage('您未选中任何人员', 'warning')
     return
@@ -1426,27 +1426,33 @@ const handleConfirmGetOffWork = async () => {
   if (data) {
     $baseConfirm('下班人员列表中，存在有未结束任务的人。确定是否要下班并结束任务?', '系统提示', async () => {
       getOffWorkLoading.value = true
-      const { data: goOff } = await confirmGoOffWork({
-        userIds,
-      })
-      if (goOff === true) {
-        $baseMessage('下班人员确定成功', 'success')
+      try {
+        const { data: goOff } = await confirmGoOffWork({
+          userIds,
+        })
+        if (goOff === true) {
+          $baseMessage('下班人员确定成功', 'success')
+        }
+      } finally {
         getOffWorkLoading.value = false
       }
     })
   } else {
     getOffWorkLoading.value = true
-    const { data: goOff } = await confirmGoOffWork({
-      userIds,
-    })
-    if (goOff === true) {
-      $baseMessage('下班人员确定成功', 'success')
+    try {
+      const { data: goOff } = await confirmGoOffWork({
+        userIds,
+      })
+      if (goOff === true) {
+        $baseMessage('下班人员确定成功', 'success')
+      }
+    } finally {
       getOffWorkLoading.value = false
     }
   }
   handleCloseGetOffWork()
   // selectRows.value = []
-}
+}, 2000)
 // 结束任务的取消
 const handleCloseFinishTask = () => {
   finishTaskTableRef.value?.clearSelection()
@@ -1457,12 +1463,12 @@ const qualityProjectLoading = ref<boolean>(false)
 
 // 结束任务的确定
 const handleConfirmFinishTask = debounce(async () => {
+  finishConfirmLoading.value = true
   try {
     if (selectFinishTaskRows.value.length === 0) {
       $baseMessage('您未选中任何人员', 'warning')
       return
     }
-    finishConfirmLoading.value = true
     const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
     const { data } = await confirmEndTask({
       userIds,
@@ -1477,7 +1483,7 @@ const handleConfirmFinishTask = debounce(async () => {
   } finally {
     finishConfirmLoading.value = false
   }
-}, 5000)
+}, 2000)
 // 开始任务的取消
 const handleCloseStartTask = () => {
   startTaskTableRef.value?.clearSelection()
@@ -1512,12 +1518,12 @@ const showSkuQualityList = async (taskIds: string, startTaskUserIds: string) => 
 }
 // 点击开始任务-人员选择后的质检项目
 const handleShowQualityProject = debounce(async () => {
+  if (selectPersonRows.value.length === 0) {
+    $baseMessage('您未选中任何人员', 'warning')
+    return
+  }
+  qualityProjectLoading.value = true
   try {
-    if (selectPersonRows.value.length === 0) {
-      $baseMessage('您未选中任何人员', 'warning')
-      return
-    }
-    qualityProjectLoading.value = true
     const taskIds = selectRows.value.map((item: any) => item.id).join(',')
     const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
     const { data: res, msg } = await checkStartTaskPackage({
@@ -1540,7 +1546,7 @@ const handleShowQualityProject = debounce(async () => {
   } finally {
     qualityProjectLoading.value = false
   }
-}, 5000)
+}, 2000)
 // // 修改优先打包
 // const handleUpdatePriority = async (row: any) => {
 //   await updatePriorityPackaging({
