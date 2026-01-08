@@ -682,7 +682,7 @@
       </el-table>
       <template #footer>
         <el-button type="danger" @click="handleCloseStartTask">取消</el-button>
-        <el-button type="success" @click="handleShowQualityProject">确定</el-button>
+        <el-button :loading="qualityProjectLoading" type="success" @click="handleShowQualityProject">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 结束任务 - 人员选择 -->
@@ -1453,15 +1453,15 @@ const handleCloseFinishTask = () => {
   finishTaskVisible.value = false
 }
 const finishConfirmLoading = ref<boolean>(false)
+const qualityProjectLoading = ref<boolean>(false)
 
 // 结束任务的确定
 const handleConfirmFinishTask = debounce(async () => {
-  if (selectFinishTaskRows.value.length === 0) {
-    $baseMessage('您未选中任何人员', 'warning')
-    return
-  }
-
   try {
+    if (selectFinishTaskRows.value.length === 0) {
+      $baseMessage('您未选中任何人员', 'warning')
+      return
+    }
     finishConfirmLoading.value = true
     const userIds = selectFinishTaskRows.value.map((item: any) => item.userId).join(',')
     const { data } = await confirmEndTask({
@@ -1477,7 +1477,7 @@ const handleConfirmFinishTask = debounce(async () => {
   } finally {
     finishConfirmLoading.value = false
   }
-}, 1000)
+}, 5000)
 // 开始任务的取消
 const handleCloseStartTask = () => {
   startTaskTableRef.value?.clearSelection()
@@ -1511,32 +1511,36 @@ const showSkuQualityList = async (taskIds: string, startTaskUserIds: string) => 
   }
 }
 // 点击开始任务-人员选择后的质检项目
-const handleShowQualityProject = async () => {
-  if (selectPersonRows.value.length === 0) {
-    $baseMessage('您未选中任何人员', 'warning')
-    return
-  }
-
-  const taskIds = selectRows.value.map((item: any) => item.id).join(',')
-  const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
-  const { data: res, msg } = await checkStartTaskPackage({
-    taskIds,
-    startTaskUserIds,
-  })
-  if (res) {
-    showSkuQualityList(taskIds, startTaskUserIds)
-  } else {
-    ElMessageBox.confirm(msg, '系统提示', {
-      confirmButtonText: '确定',
-      showCancelButton: false,
-      showClose: false,
-      type: 'warning',
-      customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
-    }).then(() => {
-      showSkuQualityList(taskIds, startTaskUserIds)
+const handleShowQualityProject = debounce(async () => {
+  try {
+    if (selectPersonRows.value.length === 0) {
+      $baseMessage('您未选中任何人员', 'warning')
+      return
+    }
+    qualityProjectLoading.value = true
+    const taskIds = selectRows.value.map((item: any) => item.id).join(',')
+    const startTaskUserIds = selectPersonRows.value.map((item: any) => item.userId).join(',')
+    const { data: res, msg } = await checkStartTaskPackage({
+      taskIds,
+      startTaskUserIds,
     })
+    if (res) {
+      await showSkuQualityList(taskIds, startTaskUserIds)
+    } else {
+      ElMessageBox.confirm(msg, '系统提示', {
+        confirmButtonText: '确定',
+        showCancelButton: false,
+        showClose: false,
+        type: 'warning',
+        customStyle: { whiteSpace: 'pre-line', maxWidth: '600px' },
+      }).then(() => {
+        showSkuQualityList(taskIds, startTaskUserIds)
+      })
+    }
+  } finally {
+    qualityProjectLoading.value = false
   }
-}
+}, 5000)
 // // 修改优先打包
 // const handleUpdatePriority = async (row: any) => {
 //   await updatePriorityPackaging({
