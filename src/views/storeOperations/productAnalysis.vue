@@ -249,7 +249,7 @@ defineOptions({
 const route: any = useRoute()
 const router: any = useRouter()
 // 选择的维度 SKU ASIN 父体ASIN
-const selectField = ref<number>(0)
+const selectField = ref<number>(Number(route.query.field) || 0)
 // 选择的日期范围 - 从 localStorage 读取或使用默认值
 const getStoredDateRange = (): [string, string] => {
   const stored = getLocalStorage('productAnalysis:selectDateRange')
@@ -573,17 +573,20 @@ watch(
 )
 onMounted(() => {
   activeName.value = Number(route.query.activeName)
-  selectField.value = Number(route.query.field)
+  selectField.value = Number(route.query.field) || 0 // 确保 selectField 有默认值
   // 获取站点列表
   fetchSiteList()
   // 初始化时获取广告活动名列表
   fetchCampaignNameList()
 })
+// 监听路由中的 field 参数变化
 watch(
   () => route.query.field,
   (newField) => {
     if (newField) {
       selectField.value = Number(newField)
+    } else {
+      selectField.value = 0 // 如果路由中没有 field，默认设置为 0 (SKU)
     }
   }
 )

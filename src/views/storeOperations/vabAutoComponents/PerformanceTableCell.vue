@@ -266,12 +266,24 @@
 
   <!-- 广告 -->
   <span v-else-if="item.label === '广告'">
-    <el-tooltip placement="top">
+    <el-tooltip effect="customized" placement="top">
       <template #content>
         <div class="custom-tooltip">
-          <div>SP {{ row.advertisementStatusSp === 1 ? '开' : '关' }}</div>
-          <div>SD {{ row.advertisementStatusSd === 1 ? '开' : '关' }}</div>
-          <div>SB {{ row.advertisementStatusSb === 1 ? '开' : '关' }}</div>
+          <div style="margin-bottom: 5px">
+            SP
+            <el-tag v-if="row.advertisementStatusSp === 1" type="success">开</el-tag>
+            <el-tag v-else type="danger">关</el-tag>
+          </div>
+          <div style="margin-bottom: 5px">
+            SD
+            <el-tag v-if="row.advertisementStatusSd === 1" type="success">开</el-tag>
+            <el-tag v-else type="danger">关</el-tag>
+          </div>
+          <div>
+            SB
+            <el-tag v-if="row.advertisementStatusSb === 1" type="success">开</el-tag>
+            <el-tag v-else type="danger">关</el-tag>
+          </div>
         </div>
       </template>
       <span style="display: inline-block">
@@ -658,7 +670,7 @@ const goToReview = (asin: string) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .copySku {
   display: inline-block;
   padding: 0;
@@ -805,5 +817,17 @@ const goToReview = (asin: string) => {
 .icon-red {
   font-size: 20px;
   color: #e32e00;
+}
+.el-popper.is-customized {
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.85); // 半透明白色背景
+  backdrop-filter: blur(5px); // 磨砂玻璃效果
+  border: 1px solid rgba(0, 0, 0, 0.1); // 柔和边框
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // 柔和阴影
+}
+
+.el-popper.is-customized .el-popper__arrow::before {
+  background-color: rgba(255, 255, 255, 0.85); // 箭头颜色与背景色一致
+  right: 0;
 }
 </style>

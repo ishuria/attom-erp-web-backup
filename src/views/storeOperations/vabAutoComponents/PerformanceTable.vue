@@ -2,8 +2,8 @@
   <!-- 优化：使用单一根元素包裹所有内容，确保属性可以正确继承 -->
   <div class="performance-table-wrapper">
     <!-- 优化：骨架屏立即显示，优化首屏渲染 -->
-    <div v-if="loading || !data || data.length === 0">
-      <el-skeleton animated :loading="loading || !data || data.length === 0">
+    <div v-if="loading">
+      <el-skeleton animated :loading="loading">
         <template #template>
           <div style="display: flex; flex-direction: column; height: calc(100vh - 270px)">
             <div style="display: flex; flex: 1; flex-direction: column; padding: 0">
@@ -16,8 +16,11 @@
         </template>
       </el-skeleton>
     </div>
+    <div v-else-if="!loading && (!data || data.length === 0)">
+      <el-empty class="vab-data-empty" description="暂无数据" />
+    </div>
     <el-table
-      v-show="!loading && data && data.length > 0"
+      v-if="!loading && data && data.length > 0"
       v-loading="loading"
       v-bind="$attrs"
       border
@@ -66,9 +69,10 @@
           />
         </template>
       </el-table-column>
-      <template #empty>
+      <!-- 将 el-empty 移动到表格外部，作为独立的状态显示 -->
+      <!-- <template #empty>
         <el-empty class="vab-data-empty" />
-      </template>
+      </template> -->
     </el-table>
   </div>
 </template>
