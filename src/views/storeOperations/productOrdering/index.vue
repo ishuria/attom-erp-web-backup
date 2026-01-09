@@ -102,7 +102,9 @@
       :default-sort="{ prop: 'originalNowSupplement', order: 'descending' }"
       :header-cell-class-name="headerStyle"
       :header-cell-style="{ textAlign: 'center' }"
+      height="calc(100vh - 260px)"
       :row-class-name="tableRowClassName"
+      :row-key="(row) => row.id"
       @cell-click="cellClick"
       @row-click="handleRowClick"
       @sort-change="handleSortChange"
@@ -173,113 +175,96 @@
           </span>
         </template>
         <template #default="{ row }">
-          <span v-if="item.label === '图片'">
-            <el-image
-              fit="fill"
-              lazy
-              :src="row.asinImgUrl"
-              style="display: block; width: 75px; height: 75px"
-              @click="imagePreviewShow(row.asinImgUrl)"
-            >
-              <template #error>
-                <el-icon />
-              </template>
-            </el-image>
-          </span>
-          <span v-if="item.label === 'ASIN'">
+          <!-- 简单文本字段 -->
+          <template v-if="isSimpleTextField(item.label)">
+            {{ getSimpleTextContent(row, item) }}
+          </template>
+
+          <!-- 图片字段 -->
+          <img
+            v-else-if="item.label === '图片'"
+            loading="lazy"
+            :src="row.asinImgUrl"
+            style="object-fit: cover; width: 75px; height: 75px; cursor: pointer"
+            @click="imagePreviewShow(row.asinImgUrl)"
+          />
+
+          <!-- ASIN 字段 -->
+          <template v-else-if="item.label === 'ASIN'">
             <el-link :href="row.amazonUrl" style="margin-right: 3px" target="_blank">{{ row.asin }}</el-link>
-            <!-- <span class="copySku" data-sku="row.sku" @click="handleClipboard($event, row.asin)">
-              <vab-icon icon="file-copy-2-fill" />
-            </span> -->
             <el-tooltip effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">复制SKU</div>
-              </template>
+              <template #content><div class="custom-tooltip">复制SKU</div></template>
               <vab-icon icon="file-copy-2-fill" @click="handleClip(row.sku.split(',')[0])" />
             </el-tooltip>
             <el-tooltip effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">复制ASIN</div>
-              </template>
+              <template #content><div class="custom-tooltip">复制ASIN</div></template>
               <vab-icon icon="file-copy-line" @click="handleClip(row.asin)" />
             </el-tooltip>
             <div class="rate-wrapper">
               <span class="rate-value">{{ row.rating !== 0 && row.rating != null ? row.rating.toFixed(1) : 0 }}</span>
-              <span><el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" /></span>
+              <el-rate v-model="row.displayRating" class="custom-rate" disabled :void-icon="Star" />
               <span class="rate-count">{{ row.commentsNumbers }}</span>
             </div>
-          </span>
-          <span v-if="item.label === 'SKU'">
-            <el-tooltip content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
-              <template #content>
-                <div class="custom-tooltip">{{ row._skuFull }}</div>
-              </template>
-              <span v-html="row._sku"></span>
-            </el-tooltip>
-          </span>
-          <span v-if="item.label === '销量趋势(点击看明细)'">
-            <div style="width: 100%; height: 59px">
-              <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
-            </div>
-          </span>
-          <span v-if="item.label === '广告'">
-            <el-tag v-if="row.advertisementStatus === 0" type="danger">关</el-tag>
-            <el-tag v-if="row.advertisementStatus === 1" type="success">开</el-tag>
-          </span>
-          <span v-if="item.label === '运营分类'">
-            <el-select v-model="row.operationTypeId" style="min-width: 100%" @change="handleUpdateAsinOpeType(row)">
-              <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
-            </el-select>
-          </span>
-          <span v-if="item.label === '今补'">
-            {{ row.nowSupplementCalcu }}
-          </span>
-          <span v-if="item.label === '今补广'">
-            {{ row.nowSupplementAdvCalcu }}
-          </span>
-          <span v-if="label3.includes(item.label)">
-            <!-- 处理 天 -->
-            {{ row[label3Map.get(item.label)!] != null ? row[label3Map.get(item.label)!] + '天' : '' }}
-          </span>
-          <span v-if="item.label === '月净利润' || item.label === '月销售额'">
-            {{ row[item.prop] ? row.currencyIcon + row[item.prop] : '' }}
-          </span>
-          <span v-if="item.label === '月净利率'">
-            {{ row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : '' }}
-          </span>
-          <span v-if="item.label === 'PASIN毛利率'">
-            {{ row.pAsinMonthNetProfitMargin !== null ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : '' }}
-          </span>
-          <span v-if="item.label === '半年有货率'">
-            {{ row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : '' }}
-          </span>
-          <span v-if="label.includes(item.label)">
-            {{ row[labelMap.get(item.label)!] !== null ? row[labelMap.get(item.label)!].toFixed(2) + '%' : '' }}
-          </span>
-          <span v-if="item.label === '剩余库存'">
+          </template>
+
+          <!-- SKU 字段 -->
+          <el-tooltip v-else-if="item.label === 'SKU'" content=" " :disabled="!row.overflow_sku" effect="dark" placement="top">
+            <template #content>
+              <div class="custom-tooltip">{{ row._skuFull }}</div>
+            </template>
+            <span v-html="row._sku"></span>
+          </el-tooltip>
+
+          <!-- 图表字段 -->
+          <div v-else-if="item.label === '销量趋势(点击看明细)'" style="width: 100%; height: 59px">
+            <vab-echarts-chart-bar :x-axis-data="xAxis" :y-axis-data="row.saleVolumeList" />
+          </div>
+          <div v-else-if="item.label === '季节趋势'" style="width: 100%; height: 50px">
+            <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
+          </div>
+
+          <!-- 选择器字段 -->
+          <el-select
+            v-else-if="item.label === '运营分类'"
+            v-model="row.operationTypeId"
+            style="min-width: 100%"
+            @change="handleUpdateAsinOpeType(row)"
+          >
+            <el-option v-for="select in row.operationTypeList" :key="select.id" :label="select.label" :value="select.id" />
+          </el-select>
+
+          <!-- 按钮字段 -->
+          <el-button v-else-if="item.label === '操作'" type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
+
+          <!-- 标签字段 -->
+          <el-tag v-else-if="item.label === '广告'" :type="row.advertisementStatus === 0 ? 'danger' : 'success'">
+            {{ row.advertisementStatus === 0 ? '关' : '开' }}
+          </el-tag>
+
+          <!-- 多行文本字段 -->
+          <div v-else-if="item.label === '剩余库存'">
             {{ row.fbaCount }}
             <span style="color: var(--el-color-warning)">
               {{ row.acceptingCount === 0 || row.acceptingCount === null ? '' : `(${row.acceptingCount})` }}
             </span>
             / {{ row.availableInventory }}
-          </span>
-          <span v-if="item.label === '订货#'">
+          </div>
+          <div v-else-if="item.label === '订货#'">
             {{ row.orderCount }}
             <br />
             <span style="font-weight: bold">{{ row.orderTotalNumber }}</span>
-          </span>
-          <span v-if="item.label === '最晚补货'">
+          </div>
+          <div v-else-if="item.label === '最晚补货'">
             {{ row.latestRestock }}
             <br />
             <span>{{ row.avgTime }}天</span>
-          </span>
-          <span v-if="item.label === '库龄'">
-            <span v-html="row.storageAge"></span>
-          </span>
-          <span v-if="item.label === '操作'">
-            <el-button type="primary" @click="handleShowReleaseOrder(row)">发布订货</el-button>
-          </span>
-          <span v-if="item.label === 'VOC满意度'">
+          </div>
+
+          <!-- HTML 内容字段 -->
+          <span v-else-if="item.label === '库龄'" v-html="row.storageAge"></span>
+
+          <!-- VOC 满意度字段 -->
+          <div v-else-if="item.label === 'VOC满意度'">
             {{ row.vocNcxCount }} / {{ row.vocTotalOrderCount }}
             <el-tag v-if="row.vocSatisfaction === '极差'" class="customTag customTag-veryPoor">
               极差 {{ formatPercentage(row.vocDefect, 2) }}
@@ -296,23 +281,15 @@
             <el-tag v-if="row.vocSatisfaction === '极好'" class="customTag customTag-excellent">
               极好 {{ formatPercentage(row.vocDefect, 2) }}
             </el-tag>
-          </span>
-          <span v-if="item.label === '季节趋势'">
-            <div style="width: 100%; height: 50px">
-              <vab-table-chart-line :x-axis-data="seasonalXData" :y-axis-data="row._actualList || []" />
-            </div>
-          </span>
-          <span v-if="item.label === '断货'">
-            <el-text v-if="row.outOfStock >= 5" type="danger">{{ row.outOfStock }}天</el-text>
-            <el-text v-else-if="row.outOfStock > 0 && row.outOfStock < 5" type="warning">{{ row.outOfStock }}天</el-text>
-            <el-text v-else type="success">{{ row.outOfStock }}天</el-text>
-          </span>
-          <!-- <span v-if="item.label === 'VOC缺陷%'" >
-            {{ row.vocDefect !== null ? (row.vocDefect * 100).toFixed(2) + '%' : '' }}
-          </span> -->
-          <span v-if="item.label === '最近入库'">
-            <div style="white-space: pre-wrap">{{ row.recentlyInboundStorage }}</div>
-          </span>
+          </div>
+
+          <!-- 断货字段 -->
+          <el-text v-else-if="item.label === '断货'" :type="getOutOfStockType(row.outOfStock)">{{ row.outOfStock }}天</el-text>
+
+          <!-- 其他字段 -->
+          <div v-else-if="item.label === '最近入库'" style="white-space: pre-wrap">
+            {{ row.recentlyInboundStorage }}
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -520,6 +497,83 @@ const stockUpForm = reactive<any>({})
 const filterVisible = ref<boolean>(false)
 const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
+
+// 列宽缓存
+const columnWidthCache = ref<Map<string, string>>(new Map())
+
+// 判断是否为简单文本字段
+const isSimpleTextField = (label: string) => {
+  return [
+    '今补',
+    '今补广',
+    '月净利润',
+    '月销售额',
+    '月净利率',
+    'PASIN毛利率',
+    '半年有货率',
+    '毛利率',
+    '月广告%',
+    '月ACOS',
+    '月TACOS',
+    '月退货%',
+    '库存可售',
+    '可售含在途',
+    '最近入库',
+    '产品描述',
+    '签收',
+  ].includes(label)
+}
+
+// 获取简单文本字段的内容
+const getSimpleTextContent = (row: any, item: any) => {
+  const { label, prop } = item
+
+  // 基本字段
+  if (['今补', '今补广', '最近入库', '产品描述', '签收'].includes(label)) {
+    return row[prop] || ''
+  }
+
+  // 天数字段
+  if (label3.includes(label)) {
+    const propKey = label3Map.get(label)
+    const value = propKey ? row[propKey] : null
+    return value != null ? value + '天' : ''
+  }
+
+  // 货币字段
+  if (['月净利润', '月销售额'].includes(label)) {
+    return row[prop] ? row.currencyIcon + row[prop] : ''
+  }
+
+  // 百分比字段
+  if (label === '月净利率') {
+    return row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''
+  }
+
+  if (label === 'PASIN毛利率') {
+    return row.pAsinMonthNetProfitMargin !== null ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : ''
+  }
+
+  if (label === '半年有货率') {
+    return row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : ''
+  }
+
+  // 其他百分比字段
+  if (['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%'].includes(label)) {
+    const propKey = labelMap.get(label)
+    const value = propKey ? row[propKey] : null
+    return value !== null ? value.toFixed(2) + '%' : ''
+  }
+
+  return ''
+}
+
+// 获取断货状态类型
+const getOutOfStockType = (outOfStock: number) => {
+  if (outOfStock >= 5) return 'danger'
+  if (outOfStock > 0 && outOfStock < 5) return 'warning'
+  return 'success'
+}
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const checkAll = ref<boolean>(false)
@@ -957,59 +1011,93 @@ const handleConfirmFilter = async () => {
   filterVisible.value = false
   queryData()
 }
-const handleWidth = (item: any) => {
+// 计算并缓存列宽
+const calculateColumnWidth = (item: any) => {
+  const cacheKey = item.label
+
+  // 检查缓存
+  if (columnWidthCache.value.has(cacheKey)) {
+    return columnWidthCache.value.get(cacheKey)
+  }
+
+  let width: string | number
+
   switch (item.label) {
     case 'SKU': {
-      return calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
+      width = calculateBrColumnWidth(list.value, (row: any) => row._sku, 100)
+      break
     }
     case '库存可售': {
-      return flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 40)
+      width = flexColumnWidth(list.value, '库存', 'esAvailableSaleDay', 40)
+      break
     }
     case '可售含在途': {
-      return flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 50)
+      width = flexColumnWidth(list.value, '含在途', 'esAvailableSaleDayTotal', 50)
+      break
     }
     case '运营分类': {
-      return flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
+      width = flexColumnWidth(list.value, '运营分类', 'operationTypeList', 60) // 处理运营分类列
+      break
     }
     case '站点': {
-      return flexColumnWidth(list.value, '站点', 'siteName') // 处理运营分类列
+      width = flexColumnWidth(list.value, '站点', 'siteName') // 处理运营分类列
+      break
     }
     case '今补': {
-      return flexColumnWidth(list.value, '今补', 'nowSupplementCalcu')
+      width = flexColumnWidth(list.value, '今补', 'nowSupplementCalcu')
+      break
     }
     case '月销售额': {
-      return flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 40)
+      width = flexColumnWidth(list.value, '月销售额', 'monthSalesPrice', 40)
+      break
     }
     case '月净利润': {
-      return flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40)
+      width = flexColumnWidth(list.value, '月净利润', 'monthNetProfit', 40)
+      break
     }
     case '剩余库存': {
-      return `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 10) + flexColumnWidth(list.value, '/', 'acceptingCount', 10) + flexColumnWidth(list.value, '/', 'fbaCount', 0)}px`
+      width = `${flexColumnWidth(list.value, '剩余库存', 'availableInventory', 10) + flexColumnWidth(list.value, '/', 'acceptingCount', 10) + flexColumnWidth(list.value, '/', 'fbaCount', 0)}px`
+      break
     }
     case '原始今补': {
-      return flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement')
+      width = flexColumnWidth(list.value, '原始今补--', 'originalNowSupplement')
+      break
     }
     case '签收': {
-      return flexColumnWidth(list.value, '签收', 'quantityReceived', 40)
+      width = flexColumnWidth(list.value, '签收', 'quantityReceived', 40)
+      break
     }
     case '最近入库': {
-      return 120
+      width = 120
+      break
     }
     // case '订货#': {
     //   const width1 = flexColumnWidth(list.value, '订货#', 'orderCount')
     //   const width2 = flexColumnWidth(list.value, '订货#', 'orderTotalNumber')
-    //   return Math.max(width1, width2)
+    //   width = Math.max(width1, width2)
+    //   break
     // }
     case 'ASIN': {
-      return Number(item.minWidth) + 10
+      width = Number(item.minWidth) + 10
+      break
     }
     case '产品描述': {
-      return flexColumnWidth(list.value, '产品描述', 'productDesc')
+      width = flexColumnWidth(list.value, '产品描述', 'productDesc')
+      break
     }
     default: {
-      return item.minWidth
+      width = item.minWidth
+      break
     }
   }
+
+  // 缓存结果
+  columnWidthCache.value.set(cacheKey, String(width))
+  return width
+}
+
+const handleWidth = (item: any) => {
+  return calculateColumnWidth(item)
 }
 watch(site, (val) => {
   if (val.length === 0) {
@@ -1054,6 +1142,8 @@ const debouncedQueryData = debounce(() => {
 
 const queryData = () => {
   queryForm.pageNo = 1
+  // 查询条件变化时清空缓存
+  columnWidthCache.value.clear()
   fetchData()
 }
 const handleCurrentChange = (value: number) => {
@@ -1063,6 +1153,8 @@ const handleCurrentChange = (value: number) => {
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
   queryForm.pageSize = value
+  // 分页大小变化时清空缓存，因为不同页的数据可能有不同的列宽
+  columnWidthCache.value.clear()
   fetchData()
 }
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
@@ -1231,24 +1323,12 @@ const fetchData = async () => {
     `
   })
   listLoading.value = false
+
+  // 数据更新后清空列宽缓存，下次计算时重新计算
+  columnWidthCache.value.clear()
 }
 
 const tableRef = ref<TableInstance>()
-// // 添加保存滚动位置的方法
-// const saveScrollPosition = () => {
-//   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-//   if (scrollBarRef?.wrapRef) {
-//     const scrollStatus = {
-//       scrollTop: scrollBarRef.wrapRef.scrollTop
-//     }
-//     localStorage.setItem('productOrderingScrollPosition', JSON.stringify(scrollStatus))
-//   }
-// }
-
-// // 监听表格滚动事件
-// const handleTableScroll = () => {
-//   saveScrollPosition()
-// }
 const chartContainer1 = ref<HTMLElement | null>(null)
 let chartInstance1: echarts.ECharts | null = null
 let chartObserver1: ResizeObserver
@@ -1278,33 +1358,6 @@ onBeforeMount(async () => {
   await fetchData()
   operationSelect()
 })
-
-// onMounted(() => {
-//   nextTick(() => {
-//     // 添加滚动事件监听
-//     const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-//     if (scrollBarRef?.wrapRef) {
-//       scrollBarRef.wrapRef.addEventListener('scroll', handleTableScroll)
-
-//       // 恢复滚动位置
-//       const savedStatus = JSON.parse(localStorage.getItem('productOrderingScrollPosition') || '{}')
-//       if (savedStatus.scrollTop) {
-//         setTimeout(() => {
-//           scrollBarRef.wrapRef.scrollTop = savedStatus.scrollTop
-//         }, 100)
-//       }
-//     }
-//   })
-// })
-
-// onBeforeUnmount(() => {
-//   // 移除滚动事件监听
-//   const scrollBarRef: any = tableRef.value!.$refs.scrollBarRef
-//   if (scrollBarRef?.wrapRef) {
-//     scrollBarRef.wrapRef.removeEventListener('scroll', handleTableScroll)
-//   }
-//   localStorage.removeItem('productOrderingScrollPosition')
-// })
 </script>
 
 <style lang="scss" scoped>
