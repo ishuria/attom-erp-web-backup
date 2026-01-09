@@ -2,6 +2,8 @@ import request from '/@/utils/request'
 
 import { BASE_API } from '/@/api/devlocal/api'
 import type {
+  IGetCommentReviewsReq,
+  IGetCommentReviewsRes,
   IGetExpenseCompositionRes,
   IGetOperationAmazonCostListReq,
   IGetOperationAmazonCostListRes,
@@ -398,6 +400,18 @@ export function queryProductAdvertisementSetting(params: {
 export function upsertProductAdvertisementSetting(data: IProductAdvertisementSettingUpdateReq): Promise<{ data: boolean }> {
   return request({
     url: `${BASE_API}/product/analysis/advertisement/setting/update`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * @description 运营-产品分析-评论Reviews
+ * @param data IGetCommentReviewsReq
+ * @returns IGetCommentReviewsRes
+ */
+export function getCommentReviews(data: IGetCommentReviewsReq): Promise<IGetCommentReviewsRes> {
+  return request({
+    url: `${BASE_API}/product/analysis/comment/reviews`,
     method: 'post',
     data,
   })

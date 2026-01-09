@@ -670,7 +670,7 @@ const goToReview = (asin: string) => {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .copySku {
   display: inline-block;
   padding: 0;
@@ -699,41 +699,7 @@ const goToReview = (asin: string) => {
     }
   }
 }
-.rate-wrapper {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-top: -5px;
 
-  .rate-value {
-    width: 25px;
-    text-align: left;
-  }
-  .custom-rate {
-    --el-rate-icon-size: 20px;
-    --el-rate-fill-color: #f09000;
-    --el-rate-text-color: #f09000;
-    --el-rate-disabled-void-color: #fff;
-    --el-rate-void-color: #fff;
-
-    :deep() {
-      .el-rate__item {
-        margin-top: -2px;
-        margin-right: 0;
-        margin-left: -9px;
-        .el-icon {
-          stroke: #f09000;
-          stroke-width: 60px;
-        }
-        cursor: pointer;
-      }
-    }
-  }
-  .rate-count {
-    margin-left: -11px;
-    color: #36788c;
-  }
-}
 .order-tag {
   display: inline-flex !important;
   align-items: center;
@@ -829,5 +795,38 @@ const goToReview = (asin: string) => {
 .el-popper.is-customized .el-popper__arrow::before {
   background-color: rgba(255, 255, 255, 0.85); // 箭头颜色与背景色一致
   right: 0;
+}
+.rate-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .rate-value {
+    width: 25px; /* 固定宽度，保证分数区域宽度一致 */
+    text-align: left; /* 文本右对齐 */
+  }
+  .custom-rate {
+    --el-rate-icon-size: 20px; /* 调整星星的大小 */
+    --el-rate-fill-color: #f09000; /* 填充星星的颜色 */
+    --el-rate-text-color: #f09000; /* 文本颜色一致 */
+    --el-rate-disabled-void-color: #fff; /* 未填充星星的颜色 */
+    --el-rate-void-color: #fff; /* 空星颜色 */
+
+    :deep() {
+      .el-rate__item {
+        margin-top: -2px;
+        margin-right: 0;
+        margin-left: -9px;
+        .el-icon {
+          stroke: #f09000; /* 星星边框颜色 */
+          stroke-width: 60px; /* 星星边框的粗细 */
+        }
+      }
+    }
+  }
+  .rate-count {
+    margin-left: -11px;
+    color: #36788c;
+  }
 }
 </style>

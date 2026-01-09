@@ -43,7 +43,7 @@
               <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
-              <vab-comment-reviews v-if="activeName === 3" />
+              <vab-comment-reviews v-if="activeName === 3" :asin="asin" :select-date-range="selectDateRange" :site="selectedSite!" />
             </el-tab-pane>
             <el-tab-pane label="退货分析" :name="4">
               <vab-return-analysis v-if="activeName === 4" />
@@ -138,14 +138,15 @@
               </el-form-item>
             </el-form>
             <el-form v-if="activeName === 3" inline>
-              <el-form-item>
-                <el-select>
-                  <el-option v-for="item in dateOption" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-date-picker end-placeholder="结束日期" range-separator="至" start-placeholder="开始日期" type="daterange" />
-              </el-form-item>
+              <el-date-picker
+                v-model="selectDateRange"
+                :disabled-date="(time: Date) => time.getTime() > Date.now()"
+                end-placeholder="结束日期"
+                range-separator="至"
+                :shortcuts="dateShortcuts"
+                start-placeholder="开始日期"
+                type="daterange"
+              />
             </el-form>
             <el-form v-if="activeName === 4" inline>
               <el-form-item>
@@ -224,7 +225,7 @@
 
 <script lang="ts" setup>
 import type { TabsPaneContext } from 'element-plus'
-import { dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
+import { dayOption, filterShowOption, levelOption } from './constantOption'
 import { getProductInfo, getSPCampaignNameList } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } from '/@/api/devlocal/productPerformance'

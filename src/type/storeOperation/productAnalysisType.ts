@@ -664,3 +664,57 @@ export interface IProductAdvertisementPieChartResp {
   clicks: IProductAdvertisementPieChartDimensionItem[] // 点击量维度数据（已排序）
   orders: IProductAdvertisementPieChartDimensionItem[] // 订单数维度数据（已排序）
 }
+
+export interface IGetCommentReviewsReq {
+  asin: string
+  site: number
+  startDate: string
+  endDate: string
+  keyWord: string
+  pageNo: number
+  pageSize: number
+  type: number
+}
+export interface IGetCommentReviewsRes {
+  data: {
+    list: IGetCommentReviews[]
+    total: number
+  }
+}
+export interface IGetCommentReviews {
+  /**
+   * 评级
+   */
+  lastStar: number
+
+  /**
+   * 点赞数
+   */
+  reviewLikes: number
+
+  /**
+   * Review ID
+   */
+  reviewId: string
+
+  /**
+   * 评价内容
+   */
+  lastContent: string
+
+  /**
+   * 买家信息
+   */
+  author: string
+
+  /**
+   * 评价时间
+   */
+  reviewDate: string
+
+  /**
+   * 更新时间
+   */
+  updateTime: string
+  displayRating: number
+}
