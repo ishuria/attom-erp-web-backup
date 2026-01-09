@@ -8,18 +8,18 @@
           <el-button type="success" @click="$emit('match')">发票匹配</el-button>
         </template>
         <span style="width: 22em; margin: 0 10px calc(var(--el-margin) / 2) 0">
-            <el-date-picker
-              v-model="queryForm.purchaseDate"
-              :clearable="false"
-              :disabled-date="(time: Date) => time.getTime() > Date.now()"
-              end-placeholder="结束日期"
-              range-separator="至"
-              start-placeholder="开始日期"
-              style="width: 22em"
-              type="daterange"
-              value-format="YYYY-MM-DD"
-              @change="$emit('query')"
-            />
+          <el-date-picker
+            v-model="queryForm.purchaseDate"
+            :clearable="false"
+            :disabled-date="(time: Date) => time.getTime() > Date.now()"
+            end-placeholder="结束日期"
+            range-separator="至"
+            start-placeholder="开始日期"
+            style="width: 22em"
+            type="daterange"
+            value-format="YYYY-MM-DD"
+            @change="$emit('query')"
+          />
         </span>
         <div class="summary-info">
           <el-space :size="16" style="align-items: center">
@@ -147,15 +147,34 @@
           {{ row.shipmentDate ? row.shipmentDate.split(' ')[0] : '' }}
         </template>
       </el-table-column>
-      <el-table-column label="合同编号" prop="contractNumber" :width="flexColumnWidth(list, '合同编号', 'contractNumber')" />
-      <el-table-column label="报关品名" min-width="100" prop="customsDeclarationName" />
-      <el-table-column label="报关数量" min-width="100" prop="customsDeclarationCount" />
-      <el-table-column label="报关单位" min-width="100" prop="customsDeclarationUnit" />
-      <el-table-column label="该批次零件数量" min-width="100" prop="componentCount">
+      <el-table-column label="合同编号" min-width="150">
+        <template #default="{ row }">
+          <div v-html="row.contractNumber"></div>
+        </template>
+      </el-table-column>
+      <el-table-column label="报关品名" min-width="100">
+        <template #default="{ row }">
+          <div v-html="row.customsDeclarationName"></div>
+        </template>
+      </el-table-column>
+      <el-table-column label="报关数量" min-width="100">
+        <template #default="{ row }">
+          <div v-html="row.customsDeclarationCount"></div>
+        </template>
+      </el-table-column>
+      <el-table-column label="报关单位" min-width="100">
+        <template #default="{ row }">
+          <div v-html="row.customsDeclarationUnit"></div>
+        </template>
+      </el-table-column>
+      <el-table-column label="该批次零件数量" min-width="100">
         <template #header>
           该批次
           <br />
           零件数量
+        </template>
+        <template #default="{ row }">
+          <div v-html="row.componentCount"></div>
         </template>
       </el-table-column>
       <el-table-column label="发票代码" min-width="100" prop="invoiceCode" />
@@ -214,7 +233,6 @@ const emit = defineEmits(['export', 'import', 'match', 'delete-match', 'query', 
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
 const selectRowsData = ref<IAiTuoMuItem[]>([])
-
 
 const imagePreviewShow = (url: string) => {
   imagePreviewVisible.value = true
