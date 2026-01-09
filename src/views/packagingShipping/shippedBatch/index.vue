@@ -162,9 +162,12 @@
         :cell-class-name="cellClassName"
         class="detailsTable"
         :data="detailList"
+        :default-sort="{ prop: 'shipmentTotalCount', order: 'descending' }"
         :header-cell-style="{ textAlign: 'center' }"
         max-height="60vh"
+        :span-method="objectSpanMethod"
         stripe
+        @sort-change="handleDetailSortChange"
       >
         <el-table-column label="图片" width="70">
           <template #default="{ row }">
@@ -182,10 +185,12 @@
             {{ row.description }}
           </template>
         </el-table-column>
+        <el-table-column align="center" label="发货数量" min-width="100" prop="shipmentTotalCount" sortable="custom" />
+        <el-table-column align="center" label="已接收数量" min-width="110" prop="receiptsCount" sortable="custom" />
+        <el-table-column align="center" label="缺数" min-width="100" prop="lackCount" sortable="custom" />
         <el-table-column align="center" label="PO" min-width="100" prop="po" />
-        <el-table-column align="center" label="发货数量" min-width="100" prop="shipmentTotalCount" />
-        <el-table-column align="center" label="已接收数量" min-width="110" prop="receiptsCount" />
-        <el-table-column align="center" label="缺数" min-width="100" prop="lackCount" />
+        <el-table-column align="center" label="发货数量" min-width="100" prop="actualCount" />
+        <el-table-column align="center" label="已接收数量" min-width="110" prop="receptionCount" />
       </el-table>
       <vab-pagination
         :current-page="detailQueryForm.pageNo"
@@ -522,7 +527,48 @@ const handleDetailSizeChange = (value: number) => {
   detailQueryForm.pageSize = value
   fetchDetailData()
 }
+const handleDetailSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (detailQueryForm.orderByField === prop) {
+    if (!order) {
+      if (detailQueryForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (detailQueryForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  detailQueryForm.orderByField = prop
+  detailQueryForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  fetchDetailData()
+}
+const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
+  // 设置需要合并的列
+  if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4) {
+    // 获取当前row的零件id
+    const sku = row.sku
+    // 默认不跨行
+    let rowspan = 1
+    // 遍历后端返回的数据
+    for (let i = rowIndex + 1; i < detailList.value.length; i++) {
+      // 如果零件id一样需要合并
+      if (detailList.value[i].sku === sku) {
+        rowspan++
+      } else {
+        break
+      }
+    }
 
+    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
+    if (rowIndex === 0 || detailList.value[rowIndex - 1].sku !== sku) {
+      return { rowspan, colspan: 1 }
+    } else {
+      return { rowspan: 0, colspan: 0 }
+    }
+  }
+}
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
   if (data.column.label === '备注') {
     return {
