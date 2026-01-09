@@ -1589,6 +1589,9 @@ const handleRouterPush = (row: any) => {
     path: '/storeOperations/productAnalysis',
     query: {
       activeName: 2,
+      field: activeName.value,
+      sku: row.sku,
+      asin: row.asin,
       site: row.site,
     },
   })

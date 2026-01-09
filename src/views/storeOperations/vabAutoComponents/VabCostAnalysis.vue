@@ -340,8 +340,7 @@ defineOptions({
 const props = defineProps<{
   sku: string
   selectedSite: number | undefined
-  startDate?: string
-  endDate?: string
+  selectDateRange: [string, string]
 }>()
 
 const list = ref<IGetOperationAmazonCostList[]>([])
@@ -632,7 +631,7 @@ const fetchExpenseComposition = async () => {
     expenseSymbol.value = '$'
     return
   }
-  if (!props.startDate || !props.endDate) {
+  if (!props.selectDateRange[0] || !props.selectDateRange[1]) {
     data1.value = []
     totalValue.value = 0
     expenseSymbol.value = '$'
@@ -644,8 +643,8 @@ const fetchExpenseComposition = async () => {
     const { data } = await getExpenseComposition({
       sku: props.sku,
       siteId,
-      startDate: props.startDate,
-      endDate: props.endDate,
+      startDate: props.selectDateRange[0],
+      endDate: props.selectDateRange[1],
     })
     // 后端返回的数据格式是 { name, value }，直接使用
     data1.value = data.list || []
@@ -695,9 +694,9 @@ watch(
   { immediate: false }
 )
 watch(
-  () => [props.sku, props.selectedSite, props.startDate, props.endDate],
+  () => [props.sku, props.selectedSite, props.selectDateRange[0], props.selectDateRange[1]],
   () => {
-    if (props.startDate && props.endDate) {
+    if (props.selectDateRange[0] && props.selectDateRange[1]) {
       fetchExpenseComposition()
     }
   }

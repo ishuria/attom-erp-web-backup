@@ -832,6 +832,9 @@ const calcYAxisRange = (yAxisIndex: number) => {
   // 收集该 y 轴对应的所有 series 的数据值
   const allValues: number[] = []
 
+  // 格式化所有数值，避免浮点数精度问题
+  const formattedAllValues: number[] = []
+
   // 特殊处理第一个 Y 轴（堆叠柱状图）
   if (yAxisIndex === 0) {
     // 找到堆叠柱状图的 series（stack: 'sales'）
@@ -899,6 +902,9 @@ const calcYAxisRange = (yAxisIndex: number) => {
     return { min: 0, max: 0, interval: 0, top: 0, bottom: 0 }
   }
 
+  // 对所有值进行格式化，避免浮点数精度问题
+  const formattedValues = allValues.map((value) => formatNumber(value))
+
   // 根据 yAxisIndex 找到对应的 dataGroup
   let dataGroup: IDataGroup | undefined
   for (const [group, index] of yAxisMapping.entries()) {
@@ -920,7 +926,7 @@ const calcYAxisRange = (yAxisIndex: number) => {
   }
 
   // 原始最大（数据的实际最大值）
-  const dataMax = allValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
+  const dataMax = formattedValues.reduce((a: number, b: number) => Math.max(a, b), -Infinity)
   // 原始最小（数据的实际最小值）
   const dataMin = Math.min(...allValues)
 

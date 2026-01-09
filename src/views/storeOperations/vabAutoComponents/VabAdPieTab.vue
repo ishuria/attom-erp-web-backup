@@ -146,7 +146,7 @@ interface IProps {
   campaignName: string
   sku: string
   asin: string
-  type: number // 0=sku, 1=asin
+  selectField?: number // 展示维度：0=SKU, 1=ASIN, 2=父体ASIN
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -156,7 +156,7 @@ const props = withDefaults(defineProps<IProps>(), {
   campaignName: '',
   sku: '',
   asin: '',
-  type: 0,
+  selectField: 0,
 })
 
 const listLoading = ref<boolean>(false)
@@ -271,7 +271,7 @@ const fetchPieData = async () => {
       campaignName: props.campaignName,
       sku: props.sku,
       asin: props.asin,
-      type: props.type,
+      type: props.selectField,
       siteId: props.siteId ?? 0,
     })
 
@@ -302,7 +302,7 @@ const fetchPieChartData = async () => {
       campaignName: props.campaignName,
       sku: props.sku,
       asin: props.asin,
-      type: props.type,
+      type: props.selectField,
       siteId: props.siteId ?? 0,
     })
 
@@ -346,7 +346,7 @@ const fetchTableData = async () => {
       pageSize: queryForm.pageSize,
       sku: props.sku,
       asin: props.asin,
-      type: props.type || 0,
+      type: props.selectField || 0,
       siteId: props.siteId ?? 0,
       exactSearch: queryForm.exactSearch || 0,
       orderByField: queryForm.orderByField,
@@ -406,7 +406,7 @@ watch(
     () => props.campaignName,
     () => props.sku,
     () => props.asin,
-    () => props.type,
+    () => props.selectField,
   ],
   async () => {
     await fetchCurrencySymbol()

@@ -32,21 +32,15 @@
                 v-if="activeName === 1"
                 :asin="asin"
                 :campaign-name="selectedCampaignName"
-                :select-date-range="adPieDateRange"
+                :select-date-range="selectDateRange"
+                :select-field="selectField"
                 :site-id="selectedSite"
                 :skip-no-data="skipNoData"
                 :sku="sku"
-                :type="selectField"
               />
             </el-tab-pane>
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis
-                v-if="activeName === 2"
-                :end-date="selectDateRange[1]"
-                :selected-site="selectedSite"
-                :sku="sku"
-                :start-date="selectDateRange[0]"
-              />
+              <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
             </el-tab-pane>
             <el-tab-pane label="评论Reviews" :name="3">
               <vab-comment-reviews v-if="activeName === 3" />
@@ -230,16 +224,16 @@
 
 <script lang="ts" setup>
 import type { TabsPaneContext } from 'element-plus'
-import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } from '~/src/api/devlocal/productPerformance'
-import { OperationTypeList } from '~/src/type/storeOperation/productPerformanceType'
-import { getLast30DaysStringTime } from '~/src/utils/dateUtils'
-import { getLocalStorage, setLocalStorage } from '~/src/utils/localStorage'
 import { dateOption, dayOption, filterShowOption, levelOption } from './constantOption'
 import { getProductInfo, getSPCampaignNameList } from '/@/api/devlocal/productAnalysis'
 import { getDistributionSiteList } from '/@/api/devlocal/productDistribution'
+import { updateProductAnalysisOperateTypeList, updateRemarkAmazonOperation } from '/@/api/devlocal/productPerformance'
 import { useSkuOptionsStore } from '/@/store/modules/skuOptions'
 import { useTabsStore } from '/@/store/modules/tabs'
 import type { IGetProductInfo } from '/@/type/storeOperation/productAnalysisType'
+import { OperationTypeList } from '/@/type/storeOperation/productPerformanceType'
+import { getLast30DaysStringTime } from '/@/utils/dateUtils'
+import { getLocalStorage, setLocalStorage } from '/@/utils/localStorage'
 import { handleActivePath } from '/@/utils/routes'
 
 defineOptions({
@@ -394,9 +388,13 @@ const goBack = async () => {
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name != undefined) {
     activeName.value = Number(tab.props.name)
-    // window.addEventListener('resize', function () {
-    //   chartInstance.resize()
-    // })
+    // 更新路由参数，保持当前激活的 tab
+    router.replace({
+      query: {
+        ...route.query,
+        activeName: tab.props.name,
+      },
+    })
   }
 }
 const skuOptionsStore = useSkuOptionsStore()
@@ -574,10 +572,16 @@ watch(
 onMounted(() => {
   activeName.value = Number(route.query.activeName)
   selectField.value = Number(route.query.field) || 0 // 确保 selectField 有默认值
+  sku.value = (route.query.sku as string) || '' // 从路由参数恢复 SKU
+  asin.value = (route.query.asin as string) || asin.value // 从路由参数恢复 ASIN
   // 获取站点列表
   fetchSiteList()
   // 初始化时获取广告活动名列表
   fetchCampaignNameList()
+  // 初始化时获取产品信息
+  if (sku.value && selectedSite.value !== undefined) {
+    fetchProductInfo()
+  }
 })
 // 监听路由中的 field 参数变化
 watch(
@@ -588,6 +592,20 @@ watch(
     } else {
       selectField.value = 0 // 如果路由中没有 field，默认设置为 0 (SKU)
     }
+  }
+)
+// 监听路由中的 sku 参数变化
+watch(
+  () => route.query.sku,
+  (newSku) => {
+    sku.value = (newSku as string) || ''
+  }
+)
+// 监听路由中的 asin 参数变化
+watch(
+  () => route.query.asin,
+  (newAsin) => {
+    asin.value = (newAsin as string) || asin.value
   }
 )
 // 监听路由中的站点参数变化
@@ -601,16 +619,7 @@ watch(
     }
   }
 )
-// 监听路由中的 ASIN 参数变化
-watch(
-  () => route.query.asin,
-  (newAsin) => {
-    if (newAsin) {
-      asin.value = newAsin as string
-    }
-  }
-)
-// 监听 selectedSku 和 selectedSite 的变化，重新获取产品信息
+// 监听 selectedSku 和 selectedSite 的变化，重新获取产品信息和广告活动名列表
 watch(
   () => [selectedSku.value, selectedSite.value],
   ([newSku, newSite]) => {
