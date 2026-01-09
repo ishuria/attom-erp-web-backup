@@ -31,6 +31,13 @@
               <el-option v-for="item in operateUserList" :key="item.id" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
+          <el-form-item label="规则开关">
+            <el-select v-model="queryForm.roleStatus" clearable placeholder="请选择规则开关状态" @change="handleQueryData">
+              <el-option label="全部" :value="-1" />
+              <el-option label="开启" :value="1" />
+              <el-option label="关闭" :value="0" />
+            </el-select>
+          </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>

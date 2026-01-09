@@ -108,6 +108,10 @@ export interface IAutoMationQueryReq {
    * 站点
    */
   sites?: number[]
+  /**
+   * 规则开关状态 0关 1开
+   */
+  roleStatus?: number | null
 }
 
 /** 店铺自动化修改 */

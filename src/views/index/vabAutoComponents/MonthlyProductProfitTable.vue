@@ -82,7 +82,18 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
   return ''
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.column.label === '总利润分' || data.column.label === '利润分') {
+  if (data.column.label === '人员') {
+    return {
+      textAlign: 'center',
+      verticalAlign: 'top',
+    }
+  } else if (data.column.label === '总利润分') {
+    return {
+      textAlign: 'center',
+      color: 'var(--el-color-success)',
+      verticalAlign: 'top',
+    }
+  } else if (data.column.label === '利润分') {
     return {
       color: 'var(--el-color-success)',
       textAlign: 'center',

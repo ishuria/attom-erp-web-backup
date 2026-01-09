@@ -184,7 +184,7 @@
                     <vab-icon icon="file-copy-2-fill" />
                   </span>
                   <br />
-                  {{ row.componentName }}
+                  {{ row.productName }}
                 </div>
                 <div style="margin-top: 4px">
                   <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
@@ -442,7 +442,7 @@
                     <vab-icon icon="file-copy-2-fill" />
                   </span>
                   <br />
-                  {{ row.componentName }}
+                  {{ row.productName }}
                 </div>
                 <div style="margin-top: 4px">
                   <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">

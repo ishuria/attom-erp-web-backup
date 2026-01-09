@@ -478,6 +478,7 @@ import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plu
 import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { useUserStore } from '~/src/store/modules/user'
 import { adStatusOption, months } from '../constantOption'
 import { getDistributionOptionUserList, getDistributionSiteList } from '/@/api/devlocal/productDistribution'
 import {
@@ -541,6 +542,7 @@ const list = ref<IGetOperationOrderList[]>([])
 const getCurrentMonthIndex = () => {
   return new Date().getMonth() // 获取当前月份索引(0-11)
 }
+const currentUser = useUserStore().getUsername
 const seasonalXData = computed(() => {
   const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
   const currentMonthIndex = getCurrentMonthIndex()
@@ -1140,6 +1142,13 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
+  if (currentUser === '李慧婷') {
+    site.value = [1]
+  } else if (currentUser === '刘秋月') {
+    site.value = [2]
+  } else {
+    site.value = [0]
+  }
   // // 初始化时全选所有站点
   // if (data && data.length > 0) {
   //   site.value = data.map((item) => item.id)

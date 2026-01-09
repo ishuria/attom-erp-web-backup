@@ -666,10 +666,10 @@
             <el-table-column label="姓名" min-width="100" prop="manageUserName" />
             <el-table-column label="职级" min-width="100" prop="jobTitle" />
             <el-table-column label="角色" min-width="130" prop="roleName" />
-            <el-table-column label="下属" min-width="130" prop="userName" />
-            <el-table-column label="下属新品提成" min-width="130" prop="newCommissionBonus" />
+            <el-table-column label="直属下级" min-width="130" prop="userName" />
+            <el-table-column label="直属下级新品提成" min-width="130" prop="newCommissionBonus" />
             <el-table-column label="新品管理奖金" min-width="130" prop="newBonus" />
-            <el-table-column label="下属总提成" min-width="130" prop="totalCommissionBonus" />
+            <el-table-column label="直属下级总提成" min-width="130" prop="totalCommissionBonus" />
             <el-table-column label="管理奖金比例" min-width="130" prop="proportion" />
             <el-table-column label="管理奖金明细" min-width="130" prop="managementBonus" />
             <el-table-column label="管理奖金" min-width="130" prop="totalManagementBonus" />
