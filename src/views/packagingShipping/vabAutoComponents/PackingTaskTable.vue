@@ -17,6 +17,12 @@
     <template v-for="column in visibleColumns" :key="column.key">
       <!-- 选择列 -->
       <el-table-column v-if="column.type === 'selection'" :fixed="column.fixed" :type="column.type" />
+      <!-- 站点 -->
+      <el-table-column v-else-if="column.key === 'sendSite'" :label="column.label" :prop="column.prop" :width="column.width">
+        <template #default="{ row }">
+          <el-tag size="default" :style="getSiteTagStyle(row.sendSite)">{{ row.sendSite }}</el-tag>
+        </template>
+      </el-table-column>
 
       <!-- 发货日期 -->
       <el-table-column v-else-if="column.key === 'sendDate'" :label="column.label" :prop="column.prop" :width="column.width">
@@ -352,6 +358,41 @@ const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIn
     return 'clear-padding'
   }
   return ''
+}
+// 站点 -> 自定义颜色映射
+const getSiteBaseColor = (siteName: string) => {
+  if (!siteName) return '#909399'
+  const colorMap: Record<string, string> = {
+    亚马逊US美国: '#67C23A', // 绿色
+    亚马逊UK英国: '#409EFF', // 蓝色
+    亚马逊DE德国: '#8E44AD', // 紫色（由红色改为紫色）
+    亚马逊CA加拿大: '#2AC3A2', // 青绿
+    沃尔玛US美国: '#E6A23C', // 橙色
+    亚马逊JP日本: '#5C6BC0', // 靛蓝
+    Tiktok美国: '#34495E', // 深石板色
+    '美国-海外仓': '#909399', // 灰色
+  }
+  return colorMap[siteName] ?? '#909399'
+}
+
+// 返回协调的tag样式：浅色背景 + 同色文字
+const getSiteTagStyle = (siteName: string) => {
+  const base = getSiteBaseColor(siteName)
+  // 将16进制转换为rgba，背景使用较低透明度
+  const hexToRgba = (hex: string, alpha = 0.15) => {
+    const h = hex.replace('#', '')
+    const bigint = parseInt(h, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
+  }
+  return {
+    backgroundColor: hexToRgba(base, 0.15),
+    color: base,
+    border: '1px solid ' + hexToRgba(base, 0.35),
+    fontSize: '14px',
+  }
 }
 </script>
 

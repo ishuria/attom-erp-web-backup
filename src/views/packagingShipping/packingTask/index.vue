@@ -10,7 +10,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="allTaskForm.site" clearable placeholder="全部" @change="queryAllTaskData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="订货日期" prop="releaseDate">
@@ -100,7 +102,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -192,7 +196,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="taskingForm.site" clearable placeholder="全部" @change="queryTaskingData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -269,7 +275,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -346,7 +354,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -423,7 +433,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -493,7 +505,9 @@
               </el-form-item>
               <el-form-item label="站点" prop="site">
                 <el-select v-model="queryForm.site" clearable placeholder="全部" @change="queryData">
-                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id" />
+                  <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                    <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -2034,6 +2048,21 @@ const siteList = ref<any>([])
 const getSiteList = async () => {
   const { data } = await getPackageSiteList()
   siteList.value = data
+}
+// 站点 -> 自定义颜色映射
+const getSiteBaseColor = (siteName: string) => {
+  if (!siteName) return '#909399'
+  const colorMap: Record<string, string> = {
+    亚马逊US美国: '#67C23A', // 绿色
+    亚马逊UK英国: '#409EFF', // 蓝色
+    亚马逊DE德国: '#8E44AD', // 紫色（由红色改为紫色）
+    亚马逊CA加拿大: '#2AC3A2', // 青绿
+    沃尔玛US美国: '#E6A23C', // 橙色
+    亚马逊JP日本: '#5C6BC0', // 靛蓝
+    Tiktok美国: '#34495E', // 深石板色
+    '美国-海外仓': '#909399', // 灰色
+  }
+  return colorMap[siteName] ?? '#909399'
 }
 onBeforeMount(() => {
   const { tab, pageNo, pageSize } = route.query
