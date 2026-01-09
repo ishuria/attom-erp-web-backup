@@ -624,7 +624,7 @@
                     <el-dropdown-item @click="handleDelPoSKuComponent(row, $index)">
                       <el-link type="danger" underline="never">删除</el-link>
                     </el-dropdown-item>
-                    <el-dropdown-item @click="showModify(row)">
+                    <el-dropdown-item v-if="row.customsDeclarationStatus === 0" @click="showModify(row)">
                       <el-link type="primary" underline="never">修改零件报关</el-link>
                     </el-dropdown-item>
                   </el-dropdown-menu>
@@ -1705,7 +1705,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="130">
             <template #default="{ row }">
-              <el-link type="primary" underline="never" @click="handleShowModify(row)">
+              <el-link v-if="row.customsDeclarationStatus === 0" type="primary" underline="never" @click="handleShowModify(row)">
                 {{ route.query.tab === 'view' ? '查看' : '修改' }}零件报关
               </el-link>
             </template>
