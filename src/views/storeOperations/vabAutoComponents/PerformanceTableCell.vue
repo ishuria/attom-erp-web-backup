@@ -266,7 +266,7 @@
 
   <!-- 广告 -->
   <span v-else-if="item.label === '广告'">
-    <el-tooltip effect="customized" placement="top">
+    <el-tooltip effect="light" placement="top">
       <template #content>
         <div class="custom-tooltip">
           <div style="margin-bottom: 5px">
@@ -784,18 +784,18 @@ const goToReview = (asin: string) => {
   font-size: 20px;
   color: #e32e00;
 }
-.el-popper.is-customized {
-  padding: 6px 12px;
-  background-color: rgba(255, 255, 255, 0.85); // 半透明白色背景
-  backdrop-filter: blur(5px); // 磨砂玻璃效果
-  border: 1px solid rgba(0, 0, 0, 0.1); // 柔和边框
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // 柔和阴影
-}
+// .el-popper.is-customized {
+//   padding: 6px 12px;
+//   background-color: rgba(255, 255, 255, 0.85); // 半透明白色背景
+//   backdrop-filter: blur(5px); // 磨砂玻璃效果
+//   border: 1px solid rgba(0, 0, 0, 0.1); // 柔和边框
+//   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); // 柔和阴影
+// }
 
-.el-popper.is-customized .el-popper__arrow::before {
-  background-color: rgba(255, 255, 255, 0.85); // 箭头颜色与背景色一致
-  right: 0;
-}
+// .el-popper.is-customized .el-popper__arrow::before {
+//   background-color: rgba(255, 255, 255, 0.85); // 箭头颜色与背景色一致
+//   right: 0;
+// }
 .rate-wrapper {
   display: flex;
   gap: 8px;

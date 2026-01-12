@@ -112,6 +112,7 @@
       <el-table-column
         v-for="(item, index) in checkList"
         :key="index"
+        :class-name="item.label === '最近入库' ? 'recent-inbound-col' : ''"
         :fixed="item.isFixed"
         :label="item.label"
         :min-width="handleWidth(item)"
@@ -287,7 +288,7 @@
           <el-text v-else-if="item.label === '断货'" :type="getOutOfStockType(row.outOfStock)">{{ row.outOfStock }}天</el-text>
 
           <!-- 其他字段 -->
-          <div v-else-if="item.label === '最近入库'" style="white-space: pre-wrap">
+          <div v-else-if="item.label === '最近入库'">
             {{ row.recentlyInboundStorage }}
           </div>
         </template>
@@ -1234,13 +1235,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 const fetchSiteList = async () => {
   const { data } = await getDistributionSiteList()
   siteList.value = data
-  if (currentUser === '李慧婷') {
-    site.value = [1]
-  } else if (currentUser === '刘秋月') {
-    site.value = [2]
-  } else {
-    site.value = [0]
-  }
   // // 初始化时全选所有站点
   // if (data && data.length > 0) {
   //   site.value = data.map((item) => item.id)
@@ -1352,6 +1346,13 @@ onActivated(() => {
 })
 
 onBeforeMount(async () => {
+  if (currentUser === '李慧婷') {
+    site.value = [1]
+  } else if (currentUser === '刘秋月') {
+    site.value = [2]
+  } else {
+    site.value = [0]
+  }
   await fetchColumn()
   fetchSiteList()
   fetchOperateUserList()
@@ -1532,5 +1533,8 @@ onBeforeMount(async () => {
 // 搜索框宽度设置
 .search-input {
   width: 300px !important;
+}
+.noneHoverTable :deep(.recent-inbound-col .cell) {
+  white-space: pre-wrap;
 }
 </style>

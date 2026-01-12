@@ -21,7 +21,13 @@
       stripe
       @sort-change="handleSortChange"
     >
-      <el-table-column label="搜索关键词" min-width="110" prop="searchQuery" :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')" />
+      <el-table-column
+        fixed="left"
+        label="搜索关键词"
+        min-width="110"
+        prop="searchQuery"
+        :width="flexColumnWidth(list, '搜索关键词', 'searchQuery')"
+      />
       <el-table-column label="搜索关键词评分" min-width="110" prop="searchQueryScore" />
       <el-table-column label="关键词搜索量" min-width="130" prop="searchQueryVolume" sortable="custom" />
       <el-table-column label="关键词总曝光量" min-width="100" prop="totalQueryImpressionCount" sortable="custom" />
