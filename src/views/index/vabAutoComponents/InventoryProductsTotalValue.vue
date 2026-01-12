@@ -43,25 +43,26 @@ const option = reactive<any>({
 
       let fbaArrivedTotal = 0
       let fbaInTransitTotal = 0
+      let totalValue = 0
+      let unpaidGoods = 0
       let fbaArrivedItems: any[] = []
       let fbaInTransitItems: any[] = []
       let otherItems: any[] = []
 
       params.forEach((item) => {
         const value = Number(item.value || 0)
-
-        // 只处理数值不为0的项目
-        if (value === 0) return
-
-        // 直接根据系列名称判断类型
-        if (item.seriesName === 'FBA已到库存') {
+        if (item.seriesName === '库存产品总货值') {
+          totalValue = value
+          otherItems.push(item)
+        } else if (item.seriesName === '未付货款') {
+          unpaidGoods = value
+          otherItems.push(item)
+        } else if (item.seriesName === 'FBA已到库存') {
           fbaArrivedTotal += value
           fbaArrivedItems.push(item)
         } else if (item.seriesName === 'FBA在途库存') {
           fbaInTransitTotal += value
           fbaInTransitItems.push(item)
-        } else {
-          otherItems.push(item)
         }
       })
 
@@ -174,10 +175,18 @@ const option = reactive<any>({
           </div>
         `
       })
-
+      // 计算总库存
+      const totalInventory = totalValue - unpaidGoods + fbaArrivedTotal + fbaInTransitTotal
+      const totalInventoryHtml = `
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;padding:6px 8px;margin-top:8px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);font-size:14px;font-weight:600;color:#1890ff;">
+          <span>总库存</span>
+          <span>¥${totalInventory.toLocaleString()}</span>
+        </div>
+      `
       return `
         <div style="padding: 0px; border-radius: 20px; width: 220px;">
           ${titleHtmlStr}
+          ${totalInventoryHtml}
           ${otherHtmlArr.join('')}
           ${fbaArrivedHtml}
           ${fbaInTransitHtml}
