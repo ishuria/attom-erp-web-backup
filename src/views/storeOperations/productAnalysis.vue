@@ -214,7 +214,6 @@
             :change-detail-config="changeDetailConfig"
             :filter-options="filterShowOption"
             :site-id="selectedSite"
-            :type="-1"
             @content-click="handleShowChange"
           />
         </div>

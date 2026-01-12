@@ -2006,7 +2006,7 @@ const fetchOperationLogCount = async () => {
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.selectedSite,
-      type: -1, // -1 表示获取所有类型
+      type: [0, 1],
       pageNo: 1,
       pageSize: 2147483647, // 获取所有数据 (Integer.MAX_VALUE)
       startDate: props.selectDateRange[0] || '',
@@ -2054,7 +2054,7 @@ const fetchChartData = async () => {
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
     // 获取操作日志数据
-    await fetchOperationLogCount()
+    // await fetchOperationLogCount()
   } catch (error) {
     console.error('获取图表数据失败:', error)
     fullTrendList.value = []
@@ -2139,7 +2139,7 @@ const handleOperationLogClick = async (date: string) => {
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.selectedSite,
-      type: -1, // -1 表示获取所有类型
+      type: [0, 1],
       pageNo: 1,
       pageSize: 10000,
       startDate: date,

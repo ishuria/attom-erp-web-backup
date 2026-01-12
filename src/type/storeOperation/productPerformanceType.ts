@@ -1252,6 +1252,7 @@ export interface IUpdateRemarkAmazonOperationReq {
   site?: number
   asin?: string
   remark?: string
+  type: number
 }
 /**
  * 产品表现-获取人员信息

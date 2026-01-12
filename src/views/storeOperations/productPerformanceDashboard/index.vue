@@ -449,16 +449,16 @@
     <!-- 关键词排名趋势 -->
     <vab-key-word-rank-trend :key-word-trend-visible="keyWordTrendVisible" @update-visible="handleCloseKeyWordTrend" />
     <!-- 运营备注 -->
-    <vab-dialog v-model="remarkVisible" title="运营备注" width="20%">
-      <el-input v-model="remark" placeholder="请输入运营备注" :rows="15" type="textarea" />
+    <vab-dialog v-model="remarkVisible" title="运营备注" width="20%" @opened="handleDialogOpened">
+      <el-input ref="inputRef" v-model="remark" placeholder="请输入运营备注" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="remarkVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmUpdateRemark">确定</el-button>
       </template>
     </vab-dialog>
     <!-- 操作日志 -->
-    <vab-dialog v-model="operationLogVisible" title="新增操作日志" width="20%">
-      <el-input v-model="operationLog" placeholder="请输入操作日志" :rows="15" type="textarea" />
+    <vab-dialog v-model="operationLogVisible" title="新增操作日志" width="20%" @opened="handleDialogOpened">
+      <el-input ref="inputRef" v-model="operationLog" placeholder="请输入操作日志" :rows="15" type="textarea" />
       <template #footer>
         <el-button @click="operationLogVisible = false">取消</el-button>
         <el-button type="primary" @click="confirmUpdateOperationLog">确定</el-button>
@@ -526,7 +526,7 @@
 import { Search } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts'
-import type { CheckboxValueType, TabsPaneContext } from 'element-plus'
+import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -1013,9 +1013,18 @@ const showRemark = (row: any) => {
 }
 const operationLogVisible = ref<boolean>(false)
 const operationLog = ref<string>('')
-const showOperationLog = (row: any) => {
+const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
+
+const showOperationLog = async (row: any) => {
   _row.value = row
   operationLogVisible.value = true
+}
+const handleDialogOpened = () => {
+  const textarea = inputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
+  if (textarea) {
+    textarea.focus()
+    textarea.setSelectionRange(0, 0) // 光标定位到开头
+  }
 }
 const confirmUpdateOperationLog = async () => {
   const { data } = await addOperationLog({
@@ -1094,6 +1103,7 @@ const confirmUpdateRemark = async () => {
     site: _row.value.site,
     asin: _row.value.asin,
     remark: remark.value,
+    type: 0,
   })
   if (data) {
     $baseMessage('运营备注修改成功！', 'success')

@@ -446,13 +446,21 @@
     </vab-dialog>
     <!-- 订货表 -->
     <vab-product-order-table v-model="productOrderTableVisible" :list="productOrderTableList" />
+    <!-- 订货备注 -->
+    <vab-dialog v-model="remarkVisible" title="订货备注" width="20%" @opened="handleDialogOpened">
+      <el-input ref="inputRef" v-model="remark" placeholder="请输入订货备注" :rows="15" type="textarea" />
+      <template #footer>
+        <el-button @click="remarkVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmUpdateOrderRemark">确定</el-button>
+      </template>
+    </vab-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { QuestionFilled, Search, Star } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import type { CheckboxValueType, FormInstance, TableInstance } from 'element-plus'
+import type { CheckboxValueType, ElInput, FormInstance, TableInstance } from 'element-plus'
 import { debounce } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
@@ -473,6 +481,7 @@ import {
   getOperationColumnList,
   hideOrShowOperationColumn,
   updateOperationASINOperateTypeList,
+  updateRemarkAmazonOperation,
   updateSortOperationColumn,
 } from '/@/api/devlocal/productPerformance'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE, ROLE_ECOMMERCEOPERATOR_CODE } from '/@/const/role'
@@ -499,6 +508,7 @@ const filterVisible = ref<boolean>(false)
 const filterForm = reactive<any>({})
 const filterFormRef = ref<FormInstance>()
 
+const remarkVisible = ref<boolean>(false)
 // 列宽缓存
 const columnWidthCache = ref<Map<string, string>>(new Map())
 
@@ -734,7 +744,40 @@ const cellClick = async (row: any, column: any) => {
       productOrderTableList.value = data
       break
     }
+    case '订货备注': {
+      showRemark(row)
+      break
+    }
     // No default
+  }
+}
+const _row = ref<any>({})
+const remark = ref<string>('')
+const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
+
+const showRemark = (row: any) => {
+  _row.value = row
+  remark.value = row.orderRemark
+  remarkVisible.value = true
+}
+const handleDialogOpened = () => {
+  const textarea = inputRef.value?.$el.querySelector('textarea') as HTMLTextAreaElement
+  if (textarea) {
+    textarea.focus()
+    textarea.setSelectionRange(0, 0) // 光标定位到开头
+  }
+}
+const confirmUpdateOrderRemark = async () => {
+  const { data } = await updateRemarkAmazonOperation({
+    site: _row.value.site,
+    asin: _row.value.asin,
+    remark: remark.value,
+    type: 1,
+  })
+  if (data) {
+    $baseMessage('订货备注修改成功！', 'success')
+    remarkVisible.value = false
+    _row.value.orderRemark = remark.value
   }
 }
 const initChart1 = () => {

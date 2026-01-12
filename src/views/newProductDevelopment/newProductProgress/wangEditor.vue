@@ -6,6 +6,7 @@
     :close-on-click-modal="false"
     :title="props.title"
     width="60%"
+    @opened="handleDialogOpened"
   >
     <div v-if="dflag" class="wang-editor-container">
       <toolbar :default-config="toolbarConfig" :editor="editorRef" style="border-bottom: 1px solid var(--el-border-color)" />
@@ -56,6 +57,21 @@ const editorRef = shallowRef<IDomEditor | undefined>()
 // 初始化时使用 props 中的内容
 const html = ref<any>(content.value || '')
 
+const handleDialogOpened = async () => {
+  await nextTick()
+
+  const editor = editorRef.value
+  if (!editor) return
+
+  // 确保内容已经 setHtml 完成
+  editor.focus()
+
+  // 光标放在开头
+  editor.select({
+    path: [0, 0],
+    offset: 0,
+  })
+}
 // 监听对话框显示状态变化，处理内容逻辑
 watch(
   () => props.wangEditorVisible,

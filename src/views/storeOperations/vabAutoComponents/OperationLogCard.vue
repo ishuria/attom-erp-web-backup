@@ -14,7 +14,14 @@
       <vab-query-form-right-panel :span="18">
         <el-form inline>
           <el-form-item label="">
-            <el-select v-model="selectedFilter" style="max-width: 100px" @change="handleFilterChange">
+            <el-select
+              v-model="selectedFilter"
+              collapse-tags
+              collapse-tags-tooltip
+              multiple
+              style="min-width: 140px"
+              @change="handleFilterChange"
+            >
               <el-option v-for="item in filterOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
@@ -108,7 +115,6 @@ interface Props {
   // 接口参数
   asin?: string
   siteId?: number
-  type?: number
   // 如果提供了 data，则使用 data，否则从接口获取
   data?: LogItem[]
   filterOptions?: FilterOption[]
@@ -134,7 +140,6 @@ const props = withDefaults(defineProps<Props>(), {
   type: undefined,
   data: undefined,
   filterOptions: () => [
-    { label: '全部', value: -1 },
     { label: '手动输入', value: 0 },
     { label: '系统抓取', value: 1 },
     { label: 'SP广告', value: 2 },
@@ -146,7 +151,7 @@ const emit = defineEmits<{
   contentClick: [row: LogItem]
 }>()
 
-const selectedFilter = ref<number | string>(-1)
+const selectedFilter = ref<number[]>([0, 1])
 const dateRange = ref<[Date, Date] | null>(null)
 const changeDetailVisible = ref<boolean>(false)
 const changeDetailTitle = ref<string>('')
@@ -165,8 +170,6 @@ const loading = ref<boolean>(false)
 const pageNo = ref<number>(1)
 const pageSize = ref<number>(50)
 const total = ref<number>(0)
-// 表格引用
-const tableRef = ref()
 
 // 类型映射：数字 -> 字符串
 const typeMap: Record<number, string> = {
@@ -184,8 +187,8 @@ const fetchOperationLog = async () => {
     return
   }
 
-  // 如果没有提供必要的参数，不请求
-  if (!props.asin || props.siteId === undefined || props.type === undefined) {
+  // 判断参数是否齐全
+  if (!props.asin || props.siteId === undefined || !selectedFilter.value.length) {
     logData.value = []
     total.value = 0
     return
@@ -196,12 +199,7 @@ const fetchOperationLog = async () => {
     const requestParams: any = {
       asin: props.asin,
       siteId: props.siteId,
-      type:
-        selectedFilter.value !== -1
-          ? typeof selectedFilter.value === 'number'
-            ? selectedFilter.value
-            : Number(selectedFilter.value)
-          : props.type,
+      type: selectedFilter.value,
       pageNo: pageNo.value,
       pageSize: pageSize.value,
     }
@@ -231,10 +229,10 @@ const fetchOperationLog = async () => {
 
 const filteredData = computed(() => {
   const dataSource = props.data !== undefined ? props.data : logData.value
-  if (props.data === undefined && selectedFilter.value !== -1) {
+  if (props.data === undefined && selectedFilter.value.length > 0) {
     return dataSource
   }
-  if (selectedFilter.value === -1) {
+  if (selectedFilter.value.length === 0) {
     return dataSource
   }
   return dataSource.filter((item) => {
@@ -244,7 +242,7 @@ const filteredData = computed(() => {
       SP广告: 2,
     }
     const itemTypeValue = typeMapReverse[item.type]
-    return itemTypeValue !== undefined && itemTypeValue === selectedFilter.value
+    return itemTypeValue !== undefined && selectedFilter.value.includes(itemTypeValue)
   })
 })
 
@@ -270,7 +268,7 @@ const handleSizeChange = (size: number) => {
 
 // 监听 props 变化，重新获取数据（重置到第一页）
 watch(
-  () => [props.asin, props.siteId, props.type],
+  () => [props.asin, props.siteId],
   () => {
     if (props.data === undefined) {
       pageNo.value = 1

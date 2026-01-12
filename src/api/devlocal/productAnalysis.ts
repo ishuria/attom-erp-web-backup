@@ -183,7 +183,7 @@ export function getSkuSiteDailyCost(params: {
 export function getOperationLog(data: {
   asin: string
   siteId: number
-  type: number
+  type: number[]
   pageNo: number
   pageSize: number
   startDate: string

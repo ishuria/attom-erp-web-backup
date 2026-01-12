@@ -1,9 +1,5 @@
 export const filterShowOption = [
   {
-    label: '全部',
-    value: -1,
-  },
-  {
     label: '手动输入',
     value: 0,
   },
