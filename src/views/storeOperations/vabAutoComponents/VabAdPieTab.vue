@@ -80,12 +80,24 @@
       </el-table-column>
       <el-table-column label="展示量" min-width="100" prop="impressions" sortable="custom" />
       <el-table-column label="点击量" min-width="100" prop="clicks" sortable="custom" />
-      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate" />
-      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate" />
+      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate">
+        <template #default="{ row }">
+          {{ `${formatPctOrDash(row.clickThruRate)} / ${formatPctOrDash(row.marketClickThruRate)}` }}
+        </template>
+      </el-table-column>
+      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate">
+        <template #default="{ row }">
+          {{ `${formatPctOrDash(row.conversionRate)} / ${formatPctOrDash(row.marketConversionRate)}` }}
+        </template>
+      </el-table-column>
       <el-table-column label="花费" min-width="100" prop="spend" sortable="custom" />
+      <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
+        <template #default="{ row }">
+          {{ row.acos != null ? `${row.acos}%` : '-' }}
+        </template>
+      </el-table-column>
       <el-table-column label="7天销售额" min-width="130" prop="sales7d" sortable="custom" />
       <el-table-column label="7天订单数" min-width="130" prop="orders7d" sortable="custom" />
-      <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom" />
       <el-table-column label="CPC" min-width="90" prop="cpc" sortable="custom" />
       <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
       <el-table-column label="大盘日总展示" min-width="145" prop="getCal" sortable="custom" />
@@ -237,20 +249,13 @@ const handleAdSettingUpdate = async () => {
     adSettingSaving.value = false
   }
 }
-
+const formatPctOrDash = (val: number | null | undefined) => {
+  return val != null && val !== undefined ? `${val}%` : '-'
+}
 // 将后端数据映射为前端显示格式
 const mapTableData = (items: ISPAdsTableItem[]): any[] => {
-  const formatPctOrDash = (val: number | null | undefined) => {
-    return val != null && val !== undefined ? `${val}%` : '-'
-  }
   return items.map((item) => ({
     ...item,
-    // 点击率：我们/大盘
-    clickThroughRate: `${formatPctOrDash(item.clickThruRate)} / ${formatPctOrDash(item.marketClickThruRate)}`,
-    // 转化率：我们/大盘
-    conversionRate: `${formatPctOrDash(item.conversionRate)} / ${formatPctOrDash(item.marketConversionRate)}`,
-    // ACOS
-    acos: item.acos != null ? `${item.acos}%` : '-',
     // 品牌占有率
     brandShareRate: item.brandShareRate != null ? `${item.brandShareRate}%` : '-',
     suggestedBid: item.suggestedBid != null ? currencySymbol.value + item.suggestedBid : '-',
@@ -399,15 +404,7 @@ const handleSizeChange = (value: number) => {
 
 // 监听props变化，重新获取数据
 watch(
-  [
-    () => props.siteId,
-    () => props.selectDateRange,
-    () => props.skipNoData,
-    () => props.campaignName,
-    () => props.sku,
-    () => props.asin,
-    () => props.selectField,
-  ],
+  [() => props.siteId, () => props.skipNoData, () => props.campaignName, () => props.sku, () => props.asin, () => props.selectField],
   async () => {
     await fetchCurrencySymbol()
     fetchTableData()
@@ -416,7 +413,14 @@ watch(
   },
   { immediate: false, deep: false }
 )
-
+watch(
+  () => props.selectDateRange?.join(','),
+  () => {
+    fetchTableData()
+    fetchPieData()
+    fetchPieChartData()
+  }
+)
 watch(
   [() => props.asin, () => props.siteId],
   () => {
@@ -737,9 +741,51 @@ const getCategoryColor = (value: any) => {
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.columnIndex === 0) {
+  const label = data.column.label
+  if (label === '客户搜索词') {
     return {
       textAlign: 'left',
+    }
+  } else if (label === 'ACOS') {
+    if (data.row.acos <= 30) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else if (data.row.acos <= 35) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-warning)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === '点击率(我们/大盘)') {
+    if (data.row.clickThruRate >= data.row.marketClickThruRate) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
+    }
+  } else if (label === '转化率(我们/大盘)') {
+    if (data.row.conversionRate >= data.row.marketConversionRate) {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-success)',
+      }
+    } else {
+      return {
+        textAlign: 'center',
+        color: 'var(--el-color-danger)',
+      }
     }
   }
   return {

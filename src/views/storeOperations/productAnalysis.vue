@@ -106,7 +106,7 @@
               </el-form-item>
               <el-form-item>
                 <el-date-picker
-                  v-model="adPieDateRange"
+                  v-model="selectDateRange"
                   :disabled-date="(time: Date) => time.getTime() > Date.now()"
                   end-placeholder="结束日期"
                   range-separator="至"
@@ -260,8 +260,7 @@ const selectedSku = ref<string>('')
 // 广告活动名相关
 const campaignNameList = ref<string[]>([])
 const selectedCampaignName = ref<string>('所有广告组之和')
-// SP广告饼图日期范围
-const adPieDateRange = ref<[string, string]>(getStoredDateRange())
+
 const skipNoData = ref<number>(1)
 
 // 日期选择器快捷选项
@@ -364,6 +363,7 @@ const handleChangeOperationRemark = async () => {
     site: selectedSite.value,
     asin: asin.value,
     remark: operationRemark.value,
+    type: 0,
   })
   if (data) {
     $baseMessage('运营备注修改成功！', 'success')
