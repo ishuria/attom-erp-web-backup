@@ -100,7 +100,7 @@
       <el-table-column label="7天订单数" min-width="130" prop="orders7d" sortable="custom" />
       <el-table-column label="CPC" min-width="90" prop="cpc" sortable="custom" />
       <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
-      <el-table-column label="大盘日总展示" min-width="145" prop="getCal" sortable="custom" />
+      <el-table-column label="大盘总展示" min-width="145" prop="getCal" sortable="custom" />
       <el-table-column label="预估大盘总点击" min-width="170" prop="estimateTotalClick" />
       <el-table-column label="曝光量排名" min-width="120" prop="impressionRank" />
       <el-table-column label="品牌占有率" min-width="120" prop="brandShareRate" />

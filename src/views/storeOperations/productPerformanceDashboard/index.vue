@@ -58,7 +58,7 @@
                 <el-button type="primary" @click="spFileUploadVisible = true">文件上传</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
+                <el-button type="primary" @click="logSummaryVisible = true">人工日志汇总</el-button>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[0] }}</el-text>
@@ -202,7 +202,7 @@
                 <el-button type="primary" @click="keyWordTrendVisible = true">关键词排名趋势</el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="logSummaryVisible = true">日志汇总</el-button>
+                <el-button type="primary" @click="logSummaryVisible = true">人工日志汇总</el-button>
               </el-form-item>
               <el-form-item>
                 <el-text style="margin-left: 10px; font-weight: 600">今销更新时间：{{ saleUpdateDate[1] }}</el-text>

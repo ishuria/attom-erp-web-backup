@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="visible" title="日志汇总" top="8vh" width="60%">
+  <vab-dialog v-model="visible" title="人工日志汇总" top="8vh" width="60%">
     <vab-query-form>
       <vab-query-form-left-panel :span="18">
         <el-form inline :model="queryForm">
@@ -54,7 +54,6 @@
       max-height="70vh"
       stripe
     >
-      <el-table-column align="center" label="日期" min-width="120" prop="date" />
       <el-table-column align="center" label="图片" width="100">
         <template #default="{ row }">
           <el-image
@@ -87,7 +86,8 @@
           <span v-else>-</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="类型" min-width="100" prop="type">手动输入</el-table-column>
+      <el-table-column align="center" label="日期" min-width="120" prop="date" />
+      <!-- <el-table-column align="center" label="类型" min-width="100" prop="type">手动输入</el-table-column> -->
       <el-table-column label="内容" min-width="300" prop="content" />
       <el-table-column align="center" label="运营" min-width="100" prop="operationUserName" />
       <template #empty>

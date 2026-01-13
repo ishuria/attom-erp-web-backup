@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vab-dialog v-model="visible" :draggable="false" title="发布订货" width="55%">
+    <vab-dialog v-model="visible" :draggable="false" title="发布订货" width="55%" @opened="handleOpened">
       <el-form v-loading="loading" class="release-order-form" label-position="top" :model="form">
         <!-- 第一行：图片、SKU和描述 -->
         <div class="form-row">
@@ -24,7 +24,7 @@
         <!-- 第二行：其他信息 -->
         <div class="form-row">
           <el-form-item class="number-item" label="订货数量">
-            <el-input-number v-model="form.number" class="number-input" :min="0" />
+            <el-input-number ref="inputRef" v-model="form.number" class="number-input" :min="0" />
           </el-form-item>
 
           <el-form-item class="split-item" label="拆分">
@@ -82,6 +82,15 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
+const inputRef = ref<any>(null)
+
+const handleOpened = async () => {
+  await nextTick()
+  // el-input-number 内部是真正的 input
+  const input = inputRef.value?.$el?.querySelector('input')
+  input?.focus()
+  input?.select()
+}
 // 弹窗显示状态
 const visible = ref(false)
 

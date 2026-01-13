@@ -287,9 +287,19 @@
           <!-- 断货字段 -->
           <el-text v-else-if="item.label === '断货'" :type="getOutOfStockType(row.outOfStock)">{{ row.outOfStock }}天</el-text>
 
-          <!-- 其他字段 -->
+          <!-- 最近入库 -->
           <div v-else-if="item.label === '最近入库'">
             {{ row.recentlyInboundStorage }}
+          </div>
+
+          <!-- 订货备注 -->
+          <div v-else-if="item.label === '订货备注'">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div class="custom-tooltip">{{ row.orderRemark }}</div>
+              </template>
+              <div class="multi-line-ellipsis">{{ row.orderRemark }}</div>
+            </el-tooltip>
           </div>
         </template>
       </el-table-column>
