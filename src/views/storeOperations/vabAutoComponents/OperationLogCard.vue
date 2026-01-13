@@ -42,7 +42,7 @@
 
     <el-table ref="tableRef" v-loading="loading" border :data="filteredData" :header-cell-style="{ textAlign: 'center' }" stripe>
       <el-table-column align="center" label="日期" prop="date" width="115" />
-      <el-table-column align="center" label="类型" prop="type" width="90" />
+      <el-table-column align="center" label="类型" prop="type" width="105" />
       <el-table-column label="内容" min-width="170" prop="content">
         <template #default="{ row }">
           <el-link class="content-link" type="primary" @click="handleContentClick(row)">
@@ -142,7 +142,7 @@ const props = withDefaults(defineProps<Props>(), {
   filterOptions: () => [
     { label: '手动输入', value: 0 },
     { label: '系统抓取', value: 1 },
-    { label: 'SP广告', value: 2 },
+    { label: '亚马逊广告', value: 2 },
   ],
   changeDetailConfig: () => ({}),
 })
@@ -175,7 +175,7 @@ const total = ref<number>(0)
 const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
-  2: 'SP广告',
+  2: '亚马逊广告',
 }
 
 // 获取操作日志数据
@@ -239,7 +239,7 @@ const filteredData = computed(() => {
     const typeMapReverse: Record<string, number> = {
       手动输入: 0,
       系统抓取: 1,
-      SP广告: 2,
+      亚马逊广告: 2,
     }
     const itemTypeValue = typeMapReverse[item.type]
     return itemTypeValue !== undefined && selectedFilter.value.includes(itemTypeValue)
