@@ -457,13 +457,8 @@
       </template>
     </vab-dialog>
     <!-- 操作日志 -->
-    <vab-dialog v-model="operationLogVisible" title="新增操作日志" width="20%" @opened="handleDialogOpened">
-      <el-input ref="inputRef" v-model="operationLog" placeholder="请输入操作日志" :rows="15" type="textarea" />
-      <template #footer>
-        <el-button @click="operationLogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmUpdateOperationLog">确定</el-button>
-      </template>
-    </vab-dialog>
+
+    <operation-log-dialog v-model="operationLogVisible" :row="_row" />
     <!-- 季节趋势 -->
     <vab-dialog v-model="seasonalVisible" title="季节趋势" width="40%" @open="handleSeasonalOpened">
       <div ref="chartContainer1" style="width: 100%; height: 400px"></div>
@@ -530,7 +525,6 @@ import type { CheckboxValueType, ElInput, TabsPaneContext } from 'element-plus'
 import { debounce } from 'lodash-es'
 import { shallowRef } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import { addOperationLog } from '~/src/api/devlocal/productAnalysis'
 import { getOperationOrderSku, releaseOperationPlanPo } from '~/src/api/devlocal/productOrdering'
 import { ROLE_BOSS_CODE, ROLE_ECOMMERCEOPERATIONLEAD_CODE } from '~/src/const/role'
 import { useUserStore } from '~/src/store/modules/user'
@@ -1012,7 +1006,6 @@ const showRemark = (row: any) => {
   remarkVisible.value = true
 }
 const operationLogVisible = ref<boolean>(false)
-const operationLog = ref<string>('')
 const inputRef = ref<InstanceType<typeof ElInput> | null>(null)
 
 const showOperationLog = async (row: any) => {
@@ -1024,17 +1017,6 @@ const handleDialogOpened = () => {
   if (textarea) {
     textarea.focus()
     textarea.setSelectionRange(0, 0) // 光标定位到开头
-  }
-}
-const confirmUpdateOperationLog = async () => {
-  const { data } = await addOperationLog({
-    asin: _row.value.asin,
-    siteId: _row.value.site,
-    content: operationLog.value,
-  })
-  if (data) {
-    $baseMessage('操作日志新增成功！', 'success')
-    operationLogVisible.value = false
   }
 }
 
