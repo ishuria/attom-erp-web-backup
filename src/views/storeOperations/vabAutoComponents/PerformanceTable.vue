@@ -233,7 +233,7 @@ const handleWidth = (item: any) => {
   if (props.activeName === 0) {
     switch (item.label) {
       case 'SKU': {
-        return flexColumnWidth(props.data, 'SKU', 'sku') + 50
+        return Math.max(flexColumnWidth(props.data, 'SKU', 'sku') + 50, 300)
       }
       case 'ASIN': {
         return flexColumnWidth(props.data, 'ASIN', 'asin')
