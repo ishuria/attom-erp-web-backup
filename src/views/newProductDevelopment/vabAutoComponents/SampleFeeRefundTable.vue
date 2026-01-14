@@ -1,7 +1,17 @@
 <template>
   <div class="sample-fee-refund-table-container">
     <vab-query-form>
-      <vab-query-form-right-panel :span="24">
+      <vab-query-form-left-panel v-if="props.status === 2" :span="props.status === 2 ? 12 : 0">
+        <!-- 可退金额筛选 -->
+        <el-form-item label="可退金额">
+          <el-select v-model="queryForm.refundAmountZero" placeholder="请选择" @change="queryData">
+            <el-option label="全部" :value="-1" />
+            <el-option label="为0" :value="0" />
+            <el-option label="非0" :value="1" />
+          </el-select>
+        </el-form-item>
+      </vab-query-form-left-panel>
+      <vab-query-form-right-panel :span="props.status === 2 ? 12 : 24">
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
             <el-input
@@ -40,6 +50,24 @@
               <el-icon />
             </template>
           </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="下单日期" width="115">
+        <template #default="{ row }">
+          {{ row.createTime ? row.createTime.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column v-if="props.status === 2" label="更新日期" width="115">
+        <template #default="{ row }">
+          {{ row.updateTime ? row.updateTime.split(' ')[0] : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="SKU" prop="sku" width="350">
+        <template #default="{ row }">
+          <span v-for="(sku, index) in row.sku" :key="index">
+            {{ sku }}
+            <br />
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -174,6 +202,7 @@ const queryForm = reactive({
   pageNo: 1,
   pageSize: 20,
   status: props.status,
+  refundAmountZero: -1,
 })
 const refundRemarkVisible = ref<boolean>(false)
 const refundProofUploadVisible = ref<boolean>(false)
