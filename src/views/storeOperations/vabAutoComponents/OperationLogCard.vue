@@ -43,11 +43,24 @@
     <el-table ref="tableRef" v-loading="loading" border :data="filteredData" :header-cell-style="{ textAlign: 'center' }" stripe>
       <el-table-column align="center" label="日期" prop="date" width="115" />
       <el-table-column align="center" label="类型" prop="type" width="105" />
-      <el-table-column label="内容" min-width="170" prop="content">
+      <el-table-column label="内容" min-width="170">
         <template #default="{ row }">
-          <el-link class="content-link" type="primary" @click="handleContentClick(row)">
-            <span class="content-text">{{ row.content }}</span>
-          </el-link>
+          <div v-if="row.content">
+            <el-link class="content-link" type="primary" @click="handleContentClick(row)">
+              <span class="content-text">{{ row.content }}</span>
+            </el-link>
+          </div>
+          <div v-else>
+            {{ row.entityType }}
+            <div v-if="row.campaignName">{{ row.campaignName }}</div>
+            <div v-if="row.keyWord">
+              {{ row.keyWord }}
+              <el-tag v-if="row.keyWordType" :type="getKeyWordType(row.keyWordType)">
+                {{ row.keyWordType }}
+              </el-tag>
+            </div>
+            <div>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</div>
+          </div>
         </template>
       </el-table-column>
       <template #empty>
@@ -131,7 +144,18 @@ interface Props {
     }
   }
 }
-
+const getKeyWordType = (type: string) => {
+  switch (type) {
+    case '精准匹配':
+      return 'primary'
+    case '宽泛匹配':
+      return 'success'
+    case '短语匹配':
+      return 'warning'
+    default:
+      return 'info' // 或者 'default'
+  }
+}
 const props = withDefaults(defineProps<Props>(), {
   title: '日志',
   addButtonText: '新增',
@@ -211,11 +235,10 @@ const fetchOperationLog = async () => {
     }
 
     const { data } = await getOperationLog(requestParams)
-    // 将接口返回的数据映射到组件需要的格式
     logData.value = data.list.map((item: IGetOperationLog) => ({
+      ...item, // 保留后端所有字段
       date: item.date,
       type: typeMap[item.type] || '未知',
-      content: item.content,
     }))
     total.value = data.total
   } catch (error) {
@@ -227,25 +250,48 @@ const fetchOperationLog = async () => {
   }
 }
 
+// const filteredData = computed(() => {
+//   const dataSource = props.data !== undefined ? props.data : logData.value
+//   if (props.data === undefined && selectedFilter.value.length > 0) {
+//     return dataSource
+//   }
+//   if (selectedFilter.value.length === 0) {
+//     return dataSource
+//   }
+//   return dataSource.filter((item) => {
+//     const typeMapReverse: Record<string, number> = {
+//       手动输入: 0,
+//       系统抓取: 1,
+//       亚马逊广告: 2,
+//     }
+//     const itemTypeValue = typeMapReverse[item.type]
+//     return itemTypeValue !== undefined && selectedFilter.value.includes(itemTypeValue)
+//   })
+// })
 const filteredData = computed(() => {
   const dataSource = props.data !== undefined ? props.data : logData.value
-  if (props.data === undefined && selectedFilter.value.length > 0) {
+
+  // 接口模式：后端已经过滤过，直接返回
+  if (props.data === undefined) {
     return dataSource
   }
-  if (selectedFilter.value.length === 0) {
+
+  // 本地数据模式：没有选择筛选条件，直接返回
+  if (!selectedFilter.value.length) {
     return dataSource
   }
+
+  const typeMapReverse: Record<string, number> = {
+    手动输入: 0,
+    系统抓取: 1,
+    亚马逊广告: 2,
+  }
+
   return dataSource.filter((item) => {
-    const typeMapReverse: Record<string, number> = {
-      手动输入: 0,
-      系统抓取: 1,
-      亚马逊广告: 2,
-    }
     const itemTypeValue = typeMapReverse[item.type]
     return itemTypeValue !== undefined && selectedFilter.value.includes(itemTypeValue)
   })
 })
-
 // 处理筛选变化
 const handleFilterChange = () => {
   if (props.data === undefined) {
