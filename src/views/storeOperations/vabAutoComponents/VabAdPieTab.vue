@@ -78,33 +78,33 @@
           <el-link type="primary">{{ row.customerSearchTerm }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="展示量" min-width="100" prop="impressions" sortable="custom" />
-      <el-table-column label="点击量" min-width="100" prop="clicks" sortable="custom" />
-      <el-table-column label="点击率(我们/大盘)" min-width="170" prop="clickThroughRate">
+      <el-table-column label="展示量" prop="impressions" sortable="custom" width="100" />
+      <el-table-column label="点击量" prop="clicks" sortable="custom" width="100" />
+      <el-table-column label="点击率(我们/大盘)" prop="clickThroughRate" width="155">
         <template #default="{ row }">
           {{ `${formatPctOrDash(row.clickThruRate)} / ${formatPctOrDash(row.marketClickThruRate)}` }}
         </template>
       </el-table-column>
-      <el-table-column label="转化率(我们/大盘)" min-width="170" prop="conversionRate">
+      <el-table-column label="转化率(我们/大盘)" prop="conversionRate" width="155">
         <template #default="{ row }">
           {{ `${formatPctOrDash(row.conversionRate)} / ${formatPctOrDash(row.marketConversionRate)}` }}
         </template>
       </el-table-column>
-      <el-table-column label="花费" min-width="100" prop="spend" sortable="custom" />
-      <el-table-column label="ACOS" min-width="100" prop="acos" sortable="custom">
+      <el-table-column label="花费" prop="spend" sortable="custom" width="95" />
+      <el-table-column label="ACOS" prop="acos" sortable="custom" width="95">
         <template #default="{ row }">
           {{ row.acos != null ? `${row.acos}%` : '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="7天销售额" min-width="130" prop="sales7d" sortable="custom" />
-      <el-table-column label="7天订单数" min-width="130" prop="orders7d" sortable="custom" />
-      <el-table-column label="CPC" min-width="90" prop="cpc" sortable="custom" />
-      <el-table-column label="建议竞价" min-width="100" prop="suggestedBid" />
-      <el-table-column label="大盘总展示" min-width="145" prop="getCal" sortable="custom" />
-      <el-table-column label="预估大盘总点击" min-width="170" prop="estimateTotalClick" />
-      <el-table-column label="曝光量排名" min-width="120" prop="impressionRank" />
-      <el-table-column label="品牌占有率" min-width="120" prop="brandShareRate" />
-      <el-table-column fixed="right" label="分类" min-width="130" prop="type">
+      <el-table-column label="7天销售额" prop="sales7d" sortable="custom" width="123" />
+      <el-table-column label="7天订单数" prop="orders7d" sortable="custom" width="123" />
+      <el-table-column label="CPC" prop="cpc" sortable="custom" width="90" />
+      <el-table-column label="建议竞价" prop="suggestedBid" width="95" />
+      <el-table-column label="大盘总展示" prop="getCal" sortable="custom" width="127" />
+      <el-table-column label="预估大盘总点击" prop="estimateTotalClick" width="135" />
+      <el-table-column label="曝光量排名" prop="impressionRank" width="105" />
+      <el-table-column label="品牌占有率" prop="brandShareRate" width="105" />
+      <el-table-column fixed="right" label="分类" prop="type" width="125">
         <template #default="{ row }">
           <span :style="{ color: `${getCategoryColor(row.type)}` }">{{ highLowMap[row.type] }}</span>
         </template>

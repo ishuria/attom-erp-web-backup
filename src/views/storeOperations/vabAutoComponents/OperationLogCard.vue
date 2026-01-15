@@ -51,8 +51,7 @@
             </el-link>
           </div>
           <div v-else>
-            {{ row.entityType }}
-            <div v-if="row.campaignName">{{ row.campaignName }}</div>
+            <div v-if="row.entityType !== '关键词'">{{ row.entityType }}</div>
             <div v-if="row.keyWord">
               {{ row.keyWord }}
               <el-tag v-if="row.keyWordType" :type="getKeyWordType(row.keyWordType)">
@@ -60,6 +59,7 @@
               </el-tag>
             </div>
             <div>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</div>
+            <div v-if="row.campaignName">{{ row.campaignName }}</div>
           </div>
         </template>
       </el-table-column>

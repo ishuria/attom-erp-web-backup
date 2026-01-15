@@ -5,7 +5,7 @@
         <el-table-column align="center" label="站点" prop="label" width="150" />
         <el-table-column align="center" label="SP-ST-Share">
           <template #default="{ row }">
-            <el-button plain type="primary" @click="openUploadDialog(row)">上传</el-button>
+            <el-button :loading="uploadLoadingBySite[row.id]" plain type="primary" @click="openUploadDialog(row)">上传</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -24,7 +24,7 @@
       <template #footer>
         <div style="text-align: center">
           <el-button @click="closeUploadDialog">取消</el-button>
-          <el-button :loading="uploadLoading" type="primary" @click="handleUploadConfirm">确定上传</el-button>
+          <el-button type="primary" @click="handleUploadConfirm">确定上传</el-button>
         </div>
       </template>
     </vab-dialog>
@@ -55,8 +55,8 @@ const uploadDialogVisible = ref<boolean>(false)
 const currentSite = ref<{ label: string; id: number } | null>(null)
 const currentFileList = ref<UploadFiles>([])
 
-// 上传加载状态
-const uploadLoading = ref<boolean>(false)
+// 上传加载状态（按站点区分）
+const uploadLoadingBySite = ref<Record<number, boolean>>({})
 
 // 初始ACOS
 const initialAcos = ref<string>('')
@@ -103,18 +103,20 @@ const handleUploadConfirm = async () => {
     return
   }
 
-  uploadLoading.value = true
+  const siteId = currentSite.value?.id ?? 0
+  const filesToUpload = [...currentFileList.value]
+  uploadLoadingBySite.value[siteId] = true
+  // 先关闭弹窗，提升用户体验
+  closeUploadDialog()
   try {
     const formData = new FormData()
-    formData.append('siteId', currentSite.value?.id.toString() || '0')
+    formData.append('siteId', siteId.toString())
     // 添加多个文件
-    currentFileList.value.forEach((file) => {
+    filesToUpload.forEach((file) => {
       formData.append('files', file.raw as Blob)
     })
 
     const { data } = await uploadSpFile(formData)
-    // 先关闭弹窗，提升用户体验
-    closeUploadDialog()
     if (data) {
       $baseMessage('上传成功', 'success')
     }
@@ -122,7 +124,7 @@ const handleUploadConfirm = async () => {
     console.error('上传失败:', error)
     $baseMessage('上传失败，请重试', 'error')
   } finally {
-    uploadLoading.value = false
+    uploadLoadingBySite.value[siteId] = false
   }
 }
 </script>
