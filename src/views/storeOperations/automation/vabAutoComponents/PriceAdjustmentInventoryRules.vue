@@ -34,6 +34,7 @@
       <vab-query-form-right-panel>
         <el-form inline :model="queryForm" @submit.prevent>
           <el-form-item>
+            <el-switch v-model="showCurrentValue" active-text="显示当前值" inactive-text="隐藏当前值" style="margin-right: 12px" />
             <el-input
               v-model="queryForm.keyWord"
               clearable
@@ -150,6 +151,12 @@
               />
             </div>
             <span>{{ row.improveDays }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.esAvailableSaleDay <= row.improveDays ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.esAvailableSaleDay }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <!-- <el-table-column label="可售总库存数≤" min-width="130" prop="improveStock">
@@ -176,6 +183,12 @@
               />
             </div>
             <span>{{ row.improveOutStockDays }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.outOfStock >= row.improveOutStockDays ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.outOfStock }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="Rating≥" min-width="90" prop="improveRatingHeight">
@@ -189,6 +202,12 @@
               />
             </div>
             <span>{{ row.improveRatingHeight }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.rating >= row.improveRatingHeight ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.rating }}
+              </span>
+            </template>
           </template>
         </el-table-column>
       </el-table-column>
@@ -204,6 +223,12 @@
               />
             </div>
             <span>{{ row.reduceOutStockDays }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.outOfStock <= row.reduceOutStockDays ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.outOfStock }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="剩余可售天数≥" min-width="130" prop="reduceDays">
@@ -217,6 +242,12 @@
               />
             </div>
             <span>{{ row.reduceDays }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.esAvailableSaleDay >= row.reduceDays ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.esAvailableSaleDay }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="剩余含在途可售天数≥" min-width="130" prop="reduceTransitDays">
@@ -230,6 +261,16 @@
               />
             </div>
             <span>{{ row.reduceTransitDays }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span
+                :style="{
+                  color: row.esAvailableSaleDayTotal >= row.reduceTransitDays ? 'var(--el-color-success)' : 'var(--el-color-danger)',
+                }"
+              >
+                {{ row.esAvailableSaleDayTotal }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="可售总库存数≥" min-width="130" prop="reduceSalesTotalStock">
@@ -243,6 +284,16 @@
               />
             </div>
             <span>{{ row.reduceSalesTotalStock }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span
+                :style="{
+                  color: row.fbaCount >= row.reduceSalesTotalStock ? 'var(--el-color-success)' : 'var(--el-color-danger)',
+                }"
+              >
+                {{ row.fbaCount }}
+              </span>
+            </template>
           </template>
         </el-table-column>
         <el-table-column label="可售库存≥" min-width="125" prop="reduceAvailableInventory">
@@ -256,6 +307,16 @@
               />
             </div>
             <span>{{ row.reduceAvailableInventory }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span
+                :style="{
+                  color: row.availableInventory >= row.reduceAvailableInventory ? 'var(--el-color-success)' : 'var(--el-color-danger)',
+                }"
+              >
+                {{ row.availableInventory }}
+              </span>
+            </template>
           </template>
         </el-table-column>
       </el-table-column>
@@ -271,6 +332,12 @@
               />
             </div>
             <span>{{ row.reduceRatingLow }}</span>
+            <template v-if="showCurrentValue">
+              <br />
+              <span :style="{ color: row.rating <= row.reduceRatingLow ? 'var(--el-color-success)' : 'var(--el-color-danger)' }">
+                {{ row.rating }}
+              </span>
+            </template>
           </template>
         </el-table-column>
       </el-table-column>
@@ -361,6 +428,7 @@ const props = defineProps<Props>()
 const queryForm = defineModel<IAutoMationQueryReq>('queryForm', { required: true })
 const checkAll = defineModel<boolean>('checkAll', { default: false })
 const indeterminate = defineModel<boolean>('indeterminate', { default: false })
+const showCurrentValue = ref<boolean>(true)
 const xAxis = ref<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
 const saleTrendVisible = ref<boolean>(false)
 // 当前行数据（用于销量趋势弹窗）
