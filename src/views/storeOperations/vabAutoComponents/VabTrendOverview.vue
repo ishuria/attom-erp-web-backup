@@ -102,12 +102,25 @@
     <vab-dialog v-model="operationLogDialogVisible" title="操作日志明细" width="45%">
       <el-table border :data="operationLogDetailList" max-height="700">
         <el-table-column align="center" label="日期" prop="date" width="190" />
-        <el-table-column align="center" label="类型" prop="type" width="100" />
+        <el-table-column align="center" label="类型" prop="type" width="105" />
         <el-table-column label="内容" min-width="170" prop="content">
           <template #default="{ row }">
-            <el-link class="content-link" type="primary">
-              <span class="content-text">{{ row.content }}</span>
-            </el-link>
+            <div v-if="row.content">
+              <el-link class="content-link" type="primary">
+                <span class="content-text">{{ row.content }}</span>
+              </el-link>
+            </div>
+            <div v-else>
+              <div v-if="row.entityType !== '关键词'">{{ row.entityType }}</div>
+              <div v-if="row.keyWord">
+                {{ row.keyWord }}
+                <el-tag v-if="row.keyWordType" :type="getKeyWordType(row.keyWordType)">
+                  {{ row.keyWordType }}
+                </el-tag>
+              </div>
+              <div>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</div>
+              <div v-if="row.campaignName">{{ row.campaignName }}</div>
+            </div>
           </template>
         </el-table-column>
         <template #empty>
@@ -208,7 +221,7 @@ const showOperationLogMarkPoint = ref<boolean>(true) // 控制操作日志泡泡
 const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
-  2: 'SP广告',
+  2: '亚马逊广告',
 }
 
 // 卡片配置数组（基于常量配置初始化）
@@ -1087,6 +1100,18 @@ const calculateSymbolSize = (dataLength: number) => {
   return 25
 }
 
+// 统一日期格式为 YYYY-MM-DD，避免图表日期与日志日期不一致
+const normalizeDateStr = (dateStr: string): string => {
+  if (!dateStr) return ''
+  if (dateStr.includes(' ')) {
+    return dateStr.split(' ')[0]
+  }
+  if (dateStr.length >= 10) {
+    return dateStr.substring(0, 10)
+  }
+  return formatDateToString(new Date(dateStr))
+}
+
 // 计算并返回 markPoint 数据
 const calculateMarkPointData = () => {
   if (radio.value !== 'day' || !option.value.series[0]) {
@@ -1102,7 +1127,8 @@ const calculateMarkPointData = () => {
   const organicSalesData = option.value.series[0]?.data || []
 
   option.value.xAxis.data.forEach((date: string, index: number) => {
-    const count = operationLogCountByDate.value[date]
+    const normalizedDate = normalizeDateStr(date)
+    const count = operationLogCountByDate.value[normalizedDate]
     if (count && count > 0) {
       // 计算该日期对应的销售额总和，作为 y 轴位置，让泡泡显示在柱状图最高值的顶部
       const organicAmount = organicSalesData[index] || 0
@@ -1172,7 +1198,10 @@ const updateOperationLogMarkPoint = () => {
 }
 
 // 切换 markPoint 显示/隐藏
-const handleToggleMarkPoint = () => {
+const handleToggleMarkPoint = async () => {
+  if (showOperationLogMarkPoint.value) {
+    await fetchOperationLogCount()
+  }
   updateOperationLogMarkPoint()
   updateChart()
 }
@@ -2001,16 +2030,15 @@ const fetchOperationLogCount = async () => {
     operationLogCountByDate.value = {}
     return
   }
-
   try {
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.selectedSite,
-      type: [0, 1],
+      type: [0, 1, 2],
       pageNo: 1,
       pageSize: 2147483647, // 获取所有数据 (Integer.MAX_VALUE)
-      startDate: props.selectDateRange[0] || '',
-      endDate: props.selectDateRange[1] || '',
+      startDate: formatDateToString(new Date(props.selectDateRange[0])) || '',
+      endDate: formatDateToString(new Date(props.selectDateRange[1])) || '',
     })
 
     // 按日期统计操作日志数量
@@ -2019,17 +2047,7 @@ const fetchOperationLogCount = async () => {
       const dateTime = item.date
       if (dateTime) {
         // 将 dateTime 转换为日期字符串（YYYY-MM-DD）
-        let dateStr: string
-        if (dateTime.includes(' ')) {
-          // 格式：2024-01-01 10:00:00
-          dateStr = dateTime.split(' ')[0]
-        } else if (dateTime.length >= 10) {
-          // 如果已经是 YYYY-MM-DD 格式，直接使用
-          dateStr = dateTime.substring(0, 10)
-        } else {
-          // 其他格式，尝试转换为 Date 对象
-          dateStr = formatDateToString(new Date(dateTime))
-        }
+        const dateStr = normalizeDateStr(dateTime)
         countByDate[dateStr] = (countByDate[dateStr] || 0) + 1
       }
     })
@@ -2054,7 +2072,7 @@ const fetchChartData = async () => {
     // 更新卡片数据（在图表数据加载完成后更新）
     updateCardsData()
     // 获取操作日志数据
-    // await fetchOperationLogCount()
+    await fetchOperationLogCount()
   } catch (error) {
     console.error('获取图表数据失败:', error)
     fullTrendList.value = []
@@ -2128,7 +2146,18 @@ watch(
   },
   { deep: true }
 )
-
+const getKeyWordType = (type: string) => {
+  switch (type) {
+    case '精准匹配':
+      return 'primary'
+    case '宽泛匹配':
+      return 'success'
+    case '短语匹配':
+      return 'warning'
+    default:
+      return 'info' // 或者 'default'
+  }
+}
 // 处理操作日志 markPoint 点击事件
 const handleOperationLogClick = async (date: string) => {
   if (!props.asin || props.selectedSite === undefined) {
@@ -2139,7 +2168,7 @@ const handleOperationLogClick = async (date: string) => {
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.selectedSite,
-      type: [0, 1],
+      type: [0, 1, 2],
       pageNo: 1,
       pageSize: 10000,
       startDate: date,
@@ -2148,9 +2177,8 @@ const handleOperationLogClick = async (date: string) => {
 
     // 将接口返回的数据映射到组件需要的格式
     operationLogDetailList.value = data.list.map((item: IGetOperationLog) => ({
-      date: item.date,
+      ...item,
       type: typeMap[item.type] || '未知',
-      content: item.content,
     }))
     operationLogDialogVisible.value = true
   } catch (error) {
