@@ -324,6 +324,9 @@
                 <div class="multi-line-ellipsis">{{ removeHtmlTags(row.purchaseMatters) }}</div>
               </el-tooltip>
             </template>
+            <template v-else-if="item.label === '收货仓库'" #default="{ row }">
+              <div :style="{ color: row.characteristic === 1 ? 'var(--el-color-danger)' : '' }">{{ row.repositoryName }}</div>
+            </template>
           </el-table-column>
 
           <el-table-column v-permissions="PlanPoPermission.skuOperationColumnPermission()" fixed="right" label="SKU操作" width="120">

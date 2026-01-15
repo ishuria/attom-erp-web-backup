@@ -97,8 +97,14 @@
       </el-table-column>
       <el-table-column label="申请理由" min-width="150" prop="applicationReason">
         <template #default="{ row }">
-          <el-link v-if="row.applicationReason" type="primary" underline="never" @click="handleViewReason(row.applicationReason)">
-            <span v-html="row.applicationReason"></span>
+          <el-link
+            v-if="row.applicationReason"
+            class="reason-link"
+            type="primary"
+            underline="never"
+            @click="handleViewReason(row.applicationReason)"
+          >
+            <div class="reason-content" v-html="row.applicationReason"></div>
           </el-link>
           <span v-else>-</span>
         </template>
@@ -107,11 +113,11 @@
       <el-table-column label="产品是否上线" min-width="120" prop="launch" />
       <el-table-column label="申请提交时间" min-width="120" prop="createTime" />
 
-      <el-table-column fixed="right" label="操作" width="150">
+      <el-table-column v-if="currentRoleCode === ROLE_BOSS_CODE" fixed="right" label="操作" width="150">
         <template #default="{ row }">
-          <el-space v-if="row.status === 0" :size="10">
-            <el-link type="primary" underline="never" @click="handleApprove(row.id)">通过</el-link>
-            <el-link type="danger" underline="never" @click="handleReject(row.id)">不通过</el-link>
+          <el-space :size="10">
+            <el-link :disabled="row.status !== 0" type="primary" underline="never" @click="handleApprove(row.id)">通过</el-link>
+            <el-link :disabled="row.status !== 0" type="danger" underline="never" @click="handleReject(row.id)">不通过</el-link>
           </el-space>
         </template>
       </el-table-column>
@@ -140,6 +146,8 @@ import { CSSProperties } from 'vue'
 import { approveArtDesignOverdue, getArtDesignOverdueList } from '~/src/api/devlocal/imageTask'
 import { IGetArtDesignTaskList } from '~/src/type/listingTask/imageTaskType'
 import { approvalFlowColumnConfigs, getTaskTypeColor, splitUsernames } from '../constantOption'
+import { ROLE_BOSS_CODE } from '/@/const/role'
+import { useAclStore } from '/@/store/modules/acl'
 import { useUserStore } from '/@/store/modules/user'
 import { formatDate } from '/@/utils/dateUtils'
 import { calculateBrColumnWidth, flexColumnWidth } from '/@/utils/tableColum'
@@ -148,6 +156,7 @@ defineOptions({
   name: 'ApprovalFlow',
 })
 
+const currentRoleCode = useAclStore().getRole[0]
 const queryForm = reactive({
   keyWord: '',
   pageNo: 1,
@@ -248,5 +257,20 @@ onBeforeMount(() => {
 .noneHoveTable :deep(.clear-padding .cell) {
   padding-right: 0;
   padding-left: 0;
+}
+.reason-link {
+  display: block;
+}
+.reason-content {
+  max-height: 80px;
+  overflow: auto;
+  white-space: normal;
+  word-break: break-word;
+}
+.reason-content :deep(img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 4px 0;
 }
 </style>

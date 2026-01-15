@@ -17,6 +17,17 @@
             >
               <el-option v-for="item in printerOption" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+            <el-select
+              v-model="queryForm.site"
+              clearable
+              placeholder="全部站点"
+              style="margin: 0 10px calc(var(--el-margin) / 2) 0"
+              @change="queryData"
+            >
+              <el-option v-for="item in siteList" :key="item.id" :label="item.label" :value="item.id">
+                <el-text :style="{ color: getSiteBaseColor(item.label), marginRight: '6px' }">{{ item.label }}</el-text>
+              </el-option>
+            </el-select>
             <el-space :size="16" style="align-items: center">
               <el-statistic class="compact-statistic" title="SKU套数" :value="totalSkuNumber" />
               <el-divider direction="vertical" style="height: 34px" />
@@ -187,15 +198,15 @@
                   {{ row.productName }}
                 </div>
                 <div style="margin-top: 4px">
-                  <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
-                    {{ siteMap[row.site as siteValue] }}
+                  <el-tag size="default" :style="getSiteTagStyle(row.siteName)">
+                    {{ row.siteName }}
                   </el-tag>
                   <span style="margin-left: 4px">{{ row.purchaseSkuNumber }}套</span>
                 </div>
               </div>
               <div v-if="item.label === '站点'">
-                <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
-                  {{ siteMap[row.site as siteValue] }}
+                <el-tag size="default" :style="getSiteTagStyle(row.siteName)">
+                  {{ row.siteName }}
                 </el-tag>
               </div>
               <div v-if="item.label === '生产完成日期'">
@@ -432,7 +443,7 @@
                   {{ row.sku }}
                   <vab-icon icon="file-copy-2-fill" />
                   <br />
-                  {{ row.componentName }}
+                  {{ row.productName }}
                 </span>
               </div>
               <div v-if="item.label === 'SKU套数'">
@@ -445,15 +456,15 @@
                   {{ row.productName }}
                 </div>
                 <div style="margin-top: 4px">
-                  <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
-                    {{ siteMap[row.site as siteValue] }}
+                  <el-tag size="default" :style="getSiteTagStyle(row.siteName)">
+                    {{ row.siteName }}
                   </el-tag>
                   <span style="margin-left: 4px">{{ row.purchaseSkuNumber }}套</span>
                 </div>
               </div>
               <div v-if="item.label === '站点'">
-                <el-tag size="default" :style="getSiteTagStyle(siteMap[row.site as siteValue])">
-                  {{ siteMap[row.site as siteValue] }}
+                <el-tag size="default" :style="getSiteTagStyle(row.siteName)">
+                  {{ row.siteName }}
                 </el-tag>
               </div>
               <div v-if="item.label === '生产完成日期'">
@@ -647,13 +658,13 @@ import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'el
 import { debounce, isEqual } from 'lodash-es'
 import { CSSProperties, ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
-import type { siteValue } from '../constantOption'
-import { printerOption, siteMap } from '../constantOption'
+import { printerOption } from '../constantOption'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
 import {
   deleteSign,
   deleteSignRecord,
+  getPackageSiteList,
   getSignDateList,
   getSignList,
   getSignLog,
@@ -671,6 +682,7 @@ import {
 import { getOperationColumnList, hideOrShowOperationColumn, updateSortOperationColumn } from '/@/api/devlocal/productPerformance'
 import SignPermission from '/@/permissions/sign'
 import type { IGetSignList } from '/@/type/packagingShipping/packagingType'
+import { ISiteOption } from '/@/type/packagingShipping/shippedType'
 import handleClipboard from '/@/utils/clipboard'
 import { focusAndSelectInput, getRootElement } from '/@/utils/nodeUtils'
 import { hasPermission } from '/@/utils/permission'
@@ -742,7 +754,7 @@ const fetchColumn2 = async () => {
 const handleWidth = (item: any) => {
   switch (item.label) {
     case 'SKU套数': {
-      return flexColumnWidth(list.value, 'SKU套数', 'sku', 60)
+      return Math.max(flexColumnWidth(list.value, 'SKU套数', 'sku') + 60, flexColumnWidth(list.value, 'SKU套数', 'productName'))
     }
     case 'SKU': {
       return flexColumnWidth(list.value, 'SKU', 'sku', 60)
@@ -1449,7 +1461,16 @@ const getSiteTagStyle = (siteName: string) => {
     fontSize: '14px',
   }
 }
+// 站点列表
+const siteList = ref<ISiteOption[]>([])
+// 获取站点信息
+const fetchSiteData = async () => {
+  const { data } = await getPackageSiteList()
+  siteList.value = data
+  siteList.value.unshift({ id: -1, label: '全部站点' })
+}
 onBeforeMount(async () => {
+  fetchSiteData()
   fetchUserList()
   fetchSignDateList()
   fetchDefaultPrinter()
@@ -1500,20 +1521,6 @@ onBeforeMount(async () => {
           .right-panel {
             margin-bottom: 5px !important;
           }
-          // .el-form {
-          //   .el-form-item:first-child {
-          //     margin: 0 !important;
-
-          //     .el-check-tag,
-          //     .el-form-item__label {
-          //       margin: 0 10px 5px 0;
-          //       border-radius: 99px;
-          //     }
-          //   }
-          //   .el-form-item:last-child {
-          //     margin: 0 !important;
-          //   }
-          // }
         }
 
         .el-table {

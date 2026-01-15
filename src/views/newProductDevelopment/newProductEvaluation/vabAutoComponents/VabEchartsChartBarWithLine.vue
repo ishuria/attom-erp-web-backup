@@ -132,7 +132,6 @@ watch(
   theme.value,
   () => {
     option.color = [theme.value.color, '#ff4d4f']
-    option.tooltip.borderColor = `${theme.value.color}`
   },
   { immediate: true }
 )
