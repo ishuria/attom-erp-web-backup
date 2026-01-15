@@ -201,6 +201,12 @@
         <el-table-column align="center" label="供应商" min-width="200" prop="supplier">
           <template #default="{ row }">
             <div class="supplier-select-container">
+              <el-tooltip v-if="row.supplierId" effect="dark" placement="top">
+                <template #content>
+                  <div class="custom-tooltip">已存在的供应商税点如果需要找采购修改。</div>
+                </template>
+                <el-tag class="supplier-exists-tag" size="small" type="info">系统已存在</el-tag>
+              </el-tooltip>
               <el-select
                 v-model="row.supplier"
                 allow-create
@@ -215,15 +221,17 @@
               >
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
-              <el-button
-                v-if="row.supplier"
-                circle
-                class="copy-btn"
-                :icon="CopyDocument"
-                size="small"
-                type="primary"
-                @click="handleClip(row.supplier)"
-              />
+              <div class="supplier-actions">
+                <el-button
+                  v-if="row.supplier"
+                  circle
+                  class="copy-btn"
+                  :icon="CopyDocument"
+                  size="small"
+                  type="primary"
+                  @click="handleClip(row.supplier)"
+                />
+              </div>
             </div>
             <!-- <div class="none">
               <el-input
@@ -1593,7 +1601,7 @@ const fetchRepository = async () => {
   repositoryOption.value = repository
 }
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.columnIndex === 1) {
+  if (data.column.label === '零件图片') {
     return 'clear-padding'
   }
   return ''
@@ -1745,22 +1753,37 @@ onMounted(() => {
 }
 // 供应商选择框容器样式
 .supplier-select-container {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
+  padding-top: 14px;
 
   .el-select {
     flex: 1;
+    min-width: 0;
   }
 
-  .copy-btn {
+  .supplier-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    font-size: 12px;
   }
+}
+.supplier-exists-tag {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  white-space: nowrap;
+}
+.copy-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 12px;
 }
 .el-checkbox {
   transform: scale(1.2);
