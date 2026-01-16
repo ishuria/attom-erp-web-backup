@@ -113,13 +113,36 @@
             <div v-else>
               <div v-if="row.entityType !== '关键词'">{{ row.entityType }}</div>
               <div v-if="row.keyWord">
-                {{ row.keyWord }}
                 <el-tag v-if="row.keyWordType" :type="getKeyWordType(row.keyWordType)">
                   {{ row.keyWordType }}
                 </el-tag>
+                {{ row.keyWord }}
               </div>
-              <div>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</div>
-              <div v-if="row.campaignName">{{ row.campaignName }}</div>
+              <div
+                v-if="!(row.entityType === '否词' && row.changeType === '创建')"
+                class="change-info"
+                :style="{ fontWeight: row.changeType === '竞价' ? 'bold' : 'normal' }"
+              >
+                <span>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</span>
+                <el-icon
+                  v-if="
+                    row.changeType === '竞价' &&
+                    row.beforeValue !== undefined &&
+                    row.afterValue !== undefined &&
+                    isValueIncreased(row.beforeValue, row.afterValue)
+                  "
+                  class="arrow-up"
+                >
+                  <vab-icon icon="arrow-up-line" />
+                </el-icon>
+                <el-icon
+                  v-else-if="row.changeType === '竞价' && row.beforeValue !== undefined && row.afterValue !== undefined"
+                  class="arrow-down"
+                >
+                  <vab-icon icon="arrow-down-line" />
+                </el-icon>
+              </div>
+              <div v-if="row.campaignName" class="campaign-name">{{ row.campaignName }}</div>
             </div>
           </template>
         </el-table-column>
@@ -221,7 +244,7 @@ const showOperationLogMarkPoint = ref<boolean>(true) // 控制操作日志泡泡
 const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
-  2: '亚马逊广告',
+  2: '广告',
 }
 
 // 卡片配置数组（基于常量配置初始化）
@@ -2158,6 +2181,15 @@ const getKeyWordType = (type: string) => {
       return 'info' // 或者 'default'
   }
 }
+
+// 判断值是否增加（用于箭头方向）
+const isValueIncreased = (beforeValue: any, afterValue: any): boolean => {
+  const before = parseFloat(String(beforeValue).replace(/[^\d.-]/g, ''))
+  const after = parseFloat(String(afterValue).replace(/[^\d.-]/g, ''))
+  if (isNaN(before) || isNaN(after)) return false
+  return after > before
+}
+
 // 处理操作日志 markPoint 点击事件
 const handleOperationLogClick = async (date: string) => {
   if (!props.asin || props.selectedSite === undefined) {
@@ -2251,5 +2283,29 @@ onBeforeUnmount(() => chartObserver.disconnect())
     white-space: pre-wrap;
     word-break: break-word;
   }
+}
+
+.change-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .arrow-up {
+    color: #f56c6c;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: -3px;
+  }
+
+  .arrow-down {
+    color: #67c23a;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: -3px;
+  }
+}
+
+.campaign-name {
+  color: #909399;
 }
 </style>

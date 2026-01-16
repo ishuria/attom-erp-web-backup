@@ -8,7 +8,7 @@ export const filterShowOption = [
     value: 1,
   },
   {
-    label: '亚马逊广告',
+    label: '广告',
     value: 2,
   },
 ]
