@@ -81,18 +81,18 @@ watch(
   () => route.name,
   (newValue) => {
     nextTick(() => {
-      // 暂时仅支持 ScrollTop 页面记录滚动条位置
-      if (newValue === 'ScrollTop')
+      // 支持 ScrollTop 和 Index 页面记录滚动条位置
+      if (newValue === 'ScrollTop' || newValue === 'Index')
         setTimeout(() => {
           const uniqueArray = JSON.parse(localStorage.getItem('scrollTop') || '[]')
           const pageItem = uniqueArray.find((item: any) => item.routeName === newValue) as any
           if (pageItem) {
             scrollbarRef.value!.setScrollTop(pageItem.scrollTop)
-            if (pageItem.scrollTop !== 0) {
+            if (pageItem.scrollTop !== 0 && newValue === 'ScrollTop') {
               $baseMessage('已为您滚动至上次停留的页面位置', 'success', 'hey')
             }
           } else scrollbarRef.value!.setScrollTop(0)
-        }, 1000)
+        }, 300)
       else scrollbarRef.value!.setScrollTop(0)
     })
   },
