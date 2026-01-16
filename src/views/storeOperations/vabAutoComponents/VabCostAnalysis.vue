@@ -127,7 +127,7 @@
 
       <el-table-column label="长(cm)" prop="length" :width="flexColumnWidth(list, '长(cm)', 'length1', 60)">
         <template #default="{ row }">
-          <div v-if="row.sizeSource === 0" class="none">
+          <div class="none">
             <el-input v-model="row.length" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.length != null ? row.length + 'cm' : '' }}</span>
@@ -137,7 +137,7 @@
       </el-table-column>
       <el-table-column label="宽(cm)" prop="width" :width="flexColumnWidth(list, '宽(cm)', 'width1', 60)">
         <template #default="{ row }">
-          <div v-if="row.sizeSource === 0" class="none">
+          <div class="none">
             <el-input v-model="row.width" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.width != null ? row.width + 'cm' : '' }}</span>
@@ -147,7 +147,7 @@
       </el-table-column>
       <el-table-column label="高(cm)" prop="height" :width="flexColumnWidth(list, '高(cm)', 'height1', 60)">
         <template #default="{ row }">
-          <div v-if="row.sizeSource === 0" class="none">
+          <div class="none">
             <el-input v-model="row.height" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.height != null ? row.height + 'cm' : '' }}</span>
@@ -157,7 +157,7 @@
       </el-table-column>
       <el-table-column label="重量(g)" prop="weight" :width="flexColumnWidth(list, '重量(g)', 'weight1', 60)">
         <template #default="{ row }">
-          <div v-if="row.sizeSource === 0" class="none">
+          <div class="none">
             <el-input v-model="row.weight" @blur="clickCancel($event, row)" @keydown.enter="clickCancel($event, row)" />
           </div>
           <span>{{ row.weight != null ? row.weight + 'g' : '' }}</span>
@@ -554,14 +554,11 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       cursor: 'not-allowed',
     }
   }
-  if (
-    data.row.sizeSource === 1 &&
-    (label === '长(cm)' || label === '宽(cm)' || label === '高(cm)' || label === '重量(g)' || label === '尾程')
-  ) {
+  if (label === '长(cm)' || label === '宽(cm)' || label === '高(cm)' || label === '重量(g)' || label === '尾程') {
     return {
       fontWeight: 600,
       textAlign: 'center',
-      cursor: 'not-allowed',
+      cursor: 'pointer',
       backgroundColor: 'rgba(245, 108, 108, 0.1)', // 浅红色背景
       // color: 'var(--el-color-danger)', // 红色文字
       // border: '1px solid rgba(245, 108, 108, 0.3)', // 淡红色边框
