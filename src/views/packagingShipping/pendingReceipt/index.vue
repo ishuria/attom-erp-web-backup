@@ -72,6 +72,12 @@
                 <el-select v-model="queryForm.filterProblemComponent" placeholder="筛选问题零件" @change="queryData">
                   <el-option v-for="item in problemComponentOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
+                <el-select v-model="queryForm.filterFollowLog" placeholder="筛选跟单日志" style="margin-left: 8px" @change="queryData">
+                  <el-option v-for="item in followLogOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+                <el-select v-model="queryForm.procurementManager" placeholder="筛选采购负责人" style="margin-left: 8px" @change="queryData">
+                  <el-option v-for="item in procurementManagerList" :key="item.userId" :label="item.userName" :value="item.userId" />
+                </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
                   class="search-input"
@@ -319,6 +325,9 @@
               <el-form-item>
                 <el-select v-model="queryForm.filterProblemComponent" placeholder="筛选问题零件" @change="queryData">
                   <el-option v-for="item in problemComponentOption" :key="item.value" :label="item.label" :value="item.value" />
+                </el-select>
+                <el-select v-model="queryForm.filterFollowLog" placeholder="筛选跟单日志" style="margin-left: 8px" @change="queryData">
+                  <el-option v-for="item in followLogOption" :key="item.value" :label="item.label" :value="item.value" />
                 </el-select>
                 <el-input
                   v-model.trim="queryForm.keyWord"
@@ -658,6 +667,7 @@ import type { FormInstance, FormRules, TableInstance, TabsPaneContext } from 'el
 import { debounce, isEqual } from 'lodash-es'
 import { CSSProperties, ref } from 'vue'
 import { VueDraggable as VabDraggable } from 'vue-draggable-plus'
+import { getUserProcurementName } from '~/src/api/devlocal/user'
 import { printerOption } from '../constantOption'
 import { downloadFilePD } from '/@/api/devlocal/download'
 import { getEncasementUserPrinter, updateEncasementUserPrinter } from '/@/api/devlocal/encasement'
@@ -713,6 +723,11 @@ const problemComponentOption = [
   { label: '全部零件', value: -1 },
   { label: '有问题零件', value: 1 },
   { label: '没问题零件', value: 0 },
+]
+const followLogOption = [
+  { label: '全部跟单日志', value: -1 },
+  { label: '已填写', value: 1 },
+  { label: '未填写', value: 0 },
 ]
 const columns = ref<any>([])
 const checkList = computed(() => {
@@ -1112,6 +1127,8 @@ const queryForm = reactive<any>({
   orderByField: 'sellableDay',
   orderDirection: 'desc',
   filterProblemComponent: -1,
+  filterFollowLog: -1,
+  procurementManager: -1,
 })
 const handleSizeChange = (value: number) => {
   queryForm.pageNo = 1
@@ -1469,7 +1486,18 @@ const fetchSiteData = async () => {
   siteList.value = data
   siteList.value.unshift({ id: -1, label: '全部站点' })
 }
+const defaultProcurementManager = { userId: -1, userName: '全部采购负责人' }
+/** 获取采购负责人列表 */
+const procurementManagerList = ref<{ userId: number; userName: string }[]>([])
+const fetchProcurementManagerList = async () => {
+  const { data } = await getUserProcurementName({
+    name: '',
+  })
+  data.unshift(defaultProcurementManager)
+  procurementManagerList.value = data
+}
 onBeforeMount(async () => {
+  fetchProcurementManagerList()
   fetchSiteData()
   fetchUserList()
   fetchSignDateList()
