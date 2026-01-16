@@ -27,6 +27,24 @@
             style="margin-right: 20px"
             @change="handleToggleMarkPoint"
           />
+          <el-checkbox
+            v-model="showAmazonLogMarkPoint"
+            :disabled="!showOperationLogMarkPoint"
+            :false-value="0"
+            style="margin-right: 10px"
+            :true-value="1"
+            @change="handleToggleAmazonLog"
+          >
+            <span
+              :style="{
+                fontSize: '16px',
+                color: showOperationLogMarkPoint ? 'var(--el-text-color-regular)' : 'var(--el-text-color-placeholder)',
+              }"
+            >
+              包含广告日志
+            </span>
+          </el-checkbox>
+
           <el-radio-group v-model="radio" size="small" @change="() => handleSwitchTime()">
             <el-radio-button label="日" value="day" />
             <el-radio-button label="周" value="week" />
@@ -237,10 +255,11 @@ const checkList1 = computed(() => {
 // 记录点击的是哪个card
 const clickCard = ref<string>('')
 // 操作日志相关
-const operationLogCountByDate = ref<Record<string, number>>({}) // 按日期统计的操作日志数量
+const operationLogCountByDate = ref<Record<string, Array<{ type: number; count: number }>>>({}) // 按日期统计的操作日志数量（包含类型）
 const operationLogDialogVisible = ref<boolean>(false) // 操作日志明细对话框显示状态
 const operationLogDetailList = ref<Array<{ date: string; type: string; content: string }>>([]) // 操作日志明细列表
 const showOperationLogMarkPoint = ref<boolean>(true) // 控制操作日志泡泡的显示/隐藏
+const showAmazonLogMarkPoint = ref<number>(1) // 控制亚马逊广告日志泡泡的显示/隐藏 (0-不显示广告, 1-显示广告)
 const typeMap: Record<number, string> = {
   0: '手动输入',
   1: '系统抓取',
@@ -1151,8 +1170,22 @@ const calculateMarkPointData = () => {
 
   option.value.xAxis.data.forEach((date: string, index: number) => {
     const normalizedDate = normalizeDateStr(date)
-    const count = operationLogCountByDate.value[normalizedDate]
-    if (count && count > 0) {
+    const logsByDate = operationLogCountByDate.value[normalizedDate]
+
+    if (logsByDate && logsByDate.length > 0) {
+      // 根据广告日志开关过滤类型
+      let count = 0
+      logsByDate.forEach((log) => {
+        // showAmazonLogMarkPoint 为 1 时显示所有类型
+        // showAmazonLogMarkPoint 为 0 时只显示类型 0(手动输入) 和 1(系统抓取)，排除 2(广告)
+        if (showAmazonLogMarkPoint.value === 1 || log.type !== 2) {
+          count += log.count
+        }
+      })
+
+      // 如果过滤后没有日志，跳过
+      if (count === 0) return
+
       // 计算该日期对应的销售额总和，作为 y 轴位置，让泡泡显示在柱状图最高值的顶部
       const organicAmount = organicSalesData[index] || 0
       const adAmount = adSalesData[index] || 0
@@ -1227,6 +1260,15 @@ const handleToggleMarkPoint = async () => {
   }
   updateOperationLogMarkPoint()
   updateChart()
+}
+
+// 切换广告日志显示/隐藏
+const handleToggleAmazonLog = () => {
+  // 只在总开关打开时生效
+  if (showOperationLogMarkPoint.value) {
+    updateOperationLogMarkPoint()
+    updateChart()
+  }
 }
 // 切换 日，周，月
 const handleSwitchTime = (shouldSave: boolean = true) => {
@@ -2064,17 +2106,30 @@ const fetchOperationLogCount = async () => {
       endDate: formatDateToString(new Date(props.selectDateRange[1])) || '',
     })
 
-    // 按日期统计操作日志数量
-    const countByDate: Record<string, number> = {}
+    // 按日期和类型统计操作日志数量
+    const countByDate: Record<string, Record<number, number>> = {}
     data.list.forEach((item: IGetOperationLog) => {
       const dateTime = item.date
       if (dateTime) {
         // 将 dateTime 转换为日期字符串（YYYY-MM-DD）
         const dateStr = normalizeDateStr(dateTime)
-        countByDate[dateStr] = (countByDate[dateStr] || 0) + 1
+        if (!countByDate[dateStr]) {
+          countByDate[dateStr] = {}
+        }
+        const type = item.type ?? 0
+        countByDate[dateStr][type] = (countByDate[dateStr][type] || 0) + 1
       }
     })
-    operationLogCountByDate.value = countByDate
+
+    // 转换为数组格式
+    const result: Record<string, Array<{ type: number; count: number }>> = {}
+    Object.keys(countByDate).forEach((dateStr) => {
+      result[dateStr] = Object.entries(countByDate[dateStr]).map(([type, count]) => ({
+        type: Number(type),
+        count,
+      }))
+    })
+    operationLogCountByDate.value = result
   } catch (error) {
     console.error('获取操作日志数据失败:', error)
     operationLogCountByDate.value = {}
@@ -2197,10 +2252,15 @@ const handleOperationLogClick = async (date: string) => {
   }
 
   try {
+    // 根据广告日志开关决定查询哪些类型
+    // showAmazonLogMarkPoint === 1: 查询所有类型 [0, 1, 2]
+    // showAmazonLogMarkPoint === 0: 只查询手动输入和系统抓取 [0, 1]
+    const queryTypes = showAmazonLogMarkPoint.value === 1 ? [0, 1, 2] : [0, 1]
+
     const { data } = await getOperationLog({
       asin: props.asin,
       siteId: props.selectedSite,
-      type: [0, 1, 2],
+      type: queryTypes,
       pageNo: 1,
       pageSize: 10000,
       startDate: date,
