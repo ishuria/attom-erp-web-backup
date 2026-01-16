@@ -598,7 +598,7 @@
       </el-table>
     </vab-dialog>
     <!-- 当前任务加人 - 人员选择 -->
-    <vab-dialog v-model="currentTaskVisible" title="当前任务加人-人员选择" width="20%" @close="handleCloseCurrentTask">
+    <vab-dialog v-model="currentTaskVisible" :draggable="false" title="当前任务加人-人员选择" width="20%" @close="handleCloseCurrentTask">
       <el-table
         ref="currentTaskTableRef"
         border
@@ -627,7 +627,6 @@
         <el-table-column align="center" type="selection" width="80" />
       </el-table>
       <template #footer>
-        <el-button type="danger" @click="handleCloseCurrentTask">取消</el-button>
         <el-button type="success" @click="handleConfirmCurrentTask">确定</el-button>
       </template>
     </vab-dialog>
@@ -1402,7 +1401,8 @@ const personSelectCellClassName = (data: { row: any; column: any; rowIndex: numb
   return ''
 }
 // 当前任务加人的取消
-const handleCloseCurrentTask = () => {
+const handleCloseCurrentTask = async () => {
+  await releaseStartTaskLock()
   currentTaskTableRef.value?.clearSelection()
   currentTaskVisible.value = false
 }
