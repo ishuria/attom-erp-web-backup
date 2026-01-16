@@ -679,6 +679,10 @@ export interface IGetCommentReviewsRes {
   data: {
     list: IGetCommentReviews[]
     total: number
+    goodCount: number
+    badCount: number
+    goodRate: number
+    badRate: number
   }
 }
 export interface IGetCommentReviews {

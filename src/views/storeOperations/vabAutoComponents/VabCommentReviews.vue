@@ -12,11 +12,11 @@
           <div class="comment-data">
             <div>
               <p class="comment-label">好评数</p>
-              <p class="comment-value">0</p>
+              <p class="comment-value">{{ goodCount }}</p>
             </div>
             <div class="comment-item center">
               <p class="comment-label">好评率</p>
-              <p class="comment-value">0%</p>
+              <p class="comment-value">{{ goodRate }}%</p>
             </div>
           </div>
         </vab-card>
@@ -33,11 +33,11 @@
           <div class="comment-data">
             <div>
               <p class="comment-label">差评数</p>
-              <p class="comment-value">0</p>
+              <p class="comment-value">{{ badCount }}</p>
             </div>
             <div class="comment-item center">
               <p class="comment-label">差评率</p>
-              <p class="comment-value">0%</p>
+              <p class="comment-value">{{ badRate }}%</p>
             </div>
           </div>
         </vab-card>
@@ -45,6 +45,44 @@
     </el-row>
     <div style="position: relative">
       <el-tabs v-model="activeName" type="card" @tab-click="handleTabClick">
+        <el-tab-pane label="全部" :name="-1">
+          <el-table border :data="list">
+            <el-table-column label="评价时间" prop="reviewDate" width="125">
+              <template #default="{ row }">
+                {{ row.reviewDate ? row.reviewDate.split(' ')[0] : '' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="更新时间" prop="updateTime" width="125">
+              <template #default="{ row }">
+                {{ row.updateTime ? row.updateTime.split(' ')[0] : '' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="评级" prop="lastStar" width="150">
+              <template #default="{ row }">
+                <div class="rate-wrapper" style="cursor: pointer" @click="">
+                  <span class="rate-value">{{ row.lastStar }}</span>
+                  <span>
+                    <el-rate v-model="row.lastStar" class="custom-rate" disabled :void-icon="Star" />
+                  </span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="点赞数" prop="reviewLikes" width="100" />
+            <el-table-column label="Review ID" prop="reviewId" width="180" />
+            <el-table-column label="评价内容" prop="lastContent" />
+            <el-table-column label="买家信息" prop="author" width="200" />
+            <template #empty>
+              <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 300px" />
+            </template>
+          </el-table>
+          <vab-pagination
+            :current-page="queryForm.pageNo"
+            :page-size="queryForm.pageSize"
+            :total="total"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          />
+        </el-tab-pane>
         <el-tab-pane label="4-5星" :name="0">
           <el-table border :data="list">
             <el-table-column label="评价时间" prop="reviewDate" width="125">
@@ -149,7 +187,7 @@ const props = defineProps<{
   asin: string
   site: number
 }>()
-const activeName = ref<number>(0)
+const activeName = ref<number>(-1)
 
 const queryForm = reactive<any>({
   keyWord: '',
@@ -171,6 +209,10 @@ const handleSizeChange = (value: number) => {
   fetchData()
 }
 const list = ref<IGetCommentReviews[]>([])
+const goodCount = ref<number>(0)
+const badCount = ref<number>(0)
+const goodRate = ref<number>(0)
+const badRate = ref<number>(0)
 const fetchData = async () => {
   loading.value = true
   try {
@@ -187,6 +229,10 @@ const fetchData = async () => {
     list.value = data.list
 
     total.value = data.total
+    goodCount.value = data.goodCount
+    badCount.value = data.badCount
+    goodRate.value = data.goodRate
+    badRate.value = data.badRate
   } catch (error) {
     list.value = []
     total.value = 0
