@@ -559,7 +559,6 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
       fontWeight: 600,
       textAlign: 'center',
       cursor: 'pointer',
-      backgroundColor: 'rgba(245, 108, 108, 0.1)', // 浅红色背景
       // color: 'var(--el-color-danger)', // 红色文字
       // border: '1px solid rgba(245, 108, 108, 0.3)', // 淡红色边框
       // borderRadius: '4px', // 圆角
