@@ -237,6 +237,16 @@ export function confirmStartTask(data: IConfirmStartTask): Promise<IBooleanResp>
     data,
   })
 }
+/**
+ * 释放开始任务锁
+ * @returns 释放开始任务锁
+ */
+export function releaseStartTaskLock(): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/package/startTask/releaseLock`,
+    method: 'post',
+  })
+}
 // 开始多个任务-选择人员后确定
 export function confirmStartMoreTask(data: IConfirmStartMoreTask): Promise<IBooleanResp> {
   return request({

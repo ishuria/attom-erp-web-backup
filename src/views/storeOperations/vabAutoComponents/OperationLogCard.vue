@@ -36,6 +36,15 @@
               @change="handleFilterChange"
             />
           </el-form-item>
+          <el-form-item>
+            <el-input
+              v-model="keyWord"
+              clearable
+              placeholder="请输入搜索关键词"
+              @input="handleFilterChange"
+              @keyup.enter="handleFilterChange"
+            />
+          </el-form-item>
         </el-form>
       </vab-query-form-right-panel>
     </vab-query-form>
@@ -179,7 +188,7 @@ const getKeyWordType = (type: string) => {
       return 'info' // 或者 'default'
   }
 }
-
+const keyWord = ref<string>('')
 // 判断值是否增加（用于箭头方向）
 const isValueIncreased = (beforeValue: any, afterValue: any): boolean => {
   const before = parseFloat(String(beforeValue).replace(/[^\d.-]/g, ''))
@@ -257,6 +266,7 @@ const fetchOperationLog = async () => {
       type: selectedFilter.value,
       pageNo: pageNo.value,
       pageSize: pageSize.value,
+      keyWord: keyWord.value,
     }
 
     // 如果有日期范围，添加到请求参数

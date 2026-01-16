@@ -8,43 +8,109 @@
       </div>
     </template>
 
-    <el-table
-      border
-      :cell-class-name="clearPadding"
-      :cell-style="cellStyle"
-      :data="list"
-      :header-cell-style="{ textAlign: 'center' }"
-      :span-method="objectSpanMethod"
-    >
-      <el-table-column label="人员" prop="userName" width="100" />
-      <el-table-column label="总利润分" prop="totalNumber" width="100" />
-      <el-table-column label="利润分" prop="number" width="100" />
-      <el-table-column label="图片" prop="imageUrl" width="75">
+    <el-table border :cell-class-name="clearPadding" :data="groupedList" :header-cell-style="{ textAlign: 'center' }" row-key="userName">
+      <el-table-column type="expand">
         <template #default="{ row }">
-          <el-image :src="row.imageUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.imageUrl)">
+          <div style="padding: 0">
+            <el-table border :cell-class-name="clearPadding" :data="row.products.slice(1)" :show-header="false">
+              <el-table-column width="48" />
+              <el-table-column width="100" />
+              <el-table-column width="100" />
+              <el-table-column align="center" prop="number" width="100">
+                <template #default="{ row: product }">
+                  <span style="color: var(--el-color-success)">{{ product.number }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="imageUrl" width="75">
+                <template #default="{ row: product }">
+                  <el-image
+                    :src="product.imageUrl"
+                    style="display: block; width: 75px; height: 75px"
+                    @click="imagePreviewShow(product.imageUrl)"
+                  >
+                    <template #error><el-icon /></template>
+                  </el-image>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" min-width="130" prop="parentASIN">
+                <template #default="{ row: product }">
+                  <el-popover v-if="product.skus && product.skus.length > 0" placement="top" trigger="hover" :width="360">
+                    <template #reference>
+                      <span style="cursor: pointer; color: var(--el-color-primary)">
+                        {{ product.parentASIN }}
+                      </span>
+                    </template>
+                    <div style="max-height: 300px; overflow-y: auto">
+                      <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
+                      <div
+                        v-for="sku in product.skus"
+                        :key="sku"
+                        style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)"
+                      >
+                        {{ sku }}
+                      </div>
+                    </div>
+                  </el-popover>
+                  <span v-else>{{ product.parentASIN }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" prop="productTotalScore" width="100" />
+            </el-table>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="人员" prop="userName" width="100" />
+      <el-table-column align="center" label="总利润分" prop="totalNumber" width="100">
+        <template #default="{ row }">
+          <span style="color: var(--el-color-success)">{{ row.totalNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="利润分" width="100">
+        <template #default="{ row }">
+          <span v-if="row.products[0]" style="color: var(--el-color-success)">{{ row.products[0].number }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :cell-class-name="clearPadding" label="图片" width="75">
+        <template #default="{ row }">
+          <el-image
+            v-if="row.products[0]"
+            :src="row.products[0].imageUrl"
+            style="display: block; width: 75px; height: 75px"
+            @click="imagePreviewShow(row.products[0].imageUrl)"
+          >
             <template #error><el-icon /></template>
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column label="计分组名" min-width="130" prop="parentASIN">
+      <el-table-column align="center" label="计分组名" min-width="130">
         <template #default="{ row }">
-          <el-popover v-if="row.skus && row.skus.length > 0" placement="top" trigger="hover" :width="360">
-            <template #reference>
-              <span style="cursor: pointer; color: var(--el-color-primary)">
-                {{ row.parentASIN }}
-              </span>
-            </template>
-            <div style="max-height: 300px; overflow-y: auto">
-              <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
-              <div v-for="sku in row.skus" :key="sku" style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)">
-                {{ sku }}
+          <template v-if="row.products[0]">
+            <el-popover v-if="row.products[0].skus && row.products[0].skus.length > 0" placement="top" trigger="hover" :width="360">
+              <template #reference>
+                <span style="cursor: pointer; color: var(--el-color-primary)">
+                  {{ row.products[0].parentASIN }}
+                </span>
+              </template>
+              <div style="max-height: 300px; overflow-y: auto">
+                <div style="font-weight: 600; margin-bottom: 8px; color: var(--el-text-color-primary)">SKU：</div>
+                <div
+                  v-for="sku in row.products[0].skus"
+                  :key="sku"
+                  style="padding: 4px 0; border-bottom: 1px solid var(--el-border-color-lighter)"
+                >
+                  {{ sku }}
+                </div>
               </div>
-            </div>
-          </el-popover>
-          <span v-else>{{ row.parentASIN }}</span>
+            </el-popover>
+            <span v-else>{{ row.products[0].parentASIN }}</span>
+          </template>
         </template>
       </el-table-column>
-      <el-table-column label="产品总分" prop="productTotalScore" width="100" />
+      <el-table-column align="center" label="产品总分" width="100">
+        <template #default="{ row }">
+          <span v-if="row.products[0]">{{ row.products[0].productTotalScore }}</span>
+        </template>
+      </el-table-column>
       <template #empty>
         <el-empty class="vab-data-empty" description="暂无数据" style="min-height: 200px" />
       </template>
@@ -54,7 +120,6 @@
 </template>
 
 <script lang="ts" setup>
-import { CSSProperties } from 'vue'
 import { IGetFrontPageProductProfitRes } from '/@/type/index/frontPage'
 
 defineOptions({
@@ -64,6 +129,24 @@ defineOptions({
 const props = defineProps<{
   list: IGetFrontPageProductProfitRes[]
 }>()
+
+// 将数据按 userName 分组
+const groupedList = computed(() => {
+  const groups: Record<string, any> = {}
+
+  props.list.forEach((item) => {
+    if (!groups[item.userName]) {
+      groups[item.userName] = {
+        userName: item.userName,
+        totalNumber: item.totalNumber,
+        products: [],
+      }
+    }
+    groups[item.userName].products.push(item)
+  })
+
+  return Object.values(groups)
+})
 
 const imagePreviewVisible = ref<boolean>(false)
 const imagePreviewList = ref<string[]>([])
@@ -76,57 +159,7 @@ const imagePreviewClose = () => {
   imagePreviewVisible.value = false
 }
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
-  if (data.column.label === '图片') {
-    return 'clear-padding'
-  }
-  return ''
-}
-const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
-  if (data.column.label === '人员') {
-    return {
-      textAlign: 'center',
-      verticalAlign: 'top',
-    }
-  } else if (data.column.label === '总利润分') {
-    return {
-      textAlign: 'center',
-      color: 'var(--el-color-success)',
-      verticalAlign: 'top',
-    }
-  } else if (data.column.label === '利润分') {
-    return {
-      color: 'var(--el-color-success)',
-      textAlign: 'center',
-    }
-  }
-  return {
-    textAlign: 'center',
-  }
-}
-const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
-  // 设置需要合并的列
-  if (columnIndex === 0 || columnIndex === 1) {
-    // 获取当前row的零件id
-    const userName = row.userName
-    // 默认不跨行
-    let rowspan = 1
-    // 遍历后端返回的数据
-    for (let i = rowIndex + 1; i < props.list.length; i++) {
-      // 如果零件id一样需要合并
-      if (props.list[i].userName === userName) {
-        rowspan++
-      } else {
-        break
-      }
-    }
-
-    // 如果是第一次出现的行，则返回 rowspan, 否则隐藏行
-    if (rowIndex === 0 || props.list[rowIndex - 1].userName !== userName) {
-      return { rowspan, colspan: 1 }
-    } else {
-      return { rowspan: 0, colspan: 0 }
-    }
-  }
+  return 'clear-padding'
 }
 </script>
 
@@ -166,6 +199,16 @@ const objectSpanMethod = ({ row, rowIndex, columnIndex }: any) => {
       .cell {
         padding-right: 0 !important;
         padding-left: 0 !important;
+      }
+    }
+
+    // 展开行样式
+    .el-table__expanded-cell {
+      padding: 0 !important;
+
+      .el-table {
+        margin: 0;
+        border-top: none;
       }
     }
   }

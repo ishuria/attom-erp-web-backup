@@ -666,7 +666,7 @@
       </template>
     </vab-dialog>
     <!-- 开始任务 - 人员选择 -->
-    <vab-dialog v-model="personSelectVisible" title="开始任务-人员选择" width="20%" @close="handleCloseStartTask">
+    <vab-dialog v-model="personSelectVisible" :draggable="false" title="开始任务-人员选择" width="20%" @close="handleCloseStartTask">
       <el-table
         ref="startTaskTableRef"
         border
@@ -695,7 +695,6 @@
         <el-table-column align="center" type="selection" width="80" />
       </el-table>
       <template #footer>
-        <el-button type="danger" @click="handleCloseStartTask">取消</el-button>
         <el-button :loading="qualityProjectLoading" type="success" @click="handleShowQualityProject">确定</el-button>
       </template>
     </vab-dialog>
@@ -1027,6 +1026,7 @@ import {
   getQualityCheck,
   getSkuQualityList,
   getStartTaskList,
+  releaseStartTaskLock,
   splitPackageTask,
   updatePackageTask,
   updatePackageTaskSite,
@@ -1498,8 +1498,10 @@ const handleConfirmFinishTask = debounce(async () => {
     finishConfirmLoading.value = false
   }
 }, 2000)
+
 // 开始任务的取消
-const handleCloseStartTask = () => {
+const handleCloseStartTask = async () => {
+  await releaseStartTaskLock()
   startTaskTableRef.value?.clearSelection()
   personSelectVisible.value = false
 }
