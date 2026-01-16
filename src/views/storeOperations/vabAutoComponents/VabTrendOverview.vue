@@ -695,6 +695,7 @@ const saveState = () => {
       radio: radio.value,
       selectedItems: [...selectedItems],
       showOperationLogMarkPoint: showOperationLogMarkPoint.value,
+      showAmazonLogMarkPoint: showAmazonLogMarkPoint.value,
     }
     localStorage.setItem(getStorageKey(), JSON.stringify(state))
   } catch (error) {
@@ -739,6 +740,11 @@ const restoreState = () => {
     // 恢复操作日志泡泡显示状态
     if (typeof state.showOperationLogMarkPoint === 'boolean') {
       showOperationLogMarkPoint.value = state.showOperationLogMarkPoint
+    }
+
+    // 恢复亚马逊广告日志泡泡显示状态
+    if (typeof state.showAmazonLogMarkPoint === 'number') {
+      showAmazonLogMarkPoint.value = Number(state.showAmazonLogMarkPoint)
     }
 
     return true
@@ -1254,12 +1260,18 @@ const updateOperationLogMarkPoint = () => {
 }
 
 // 切换 markPoint 显示/隐藏
-const handleToggleMarkPoint = async () => {
+const handleToggleMarkPoint = () => {
   if (showOperationLogMarkPoint.value) {
-    await fetchOperationLogCount()
+    // 异步加载数据，完成后更新图表
+    fetchOperationLogCount().then(() => {
+      updateOperationLogMarkPoint()
+      updateChart()
+    })
+  } else {
+    updateOperationLogMarkPoint()
+    updateChart()
   }
-  updateOperationLogMarkPoint()
-  updateChart()
+  saveState() // 保存状态到 localStorage
 }
 
 // 切换广告日志显示/隐藏
@@ -1269,6 +1281,7 @@ const handleToggleAmazonLog = () => {
     updateOperationLogMarkPoint()
     updateChart()
   }
+  saveState() // 保存状态到 localStorage
 }
 // 切换 日，周，月
 const handleSwitchTime = (shouldSave: boolean = true) => {
@@ -2196,6 +2209,7 @@ watch(
   () => [props.selectField, props.compareType, props.selectDateRange, props.selectedSku, props.asin],
   () => {
     fetchChartData()
+    fetchTableData() // 图表数据变化时，表格数据也需要刷新
   },
   { deep: true }
 )
@@ -2214,13 +2228,6 @@ watch(
     if (chartInstance && fullTrendList.value.length > 0 && radio.value === 'day') {
       handleSwitchTime()
     }
-  },
-  { deep: true }
-)
-watch(
-  () => [props.selectField, props.selectDateRange, props.selectedSku],
-  () => {
-    fetchTableData()
   },
   { deep: true }
 )
