@@ -1404,7 +1404,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
 const objectSpanMethod = ({ row, column, rowIndex, columnIndex }: any) => {
   let rowspan = 1 // 默认不跨行
   const label = column.label
-  if (label === 'SKU图片' || label === 'SKU套数' || label === '站点') {
+  if (label === 'SKU图片' || label === 'SKU套数' || label === '站点' || label === '剩余可售') {
     const po = row.po
     const purchaseSkuNumber = (row as any).purchaseSkuNumber
 
