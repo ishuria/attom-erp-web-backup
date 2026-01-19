@@ -357,7 +357,7 @@
     <!-- 第六层 -->
     <el-row v-if="ableViewTop30ProductSaleCard || ableViewTop50ProductLossCard" class="row-spacing" :gutter="20">
       <!-- top100新品销售额 -->
-      <el-col v-if="ableViewTop30ProductSaleCard" :lg="11" :md="24" :sm="24" :xl="11" :xs="24">
+      <el-col v-if="ableViewTop30ProductSaleCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <top30-product-sale-table :list="top30ProductSaleList" :loading="top30ProductSaleLoading">
           <!-- <template #select>
             <el-select v-model="selectProfitMonth" placeholder="月份" style="max-width: 5em" @change="fetchMonthlyProductProfit">
@@ -367,7 +367,7 @@
         </top30-product-sale-table>
       </el-col>
       <!-- top50 亏损产品 -->
-      <el-col v-if="ableViewTop50ProductLossCard" :lg="13" :md="24" :sm="24" :xl="13" :xs="24">
+      <el-col v-if="ableViewTop50ProductLossCard" :lg="12" :md="24" :sm="24" :xl="12" :xs="24">
         <top50-product-loss-table :list="top50ProductLossList">
           <template #select>
             <el-select v-model="selectLossUserId" placeholder="人员" style="max-width: 5em" @change="fetchTop50ProductLoss">

@@ -164,7 +164,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#4D96FF' },
+      itemStyle: { color: '#6BCB77' },
     },
     {
       name: '精铺',
@@ -182,7 +182,7 @@ const option = reactive<any>({
       data: [],
       barWidth: 20,
       stack: 'one',
-      itemStyle: { color: '#6BCB77' }, // 青绿色
+      itemStyle: { color: '#4D96FF' }, // 青绿色
     },
     {
       name: '铺货',

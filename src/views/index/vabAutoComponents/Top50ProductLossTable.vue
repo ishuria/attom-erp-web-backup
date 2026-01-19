@@ -116,7 +116,7 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
 
 <style lang="scss" scoped>
 .top30ProductSaleTable {
-  height: 478px;
+  height: 520px;
   display: flex;
   flex-direction: column;
 
