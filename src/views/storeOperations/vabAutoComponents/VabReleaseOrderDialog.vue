@@ -137,8 +137,33 @@ const handleCancel = () => {
 }
 
 // 处理确认
-const handleConfirm = () => {
-  emit('confirm', { ...form })
+const handleConfirm = async () => {
+  // 检查订货数量是否为整箱数的倍数
+  const numberOfCartons = Number(form.numberOfCartons)
+  const orderNumber = Number(form.number)
+
+  // 如果整箱数有效且订货数量不是整箱数的倍数，则弹出二次确认
+  if (numberOfCartons > 0 && orderNumber > 0 && orderNumber % numberOfCartons !== 0) {
+    try {
+      await ElMessageBox.confirm(
+        `订货数量 ${orderNumber} 不是整箱数 ${numberOfCartons} 的倍数，是否继续发布？`,
+        '提示',
+        {
+          confirmButtonText: '继续发布',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+      // 用户确认后继续发布
+      emit('confirm', { ...form })
+    } catch {
+      // 用户取消，不执行任何操作
+      return
+    }
+  } else {
+    // 是整箱数的倍数或没有整箱数限制，直接发布
+    emit('confirm', { ...form })
+  }
 }
 
 // 重置表单
