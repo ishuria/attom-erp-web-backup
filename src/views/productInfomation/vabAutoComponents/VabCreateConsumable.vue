@@ -180,14 +180,14 @@ const rules = reactive({
       validator: (rule: any, value: any, callback: any) => {
         // 如果不是无法开票（invoicing !== 2），则必填
         if (form.invoicing !== 2) {
-          // 如果值为空，则必填（无论是否自动填充，只要为空就必须填写）
-          if (!value || value === '') {
+          // 如果值为空（但允许为0），则必填
+          if (value === null || value === undefined || value === '') {
             callback(new Error('请填写实际税点'))
             return
           }
         }
         // 检查空格（如果有值的话）
-        if (value && /\s/.test(value)) {
+        if (value !== null && value !== undefined && value !== '' && /\s/.test(String(value))) {
           callback(new Error('输入不能包含空格'))
           return
         }
@@ -201,14 +201,14 @@ const rules = reactive({
       validator: (rule: any, value: any, callback: any) => {
         // 如果不是无法开票（invoicing !== 2），则必填
         if (form.invoicing !== 2) {
-          // 如果值为空，则必填（无论是否自动填充，只要为空就必须填写）
-          if (!value || value === '') {
+          // 如果值为空（但允许为0），则必填
+          if (value === null || value === undefined || value === '') {
             callback(new Error('请填写开票税点'))
             return
           }
         }
         // 检查空格（如果有值的话）
-        if (value && /\s/.test(value)) {
+        if (value !== null && value !== undefined && value !== '' && /\s/.test(String(value))) {
           callback(new Error('输入不能包含空格'))
           return
         }
