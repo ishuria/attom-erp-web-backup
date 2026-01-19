@@ -83,7 +83,7 @@
         type="danger"
         @click="$emit('specialDelete')"
       >
-        特殊Po删除
+        已签收PO删除
       </el-button>
       <el-button
         v-if="showCommonButtons"
