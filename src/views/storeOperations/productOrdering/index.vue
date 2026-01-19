@@ -551,7 +551,8 @@ const getSimpleTextContent = (row: any, item: any) => {
 
   // 基本字段
   if (['今补', '今补广', '最近入库', '产品描述', '签收'].includes(label)) {
-    return row[prop] || ''
+    // 允许0值，只排除null和undefined
+    return row[prop] !== null && row[prop] !== undefined ? row[prop] : ''
   }
 
   // 天数字段
@@ -563,27 +564,28 @@ const getSimpleTextContent = (row: any, item: any) => {
 
   // 货币字段
   if (['月净利润', '月销售额'].includes(label)) {
-    return row[prop] ? row.currencyIcon + row[prop] : ''
+    // 允许0值，只排除null和undefined
+    return row[prop] !== null && row[prop] !== undefined ? row.currencyIcon + row[prop] : ''
   }
 
   // 百分比字段
   if (label === '月净利率') {
-    return row.monthNetProfitMargin !== null ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''
+    return row.monthNetProfitMargin !== null && row.monthNetProfitMargin !== undefined ? (row.monthNetProfitMargin * 100).toFixed(2) + '%' : ''
   }
 
   if (label === 'PASIN毛利率') {
-    return row.pAsinMonthNetProfitMargin !== null ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : ''
+    return row.pAsinMonthNetProfitMargin !== null && row.pAsinMonthNetProfitMargin !== undefined ? (row.pAsinMonthNetProfitMargin * 100).toFixed(2) + '%' : ''
   }
 
   if (label === '半年有货率') {
-    return row.availableRate !== null ? row.availableRate.toFixed(0) + '%' : ''
+    return row.availableRate !== null && row.availableRate !== undefined ? row.availableRate.toFixed(0) + '%' : ''
   }
 
   // 其他百分比字段
   if (['毛利率', '月广告%', '月ACOS', '月TACOS', '月退货%'].includes(label)) {
     const propKey = labelMap.get(label)
     const value = propKey ? row[propKey] : null
-    return value !== null ? value.toFixed(2) + '%' : ''
+    return value !== null && value !== undefined ? value.toFixed(2) + '%' : ''
   }
 
   return ''
