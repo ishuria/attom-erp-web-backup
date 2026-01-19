@@ -24,6 +24,7 @@
               :show-common-buttons="true"
               :show-package-task-button="true"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
@@ -39,6 +40,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -242,10 +244,12 @@
               :show-common-buttons="true"
               :show-package-task-button="false"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -255,6 +259,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -319,10 +324,12 @@
               :show-common-buttons="true"
               :show-package-task-button="false"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -332,6 +339,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -395,10 +403,12 @@
               :show-common-buttons="true"
               :show-package-task-button="false"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -408,6 +418,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -469,10 +480,12 @@
               :show-common-buttons="true"
               :show-package-task-button="false"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -482,6 +495,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -543,10 +557,12 @@
               :show-common-buttons="true"
               :show-package-task-button="false"
               :show-payment-buttons="true"
+              :special-del-loading="specialDelLoading"
               :tax-included-total-price="taxIncludedTotalPrice"
               @add-automatic-payment="handleAddAutomaticPayment"
               @automatic-payment-preview="handleAutomaticPaymentPreview"
               @automatic-signature="handleShowAutomaticSignature"
+              @batch-refund-full="handleBatchRefundFull"
               @delete="handleDelPo"
               @generate-contract="handleGenerateContract"
               @generate-money-transfer="handleShowGenerateMoneyTransfer"
@@ -556,6 +572,7 @@
               @reduce-cost="handleReduceCost"
               @refund="handleShowRefund"
               @remittan-check="handleremittanceCheck"
+              @special-delete="handleSpecialDelPo"
               @total-price-sharing="handleShowTotalPriceSharing"
             />
           </vab-query-form-left-panel>
@@ -970,6 +987,7 @@ import {
   purchaseAutoPaySubmit,
   purchaseTotalAp,
   releasePackageTask,
+  specialDeletePo,
   updateComponentAllPay,
   updateComponentPayPart,
   updateComponentRefund,
@@ -1195,6 +1213,8 @@ const generateMoneyTransferTime = ref<string>('')
 const automaticSignatureVisible = ref<boolean>(false)
 // 付款进度传的row
 const payHistoryRow = ref<any>()
+// 特殊Po删除loading
+const specialDelLoading = ref<boolean>(false)
 const tableColumnWidth = ref<number>(90)
 // 含税价格合计
 // const taxIncludedTotalPrice = ref<number>(0)
@@ -1877,6 +1897,29 @@ const handleDelPo = async () => {
       console.error(error)
     } finally {
       delLoading.value = false
+    }
+  })
+}
+// 特殊Po删除
+const handleSpecialDelPo = async () => {
+  if (selectedPORow.value.size === 0) {
+    $baseMessage('您未选中PO操作列的任何行', 'warning')
+    return
+  }
+  $baseConfirm('确定要特殊删除该条PO吗? ', '系统提示', async () => {
+    try {
+      specialDelLoading.value = true
+      const ids = selectedPOArray.value.join(',')
+      const { data } = await specialDeletePo({ ids })
+      if (data === true) {
+        $baseMessage('特殊删除该条PO成功', 'success', 'hey')
+        fetchData() //重新刷新表格
+        clearTableSelect()
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      specialDelLoading.value = false
     }
   })
 }

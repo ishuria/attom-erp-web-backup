@@ -78,6 +78,15 @@
       </el-button>
       <el-button
         v-if="showCommonButtons"
+        v-permissions="{ permission: [PoPermission.SPECIAL_DELETE] }"
+        :loading="specialDelLoading"
+        type="danger"
+        @click="$emit('specialDelete')"
+      >
+        特殊Po删除
+      </el-button>
+      <el-button
+        v-if="showCommonButtons"
         v-permissions="{ permission: [PoPermission.PO_AUTO_PAY_ADD_PATH] }"
         type="primary"
         @click="$emit('addAutomaticPayment')"
@@ -213,6 +222,7 @@ defineProps<{
   moneyTransferLoading?: boolean
   reduceCostLoading?: boolean
   delLoading?: boolean
+  specialDelLoading?: boolean
   fullPaymentLoading?: boolean
   installmentLoading?: boolean
   refundLoading?: boolean
@@ -233,6 +243,7 @@ defineEmits<{
   reduceCost: []
   automaticSignature: []
   delete: []
+  specialDelete: []
   packageTaskRelease: []
   paymentPaid: []
   installment: []

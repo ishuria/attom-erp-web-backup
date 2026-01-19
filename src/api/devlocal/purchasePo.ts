@@ -792,3 +792,15 @@ export function purchaseRemittanceCheck(data: { path: string }): Promise<{ data:
     data,
   })
 }
+
+/**
+ * 采购订单-特殊Po删除
+ * @returns
+ */
+export function specialDeletePo(params: IIds): Promise<IBooleanResp> {
+  return request({
+    url: `${BASE_API}/purchase/special/po/delete`,
+    method: 'post',
+    params,
+  })
+}
