@@ -242,12 +242,12 @@
         <el-form-item label="新SKU" prop="sku">
           <el-input v-model.trim="copySkuForm.sku" clearable placeholder="请输入新SKU" />
         </el-form-item>
-        <el-form-item label="是否需要重新拍摄详情页图片">
+        <!-- <el-form-item label="是否需要重新拍摄详情页图片">
           <el-radio-group v-model="copySkuForm.listingTask">
             <el-radio size="large" :value="0">否</el-radio>
             <el-radio size="large" :value="1">是</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="是否需要新品质检">
           <el-radio-group v-model="copySkuForm.needQualityInspection">
             <el-radio size="large" :value="0">否</el-radio>
