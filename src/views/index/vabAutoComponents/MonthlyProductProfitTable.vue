@@ -8,14 +8,28 @@
       </div>
     </template>
 
-    <el-table border :cell-class-name="clearPadding" :data="groupedList" :header-cell-style="{ textAlign: 'center' }" row-key="userName">
-      <el-table-column type="expand">
+    <el-table
+      border
+      :cell-class-name="clearPadding"
+      :data="groupedList"
+      :expand-row-keys="expandedRows"
+      :header-cell-style="{ textAlign: 'center' }"
+      row-key="userName"
+      @row-click="handleRowClick"
+    >
+      <el-table-column align="center" label="人员" prop="userName" width="100" />
+      <el-table-column align="center" label="总利润分" prop="totalNumber" width="100">
+        <template #default="{ row }">
+          <span style="color: var(--el-color-success)">{{ row.totalNumber }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="展开" type="expand" width="80">
         <template #default="{ row }">
           <div style="padding: 0">
             <el-table border :cell-class-name="clearPadding" :data="row.products.slice(1)" :show-header="false">
-              <el-table-column width="48" />
               <el-table-column width="100" />
               <el-table-column width="100" />
+              <el-table-column width="80" />
               <el-table-column align="center" prop="number" width="100">
                 <template #default="{ row: product }">
                   <span style="color: var(--el-color-success)">{{ product.number }}</span>
@@ -57,12 +71,6 @@
               <el-table-column align="center" prop="productTotalScore" width="100" />
             </el-table>
           </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="人员" prop="userName" width="100" />
-      <el-table-column align="center" label="总利润分" prop="totalNumber" width="100">
-        <template #default="{ row }">
-          <span style="color: var(--el-color-success)">{{ row.totalNumber }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="利润分" width="100">
@@ -161,6 +169,17 @@ const imagePreviewClose = () => {
 const clearPadding = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): string => {
   return 'clear-padding'
 }
+
+// 展开行控制
+const expandedRows = ref<string[]>([])
+const handleRowClick = (row: any) => {
+  const index = expandedRows.value.indexOf(row.userName)
+  if (index > -1) {
+    expandedRows.value.splice(index, 1)
+  } else {
+    expandedRows.value.push(row.userName)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -209,6 +228,54 @@ const clearPadding = (data: { row: any; column: any; rowIndex: number; columnInd
       .el-table {
         margin: 0;
         border-top: none;
+      }
+    }
+
+    // 让表格行有点击效果
+    .el-table__row {
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: var(--el-table-row-hover-bg-color) !important;
+      }
+    }
+
+    // 展开列的图标样式优化
+    .el-table__expand-column {
+      .cell {
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .el-table__expand-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        background-color: var(--el-color-primary-light-9);
+        color: var(--el-color-primary);
+        transition: all 0.3s;
+        font-size: 16px;
+        font-weight: bold;
+
+        &:hover {
+          background-color: var(--el-color-primary-light-7);
+          transform: scale(1.1);
+        }
+
+        &.el-table__expand-icon--expanded {
+          background-color: var(--el-color-primary);
+          color: white;
+
+          &:hover {
+            background-color: var(--el-color-primary-dark-2);
+          }
+        }
       }
     }
   }

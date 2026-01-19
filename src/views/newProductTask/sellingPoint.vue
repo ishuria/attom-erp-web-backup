@@ -128,7 +128,7 @@
         <div style="text-align: center">
           <el-button type="primary" @click="showSelectSKU">从其他SKU导入</el-button>
           <el-button type="danger" @click="goBack">返回</el-button>
-          <el-button type="success" @click="handleConfirmSave">确定完成</el-button>
+          <el-button type="success" @click="handleConfirmSave">完成并提交</el-button>
         </div>
       </div>
     </div>
