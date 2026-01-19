@@ -74,7 +74,7 @@
                 {{ row.keyWord }}
               </div>
               <!-- changeType 展示逻辑 -->
-              <div v-if="row.entityType !== '否词'" class="change-info">
+              <div v-if="row.keyWordType !== '取消否定投放' && row.afterValue !== '归档'" class="change-info">
                 <!-- 创建类型：蓝色加粗显示"创建" -->
                 <span v-if="row.changeType === '创建'" class="create-text">创建</span>
                 <!-- 状态类型：只展示变更后的值 -->
@@ -97,6 +97,11 @@
                   <el-icon v-else-if="row.beforeValue !== undefined && row.afterValue !== undefined" class="arrow-down">
                     <vab-icon icon="arrow-down-line" />
                   </el-icon>
+                </span>
+                <!-- 预算 -->
+                <span v-else-if="row.changeType === '预算'">
+                  <span v-if="row.afterValue === 'false'">预算用完</span>
+                  <span v-else-if="row.afterValue === 'true'">预算恢复</span>
                 </span>
                 <!-- 其他类型：正常显示 -->
                 <span v-else>{{ row.changeType }}: {{ row.beforeValue }} -> {{ row.afterValue }}</span>
