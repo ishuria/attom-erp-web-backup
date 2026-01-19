@@ -149,14 +149,15 @@
             :header-cell-style="{ textAlign: 'center' }"
             show-summary
             stripe
+            @sort-change="handleSortChange"
           >
-            <el-table-column label="姓名" min-width="100" prop="name" />
-            <el-table-column label="日期" min-width="80" prop="time">
+            <el-table-column label="姓名" min-width="100" prop="name" sortable="custom" />
+            <el-table-column label="日期" min-width="80" prop="time" sortable="custom">
               <template #default="{ row }">
                 {{ row.time ? row.time.split(' ')[0] : '' }}
               </template>
             </el-table-column>
-            <el-table-column label="工时(分钟)" min-width="70" prop="workerHouse" />
+            <el-table-column label="工时(分钟)" min-width="70" prop="workerHouse" sortable="custom" />
             <el-table-column label="餐补次数" min-width="60" prop="mealSupplement" />
             <template #empty>
               <el-empty class="vab-data-empty" />
@@ -361,6 +362,8 @@ const queryRightForm = reactive<any>({
   endTime: date.value[1],
   pageNo: 1,
   pageSize: 20,
+  orderByField: 'date',
+  orderDirection: 'descending',
 })
 const rightTotal = ref<number>(0)
 const rightList = ref<any>([])
@@ -437,6 +440,24 @@ const queryData = () => {
   queryForm.startTime = leftStartDate.value || ''
   queryForm.endTime = leftEndDate.value || ''
   fetchData()
+}
+
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  const { column, prop, order } = data
+  if (queryRightForm.orderByField === prop) {
+    if (!order) {
+      if (queryRightForm.orderDirection === 'asc') {
+        column.order = 'descending'
+      } else if (queryRightForm.orderDirection === 'desc') {
+        column.order = 'ascending'
+      }
+    }
+  } else {
+    column.order = 'descending'
+  }
+  queryRightForm.orderByField = prop
+  queryRightForm.orderDirection = column.order === 'ascending' ? 'asc' : 'desc'
+  queryRightData()
 }
 const queryRightData = () => {
   queryRightForm.pageNo = 1
