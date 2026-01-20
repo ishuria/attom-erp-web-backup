@@ -46,7 +46,11 @@
         >
           生成发货测试文件1
         </el-button>
-        <el-button type="primary" @click="shippingPlanChannelVisible = true">
+        <el-button
+          v-permissions="{ permission: [EncasementPermission.ENCASEMENT_PLAN_CHANNEL] }"
+          type="primary"
+          @click="shippingPlanChannelVisible = true"
+        >
           发货计划渠道
         </el-button>
 
@@ -677,8 +681,8 @@
       </template>
     </vab-dialog>
 
-    <!-- 发货计划渠道管理弹窗 -->
-    <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible" :data="shippingPlanChannelList" @save="handleSaveShippingPlanChannel" />
+    <!-- 发货计划渠道配置弹窗 -->
+    <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible"  />
   </div>
 </template>
 
@@ -742,14 +746,8 @@ const showQuantityCheck = () => {
 
 // 发货计划渠道管理
 const shippingPlanChannelVisible = ref<boolean>(false)
-const shippingPlanChannelList = ref<any[]>([])
 
-// 保存发货计划渠道
-const handleSaveShippingPlanChannel = (data: any[]) => {
-  shippingPlanChannelList.value = data
-  // TODO: 这里可以调用 API 保存数据到后端
-  console.log('保存发货计划渠道数据:', data)
-}
+
 // 订货总数查看展示
 const viewOrderVisible = ref<boolean>(false)
 const columns = ref<any>([])
@@ -1594,6 +1592,7 @@ const showShippingAmazon = async () => {
     shippingAmazonVisible.value = true
     shipmentAmazonForm.site = data.siteName
     shipmentAmazonForm.siteId = data.siteId
+    shipmentAmazonForm.channel = data.channelId
   }
 }
 // 展示发货沃尔玛
@@ -1626,6 +1625,7 @@ const showShippingWalmart = async () => {
     shippingWalmartVisible.value = true
     shipmentWalmartForm.site = data.siteName
     shipmentWalmartForm.siteId = data.siteId
+    shipmentWalmartForm.channel = data.channelId
   }
 }
 // 展示修改发货计划

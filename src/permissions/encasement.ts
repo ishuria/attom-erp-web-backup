@@ -29,6 +29,8 @@ class EncasementPermission {
   static readonly ENCASEMENT_UNLOCK = 'encasement:unlock'
   /** 生成发货亚马逊模板文件权限 */
   static readonly ENCASEMENT_GENERATE_AMAZON_TEMPLATE = 'encasement:generate:amazon:template'
+  /** 发货计划渠道配置权限 */
+  static readonly ENCASEMENT_PLAN_CHANNEL = 'encasement:plan:channel'
 
   /**
    * 操作列权限

@@ -1,5 +1,5 @@
 <template>
-  <vab-dialog v-model="visible" title="发货计划渠道管理" width="60%">
+  <vab-dialog v-model="visible" title="发货计划渠道配置" width="60%">
     <div class="shipping-plan-channel-container">
       <!-- 新增按钮 -->
       <div class="toolbar">
@@ -10,7 +10,7 @@
       </div>
 
       <!-- 数据表格 -->
-      <el-table border :data="tableData" style="width: 100%">
+      <el-table v-loading="loading" border :data="tableData" style="width: 100%">
         <el-table-column align="center" label="序号" type="index" width="60" />
         <el-table-column align="center" label="发货计划日期" min-width="150">
           <template #default="{ row }">
@@ -23,14 +23,14 @@
               type="date"
               value-format="YYYY-MM-DD"
             />
-            <span v-else>{{ row.planDate || '-' }}</span>
+            <span v-else>{{ row.planDate.split(' ')[0] || '-' }}</span>
           </template>
         </el-table-column>
         <el-table-column align="center" label="渠道" min-width="150">
           <template #default="{ row }">
-          <el-select v-model="row.channelId" >
-            <el-option v-for="item in forwarderOption" :key="item.id" :label="item.label" :value="item.id" />
-          </el-select>
+            <el-select v-model="row.channelId" clearable filterable placeholder="请选择货代渠道">
+              <el-option v-for="item in channelList" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
         </template>
         </el-table-column>
         <el-table-column align="center" label="备注" min-width="200">
@@ -64,9 +64,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { ref, watch } from 'vue'
-import { getChannelList } from '~/src/api/devlocal/encasement'
+import {
+  addShipmentPlanChannelConfig,
+  deleteShipmentPlanChannelConfig,
+  getChannelList,
+  queryShipmentPlanChannelConfigList,
+  updateShipmentPlanChannelConfig,
+} from '/@/api/devlocal/encasement'
 
 defineOptions({
   name: 'VabShippingPlanChannelDialog',
@@ -75,53 +79,71 @@ defineOptions({
 interface ShippingPlanChannel {
   id?: number
   planDate: string
-  channel: string
-  remark: string
+  channelId: number
+  remark?: string
   isEditing?: boolean
 }
 
-interface Props {
-  data?: ShippingPlanChannel[]
-}
 
-interface Emits {
-  (e: 'save', data: ShippingPlanChannel[]): void
-}
 
-const props = withDefaults(defineProps<Props>(), {
-  data: () => [],
-})
-
-const emit = defineEmits<Emits>()
 
 // 使用 defineModel 替代 modelValue props + emit
 const visible = defineModel<boolean>({ default: false })
 
 const tableData = ref<ShippingPlanChannel[]>([])
 const originalData = ref<Map<number, ShippingPlanChannel>>(new Map())
+const loading = ref(false)
 
-// 监听弹窗打开，复制数据
+// 监听弹窗打开，加载数据
 watch(visible, (newValue) => {
   if (newValue) {
-    // 弹窗打开时，复制数据
-    tableData.value = JSON.parse(JSON.stringify(props.data || []))
+    // 弹窗打开时，加载数据
+    fetchData()
+    fetchChannelOption()
   } else {
     // 关闭时清空编辑状态
     originalData.value.clear()
   }
 })
+
 // 货代渠道选项
-const forwarderOption = ref<any>([])
-// 获取货代渠道
+const channelList = ref<any>([])
+
+// 获取货代渠道列表
 const fetchChannelOption = async () => {
-  const { data } = await getChannelList()
-  forwarderOption.value = data
+  try {
+    const { data } = await getChannelList()
+    channelList.value = data
+  } catch (error) {
+    console.error('获取货代渠道列表失败:', error)
+  }
+}
+
+// 加载数据
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const { data } = await queryShipmentPlanChannelConfigList()
+    // 转换后端数据格式为前端格式
+    tableData.value = data.map((item: any) => ({
+      id: item.id,
+      planDate: item.shipmentPlanDate,
+      channelId: item.channelId,
+      remark: item.remark || '',
+      isEditing: false,
+    }))
+  } catch (error) {
+    console.error('加载发货计划渠道配置失败:', error)
+    $baseMessage('加载数据失败', 'error')
+  } finally {
+    loading.value = false
+  }
 }
 // 新增
 const handleAdd = () => {
   const newRow: ShippingPlanChannel = {
     planDate: '',
-    channel: '',
+    channelId: 0,
     remark: '',
     isEditing: true,
   }
@@ -138,23 +160,47 @@ const handleEdit = (row: ShippingPlanChannel, index: number) => {
 }
 
 // 保存
-const handleSave = (row: ShippingPlanChannel, index: number) => {
+const handleSave = async (row: ShippingPlanChannel, index: number) => {
   // 验证必填字段
   if (!row.planDate) {
-    ElMessage.warning('请选择发货计划日期')
+    $baseMessage('请选择发货计划日期', 'warning')
     return
   }
-  if (!row.channel) {
-    ElMessage.warning('请输入渠道')
+  if (!row.channelId) {
+    $baseMessage('请选择货代渠道', 'warning')
     return
   }
 
-  row.isEditing = false
-  originalData.value.delete(index)
-  ElMessage.success('保存成功')
-  
-  // 触发保存事件
-  emit('save', tableData.value)
+  try {
+    if (row.id) {
+      // 更新
+      await updateShipmentPlanChannelConfig({
+        id: row.id,
+        shipmentPlanDate: row.planDate,
+        channelId: row.channelId,
+        remark: row.remark,
+      })
+      $baseMessage('修改成功', 'success')
+    } else {
+      // 新增
+      await addShipmentPlanChannelConfig({
+        shipmentPlanDate: row.planDate,
+        channelId: row.channelId,
+        remark: row.remark,
+      })
+      $baseMessage('新增成功', 'success')
+    }
+    
+    row.isEditing = false
+    originalData.value.delete(index)
+    
+    // 刷新数据
+    await fetchData()
+    
+  } catch (error) {
+    console.error('保存失败:', error)
+    $baseMessage('保存失败', 'error')
+  }
 }
 
 // 取消编辑
@@ -175,38 +221,39 @@ const handleCancelEdit = (row: ShippingPlanChannel, index: number) => {
 
 // 删除
 const handleDelete = async (index: number) => {
-  try {
-    await ElMessageBox.confirm('确定要删除这条记录吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
+  const row = tableData.value[index]
+  
+  // 如果是新增未保存的行，直接删除
+  if (!row.id) {
     tableData.value.splice(index, 1)
-    ElMessage.success('删除成功')
-    
-    // 触发保存事件
-    emit('save', tableData.value)
-  } catch {
-    // 用户取消删除
+    return
   }
-}
+  
+    $baseConfirm('确定要删除这条记录吗？', null, async () => {
+      await deleteShipmentPlanChannelConfig(row.id!)
+      $baseMessage('删除成功', 'success')
+      await fetchData()
+   
+    })
+} 
 
 // 关闭弹窗
 const handleClose = () => {
   // 检查是否有未保存的编辑
   const hasEditing = tableData.value.some((item) => item.isEditing)
   if (hasEditing) {
-    ElMessageBox.confirm('有未保存的修改，确定要关闭吗？', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
-      .then(() => {
+    // 第3个参数是确认回调，第4个参数是取消回调
+    $baseConfirm(
+      '有未保存的修改，确定要关闭吗？',
+      '提示',
+      () => {
+        // 确认：关闭弹窗
         visible.value = false
-      })
-      .catch(() => {
-        // 用户取消关闭
-      })
+      },
+      () => {
+        // 取消：什么都不做（只关闭确认对话框）
+      }
+    )
   } else {
     visible.value = false
   }

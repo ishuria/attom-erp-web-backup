@@ -12,6 +12,8 @@
         <el-table-column type="selection" />
         <el-table-column label="站点" prop="siteName" />
         <el-table-column label="发货计划" prop="shippingPlanDate" />
+        <el-table-column align="left" label="渠道" prop="channelName" :width="flexColumnWidth(list, '渠道', 'channelName')" />
+        <el-table-column align="left" label="备注" prop="channelRemark" :width="flexColumnWidth(list, '备注', 'channelRemark')" />
         <el-table-column label="产品数量" prop="productCount" />
         <el-table-column label="重量" prop="weight" />
         <el-table-column label="体积" prop="volume" />
@@ -26,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import { getOperationOrderShippingInspection, updateOperationOrderShipmentQuantity } from '~/src/api/devlocal/productOrdering'
+import { getOperationOrderShippingInspection, updateOperationOrderShipmentQuantity } from '/@/api/devlocal/productOrdering'
+import { flexColumnWidth } from '/@/utils/tableColum'
 
 defineOptions({
   name: 'VabShipmentQuantityInspection',

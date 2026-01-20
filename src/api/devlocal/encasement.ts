@@ -643,7 +643,9 @@ export const printBarcodeEncasementSuccess = (data: any) => {
  * @param data
  * @returns
  */
-export const checkEncasementShipment = (data: { encasementIds: string }): Promise<{ data: { siteId: number; siteName: string } }> => {
+export const checkEncasementShipment = (data: {
+  encasementIds: string
+}): Promise<{ data: { siteId: number; siteName: string; channelId: number } }> => {
   return request({
     url: `${BASE_API}/encasement/shipment/check`,
     method: 'post',
@@ -770,5 +772,48 @@ export const checkEncasementNo = (params: { boxNo: number }): Promise<IBoxNumber
     url: `${BASE_API}/encasement/check/boxNo`,
     method: 'post',
     params,
+  })
+}
+
+/**
+ * 发货计划渠道配置-查询
+ */
+export const queryShipmentPlanChannelConfigList = () => {
+  return request({
+    url: `${BASE_API}/encasement/shipment/plan/channel/config/list`,
+    method: 'post',
+  })
+}
+
+/**
+ * 发货计划渠道配置-新增
+ */
+export const addShipmentPlanChannelConfig = (data: { shipmentPlanDate: string; channelId: number; remark?: string }) => {
+  return request({
+    url: `${BASE_API}/encasement/shipment/plan/channel/config/add`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 发货计划渠道配置-修改
+ */
+export const updateShipmentPlanChannelConfig = (data: { id: number; shipmentPlanDate?: string; channelId?: number; remark?: string }) => {
+  return request({
+    url: `${BASE_API}/encasement/shipment/plan/channel/config/update`,
+    method: 'post',
+    data,
+  })
+}
+
+/**
+ * 发货计划渠道配置-删除
+ */
+export const deleteShipmentPlanChannelConfig = (id: number) => {
+  return request({
+    url: `${BASE_API}/encasement/shipment/plan/channel/config/delete`,
+    method: 'post',
+    params: { id },
   })
 }
