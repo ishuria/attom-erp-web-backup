@@ -1118,3 +1118,14 @@ export const updateTaxRefundInvoiceMatchFlag = (): Promise<IBooleanRes> => {
     method: 'post',
   })
 }
+
+/**
+ * 发票路径导入
+ */
+export const dealTaxRefundInvoicePath = (params: { path: string }): Promise<{ data: boolean }> => {
+  return request({
+    url: `${BASE_API}/taxRefund/invoice/deal`,
+    method: 'post',
+    params,
+  })
+}

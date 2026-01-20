@@ -3,6 +3,7 @@
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
       <vab-query-form>
         <vab-query-form-left-panel>
+          <el-button type="primary" @click="showPathImport">发票路径导入</el-button>
           <el-button type="primary" @click="showUploadInvoice('import')">发票导入</el-button>
           <el-button type="primary" @click="showUploadInvoice('repeat')">多页发票导入</el-button>
           <h3>单价匹配勾选</h3>
@@ -278,6 +279,19 @@
       </div>
     </template>
   </vab-dialog>
+  <!-- 发票路径导入 -->
+  <vab-dialog v-model="pathImportVisible" title="发票路径导入" width="20%" @close="pathImportForm.invoicePath = ''">
+    <el-form ref="pathImportFormRef" label-width="100px" :model="pathImportForm" :rules="pathImportRules">
+      <el-form-item label="发票路径" prop="invoicePath">
+        <el-input v-model.trim="pathImportForm.invoicePath" placeholder="请输入发票路径" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div style="text-align: right">
+        <el-button :loading="pathImportLoading" type="primary" @click="handlePathImport">确定</el-button>
+      </div>
+    </template>
+  </vab-dialog>
   <!-- 匹配 -->
   <vab-dialog v-model="matchVisible" :draggable="false" style="width: fit-content; max-height: 90vh" title="匹配" @close="matchStatus = -1">
     <div style="max-width: fit-content; margin: 0 auto; width: 100%; display: flex; flex-direction: column; height: 100%">
@@ -414,6 +428,7 @@ import { isEqual } from 'lodash-es'
 import type { CSSProperties } from 'vue'
 import {
   cleanTaxRefundInvoice,
+  dealTaxRefundInvoicePath,
   deleteTaxRefundInvoice,
   finishTaxRefundInvoice,
   finishTaxRefundInvoiceRepeat,
@@ -422,11 +437,11 @@ import {
   getTaxRefundInvoiceMatch,
   submitConfirmTaxRefundInvoiceMatch,
   submitTaxRefundInvoiceMatch,
+  taxRefundInvoiceMatchFlag,
   updateTaxRefundInvoice,
   updateTaxRefundInvoiceDetail,
+  updateTaxRefundInvoiceMatchFlag,
   uploadTaxRefund,
-  taxRefundInvoiceMatchFlag,
-  updateTaxRefundInvoiceMatchFlag
 } from '/@/api/devlocal/customsDeclarationAndTaxRefund'
 import VabPdf from '/@/plugins/VabPdf'
 import type {
@@ -474,6 +489,15 @@ const closeInvoiceMatching = () => {
 
 // 上传发票可见
 const uploadInvoiceVisible = ref<boolean>(false)
+
+// 发票路径导入可见
+const pathImportVisible = ref<boolean>(false)
+const pathImportForm = reactive<{ invoicePath: string }>({ invoicePath: '' })
+const pathImportLoading = ref<boolean>(false)
+const pathImportFormRef = ref()
+const pathImportRules = {
+  invoicePath: [{ required: true, message: '请输入发票路径', trigger: 'blur' }],
+}
 
 const fileList = ref<any[]>([])
 
@@ -610,6 +634,39 @@ const showUploadInvoice = (type: string) => {
   uploadType.value = type
   fileList.value = []
   uploadInvoiceVisible.value = true
+}
+const showPathImport = () => {
+  pathImportForm.invoicePath = ''
+  pathImportFormRef.value?.clearValidate()
+  pathImportVisible.value = true
+}
+
+const handlePathImport = async () => {
+  await pathImportFormRef.value?.validate(async (valid: boolean) => {
+    if (valid) {
+      pathImportLoading.value = true
+      try {
+        const { data } = await dealTaxRefundInvoicePath({ path: pathImportForm.invoicePath })
+        if (data) {
+          ElMessageBox({
+            title: '提示',
+            confirmButtonText: '确定',
+            showClose: false,
+            showCancelButton: false,
+            type: 'info',
+            message: '后台发票导入中，导入结果已邮件形式通知！请勿重复导入！',
+          })
+          pathImportVisible.value = false
+          await fetchData()
+        }
+      } catch {
+        $baseMessage('发票路径导入失败', 'error')
+      } finally {
+        pathImportLoading.value = false
+        pathImportForm.invoicePath = ''
+      }
+    }
+  })
 }
 const finishLoading = ref<boolean>(false)
 // 完成发票导入
@@ -1318,9 +1375,9 @@ const getTaxRefundInvoiceFlag = async () => {
 }
 
 const updateTaxRefundMatchFlag = async () => {
-  const { data } =  await updateTaxRefundInvoiceMatchFlag();
-  if (data){
-    $baseMessage("修改成功！","success")
+  const { data } = await updateTaxRefundInvoiceMatchFlag()
+  if (data) {
+    $baseMessage('修改成功！', 'success')
   }
 }
 
