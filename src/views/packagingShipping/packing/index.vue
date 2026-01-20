@@ -46,6 +46,9 @@
         >
           生成发货测试文件1
         </el-button>
+        <el-button type="primary" @click="shippingPlanChannelVisible = true">
+          发货计划渠道
+        </el-button>
 
         <!-- <el-button type="success">装箱检查</el-button> -->
         <el-select
@@ -673,6 +676,9 @@
         </div>
       </template>
     </vab-dialog>
+
+    <!-- 发货计划渠道管理弹窗 -->
+    <vab-shipping-plan-channel-dialog v-model="shippingPlanChannelVisible" :data="shippingPlanChannelList" @save="handleSaveShippingPlanChannel" />
   </div>
 </template>
 
@@ -732,6 +738,17 @@ const quantityCheckVisible = ref<boolean>(false)
 // 打开发货数检查
 const showQuantityCheck = () => {
   quantityCheckVisible.value = true
+}
+
+// 发货计划渠道管理
+const shippingPlanChannelVisible = ref<boolean>(false)
+const shippingPlanChannelList = ref<any[]>([])
+
+// 保存发货计划渠道
+const handleSaveShippingPlanChannel = (data: any[]) => {
+  shippingPlanChannelList.value = data
+  // TODO: 这里可以调用 API 保存数据到后端
+  console.log('保存发货计划渠道数据:', data)
 }
 // 订货总数查看展示
 const viewOrderVisible = ref<boolean>(false)

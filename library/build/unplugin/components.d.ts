@@ -326,6 +326,7 @@ declare module 'vue' {
     VabSearchTermPerformance: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabSearchTermPerformance.vue')['default']
     VabShared: typeof import('./../../../src/plugins/VabShared/index.vue')['default']
     VabShipmentQuantityInspection: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabShipmentQuantityInspection.vue')['default']
+    VabShippingPlanChannelDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabShippingPlanChannelDialog.vue')['default']
     VabSideBar: typeof import('./../../components/VabSideBar/index.vue')['default']
     VabSiteOperationUserSelect: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteOperationUserSelect.vue')['default']
     VabSiteQuantityTable: typeof import('./../../../src/views/newProductDevelopment/vabAutoComponents/VabSiteQuantityTable.vue')['default']
