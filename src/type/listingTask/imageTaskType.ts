@@ -414,3 +414,12 @@ export interface IAllocateArtDesignTaskReq {
   taskId: number
   skuIds: number[]
 }
+
+export interface IGetArtDesignTaskUserListBySku {
+  id: number
+  label: string
+  /**
+   * true 不可选中 false 可选中
+   */
+  status: boolean
+}

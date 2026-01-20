@@ -974,6 +974,7 @@
               placeholder="点击输入和搜索"
               remote
               :remote-method="remoteSKUMethod"
+              @change="handleFetchArtDesignUserList"
             >
               <el-option v-for="item in skuOptions" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
@@ -1018,7 +1019,7 @@
         </el-form-item>
         <el-form-item label="美工" prop="artDesign">
           <el-select v-model="postTaskForm.artDesign" clearable collapse-tags collapse-tags-tooltip multiple placeholder="请选择人员">
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserList" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="要求" prop="remark">
@@ -1069,7 +1070,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="建模">
@@ -1082,7 +1083,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="渲染">
@@ -1095,7 +1096,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="A+">
@@ -1108,7 +1109,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showOldProductTaskFields" label="视频">
@@ -1121,7 +1122,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <!-- 设计任务相关字段：说明书/包装、配色设计、产品平面设计 -->
@@ -1135,7 +1136,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showDesignTaskFields" label="配色设计">
@@ -1148,7 +1149,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="showDesignTaskFields" label="产品平面设计">
@@ -1161,7 +1162,7 @@
             multiple
             placeholder="请选择人员"
           >
-            <el-option v-for="item in userList" :key="item.id" :label="item.label" :value="item.id" />
+            <el-option v-for="item in artDesignUserListByIds" :key="item.id" :disabled="item.status" :label="item.label" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -1259,6 +1260,8 @@ import {
   getArtDesignTaskList,
   getArtDesignTaskMargin,
   getArtDesignTaskUserList,
+  getArtDesignTaskUserListByIds,
+  getArtDesignTaskUserListBySku,
   queryArtDesignTaskDistribution,
   updateArtDesignDemandAddress,
   updateArtDesignTaskDistribute,
@@ -1280,6 +1283,7 @@ import type {
   IGetArtDesignSelectionReasonsList,
   IGetArtDesignTaskList,
   IGetArtDesignTaskListReq,
+  IGetArtDesignTaskUserListBySku,
 } from '/@/type/listingTask/imageTaskType'
 import { handleClip } from '/@/utils/clipboard'
 import { formatDate } from '/@/utils/dateUtils'
@@ -1547,6 +1551,11 @@ const remoteSKUMethod = async (query: string) => {
   } else {
     skuOptions.value = []
   }
+}
+const artDesignUserList = ref<IGetArtDesignTaskUserListBySku[]>([])
+const handleFetchArtDesignUserList = async (sku: string) => {
+  const { data } = await getArtDesignTaskUserListBySku({ sku: postTaskForm.sku })
+  artDesignUserList.value = data
 }
 const postTaskVisible = ref<boolean>(false)
 const postTaskFormRef = ref<FormInstance>()
@@ -1856,29 +1865,49 @@ const showMarginSetting = async () => {
   Object.assign(marginSettingForm, data)
   marginSettingVisible.value = true
 }
+const artDesignUserListByIds = ref<IGetArtDesignTaskUserListBySku[]>([])
 const showAssignTask = async () => {
   if (selectedRows.value.length === 0) {
     $baseMessage('您未选择任何行！', 'warning')
     return
   }
-  if (selectedRows.value.length > 1 && activeName.value === 1) {
-    $baseMessage('您只能选择一行！', 'warning')
-    return
+
+  // 获取选中的所有任务 ID
+  const selectedIds = selectedRows.value.map((row) => row.id!)
+
+  // 调用接口获取人员下拉菜单
+  const { data: userListData } = await getArtDesignTaskUserListByIds({ ids: selectedIds })
+  if (userListData) {
+    artDesignUserListByIds.value = userListData
   }
-  if (activeName.value === 1 || activeName.value === 3) {
-    // console.log(selectedRows.value)
-    const { data } = await queryArtDesignTaskDistribution({ taskId: selectedRows.value[0].id! })
-    if (data) {
-      assignTaskForm.baseImageUrlPerson = data.baseImageUrlPersons
-      assignTaskForm.moldingPerson = data.moldingPersons
-      assignTaskForm.aPlus = data.aPlus
-      assignTaskForm.videoPerson = data.videoPersons
-      assignTaskForm.instructionPerson = data.instructionPersons
-      assignTaskForm.renderingPerson = data.renderingPersons
-      assignTaskForm.colorDesignPerson = data.colorDesignPersons
-      assignTaskForm.productPlaneDesignPerson = data.productPlaneDesignPersons
+
+  // 如果只选择了一行，获取初始化值
+  if (selectedRows.value.length === 1) {
+    if (activeName.value === 1 || activeName.value === 3) {
+      const { data } = await queryArtDesignTaskDistribution({ taskId: selectedRows.value[0].id! })
+      if (data) {
+        assignTaskForm.baseImageUrlPerson = data.baseImageUrlPersons
+        assignTaskForm.moldingPerson = data.moldingPersons
+        assignTaskForm.aPlus = data.aPlus
+        assignTaskForm.videoPerson = data.videoPersons
+        assignTaskForm.instructionPerson = data.instructionPersons
+        assignTaskForm.renderingPerson = data.renderingPersons
+        assignTaskForm.colorDesignPerson = data.colorDesignPersons
+        assignTaskForm.productPlaneDesignPerson = data.productPlaneDesignPersons
+      }
     }
+  } else {
+    // 如果选择了多行，初始化值都为空
+    assignTaskForm.baseImageUrlPerson = []
+    assignTaskForm.moldingPerson = []
+    assignTaskForm.aPlus = []
+    assignTaskForm.videoPerson = []
+    assignTaskForm.instructionPerson = []
+    assignTaskForm.renderingPerson = []
+    assignTaskForm.colorDesignPerson = []
+    assignTaskForm.productPlaneDesignPerson = []
   }
+
   assignTaskVisible.value = true
 }
 // const handleConfirmClaimMission = async () => {
@@ -2034,6 +2063,7 @@ const fetchSiteList = async () => {
   const { data } = await getSeasonalCoefficientSiteList()
   siteList.value = data
 }
+
 const fetchUserList = async () => {
   const { data } = await getArtDesignTaskUserList()
   userList.value = data

@@ -14,6 +14,7 @@ import type {
   IGetArtDesignTaskListRes,
   IGetArtDesignTaskMarginRes,
   IGetArtDesignTaskStatisticsRes,
+  IGetArtDesignTaskUserListBySku,
   IGetCopywritingRes,
   IGetSellingPoint,
   IGetSellingPointRes,
@@ -134,6 +135,30 @@ export function getArtDesignTaskUserList() {
   return request({
     url: `${BASE_API}/artdesign/task/user/list`,
     method: 'get',
+  })
+}
+/**
+ * 根据sku查询美工人员列表
+ * @param data { sku: string }
+ * @returns
+ */
+export function getArtDesignTaskUserListBySku(data: { sku: string }): Promise<{ data: IGetArtDesignTaskUserListBySku[] }> {
+  return request({
+    url: `${BASE_API}/artdesign/user/list`,
+    method: 'post',
+    data,
+  })
+}
+/**
+ * 根据ids查询美工人员列表
+ * @param data { ids: number[] }
+ * @returns
+ */
+export function getArtDesignTaskUserListByIds(data: { ids: number[] }): Promise<{ data: IGetArtDesignTaskUserListBySku[] }> {
+  return request({
+    url: `${BASE_API}/artdesign/user/list/more`,
+    method: 'post',
+    data,
   })
 }
 /**
