@@ -150,6 +150,11 @@
           </el-select>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="需拍照" min-width="20">
+        <template #default="{ row }">
+          <el-checkbox v-model="row.requirePhoto" :false-value="0" :true-value="1" @change="handleCheckTypeUpdate(row)" />
+        </template>
+      </el-table-column>
       <el-table-column label="打包注意事项" min-width="200" prop="packingPrecautions">
         <template #default="{ row }">
           <div class="none">
@@ -228,6 +233,7 @@ const handleCheckTypeUpdate = async (row: IreviewStepNo4ListQualityInspection) =
     qualityInspectionId: row.qualityInspectionId!,
     variant: row.variant!,
     variantId: row.variantId!,
+    requirePhoto: row.requirePhoto!
   })
   fetchQualityInspectionData()
 }
@@ -528,5 +534,8 @@ onMounted(() => {
   min-height: 35px;
   max-height: 35px;
   line-height: 35px;
+}
+.el-checkbox {
+  transform: scale(1.2);
 }
 </style>

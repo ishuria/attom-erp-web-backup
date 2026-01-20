@@ -511,6 +511,7 @@ export interface IreviewStepNo4ListQualityInspection {
   qualityInspectionId?: number
   variant?: string
   variantId?: number
+  requirePhoto?: number
 }
 // 新品订货流程-完善新供应商信息与打包质检清单-删除
 export interface IqualityInspectionId {
@@ -528,6 +529,7 @@ export interface IreviewStepNo4UpdateQualityInspection {
   qualityInspectionId: number
   variant: string
   variantId: number
+  requirePhoto?: number
 }
 // 新品订货流程-完善sku信息 -变体信息修改
 export interface IreviewStepNo5SkuInfoPerfect {
