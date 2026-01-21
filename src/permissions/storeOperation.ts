@@ -7,6 +7,8 @@ class StoreOperationPermission {
   static readonly KEY_PRODUCTS_PAUSE = 'storeOperation:keyProducts:pause'
   /** 关键产品-默认参数设置权限 */
   static readonly KEY_PRODUCTS_DEFAULT_PARAMS = 'storeOperation:keyProducts:defaultParams'
+  /** 产品分配-批量老品认领 */
+  static readonly PRODUCT_DISTRIBUTION_BATCH_CLAIM = 'storeOperation:productDistribution:batchClaim'
 }
 
 export default StoreOperationPermission

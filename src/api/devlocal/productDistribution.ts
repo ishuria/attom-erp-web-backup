@@ -8,7 +8,8 @@ import type {
   IGetDistributionProductListReq,
   IGetDistributionProductListRes,
   IUpdateDistributionAsinUserReq,
-  IUpdateDistributionUserType
+  IUpdateDistributionUserType,
+  IUpdateOldStatusReq
 } from '/@/type/storeOperation/productDistributionType'
 
 
@@ -102,11 +103,21 @@ export function updateDistributionUserType(data: IUpdateDistributionUserType): P
 
 /**
  * 产品分配-查询全部运营人对应的运营分类列表
- * @returns 
+ * @returns
  */
 export function getDistributionUserType() {
   return request({
     url: `${BASE_API}/distribution/option/user/all/list`,
     method: 'get',
+  })
+}
+/**
+ * @description 批量老品认领
+ */
+export function updateOldStatus(data: IUpdateOldStatusReq): Promise<{ data: boolean }> {
+  return request({
+    url: `${BASE_API}/distribution/oldStatus/update`,
+    method: 'post',
+    data
   })
 }

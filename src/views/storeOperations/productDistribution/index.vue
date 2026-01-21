@@ -28,6 +28,13 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="showAutoClaimSettings">自动分站点认领设定</el-button>
+            <el-button
+              v-permissions="{ permission: [StoreOperationPermission.PRODUCT_DISTRIBUTION_BATCH_CLAIM] }"
+              type="primary"
+              @click="handleBatchClaim"
+            >
+              批量老品认领
+            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -58,7 +65,9 @@
       :row-class-name="tableRowClassName"
       stripe
       @row-click="handleRowClick"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" />
       <el-table-column label="图片" prop="skuImgUrl" width="75">
         <template #default="{ row }">
           <el-image :src="row.skuImgUrl" style="display: block; width: 75px; height: 75px" @click="imagePreviewShow(row.skuImgUrl)">
@@ -84,6 +93,11 @@
       <el-table-column label="入库总数" min-width="100" prop="inboundStorageTotal" />
       <el-table-column label="头部产品#" min-width="100" prop="headerCount" />
       <el-table-column label="同赛道ASIN" min-width="200" prop="benchmarkAsin" />
+      <el-table-column align="center" label="老品认领" min-width="100">
+        <template #default="{ row }">
+          <vab-icon v-if="row.oldStatus === 1" icon="checkbox-circle-fill" style="color: var(--el-color-success); font-size: 23px" />
+        </template>
+      </el-table-column>
       <el-table-column label="产品经理" min-width="130" prop="productManagerName" />
       <el-table-column label="运营" min-width="110" prop="userId">
         <template #default="{ row }">
@@ -129,6 +143,27 @@
       </el-table>
     </vab-dialog>
     <!-- 新增 -->
+    <!-- 批量老品认领 -->
+    <vab-dialog v-model="batchClaimVisible" title="批量老品认领" width="15%" @close="handleCloseBatchClaim">
+      <el-form
+        ref="batchClaimFormRef"
+        label-position="right"
+        label-width="auto"
+        :model="batchClaimForm"
+        :rules="batchClaimFormRules"
+        style="margin: 0"
+      >
+        <el-form-item label="认领类型" prop="claimType">
+          <el-select v-model="batchClaimForm.claimType" placeholder="请选择认领类型">
+            <el-option label="老品认领" :value="1" />
+            <el-option label="老品不认领" :value="0" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="handleConfirmBatchClaim">确定</el-button>
+      </template>
+    </vab-dialog>
     <vab-dialog v-model="addVisible" title="新增" width="20%" @close="handleCloseAdd">
       <el-form ref="addFormRef" label-position="right" label-width="auto" :model="addForm" :rules="addFormRules" style="margin: 0">
         <el-form-item label="姓名" prop="userId">
@@ -165,7 +200,9 @@ import {
   getDistributionUserTypeList,
   updateDistributionAsinUser,
   updateDistributionUserType,
+  updateOldStatus,
 } from '/@/api/devlocal/productDistribution'
+import StoreOperationPermission from '/@/permissions/storeOperation'
 import type { IGetDistributionList, IGetDistributionProductList } from '/@/type/storeOperation/productDistributionType'
 import { flexColumnWidth } from '/@/utils/tableColum'
 
@@ -174,14 +211,46 @@ defineOptions({
 })
 
 const selectedRowIndex = ref<number>(-1)
+const selectedRows = ref<IGetDistributionProductList[]>([])
 const handleRowClick = (row: any) => {
   selectedRowIndex.value = row.id
+}
+const handleSelectionChange = (rows: IGetDistributionProductList[]) => {
+  selectedRows.value = rows
 }
 const tableRowClassName = ({ row, rowIndex }: { row: any; rowIndex: number }) => {
   if (row.id === selectedRowIndex.value) {
     return 'select-row'
   }
   return ''
+}
+const handleBatchClaim = () => {
+  if (selectedRows.value.length === 0) {
+    $baseMessage('请先选择需要操作的数据！', 'warning')
+    return
+  }
+  batchClaimVisible.value = true
+}
+const handleConfirmBatchClaim = async () => {
+  batchClaimFormRef.value?.validate(async (isValid: boolean) => {
+    if (isValid) {
+      try {
+        const { data } = await updateOldStatus({
+          ids: selectedRows.value.map((item) => item.id),
+          oldStatus: batchClaimForm.claimType!,
+        })
+        if (data) {
+          $baseMessage('批量老品认领成功！', 'success')
+          handleCloseBatchClaim()
+          fetchData()
+        }
+      } catch {}
+    }
+  })
+}
+const handleCloseBatchClaim = () => {
+  batchClaimFormRef.value?.resetFields()
+  batchClaimVisible.value = false
 }
 
 type IQueryForm = {
@@ -208,6 +277,15 @@ const userList = ref<{ id: number; label: string }[]>([])
 const addVisible = ref<boolean>(false)
 // 自动认领设定
 const autoClaimSettingsVisible = ref<boolean>(false)
+// 批量老品认领
+const batchClaimVisible = ref<boolean>(false)
+const batchClaimForm = reactive({
+  claimType: undefined as number | undefined,
+})
+const batchClaimFormRef = ref<FormInstance>()
+const batchClaimFormRules = reactive<FormRules>({
+  claimType: [{ required: true, message: '请选择认领类型', trigger: 'change' }],
+})
 const addForm = reactive<any>({})
 const addFormRef = ref<FormInstance>()
 const addFormRules = reactive<FormRules>({

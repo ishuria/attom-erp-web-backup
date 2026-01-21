@@ -88,3 +88,7 @@ export interface IUpdateDistributionUserType {
   id: number
   typeId: number
 }
+export interface IUpdateOldStatusReq {
+  ids: number[]
+  oldStatus: number
+}
