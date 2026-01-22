@@ -108,9 +108,9 @@
             <div v-if="row.isUploadImages === 1" style="display: flex; gap: 8px; align-items: center">
               <div v-for="(image, index) in row.images" :key="index" class="image-cell">
                 <div class="image-preview">
-                  <img :alt="image.id" :src="image.imgUrl" />
+                  <img :alt="String(image.id)" :src="image.imgUrl" />
                   <div class="image-actions">
-                    <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
+                    <el-icon @click="showPreviewImage(row.images, Number(index))"><zoom-in /></el-icon>
                     <el-icon @click="handleImageRemove(image, row)"><delete /></el-icon>
                   </div>
                 </div>
@@ -159,7 +159,24 @@
     @close="imagePreviewClose"
   />
   <!-- 上传图片 -->
-  <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
+  <vab-dialog v-model="imageUploadVisible" title="上传图片" width="30%">
+    <el-upload
+      ref="uploadRef"
+      :auto-upload="false"
+      :file-list="fileList"
+      list-type="picture-card"
+      multiple
+      :on-change="handleFileChange"
+      :on-preview="handlePictureCardPreview"
+      :on-remove="handleRemove"
+    >
+      <el-icon><plus /></el-icon>
+    </el-upload>
+    <template #footer>
+      <el-button @click="imageUploadVisible = false">取消</el-button>
+      <el-button type="primary" @click="handleUploadConfirm">确定上传</el-button>
+    </template>
+  </vab-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -232,6 +249,8 @@ const imageUploadVisible = ref(false)
 const id = ref<number>(0)
 let _row: any
 const currentPreviewIndex = ref<number>(0)
+const uploadRef = ref()
+const fileList = ref<any[]>([])
 const getImageColumnWidth = (): number => {
   const imageWidth = 75 // 每张图片宽度
   let maxWidth = 0
@@ -248,6 +267,7 @@ const getImageColumnWidth = (): number => {
 const showUploadDialog = (row: any) => {
   id.value = row.id
   _row = row
+  fileList.value = []
   imageUploadVisible.value = true
 }
 const showPreviewImage = (images: any[], currentIndex: number) => {
@@ -276,22 +296,67 @@ const qualityInspectionForm = reactive({
   packageWeight: '',
 })
 
-const uploadImage = async (file: File) => {
-  try {
-    let uploadImgForm = new FormData() // 每次上传前重置 FormData
-    uploadImgForm.append('file', file)
-    uploadImgForm.append('reportDetailId', String(id.value))
+// 文件选择变化
+const handleFileChange = (file: any, fileListParam: any[]) => {
+  fileList.value = fileListParam
+}
 
-    const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
-    if (data) {
-      _row.images.push(data)
-      $baseMessage('图片上传成功！', 'success')
+// 预览图片
+const handlePictureCardPreview = (file: any) => {
+  imagePreviewList.value = [file.url]
+  imagePreviewVisible.value = true
+  currentPreviewIndex.value = 0
+}
+
+// 移除文件
+const handleRemove = (file: any, fileListParam: any[]) => {
+  fileList.value = fileListParam
+}
+
+// 批量上传图片
+const handleUploadConfirm = async () => {
+  if (fileList.value.length === 0) {
+    $baseMessage('请选择要上传的图片！', 'warning')
+    return
+  }
+
+  try {
+    let successCount = 0
+    let failCount = 0
+
+    // 批量上传所有图片
+    for (const fileItem of fileList.value) {
+      try {
+        let uploadImgForm = new FormData()
+        uploadImgForm.append('file', fileItem.raw)
+        uploadImgForm.append('reportDetailId', String(id.value))
+
+        const { data } = await uploadPackageInspectionItemImage(uploadImgForm)
+        if (data) {
+          _row.images.push(data)
+          successCount++
+        } else {
+          failCount++
+        }
+      } catch (error) {
+        console.error('上传失败:', error)
+        failCount++
+      }
+    }
+
+    // 显示上传结果
+    if (successCount > 0 && failCount === 0) {
+      $baseMessage(`成功上传 ${successCount} 张图片！`, 'success')
       imageUploadVisible.value = false
+      fileList.value = []
+    } else if (successCount > 0 && failCount > 0) {
+      $baseMessage(`成功上传 ${successCount} 张，失败 ${failCount} 张！`, 'warning')
     } else {
       $baseMessage('图片上传失败！', 'error')
     }
   } catch (error) {
     console.error(error)
+    $baseMessage('图片上传失败！', 'error')
   }
 }
 const handleImageRemove = async (image: any, row: any) => {

@@ -288,6 +288,14 @@
         :rules="inspectionResultsFormRules"
         style="margin: 20px 20px 0 20px"
       >
+        <!-- 一条龙拍摄按钮 -->
+        <div style="margin-bottom: 20px">
+          <el-button type="success" @click="startOneStopPhotoSession">
+            <vab-icon icon="camera-line" />
+            一条龙质检图片拍摄
+          </el-button>
+        </div>
+        
         <el-form-item label="基础图片" style="margin-bottom: 50px" validate-position="right">
           <template #label>
             基础图片
@@ -378,6 +386,26 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item label="其他图片">
+          <div style="display: flex; flex-wrap: wrap">
+            <!-- 图片预览部分 -->
+            <div v-for="(item, index) in otherImgList" :key="index" class="image-cell" style="margin-right: 20px">
+              <div v-if="item.imgUrl" class="image-preview">
+                <img alt="" :src="item.imgUrl" />
+                <div class="image-actions">
+                  <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+                  <el-icon @click="handleImageRemove(item.id, index, 3)"><delete /></el-icon>
+                </div>
+              </div>
+            </div>
+            <!-- 上传按钮部分 - 始终显示 -->
+            <div class="image-cell">
+              <div class="upload-placeholder" @click="showUploadDialog(3, 0)">
+                <el-icon><plus /></el-icon>
+              </div>
+            </div>
+          </div>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <template #label>
             <span style="margin-right: 6px">备注</span>
@@ -437,6 +465,16 @@
     <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
     <!-- 上传图片 -->
     <vab-image-upload v-model="imageUploadVisible" @image-upload="uploadImage" />
+    <!-- 一条龙质检图片拍摄 -->
+    <vab-one-stop-photo-dialog
+      v-model="oneStopPhotoVisible"
+      :base-picture-img-list="basePictureImgList"
+      :component-detail-img-list="componentDetailImgList"
+      :finished-img-list="finishedImgList"
+      :other-img-list="otherImgList"
+      :report-id="reportId"
+      @photo-uploaded="handlePhotoUploaded"
+    />
     <!-- 打包注意事项 -->
     <vab-packing-precautions v-model="precautionsVisible" :sku-id="props.skuId" @update:model-value="handleUpdateData" />
   </div>
@@ -496,13 +534,16 @@ const handleUpdateData = (val: boolean) => {
   }
 }
 const precautionsVisible = ref<boolean>(false)
+// 一条龙拍摄相关
+const oneStopPhotoVisible = ref<boolean>(false)
 const componentList = ref<IComponentList[]>([])
 const reportDetailList = ref<ReportDetailList[]>([])
 const poOption = ref<string[]>([])
 const basePictureImgList = ref<any[]>([])
 const componentDetailImgList = ref<PictureImgList[]>([])
 const finishedImgList = ref<PictureImgList[]>([])
-// 图片上传type 0基础图片 1零件细节 2 成品组装图片
+const otherImgList = ref<PictureImgList[]>([])
+// 图片上传type 0基础图片 1零件细节 2 成品组装图片 3其他图片
 const imageUploadType = ref<number>(0)
 // 图片上传存储 reportId
 const reportId = ref<number>(0)
@@ -579,6 +620,54 @@ const handleShareWeight = async () => {
 const showPrecautions = () => {
   precautionsVisible.value = true
 }
+
+// 一条龙拍摄功能
+const startOneStopPhotoSession = () => {
+  oneStopPhotoVisible.value = true
+}
+
+// 处理照片上传事件
+const handlePhotoUploaded = (data: { type: number; sort: number; imgData: any }) => {
+  const { type, sort, imgData } = data
+  
+  // 根据类型更新对应的列表
+  switch (type) {
+    case 0: {
+      // 基础图片
+      const item = basePictureImgList.value.find((item) => item.sort === sort)
+      if (item) {
+        item.imgUrl = imgData.imgUrl
+        item.id = imgData.id
+      }
+      break
+    }
+    case 1: {
+      // 零件细节
+      componentDetailImgList.value.push({
+        ...imgData,
+        sort,
+      } as any)
+      break
+    }
+    case 2: {
+      // 成品组装图
+      finishedImgList.value.push({
+        ...imgData,
+        sort,
+      } as any)
+      break
+    }
+    case 3: {
+      // 其他图片
+      otherImgList.value.push({
+        ...imgData,
+        sort,
+      } as any)
+      break
+    }
+  }
+}
+
 const showPreviewImage = (url: string) => {
   imagePreviewVisible.value = true
   imagePreviewList.value = [url]
@@ -701,6 +790,15 @@ const uploadImage = async (file: File) => {
 
           break
         }
+        case 3: {
+          // 其他图片：使用上传时计算的 sort（已在 imageUploadIndex.value 中）
+          otherImgList.value.push({
+            ...data,
+            sort: imageUploadIndex.value, // 使用上传时计算的 sort
+          } as any)
+
+          break
+        }
         // No default
       }
       $baseMessage('图片上传成功！', 'success')
@@ -754,6 +852,15 @@ const handleImageRemove = async (id: number, index: number, type: number) => {
             }
             break
           }
+          case 3: {
+            // 通过 id 查找并删除其他图片
+            const itemIndex = otherImgList.value.findIndex((item) => item.id === id)
+            if (itemIndex !== -1) {
+              otherImgList.value.splice(itemIndex, 1)
+              $baseMessage('图片删除成功！', 'success')
+            }
+            break
+          }
         }
       }
     })
@@ -780,6 +887,10 @@ const showUploadDialog = (type: number, index: number) => {
   } else if (type === 2) {
     // 成品组装图片：sort 依次递增，计算当前最大 sort + 1
     const maxSort = finishedImgList.value.length > 0 ? Math.max(...finishedImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
+    imageUploadIndex.value = maxSort + 1
+  } else if (type === 3) {
+    // 其他图片：sort 依次递增，计算当前最大 sort + 1
+    const maxSort = otherImgList.value.length > 0 ? Math.max(...otherImgList.value.map((item: any) => (item as any).sort ?? -1)) : -1
     imageUploadIndex.value = maxSort + 1
   } else {
     // 基础图片：使用传入的 index（即 sort）
@@ -997,6 +1108,7 @@ const resetAllData = () => {
   ]
   componentDetailImgList.value = []
   finishedImgList.value = []
+  otherImgList.value = []
 
   // 重置列表数据
   componentList.value = []
@@ -1096,6 +1208,14 @@ const fetchData = async () => {
     // 加载成品组装图片 - 后端已按 sort 排序
     finishedImgList.value =
       data.assemblyDrawingPictureImgList?.map((item: any) => ({
+        imgUrl: item.imgUrl || '',
+        id: item.id || '',
+        sort: (item as any).sort ?? 0, // 保存 sort 字段
+      })) || []
+
+    // 加载其他图片 - 后端已按 sort 排序
+    otherImgList.value =
+      (data as any).otherPictureImgList?.map((item: any) => ({
         imgUrl: item.imgUrl || '',
         id: item.id || '',
         sort: (item as any).sort ?? 0, // 保存 sort 字段

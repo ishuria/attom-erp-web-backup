@@ -295,6 +295,7 @@ declare module 'vue' {
     VabModifyDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabModifyDialog.vue')['default']
     VabNav: typeof import('./../../components/VabNav/index.vue')['default']
     VabNotice: typeof import('./../../components/VabNotice/index.vue')['default']
+    VabOneStopPhotoDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabOneStopPhotoDialog.vue')['default']
     VabOperationalClassify: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabOperationalClassify.vue')['default']
     VabPackagingInfoCard: typeof import('./../../../src/views/storeOperations/vabAutoComponents/VabPackagingInfoCard.vue')['default']
     VabPackingDialog: typeof import('./../../../src/views/packagingShipping/vabAutoComponents/VabPackingDialog.vue')['default']

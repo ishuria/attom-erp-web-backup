@@ -88,9 +88,9 @@
             <div v-if="row.isUploadImages === 1" style="display: flex; gap: 8px; align-items: center">
               <div v-for="(image, index) in row.images" :key="index" class="image-cell">
                 <div class="image-preview">
-                  <img :alt="image.id" :src="image.imgUrl" />
+                  <img :alt="String(image.id)" :src="image.imgUrl" />
                   <div class="image-actions">
-                    <el-icon @click="showPreviewImage(row.images, index)"><zoom-in /></el-icon>
+                    <el-icon @click="showPreviewImage(row.images, Number(index))"><zoom-in /></el-icon>
                   </div>
                 </div>
               </div>
