@@ -27,6 +27,7 @@
                 :selected-sku="selectedSku"
               />
             </el-tab-pane>
+
             <el-tab-pane label="SP广告饼图" :name="1">
               <vab-ad-pie-tab
                 v-if="activeName === 1"
@@ -39,16 +40,31 @@
                 :sku="sku"
               />
             </el-tab-pane>
+
             <el-tab-pane label="产品成本分析" :name="2">
-              <vab-cost-analysis v-if="activeName === 2" :select-date-range="selectDateRange" :selected-site="selectedSite" :sku="sku" />
+              <vab-cost-analysis
+                v-if="activeName === 2"
+                :select-date-range="selectDateRange"
+                :selected-site="selectedSite"
+                :sku="sku"
+              />
             </el-tab-pane>
+
             <el-tab-pane label="评论Reviews" :name="3">
-              <vab-comment-reviews v-if="activeName === 3" :asin="asin" :select-date-range="selectDateRange" :site="selectedSite!" />
+              <vab-comment-reviews
+                v-if="activeName === 3"
+                :asin="asin"
+                :select-date-range="selectDateRange"
+                :site="selectedSite!"
+              />
             </el-tab-pane>
+
             <el-tab-pane label="退货分析" :name="4">
               <vab-return-analysis v-if="activeName === 4" />
             </el-tab-pane>
+
             <el-tab-pane label="竞品" :name="5" />
+
             <el-tab-pane label="搜索词表现" :name="6">
               <vab-search-term-performance
                 v-if="activeName === 6"
@@ -242,8 +258,21 @@ defineOptions({
 
 const route: any = useRoute()
 const router: any = useRouter()
+const sku = ref<string>('')
+const asin = ref<string>('')  
+const selectedSite = ref<number>()
+const selectField = ref<number>()
+watch(
+  () => route.query,
+  (query) => {
+    if (query.sku) sku.value = String(query.sku)
+    if (query.asin) asin.value = String(query.asin)
+    if (query.site) selectedSite.value = Number(query.site)
+    if (query.field) selectField.value = Number(query.field)
+  },
+  { immediate: true }
+)
 // 选择的维度 SKU ASIN 父体ASIN
-const selectField = ref<number>(Number(route.query.field) || 0)
 // 选择的日期范围 - 从 localStorage 读取或使用默认值
 const getStoredDateRange = (): [string, string] => {
   const stored = getLocalStorage('productAnalysis:selectDateRange')
@@ -332,7 +361,6 @@ const activeName = ref<number>(Number(route.query.activeName) || 0)
 const returnRadio = ref<number>(0)
 const queryForm3 = reactive<any>({})
 // ASIN（从 route.query 获取，如果没有则使用默认值）
-const asin = ref<string>((route.query.asin as string) || 'B08N5M7S6K')
 const fakeChangeData = [{}]
 // 变化详情配置
 const changeDetailConfig = computed(() => ({
@@ -402,18 +430,13 @@ const skuOptions = ref<any[]>([])
 // 判断是单个显示还是多个显示
 const isSingle = ref<boolean>(false)
 // 传递给成本分析组件的sku参数
-const sku = ref<string>('')
+
 const handleChangeSku = () => {
   sku.value = queryForm3.sku
-  // SKU变化时重新获取产品信息
-  if (sku.value && selectedSite.value !== undefined) {
-    fetchProductInfo()
-  }
 }
 
 // 站点相关
 const siteList = ref<{ id: number; label: string }[]>([])
-const selectedSite = ref<number | undefined>(route.query.site ? Number(route.query.site) : undefined)
 
 // 获取站点列表
 const fetchSiteList = async () => {
@@ -428,12 +451,7 @@ const fetchSiteList = async () => {
 // 站点变化处理
 const handleSiteChange = (siteId: number | undefined) => {
   selectedSite.value = siteId
-  // 站点变化时重新获取产品信息
-  if (sku.value && selectedSite.value !== undefined) {
-    fetchProductInfo()
-  }
-  // 站点变化时重新获取广告活动名列表
-  fetchCampaignNameList()
+ 
 }
 
 // 获取广告活动名列表
@@ -529,10 +547,6 @@ onBeforeMount(() => {
     sku.value = queryForm3.sku
     // 初始化趋势总览的SKU选择
     selectedSku.value = skuOptions.value[0]
-    // 初始化时获取产品信息
-    if (sku.value && selectedSite.value !== undefined) {
-      fetchProductInfo()
-    }
   }
 })
 
@@ -570,75 +584,29 @@ watch(
   { deep: true }
 )
 onMounted(() => {
-  activeName.value = Number(route.query.activeName)
-  selectField.value = Number(route.query.field) || 0 // 确保 selectField 有默认值
-  sku.value = (route.query.sku as string) || '' // 从路由参数恢复 SKU
-  asin.value = (route.query.asin as string) || asin.value // 从路由参数恢复 ASIN
-  // 获取站点列表
   fetchSiteList()
-  // 初始化时获取广告活动名列表
-  fetchCampaignNameList()
-  // 初始化时获取产品信息
-  if (sku.value && selectedSite.value !== undefined) {
-    fetchProductInfo()
-  }
 })
-// 监听路由中的 field 参数变化
-watch(
-  () => route.query.field,
-  (newField) => {
-    if (newField) {
-      selectField.value = Number(newField)
-    } else {
-      selectField.value = 0 // 如果路由中没有 field，默认设置为 0 (SKU)
-    }
-  }
-)
-// 监听路由中的 sku 参数变化
-watch(
-  () => route.query.sku,
-  (newSku) => {
-    sku.value = (newSku as string) || ''
-  }
-)
-// 监听路由中的 asin 参数变化
-watch(
-  () => route.query.asin,
-  (newAsin) => {
-    asin.value = (newAsin as string) || asin.value
-  }
-)
-// 监听路由中的站点参数变化
-watch(
-  () => route.query.site,
-  (newSite) => {
-    if (newSite) {
-      selectedSite.value = Number(newSite)
-    } else {
-      selectedSite.value = undefined
-    }
-  }
-)
-// 监听 selectedSku 和 selectedSite 的变化，重新获取产品信息和广告活动名列表
-watch(
-  () => [selectedSku.value, selectedSite.value],
-  ([newSku, newSite]) => {
-    // 当 SKU 或站点变化时，更新 sku 变量并重新获取产品信息
-    if (newSku && newSite !== undefined) {
-      sku.value = String(newSku)
-      fetchProductInfo()
-    }
-    // 重新获取广告活动名列表
-    fetchCampaignNameList()
-  }
-)
 
-// 监听 selectField 和 asin 的变化，重新获取广告活动名列表
 watch(
-  () => [selectField.value, asin.value, selectedSite.value],
+  () => [sku.value, selectedSite.value],
+  ([skuVal, site]) => {
+    if (!skuVal || site === undefined) return
+    fetchProductInfo()
+  },
+  { immediate: true }
+)
+watch(
+  () => [
+    selectedSite.value,
+    selectField.value,
+    asin.value,
+    sku.value
+  ],
   () => {
+    if (!selectedSite.value) return
     fetchCampaignNameList()
-  }
+  },
+  { immediate: true }
 )
 </script>
 
