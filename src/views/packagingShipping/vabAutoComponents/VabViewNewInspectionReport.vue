@@ -206,6 +206,19 @@
           </div>
         </div>
       </el-form-item>
+      <el-form-item label="其他图片">
+        <div style="display: flex; flex-wrap: wrap">
+          <!-- 图片预览部分 -->
+          <div v-for="(item, index) in otherImgList" :key="index" class="image-cell" style="margin-right: 20px">
+            <div v-if="item.imgUrl" class="image-preview">
+              <img alt="" :src="item.imgUrl" />
+              <div class="image-actions">
+                <el-icon @click="showPreviewImage(item.imgUrl)"><zoom-in /></el-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <template #label>
           <span style="margin-right: 6px">备注</span>
@@ -368,6 +381,16 @@ const initData = () => {
   } else {
     finishedImgList.value = []
   }
+
+  // 处理其他图片
+  if (qualityInspectionForm.otherImgList && qualityInspectionForm.otherImgList.length > 0) {
+    otherImgList.value = qualityInspectionForm.otherImgList.map((item: any) => ({
+      imgUrl: item.imgUrl || '',
+      id: item.id || '',
+    }))
+  } else {
+    otherImgList.value = []
+  }
 }
 
 const imagePreviewVisible = ref<boolean>(false)
@@ -384,6 +407,7 @@ const basePictureImgList = ref<any[]>([
 ])
 const componentDetailImgList = ref<PictureImgList[]>([])
 const finishedImgList = ref<PictureImgList[]>([])
+  const otherImgList = ref<PictureImgList[]>([])
 const closeQualityInspection = () => {
   visible.value = false
 }
