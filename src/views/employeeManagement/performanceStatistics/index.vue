@@ -723,6 +723,7 @@
             <el-table-column label="角色" min-width="130" prop="roleName" />
             <el-table-column label="过去6个月月均产品提成" min-width="120" prop="sixPastCommission" />
             <el-table-column label="过去6个月月均上线1年内新品提成" min-width="155" prop="newProductCommission" />
+            <el-table-column label="提成比例" min-width="100" prop="commissionRatio" />
             <el-table-column label="运营奖金" min-width="130" prop="totalManagementBonus" />
           </el-table-column>
           <template #empty>

@@ -499,3 +499,50 @@ export function queryTaxRefundBonusDetailMonthList(data: ITaxRefundBonusQuery): 
     data,
   })
 }
+
+// ============ 运营奖金相关 ============
+
+/**
+ * @description 运营奖金-ASIN明细列表
+ */
+export function getOperationBonusAsinDetailList(params: {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/bonus/asin/detail/list`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description 运营奖金-ASIN汇总列表
+ */
+export function getOperationBonusAsinSummaryList(params: {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/bonus/asin/summary/list`,
+    method: 'get',
+    params,
+  })
+}
+
+/**
+ * @description 运营奖金-奖金明细列表
+ */
+export function getOperationBonusDetailList(params: {
+  keyWord: string
+  pageNo: number
+  pageSize: number
+}): Promise<{ data: { list: any[]; total: number } }> {
+  return request({
+    url: `${BASE_API}/operation/bonus/detail/list`,
+    method: 'get',
+    params,
+  })
+}

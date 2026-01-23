@@ -303,6 +303,26 @@
           <!-- 考核指标配置 -->
           <el-card class="config-card indicator-card" header="考核指标配置" shadow="never">
             <div class="indicator-list">
+              <!-- 老品认领提成比例 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    老品认领提成比例
+                    <el-input-number
+                      v-model="operationConfig.oldProductClaimRatio"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
               <!-- 广告ACOS -->
               <div class="indicator-item">
                 <div class="indicator-content">
@@ -994,11 +1014,13 @@ interface OperationIndicator {
 }
 
 interface OperationConfig {
+  oldProductClaimRatio: number
   indicators: OperationIndicator[]
 }
 
 // 运营配置数据
 const operationConfig = ref<OperationConfig>({
+  oldProductClaimRatio: 20,
   indicators: [
     {
       key: 'acos',
@@ -1068,12 +1090,14 @@ let copyOperationConfig: OperationConfig | null = null
 // 获取运营配置
 const fetchOperationConfig = async () => {
   try {
-    // TODO: 调用接口获取配置
-    // const { data } = await getOperationConfig()
-    // operationConfig.value = data
-    copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
+    // const { data } = await getOperationBonusConfig()
+    // if (data) {
+    //   operationConfig.value = data
+    //   copyOperationConfig = JSON.parse(JSON.stringify(data))
+    // }
   } catch (error) {
-    console.error('获取配置失败:', error)
+    console.error('获取运营配置失败:', error)
+    $baseMessage('获取配置失败', 'error')
   }
 }
 
