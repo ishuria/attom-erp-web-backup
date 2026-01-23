@@ -2,24 +2,21 @@
   <vab-dialog v-model="visible" :title="getCurrentPhotoTitle()" width="30%">
     <div style="text-align: center; padding: 20px">
       <!-- 隐藏的文件输入 -->
-      <input
-        ref="cameraInputRef"
-        accept="image/*"
-        capture="environment"
-        style="display: none"
-        type="file"
-        @change="handleCameraCapture"
-      />
+      <input ref="cameraInputRef" accept="image/*" capture="environment" style="display: none" type="file" @change="handleCameraCapture" />
 
       <!-- 拍摄提示卡片 - 可点击 -->
       <div class="photo-card" @click="triggerCamera">
+        <!-- 连拍模式标签 -->
+        <div v-if="currentPhotoInfo?.type === 3" style="position: absolute; top: 8px; right: 12px">
+          <el-tag size="small" type="success">连拍模式</el-tag>
+        </div>
         <div class="photo-card-icon">
           <vab-icon icon="camera-fill" />
         </div>
         <h3 class="photo-card-title">{{ currentPhotoInfo?.title }}</h3>
         <p class="photo-card-desc">{{ currentPhotoInfo?.desc }}</p>
         <div class="photo-card-action">
-          {{ currentPhotoPreview ? '点击重新拍摄' : '点击开始拍摄' }}
+          {{ currentPhotoPreview ? '点击重新拍摄' : currentPhotoInfo?.type === 3 ? '点击开始拍摄（连拍模式）' : '点击开始拍摄' }}
         </div>
       </div>
 
@@ -35,12 +32,7 @@
     </div>
 
     <!-- 图片查看器 -->
-    <el-image-viewer
-      v-if="imageViewerVisible"
-      hide-on-click-modal
-      :url-list="[currentPhotoPreview]"
-      @close="imageViewerVisible = false"
-    />
+    <el-image-viewer v-if="imageViewerVisible" hide-on-click-modal :url-list="[currentPhotoPreview]" @close="imageViewerVisible = false" />
 
     <template #footer>
       <div style="display: flex; justify-content: space-between; width: 100%">
@@ -169,11 +161,6 @@ const initPhotoSession = () => {
   currentPhotoIndex.value = firstEmptyIndex >= 0 ? firstEmptyIndex : 0
   currentPhotoPreview.value = ''
   currentPhotoFile.value = null
-
-  // 自动触发第一张拍摄
-  nextTick(() => {
-    triggerCamera()
-  })
 }
 
 // 获取当前照片标题
@@ -267,11 +254,6 @@ const skipToNextType = () => {
     currentPhotoIndex.value = nextTypeIndex
     currentPhotoPreview.value = ''
     currentPhotoFile.value = null
-
-    // 自动触发拍摄
-    nextTick(() => {
-      triggerCamera()
-    })
   }
 }
 
@@ -279,12 +261,28 @@ const skipToNextType = () => {
 const goToPrevious = () => {
   if (currentPhotoIndex.value > 0) {
     currentPhotoIndex.value--
-    currentPhotoPreview.value = ''
     currentPhotoFile.value = null
 
-    // 自动触发拍摄
+    // 等待 index 更新后，获取对应的图片预览
     nextTick(() => {
-      triggerCamera()
+      const info = currentPhotoInfo.value
+      let imgUrl = ''
+
+      if (info.type === 0) {
+        // 基础图片：根据 sort 找对应的图片
+        imgUrl = props.basePictureImgList.find((i) => i.sort === info.sort)?.imgUrl || ''
+      } else if (info.type === 1) {
+        // 零件细节：显示最后一张
+        imgUrl = props.componentDetailImgList.at(-1)?.imgUrl || ''
+      } else if (info.type === 2) {
+        // 成品组装图：显示最后一张
+        imgUrl = props.finishedImgList.at(-1)?.imgUrl || ''
+      } else if (info.type === 3) {
+        // 其他图片：显示最后一张
+        imgUrl = props.otherImgList.at(-1)?.imgUrl || ''
+      }
+
+      currentPhotoPreview.value = imgUrl
     })
   }
 }
@@ -343,10 +341,13 @@ const saveAndContinue = async () => {
       // 零件细节、成品组装图、其他图片使用递增的 sort
       if (photoInfo.type === 1) {
         const maxSort =
-          props.componentDetailImgList.length > 0 ? Math.max(...props.componentDetailImgList.map((item: any) => (item as any).sort ?? -1)) : -1
+          props.componentDetailImgList.length > 0
+            ? Math.max(...props.componentDetailImgList.map((item: any) => (item as any).sort ?? -1))
+            : -1
         imageUploadIndex.value = maxSort + 1
       } else if (photoInfo.type === 2) {
-        const maxSort = props.finishedImgList.length > 0 ? Math.max(...props.finishedImgList.map((item: any) => (item as any).sort ?? -1)) : -1
+        const maxSort =
+          props.finishedImgList.length > 0 ? Math.max(...props.finishedImgList.map((item: any) => (item as any).sort ?? -1)) : -1
         imageUploadIndex.value = maxSort + 1
       } else if (photoInfo.type === 3) {
         const maxSort = props.otherImgList.length > 0 ? Math.max(...props.otherImgList.map((item: any) => (item as any).sort ?? -1)) : -1
@@ -375,20 +376,22 @@ const saveAndContinue = async () => {
           currentPhotoIndex.value = nextBaseIndex
           currentPhotoPreview.value = ''
           currentPhotoFile.value = null
-          nextTick(() => {
-            triggerCamera()
-          })
         } else {
           // 基础图片全部完成，跳到零件细节
           skipToNextType()
         }
-      } else {
-        // 零件细节、成品组装图、其他图片：继续当前类型
+      } else if (photoInfo.type === 1 || photoInfo.type === 2) {
+        // 零件细节、成品组装图：继续当前类型
         currentPhotoPreview.value = ''
         currentPhotoFile.value = null
-        nextTick(() => {
+      } else if (photoInfo.type === 3) {
+        // 其他图片：连拍模式，自动弹出相机
+        currentPhotoPreview.value = ''
+        currentPhotoFile.value = null
+        // 使用 setTimeout 确保浏览器完全处理完当前事件
+        setTimeout(() => {
           triggerCamera()
-        })
+        }, 100)
       }
     } else {
       $baseMessage('图片上传失败', 'error')
@@ -398,7 +401,6 @@ const saveAndContinue = async () => {
     $baseMessage('图片上传失败', 'error')
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

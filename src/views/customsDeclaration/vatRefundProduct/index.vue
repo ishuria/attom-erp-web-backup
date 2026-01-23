@@ -433,12 +433,6 @@
                       size="small"
                       @click="downloadInvoice(item.invoiceFilePath)"
                     />
-                    <el-tooltip content="" effect="dark" placement="top">
-                      <template #content>
-                        <div class="custom-tooltip">删除匹配</div>
-                      </template>
-                      <el-button class="button-delete" :icon="Delete" plain size="small" type="danger" @click="handleDeleteMatch(item)" />
-                    </el-tooltip>
                   </div>
                 </div>
               </span>
