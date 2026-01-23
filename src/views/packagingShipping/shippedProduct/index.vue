@@ -158,6 +158,16 @@
           :span-method="objectSpanMethod2"
           @row-click="handleRowClick"
         >
+          <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
+            <template #default="{ row }">
+              {{ formatDate(new Date(row.shipmentDate)) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="实际上架日期" min-width="115" prop="actualArrivalDate">
+            <template #default="{ row }">
+              {{ row.actualArrivalDate ? formatDate(new Date(row.actualArrivalDate)) : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
               产品
@@ -242,6 +252,16 @@
           :span-method="objectSpanMethod2"
           @row-click="handleRowClick"
         >
+          <el-table-column label="发货日期" min-width="115" prop="shipmentDate">
+            <template #default="{ row }">
+              {{ formatDate(new Date(row.shipmentDate)) }}
+            </template>
+          </el-table-column>
+          <el-table-column label="实际上架日期" min-width="115" prop="actualArrivalDate">
+            <template #default="{ row }">
+              {{ row.actualArrivalDate ? formatDate(new Date(row.actualArrivalDate)) : '' }}
+            </template>
+          </el-table-column>
           <el-table-column label="产品图片" prop="skuImgUrl" width="75">
             <template #header>
               产品
@@ -601,19 +621,19 @@ const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex:
   }
 }
 const cellClassName = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 4) {
+  if (data.column.label === '产品图片') {
     return 'clear-padding'
   }
-  if (data.columnIndex !== 5 && data.columnIndex !== 13) {
+  if (data.column.label !== 'SKU' && data.column.label !== '头程渠道') {
     return 'text-center'
   }
   return ''
 }
 const cellClassName2 = (data: { row: any; column: any; rowIndex: number; columnIndex: number }) => {
-  if (data.columnIndex === 0) {
+  if (data.column.label === '产品图片') {
     return 'clear-padding'
   }
-  if (data.columnIndex !== 1) {
+  if (data.column.label !== 'SKU') {
     return 'text-center'
   }
   return ''
