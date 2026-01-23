@@ -298,6 +298,424 @@
           </template>
         </el-table>
       </el-tab-pane>
+      <el-tab-pane label="运营类型" :name="2">
+        <div class="operation-config-container">
+          <!-- 考核指标配置 -->
+          <el-card class="config-card indicator-card" header="考核指标配置" shadow="never">
+            <div class="indicator-list">
+              <!-- 广告ACOS -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    广告ACOS <=
+                    <el-input-number
+                      v-model="operationConfig.indicators[0].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[0].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %（不足
+                    <span class="inline-value">{{ operationConfig.indicators[0].stepValue }}</span>
+                    %按
+                    <span class="inline-value">{{ operationConfig.indicators[0].stepValue }}</span>
+                    %计），提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[0].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- Total ACOS (ACOG) -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    Total ACOS (ACOG) <=
+                    <el-input-number
+                      v-model="operationConfig.indicators[1].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[1].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %（不足
+                    <span class="inline-value">{{ operationConfig.indicators[1].stepValue }}</span>
+                    %按
+                    <span class="inline-value">{{ operationConfig.indicators[1].stepValue }}</span>
+                    %计），提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[1].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- ASOAS广告销售额占比 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    ASOAS广告销售额占比 >=
+                    <el-input-number
+                      v-model="operationConfig.indicators[2].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每少
+                    <el-input-number
+                      v-model="operationConfig.indicators[2].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %（不足
+                    <span class="inline-value">{{ operationConfig.indicators[2].stepValue }}</span>
+                    %按
+                    <span class="inline-value">{{ operationConfig.indicators[2].stepValue }}</span>
+                    %计），提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[2].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- 冗余库存占比 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    冗余库存占比（结算时，剩余总可售天数>=
+                    <el-input-number
+                      v-model="operationConfig.indicators[3].daysThreshold"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="1000"
+                      :min="0"
+                      :precision="0"
+                      style="width: 80px"
+                    />
+                    天的产品的库存占比<=
+                    <el-input-number
+                      v-model="operationConfig.indicators[3].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %）
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[3].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %，提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[3].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- 低动销 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    低动销（结算时，总可售天数>=
+                    <el-input-number
+                      v-model="operationConfig.indicators[4].daysThreshold"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="1000"
+                      :min="0"
+                      :precision="0"
+                      style="width: 80px"
+                    />
+                    天）的比例<=
+                    <el-input-number
+                      v-model="operationConfig.indicators[4].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[4].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %，提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[4].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- 高库龄库存 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    高库龄库存（库龄>=181天库存的占比需要<=
+                    <el-input-number
+                      v-model="operationConfig.indicators[5].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %）
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[5].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %，提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[5].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- 不可售产品销量占比 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    不可售产品销量占比<=
+                    <el-input-number
+                      v-model="operationConfig.indicators[6].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[6].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %，提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[6].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+
+              <!-- 未发库存 -->
+              <div class="indicator-item">
+                <div class="indicator-content">
+                  <span class="bullet">■</span>
+                  <span class="indicator-text">
+                    未发库存（结算时，在上海仓库滞留超过
+                    <el-input-number
+                      v-model="operationConfig.indicators[7].daysThreshold"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="1000"
+                      :min="0"
+                      :precision="0"
+                      style="width: 80px"
+                    />
+                    天的产品比例<=
+                    <el-input-number
+                      v-model="operationConfig.indicators[7].baseValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %）
+                  </span>
+                </div>
+                <div class="indicator-sub">
+                  <span class="sub-bullet">●</span>
+                  <span class="indicator-text">
+                    每超
+                    <el-input-number
+                      v-model="operationConfig.indicators[7].stepValue"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0.01"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %，提成比例减少
+                    <el-input-number
+                      v-model="operationConfig.indicators[7].deductionRate"
+                      class="inline-input highlight-input"
+                      :controls="false"
+                      :max="100"
+                      :min="0"
+                      :precision="2"
+                      style="width: 80px"
+                    />
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-tab-pane>
     </el-tabs>
     <vab-dialog v-model="paramSetting" :draggable="false" title="参数设定" width="20%">
       <el-form ref="formRef" label-position="right" label-width="auto" :model="form" :rules="formRules" style="margin: 0 0 20px 0">
@@ -563,6 +981,104 @@ const clickCancel3 = async (event: any, value: any) => {
     }
   }
 }
+
+// ============ 运营类型相关 ============
+
+interface OperationIndicator {
+  key: string
+  name: string
+  baseValue: number
+  stepValue: number
+  daysThreshold?: number // 天数阈值（如360天、150天、60天）
+  deductionRate: number
+}
+
+interface OperationConfig {
+  indicators: OperationIndicator[]
+}
+
+// 运营配置数据
+const operationConfig = ref<OperationConfig>({
+  indicators: [
+    {
+      key: 'acos',
+      name: '广告ACOS',
+      baseValue: 35,
+      stepValue: 1,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'totalAcos',
+      name: 'Total ACOS (ACOG)',
+      baseValue: 15,
+      stepValue: 0.5,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'adSalesRatio',
+      name: 'ASOAS广告销售额占比',
+      baseValue: 40,
+      stepValue: 1,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'redundantInventory',
+      name: '冗余库存占比',
+      baseValue: 16,
+      stepValue: 0.5,
+      daysThreshold: 360,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'lowSalesRatio',
+      name: '低动销比例',
+      baseValue: 20,
+      stepValue: 1,
+      daysThreshold: 150,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'highAgeInventory',
+      name: '高库龄库存占比',
+      baseValue: 15,
+      stepValue: 1,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'unsellableRatio',
+      name: '不可售产品销量占比',
+      baseValue: 2.5,
+      stepValue: 0.1,
+      deductionRate: 0.2,
+    },
+    {
+      key: 'unshippedInventory',
+      name: '未发库存比例',
+      baseValue: 10,
+      stepValue: 1,
+      daysThreshold: 60,
+      deductionRate: 0.2,
+    },
+  ],
+})
+
+// 复制原始数据用于对比
+let copyOperationConfig: OperationConfig | null = null
+
+// 获取运营配置
+const fetchOperationConfig = async () => {
+  try {
+    // TODO: 调用接口获取配置
+    // const { data } = await getOperationConfig()
+    // operationConfig.value = data
+    copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
+  } catch (error) {
+    console.error('获取配置失败:', error)
+  }
+}
+
+// ============ 结束运营类型相关 ============
+
 const fetchData = async () => {
   listLoading.value = true
   const { data } = await getCommissionArtTypeList({
@@ -601,6 +1117,8 @@ const handleTabClick = (tab: TabsPaneContext) => {
     fetchData2()
   } else if (tab.props.name === 0) {
     fetchData()
+  } else if (tab.props.name === 2) {
+    fetchOperationConfig()
   }
 }
 const cellStyle = (data: { row: any; column: any; rowIndex: number; columnIndex: number }): CSSProperties => {
@@ -674,6 +1192,154 @@ onBeforeMount(() => {
       min-height: 34px;
       line-height: 34px;
     }
+  }
+}
+
+// 运营类型配置样式
+.operation-config-container {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+
+  .config-card {
+    margin-bottom: 20px;
+
+    :deep(.el-card__header) {
+      background-color: #f5f7fa;
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+
+  .indicator-card {
+    .indicator-list {
+      .indicator-item {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f9fafb;
+        border-radius: 4px;
+        border-left: 4px solid var(--el-color-primary);
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .indicator-content {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          font-size: 16px;
+          line-height: 36px;
+
+          .bullet {
+            color: var(--el-color-primary);
+            margin-right: 8px;
+            font-size: 16px;
+          }
+
+          .indicator-text {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .inline-input {
+              margin: 0 4px;
+
+              :deep(.el-input__wrapper) {
+                padding: 0 10px;
+                box-shadow: 0 0 0 1px #dcdfe6 inset;
+              }
+
+              :deep(.el-input__inner) {
+                font-size: 15px;
+              }
+
+              // &.highlight-input {
+              //   :deep(.el-input__wrapper) {
+              //     background-color: #fff9e6;
+              //     box-shadow: 0 0 0 1px #ffd666 inset;
+              //   }
+
+              //   :deep(.el-input__inner) {
+              //     text-align: center;
+              //     font-weight: bold;
+              //     color: #e6a23c;
+              //   }
+              // }
+            }
+
+            .inline-value {
+              font-size: 15px;
+              // color: #e6a23c;
+              // font-weight: bold;
+              // padding: 0 2px;
+            }
+          }
+        }
+
+        .indicator-sub {
+          display: flex;
+          align-items: center;
+          padding-left: 20px;
+          font-size: 15px;
+          line-height: 34px;
+          color: #606266;
+
+          .sub-bullet {
+            color: #909399;
+            margin-right: 8px;
+            font-size: 12px;
+          }
+
+          .indicator-text {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .inline-input {
+              margin: 0 4px;
+
+              :deep(.el-input__wrapper) {
+                padding: 0 10px;
+                box-shadow: 0 0 0 1px #dcdfe6 inset;
+              }
+
+              :deep(.el-input__inner) {
+                font-size: 15px;
+              }
+
+              // &.highlight-input {
+              //   :deep(.el-input__wrapper) {
+              //     background-color: #fff9e6;
+              //     box-shadow: 0 0 0 1px #ffd666 inset;
+              //   }
+
+              //   :deep(.el-input__inner) {
+              //     text-align: center;
+              //     font-weight: bold;
+              //     color: #e6a23c;
+              //   }
+              // }
+            }
+
+            .inline-value {
+              font-size: 15px;
+              // color: #e6a23c;
+              // font-weight: bold;
+              // padding: 0 2px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .operation-actions {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px 0;
   }
 }
 </style>
