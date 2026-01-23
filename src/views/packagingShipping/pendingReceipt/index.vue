@@ -257,7 +257,9 @@
       <el-tab-pane label="已签收" :name="1">
         <vab-query-form>
           <vab-query-form-left-panel>
-            <el-button type="primary" @click="handleShowReceiptExport">入库单导出</el-button>
+            <el-button v-permissions="{ permission: [SignPermission.SIGN_EXPORT] }" type="primary" @click="handleShowReceiptExport">
+              入库单导出
+            </el-button>
             <el-select
               v-model="printer"
               clearable

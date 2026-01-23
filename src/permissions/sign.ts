@@ -9,6 +9,8 @@ class SignPermission {
   static readonly SIGN_COMPONENT = 'sign:component'
   /** 打印权限 */
   static readonly SIGN_PRINT = 'sign:print'
+  /** 入库单导出权限 */
+  static readonly SIGN_EXPORT = 'sign:export'
 
   /**
    * 已签收操作列权限
