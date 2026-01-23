@@ -686,6 +686,57 @@
           @size-change="handleSupervisorSizeChange"
         />
       </el-tab-pane>
+      <el-tab-pane label="运营" :name="8">
+        <vab-query-form>
+          <vab-query-form-left-panel>
+            <el-date-picker v-model="date" style="max-width: 300px" type="monthrange" value-format="YYYY-MM" @change="operationQueryData" />
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel>
+            <el-form inline :model="operationQueryForm" @submit.prevent>
+              <el-form-item>
+                <el-input
+                  v-model.trim="operationQueryForm.keyWord"
+                  clearable
+                  placeholder="请输入搜索关键词"
+                  @input="operationQueryData"
+                  @keyup.enter="operationQueryData"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button :icon="Search" :loading="listLoading" type="primary" @click="operationQueryData" />
+              </el-form-item>
+            </el-form>
+          </vab-query-form-right-panel>
+        </vab-query-form>
+        <el-table
+          v-loading="listLoading"
+          border
+          :cell-style="{ textAlign: 'center' }"
+          :data="list"
+          :header-cell-style="{ textAlign: 'center' }"
+          stripe
+        >
+          <el-table-column label="基本信息">
+            <el-table-column label="月份" min-width="100" prop="month" />
+            <el-table-column label="姓名" min-width="100" prop="manageUserName" />
+            <el-table-column label="职级" min-width="100" prop="jobTitle" />
+            <el-table-column label="角色" min-width="130" prop="roleName" />
+            <el-table-column label="过去6个月月均产品提成" min-width="120" prop="sixPastCommission" />
+            <el-table-column label="过去6个月月均上线1年内新品提成" min-width="155" prop="newProductCommission" />
+            <el-table-column label="运营奖金" min-width="130" prop="totalManagementBonus" />
+          </el-table-column>
+          <template #empty>
+            <el-empty class="vab-data-empty" />
+          </template>
+        </el-table>
+        <vab-pagination
+          :current-page="operationQueryForm.pageNo"
+          :page-size="operationQueryForm.pageSize"
+          :total="total"
+          @current-change="handleOperationCurrentChange"
+          @size-change="handleOperationSizeChange"
+        />
+      </el-tab-pane>
     </el-tabs>
     <!-- 考核数设定 -->
     <vab-dialog v-model="settingVisible" :draggable="false" title="产品经理考核设定和追踪" top="10vh" width="60%">
@@ -955,6 +1006,16 @@ const supervisorQueryForm = reactive<IGetAssessmentListReq>({
   orderDirection: 'desc',
 })
 const list = ref<IGetUserAttendanceManagementList[]>([])
+// 运营 tab 查询表单
+const operationQueryForm = reactive<IGetAssessmentListReq>({
+  keyWord: '',
+  pageNo: 1,
+  pageSize: 20,
+  startDate: '',
+  endDate: '',
+  orderByField: 'month',
+  orderDirection: 'desc',
+})
 /* ============================== 考核数设定变量 ============================== */
 const settingVisible = ref<boolean>(false)
 const settingQueryForm = reactive<any>({
@@ -1211,6 +1272,31 @@ const handleSupervisorSizeChange = (value: number) => {
   supervisorQueryForm.pageNo = 1
   supervisorQueryForm.pageSize = value
   fetchSupervisorData()
+}
+// 运营tab的查询函数
+const operationQueryData = () => {
+  operationQueryForm.pageNo = 1
+  operationQueryForm.startDate = date.value[0]
+  operationQueryForm.endDate = date.value[1]
+  fetchOperationData()
+}
+// 运营tab的数据获取函数
+const fetchOperationData = async () => {
+  listLoading.value = true
+  // const { data } = await getUserAttendanceList(operationQueryForm)
+  // total.value = data.total
+  // list.value = data.list
+  listLoading.value = false
+}
+// 运营tab的分页处理函数
+const handleOperationCurrentChange = (value: number) => {
+  operationQueryForm.pageNo = value
+  fetchOperationData()
+}
+const handleOperationSizeChange = (value: number) => {
+  operationQueryForm.pageNo = 1
+  operationQueryForm.pageSize = value
+  fetchOperationData()
 }
 const handleChangeNoAssessment = async (row: IGetUserAttendanceList) => {
   await updateProductManagerNoAssessment({

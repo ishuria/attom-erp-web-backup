@@ -7,6 +7,7 @@
             <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">
               批量签收
             </el-button>
+            <!-- <el-button type="primary">导出</el-button> -->
             <el-select
               v-model="printer"
               v-permissions="{ permission: [SignPermission.SIGN_BATCH] }"
