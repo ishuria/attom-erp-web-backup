@@ -505,44 +505,51 @@ export function queryTaxRefundBonusDetailMonthList(data: ITaxRefundBonusQuery): 
 /**
  * @description 运营奖金-ASIN明细列表
  */
-export function getOperationBonusAsinDetailList(params: {
+export function getOperationBonusAsinDetailList(data: {
+  userId: number
+  month: string
   keyWord: string
   pageNo: number
   pageSize: number
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
-    url: `${BASE_API}/operation/bonus/asin/detail/list`,
-    method: 'get',
-    params,
+    url: `${BASE_API}/operation/asin/detail`,
+    method: 'post',
+    data,
   })
 }
 
 /**
  * @description 运营奖金-ASIN汇总列表
  */
-export function getOperationBonusAsinSummaryList(params: {
+export function getOperationBonusAsinSummaryList(data: {
+  userId: number
+  month: string
   keyWord: string
   pageNo: number
   pageSize: number
 }): Promise<{ data: { list: any[]; total: number } }> {
   return request({
-    url: `${BASE_API}/operation/bonus/asin/summary/list`,
-    method: 'get',
-    params,
+    url: `${BASE_API}/operation/asin/summary`,
+    method: 'post',
+    data,
   })
 }
 
 /**
  * @description 运营奖金-奖金明细列表
  */
-export function getOperationBonusDetailList(params: {
+export function getOperationBonusDetailList(data: {
+  userId: number
+  month: string
+  site: number
   keyWord: string
   pageNo: number
   pageSize: number
-}): Promise<{ data: { list: any[]; total: number } }> {
+}): Promise<{ data: { list: any[]; total: number; totalPrice: number } }> {
   return request({
-    url: `${BASE_API}/operation/bonus/detail/list`,
-    method: 'get',
-    params,
+    url: `${BASE_API}/operation/commission/detail`,
+    method: 'post',
+    data,
   })
 }

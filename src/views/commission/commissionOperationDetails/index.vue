@@ -4,7 +4,22 @@
       <!-- ASIN汇总 -->
       <el-tab-pane label="ASIN汇总" :name="0">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel :span="18">
+            <el-form inline>
+              <el-form-item label="人员">
+                <el-select v-model="asinSummaryQueryForm.userId" filterable placeholder="全部" @change="queryAsinSummaryData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="月份">
+                <el-select v-model="asinSummaryQueryForm.month" placeholder="请选择月份" @change="queryAsinSummaryData">
+                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="asinSummaryQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -122,7 +137,22 @@
       <!-- ASIN明细 -->
       <el-tab-pane label="ASIN明细" :name="1">
         <vab-query-form>
-          <vab-query-form-right-panel :span="24">
+          <vab-query-form-left-panel :span="18">
+            <el-form inline>
+              <el-form-item label="人员">
+                <el-select v-model="asinDetailQueryForm.userId" filterable placeholder="全部" @change="queryAsinDetailData">
+                  <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
+                </el-select>
+              </el-form-item>
+
+              <el-form-item label="月份">
+                <el-select v-model="asinDetailQueryForm.month" placeholder="请选择月份" @change="queryAsinDetailData">
+                  <el-option v-for="item in monthOption" :key="item.id" :label="item.label" :value="item.label" />
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-left-panel>
+          <vab-query-form-right-panel :span="6">
             <el-form inline :model="asinDetailQueryForm" @submit.prevent>
               <el-form-item>
                 <el-input
@@ -381,19 +411,24 @@ const listLoading = ref<boolean>(false)
 // 考核指标
 const performanceIndicatorDetailsVisible = ref<boolean>(false)
 // ASIN明细
-const asinDetailQueryForm = ref({
+const asinDetailQueryForm = reactive({
   keyWord: '',
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 20,
+  userId: -1,
+  site: -1,
+  month: '',
 })
 const asinDetailList = ref<any[]>([])
 const asinDetailTotal = ref<number>(0)
 
 // ASIN汇总
-const asinSummaryQueryForm = ref({
+const asinSummaryQueryForm = reactive({
   keyWord: '',
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 20,
+  userId: -1,
+  month: '',
 })
 const asinSummaryList = ref<any[]>([])
 const asinSummaryTotal = ref<number>(0)
@@ -405,7 +440,7 @@ const bonusDetailQueryForm = reactive({
   month: '2025-12',
   keyWord: '',
   pageNo: 1,
-  pageSize: 10,
+  pageSize: 20,
 })
 const bonusDetailList = ref<any[]>([])
 const bonusDetailTotal = ref<number>(0)
@@ -414,7 +449,7 @@ const bonusDetailTotal = ref<number>(0)
 const queryAsinDetailData = async () => {
   listLoading.value = true
   try {
-    const { data } = await getOperationBonusAsinDetailList(asinDetailQueryForm.value)
+    const { data } = await getOperationBonusAsinDetailList(asinDetailQueryForm)
     asinDetailList.value = data.list || []
     asinDetailTotal.value = data.total || 0
   } catch (error) {
@@ -426,13 +461,13 @@ const queryAsinDetailData = async () => {
 }
 
 const handleAsinDetailCurrentChange = (val: number) => {
-  asinDetailQueryForm.value.pageNo = val
+  asinDetailQueryForm.pageNo = val
   queryAsinDetailData()
 }
 
 const handleAsinDetailSizeChange = (val: number) => {
-  asinDetailQueryForm.value.pageSize = val
-  asinDetailQueryForm.value.pageNo = 1
+  asinDetailQueryForm.pageSize = val
+  asinDetailQueryForm.pageNo = 1
   queryAsinDetailData()
 }
 
@@ -443,7 +478,7 @@ const handleAsinDetail = (row: any) => {
 const queryAsinSummaryData = async () => {
   listLoading.value = true
   try {
-    const { data } = await getOperationBonusAsinSummaryList(asinSummaryQueryForm.value)
+    const { data } = await getOperationBonusAsinSummaryList(asinSummaryQueryForm)
     asinSummaryList.value = data.list || []
     asinSummaryTotal.value = data.total || 0
   } catch (error) {
@@ -455,13 +490,13 @@ const queryAsinSummaryData = async () => {
 }
 
 const handleAsinSummaryCurrentChange = (val: number) => {
-  asinSummaryQueryForm.value.pageNo = val
+  asinSummaryQueryForm.pageNo = val
   queryAsinSummaryData()
 }
 
 const handleAsinSummarySizeChange = (val: number) => {
-  asinSummaryQueryForm.value.pageSize = val
-  asinSummaryQueryForm.value.pageNo = 1
+  asinSummaryQueryForm.pageSize = val
+  asinSummaryQueryForm.pageNo = 1
   queryAsinSummaryData()
 }
 

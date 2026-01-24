@@ -7,7 +7,7 @@
             <el-button v-permissions="{ permission: [SignPermission.SIGN_BATCH] }" type="primary" @click="handleAllSigned">
               批量签收
             </el-button>
-            <!-- <el-button type="primary">导出</el-button> -->
+            <el-button :loading="exportLoading" type="primary" @click="handlePendingSignExport">导出</el-button>
             <el-select
               v-model="printer"
               v-permissions="{ permission: [SignPermission.SIGN_BATCH] }"
@@ -1014,7 +1014,24 @@ const closeReceiptExport = () => {
   receiptExportFormRef.value?.resetFields()
   receiptExportVisible.value = false
 }
-
+const exportLoading = ref<boolean>(false)
+const handlePendingSignExport = async () => {
+  const idList = selectRows.value.map((row: any) => row.signId)
+  if (idList.length === 0) {
+    $baseMessage('您未选择任何行！', 'warning')
+    return
+  }
+  try {
+    exportLoading.value = true
+    await downloadFilePD('/pending/sign/export', {
+      idList: idList,
+    })
+  } catch (error) {
+    exportLoading.value = false
+  } finally {
+    exportLoading.value = false
+  }
+}
 const signExportSubmit = async () => {
   await downloadFilePD('/sign/export/aiTuom', {
     startDate: receiptExportForm.date[0],
