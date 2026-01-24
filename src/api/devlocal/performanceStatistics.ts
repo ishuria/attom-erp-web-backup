@@ -10,6 +10,8 @@ import type {
   IGetAdjustDetailRes,
   IGetAssessmentListReq,
   IGetAssessmentListRes,
+  IGetOperationCommissionReq,
+  IGetOperationCommissionRes,
   IGetProductManagerAssessmentListReq,
   IGetProductManagerAssessmentListRes,
   IGetUserAttendanceListRes,
@@ -218,5 +220,16 @@ export function updateMinimumMonthlyAssessment(params: { id: number; number: num
     url: `${BASE_API}/update/minimum/monthly/assessments`,
     method: 'post',
     params,
+  })
+}
+
+/**
+ * @description 运营绩效-运营奖金查询
+ */
+export function getOperationCommission(data: IGetOperationCommissionReq): Promise<IGetOperationCommissionRes> {
+  return request({
+    url: `/operation/commission/summary`,
+    method: 'post',
+    data,
   })
 }

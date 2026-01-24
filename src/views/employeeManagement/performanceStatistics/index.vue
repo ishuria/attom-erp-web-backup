@@ -712,19 +712,23 @@
           v-loading="listLoading"
           border
           :cell-style="{ textAlign: 'center' }"
-          :data="list"
+          :data="operationList"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
         >
           <el-table-column label="基本信息">
             <el-table-column label="月份" min-width="100" prop="month" />
-            <el-table-column label="姓名" min-width="100" prop="manageUserName" />
-            <el-table-column label="职级" min-width="100" prop="jobTitle" />
+            <el-table-column label="姓名" min-width="100" prop="userName" />
+            <el-table-column label="职级" min-width="100" prop="leveName" />
             <el-table-column label="角色" min-width="130" prop="roleName" />
-            <el-table-column label="过去6个月月均产品提成" min-width="120" prop="sixPastCommission" />
-            <el-table-column label="过去6个月月均上线1年内新品提成" min-width="155" prop="newProductCommission" />
-            <el-table-column label="提成比例" min-width="100" prop="commissionRatio" />
-            <el-table-column label="运营奖金" min-width="130" prop="totalManagementBonus" />
+            <el-table-column label="过去6个月月均产品提成" min-width="155" prop="sixAvgCommissionPrice" />
+            <el-table-column label="过去6个月月均上线1年内新品提成" min-width="190" prop="newSixAvgCommissionPrice" />
+            <el-table-column label="提成比例" min-width="100">
+              <template #default="scope">
+                <span>{{ scope.row.proportion }}%</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="运营奖金" min-width="130" prop="commissionPrice" />
           </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
@@ -879,6 +883,7 @@ import {
   checkoutAssessmentNumber,
   getAdjustDetailByUser,
   getAssessmentList,
+  getOperationCommission,
   getProductManager,
   getProductManagerAssessmentList,
   getUserAttendanceList,
@@ -891,6 +896,7 @@ import {
   IGetAdjustDetail,
   IGetAssessmentList,
   IGetAssessmentListReq,
+  IGetOperationCommission,
   IGetProductManagerAssessmentList,
   IGetUserAttendanceList,
   IGetUserAttendanceManagementList,
@@ -1007,6 +1013,8 @@ const supervisorQueryForm = reactive<IGetAssessmentListReq>({
   orderDirection: 'desc',
 })
 const list = ref<IGetUserAttendanceManagementList[]>([])
+// 运营 tab 数据列表
+const operationList = ref<IGetOperationCommission[]>([])
 // 运营 tab 查询表单
 const operationQueryForm = reactive<IGetAssessmentListReq>({
   keyWord: '',
@@ -1284,9 +1292,14 @@ const operationQueryData = () => {
 // 运营tab的数据获取函数
 const fetchOperationData = async () => {
   listLoading.value = true
-  // const { data } = await getUserAttendanceList(operationQueryForm)
-  // total.value = data.total
-  // list.value = data.list
+  const { data } = await getOperationCommission({
+    month: date.value[0] || '',
+    pageNo: operationQueryForm.pageNo,
+    pageSize: operationQueryForm.pageSize,
+    keyWord: operationQueryForm.keyWord,
+  })
+  total.value = data.total
+  operationList.value = data.list
   listLoading.value = false
 }
 // 运营tab的分页处理函数
@@ -1584,6 +1597,9 @@ const handleTabChange = () => {
   } else if (activeName.value === 7) {
     // 主管 tab 使用独立的 supervisorQueryForm
     supervisorQueryData()
+  } else if (activeName.value === 8) {
+    // 运营 tab 使用独立的 operationQueryForm
+    operationQueryData()
   } else {
     queryForm.status = 0
     queryData()

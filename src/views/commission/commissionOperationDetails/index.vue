@@ -25,7 +25,7 @@
           v-loading="listLoading"
           border
           :cell-style="{ textAlign: 'center' }"
-          :data="fakeData"
+          :data="asinSummaryList"
           :header-cell-style="{ textAlign: 'center' }"
           stripe
         >
@@ -46,9 +46,9 @@
               {{ row.totalSales ? '$' + row.totalSales : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="120" prop="totalProfit">
+          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit">
             <template #default="{ row }">
-              {{ row.totalProfit ? '$' + row.totalProfit : '-' }}
+              {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos">
@@ -73,10 +73,10 @@
               {{ row.redundantInventoryRatio ? row.redundantInventoryRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="低动销库存" min-width="130" prop="lowSalesInventory" />
-          <el-table-column label="低动销占比" min-width="120" prop="lowSalesRatio">
+          <el-table-column label="低动销库存" min-width="130" prop="lowTurnoverInventory" />
+          <el-table-column label="低动销占比" min-width="120" prop="lowTurnoverRatio">
             <template #default="{ row }">
-              {{ row.lowSalesRatio ? row.lowSalesRatio + '%' : '-' }}
+              {{ row.lowTurnoverRatio ? row.lowTurnoverRatio + '%' : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="高库龄库存" min-width="130" prop="highAgeInventory" />
@@ -85,20 +85,20 @@
               {{ row.highAgeRatio ? row.highAgeRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="未发库存" min-width="100" prop="unshippedInventory" />
-          <el-table-column label="未发库存占比" min-width="140" prop="unshippedInventoryRatio">
+          <el-table-column label="未发库存" min-width="100" prop="unsentInventory" />
+          <el-table-column label="未发库存占比" min-width="140" prop="unsentInventoryRatio">
             <template #default="{ row }">
-              {{ row.unshippedInventoryRatio ? row.unshippedInventoryRatio + '%' : '-' }}
+              {{ row.unsentInventoryRatio ? row.unsentInventoryRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="不可售产品销量占比" min-width="180" prop="unsellableSalesRatio">
+          <el-table-column label="不可售产品销量占比" min-width="180" prop="unsaleableProductSalesRatio">
             <template #default="{ row }">
-              {{ row.unsellableSalesRatio ? row.unsellableSalesRatio + '%' : '-' }}
+              {{ row.unsaleableProductSalesRatio ? row.unsaleableProductSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="考核指标不达标调整" min-width="180" prop="adjustment">
+          <el-table-column label="考核指标不达标调整" min-width="180" prop="kpiUnqualifiedAdjustment">
             <template #default="{ row }">
-              {{ row.adjustment ? row.adjustment + '%' : '-' }}
+              {{ row.kpiUnqualifiedAdjustment ? row.kpiUnqualifiedAdjustment + '%' : '-' }}
             </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作" min-width="100">
@@ -147,7 +147,7 @@
           :header-cell-style="{ textAlign: 'center' }"
           stripe
         >
-          <el-table-column label="月份" min-width="100" prop="month" />
+          <el-table-column label="月份" min-width="100" prop="reportDate" />
           <el-table-column label="人员" min-width="100" prop="userName" />
           <el-table-column label="图片" min-width="100" prop="imageUrl">
             <template #default="{ row }">
@@ -177,9 +177,9 @@
               {{ row.totalSales ? '$' + row.totalSales : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总毛利润" min-width="120" prop="totalProfit">
+          <el-table-column label="总毛利润" min-width="120" prop="totalGrossProfit">
             <template #default="{ row }">
-              {{ row.totalProfit ? '$' + row.totalProfit : '-' }}
+              {{ row.totalGrossProfit ? '$' + row.totalGrossProfit : '-' }}
             </template>
           </el-table-column>
           <el-table-column label="ACOS" min-width="100" prop="acos">
@@ -197,13 +197,22 @@
               {{ row.adSalesRatio ? row.adSalesRatio + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="总可售天数" min-width="130" prop="totalSaleDays" />
+          <el-table-column label="总可售天数" min-width="130" prop="totalSellableDays" />
           <el-table-column label="冗余库存" min-width="120" prop="redundantInventory" />
-          <el-table-column label="低动销" min-width="100" prop="lowSales" />
+          <el-table-column label="低动销" min-width="100" prop="lowTurnoverQty" />
           <el-table-column label="总库存" min-width="100" prop="totalInventory" />
-          <el-table-column label="高库龄库存" min-width="130" prop="highAgeInventory" />
+          <el-table-column label="高库龄库存" min-width="130" prop="oldAgeInventory" />
           <el-table-column label="未发库存" min-width="100" prop="unshippedInventory" />
-          <el-table-column label="不可售" min-width="100" prop="unsellable" />
+          <el-table-column label="不可售" min-width="100" prop="unsellableStatusQty">
+            <template #default="{ row }">
+              <vab-icon
+                v-if="row.unsellableStatusQty === 0"
+                icon="checkbox-circle-fill"
+                style="color: var(--el-color-success); font-size: 23px"
+              />
+              <span v-else-if="row.unsellableStatusQty === 1"></span>
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -276,56 +285,60 @@
         >
           <el-table-column label="月份" min-width="100" prop="month" />
           <el-table-column label="人员" min-width="100" prop="userName" />
-          <el-table-column label="图片" min-width="100" prop="imageUrl">
+          <el-table-column label="图片" min-width="100" prop="imgUrl">
             <template #default="{ row }">
               <el-image
-                v-if="row.imageUrl"
+                v-if="row.imgUrl"
                 fit="cover"
-                :preview-src-list="[row.imageUrl]"
-                :src="row.imageUrl"
+                :preview-src-list="[row.imgUrl]"
+                :src="row.imgUrl"
                 style="width: 60px; height: 60px"
               />
             </template>
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
           <el-table-column label="站点" min-width="100" prop="site" />
-          <el-table-column label="提成" min-width="100" prop="commission">
+          <el-table-column label="提成" min-width="100" prop="price">
             <template #default="{ row }">
-              {{ row.commission ? '$' + row.commission : '-' }}
+              {{ row.price ? '$' + row.price : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="实际提成比例" min-width="140" prop="actualCommissionRate">
+          <el-table-column label="实际提成比例" min-width="140" prop="actualProportion">
             <template #default="{ row }">
-              {{ row.actualCommissionRate ? row.actualCommissionRate + '%' : '-' }}
+              {{ row.actualProportion ? row.actualProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="职级提成比例" min-width="140" prop="levelCommissionRate">
+          <el-table-column label="职级提成比例" min-width="140" prop="originProportion">
             <template #default="{ row }">
-              {{ row.levelCommissionRate ? row.levelCommissionRate + '%' : '-' }}
+              {{ row.originProportion ? row.originProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="指标不达标调整" min-width="180" prop="indicatorAdjustment">
+          <el-table-column label="指标不达标调整" min-width="180" prop="adjustProportion">
             <template #default="{ row }">
-              {{ row.indicatorAdjustment !== undefined ? row.indicatorAdjustment + '%' : '-' }}
+              {{ row.adjustProportion !== undefined ? row.adjustProportion + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="净利润" min-width="120" prop="netProfit">
+          <el-table-column label="净利润" min-width="120" prop="profitGross">
             <template #default="{ row }">
-              {{ row.netProfit ? '$' + row.netProfit : '-' }}
+              {{ row.profitGross ? '$' + row.profitGross : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="销售额" min-width="100" prop="sales">
+          <el-table-column label="销售额" min-width="100" prop="totalSalesAmount">
             <template #default="{ row }">
-              {{ row.sales ? '$' + row.sales : '-' }}
+              {{ row.totalSalesAmount ? '$' + row.totalSalesAmount : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="净利率" min-width="100" prop="netProfitRate">
+          <el-table-column label="净利率" min-width="100" prop="netProfitMargin">
             <template #default="{ row }">
-              {{ row.netProfitRate ? row.netProfitRate + '%' : '-' }}
+              {{ row.netProfitMargin ? row.netProfitMargin + '%' : '-' }}
             </template>
           </el-table-column>
-          <el-table-column label="汇率" min-width="100" prop="exchangeRate" />
-          <el-table-column label="老品认领" min-width="120" prop="oldProductClaim" />
+          <el-table-column label="汇率" min-width="100" prop="avgRate" />
+          <el-table-column label="老品净利润" min-width="120" prop="oldProfitGross">
+            <template #default="{ row }">
+              {{ row.oldProfitGross ? '$' + row.oldProfitGross : '-' }}
+            </template>
+          </el-table-column>
           <template #empty>
             <el-empty class="vab-data-empty" />
           </template>
@@ -389,7 +402,7 @@ const asinSummaryTotal = ref<number>(0)
 const bonusDetailQueryForm = reactive({
   userId: -1,
   site: -1,
-  month: '',
+  month: '2025-12',
   keyWord: '',
   pageNo: 1,
   pageSize: 10,
@@ -424,14 +437,6 @@ const handleAsinDetailSizeChange = (val: number) => {
 }
 
 // ============ ASIN汇总方法 ============
-const fakeData = [
-  {
-    month: '2025-01',
-    userName: '张三',
-    adSpend: 100,
-    adSales: 100,
-  },
-]
 const handleAsinDetail = (row: any) => {
   performanceIndicatorDetailsVisible.value = true
 }
@@ -467,6 +472,7 @@ const queryBonusDetailData = async () => {
     const { data } = await getOperationBonusDetailList(bonusDetailQueryForm)
     bonusDetailList.value = data.list || []
     bonusDetailTotal.value = data.total || 0
+    bonus.value = data.totalPrice
   } catch (error) {
     console.error('查询运营奖金明细失败:', error)
     $baseMessage('查询失败，请重试', 'error')
@@ -489,11 +495,11 @@ const handleBonusDetailSizeChange = (val: number) => {
 // ============ Tab切换 ============
 const handleTabClick = (tab: TabsPaneContext) => {
   if (tab.props.name === 0) {
-    // queryAsinSummaryData()
+    queryAsinSummaryData()
   } else if (tab.props.name === 1) {
-    // queryAsinDetailData()
+    queryAsinDetailData()
   } else if (tab.props.name === 2) {
-    // queryBonusDetailData()
+    queryBonusDetailData()
   }
 }
 // 当前角色名
@@ -524,7 +530,7 @@ const monthOption = ref<{ id: number; label: string }[]>([])
 onBeforeMount(() => {
   fetchSiteList()
   fetchUserLevelList()
-  // queryAsinSummaryData()
+  queryAsinSummaryData()
 })
 </script>
 

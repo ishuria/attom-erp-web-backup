@@ -317,6 +317,7 @@
                       :min="0"
                       :precision="2"
                       style="width: 80px"
+                      @blur="handleOldProductRatioBlur"
                     />
                     %
                   </span>
@@ -790,11 +791,13 @@ import {
   getCommissionArtTypeList,
   getCommissionProductTypeList,
   getCommissionSetting,
+  getOldProductProportion,
   updateCommissionArtType,
   updateCommissionProductType,
   updateCommissionProductTypeScore,
   updateCommissionSetting1,
   updateCommissionSetting2,
+  updateOldProductProportion,
 } from '/@/api/devlocal/commission'
 import type {
   IGetCommissionArtTypeList,
@@ -1090,14 +1093,53 @@ let copyOperationConfig: OperationConfig | null = null
 // 获取运营配置
 const fetchOperationConfig = async () => {
   try {
-    // const { data } = await getOperationBonusConfig()
-    // if (data) {
-    //   operationConfig.value = data
-    //   copyOperationConfig = JSON.parse(JSON.stringify(data))
-    // }
+    // 获取老品认领比例
+    const { data: oldProductProportion } = await getOldProductProportion()
+    operationConfig.value.oldProductClaimRatio = oldProductProportion
+    copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
   } catch (error) {
     console.error('获取运营配置失败:', error)
     $baseMessage('获取配置失败', 'error')
+  }
+}
+
+// 老品认领比例失焦保存
+const handleOldProductRatioBlur = async () => {
+  // 检查值是否发生变化
+  if (copyOperationConfig && operationConfig.value.oldProductClaimRatio === copyOperationConfig.oldProductClaimRatio) {
+    return
+  }
+  try {
+    const { data } = await updateOldProductProportion({
+      proportion: operationConfig.value.oldProductClaimRatio,
+    })
+    if (data) {
+      $baseMessage('保存成功！', 'success')
+      copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
+    }
+  } catch (error) {
+    console.error('保存老品认领比例失败:', error)
+    $baseMessage('保存失败，请重试', 'error')
+    // 保存失败时恢复原值
+    if (copyOperationConfig) {
+      operationConfig.value.oldProductClaimRatio = copyOperationConfig.oldProductClaimRatio
+    }
+  }
+}
+
+// 保存老品认领比例
+const handleSaveOldProductProportion = async () => {
+  try {
+    const { data } = await updateOldProductProportion({
+      proportion: operationConfig.value.oldProductClaimRatio,
+    })
+    if (data) {
+      $baseMessage('保存成功！', 'success')
+      copyOperationConfig = JSON.parse(JSON.stringify(operationConfig.value))
+    }
+  } catch (error) {
+    console.error('保存老品认领比例失败:', error)
+    $baseMessage('保存失败，请重试', 'error')
   }
 }
 

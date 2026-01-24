@@ -313,3 +313,47 @@ export interface IGetUserAttendanceManagementList {
   roleName?: string
   month?: string
 }
+
+export interface IGetOperationCommissionReq {
+  month: string
+  userId?: number
+  keyWord?: string
+  pageNo: number
+  pageSize: number
+}
+
+export interface IGetOperationCommissionRes {
+  data: {
+    total: number
+    list: IGetOperationCommission[]
+  }
+}
+
+export interface IGetOperationCommission {
+  /** 过去6个月平均提成（不含当月） */
+  sixAvgCommission?: number
+  /** 过去6个月新品平均提成（不含当月） */
+  newSixAvgCommission?: number
+  /** 过去6个月产品提成 */
+  sixAvgCommissionPrice?: number
+  /** 提成比例 */
+  proportion?: number
+  /** 提成金额（预留） */
+  commissionPrice?: number
+  /** 职级id */
+  levelId?: number
+  /** 职级名称 */
+  leveName?: string
+  /** 角色名 */
+  roleName?: string
+  /** 主键id */
+  id?: number
+  /** 用户名 */
+  userName?: string
+  /** 过去6个月1年内新品提成 */
+  newSixAvgCommissionPrice?: number
+  /** 用户id */
+  userId?: number
+  /** 月份 */
+  month?: string
+}
