@@ -559,6 +559,8 @@ const fetchUserLevelList = async () => {
   const { data } = await getUserPersonLevelDropdownList()
   userLevelList.value = data
   bonusDetailQueryForm.userId = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
+  asinDetailQueryForm.userId = bonusDetailQueryForm.userId
+  asinSummaryQueryForm.userId = bonusDetailQueryForm.userId
 }
 // 月份筛选
 const monthOption = ref<{ id: number; label: string }[]>([])
