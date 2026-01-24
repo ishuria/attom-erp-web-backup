@@ -7,7 +7,13 @@
           <vab-query-form-left-panel :span="18">
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="asinSummaryQueryForm.userId" filterable placeholder="全部" @change="queryAsinSummaryData">
+                <el-select
+                  v-model="asinSummaryQueryForm.userId"
+                  :disabled="userSelectDisabled"
+                  filterable
+                  placeholder="全部"
+                  @change="queryAsinSummaryData"
+                >
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -140,7 +146,13 @@
           <vab-query-form-left-panel :span="18">
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="asinDetailQueryForm.userId" filterable placeholder="全部" @change="queryAsinDetailData">
+                <el-select
+                  v-model="asinDetailQueryForm.userId"
+                  :disabled="userSelectDisabled"
+                  filterable
+                  placeholder="全部"
+                  @change="queryAsinDetailData"
+                >
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -184,14 +196,14 @@
               <el-image
                 v-if="row.imageUrl"
                 fit="cover"
-                :preview-src-list="[row.imageUrl]"
                 :src="row.imageUrl"
                 style="width: 60px; height: 60px"
+                @click="imagePreviewShow(row.imageUrl)"
               />
             </template>
           </el-table-column>
           <el-table-column label="ASIN" min-width="140" prop="asin" />
-          <el-table-column label="站点" min-width="100" prop="site" />
+          <el-table-column label="站点" min-width="135" prop="site" />
           <el-table-column label="广告花费" min-width="120" prop="adSpend">
             <template #default="{ row }">
               {{ row.adSpend ? '$' + row.adSpend : '-' }}
@@ -262,7 +274,13 @@
           <vab-query-form-left-panel :span="18">
             <el-form inline>
               <el-form-item label="人员">
-                <el-select v-model="bonusDetailQueryForm.userId" filterable placeholder="全部" @change="queryBonusDetailData">
+                <el-select
+                  v-model="bonusDetailQueryForm.userId"
+                  :disabled="userSelectDisabled"
+                  filterable
+                  placeholder="全部"
+                  @change="queryBonusDetailData"
+                >
                   <el-option v-for="item in userLevelList" :key="item.id" :label="item.label" :value="item.id" />
                 </el-select>
               </el-form-item>
@@ -320,9 +338,9 @@
               <el-image
                 v-if="row.imgUrl"
                 fit="cover"
-                :preview-src-list="[row.imgUrl]"
                 :src="row.imgUrl"
                 style="width: 60px; height: 60px"
+                @click="imagePreviewShow(row.imgUrl)"
               />
             </template>
           </el-table-column>
@@ -385,21 +403,20 @@
 
     <!-- 考核指标详情 -->
     <performance-indicator-details v-model="performanceIndicatorDetailsVisible" />
+
+    <el-image-viewer v-if="imagePreviewVisible" hide-on-click-modal :url-list="imagePreviewList" @close="imagePreviewClose" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import type { TabsPaneContext } from 'element-plus'
+import { getFrontPageProductManagerSelectOption } from '~/src/api/devlocal/frontPage'
 import { getSeasonalCoefficientSiteList } from '~/src/api/devlocal/seasonalCoefficient'
+import { ROLE_BOSS_CODE } from '~/src/const/role'
 import { useAclStore } from '~/src/store/modules/acl'
 import { useUserStore } from '~/src/store/modules/user'
-import {
-  getOperationBonusAsinDetailList,
-  getOperationBonusAsinSummaryList,
-  getOperationBonusDetailList,
-  getUserPersonLevelDropdownList,
-} from '/@/api/devlocal/commission'
+import { getOperationBonusAsinDetailList, getOperationBonusAsinSummaryList, getOperationBonusDetailList } from '/@/api/devlocal/commission'
 
 defineOptions({
   name: 'CommissionOperationDetails',
@@ -408,6 +425,16 @@ defineOptions({
 const activeName = ref<number>(0)
 const listLoading = ref<boolean>(false)
 
+const imagePreviewVisible = ref<boolean>(false)
+const imagePreviewList = ref<string[]>([])
+const imagePreviewShow = (url: string) => {
+  imagePreviewVisible.value = true
+  imagePreviewList.value = []
+  imagePreviewList.value.push(url)
+}
+const imagePreviewClose = () => {
+  imagePreviewVisible.value = false
+}
 // 考核指标
 const performanceIndicatorDetailsVisible = ref<boolean>(false)
 // ASIN明细
@@ -556,18 +583,29 @@ const fetchSiteList = async () => {
 // 人员筛选
 const userLevelList = ref<{ id: number; label: string }[]>([])
 const fetchUserLevelList = async () => {
-  const { data } = await getUserPersonLevelDropdownList()
+  const { data } = await getFrontPageProductManagerSelectOption({ type: 3 })
   userLevelList.value = data
-  bonusDetailQueryForm.userId = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
+  userLevelList.value.unshift({ id: -1, label: '全部' })
+
+  if (currentRoleCode === ROLE_BOSS_CODE) {
+    userSelectDisabled.value = false
+    bonusDetailQueryForm.userId = -1
+  } else {
+    bonusDetailQueryForm.userId = userLevelList.value.find((item) => item.label.includes(userName!))?.id || -1
+  }
+
   asinDetailQueryForm.userId = bonusDetailQueryForm.userId
   asinSummaryQueryForm.userId = bonusDetailQueryForm.userId
 }
 // 月份筛选
 const monthOption = ref<{ id: number; label: string }[]>([])
-onBeforeMount(() => {
+
+const userSelectDisabled = ref<boolean>(true)
+onBeforeMount(async () => {
   fetchSiteList()
-  fetchUserLevelList()
-  queryAsinSummaryData()
+
+  await fetchUserLevelList()
+  await queryAsinSummaryData()
 })
 </script>
 
